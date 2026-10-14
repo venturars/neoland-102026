@@ -10,31 +10,25 @@ El objetivo es que tus compañeros sepan quién eres, de dónde vienes y cómo p
 
 ## 1. Quién soy
 
-**Raul Santamaria** · [ciudad o de dónde eres]
+**Raul Santamaria** · Valladolid
 
-[Cómo prefieres que te llamen]
-
-_Di el nombre despacio. Si tiene un apodo, dilo ahora. 15 segundos._
+Raul
 
 ---
 
 ## 2. Antes del bootcamp
 
-Venía de [trabajo, estudios u otra cosa].
+Venía de estudiar DAM.
 
-Lo que más hacía en el día a día era [una frase concreta].
-
-_Una escena vale más que un currículum. 30 segundos._
+Lo que más hacía en el día a día era buscar trabajo.
 
 ---
 
 ## 3. Por qué estoy aquí
 
-Me apunté porque [motivo real: cambiar de trabajo, construir algo, curiosidad…].
+Me apunté porque quiero adaptarme a las nuevas herramientas de IA y que eso me de un plus a la hora de buscar empleo.
 
-Cuando acabe el bootcamp quiero [qué te gustaría estar haciendo].
-
-_Sé concreto. "Aprender a programar" se lo puede decir cualquiera. 30 segundos._
+Cuando acabe el bootcamp quiero empezar a trabajar.
 
 ---
 
@@ -42,24 +36,22 @@ _Sé concreto. "Aprender a programar" se lo puede decir cualquiera. 30 segundos.
 
 |                             |                                                          |
 | --------------------------- | -------------------------------------------------------- |
-| Experiencia                 | [Ninguna / algo de HTML / un curso / proyectos propios…] |
-| Con lo que me siento cómodo | [una cosa, aunque sea pequeña]                           |
-| Lo que más me cuesta ahora  | [una cosa honesta]                                       |
+| Experiencia                 | HTML/CSS/JavaScript/TypeScript/Python/Java/SQL/MongoDB/Hibernate/Android Studio/Unity/C#
+| Con lo que me siento cómodo | Trabajando con gente dispuesta a echar una mano                           |
+| Lo que más me cuesta ahora  | Empezar nuevos proyectos                                     |
 
-En este grupo puedo echar una mano con [algo que sí sabes: diseño, organización, inglés, explicar, paciencia…].
-
-_El nivel no puntúa. Que el resto sepa cómo ayudarte, y tú a ellos, sí. 40 segundos._
+En este grupo puedo echar una mano con lo que cualquier compañero necesite.
 
 ---
 
 ## 5. En qué me quiero especializar
 
-Fill
+Especialista en sistemas de IA para empresas de defensa.
 
 ---
 
 ## 6. Cierre
 
-Soy **[nombre]**, vengo de **[de dónde]** y estoy aquí para **[el objetivo en cuatro palabras]**.
+Soy **Raul**, vengo de **Valladolid** y estoy aquí para **complementar mi formacion**.
 
 Encantado de conoceros.
