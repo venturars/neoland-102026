@@ -1,18 +1,10 @@
-# Template de presentación — Bootcamp Neoland
 
-Copia este documento, rellénalo y úsalo para presentarte al resto de la clase. Tiempo: **2–3 minutos**.
-
-Sustituye los textos entre `[corchetes]`. Borra las notas en cursiva antes de hablar.
-
-El objetivo es que tus compañeros sepan quién eres, de dónde vienes y cómo pueden contar contigo. No hace falta impresionar: hace falta que te recuerden.
-
----
 
 ## 1. Quién soy
 
-**José Miguel** · [Ciudad Real]
+**José Miguel** · Ciudad Real
 
-[josemi]
+josemi
 
 _Di el nombre despacio. Si tiene un apodo, dilo ahora. 15 segundos._
 
@@ -42,9 +34,9 @@ _Sé concreto. "Aprender a programar" se lo puede decir cualquiera. 30 segundos.
 
 |                             |                                                          |
 | --------------------------- | -------------------------------------------------------- |
-| Experiencia                 | [bastante] |
-| Con lo que me siento cómodo | [java]                           |
-| Lo que más me cuesta ahora  | [estar motivado]                                       |
+| Experiencia                 | bastante |
+| Con lo que me siento cómodo | java]                           |
+| Lo que más me cuesta ahora  | estar motivado                                      |
 
 En este grupo puedo echar una mano con código.
 
@@ -54,12 +46,12 @@ _El nivel no puntúa. Que el resto sepa cómo ayudarte, y tú a ellos, sí. 40 s
 
 ## 5. En qué me quiero especializar
 
-Fill
+Pues aun lo estoy pensando sinceramente
 
 ---
 
 ## 6. Cierre
 
-Soy **[José Miguel]**, vengo de **[Ciudad Real]** y estoy aquí para **[aprender de agentes]**.
+Soy **José Miguel**, vengo de **Ciudad Real** y estoy aquí para **aprender de agentes**.
 
 Encantado de conoceros.
