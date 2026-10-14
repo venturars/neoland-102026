@@ -10,9 +10,9 @@ El objetivo es que tus compañeros sepan quién eres, de dónde vienes y cómo p
 
 ## 1. Quién soy
 
-**[Diego Torres]** · [Madrid]
+**Meghan Martin** · California
 
-[Diego Torres]
+Meghan
 
 _Di el nombre despacio. Si tiene un apodo, dilo ahora. 15 segundos._
 
@@ -20,9 +20,9 @@ _Di el nombre despacio. Si tiene un apodo, dilo ahora. 15 segundos._
 
 ## 2. Antes del bootcamp
 
-Venía de [bachillerato].
+Venía de trabajar como diseñadora UX UI.
 
-Lo que más hacía en el día a día era [trabajar y jugar].
+Lo que más hacía en el día a día era diseñar interfazes.
 
 _Una escena vale más que un currículum. 30 segundos._
 
@@ -30,9 +30,9 @@ _Una escena vale más que un currículum. 30 segundos._
 
 ## 3. Por qué estoy aquí
 
-Me apunté porque queria aprender sobre ia y programacion.
+Me apunté porque quiero construir mis propios proyectos.
 
-Cuando acabe el bootcamp quiero [trabajar y poder empezar sin problema].
+Cuando acabe el bootcamp quiero lanzar proyectos con éxito.
 
 _Sé concreto. "Aprender a programar" se lo puede decir cualquiera. 30 segundos._
 
@@ -42,11 +42,11 @@ _Sé concreto. "Aprender a programar" se lo puede decir cualquiera. 30 segundos.
 
 |                             |                                                          |
 | --------------------------- | -------------------------------------------------------- |
-| Experiencia                 | en css,html y un poco de javascript |
-| Con lo que me siento cómodo | que me ayuden]                           |
-| Lo que más me cuesta ahora  | pillar el inicio                                       |
+| Experiencia                 | un curso, propios proyectos |
+| Con lo que me siento cómodo | Claude                         |
+| Lo que más me cuesta ahora  | tocar el codigo                                       |
 
-En este grupo puedo echar una mano con creatividad y paciencia
+En este grupo puedo echar una mano con diseño y ingles.
 
 _El nivel no puntúa. Que el resto sepa cómo ayudarte, y tú a ellos, sí. 40 segundos._
 
@@ -54,12 +54,12 @@ _El nivel no puntúa. Que el resto sepa cómo ayudarte, y tú a ellos, sí. 40 s
 
 ## 5. En qué me quiero especializar
 
-programacion
+Diseñadora que sabe programar con la IA
 
 ---
 
 ## 6. Cierre
 
-Soy Diego, vengo de Madrid y estoy aquí para saber a programar y tener experiencia con ia.
+Soy **Meghan Martin**, vengo de **California** y estoy aquí para **lanzar mis propios proyectos**.
 
 Encantado de conoceros.
