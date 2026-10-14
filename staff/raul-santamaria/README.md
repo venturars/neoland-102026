@@ -10,7 +10,7 @@ El objetivo es que tus compañeros sepan quién eres, de dónde vienes y cómo p
 
 ## 1. Quién soy
 
-**[Tu nombre]** · [ciudad o de dónde eres]
+**Raul Santamaria** · [ciudad o de dónde eres]
 
 [Cómo prefieres que te llamen]
 
