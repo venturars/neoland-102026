@@ -12,7 +12,7 @@ El objetivo es que tus compañeros sepan quién eres, de dónde vienes y cómo p
 
 **[Miguel Rodríguez]** · [ciudad o de dónde eres]
 
-[Cómo prefieres que te llamen]
+[Miguel]
 
 _Di el nombre despacio. Si tiene un apodo, dilo ahora. 15 segundos._
 
