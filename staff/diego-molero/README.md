@@ -10,31 +10,25 @@ El objetivo es que tus compañeros sepan quién eres, de dónde vienes y cómo p
 
 ## 1. Quién soy
 
-**[Diego Molero]** · [ciudad o de dónde eres]
+**[Diego Molero]** · Soria
 
-[Cómo prefieres que te llamen]
-
-_Di el nombre despacio. Si tiene un apodo, dilo ahora. 15 segundos._
+(Podéis llamarme Molero a secas.)
 
 ---
 
 ## 2. Antes del bootcamp
 
-Venía de [trabajo, estudios u otra cosa].
+Venía de estudiar programación.
 
-Lo que más hacía en el día a día era [una frase concreta].
-
-_Una escena vale más que un currículum. 30 segundos._
+Lo que más hacía en el día a día era programar.
 
 ---
 
 ## 3. Por qué estoy aquí
 
-Me apunté porque [motivo real: cambiar de trabajo, construir algo, curiosidad…].
+Me apunté porque llevo bastante tiempo interesado en la inteligencia artificial y creo que es un campo con muchísimo potencial.
 
-Cuando acabe el bootcamp quiero [qué te gustaría estar haciendo].
-
-_Sé concreto. "Aprender a programar" se lo puede decir cualquiera. 30 segundos._
+Cuando termine el bootcamp, me gustaría poder trabajar como AI Engineer, combinando mis conocimientos de desarrollo de software con inteligencia artificial.
 
 ---
 
@@ -42,24 +36,26 @@ _Sé concreto. "Aprender a programar" se lo puede decir cualquiera. 30 segundos.
 
 |                             |                                                          |
 | --------------------------- | -------------------------------------------------------- |
-| Experiencia                 | [Ninguna / algo de HTML / un curso / proyectos propios…] |
-| Con lo que me siento cómodo | [una cosa, aunque sea pequeña]                           |
-| Lo que más me cuesta ahora  | [una cosa honesta]                                       |
+| Experiencia                 | Formación en DAW y DAM, experiencia profesional y proyectos personales. |
+| Con lo que me siento cómodo | Java, PHP, JavaScript, TypeScript, desarrollo backend, APIs y bases de datos.                        |
+| Lo que más me cuesta ahora  | Python es un lenguaje que todavía estoy aprendiendo, y me falta profundizar en machine learning y en los fundamentos de la IA.                                     |
 
-En este grupo puedo echar una mano con [algo que sí sabes: diseño, organización, inglés, explicar, paciencia…].
-
-_El nivel no puntúa. Que el resto sepa cómo ayudarte, y tú a ellos, sí. 40 segundos._
+En este grupo puedo echar una mano con temas de programación, desarrollo web, APIs, bases de datos y herramientas como Git.
 
 ---
 
 ## 5. En qué me quiero especializar
 
-Fill
+Me gustaría especializarme en **AI Engineering**, sobre todo en inteligencia artificial generativa, modelos de lenguaje (LLMs), machine learning y desarrollo de agentes de IA.
+
+Me llama especialmente la atención crear sistemas inteligentes que puedan automatizar tareas, conectarse con herramientas externas y resolver problemas reales.
+
+Mi objetivo es unir el desarrollo de software tradicional con la IA para construir aplicaciones útiles y completas.
 
 ---
 
 ## 6. Cierre
 
-Soy **[nombre]**, vengo de **[de dónde]** y estoy aquí para **[el objetivo en cuatro palabras]**.
+Soy **Diego**, vengo de **Soria** y estoy aquí para **especializarme en inteligencia artificial**.
 
 Encantado de conoceros.
