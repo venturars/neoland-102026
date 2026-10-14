@@ -10,19 +10,18 @@ El objetivo es que tus compañeros sepan quién eres, de dónde vienes y cómo p
 
 ## 1. Quién soy
 
-**[Maria]** · [ciudad o de dónde eres]
+**Maria** · Rusia
 
-[Cómo prefieres que te llamen]
 
-_Di el nombre despacio. Si tiene un apodo, dilo ahora. 15 segundos._
+
 
 ---
 
 ## 2. Antes del bootcamp
 
-Venía de [trabajo, estudios u otra cosa].
+Venía de mi proyecto propio como autonoma.
 
-Lo que más hacía en el día a día era [una frase concreta].
+Lo que más hacía en el día a día era product-management, marketing.
 
 _Una escena vale más que un currículum. 30 segundos._
 
@@ -30,9 +29,9 @@ _Una escena vale más que un currículum. 30 segundos._
 
 ## 3. Por qué estoy aquí
 
-Me apunté porque [motivo real: cambiar de trabajo, construir algo, curiosidad…].
+Me apunté porque quiero dedicarme a la IA aplicado a marketing o operaciones.
 
-Cuando acabe el bootcamp quiero [qué te gustaría estar haciendo].
+Cuando acabe el bootcamp quiero trabajar en una empresa que apuesta por nuevas tecnologias y que aplique la IA de forma práctica y donde pueda aportar valor.
 
 _Sé concreto. "Aprender a programar" se lo puede decir cualquiera. 30 segundos._
 
@@ -42,11 +41,11 @@ _Sé concreto. "Aprender a programar" se lo puede decir cualquiera. 30 segundos.
 
 |                             |                                                          |
 | --------------------------- | -------------------------------------------------------- |
-| Experiencia                 | [Ninguna / algo de HTML / un curso / proyectos propios…] |
-| Con lo que me siento cómodo | [una cosa, aunque sea pequeña]                           |
-| Lo que más me cuesta ahora  | [una cosa honesta]                                       |
+| Experiencia                 | [un curso ] |
+| Con lo que me siento cómodo | [funciones basicas]                           |
+| Lo que más me cuesta ahora  | [empezar]                                       |
 
-En este grupo puedo echar una mano con [algo que sí sabes: diseño, organización, inglés, explicar, paciencia…].
+En este grupo puedo echar una mano con organización, ingles.
 
 _El nivel no puntúa. Que el resto sepa cómo ayudarte, y tú a ellos, sí. 40 segundos._
 
@@ -54,12 +53,12 @@ _El nivel no puntúa. Que el resto sepa cómo ayudarte, y tú a ellos, sí. 40 s
 
 ## 5. En qué me quiero especializar
 
-Fill
+Operaciones, bases de conocimiento, marketing con la IA aplicada
 
 ---
 
 ## 6. Cierre
 
-Soy **[nombre]**, vengo de **[de dónde]** y estoy aquí para **[el objetivo en cuatro palabras]**.
+Soy **Maria**, vengo de **Rusia** y estoy aquí para **aprender**.
 
 Encantado de conoceros.
