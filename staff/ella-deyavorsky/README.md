@@ -12,7 +12,7 @@ El objetivo es que tus compañeros sepan quién eres, de dónde vienes y cómo p
 
 **Ella** · [ciudad o de dónde eres]
 
-[Cómo prefieres que te llamen]
+Ella
 
 _Di el nombre despacio. Si tiene un apodo, dilo ahora. 15 segundos._
 
@@ -20,9 +20,9 @@ _Di el nombre despacio. Si tiene un apodo, dilo ahora. 15 segundos._
 
 ## 2. Antes del bootcamp
 
-Venía de [trabajo, estudios u otra cosa].
+Venía de 1 año de freelance creando chatbots.
 
-Lo que más hacía en el día a día era [una frase concreta].
+Lo que más hacía en el día a día era crear chatbots.
 
 _Una escena vale más que un currículum. 30 segundos._
 
@@ -30,7 +30,7 @@ _Una escena vale más que un currículum. 30 segundos._
 
 ## 3. Por qué estoy aquí
 
-Me apunté porque [motivo real: cambiar de trabajo, construir algo, curiosidad…].
+Me apunté porque quiero aprender a dessarollar con IA.
 
 Cuando acabe el bootcamp quiero [qué te gustaría estar haciendo].
 
@@ -54,12 +54,12 @@ _El nivel no puntúa. Que el resto sepa cómo ayudarte, y tú a ellos, sí. 40 s
 
 ## 5. En qué me quiero especializar
 
-Fill
+en proyectos con impacto
 
 ---
 
 ## 6. Cierre
 
-Soy **[nombre]**, vengo de **[de dónde]** y estoy aquí para **[el objetivo en cuatro palabras]**.
+Soy **Ella**, vengo de **Francia** y estoy aquí para **bootcamp**.
 
 Encantado de conoceros.
