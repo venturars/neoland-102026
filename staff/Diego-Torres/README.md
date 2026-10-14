@@ -10,9 +10,9 @@ El objetivo es que tus compañeros sepan quién eres, de dónde vienes y cómo p
 
 ## 1. Quién soy
 
-**[Diego Torres]** · [ciudad o de dónde eres]
+**[Diego Torres]** · [Madrid]
 
-[Cómo prefieres que te llamen]
+[Diego Torres]
 
 _Di el nombre despacio. Si tiene un apodo, dilo ahora. 15 segundos._
 
@@ -20,9 +20,9 @@ _Di el nombre despacio. Si tiene un apodo, dilo ahora. 15 segundos._
 
 ## 2. Antes del bootcamp
 
-Venía de [trabajo, estudios u otra cosa].
+Venía de [bachillerato].
 
-Lo que más hacía en el día a día era [una frase concreta].
+Lo que más hacía en el día a día era [trabajar y jugar].
 
 _Una escena vale más que un currículum. 30 segundos._
 
@@ -30,9 +30,9 @@ _Una escena vale más que un currículum. 30 segundos._
 
 ## 3. Por qué estoy aquí
 
-Me apunté porque [motivo real: cambiar de trabajo, construir algo, curiosidad…].
+Me apunté porque queria aprender sobre ia y programacion.
 
-Cuando acabe el bootcamp quiero [qué te gustaría estar haciendo].
+Cuando acabe el bootcamp quiero [trabajar y poder empezar sin problema].
 
 _Sé concreto. "Aprender a programar" se lo puede decir cualquiera. 30 segundos._
 
@@ -42,11 +42,11 @@ _Sé concreto. "Aprender a programar" se lo puede decir cualquiera. 30 segundos.
 
 |                             |                                                          |
 | --------------------------- | -------------------------------------------------------- |
-| Experiencia                 | [Ninguna / algo de HTML / un curso / proyectos propios…] |
-| Con lo que me siento cómodo | [una cosa, aunque sea pequeña]                           |
-| Lo que más me cuesta ahora  | [una cosa honesta]                                       |
+| Experiencia                 | en css,html y un poco de javascript |
+| Con lo que me siento cómodo | que me ayuden]                           |
+| Lo que más me cuesta ahora  | pillar el inicio                                       |
 
-En este grupo puedo echar una mano con [algo que sí sabes: diseño, organización, inglés, explicar, paciencia…].
+En este grupo puedo echar una mano con creatividad y paciencia
 
 _El nivel no puntúa. Que el resto sepa cómo ayudarte, y tú a ellos, sí. 40 segundos._
 
@@ -54,12 +54,12 @@ _El nivel no puntúa. Que el resto sepa cómo ayudarte, y tú a ellos, sí. 40 s
 
 ## 5. En qué me quiero especializar
 
-Fill
+programacion
 
 ---
 
 ## 6. Cierre
 
-Soy **[nombre]**, vengo de **[de dónde]** y estoy aquí para **[el objetivo en cuatro palabras]**.
+Soy Diego, vengo de Madrid y estoy aquí para saber a programar y tener experiencia con ia.
 
 Encantado de conoceros.
