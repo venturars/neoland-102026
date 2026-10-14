@@ -1,12 +1,4 @@
-# Template de presentación — Bootcamp Neoland
 
-Copia este documento, rellénalo y úsalo para presentarte al resto de la clase. Tiempo: **2–3 minutos**.
-
-Sustituye los textos entre `[corchetes]`. Borra las notas en cursiva antes de hablar.
-
-El objetivo es que tus compañeros sepan quién eres, de dónde vienes y cómo pueden contar contigo. No hace falta impresionar: hace falta que te recuerden.
-
----
 
 ## 1. Quién soy
 
