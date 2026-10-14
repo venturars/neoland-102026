@@ -16,7 +16,29 @@
 
 
 
-
+G
 
 21 Lo que nos es querido siempre queda atrás
 11 Que alumbre mi camino
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+44 Un te quiero, una caricia y un adiós
