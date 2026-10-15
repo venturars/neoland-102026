@@ -1,0 +1,1 @@
+Quiero que me generes una imagen de un personaje ficticio estilo Halloween, que tenga relación con la IA, después voy a hacer un text to speech en elevenlabs de 30 segundos, es una felicitación de Halloween, dame el guión para la felicitación y dime que voz le puedo poner que pegue con el caso y teniendo en cuenta que tengo el plan gratis
