@@ -32,7 +32,7 @@
 
 33 Me voy, pero te juro que mañana volveré
 
-
+35 Un te quiero, una caricia y un adiós
 36 Es ligero equipaje
 37 Para tan largo viaje
 38 Las penas pesan en el corazón
