@@ -9,7 +9,7 @@
 9 De noche, las estrellas me acompañarán
 10 Serás como una luz
 11 Que alumbre mi camino
-
+12 Me voy, pero te juro que mañana volveré
 13 Al partir, un beso y una flor
 14 Un te quiero, una caricia y un adiós
 15 Es ligero equipaje
