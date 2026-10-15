@@ -23,7 +23,7 @@
 23 Donde el cielo se une con el mar
 24 Lejos de aquí
 25 Con mis manos y con tu amor
-
+26 Lograré encontrar otra ilusión
 27 Lejos de aquí
 28 De día viviré
 29 Pensando en tus sonrisas
@@ -39,8 +39,8 @@
 39 Más allá del mar, habrá un lugar
 40 Donde el Sol cada mañana brille más
 41 Forjarán mi destino, las piedras del camino
-
 43 Al partir, un beso y una flor
+
 44 Un te quiero, una caricia y un adiós
 
 46 Para tan largo viaje
