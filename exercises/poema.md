@@ -16,7 +16,7 @@
 16 Para tan largo viaje
 17 Las penas pesan en el corazón
 
-
+19 Donde el Sol cada mañana brille más
 20 Forjarán mi destino, las piedras del camino
 21 Lo que nos es querido siempre queda atrás
 
@@ -28,11 +28,11 @@
 28 De día viviré
 29 Pensando en tus sonrisas
 30 De noche las estrellas me acompañarán
-31.Serás como una luz
+31 Serás como una luz
 
 33 Me voy, pero te juro que mañana volveré
 34 Al partir, un beso y una flor
-
+35 Un te quiero, una caricia y un adiós
 36 Es ligero equipaje
 37 Para tan largo viaje
 38 Las penas pesan en el corazón
