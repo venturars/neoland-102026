@@ -20,7 +20,7 @@
 
 21 Lo que nos es querido siempre queda atrás
 
-
+23 Donde el cielo se une con el mar
 
 25 Con mis manos y con tu amor
 
