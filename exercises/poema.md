@@ -35,7 +35,7 @@
 
 36 Es ligero equipaje
 37 Para tan largo viaje
-
+38 Las penas pesan en el corazón
 39 Más allá del mar, habrá un lugar
 40 Donde el Sol cada mañana brille más
 41 Forjarán mi destino, las piedras del camino
