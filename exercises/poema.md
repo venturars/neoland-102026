@@ -8,7 +8,7 @@
 8 Pensando en tus sonrisas
 9 De noche, las estrellas me acompañarán
 
-11 Que alumbre mi camino
+
 
 13 Al partir, un beso y una flor
 14 Un te quiero, una caricia y un adiós
@@ -21,7 +21,7 @@
 21 Lo que nos es querido siempre queda atrás
 
 23 Donde el cielo se une con el mar
-24 Lejos de aquí
+
 25 Con mis manos y con tu amor
 
 27 Lejos de aquí
@@ -38,4 +38,4 @@
 
 
 40 Donde el Sol cada mañana brille más
-41 Forjarán mi destino, las piedras del camino
+41 Forjarán mi destino, las piedras del caminogit 
