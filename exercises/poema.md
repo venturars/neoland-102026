@@ -6,10 +6,7 @@
 
 7 De día, viviré
 
-
-
-11 Que alumbre mi camino
-
+9 De noche, las estrellas me acompañarán
 
 
 
@@ -21,7 +18,10 @@
 
 
 
+21 Lo que nos es querido siempre queda atrás
 
 
+
+25 Con mis manos y con tu amor
 
 27 Lejos de aquí
