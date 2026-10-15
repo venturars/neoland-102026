@@ -43,5 +43,5 @@
 43 Al partir, un beso y una flor
 44 Un te quiero, una caricia y un adiós
 
-
+46 Para tan largo viaje
 47 Las penas pesan en el corazón
