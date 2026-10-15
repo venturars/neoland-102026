@@ -5,17 +5,17 @@
 
 
 7 De día, viviré
-
+8 Pensando en tus sonrisas
 9 De noche, las estrellas me acompañarán
 
 11 Que alumbre mi camino
 
 
-11 Que alumbre mi camino
-
+14 Un te quiero, una caricia y un adiós
 
 
 17 Las penas pesan en el corazón
+
 
 20 Forjarán mi destino, las piedras del camino
 21 Lo que nos es querido siempre queda atrás
@@ -33,8 +33,8 @@
 
 
 
-
-
+36 Es ligero equipaje
 
 
 39 Más allá del mar, habrá un lugar
+40 Donde el Sol cada mañana brille más
