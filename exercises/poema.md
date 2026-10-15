@@ -7,7 +7,7 @@
 7 De día, viviré
 8 Pensando en tus sonrisas
 9 De noche, las estrellas me acompañarán
-
+10 Serás como una luz
 11 Que alumbre mi camino
 
 13 Al partir, un beso y una flor
