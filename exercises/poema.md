@@ -38,7 +38,7 @@
 
 
 40 Donde el Sol cada mañana brille más
-
+41 Forjarán mi destino, las piedras del camino
 
 
 
