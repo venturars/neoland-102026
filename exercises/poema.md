@@ -5,7 +5,7 @@
 
 
 7 De día, viviré
-
+8 Pensando en tus sonrisas
 9 De noche, las estrellas me acompañarán
 
 11 Que alumbre mi camino
