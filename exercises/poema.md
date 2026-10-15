@@ -1,7 +1,7 @@
 1 Dejaré mi tierra por ti
 2 Dejaré mis campos y me iré
 
-
+4 Cruzaré, llorando, el jardín
 5 Y, con tus recuerdos, partiré
 
 7 De día, viviré
@@ -17,7 +17,7 @@
 17 Las penas pesan en el corazón
 
 
-
+20 Forjarán mi destino, las piedras del camino
 21 Lo que nos es querido siempre queda atrás
 
 
@@ -36,11 +36,5 @@
 36 Es ligero equipaje
 
 
-
+39 Más allá del mar, habrá un lugar
 40 Donde el Sol cada mañana brille más
-
-
-
-
-
-
