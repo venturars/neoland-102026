@@ -20,32 +20,10 @@
 
 21 Lo que nos es querido siempre queda atrás
 
-<<<<<<< HEAD
 23 Donde el cielo se une con el mar
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-41 Forjarán mi destino, las piedras del camino
-=======
-
 
 25 Con mis manos y con tu amor
 
 
 
 29 Pensando en tus sonrisas
->>>>>>> 4b33062a7a9dea18eb1fd9f422d28a1c28c10fd9
