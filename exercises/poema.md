@@ -6,23 +6,23 @@
 
 7 De día, viviré
 
+9 De noche, las estrellas me acompañarán
+
+11 Que alumbre mi camino
 
 
 
 
 
+17 Las penas pesan en el corazón
 
 
 
+21 Lo que nos es querido siempre queda atrás
 
 
 
-
-
-
-
-
-
+25 Con mis manos y con tu amor
 
 
 
@@ -36,3 +36,24 @@
 
 
 38 Las penas pesan en el corazón
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+29 Pensando en tus sonrisas
