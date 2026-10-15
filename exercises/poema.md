@@ -2,8 +2,8 @@
 2 Dejaré mis campos y me iré
 
 
-
-Lejos de aquí
+5 Y, con tus recuerdos, partiré
+6 Lejos de aquí
 7 De día, viviré
 8 Pensando en tus sonrisas
 9 De noche, las estrellas me acompañarán
@@ -12,42 +12,10 @@ Lejos de aquí
 
 
 14 Un te quiero, una caricia y un adiós
-
-
-<<<<<<< HEAD
-
- Más allá del mar, habrá un lugar
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- Es ligero equipaje
- Para tan largo viaje
-=======
+15 Es ligero equipaje
+16 Para tan largo viaje
 17 Las penas pesan en el corazón
-
+18 Más allá del mar, habrá un lugar
 
 
 21 Lo que nos es querido siempre queda atrás
@@ -59,9 +27,6 @@ Lejos de aquí
 
 
 29 Pensando en tus sonrisas
-<<<<<<< HEAD
->>>>>>> staging
-=======
 
 
 
@@ -73,10 +38,3 @@ Lejos de aquí
 
 
 40 Donde el Sol cada mañana brille más
-
-
-
-
-
-
->>>>>>> staging
