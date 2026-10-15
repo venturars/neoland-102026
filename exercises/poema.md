@@ -27,7 +27,7 @@
 27 Lejos de aquí
 28 De día viviré
 29 Pensando en tus sonrisas
-
+30 De noche las estrellas me acompañarán
 31.Serás como una luz
 
 33 Me voy, pero te juro que mañana volveré
