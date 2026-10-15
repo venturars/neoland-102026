@@ -1,0 +1,1 @@
+Necesito un texto para halloween, acorde a una imagen, la imagen es edgar allan poe. La idea es un texto para convertir a audio simulando la voz de edgar allan poe, debe durar aprox 30 segundos el audio
