@@ -38,4 +38,10 @@
 
 
 40 Donde el Sol cada mañana brille más
-41 Forjarán mi destino, las piedras del caminogit 
+41 Forjarán mi destino, las piedras del camino
+
+43 Al partir, un beso y una flor
+
+
+
+47 Las penas pesan en el corazón
