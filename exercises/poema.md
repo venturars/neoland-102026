@@ -16,7 +16,7 @@
 16 Para tan largo viaje
 17 Las penas pesan en el corazón
 
-
+19 Donde el Sol cada mañana brille más
 20 Forjarán mi destino, las piedras del camino
 21 Lo que nos es querido siempre queda atrás
 
