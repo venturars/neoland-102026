@@ -4,7 +4,7 @@
 
 
 
-7 De día, viviré
+
 
 
 
@@ -23,7 +23,7 @@
 
 
 
-26 Lograré encontrar otra ilusión
+
 
 
 
