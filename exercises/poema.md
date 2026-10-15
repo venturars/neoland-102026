@@ -41,7 +41,7 @@
 41 Forjarán mi destino, las piedras del camino
 
 43 Al partir, un beso y una flor
-
+44 Un te quiero, una caricia y un adiós
 
 
 47 Las penas pesan en el corazón
