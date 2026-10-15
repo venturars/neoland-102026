@@ -34,7 +34,7 @@
 
 
 36 Es ligero equipaje
-
+37 Para tan largo viaje
 
 
 40 Donde el Sol cada mañana brille más
