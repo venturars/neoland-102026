@@ -10,7 +10,7 @@
 
 11 Que alumbre mi camino
 
-
+13 Al partir, un beso y una flor
 14 Un te quiero, una caricia y un adiós
 
 
@@ -20,15 +20,15 @@
 
 21 Lo que nos es querido siempre queda atrás
 
-
+23 Donde el cielo se une con el mar
 
 25 Con mis manos y con tu amor
 
-
+27 Lejos de aquí
 28 De día viviré
 29 Pensando en tus sonrisas
 
-
+31.Serás como una luz
 
 
 
@@ -38,3 +38,7 @@
 
 
 40 Donde el Sol cada mañana brille más
+41 Forjarán mi destino, las piedras del camino
+
+
+
