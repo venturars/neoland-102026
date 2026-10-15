@@ -1,0 +1,81 @@
+Necesito generar una imagen de un persona. Este individuo es masculino cons las siguientes caracteristicas:
+
+
+
+# Estilo:
+
+
+
+- Imagen animada 3D
+- Un banner en la parte central de arriba que diga happy hallown. Este debe tener los color tematicos y tipografia de harry potter
+
+
+
+# Rostro
+
+
+
+- piel medianamente trigrena
+- color de ojos cafe claro
+- pelo castano cenizo risado
+- una nariz definida y natural muy bonita
+- labios medios
+- con una barba corta al raz (que genera un estilo de sombra).&#x20;
+- Un menton no tan pronucniado
+- un pequeno lunar poco pronuciado en la mejilla derecha, a 1 cm de la nariz.&#x20;
+- Orejas acordes a las proporciones del rostor.
+
+
+
+# Cuello, torzo y brasos
+
+
+
+- La persona mide 1.80cm
+- cuerpo corpulento pero no atletico.&#x20;
+- Peso de aporzimadamente 78kg.&#x20;
+- Espalda relativamente ancha con brazos ni muscoloso ni escualidos.&#x20;
+- Percotorales medianamente definidos.&#x20;
+- Abdomen plano sin ser atletico ni marcado
+- En la muneca un reloj Classico de mnanecillas sencillo
+
+
+
+
+
+# Pirenas y pies.
+
+
+
+- Lleva puesto un pantalon color beige con cinturon negro.
+- Piernas un poco robustas pero no atelicas. Como de alguien que camina un par de horas cada dia. Fuertes.
+- Tiene unos zapatos tipo bussines casual de color verde oscuro
+
+
+
+# Atuendo
+
+
+
+- Esto es para un hallowen. El personaje esta disfrazado de un persona de harry potter. Debe lleva la bata caracteristica y una varita del sauco.
+
+
+# Script
+
+[tarareando] Hola. Espero que te encuentres bien. Tan solo quería extenderte mi saludo y decirte que todo está bien.
+
+[thoughtful] Mi vida ha sido un altibajo de experiencias y emociones. He tenido el privilegio de viajar, conocer e interactuar con personas de diferentes culturas, creencias y pensamientos.
+
+[thoughtful] Debo admitir que cada uno ha aportado un pedazo de ser que se ha instaurado en mí.
+
+[thoughtful] Con cada individuo siento que mi propia ignorancia disminuye de a poco. He aprendido que no importa de qué lugar seamos, todas las personas cargamos con las mismas dudas, deseos, miedos e incertidumbres.
+
+[long pause] [sighs] A lo largo del camino he aprendido algo muy valioso; todos cargamos con una gran mochila a nuestras espaldas, todos atravesamos momentos oscuros y cada individuo vive en su propio infierno. Por ende, debemos aprender a escuchar, entender y simpatizar con nuestros semejantes.
+
+[thoughtful] No somos el centro de nada, sino parte de un todo. Todos los seres humanos estamos aquí por un breve suspiro, y sin importar tu grandeza, todos nos dirigimos al mismo lugar... El sueño eterno.
+
+[chuckles] Por ello admira, ama, deslúmbrate, regocíjate, llora, siente y vive. Todo es efímero y tan rápido como un parpadeo en la inmensidad del universo.
+
+[thoughtful] El tiempo no espera a nadie, así que ponte en marcha y abarca la vida.
+
+[thoughtful] Al final solo te acordarás de los momentos que te quitaron el suspiro y te llenaron de plenitud.
