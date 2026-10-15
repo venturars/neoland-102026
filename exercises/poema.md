@@ -11,6 +11,7 @@
 11 Que alumbre mi camino
 
 
+<<<<<<< HEAD
 14 Un te quiero, una caricia y un adiós
 15 Es ligero equipaje
 
@@ -38,3 +39,11 @@
 
 
 40 Donde el Sol cada mañana brille más
+=======
+
+
+
+
+
+15 Es ligero equipaje
+>>>>>>> b1a419ed1be677bc8fd0037c7b4e91ff5edd10a3
