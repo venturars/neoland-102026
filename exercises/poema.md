@@ -5,13 +5,13 @@
 
 Lejos de aquí
 7 De día, viviré
-
+8 Pensando en tus sonrisas
 9 De noche, las estrellas me acompañarán
 
 11 Que alumbre mi camino
 
 
-
+14 Un te quiero, una caricia y un adiós
 
 
 <<<<<<< HEAD
@@ -59,4 +59,24 @@ Lejos de aquí
 
 
 29 Pensando en tus sonrisas
+<<<<<<< HEAD
+>>>>>>> staging
+=======
+
+
+
+
+
+
+36 Es ligero equipaje
+
+
+
+40 Donde el Sol cada mañana brille más
+
+
+
+
+
+
 >>>>>>> staging
