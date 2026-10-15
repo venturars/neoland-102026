@@ -39,8 +39,8 @@
 39 Más allá del mar, habrá un lugar
 40 Donde el Sol cada mañana brille más
 41 Forjarán mi destino, las piedras del camino
+42 Lo que nos es querido siempre queda atrás
 43 Al partir, un beso y una flor
-
 44 Un te quiero, una caricia y un adiós
 
 46 Para tan largo viaje
