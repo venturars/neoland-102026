@@ -1,0 +1,13 @@
+Prompt Saludo
+Crea un saludo de Halloween para mi sobrino de 6 años, simulando ser un hombre lobo. Con una duración aproximada de 25 segundos.
+- El saludo será luego procesado por text to speech, actúa como el personaje.
+- El saludo irá adjunto con una imagen mía procesada en la que yo soy el hombre lobo
+
+
+Prompt Imagen
+Given the two provided images, create a cartoonish version of the person as a werewolf.&#x20;
+- The image should be suited a 5 year old. It is for a  Halloween greeting for my nephew
+- Use the provided cartoon as a reference
+- Use a similar background in the cartoon (full-moon in a foggy woods).
+- Keep the references of the person in the original photo. (clothes, glasses, hair, etc.)
+- Don't write any messages in the image for now.
