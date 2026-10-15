@@ -22,20 +22,20 @@
 
 23 Donde el cielo se une con el mar
 
+25 Con mis manos y con tu amor
+
+27 Lejos de aquí
+
+29 Pensando en tus sonrisas
 
 
 
 
 
 
+36 Es ligero equipaje
 
 
-
-
-
-
-
-
-
+40 Donde el Sol cada mañana brille más
 
 41 Forjarán mi destino, las piedras del camino
