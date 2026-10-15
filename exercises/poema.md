@@ -2,7 +2,7 @@
 2 Dejaré mis campos y me iré
 
 
-
+5 Y, con tus recuerdos, partiré
 
 7 De día, viviré
 8 Pensando en tus sonrisas
