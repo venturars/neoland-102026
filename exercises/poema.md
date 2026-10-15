@@ -18,14 +18,14 @@
 
 
 
-
-
-
-24 Lejos de aquí
 21 Lo que nos es querido siempre queda atrás
 
 
-
+24 Lejos de aquí
 25 Con mis manos y con tu amor
+
+
+
+
 
 
