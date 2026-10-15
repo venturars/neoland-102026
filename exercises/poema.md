@@ -20,7 +20,7 @@
 20 Forjarán mi destino, las piedras del camino
 21 Lo que nos es querido siempre queda atrás
 
-
+23 Donde el cielo se une con el mar
 
 25 Con mis manos y con tu amor
 
@@ -38,7 +38,7 @@
 
 39 Más allá del mar, habrá un lugar
 40 Donde el Sol cada mañana brille más
-
+41 Forjarán mi destino, las piedras del camino
 
 
 
