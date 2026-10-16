@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2d2640">
+  <meta name="description" content="Un temporizador Pomodoro sencillo para alternar concentración y descanso.">
+  <title>Pomodoro · Concentración</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      color: var(--text);
+      background: #2d2640;
+      font-synthesis: none;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      --bg-a: #2d2640;
+      --bg-b: #3a2d4a;
+      --bg-c: #2a3a3c;
+      --card: rgba(48, 40, 66, .82);
+      --text: #f6efe8;
+      --muted: #c4b3cf;
+      --work: #8fd4c2;
+      --short: #d2c2f0;
+      --long: #ffc9b0;
+      --start-bg: #7ec8b3;
+      --start-ink: #1d332e;
+      --pause-bg: #4c3f68;
+      --pause-ink: #eadfff;
+      --reset-bg: #4a3f38;
+      --reset-ink: #f3e4d0;
+      --end-bg: #5a3640;
+      --end-ink: #ffd0d6;
+      --swatch-a: #8fd4c2;
+      --swatch-b: #ffc9b0;
+      --orb-a: #ffc9b0;
+      --orb-b: #d2c2f0;
+      --orb-c: #8fd4c2;
+      --card-border: rgba(255, 255, 255, .45);
+      --shadow: 0 20px 56px rgba(0, 0, 0, .35);
+      --accent: var(--work);
+      --accent-ink: var(--start-ink);
+      --accent-soft: color-mix(in srgb, var(--accent) 15%, transparent);
+      margin: 0;
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      padding: 40px 24px;
+      isolation: isolate;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 800px at 15% 10%, var(--bg-a), transparent 55%),
+        radial-gradient(1000px 700px at 90% 20%, var(--bg-b), transparent 50%),
+        radial-gradient(900px 700px at 50% 100%, var(--bg-c), transparent 55%),
+        var(--bg-a);
+    }
+
+    body[data-theme="campus"] {
+      --bg-a: #1c1610;
+      --bg-b: #2a2118;
+      --bg-c: #1a2218;
+      --card: rgba(42, 34, 24, .9);
+      --text: #f3e6c9;
+      --muted: #c4b08c;
+      --work: #82caa2;
+      --short: #d7c4a3;
+      --long: #e5d3a8;
+      --start-bg: #4a9b74;
+      --start-ink: #102018;
+      --pause-bg: #3a3020;
+      --pause-ink: #f3e6c9;
+      --reset-bg: #33281c;
+      --reset-ink: #ead9b8;
+      --end-bg: #3a2420;
+      --end-ink: #f0c4c0;
+      --swatch-a: #2f6b4f;
+      --swatch-b: #e5d3a8;
+      --orb-a: #e5d3a8;
+      --orb-b: #d7c4a3;
+      --orb-c: #2f6b4f;
+      --shadow: 0 16px 40px rgba(90, 64, 32, .16);
+    }
+
+    body[data-theme="night-owl"] {
+      --bg-a: #1a1630;
+      --bg-b: #2a2150;
+      --bg-c: #3a2a18;
+      --card: rgba(30, 26, 48, .88);
+      --text: #f4e8c8;
+      --muted: #c4b4e0;
+      --work: #f0a202;
+      --short: #b5a1ff;
+      --long: #ffc14d;
+      --start-bg: #f0a202;
+      --start-ink: #2a1c00;
+      --pause-bg: #3a3160;
+      --pause-ink: #ead9ff;
+      --reset-bg: #2c2744;
+      --reset-ink: #f4e8c8;
+      --end-bg: #4a2a38;
+      --end-ink: #ffc4c8;
+      --swatch-a: #f0a202;
+      --swatch-b: #7b6cff;
+      --orb-a: #7b6cff;
+      --orb-b: #6c5ce7;
+      --orb-c: #f0a202;
+      --shadow: 0 20px 50px rgba(0, 0, 0, .4);
+    }
+
+    body[data-theme="lab"] {
+      --bg-a: #0b1418;
+      --bg-b: #102226;
+      --bg-c: #142018;
+      --card: rgba(18, 32, 38, .9);
+      --text: #e6f4f1;
+      --muted: #8aa4ac;
+      --work: #2dd4bf;
+      --short: #99f6e4;
+      --long: #a3e635;
+      --start-bg: #14b8a6;
+      --start-ink: #04201c;
+      --pause-bg: #16333a;
+      --pause-ink: #99f6e4;
+      --reset-bg: #1a2a30;
+      --reset-ink: #d5e4e8;
+      --end-bg: #3a2028;
+      --end-ink: #fecdd3;
+      --swatch-a: #0d9488;
+      --swatch-b: #a3e635;
+      --orb-a: #a3e635;
+      --orb-b: #99f6e4;
+      --orb-c: #0d9488;
+      --shadow: 0 16px 40px rgba(28, 42, 50, .12);
+    }
+
+    body[data-theme="apple"] {
+      --bg-a: #000000;
+      --bg-b: #000000;
+      --bg-c: #000000;
+      --card: #1c1c1e;
+      --text: #f2f2f7;
+      --muted: #a1a1a6;
+      --work: #409cff;
+      --short: #bf9af7;
+      --long: #ffb340;
+      --start-bg: #0a84ff;
+      --start-ink: #ffffff;
+      --pause-bg: rgba(10, 132, 255, .22);
+      --pause-ink: #409cff;
+      --reset-bg: #2c2c2e;
+      --reset-ink: #ebebf5;
+      --end-bg: rgba(255, 69, 58, .18);
+      --end-ink: #ff8078;
+      --swatch-a: #0a84ff;
+      --swatch-b: #ebebf5;
+      --card-border: transparent;
+      --shadow: 0 16px 48px rgba(0, 0, 0, .45);
+    }
+
+    body[data-phase="short"] {
+      --accent: var(--short);
+    }
+
+    body[data-phase="long"] {
+      --accent: var(--long);
+    }
+
+    .ambient { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+    .orb { position: absolute; border-radius: 50%; filter: blur(9px); opacity: .65; }
+    .orb-one { width: 220px; height: 220px; left: -30px; top: 10%; background: var(--orb-a); }
+    .orb-two { width: 190px; height: 190px; right: -45px; top: 25%; background: var(--orb-b); }
+    .orb-three { width: 170px; height: 170px; left: 19%; bottom: -35px; background: var(--orb-c); }
+    body[data-theme="apple"] .ambient { opacity: 0; }
+
+    .theme-toggle {
+      position: fixed;
+      z-index: 10;
+      top: 16px;
+      right: 16px;
+      min-height: 44px;
+      gap: 8px;
+      padding: 7px 11px 7px 8px;
+      border: 1px solid rgba(255, 255, 255, .4);
+      border-radius: 999px;
+      background: var(--card);
+      color: var(--text);
+      font-size: 13px;
+      box-shadow: 0 4px 16px #00000015;
+      backdrop-filter: blur(12px);
+    }
+    .theme-swatch { width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%; background: linear-gradient(135deg, var(--swatch-a) 50%, var(--swatch-b) 50%); }
+    .theme-toggle:hover:not(:disabled) { background: var(--card); }
+
+    .app { width: min(100%, 580px); }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 0 5px;
+      margin-bottom: 24px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand svg { width: 23px; height: 23px; color: var(--work); }
+    .brand-dot { color: var(--work); }
+    h1 { margin: 0; font-size: 18px; font-weight: 600; letter-spacing: -.4px; }
+    .header-note { margin: 0; color: var(--muted); font-size: 12px; }
+
+    .timer-card {
+      padding: 30px 32px 26px;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .phase-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 20px;
+      color: var(--accent);
+      background: var(--accent-soft);
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .phase-badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .session-length { color: var(--muted); font-size: 12px; }
+
+    .clock-area { padding-top: 37px; text-align: center; }
+    .pomodoro-number { margin: 0 0 10px; color: var(--accent); font-size: 12px; font-weight: 600; }
+    h2 { margin: 0; font-size: 19px; letter-spacing: -.4px; font-weight: 500; }
+    .timer {
+      margin: 7px 0 2px;
+      font-size: clamp(76px, 17vw, 112px);
+      line-height: 1.3;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -6px;
+    }
+    .status { min-height: 40px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+
+    .progress { height: 4px; margin: 23px 0 10px; background: #ffffff0c; border-radius: 10px; overflow: hidden; }
+    .progress-fill { height: 100%; width: 0; background: var(--accent); border-radius: inherit; }
+    .progress-labels { display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; }
+
+    .controls { display: grid; grid-template-columns: 1.25fr 1fr 1fr 1fr; gap: 9px; margin-top: 28px; }
+    button {
+      min-height: 48px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 7px;
+      padding: 10px;
+      border: 1px solid #ffffff19;
+      border-radius: 12px;
+      background: #ffffff05;
+      color: var(--text);
+      font: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s, transform .15s;
+    }
+    button svg { width: 15px; height: 15px; flex-shrink: 0; }
+    button:hover:not(:disabled) { background: #ffffff10; transform: translateY(-1px); }
+    button:active:not(:disabled) { transform: translateY(0); }
+    button:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+    button:disabled { opacity: .35; cursor: default; }
+    .primary { background: var(--start-bg); color: var(--accent-ink); border-color: transparent; }
+    .primary:hover:not(:disabled) { background: var(--start-bg); filter: brightness(1.08); }
+    #pause { background: var(--pause-bg); color: var(--pause-ink); border-color: transparent; }
+    #reset { background: var(--reset-bg); color: var(--reset-ink); border-color: transparent; }
+    #pause:hover:not(:disabled), #reset:hover:not(:disabled) { filter: brightness(1.15); }
+    .finish { grid-column: 1 / -1; min-height: 42px; background: var(--end-bg); color: var(--end-ink); border-color: transparent; }
+    .finish:hover:not(:disabled) { background: var(--end-bg); filter: brightness(1.15); }
+
+    .summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 26px; padding-top: 22px; border-top: 1px solid #ffffff12; }
+    .completed { display: flex; align-items: center; gap: 10px; }
+    .completed-number { font-size: 26px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .completed-label { max-width: 90px; color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .cycle { text-align: right; }
+    .cycle-dots { display: flex; justify-content: flex-end; gap: 6px; margin-bottom: 8px; }
+    .cycle-dot { width: 9px; height: 9px; border: 1px solid #ffffff38; border-radius: 50%; }
+    .cycle-dot.is-complete { border-color: var(--accent); background: var(--accent); }
+    .cycle-label { margin: 0; color: var(--muted); font-size: 11px; }
+
+    .rhythm { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 23px; padding: 0 4px; }
+    .rhythm-item { padding-top: 12px; border-top: 1px solid #ffffff16; color: var(--muted); font-size: 11px; line-height: 1.7; }
+    .rhythm-item strong { display: block; color: var(--text); font-size: 13px; font-weight: 500; }
+    .rhythm-item.is-current { border-top-color: var(--accent); }
+    .rhythm-item.is-current strong { color: var(--accent); }
+    .footer-note { margin: 23px 0 0; text-align: center; color: var(--muted); font-size: 11px; line-height: 1.6; }
+
+    @media (max-width: 800px) {
+      body { padding-top: 80px; }
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 80px 16px 24px; }
+      .orb-one { width: 140px; height: 140px; left: -65px; }
+      .orb-two { width: 130px; height: 130px; right: -70px; }
+      .orb-three { left: 9%; }
+      .header-note { font-size: 11px; }
+      .page-header { margin-bottom: 18px; }
+      .timer-card { padding: 23px 20px; border-radius: 23px; }
+      .clock-area { padding-top: 28px; }
+      .timer { letter-spacing: -4px; }
+      .controls { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 23px; }
+      .rhythm { gap: 9px; }
+      .rhythm-item { font-size: 10px; }
+      .rhythm-item strong { font-size: 12px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      button { transition: none; }
+    }
+  </style>
+</head>
+<body data-phase="work" data-theme="pastel">
+  <div class="ambient" aria-hidden="true"><span class="orb orb-one"></span><span class="orb orb-two"></span><span class="orb orb-three"></span></div>
+  <button id="theme" class="theme-toggle" type="button" aria-label="Tema Pastel. Cambiar a Campus." title="Tema Pastel. Cambiar a Campus.">
+    <span class="theme-swatch" aria-hidden="true"></span>
+    <span id="theme-label">Pastel</span>
+  </button>
+  <main class="app">
+    <header class="page-header">
+      <div class="brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 1.5M9 2h6M12 2v3M18 6l1.5-1.5"/></svg>
+        <h1>pomodoro<span class="brand-dot">.</span></h1>
+      </div>
+      <p class="header-note">Un tiempo para cada cosa</p>
+    </header>
+
+    <section class="timer-card" aria-labelledby="phase-title">
+      <div class="card-top">
+        <span id="phase-badge" class="phase-badge">Concentración</span>
+        <span id="session-length" class="session-length">Sesión de 25 min</span>
+      </div>
+
+      <div class="clock-area">
+        <p id="pomodoro-number" class="pomodoro-number">Pomodoro 1</p>
+        <h2 id="phase-title">Tiempo de concentrarse</h2>
+        <div id="timer" class="timer" role="timer" aria-label="Tiempo restante" aria-live="off">25:00</div>
+        <p id="status" class="status" role="status" aria-atomic="true">Todo listo. Empieza cuando quieras.</p>
+      </div>
+
+      <div class="progress" aria-hidden="true"><div id="progress-fill" class="progress-fill"></div></div>
+      <div class="progress-labels" aria-hidden="true"><span>Inicio</span><span id="progress-duration">25 min</span></div>
+
+      <div class="controls" role="group" aria-label="Controles del temporizador">
+        <button id="start" class="primary" type="button">
+          <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M6 3.5v13l10-6.5z"/></svg>
+          <span id="start-label">Iniciar</span>
+        </button>
+        <button id="pause" type="button" disabled>
+          <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M5 4h3v12H5zM12 4h3v12h-3z"/></svg>
+          Pausar
+        </button>
+        <button id="reset" type="button" disabled>
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 7a6.5 6.5 0 1 1-.5 5M4 3v4h4"/></svg>
+          Reiniciar
+        </button>
+        <button id="skip" type="button">
+          <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M4 4v12l8-6zM14 4h2v12h-2z"/></svg>
+          Saltar
+        </button>
+        <button id="end" class="finish" type="button" title="Detener y reiniciar todo el ciclo" disabled>
+          <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><rect x="4" y="4" width="12" height="12" rx="2"/></svg>
+          Finalizar Pomodoro
+        </button>
+      </div>
+
+      <div class="summary">
+        <div class="completed" aria-live="polite" aria-atomic="true">
+          <span id="completed" class="completed-number">0</span>
+          <span class="completed-label">Pomodoros completados</span>
+        </div>
+        <div class="cycle">
+          <div class="cycle-dots" aria-hidden="true">
+            <span class="cycle-dot"></span><span class="cycle-dot"></span><span class="cycle-dot"></span><span class="cycle-dot"></span>
+          </div>
+          <p id="cycle-label" class="cycle-label">0 de 4 para el descanso largo</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="rhythm" aria-label="Duraciones del ciclo">
+      <div class="rhythm-item is-current" data-session="work"><strong>25 min</strong>Concentración</div>
+      <div class="rhythm-item" data-session="short"><strong>5 min</strong>Descanso corto</div>
+      <div class="rhythm-item" data-session="long"><strong>15 min</strong>Descanso largo</div>
+    </div>
+    <p class="footer-note">Cada 4 Pomodoros, completados o saltados, un descanso largo.<br>La siguiente sesión empieza cuando tú decidas.</p>
+    <noscript><p>Activa JavaScript en tu navegador para usar el temporizador.</p></noscript>
+  </main>
+
+  <script>
+    "use strict";
+
+    // El botón recorre los mismos cinco temas de la referencia sin modificar el temporizador.
+    const themes = [
+      { id: "pastel", name: "Pastel" },
+      { id: "campus", name: "Campus" },
+      { id: "night-owl", name: "Night Owl" },
+      { id: "lab", name: "Lab" },
+      { id: "apple", name: "Apple" }
+    ];
+    const themeButton = document.getElementById("theme");
+    const themeLabel = document.getElementById("theme-label");
+    const themeColor = document.querySelector('meta[name="theme-color"]');
+    const themeStorageKey = "diego-pomodoro-theme";
+    let themeIndex = 0;
+
+    function applyTheme(index) {
+      themeIndex = index;
+      const current = themes[themeIndex];
+      const next = themes[(themeIndex + 1) % themes.length];
+      document.body.dataset.theme = current.id;
+      themeLabel.textContent = current.name;
+      const description = `Tema ${current.name}. Cambiar a ${next.name}.`;
+      themeButton.setAttribute("aria-label", description);
+      themeButton.title = description;
+      themeColor.content = getComputedStyle(document.body).getPropertyValue("--bg-a").trim();
+    }
+
+    // Solo se guarda el tema; si el navegador bloquea el almacenamiento, el selector sigue funcionando.
+    try {
+      const savedTheme = localStorage.getItem(themeStorageKey);
+      const savedIndex = themes.findIndex(theme => theme.id === savedTheme);
+      if (savedIndex !== -1) themeIndex = savedIndex;
+    } catch {
+      themeIndex = 0;
+    }
+    applyTheme(themeIndex);
+
+    themeButton.addEventListener("click", () => {
+      applyTheme((themeIndex + 1) % themes.length);
+      try {
+        localStorage.setItem(themeStorageKey, themes[themeIndex].id);
+      } catch {
+        // El tema elegido se conserva en esta página aunque no pueda guardarse.
+      }
+    });
+
+    // Las duraciones y los textos de cada fase se mantienen en una única configuración.
+    const phases = {
+      work: { duration: 25 * 60 * 1000, label: "Concentración", title: "Tiempo de concentrarse" },
+      short: { duration: 5 * 60 * 1000, label: "Descanso corto", title: "Haz una pequeña pausa" },
+      long: { duration: 15 * 60 * 1000, label: "Descanso largo", title: "Recarga con calma" }
+    };
+
+    const state = {
+      phase: "work",
+      remainingMs: phases.work.duration,
+      endAt: null,
+      intervalId: null,
+      completed: 0,
+      sessionsPassed: 0,
+      hasSessionActivity: false
+    };
+
+    const elements = {
+      timer: document.getElementById("timer"),
+      pomodoroNumber: document.getElementById("pomodoro-number"),
+      badge: document.getElementById("phase-badge"),
+      title: document.getElementById("phase-title"),
+      length: document.getElementById("session-length"),
+      status: document.getElementById("status"),
+      progress: document.getElementById("progress-fill"),
+      progressDuration: document.getElementById("progress-duration"),
+      start: document.getElementById("start"),
+      startLabel: document.getElementById("start-label"),
+      pause: document.getElementById("pause"),
+      reset: document.getElementById("reset"),
+      skip: document.getElementById("skip"),
+      end: document.getElementById("end"),
+      completed: document.getElementById("completed"),
+      cycleLabel: document.getElementById("cycle-label"),
+      dots: document.querySelectorAll(".cycle-dot"),
+      rhythm: document.querySelectorAll(".rhythm-item")
+    };
+
+    function render() {
+      const phase = phases[state.phase];
+      const seconds = Math.ceil(state.remainingMs / 1000);
+      const minutesText = String(Math.floor(seconds / 60)).padStart(2, "0");
+      const secondsText = String(seconds % 60).padStart(2, "0");
+      const running = state.intervalId !== null;
+      const pristine = state.remainingMs === phase.duration;
+      const cycleCompleted = state.sessionsPassed % 4 || (state.phase === "long" ? 4 : 0);
+
+      // En los descansos se muestra el Pomodoro anterior; al volver al trabajo aparece el siguiente.
+      elements.pomodoroNumber.textContent = state.phase === "work"
+        ? `Pomodoro ${state.sessionsPassed + 1}`
+        : `Tras el Pomodoro ${state.sessionsPassed}`;
+      elements.timer.textContent = `${minutesText}:${secondsText}`;
+      document.title = `${minutesText}:${secondsText} · ${phase.label} · Pomodoro`;
+      document.body.dataset.phase = state.phase;
+      elements.badge.textContent = phase.label;
+      elements.title.textContent = phase.title;
+      elements.length.textContent = `Sesión de ${phase.duration / 60000} min`;
+      elements.progressDuration.textContent = `${phase.duration / 60000} min`;
+      elements.progress.style.width = `${(1 - state.remainingMs / phase.duration) * 100}%`;
+      elements.start.disabled = running;
+      elements.pause.disabled = !running;
+      elements.reset.disabled = !running && pristine;
+      // Finalizar se habilita tras iniciar o saltar un Pomodoro y se desactiva al finalizar todo.
+      elements.end.disabled = !state.hasSessionActivity;
+      elements.startLabel.textContent = !running && !pristine ? "Reanudar" : "Iniciar";
+
+      // El contador solo se anuncia cuando cambia, sin repetirlo en cada actualización.
+      if (elements.completed.textContent !== String(state.completed)) {
+        elements.completed.textContent = String(state.completed);
+      }
+      elements.cycleLabel.textContent = `${cycleCompleted} de 4 para el descanso largo`;
+      elements.dots.forEach((dot, index) => dot.classList.toggle("is-complete", index < cycleCompleted));
+      elements.rhythm.forEach(item => item.classList.toggle("is-current", item.dataset.session === state.phase));
+    }
+
+    function stopClock() {
+      if (state.intervalId !== null) clearInterval(state.intervalId);
+      state.intervalId = null;
+      state.endAt = null;
+    }
+
+    function preparePhase(nextPhase, message) {
+      stopClock();
+      state.phase = nextPhase;
+      state.remainingMs = phases[nextPhase].duration;
+      elements.status.textContent = message;
+      render();
+    }
+
+    function advanceWork(wasCompleted) {
+      // Completar o saltar avanza el ciclo; solo llegar a cero aumenta los completados.
+      state.hasSessionActivity = true;
+      state.sessionsPassed += 1;
+      if (wasCompleted) state.completed += 1;
+      const nextPhase = state.sessionsPassed % 4 === 0 ? "long" : "short";
+      preparePhase(nextPhase, wasCompleted
+        ? "¡Pomodoro completado! Tu descanso está preparado."
+        : "Pomodoro saltado. Tu descanso está preparado.");
+    }
+
+    function finishPhase() {
+      if (state.intervalId === null) return;
+
+      if (state.phase === "work") {
+        advanceWork(true);
+      } else {
+        preparePhase("work", "Descanso terminado. Empieza cuando quieras.");
+      }
+    }
+
+    function updateClock() {
+      if (state.intervalId === null) return false;
+
+      // La hora de finalización evita acumular retrasos cuando la pestaña está en segundo plano.
+      state.remainingMs = Math.max(0, state.endAt - Date.now());
+      if (state.remainingMs === 0) {
+        finishPhase();
+        return true;
+      }
+      render();
+      return false;
+    }
+
+    function start() {
+      if (state.intervalId !== null) return;
+      state.hasSessionActivity = true;
+      state.endAt = Date.now() + state.remainingMs;
+      state.intervalId = setInterval(updateClock, 200);
+      elements.status.textContent = state.phase === "work"
+        ? "En marcha. Una cosa a la vez."
+        : "Descanso en marcha. Este tiempo es para ti.";
+      render();
+    }
+
+    function pause() {
+      if (state.intervalId === null || updateClock()) return;
+      // Se conserva el tiempo exacto de la pausa para continuar desde el mismo instante.
+      stopClock();
+      elements.status.textContent = "En pausa. Continúa cuando quieras.";
+      render();
+    }
+
+    function reset() {
+      if (updateClock()) return;
+      preparePhase(state.phase, "Sesión reiniciada. Todo listo para empezar.");
+    }
+
+    function skip() {
+      if (updateClock()) return;
+      // Los descansos saltados no avanzan el número; la siguiente sesión espera a Iniciar.
+      if (state.phase === "work") {
+        advanceWork(false);
+      } else {
+        preparePhase("work", "Descanso saltado. El siguiente Pomodoro está preparado.");
+      }
+    }
+
+    function endPomodoro() {
+      // Finalizar borra todo el progreso y detiene el reloj, conservando únicamente el tema elegido.
+      state.completed = 0;
+      state.sessionsPassed = 0;
+      state.hasSessionActivity = false;
+      preparePhase("work", "Pomodoro finalizado. Todo listo para empezar de nuevo.");
+    }
+
+    elements.start.addEventListener("click", start);
+    elements.pause.addEventListener("click", pause);
+    elements.reset.addEventListener("click", reset);
+    elements.skip.addEventListener("click", skip);
+    elements.end.addEventListener("click", endPomodoro);
+
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) updateClock();
+    });
+
+    render();
+  </script>
+</body>
+</html>
