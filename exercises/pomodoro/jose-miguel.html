@@ -1,0 +1,809 @@
+<!doctype html>
+<html lang="es" data-theme="midnight">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2b243b">
+  <title>Pomodoro — Quiet time</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f4f7ff;
+      --muted: #b5c2df;
+      --mint: #ffbd69;
+      --mint-ink: #202943;
+      --lilac: #343e61;
+      --panel: rgba(22, 31, 54, .84);
+      --border: rgba(155, 179, 224, .42);
+      --rose: #ff7f9d;
+      --aqua: #65dfd0;
+      --violet: #9d91ff;
+      --background-image: radial-gradient(ellipse at 52% 110%, rgba(43, 181, 170, .22) 0, rgba(43, 181, 170, .06) 24%, transparent 45%), radial-gradient(ellipse at 100% 0%, rgba(117, 99, 220, .20), transparent 38%), linear-gradient(135deg, #111a30 0%, #19223d 52%, #23213f 100%);
+      --orb-peach: #ff9b83;
+      --orb-lilac: #9d91ff;
+      --orb-mint: #65dfd0;
+      --badge-bg: rgba(113, 62, 91, .72);
+      --badge-text: #f6dbe4;
+      --button-bg: #42334f;
+      --button-text: #b7a9c4;
+      --reset-bg: #29344f;
+      --reset-text: #c3cdec;
+      --end-bg: #492c4a;
+      --end-text: #ff9db4;
+      --robot-shell-1: #8df0df;
+      --robot-shell-2: #43bdbd;
+      --robot-shell-highlight: #a9fff0;
+      --robot-body-1: #ffc978;
+      --robot-body-2: #ff996f;
+      --robot-pod: #9d91ff;
+      --robot-pod-center: #dcd7ff;
+      --robot-screen: #182641;
+      --robot-screen-glint: #4e6c84;
+      --robot-core: #fff0ca;
+    }
+
+    :root[data-theme="orchid"] {
+      --ink: #fff5ff; --muted: #d8bfe6; --mint: #f1a6df; --mint-ink: #3f1e48;
+      --lilac: #563765; --panel: rgba(40, 23, 53, .87); --border: rgba(223, 171, 238, .42);
+      --rose: #ff9fbc; --aqua: #bda4ff; --violet: #d08bee;
+      --background-image: radial-gradient(ellipse at 53% 110%, rgba(208, 111, 205, .22) 0, rgba(208, 111, 205, .06) 25%, transparent 46%), radial-gradient(ellipse at 100% 0%, rgba(154, 102, 231, .23), transparent 39%), linear-gradient(135deg, #20142f 0%, #332047 52%, #402343 100%);
+      --orb-peach: #ffabbd; --orb-lilac: #bd91ff; --orb-mint: #95f2d0;
+      --badge-bg: rgba(142, 65, 123, .72); --badge-text: #ffebf8;
+      --button-bg: #513962; --button-text: #e4c8ed; --reset-bg: #362847; --reset-text: #e2c9f0;
+      --end-bg: #512b4c; --end-text: #ffb5d0;
+      --robot-shell-1: #d7b6ff; --robot-shell-2: #9676ee; --robot-shell-highlight: #eddbff;
+      --robot-body-1: #ffa6dc; --robot-body-2: #f276ba; --robot-pod: #bda4ff; --robot-pod-center: #efe3ff;
+      --robot-screen: #2a1d40; --robot-screen-glint: #76528c; --robot-core: #fff0fa;
+    }
+
+    :root[data-theme="ocean"] {
+      --ink: #effcff; --muted: #b5d9e6; --mint: #6de8de; --mint-ink: #102f3a;
+      --lilac: #22566b; --panel: rgba(9, 35, 50, .88); --border: rgba(115, 211, 228, .4);
+      --rose: #ff93a9; --aqua: #7ce3ed; --violet: #77aef4;
+      --background-image: radial-gradient(ellipse at 52% 110%, rgba(42, 206, 190, .2) 0, rgba(42, 206, 190, .055) 25%, transparent 46%), radial-gradient(ellipse at 100% 0%, rgba(61, 140, 222, .22), transparent 39%), linear-gradient(135deg, #081d2a 0%, #103248 52%, #123e50 100%);
+      --orb-peach: #ffad98; --orb-lilac: #77aef4; --orb-mint: #6de8de;
+      --badge-bg: rgba(43, 94, 118, .78); --badge-text: #dffaff;
+      --button-bg: #20495a; --button-text: #c4e6ef; --reset-bg: #183747; --reset-text: #bbdbe7;
+      --end-bg: #4d304a; --end-text: #ffb1c0;
+      --robot-shell-1: #8df0ee; --robot-shell-2: #36b9d0; --robot-shell-highlight: #b8ffff;
+      --robot-body-1: #ffc978; --robot-body-2: #ff996f; --robot-pod: #77aef4; --robot-pod-center: #d9edff;
+      --robot-screen: #102b3c; --robot-screen-glint: #3d728c; --robot-core: #fff0ca;
+    }
+
+    :root[data-theme="forest"] {
+      --ink: #f4ffef; --muted: #bfd8bf; --mint: #c7ef8b; --mint-ink: #24351b;
+      --lilac: #355648; --panel: rgba(17, 43, 33, .88); --border: rgba(161, 211, 170, .4);
+      --rose: #ff9baf; --aqua: #8fe1b8; --violet: #b2c78b;
+      --background-image: radial-gradient(ellipse at 52% 110%, rgba(102, 193, 132, .2) 0, rgba(102, 193, 132, .055) 25%, transparent 46%), radial-gradient(ellipse at 100% 0%, rgba(158, 168, 92, .18), transparent 39%), linear-gradient(135deg, #10251e 0%, #18372d 52%, #254334 100%);
+      --orb-peach: #e9a68b; --orb-lilac: #b2c78b; --orb-mint: #8fe1b8;
+      --badge-bg: rgba(67, 100, 69, .8); --badge-text: #f0ffe5;
+      --button-bg: #315343; --button-text: #d1e8d0; --reset-bg: #203f32; --reset-text: #c1dcc5;
+      --end-bg: #4e3546; --end-text: #ffb5c5;
+      --robot-shell-1: #a9efc1; --robot-shell-2: #5dc69b; --robot-shell-highlight: #d2ffe0;
+      --robot-body-1: #d7ee91; --robot-body-2: #a6d477; --robot-pod: #b2c78b; --robot-pod-center: #efffd9;
+      --robot-screen: #19382c; --robot-screen-glint: #507866; --robot-core: #f5ffd9;
+    }
+
+    :root[data-theme="sunset"] {
+      --ink: #fff5ef; --muted: #e4c2c8; --mint: #ffbc7a; --mint-ink: #4a2b35;
+      --lilac: #684052; --panel: rgba(54, 28, 43, .88); --border: rgba(235, 172, 179, .42);
+      --rose: #ff8a9c; --aqua: #81d3c1; --violet: #e7a0ed;
+      --background-image: radial-gradient(ellipse at 52% 110%, rgba(236, 115, 119, .2) 0, rgba(236, 115, 119, .055) 25%, transparent 46%), radial-gradient(ellipse at 100% 0%, rgba(198, 103, 176, .22), transparent 39%), linear-gradient(135deg, #291725 0%, #512639 52%, #673747 100%);
+      --orb-peach: #ffc08d; --orb-lilac: #e7a0ed; --orb-mint: #81d3c1;
+      --badge-bg: rgba(139, 57, 88, .78); --badge-text: #ffe8e4;
+      --button-bg: #63394e; --button-text: #f0cfd4; --reset-bg: #472b3d; --reset-text: #e7c0ca;
+      --end-bg: #633043; --end-text: #ffc0c8;
+      --robot-shell-1: #ffc1b6; --robot-shell-2: #e9849c; --robot-shell-highlight: #ffe0d6;
+      --robot-body-1: #ffd28a; --robot-body-2: #ff956f; --robot-pod: #e7a0ed; --robot-pod-center: #fff0ff;
+      --robot-screen: #382131; --robot-screen-glint: #87516a; --robot-core: #fff0d8;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      color: var(--ink);
+      font-family: Inter, ui-rounded, "SF Pro Rounded", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--background-image);
+    }
+
+    .orb {
+      position: fixed;
+      z-index: 0;
+      width: 164px;
+      height: 164px;
+      border-radius: 50%;
+      filter: blur(7px);
+      opacity: .82;
+      pointer-events: none;
+    }
+    .orb-peach { width: 164px; height: 164px; background: var(--orb-peach); left: -84px; top: 9%; }
+    .orb-lilac { width: 132px; height: 132px; background: var(--orb-lilac); right: -111px; top: 27%; filter: blur(9px); }
+    .orb-mint { width: 118px; height: 118px; background: var(--orb-mint); left: 15.5%; bottom: -68px; }
+
+    main {
+      position: relative;
+      z-index: 1;
+      width: min(410px, calc(100vw - 32px));
+      min-height: 384px;
+      padding: 25px 22px 22px;
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      background: var(--panel);
+      box-shadow: 0 20px 60px rgba(14, 10, 22, .12), inset 0 1px 0 rgba(255,255,255,.025);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .count-badge {
+      min-height: 21px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 10px 4px;
+      margin: 0 0 8px;
+      border-radius: 999px;
+      color: var(--badge-text);
+      background: var(--badge-bg);
+      font-size: 9px;
+      font-weight: 750;
+      letter-spacing: -.1px;
+      line-height: 1;
+    }
+
+    .hint {
+      margin: 0;
+      color: var(--muted);
+      font-size: 9.5px;
+      font-weight: 650;
+      line-height: 1.5;
+      min-height: 15px;
+    }
+
+    .phase-label {
+      margin: 12px 0 3px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 720;
+      letter-spacing: -.18px;
+      line-height: 1.3;
+    }
+
+    .timer {
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(47px, 12vw, 56px);
+      font-weight: 760;
+      letter-spacing: -3.7px;
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum" 1;
+    }
+
+    .robot-wrap {
+      height: 137px;
+      width: 148px;
+      margin-top: 2px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      --robot-motion: robot-float 2.9s ease-in-out infinite;
+    }
+    .robot {
+      width: 126px;
+      height: 126px;
+      overflow: visible;
+      animation: var(--robot-motion);
+      transform-origin: 50% 70%;
+    }
+    .robot .arm, .robot .leg, .robot .head, .robot .body, .robot .antenna {
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .robot .eye { transform-box: fill-box; transform-origin: center; fill: var(--ink); }
+    .robot .smile { transition: d .25s ease; stroke: var(--ink); }
+    .robot .antenna { stroke: var(--robot-shell-2); }
+    .robot .antenna-dot { fill: var(--rose); stroke: var(--ink); }
+    .robot .pod-outer { fill: var(--robot-pod); }
+    .robot .pod-inner { fill: var(--robot-pod-center); }
+    .robot .arm { stroke: var(--robot-body-1); }
+    .robot .leg { fill: var(--robot-pod); }
+    .robot #shellStop1 { stop-color: var(--robot-shell-1); }
+    .robot #shellStop2 { stop-color: var(--robot-shell-2); }
+    .robot #bodyStop1 { stop-color: var(--robot-body-1); }
+    .robot #bodyStop2 { stop-color: var(--robot-body-2); }
+    .robot .head { stroke: var(--robot-shell-highlight); }
+    .robot .screen { fill: var(--robot-screen); }
+    .robot .screen-glint { stroke: var(--robot-screen-glint); }
+    .robot .robot-core { fill: var(--robot-core); }
+    .robot .robot-heart, .robot .cheek { fill: var(--rose); }
+    .robot-wrap.is-paused { --robot-motion: robot-sleep 3.4s ease-in-out infinite; }
+    .robot-wrap.is-paused .eye { opacity: 0; }
+    .robot-wrap.is-paused .sleep-eye { opacity: 1; }
+    .robot-wrap .sleep-eye { opacity: 0; transition: opacity .2s ease; }
+    .robot-wrap.is-resting { --robot-motion: robot-dance 1.75s ease-in-out infinite; }
+    .robot-wrap.is-resting .arm-left { animation: arm-wave 1.2s ease-in-out infinite; transform-origin: 100% 0%; }
+    .robot-wrap.is-resting .arm-right { animation: arm-wave 1.2s ease-in-out infinite reverse; transform-origin: 0% 0%; }
+    .robot-wrap.is-ended { --robot-motion: robot-finish .9s cubic-bezier(.2,.8,.2,1) 1 forwards; }
+    .robot-wrap.is-ended::before,
+    .robot-wrap.is-ended::after {
+      content: "✦";
+      position: absolute;
+      color: var(--rose);
+      font-size: 19px;
+      opacity: 0;
+      animation: sparkle .75s ease-out 2;
+    }
+    .robot-wrap.is-ended::before { left: 15px; top: 31px; }
+    .robot-wrap.is-ended::after { right: 15px; top: 48px; animation-delay: .12s; color: var(--mint); }
+    .robot-wrap.is-ended .eye { transform: scaleY(.12); }
+
+    .controls {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+      gap: 7px;
+      margin-top: 2px;
+    }
+    button {
+      min-width: 0;
+      height: 36px;
+      border: 1px solid transparent;
+      border-radius: 13px;
+      padding: 0 7px;
+      color: var(--button-text);
+      background: var(--button-bg);
+      font: inherit;
+      font-size: 10px;
+      font-weight: 760;
+      letter-spacing: -.2px;
+      cursor: pointer;
+      transition: transform .15s ease, background .18s ease, color .18s ease, opacity .18s ease, border-color .18s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:not(:disabled):hover { filter: brightness(1.12); transform: translateY(-1px); }
+    button:not(:disabled):active { transform: translateY(0) scale(.98); }
+    button:focus-visible { outline: 2px solid var(--aqua); outline-offset: 3px; }
+    button:disabled { cursor: not-allowed; opacity: .39; }
+    #startBtn { background: var(--mint); color: var(--mint-ink); }
+    #startBtn:disabled { opacity: .65; }
+    #resetBtn { background: var(--reset-bg); color: var(--reset-text); }
+    #endBtn { background: var(--end-bg); color: var(--end-text); }
+
+    .theme-control {
+      position: fixed;
+      top: 20px;
+      right: 22px;
+      z-index: 10;
+    }
+    .theme-trigger {
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      color: var(--ink);
+      background: var(--panel);
+      box-shadow: 0 8px 26px rgba(0, 0, 0, .15);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .theme-trigger svg { width: 21px; height: 21px; }
+    .theme-panel {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      width: 218px;
+      padding: 11px;
+      display: grid;
+      gap: 5px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: var(--panel);
+      box-shadow: 0 16px 42px rgba(0, 0, 0, .28);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+    .theme-panel[hidden] { display: none; }
+    .theme-panel-title {
+      margin: 1px 7px 5px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+      text-align: left;
+      letter-spacing: .15px;
+    }
+    .theme-option {
+      width: 100%;
+      min-height: 38px;
+      height: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 7px 9px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--ink);
+      font-size: 11px;
+      text-align: left;
+    }
+    .theme-option[aria-pressed="true"] {
+      border-color: var(--border);
+      background: rgba(255, 255, 255, .075);
+    }
+    .theme-option-name { display: inline-flex; align-items: center; gap: 9px; }
+    .theme-swatches { display: inline-flex; align-items: center; padding-left: 5px; }
+    .theme-swatches span {
+      width: 10px;
+      height: 10px;
+      margin-left: -3px;
+      border: 1px solid rgba(255, 255, 255, .3);
+      border-radius: 50%;
+      background: var(--swatch);
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, .08);
+    }
+    .theme-option .check { opacity: 0; color: var(--mint); font-size: 13px; }
+    .theme-option[aria-pressed="true"] .check { opacity: 1; }
+    @media (max-width: 480px) {
+      .theme-control { top: 12px; right: 12px; }
+      .theme-trigger { width: 40px; height: 40px; border-radius: 13px; }
+      .theme-panel { width: 205px; }
+    }
+
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+    }
+
+    @keyframes robot-float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-4px) rotate(-1deg); }
+    }
+    @keyframes robot-sleep {
+      0%, 100% { transform: translateY(2px) rotate(-2deg); }
+      50% { transform: translateY(4px) rotate(2deg); }
+    }
+    @keyframes robot-dance {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50% { transform: translateY(-6px) rotate(3deg); }
+    }
+    @keyframes arm-wave {
+      0%, 100% { rotate: -7deg; }
+      50% { rotate: 12deg; }
+    }
+    @keyframes robot-finish {
+      0% { transform: scale(1) rotate(0); }
+      30% { transform: scale(1.08) rotate(-7deg) translateY(-7px); }
+      60% { transform: scale(1.08) rotate(7deg) translateY(-4px); }
+      100% { transform: scale(1) rotate(0); }
+    }
+    @keyframes sparkle {
+      0% { opacity: 0; transform: scale(.3) rotate(-25deg); }
+      40% { opacity: 1; transform: scale(1.15) rotate(10deg); }
+      100% { opacity: 0; transform: scale(.7) rotate(35deg) translateY(-12px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+    @media (max-width: 380px) {
+      main { padding: 22px 15px 17px; min-height: 370px; }
+      .controls { gap: 5px; }
+      button { padding: 0 3px; font-size: 9px; border-radius: 11px; }
+      .robot-wrap { height: 128px; }
+    }
+    @media (max-height: 500px) {
+      body { overflow-y: auto; padding: 16px 0; }
+      main { min-height: 0; padding-top: 18px; padding-bottom: 16px; }
+      .robot-wrap { height: 105px; }
+      .robot { width: 106px; height: 106px; }
+      .phase-label { margin-top: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb orb-peach" aria-hidden="true"></div>
+  <div class="orb orb-lilac" aria-hidden="true"></div>
+  <div class="orb orb-mint" aria-hidden="true"></div>
+
+  <div class="theme-control">
+    <button id="themeBtn" class="theme-trigger" type="button" aria-label="Cambiar colores del tema" aria-haspopup="true" aria-expanded="false" aria-controls="themePanel" title="Cambiar tema">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 3.2a8.8 8.8 0 1 0 0 17.6h1.2a2.2 2.2 0 0 0 1.45-3.85 1.65 1.65 0 0 1 1.08-2.88h1.03A4.98 4.98 0 0 0 21.7 9.1C20.55 5.6 16.65 3.2 12 3.2Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="7.6" cy="10" r="1.2" fill="var(--rose)"/>
+        <circle cx="11.4" cy="6.9" r="1.2" fill="var(--aqua)"/>
+        <circle cx="16.1" cy="8.1" r="1.2" fill="var(--violet)"/>
+        <circle cx="8.6" cy="14.2" r="1.2" fill="var(--mint)"/>
+      </svg>
+    </button>
+    <div id="themePanel" class="theme-panel" role="group" aria-label="Colores del tema" hidden>
+      <p class="theme-panel-title">Colores del tema</p>
+      <button class="theme-option" type="button" data-theme-choice="midnight" aria-pressed="true">
+        <span class="theme-option-name">Noche</span><span class="theme-swatches" aria-hidden="true"><span style="--swatch:#19223d"></span><span style="--swatch:#ffbd69"></span><span style="--swatch:#65dfd0"></span></span><span class="check" aria-hidden="true">✓</span>
+      </button>
+      <button class="theme-option" type="button" data-theme-choice="orchid" aria-pressed="false">
+        <span class="theme-option-name">Orquídea</span><span class="theme-swatches" aria-hidden="true"><span style="--swatch:#332047"></span><span style="--swatch:#f1a6df"></span><span style="--swatch:#bda4ff"></span></span><span class="check" aria-hidden="true">✓</span>
+      </button>
+      <button class="theme-option" type="button" data-theme-choice="ocean" aria-pressed="false">
+        <span class="theme-option-name">Océano</span><span class="theme-swatches" aria-hidden="true"><span style="--swatch:#103248"></span><span style="--swatch:#6de8de"></span><span style="--swatch:#77aef4"></span></span><span class="check" aria-hidden="true">✓</span>
+      </button>
+      <button class="theme-option" type="button" data-theme-choice="forest" aria-pressed="false">
+        <span class="theme-option-name">Bosque</span><span class="theme-swatches" aria-hidden="true"><span style="--swatch:#18372d"></span><span style="--swatch:#c7ef8b"></span><span style="--swatch:#8fe1b8"></span></span><span class="check" aria-hidden="true">✓</span>
+      </button>
+      <button class="theme-option" type="button" data-theme-choice="sunset" aria-pressed="false">
+        <span class="theme-option-name">Atardecer</span><span class="theme-swatches" aria-hidden="true"><span style="--swatch:#512639"></span><span style="--swatch:#ffbc7a"></span><span style="--swatch:#e7a0ed"></span></span><span class="check" aria-hidden="true">✓</span>
+      </button>
+    </div>
+  </div>
+
+  <main aria-label="Temporizador Pomodoro">
+    <div id="countBadge" class="count-badge">Pomodoro 0</div>
+    <p id="hint" class="hint">No rush — start when you like</p>
+    <p id="phaseLabel" class="phase-label">Quiet time</p>
+    <p id="timer" class="timer" role="timer" aria-label="Tiempo restante">25:00</p>
+
+    <div id="robotWrap" class="robot-wrap" aria-hidden="true">
+      <svg class="robot" viewBox="0 0 140 130" role="img" aria-label="Robot acompañante">
+        <defs>
+          <linearGradient id="shellGlow" x1="0" y1="0" x2="1" y2="1">
+            <stop id="shellStop1" offset="0" stop-color="#8df0df" />
+            <stop id="shellStop2" offset="1" stop-color="#43bdbd" />
+          </linearGradient>
+          <linearGradient id="bodyGlow" x1="0" y1="0" x2="1" y2="1">
+            <stop id="bodyStop1" offset="0" stop-color="#ffc978" />
+            <stop id="bodyStop2" offset="1" stop-color="#ff996f" />
+          </linearGradient>
+        </defs>
+        <!-- Little antenna and side audio pods -->
+        <path class="antenna" d="M70 23V14" fill="none" stroke="#65dfd0" stroke-width="4" />
+        <circle class="antenna-dot" cx="70" cy="9" r="6" fill="#ff7f9d" stroke="#ffd1d9" stroke-width="1.5" />
+        <circle class="pod-outer" cx="31" cy="51" r="10" fill="#9d91ff" />
+        <circle class="pod-outer" cx="109" cy="51" r="10" fill="#9d91ff" />
+        <circle class="pod-inner" cx="31" cy="51" r="4" fill="#dcd7ff" />
+        <circle class="pod-inner" cx="109" cy="51" r="4" fill="#dcd7ff" />
+        <!-- Arms and little feet -->
+        <path class="arm arm-left" d="M43 79L28 96" fill="none" stroke="#ffbd69" stroke-width="7" />
+        <path class="arm arm-right" d="M97 79L112 96" fill="none" stroke="#ffbd69" stroke-width="7" />
+        <ellipse class="leg" cx="55" cy="113" rx="10" ry="5" fill="#9d91ff" />
+        <ellipse class="leg" cx="85" cy="113" rx="10" ry="5" fill="#9d91ff" />
+        <!-- Warm little body -->
+        <rect class="body" x="43" y="69" width="54" height="43" rx="17" fill="url(#bodyGlow)" />
+        <rect class="robot-core" x="60" y="79" width="20" height="13" rx="6.5" fill="#fff0ca" opacity=".92" />
+        <path class="robot-heart" d="M70 82.2c-2.5-3.5-7-1.1-5.2 2.3L70 89l5.2-4.5c1.8-3.4-2.7-5.8-5.2-2.3Z" fill="#ff7f9d" />
+        <!-- Big friendly screen -->
+        <rect class="head" x="34" y="25" width="72" height="57" rx="21" fill="url(#shellGlow)" stroke="#a9fff0" stroke-width="1.5" />
+        <rect class="screen" x="41" y="32" width="58" height="43" rx="15" fill="#182641" />
+        <path class="screen-glint" d="M48 39h44" stroke="#4e6c84" stroke-width="1.5" stroke-linecap="round" opacity=".55" />
+        <!-- Eyes, sleepy lids, blush and smile -->
+        <circle class="eye" cx="58" cy="49" r="4.2" fill="#f4f7ff" />
+        <circle class="eye" cx="82" cy="49" r="4.2" fill="#f4f7ff" />
+        <path class="sleep-eye" d="M52 49q6 5 12 0M76 49q6 5 12 0" fill="none" stroke="#f4f7ff" stroke-width="2.8" stroke-linecap="round" />
+        <path class="smile" d="M57 59Q70 69 83 59" fill="none" stroke="#f4f7ff" stroke-width="2.8" stroke-linecap="round" />
+        <circle class="cheek" cx="49" cy="59" r="3" fill="#ff7f9d" opacity=".95" />
+        <circle class="cheek" cx="91" cy="59" r="3" fill="#ff7f9d" opacity=".95" />
+      </svg>
+    </div>
+
+    <div class="controls" aria-label="Controles del temporizador">
+      <button id="startBtn" type="button">Start</button>
+      <button id="pauseBtn" type="button" disabled>Pause</button>
+      <button id="nextBtn" type="button" disabled>Next</button>
+      <button id="resetBtn" type="button" disabled>Reset</button>
+      <button id="endBtn" type="button" disabled>End</button>
+    </div>
+    <p id="statusMessage" class="sr-only" aria-live="polite"></p>
+  </main>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const phases = [
+        { key: 'quiet', label: 'Quiet time', seconds: 25 * 60, kind: 'focus' },
+        { key: 'short', label: 'Short rest', seconds: 5 * 60, kind: 'rest' },
+        { key: 'quiet', label: 'Quiet time', seconds: 25 * 60, kind: 'focus' },
+        { key: 'short', label: 'Short rest', seconds: 5 * 60, kind: 'rest' },
+        { key: 'quiet', label: 'Quiet time', seconds: 25 * 60, kind: 'focus' },
+        { key: 'short', label: 'Short rest', seconds: 5 * 60, kind: 'rest' },
+        { key: 'quiet', label: 'Quiet time', seconds: 25 * 60, kind: 'focus' },
+        { key: 'long', label: 'Long rest', seconds: 15 * 60, kind: 'rest' }
+      ];
+
+      const els = {
+        badge: document.getElementById('countBadge'),
+        hint: document.getElementById('hint'),
+        label: document.getElementById('phaseLabel'),
+        timer: document.getElementById('timer'),
+        robot: document.getElementById('robotWrap'),
+        message: document.getElementById('statusMessage'),
+        start: document.getElementById('startBtn'),
+        pause: document.getElementById('pauseBtn'),
+        next: document.getElementById('nextBtn'),
+        reset: document.getElementById('resetBtn'),
+        end: document.getElementById('endBtn')
+      };
+
+      let phaseIndex = 0;
+      let completedPhases = 0;
+      let remainingSeconds = phases[phaseIndex].seconds;
+      let hasStarted = false;
+      let isRunning = false;
+      let isPaused = false;
+      let isEnded = false;
+      let deadline = 0;
+      let ticker = null;
+      let finishAnimationTimeout = null;
+      let finishAnimating = false;
+
+      const currentPhase = () => phases[phaseIndex];
+      const formatTime = (seconds) => {
+        const safeSeconds = Math.max(0, Math.ceil(seconds));
+        const minutes = Math.floor(safeSeconds / 60).toString().padStart(2, '0');
+        const secs = (safeSeconds % 60).toString().padStart(2, '0');
+        return `${minutes}:${secs}`;
+      };
+
+      function announce(message) {
+        els.message.textContent = '';
+        window.requestAnimationFrame(() => { els.message.textContent = message; });
+      }
+
+      function setRobotState() {
+        els.robot.classList.remove('is-paused', 'is-resting');
+        if (isEnded || finishAnimating) {
+          // Keep the one-shot finish animation alive across timer re-renders.
+          els.robot.classList.add('is-ended');
+          return;
+        }
+        els.robot.classList.remove('is-ended');
+        if (isPaused) {
+          els.robot.classList.add('is-paused');
+        } else if (hasStarted && currentPhase().kind === 'rest') {
+          els.robot.classList.add('is-resting');
+        }
+      }
+
+      function render() {
+        const phase = currentPhase();
+        els.badge.textContent = `Pomodoro ${completedPhases}`;
+        els.label.textContent = phase.label;
+        els.timer.textContent = formatTime(remainingSeconds);
+        els.timer.setAttribute('aria-label', `${formatTime(remainingSeconds)} restantes`);
+        document.title = `${formatTime(remainingSeconds)} · ${phase.label} — Pomodoro`;
+
+        if (isEnded) {
+          els.hint.textContent = 'Session ended — take a breath';
+        } else if (isPaused) {
+          els.hint.textContent = 'A little pause is okay';
+        } else if (hasStarted && phase.kind === 'rest') {
+          els.hint.textContent = phase.key === 'long' ? 'You earned a longer break' : 'Relax — you are doing great';
+        } else if (hasStarted) {
+          els.hint.textContent = 'One thing at a time';
+        } else {
+          els.hint.textContent = 'No rush — start when you like';
+        }
+
+        els.start.disabled = hasStarted && !isEnded;
+        els.pause.disabled = !hasStarted || isEnded;
+        els.pause.textContent = isPaused ? 'Resume' : 'Pause';
+        els.next.disabled = !hasStarted || isEnded;
+        els.reset.disabled = !hasStarted && !isEnded;
+        els.end.disabled = !hasStarted || isEnded;
+        setRobotState();
+      }
+
+      function stopTicker() {
+        if (ticker !== null) {
+          window.clearInterval(ticker);
+          ticker = null;
+        }
+      }
+
+      function startTicker() {
+        stopTicker();
+        deadline = Date.now() + remainingSeconds * 1000;
+        ticker = window.setInterval(() => {
+          if (!isRunning || isPaused || isEnded) return;
+          remainingSeconds = Math.max(0, (deadline - Date.now()) / 1000);
+          if (remainingSeconds <= 0) {
+            remainingSeconds = 0;
+            render();
+            completeCurrentPhase();
+            return;
+          }
+          render();
+        }, 200);
+      }
+
+      function triggerFinishAnimation() {
+        window.clearTimeout(finishAnimationTimeout);
+        finishAnimating = true;
+        els.robot.classList.remove('is-ended');
+        // Reflow restarts the one-shot celebration animation.
+        void els.robot.offsetWidth;
+        els.robot.classList.add('is-ended');
+        finishAnimationTimeout = window.setTimeout(() => {
+          finishAnimating = false;
+          setRobotState();
+        }, 1900);
+      }
+
+      function moveToNextPhase({ countAsCompleted = true, announceChange = true } = {}) {
+        // Increment as soon as we ARRIVE at a rest (short or long), not when
+        // leaving it. This works for both automatic transitions and Next.
+        phaseIndex = (phaseIndex + 1) % phases.length;
+        if (countAsCompleted && currentPhase().kind === 'rest') completedPhases += 1;
+        remainingSeconds = currentPhase().seconds;
+        if (isRunning && !isPaused && !isEnded) {
+          startTicker();
+        } else {
+          stopTicker();
+        }
+        render();
+        if (announceChange) announce(`${currentPhase().label}. ${formatTime(remainingSeconds)}.`);
+      }
+
+      function completeCurrentPhase() {
+        // Moving into a rest increments the Pomodoro counter immediately.
+        stopTicker();
+        moveToNextPhase({ countAsCompleted: true, announceChange: true });
+        // A finished phase flows directly into the next one. Trigger the
+        // celebration after rendering so the normal robot state won't cancel it.
+        isRunning = true;
+        isPaused = false;
+        isEnded = false;
+        render();
+        triggerFinishAnimation();
+        startTicker();
+      }
+
+      function start() {
+        // Start always begins a fresh 25-minute Quiet time. The counter is only
+        // reset by Reset; End is a stop, not a counter reset.
+        stopTicker();
+        window.clearTimeout(finishAnimationTimeout);
+        finishAnimating = false;
+        phaseIndex = 0;
+        remainingSeconds = phases[0].seconds;
+        hasStarted = true;
+        isRunning = true;
+        isPaused = false;
+        isEnded = false;
+        render();
+        startTicker();
+        announce('Quiet time started. 25 minutes on the clock.');
+      }
+
+      function togglePause() {
+        if (!hasStarted || isEnded) return;
+        if (isPaused) {
+          isPaused = false;
+          isRunning = true;
+          render();
+          startTicker();
+          announce('Timer resumed.');
+        } else {
+          if (ticker !== null) {
+            remainingSeconds = Math.max(0, (deadline - Date.now()) / 1000);
+          }
+          isPaused = true;
+          isRunning = false;
+          stopTicker();
+          render();
+          announce('Timer paused.');
+        }
+      }
+
+      function next() {
+        if (!hasStarted || isEnded) return;
+        // If the timer is paused, keep the next phase paused as well.
+        // The counter advances when this moves into a rest phase.
+        moveToNextPhase({ countAsCompleted: true, announceChange: true });
+        if (isPaused) {
+          isRunning = false;
+          stopTicker();
+          render();
+        } else {
+          isRunning = true;
+          startTicker();
+        }
+      }
+
+      function reset() {
+        stopTicker();
+        window.clearTimeout(finishAnimationTimeout);
+        finishAnimating = false;
+        phaseIndex = 0;
+        completedPhases = 0;
+        remainingSeconds = phases[0].seconds;
+        hasStarted = false;
+        isRunning = false;
+        isPaused = false;
+        isEnded = false;
+        render();
+        announce('Pomodoro reset. Ready when you are.');
+      }
+
+      function end() {
+        if (!hasStarted || isEnded) return;
+        if (ticker !== null && isRunning && !isPaused) {
+          remainingSeconds = Math.max(0, (deadline - Date.now()) / 1000);
+        }
+        stopTicker();
+        isRunning = false;
+        isPaused = false;
+        isEnded = true;
+        render();
+        triggerFinishAnimation();
+        announce('Session ended. Press Start for a new Quiet time or Reset to begin from zero.');
+      }
+
+      els.start.addEventListener('click', start);
+      els.pause.addEventListener('click', togglePause);
+      els.next.addEventListener('click', next);
+      els.reset.addEventListener('click', reset);
+      els.end.addEventListener('click', end);
+
+      // Theme palette: all styles live in this same HTML file.
+      const themeBtn = document.getElementById('themeBtn');
+      const themePanel = document.getElementById('themePanel');
+      const themeOptions = Array.from(document.querySelectorAll('[data-theme-choice]'));
+      const allowedThemes = new Set(themeOptions.map((option) => option.dataset.themeChoice));
+
+      function setTheme(theme, persist = true) {
+        if (!allowedThemes.has(theme)) theme = 'midnight';
+        document.documentElement.dataset.theme = theme;
+        themeOptions.forEach((option) => {
+          option.setAttribute('aria-pressed', String(option.dataset.themeChoice === theme));
+        });
+        if (persist) {
+          try { window.localStorage.setItem('pomodoro-color-theme', theme); } catch (_) { /* Storage may be unavailable for local files. */ }
+        }
+      }
+
+      function closeThemePanel() {
+        themePanel.hidden = true;
+        themeBtn.setAttribute('aria-expanded', 'false');
+      }
+
+      themeBtn.addEventListener('click', () => {
+        const shouldOpen = themePanel.hidden;
+        themePanel.hidden = !shouldOpen;
+        themeBtn.setAttribute('aria-expanded', String(shouldOpen));
+        if (shouldOpen) themeOptions.find((option) => option.getAttribute('aria-pressed') === 'true')?.focus();
+      });
+      themeOptions.forEach((option) => {
+        option.addEventListener('click', () => setTheme(option.dataset.themeChoice));
+      });
+      document.addEventListener('click', (event) => {
+        if (!themePanel.hidden && !event.target.closest('.theme-control')) closeThemePanel();
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !themePanel.hidden) {
+          closeThemePanel();
+          themeBtn.focus();
+        }
+      });
+
+      try {
+        const savedTheme = window.localStorage.getItem('pomodoro-color-theme');
+        if (savedTheme && allowedThemes.has(savedTheme)) setTheme(savedTheme, false);
+      } catch (_) { /* Default theme is used when storage is unavailable. */ }
+
+      render();
+    })();
+  </script>
+</body>
+</html>
