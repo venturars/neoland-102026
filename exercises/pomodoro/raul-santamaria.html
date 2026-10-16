@@ -3,38 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#c0392b">
-  <title>Pomodoro</title>
-  <!-- Favicon inicial (el JavaScript lo cambia con el modo) -->
-  <link rel="icon" id="favicon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2064%2064'%3E%3Ccircle%20cx%3D'32'%20cy%3D'32'%20r%3D'30'%20fill%3D'%23c0392b'%2F%3E%3Ccircle%20cx%3D'32'%20cy%3D'32'%20r%3D'17'%20fill%3D'none'%20stroke%3D'white'%20stroke-width%3D'7'%2F%3E%3C%2Fsvg%3E">
-
+  <meta name="theme-color" content="#2d2640">
+  <title>Tiempo de concentración</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%232d2640'/%3E%3Ccircle cx='28' cy='32' r='14' fill='%23f6f0e4'/%3E%3Ccircle cx='36' cy='28' r='11' fill='%232d2640'/%3E%3C/svg%3E">
   <style>
-    /* =========================================================
-       1. VARIABLES Y PALETA POR MODO
-       El modo activo se indica con data-mode en <body>.
-       ========================================================= */
-    :root {
-      --bg: #c0392b;          /* fondo de página */
-      --bg-dark: #a52e22;     /* degradado inferior */
-      --accent: #c0392b;      /* color del texto sobre botón primario */
-      --fg: #ffffff;          /* texto principal */
-      --fg-soft: rgba(255, 255, 255, 0.9);
-      --card: rgba(0, 0, 0, 0.16);    /* tarjeta oscura: da contraste >= 4.5:1 al texto blanco */
-      --card-border: rgba(255, 255, 255, 0.22);
-      --track: rgba(255, 255, 255, 0.22);
-      --focus: #ffffff;
-
-      --radius: 20px;
-      --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    }
-
-    body[data-mode="pomodoro"] { --bg: #c0392b; --bg-dark: #a52e22; --accent: #c0392b; }
-    body[data-mode="short"]    { --bg: #0f766e; --bg-dark: #0b5a54; --accent: #0f766e; }
-    body[data-mode="long"]     { --bg: #4338ca; --bg-dark: #3328a3; --accent: #4338ca; }
-
-    /* =========================================================
-       2. BASE
-       ========================================================= */
     *, *::before, *::after { box-sizing: border-box; }
 
     html { -webkit-text-size-adjust: 100%; }
@@ -43,1542 +15,555 @@
       margin: 0;
       min-height: 100vh;
       min-height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      font-family: var(--font);
-      color: var(--fg);
-      background: linear-gradient(160deg, var(--bg), var(--bg-dark));
-      transition: background 0.4s ease;
+      font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+      color: #f6f0e4;
+      background: radial-gradient(1200px 700px at 50% 0%, #3a3158 0%, #2d2640 42%, #221c36 100%);
     }
 
-    button { font: inherit; color: inherit; cursor: pointer; }
+    button { font: inherit; }
+
+    :focus { outline: none; }
 
     :focus-visible {
-      outline: 3px solid var(--focus);
+      outline: 3px solid #f6f0e4;
       outline-offset: 3px;
     }
 
     .sr-only {
       position: absolute;
-      width: 1px; height: 1px;
-      margin: -1px; padding: 0;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
       overflow: hidden;
       clip: rect(0, 0, 0, 0);
       white-space: nowrap;
       border: 0;
     }
 
-    /* =========================================================
-       3. LAYOUT
-       ========================================================= */
-    .app-header {
+    .orbs {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(46px);
+      opacity: 0.42;
+      animation: float 16s ease-in-out infinite;
+    }
+
+    .orb-a {
+      width: 280px;
+      height: 280px;
+      background: #7c6bb5;
+      top: -70px;
+      left: -80px;
+    }
+
+    .orb-b {
+      width: 240px;
+      height: 240px;
+      background: #e0b15a;
+      top: 18%;
+      right: -70px;
+      animation-delay: -5s;
+      opacity: 0.28;
+    }
+
+    .orb-c {
+      width: 260px;
+      height: 260px;
+      background: #d9899a;
+      bottom: -90px;
+      left: 28%;
+      animation-delay: -9s;
+      opacity: 0.26;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      max-width: 460px;
-      margin: 0 auto;
-      padding: 16px 16px 0;
-    }
-
-    .app-title {
-      margin: 0;
-      font-size: 1.15rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-    }
-
-    .icon-btn {
-      display: inline-flex;
-      align-items: center;
       justify-content: center;
-      min-width: 44px;
-      min-height: 44px;
-      padding: 0 12px;
-      gap: 8px;
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-    }
-    .icon-btn:hover { background: rgba(0, 0, 0, 0.3); }
-    .icon-btn svg { width: 20px; height: 20px; flex: none; }
-
-    .app-main {
-      flex: 1;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      width: 100%;
-      padding: 20px 16px 32px;
+      padding: 24px 16px;
     }
 
     .card {
       width: 100%;
-      max-width: 460px;
-      padding: 20px 16px 24px;
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius);
-      text-align: center;
-      backdrop-filter: blur(4px);
-    }
-
-    /* =========================================================
-       4. PESTAÑAS DE MODO
-       ========================================================= */
-    .mode-tabs {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      padding: 6px;
-      background: rgba(0, 0, 0, 0.14);
-      border-radius: 14px;
-    }
-
-    .mode-tab {
-      min-height: 44px;
-      padding: 8px 6px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      line-height: 1.2;
-      background: transparent;
-      border: 0;
-      border-radius: 10px;
-      color: var(--fg-soft);
-      transition: background 0.2s, color 0.2s;
-    }
-    .mode-tab:hover { background: rgba(255, 255, 255, 0.12); }
-    .mode-tab[aria-selected="true"] {
-      background: var(--fg);
-      color: var(--accent);
-    }
-
-    /* =========================================================
-       5. TEMPORIZADOR (ANILLO + TIEMPO)
-       ========================================================= */
-    .timer {
-      position: relative;
-      width: min(78vw, 320px);
-      aspect-ratio: 1;
-      margin: 28px auto 8px;
-    }
-
-    .ring {
-      width: 100%;
-      height: 100%;
-      overflow: visible;         /* que el brillo del anillo no se recorte en el borde */
-      transform: rotate(-90deg); /* el progreso arranca arriba */
-    }
-    .ring-track,
-    .ring-progress {
-      fill: none;
-      stroke-width: 8;
-    }
-    .ring-track { stroke: var(--track); }
-    .ring-progress {
-      stroke: var(--fg);
-      stroke-linecap: round;
-      stroke-dasharray: 565.49;   /* 2 * PI * 90 */
-      stroke-dashoffset: 0;       /* 0 = anillo completo */
-      transition: stroke-dashoffset 0.25s linear;
-    }
-
-    .timer-readout {
-      position: absolute;
-      inset: 0;
+      max-width: 26rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 4px;
+      text-align: center;
+      padding: 1.6rem 1.35rem 1.35rem;
+      background: #342b4e;
+      border: 1px solid rgba(246, 240, 228, 0.12);
+      border-radius: 28px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
     }
-
-    .time {
-      font-size: clamp(2.6rem, 14vw, 4.6rem);
-      font-weight: 700;
-      line-height: 1;
-      font-variant-numeric: tabular-nums;
-      letter-spacing: 0.01em;
-    }
-
-    .mode-label {
-      font-size: 0.95rem;
-      color: var(--fg-soft);
-    }
-
-    /* =========================================================
-       6. CONTROLES
-       ========================================================= */
-    .controls {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .btn {
-      min-height: 48px;
-      padding: 0 22px;
-      font-weight: 600;
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
-      transition: transform 0.1s, background 0.2s;
-    }
-    .btn:hover { background: rgba(0, 0, 0, 0.3); }
-    .btn:active { transform: scale(0.97); }
-
-    .btn-primary {
-      min-width: 150px;
-      font-size: 1.1rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--accent);
-      background: var(--fg);
-      border-color: transparent;
-      box-shadow: 0 6px 0 rgba(0, 0, 0, 0.18);
-    }
-    .btn-primary:hover { background: #f4f4f4; }
-    .btn-primary:active { transform: translateY(3px); box-shadow: 0 3px 0 rgba(0, 0, 0, 0.18); }
-
-    /* Animación de fin de sesión: pulso del anillo (la desactiva prefers-reduced-motion) */
-    .timer.is-finished { animation: finish-pulse 0.8s ease-in-out 3; }
-    @keyframes finish-pulse {
-      0%, 100% { transform: scale(1); }
-      50%      { transform: scale(1.06); }
-    }
-
-    /* Estados según data-status (idle | running | paused) en <body> */
-    body[data-status="running"] .ring-progress {
-      filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.55));   /* brillo sutil mientras corre */
-    }
-    body[data-status="paused"] .time {
-      animation: pause-blink 1.6s ease-in-out infinite;          /* el tiempo "respira" en pausa */
-    }
-    @keyframes pause-blink {
-      0%, 100% { opacity: 1; }
-      50%      { opacity: 0.45; }
-    }
-
-    /* Pista de atajos (solo en dispositivos con puntero) */
-    .hint {
-      margin: 16px 0 0;
-      font-size: 0.85rem;
-      color: var(--fg-soft);
-    }
-    kbd {
-      font: inherit;
-      font-weight: 600;
-      padding: 1px 7px;
-      border: 1px solid var(--card-border);
-      border-radius: 6px;
-      background: rgba(0, 0, 0, 0.18);
-    }
-    @media (hover: none) { .hint { display: none; } }
-
-    button { touch-action: manipulation; }   /* sin retardo ni zoom por doble toque */
-
-    .noscript { margin: 0; padding: 16px; text-align: center; }
-
-    /* =========================================================
-       7. CONTADOR DE POMODOROS
-       ========================================================= */
-    .progress {
-      margin-top: 26px;
-      padding-top: 18px;
-      border-top: 1px solid var(--card-border);
-    }
-
-    .cycle-label {
-      margin: 0 0 10px;
-      font-size: 0.95rem;
-      color: var(--fg-soft);
-    }
-
-    .dots {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin: 0 0 12px;
-      padding: 0;
-      list-style: none;
-    }
-    .dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      border: 2px solid var(--fg);
-      background: transparent;
-    }
-    .dot.is-done { background: var(--fg); }
 
     .count {
       margin: 0;
-      font-size: 0.95rem;
+      padding: 0.32rem 0.8rem;
+      border-radius: 999px;
+      background: #4a3d6b;
+      color: #f0d9a0;
+      font-size: 0.85rem;
       font-weight: 600;
     }
 
-    /* =========================================================
-       8. DIÁLOGO DE AJUSTES
-       ========================================================= */
-    .settings {
-      width: min(92vw, 440px);
-      max-height: 90vh;
-      padding: 0;
-      color: #1f2328;
-      background: #ffffff;
-      border: 0;
-      border-radius: var(--radius);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
-    }
-    .settings::backdrop { background: rgba(0, 0, 0, 0.5); }
-    .settings :focus-visible { outline-color: #1f2328; }
-
-    .settings-form { display: flex; flex-direction: column; max-height: 90vh; }
-
-    .settings-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 20px;
-      border-bottom: 1px solid #e5e7eb;
-    }
-    .settings-head h2 { margin: 0; font-size: 1.15rem; }
-    .settings-head .close-btn {
-      min-width: 44px;
-      min-height: 44px;
-      font-size: 1.4rem;
-      line-height: 1;
-      background: transparent;
-      border: 0;
-      border-radius: 10px;
-    }
-    .settings-head .close-btn:hover { background: #f3f4f6; }
-
-    .settings-body {
-      padding: 8px 20px 16px;
-      overflow-y: auto;
+    .message {
+      margin: 0.9rem 0 0;
+      max-width: 20rem;
+      color: #cbbde0;
+      font-size: 0.98rem;
+      line-height: 1.45;
     }
 
-    .settings fieldset {
-      margin: 12px 0 0;
-      padding: 0;
-      border: 0;
+    .mode {
+      margin: 0.85rem 0 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #f0d9a0;
+      transition: color 0.3s ease;
     }
-    .settings legend {
-      padding: 0;
-      margin-bottom: 8px;
-      font-size: 0.8rem;
+
+    body[data-mode="short"] .mode { color: #b7e0d4; }
+    body[data-mode="long"] .mode { color: #f0c49a; }
+
+    .time {
+      margin: 0.35rem 0 0;
+      font-size: 4.5rem;
       font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #57606a;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+      color: #f6f0e4;
     }
 
-    .field {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      min-height: 44px;
-      padding: 4px 0;
-    }
-    .field label { flex: 1; }
-    .field input[type="number"],
-    .field select {
-      width: 96px;
-      min-height: 40px;
-      padding: 4px 8px;
-      font: inherit;
-      color: inherit;
-      background: #fff;
-      border: 1px solid #c8ced6;
-      border-radius: 8px;
-    }
-    .field select { width: 140px; }
-    .field input[type="checkbox"] { width: 22px; height: 22px; }
-    .field input[type="range"] { width: 140px; }
+    body[data-status="paused"] .time { opacity: 0.8; }
 
-    .settings-foot {
+    .companion {
+      width: 148px;
+      height: auto;
+      margin: 0.35rem 0 0.2rem;
+      display: block;
+      transform-origin: 50% 70%;
+    }
+
+    body[data-status="running"] .companion {
+      animation: sway 3.4s ease-in-out infinite;
+    }
+
+    .companion-z {
+      opacity: 0;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    body[data-mode="short"] .companion-z,
+    body[data-mode="long"] .companion-z {
+      opacity: 1;
+      animation: rise 3.2s ease-in-out infinite;
+    }
+
+    .controls {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      justify-content: space-between;
-      padding: 14px 20px;
-      border-top: 1px solid #e5e7eb;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      margin-top: 0.85rem;
     }
-    /* Botones dentro del diálogo (fondo blanco): colores propios */
-    .settings .btn {
+
+    .controls button {
+      min-height: 44px;
       padding: 0 16px;
-      color: #1f2328;
-      background: #f3f4f6;
-      border-color: #d8dee4;
-    }
-    .settings .btn:hover { background: #e8ebef; }
-    .settings .btn-danger { color: #b42318; }
-    .settings .btn-save {
-      color: #fff;
-      background: var(--bg);
-      border-color: transparent;
-    }
-    .settings .btn-save:hover { background: var(--bg-dark); }
-
-    .form-error {
-      flex: 1 1 100%;
-      margin: 0;
-      font-size: 0.9rem;
-      color: #b42318;
-    }
-    .field input[aria-invalid="true"] {
-      border-color: #b42318;
-      box-shadow: 0 0 0 2px rgba(180, 35, 24, 0.2);
+      border: 0;
+      border-radius: 999px;
+      font-weight: 600;
+      cursor: pointer;
     }
 
-    /* =========================================================
-       9. RESPONSIVE Y PREFERENCIAS DEL USUARIO
-       ========================================================= */
-    @media (max-width: 460px) {
-      .mode-tab { font-size: 0.8rem; }
-      /* Iniciar/Pausar a todo el ancho y, debajo, Reiniciar y Saltar a medias */
-      .btn-primary { flex: 1 1 100%; }
-      .controls .btn:not(.btn-primary) { flex: 1 1 0; padding: 0 12px; }
+    .controls button:disabled {
+      opacity: 0.45;
+      cursor: default;
     }
 
-    @media (min-width: 700px) {
-      .app-main { padding-top: 40px; }
-      .card { padding: 28px 28px 32px; }
+    .controls button:not(:disabled):hover { filter: brightness(1.08); }
+
+    .controls button:not(:disabled):active { transform: translateY(1px); }
+
+    #start { background: #e0a23a; color: #2a2108; }
+    #pause,
+    #next { background: #4a4268; color: #f6f0e4; }
+    #reset { background: #3c3654; color: #f6f0e4; }
+    #end { background: #6b4552; color: #ffd5d8; }
+
+    @media (max-width: 380px) {
+      .time { font-size: 3.25rem; }
+      .controls button { padding: 0 12px; }
+    }
+
+    @media (max-height: 700px) {
+      .companion { width: 104px; }
+      .time { font-size: 3.5rem; }
+      .card { padding: 1.15rem 1.1rem 1rem; }
+      .message { margin-top: 0.6rem; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(18px); }
+    }
+
+    @keyframes sway {
+      0%, 100% { transform: rotate(-2.5deg); }
+      50% { transform: rotate(2.5deg); }
+    }
+
+    @keyframes rise {
+      0%, 100% { transform: translateY(0); opacity: 0.7; }
+      50% { transform: translateY(-8px); opacity: 1; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        transition: none !important;
-        animation: none !important;
+      .orb,
+      body[data-status="running"] .companion,
+      body[data-mode="short"] .companion-z,
+      body[data-mode="long"] .companion-z,
+      .mode,
+      .controls button {
+        animation: none;
+        transition: none;
       }
+
+      .controls button:not(:disabled):active { transform: none; }
     }
   </style>
 </head>
+<body data-mode="focus" data-status="idle">
+  <div class="orbs" aria-hidden="true">
+    <span class="orb orb-a"></span>
+    <span class="orb orb-b"></span>
+    <span class="orb orb-c"></span>
+  </div>
 
-<body data-mode="pomodoro">
-
-  <header class="app-header">
-    <h1 class="app-title">🍅 Pomodoro</h1>
-    <button type="button" class="icon-btn" id="settings-btn" aria-haspopup="dialog" aria-controls="settings-dialog">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <circle cx="12" cy="12" r="3"></circle>
-        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+  <main>
+    <h1 class="sr-only">Pomodoro de estudio</h1>
+    <section class="card">
+      <p class="count" id="count">Pomodoro 0</p>
+      <p class="message" id="message" aria-live="polite">Sin prisa. Empieza cuando quieras.</p>
+      <p class="mode" id="mode">Tiempo de concentración</p>
+      <p class="time" id="time">25:00</p>
+      <svg class="companion" viewBox="0 0 160 120" aria-hidden="true">
+        <g class="companion-body">
+          <circle cx="74" cy="68" r="34" fill="#d9c7f2"/>
+          <circle cx="60" cy="56" r="12" fill="#f6f0e4" opacity="0.28"/>
+          <path d="M58 66 q7 7 14 0" fill="none" stroke="#2a2340" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M80 66 q7 7 14 0" fill="none" stroke="#2a2340" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M66 82 q10 7 18 0" fill="none" stroke="#2a2340" stroke-width="2.4" stroke-linecap="round"/>
+          <circle cx="54" cy="76" r="3.2" fill="#d9899a"/>
+          <circle cx="98" cy="76" r="3.2" fill="#d9899a"/>
+          <path d="M74 22 l2.2 6.2 6.2 2.2 -6.2 2.2 -2.2 6.2 -2.2 -6.2 -6.2 -2.2 6.2 -2.2 z" fill="#f0d9a0"/>
+        </g>
+        <g class="companion-z">
+          <text x="116" y="48" fill="#f0d9a0" font-size="22" font-family="Georgia, 'Palatino Linotype', Palatino, serif">z</text>
+        </g>
       </svg>
-      <span>Ajustes</span>
-    </button>
-  </header>
-
-  <main class="app-main">
-    <noscript><p class="noscript">Esta aplicación necesita JavaScript para funcionar.</p></noscript>
-    <section class="card" aria-label="Temporizador Pomodoro">
-
-      <!-- Selector de modo -->
-      <div class="mode-tabs" role="tablist" aria-label="Modo del temporizador">
-        <button type="button" class="mode-tab" role="tab" id="tab-pomodoro" data-mode="pomodoro" aria-selected="true" aria-controls="timer-panel">Pomodoro</button>
-        <button type="button" class="mode-tab" role="tab" id="tab-short" data-mode="short" aria-selected="false" aria-controls="timer-panel" tabindex="-1">Descanso corto</button>
-        <button type="button" class="mode-tab" role="tab" id="tab-long" data-mode="long" aria-selected="false" aria-controls="timer-panel" tabindex="-1">Descanso largo</button>
-      </div>
-
-      <div id="timer-panel" role="tabpanel" aria-labelledby="tab-pomodoro">
-
-        <!-- Anillo de progreso + tiempo -->
-        <div class="timer">
-          <svg class="ring" viewBox="0 0 200 200" aria-hidden="true">
-            <circle class="ring-track" cx="100" cy="100" r="90"></circle>
-            <circle class="ring-progress" id="ring-progress" cx="100" cy="100" r="90"></circle>
-          </svg>
-          <div class="timer-readout">
-            <div class="time" id="time" role="timer" aria-label="25 minutos y 0 segundos">25:00</div>
-            <div class="mode-label" id="mode-label">Hora de concentrarse</div>
-          </div>
-        </div>
-
-        <!-- Controles -->
-        <div class="controls">
-          <button type="button" class="btn btn-primary" id="toggle-btn" aria-keyshortcuts="Space">Iniciar</button>
-          <button type="button" class="btn" id="reset-btn" aria-keyshortcuts="R">Reiniciar</button>
-          <button type="button" class="btn" id="skip-btn">Saltar</button>
-        </div>
-        <p class="hint"><kbd>Espacio</kbd> iniciar / pausar · <kbd>R</kbd> reiniciar</p>
-
-        <!-- Ciclo y contador -->
-        <div class="progress">
-          <p class="cycle-label" id="cycle-label">Pomodoro 1 de 4</p>
-          <ul class="dots" id="dots" aria-hidden="true">
-            <li class="dot"></li>
-            <li class="dot"></li>
-            <li class="dot"></li>
-            <li class="dot"></li>
-          </ul>
-          <p class="count">Completados hoy: <span id="count">0</span></p>
-        </div>
-
+      <div class="controls">
+        <button type="button" id="start">Empezar</button>
+        <button type="button" id="pause" disabled>Pausar</button>
+        <button type="button" id="next" disabled>Siguiente</button>
+        <button type="button" id="reset" disabled>Reiniciar</button>
+        <button type="button" id="end" disabled>Terminar</button>
       </div>
     </section>
   </main>
 
-  <!-- Anuncios para lectores de pantalla -->
-  <div class="sr-only" id="live-region" aria-live="polite" aria-atomic="true"></div>
-
-  <!-- Diálogo de ajustes -->
-  <dialog class="settings" id="settings-dialog" aria-labelledby="settings-title">
-    <form method="dialog" class="settings-form" id="settings-form" novalidate>
-
-      <div class="settings-head">
-        <h2 id="settings-title">Ajustes</h2>
-        <button type="button" class="close-btn" id="settings-close" aria-label="Cerrar ajustes">×</button>
-      </div>
-
-      <div class="settings-body">
-
-        <fieldset>
-          <legend>Duración (minutos)</legend>
-          <div class="field">
-            <label for="set-pomodoro">Pomodoro</label>
-            <input type="number" id="set-pomodoro" min="1" max="180" step="1" value="25" inputmode="numeric">
-          </div>
-          <div class="field">
-            <label for="set-short">Descanso corto</label>
-            <input type="number" id="set-short" min="1" max="180" step="1" value="5" inputmode="numeric">
-          </div>
-          <div class="field">
-            <label for="set-long">Descanso largo</label>
-            <input type="number" id="set-long" min="1" max="180" step="1" value="15" inputmode="numeric">
-          </div>
-          <div class="field">
-            <label for="set-long-every">Descanso largo cada (pomodoros)</label>
-            <input type="number" id="set-long-every" min="2" max="12" step="1" value="4" inputmode="numeric">
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Comportamiento</legend>
-          <div class="field">
-            <label for="set-autostart">Iniciar siguiente sesión automáticamente</label>
-            <input type="checkbox" id="set-autostart">
-          </div>
-          <div class="field">
-            <label for="set-shortcuts">Atajos de teclado (Espacio y R)</label>
-            <input type="checkbox" id="set-shortcuts" checked>
-          </div>
-          <div class="field">
-            <label for="set-notifications">Notificaciones del navegador</label>
-            <input type="checkbox" id="set-notifications">
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Sonido</legend>
-          <div class="field">
-            <label for="set-sound">Sonido al terminar</label>
-            <input type="checkbox" id="set-sound" checked>
-          </div>
-          <div class="field">
-            <label for="set-tone">Tono</label>
-            <select id="set-tone">
-              <option value="suave" selected>Suave</option>
-              <option value="campana">Campana</option>
-              <option value="digital">Digital</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="set-volume">Volumen</label>
-            <input type="range" id="set-volume" min="0" max="1" step="0.05" value="0.7">
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Contador</legend>
-          <div class="field">
-            <label for="reset-count-btn">Poner a cero los pomodoros de hoy</label>
-            <button type="button" class="btn btn-danger" id="reset-count-btn">Reiniciar</button>
-          </div>
-        </fieldset>
-
-      </div>
-
-      <div class="settings-foot">
-        <p class="form-error" id="settings-error" role="alert" hidden></p>
-        <button type="button" class="btn" id="settings-defaults">Valores por defecto</button>
-        <button type="submit" class="btn btn-save" id="settings-save" value="save">Guardar</button>
-      </div>
-
-    </form>
-  </dialog>
-
   <script>
-    (function () {
-      'use strict';
+    var DURATIONS = { focus: 1500, short: 300, long: 900 };
+    var LONG_EVERY = 4;
 
-      /* =========================================================
-         1. CONSTANTES Y VALORES POR DEFECTO
-         ========================================================= */
-      const DEFAULT_SETTINGS = {
-        pomodoro: 25,        // minutos
-        short: 5,
-        long: 15,
-        longEvery: 4,        // descanso largo cada N pomodoros
-        autoStart: false,
-        shortcuts: true,     // atajos de teclado (Espacio y R)
-        sound: true,
-        tone: 'suave',
-        volume: 0.7,
-        notifications: false
+    var MODE_LABELS = {
+      focus: "Tiempo de concentración",
+      short: "Descanso corto",
+      long: "Descanso largo"
+    };
+
+    var TITLE_LABELS = {
+      focus: "Concentración",
+      short: "Descanso corto",
+      long: "Descanso largo"
+    };
+
+    var MESSAGES = {
+      idle: "Sin prisa. Empieza cuando quieras.",
+      focus: "Un minuto detrás de otro.",
+      paused: "La pausa también vale. Quédate lo que necesites.",
+      rest: "Descansar también es estudiar.",
+      done: "Bien. Has estado aquí."
+    };
+
+    function createInitialState() {
+      return {
+        mode: "focus",
+        status: "idle",
+        remaining: DURATIONS.focus,
+        completed: 0,
+        endsAt: null
       };
+    }
 
-      const MODES = ['pomodoro', 'short', 'long'];
+    function formatTime(seconds) {
+      var safe = Math.max(0, Math.floor(seconds));
+      var minutes = Math.floor(safe / 60);
+      var secs = safe % 60;
+      return String(minutes).padStart(2, "0") + ":" + String(secs).padStart(2, "0");
+    }
 
-      const MODE_NAMES = {
-        pomodoro: 'Pomodoro',
-        short: 'Descanso corto',
-        long: 'Descanso largo'
+    function phaseAfter(state) {
+      if (state.mode !== "focus") return "focus";
+      var nextCount = state.completed + 1;
+      return nextCount % LONG_EVERY === 0 ? "long" : "short";
+    }
+
+    function secondsLeft(state, now) {
+      if (state.endsAt == null) return state.remaining;
+      return Math.max(0, Math.ceil((state.endsAt - now) / 1000));
+    }
+
+    function advance(state, now) {
+      var completed = state.mode === "focus" ? state.completed + 1 : state.completed;
+      var mode = phaseAfter(state);
+      var duration = DURATIONS[mode];
+      return {
+        mode: mode,
+        status: "running",
+        remaining: duration,
+        completed: completed,
+        endsAt: now + duration * 1000
       };
+    }
 
-      const MODE_HINTS = {
-        pomodoro: 'Hora de concentrarse',
-        short: 'Respira un momento',
-        long: 'Desconecta un rato'
+    function startPhase(state, now) {
+      var duration = DURATIONS[state.mode];
+      return {
+        mode: state.mode,
+        status: "running",
+        remaining: duration,
+        completed: state.completed,
+        endsAt: now + duration * 1000
       };
+    }
 
-      const MODE_COLORS = {          // deben coincidir con el CSS
-        pomodoro: '#c0392b',
-        short: '#0f766e',
-        long: '#4338ca'
+    function pause(state, now) {
+      return {
+        mode: state.mode,
+        status: "paused",
+        remaining: secondsLeft(state, now),
+        completed: state.completed,
+        endsAt: null
       };
+    }
 
-      const RING_LENGTH = 2 * Math.PI * 90;   // perímetro del anillo SVG (r = 90)
-      const BASE_TITLE = 'Pomodoro';
-
-      /* =========================================================
-         2. ESTADO
-         Única fuente de verdad: render() pinta la UI a partir de él.
-         Ajustes, contador y sesión en curso se guardan en localStorage
-         (secciones 2b y 2c).
-         ========================================================= */
-      const state = {
-        settings: Object.assign({}, DEFAULT_SETTINGS),
-        mode: 'pomodoro',            // 'pomodoro' | 'short' | 'long'
-        status: 'idle',              // 'idle' | 'running' | 'paused'
-        remainingMs: DEFAULT_SETTINGS.pomodoro * 60 * 1000,  // válido en idle/paused
-        totalMs: DEFAULT_SETTINGS.pomodoro * 60 * 1000,      // duración con la que empezó esta sesión (para el anillo)
-        endTime: null,               // timestamp de fin, solo en running
-        completed: 0,                // pomodoros completados hoy
-        cycleCount: 0,               // pomodoros desde el último descanso largo
-        counterDate: ''              // día local (AAAA-MM-DD) al que pertenece el contador
+    function resume(state, now) {
+      return {
+        mode: state.mode,
+        status: "running",
+        remaining: state.remaining,
+        completed: state.completed,
+        endsAt: now + state.remaining * 1000
       };
+    }
 
-      function durationMs(mode) {
-        return state.settings[mode] * 60 * 1000;
-      }
-
-      function formatTime(ms) {
-        const totalSeconds = Math.max(0, Math.ceil(ms / 1000));
-        const minutes = Math.floor(totalSeconds / 60);
-        const seconds = totalSeconds % 60;
-        return String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
-      }
-
-      /* =========================================================
-         2b. PERSISTENCIA (localStorage) Y VALIDACIÓN
-         Todo va en try/catch: localStorage puede no estar disponible
-         (navegación privada, políticas del navegador) o contener datos
-         corruptos; en ese caso se usan los valores por defecto.
-         ========================================================= */
-      const KEY_SETTINGS = 'pomodoro.settings.v1';
-      const KEY_COUNTER = 'pomodoro.counter.v1';
-      const TONE_NAMES = ['suave', 'campana', 'digital'];
-      const LIMITS = {
-        pomodoro:  { min: 1, max: 180 },    // minutos
-        short:     { min: 1, max: 180 },
-        long:      { min: 1, max: 180 },
-        longEvery: { min: 2, max: 12 }      // pomodoros
+    function tick(state, now) {
+      if (state.status !== "running") return state;
+      var remaining = secondsLeft(state, now);
+      if (remaining <= 0) return advance(state, now);
+      if (remaining === state.remaining) return state;
+      return {
+        mode: state.mode,
+        status: state.status,
+        remaining: remaining,
+        completed: state.completed,
+        endsAt: state.endsAt
       };
+    }
 
-      function storageGet(key) {
-        try {
-          const raw = localStorage.getItem(key);
-          return raw ? JSON.parse(raw) : null;
-        } catch (e) {
-          return null;
-        }
-      }
+    function skip(state, now) {
+      return advance(state, now);
+    }
 
-      function storageSet(key, value) {
-        try {
-          localStorage.setItem(key, JSON.stringify(value));
-          return true;
-        } catch (e) {
-          return false;
-        }
-      }
+    function reset() {
+      return createInitialState();
+    }
 
-      // Devuelve el entero si es válido y está en rango; si no, null
-      function parseIntInRange(value, min, max) {
-        const s = String(value).trim();
-        if (s === '') return null;
-        const n = Number(s);
-        return Number.isInteger(n) && n >= min && n <= max ? n : null;
-      }
-
-      // Cualquier campo ausente o inválido vuelve a su valor por defecto
-      function sanitizeSettings(raw) {
-        const out = Object.assign({}, DEFAULT_SETTINGS);
-        if (!raw || typeof raw !== 'object') return out;
-        ['pomodoro', 'short', 'long', 'longEvery'].forEach(function (k) {
-          const n = parseIntInRange(raw[k], LIMITS[k].min, LIMITS[k].max);
-          if (n !== null) out[k] = n;
-        });
-        ['autoStart', 'shortcuts', 'sound', 'notifications'].forEach(function (k) {
-          if (typeof raw[k] === 'boolean') out[k] = raw[k];
-        });
-        if (TONE_NAMES.includes(raw.tone)) out.tone = raw.tone;
-        if (typeof raw.volume === 'number' && Number.isFinite(raw.volume)) {
-          out.volume = Math.min(1, Math.max(0, raw.volume));
-        }
-        return out;
-      }
-
-      function saveSettings() {
-        return storageSet(KEY_SETTINGS, state.settings);
-      }
-
-      function pad2(n) {
-        return String(n).padStart(2, '0');
-      }
-
-      // Día local en formato AAAA-MM-DD
-      function todayKey(ms) {
-        const d = new Date(ms === undefined ? Date.now() : ms);
-        return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
-      }
-
-      function saveCounter() {
-        return storageSet(KEY_COUNTER, {
-          date: state.counterDate,
-          completed: state.completed,
-          cycleCount: state.cycleCount
-        });
-      }
-
-      // Si el contador es de otro día, empieza de cero (contador y ciclo)
-      function rollCounterIfNewDay() {
-        const today = todayKey();
-        if (state.counterDate === today) return false;
-        state.counterDate = today;
-        state.completed = 0;
-        state.cycleCount = 0;
-        saveCounter();
-        return true;
-      }
-
-      function loadCounter() {
-        const raw = storageGet(KEY_COUNTER);
-        if (raw && typeof raw === 'object' && /^\d{4}-\d{2}-\d{2}$/.test(String(raw.date))) {
-          const completed = parseIntInRange(raw.completed, 0, 99999);
-          const cycle = parseIntInRange(raw.cycleCount, 0, 99999);
-          if (completed !== null && cycle !== null) {
-            state.counterDate = raw.date;
-            state.completed = completed;
-            state.cycleCount = cycle;
-          }
-        }
-        rollCounterIfNewDay();
-      }
-
-      /* =========================================================
-         2c. SESIÓN EN CURSO (recuperación al recargar)
-         Se guarda en cada cambio de estado: iniciar, pausar, cambiar de
-         modo, reiniciar y terminar. Al arrancar se valida; si algo no
-         cuadra, se descarta y se empieza en reposo.
-         ========================================================= */
-      const KEY_SESSION = 'pomodoro.session.v1';
-
-      function saveSession() {
-        return storageSet(KEY_SESSION, {
-          mode: state.mode,
-          status: state.status,
-          remainingMs: state.remainingMs,
-          totalMs: state.totalMs,
-          endTime: state.endTime
-        });
-      }
-
-      function sanitizeSession(raw) {
-        if (!raw || typeof raw !== 'object') return null;
-        if (!MODES.includes(raw.mode)) return null;
-        if (raw.status === 'idle') return { mode: raw.mode, status: 'idle' };
-        if (raw.status !== 'paused' && raw.status !== 'running') return null;
-
-        const maxMs = LIMITS.pomodoro.max * 60 * 1000;
-        const okMs = function (v) {
-          return typeof v === 'number' && Number.isFinite(v) && v > 0 && v <= maxMs;
-        };
-        if (!okMs(raw.totalMs)) return null;
-
-        if (raw.status === 'paused') {
-          if (!okMs(raw.remainingMs)) return null;
-          return {
-            mode: raw.mode, status: 'paused',
-            totalMs: raw.totalMs,
-            remainingMs: Math.min(raw.remainingMs, raw.totalMs)   // nunca más que la duración
-          };
-        }
-        if (typeof raw.endTime !== 'number' || !Number.isFinite(raw.endTime) || raw.endTime <= 0) return null;
-        return { mode: raw.mode, status: 'running', totalMs: raw.totalMs, endTime: raw.endTime };
-      }
-
-      // Aplica una sesión ya validada sobre el estado recién cargado
-      function restoreSession(s) {
-        if (s.status === 'idle') { loadMode(s.mode); return; }
-
-        state.mode = s.mode;
-        state.totalMs = s.totalMs;
-
-        if (s.status === 'paused') {
-          state.status = 'paused';
-          state.endTime = null;
-          state.remainingMs = s.remainingMs;
-          saveSession();
-          return;
-        }
-
-        const now = Date.now();
-        if (s.endTime <= now) {
-          // Venció mientras la página estaba cerrada: se cierra una sola vez.
-          // Sin auto-inicio, y solo cuenta si terminó hoy.
-          state.status = 'running';
-          state.endTime = s.endTime;
-          if (todayKey(s.endTime) === todayKey(now)) complete(true);
-          else advance(false);
-          return;
-        }
-
-        // Sigue en marcha. Si el reloj del sistema cambió y la marca queda más
-        // lejos que la duración de la sesión, se recorta.
-        state.status = 'running';
-        state.endTime = Math.min(s.endTime, now + s.totalMs);
-        state.remainingMs = state.endTime - now;
-        startTicker();
-        saveSession();
-      }
-
-      /* =========================================================
-         3. MOTOR DEL TEMPORIZADOR
-         El tiempo se mide con una marca absoluta (endTime), no contando
-         ticks: el intervalo solo "despierta" la UI, así que aunque el
-         navegador lo ralentice en segundo plano, el valor mostrado
-         nunca se desfasa.
-         ========================================================= */
-      const TICK_MS = 250;
-      let tickHandle = null;     // intervalo que refresca la pantalla
-      let endHandle = null;      // aviso único de respaldo, justo al vencer
-
-      // Tiempo restante real: calculado en running, guardado en idle/paused
-      function getRemainingMs() {
-        if (state.status === 'running') {
-          return Math.max(0, state.endTime - Date.now());
-        }
-        return state.remainingMs;
-      }
-
-      function stopTicker() {
-        if (tickHandle !== null) {
-          clearInterval(tickHandle);
-          tickHandle = null;
-        }
-        if (endHandle !== null) {
-          clearTimeout(endHandle);
-          endHandle = null;
-        }
-      }
-
-      function startTicker() {
-        stopTicker();                       // nunca dos intervalos a la vez
-        tickHandle = setInterval(tick, TICK_MS);
-        // Respaldo: si el navegador ralentiza el intervalo en segundo plano,
-        // este aviso único sigue llegando cerca del vencimiento.
-        endHandle = setTimeout(tick, getRemainingMs() + 50);
-      }
-
-      function start() {
-        if (state.status === 'running') return;
-        unlockAudio();                      // Iniciar es un gesto del usuario: desbloquea el audio
-        rollCounterIfNewDay();              // por si la pestaña lleva abierta desde ayer
-        if (state.remainingMs <= 0) {
-          state.remainingMs = durationMs(state.mode);
-          state.totalMs = state.remainingMs;
-        }
-        state.endTime = Date.now() + state.remainingMs;
-        state.status = 'running';
-        startTicker();
-        saveSession();
-        render();
-      }
-
-      function pause() {
-        if (state.status !== 'running') return;
-        if (getRemainingMs() <= 0) { complete(); return; }
-        state.remainingMs = getRemainingMs();
-        state.endTime = null;
-        state.status = 'paused';
-        stopTicker();
-        saveSession();
-        render();
-      }
-
-      function toggle() {
-        if (state.status === 'running') {
-          pause();
-          say('En pausa');
-        } else {
-          start();
-          say('Iniciado');
-        }
-      }
-
-      function reset() {
-        loadMode(state.mode);
-        render();
-        say('Reiniciado');
-      }
-
-      function tick() {
-        if (state.status !== 'running') return;
-        if (getRemainingMs() <= 0) complete();
-        else render();
-      }
-
-      // Fin de sesión: cuenta el pomodoro (si lo era), pasa al siguiente modo,
-      // avisa (sonido, notificación, animación, lectores de pantalla) y, si
-      // está activado el auto-inicio, arranca la siguiente sesión.
-      function complete(fromRestore) {
-        // Guarda anti-doble-disparo: tick, aviso de respaldo y visibilitychange
-        // pueden coincidir, pero solo el primero encuentra la sesión "en marcha".
-        if (state.status !== 'running') return;
-        const finished = state.mode;
-        const next = advance(true);
-        alertEnd(finished, next);
-        say(MODE_NAMES[finished] + ' terminado. Siguiente: ' +
-            MODE_NAMES[next] + ', ' + formatTime(state.remainingMs));
-        if (state.settings.autoStart && !fromRestore) start();
-      }
-
-      // Saltar sesión: pasa al siguiente modo sin contar el pomodoro
-      function skip() {
-        const skipped = state.mode;
-        const next = advance(false);
-        say(MODE_NAMES[skipped] + ' saltado. Siguiente: ' +
-            MODE_NAMES[next] + ', ' + formatTime(state.remainingMs));
-      }
-
-      /* =========================================================
-         4. TRANSICIONES DE MODO
-         Ciclo: pomodoro -> descanso corto -> pomodoro -> ... y, cada
-         N pomodoros completados (longEvery), descanso largo.
-         ========================================================= */
-
-      // Carga un modo en reposo (detiene el reloj, no toca contadores ni pinta)
-      function loadMode(mode) {
-        stopTicker();
-        state.mode = mode;
-        state.status = 'idle';
-        state.endTime = null;
-        state.remainingMs = durationMs(mode);
-        state.totalMs = state.remainingMs;
-        saveSession();
-      }
-
-      // Cambio manual: se detiene y carga la duración del nuevo modo.
-      // No suma al contador ni altera el ciclo.
-      function setMode(mode, announce) {
-        if (!MODES.includes(mode)) return;
-        loadMode(mode);
-        render();
-        if (announce) {
-          say(MODE_NAMES[mode] + ': ' + formatTime(state.remainingMs));
-        }
-      }
-
-      // Pasa de la sesión actual a la siguiente. counted = true si terminó
-      // de verdad (suma al contador); false si se salta. Devuelve el modo nuevo.
-      function advance(counted) {
-        const finished = state.mode;
-        let next;
-        if (counted) rollCounterIfNewDay();   // una sesión que acaba en un día nuevo cuenta en el nuevo
-        if (finished === 'pomodoro') {
-          if (counted) {
-            state.completed += 1;
-            state.cycleCount += 1;
-          }
-          next = (counted && state.cycleCount % state.settings.longEvery === 0)
-            ? 'long' : 'short';
-        } else {
-          if (finished === 'long') state.cycleCount = 0;   // el descanso largo cierra el ciclo
-          next = 'pomodoro';
-        }
-        saveCounter();
-        loadMode(next);
-        render();
-        return next;
-      }
-
-      /* =========================================================
-         5. AUDIO Y NOTIFICACIONES
-         Sonido generado con Web Audio (sin archivos). Los navegadores
-         bloquean el audio hasta que hay un gesto del usuario, así que el
-         contexto se crea y reanuda en el primer clic o tecla. Si el audio
-         o las notificaciones fallan, la app sigue funcionando (título,
-         animación y avisos para lectores de pantalla).
-         ========================================================= */
-      let audioCtx = null;
-      let flashHandle = null;
-
-      function unlockAudio() {
-        try {
-          if (!audioCtx) {
-            const Ctx = window.AudioContext || window.webkitAudioContext;
-            if (!Ctx) return;
-            audioCtx = new Ctx();
-          }
-          if (audioCtx.state === 'suspended') audioCtx.resume();
-        } catch (e) {
-          audioCtx = null;
-        }
-      }
-
-      // Cada nota: frecuencia (Hz), inicio (s), duración (s), onda y volumen
-      function bell(at) {
-        const base = 880;
-        return [
-          { freq: base,        at: at, dur: 1.6, type: 'sine', gain: 0.35 },
-          { freq: base * 2.76, at: at, dur: 1.1, type: 'sine', gain: 0.15 },
-          { freq: base * 5.4,  at: at, dur: 0.6, type: 'sine', gain: 0.07 }
-        ];
-      }
-
-      const TONES = {
-        suave: [
-          { freq: 523.25, at: 0,    dur: 0.7, type: 'sine', gain: 0.35 },
-          { freq: 659.25, at: 0.25, dur: 0.7, type: 'sine', gain: 0.35 },
-          { freq: 783.99, at: 0.5,  dur: 1.2, type: 'sine', gain: 0.35 }
-        ],
-        campana: bell(0).concat(bell(1.0)),
-        digital: [
-          { freq: 880,  at: 0,   dur: 0.12, type: 'square', gain: 0.12 },
-          { freq: 880,  at: 0.2, dur: 0.12, type: 'square', gain: 0.12 },
-          { freq: 880,  at: 0.4, dur: 0.12, type: 'square', gain: 0.12 },
-          { freq: 1175, at: 0.6, dur: 0.30, type: 'square', gain: 0.12 }
-        ]
+    function endSession(state, now) {
+      return {
+        mode: state.mode,
+        status: "done",
+        remaining: secondsLeft(state, now),
+        completed: state.completed,
+        endsAt: null
       };
+    }
 
-      function playTone(name, volume) {
-        // Si el audio sigue bloqueado, mejor silencio que un pitido tardío
-        if (!audioCtx || audioCtx.state !== 'running') return;
-        try {
-          const notes = TONES[name] || TONES.suave;
-          const t0 = audioCtx.currentTime + 0.03;
-          const master = audioCtx.createGain();
-          master.gain.value = Math.min(1, Math.max(0, volume));
-          master.connect(audioCtx.destination);
-          notes.forEach(function (n) {
-            const t = t0 + n.at;
-            const osc = audioCtx.createOscillator();
-            const env = audioCtx.createGain();
-            osc.type = n.type;
-            osc.frequency.setValueAtTime(n.freq, t);
-            env.gain.setValueAtTime(0.0001, t);
-            env.gain.exponentialRampToValueAtTime(n.gain, t + 0.02);
-            env.gain.exponentialRampToValueAtTime(0.0001, t + n.dur);
-            osc.connect(env);
-            env.connect(master);
-            osc.start(t);
-            osc.stop(t + n.dur + 0.05);
-          });
-        } catch (e) {
-          /* sin sonido, pero la app sigue funcionando */
-        }
-      }
+    function beginAgain(state, now) {
+      return startPhase(state, now);
+    }
 
-      // Pide permiso de notificaciones (se llama desde los ajustes)
-      function requestNotifications() {
-        if (!('Notification' in window)) return Promise.resolve('unsupported');
-        if (Notification.permission !== 'default') return Promise.resolve(Notification.permission);
-        try {
-          return Promise.resolve(Notification.requestPermission());
-        } catch (e) {
-          return Promise.resolve('denied');
-        }
-      }
-
-      function notificationsGranted() {
-        return 'Notification' in window && Notification.permission === 'granted';
-      }
-
-      function notify(title, body) {
-        if (!state.settings.notifications) return;
-        if (!notificationsGranted()) return;
-        // Si estás mirando la pestaña, el sonido y la animación bastan
-        if (!document.hidden && document.hasFocus()) return;
-        try {
-          const n = new Notification(title, { body: body, tag: 'pomodoro' });
-          n.onclick = function () { window.focus(); n.close(); };
-        } catch (e) {
-          /* algunos navegadores móviles no permiten crear notificaciones así */
-        }
-      }
-
-      function flashFinished() {
-        els.timer.classList.remove('is-finished');
-        void els.timer.offsetWidth;                 // reinicia la animación
-        els.timer.classList.add('is-finished');
-        clearTimeout(flashHandle);
-        flashHandle = setTimeout(function () {
-          els.timer.classList.remove('is-finished');
-        }, 2600);
-      }
-
-      // Avisos al terminar una sesión (el estado ya apunta al modo siguiente)
-      function alertEnd(finished, next) {
-        if (state.settings.sound) playTone(state.settings.tone, state.settings.volume);
-        notify(MODE_NAMES[finished] + ' terminado',
-               'Siguiente: ' + MODE_NAMES[next] + ' (' + formatTime(state.remainingMs) + ')');
-        flashFinished();
-      }
-
-      /* =========================================================
-         6. RENDER
-         ========================================================= */
-      const $ = (id) => document.getElementById(id);
-
-      const els = {
-        tablist: document.querySelector('.mode-tabs'),
-        tabs: Array.from(document.querySelectorAll('.mode-tab')),
-        panel: $('timer-panel'),
-        timer: document.querySelector('.timer'),
-        time: $('time'),
-        modeLabel: $('mode-label'),
-        ring: $('ring-progress'),
-        toggleBtn: $('toggle-btn'),
-        resetBtn: $('reset-btn'),
-        skipBtn: $('skip-btn'),
-        cycleLabel: $('cycle-label'),
-        dots: $('dots'),
-        count: $('count'),
-        live: $('live-region'),
-        themeColor: document.querySelector('meta[name="theme-color"]'),
-        favicon: document.getElementById('favicon'),
-        hint: document.querySelector('.hint')
+    function controls(state) {
+      var status = state.status;
+      return {
+        start: status === "idle" || status === "paused" || status === "done",
+        pause: status === "running",
+        next: status === "running" || status === "paused",
+        reset: status !== "idle",
+        end: status === "running" || status === "paused"
       };
+    }
 
-      function say(message) {
-        // Se vacía y se rellena en el siguiente frame para que el lector lo anuncie siempre
-        els.live.textContent = '';
-        requestAnimationFrame(function () { els.live.textContent = message; });
+    function copyFor(state) {
+      var message = MESSAGES.idle;
+      if (state.status === "done") message = MESSAGES.done;
+      else if (state.status === "paused") message = MESSAGES.paused;
+      else if (state.status === "running" && state.mode === "focus") message = MESSAGES.focus;
+      else if (state.status === "running") message = MESSAGES.rest;
+
+      var modeLabel = MODE_LABELS[state.mode];
+      var title = modeLabel;
+      if (state.status === "running" || state.status === "paused") {
+        title = formatTime(state.remaining) + " · " + TITLE_LABELS[state.mode];
       }
 
-      // Texto hablado del tiempo restante para lectores de pantalla
-      function spokenTime(ms) {
-        const total = Math.max(0, Math.ceil(ms / 1000));
-        const m = Math.floor(total / 60);
-        const s = total % 60;
-        return m + (m === 1 ? ' minuto' : ' minutos') + ' y ' + s + (s === 1 ? ' segundo' : ' segundos');
-      }
-
-      // Favicon por modo: círculo del color del modo con un anillo blanco
-      function faviconHref(color) {
-        const svg = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>" +
-          "<circle cx='32' cy='32' r='30' fill='" + color + "'/>" +
-          "<circle cx='32' cy='32' r='17' fill='none' stroke='white' stroke-width='7'/></svg>";
-        return 'data:image/svg+xml,' + encodeURIComponent(svg);
-      }
-
-      let faviconMode = 'pomodoro';     // el HTML ya trae el favicon del modo pomodoro
-      let lastTimeText = null;
-
-      function updateFavicon(mode) {
-        if (mode === faviconMode || !els.favicon) return;
-        faviconMode = mode;
-        // Se sustituye el <link>: algunos navegadores no repintan el icono si solo cambia el href
-        const link = document.createElement('link');
-        link.rel = 'icon';
-        link.id = 'favicon';
-        link.type = 'image/svg+xml';
-        link.href = faviconHref(MODE_COLORS[mode]);
-        els.favicon.replaceWith(link);
-        els.favicon = link;
-      }
-
-      function renderDots(total, done) {
-        if (els.dots.children.length !== total) {
-          els.dots.replaceChildren();
-          for (let i = 0; i < total; i++) {
-            const dot = document.createElement('li');
-            dot.className = 'dot';
-            els.dots.appendChild(dot);
-          }
-        }
-        Array.from(els.dots.children).forEach(function (dot, i) {
-          dot.classList.toggle('is-done', i < done);
-        });
-      }
-
-      function render() {
-        const mode = state.mode;
-        const total = state.settings.longEvery;
-        const remaining = getRemainingMs();
-        const timeText = formatTime(remaining);
-
-        // Modo activo: paleta, pestañas y panel
-        document.body.dataset.mode = mode;
-        document.body.dataset.status = state.status;
-        updateFavicon(mode);
-
-        // Atajos: la pista y los aria-keyshortcuts solo existen si están activados
-        const shortcuts = state.settings.shortcuts;
-        els.hint.hidden = !shortcuts;
-        if (shortcuts) {
-          els.toggleBtn.setAttribute('aria-keyshortcuts', 'Space');
-          els.resetBtn.setAttribute('aria-keyshortcuts', 'R');
-        } else {
-          els.toggleBtn.removeAttribute('aria-keyshortcuts');
-          els.resetBtn.removeAttribute('aria-keyshortcuts');
-        }
-
-        els.tabs.forEach(function (tab) {
-          const active = tab.dataset.mode === mode;
-          tab.setAttribute('aria-selected', String(active));
-          tab.tabIndex = active ? 0 : -1;
-        });
-        els.panel.setAttribute('aria-labelledby', 'tab-' + mode);
-        if (els.themeColor) els.themeColor.setAttribute('content', MODE_COLORS[mode]);
-
-        // Tiempo y anillo (ratio 1 = anillo completo)
-        if (timeText !== lastTimeText) {
-          lastTimeText = timeText;
-          els.time.textContent = timeText;
-          els.time.setAttribute('aria-label', spokenTime(remaining));
-        }
-        els.modeLabel.textContent = state.status === 'paused' ? 'En pausa' : MODE_HINTS[mode];
-        const ratio = Math.min(1, Math.max(0, remaining / state.totalMs));
-        els.ring.style.strokeDashoffset = String(RING_LENGTH * (1 - ratio));
-
-        // Botón principal según estado
-        els.toggleBtn.textContent =
-          state.status === 'running' ? 'Pausar' :
-          state.status === 'paused' ? 'Reanudar' : 'Iniciar';
-
-        // Ciclo y contador
-        if (mode === 'pomodoro') {
-          els.cycleLabel.textContent = 'Pomodoro ' + ((state.cycleCount % total) + 1) + ' de ' + total;
-        } else {
-          els.cycleLabel.textContent = MODE_NAMES[mode];
-        }
-        renderDots(total, mode === 'long' ? total : state.cycleCount % total);
-        els.count.textContent = String(state.completed);
-
-        // Título de pestaña: tiempo restante solo mientras corre
-        document.title = state.status === 'running'
-          ? timeText + ' · ' + MODE_NAMES[mode]
-          : BASE_TITLE;
-      }
-
-      /* =========================================================
-         6b. AJUSTES (DIÁLOGO)
-         Guardar valida y aplica; cerrar, Escape o clic fuera descartan.
-         Las duraciones se aplican al instante solo en reposo; durante
-         una sesión (en marcha o en pausa) valen desde la siguiente.
-         ========================================================= */
-      const dlg = {
-        root: $('settings-dialog'),
-        form: $('settings-form'),
-        openBtn: $('settings-btn'),
-        closeBtn: $('settings-close'),
-        defaultsBtn: $('settings-defaults'),
-        error: $('settings-error'),
-        resetCountBtn: $('reset-count-btn'),
-        fields: {
-          pomodoro: $('set-pomodoro'),
-          short: $('set-short'),
-          long: $('set-long'),
-          longEvery: $('set-long-every'),
-          autoStart: $('set-autostart'),
-          shortcuts: $('set-shortcuts'),
-          notifications: $('set-notifications'),
-          sound: $('set-sound'),
-          tone: $('set-tone'),
-          volume: $('set-volume')
-        }
+      return {
+        count: "Pomodoro " + state.completed,
+        message: message,
+        modeLabel: modeLabel,
+        title: title
       };
+    }
 
-      const NUMBER_KEYS = ['pomodoro', 'short', 'long', 'longEvery'];
-      const FIELD_LABELS = {
-        pomodoro: 'Pomodoro',
-        short: 'Descanso corto',
-        long: 'Descanso largo',
-        longEvery: 'Descanso largo cada'
-      };
+    var countEl = document.getElementById("count");
+    var messageEl = document.getElementById("message");
+    var modeEl = document.getElementById("mode");
+    var timeEl = document.getElementById("time");
+    var startBtn = document.getElementById("start");
+    var pauseBtn = document.getElementById("pause");
+    var nextBtn = document.getElementById("next");
+    var resetBtn = document.getElementById("reset");
+    var endBtn = document.getElementById("end");
 
-      let resetCountTimer = null;
+    var state = createInitialState();
+    var timerId = null;
+    var audioCtx = null;
 
-      function showFormMessage(text, kind) {
-        dlg.error.textContent = text;
-        dlg.error.dataset.kind = kind || '';
-        dlg.error.hidden = !text;
+    function render(nextState) {
+      var copy = copyFor(nextState);
+      var enabled = controls(nextState);
+      document.body.dataset.mode = nextState.mode;
+      document.body.dataset.status = nextState.status;
+      document.title = copy.title;
+      countEl.textContent = copy.count;
+      messageEl.textContent = copy.message;
+      modeEl.textContent = copy.modeLabel;
+      timeEl.textContent = formatTime(nextState.remaining);
+      startBtn.disabled = !enabled.start;
+      pauseBtn.disabled = !enabled.pause;
+      nextBtn.disabled = !enabled.next;
+      resetBtn.disabled = !enabled.reset;
+      endBtn.disabled = !enabled.end;
+    }
+
+    function ensureAudio() {
+      var AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      if (!audioCtx) audioCtx = new AudioCtx();
+      if (audioCtx.state === "suspended") audioCtx.resume();
+    }
+
+    function playChime() {
+      if (!audioCtx) return;
+      if (audioCtx.state === "suspended") audioCtx.resume();
+      var startAt = audioCtx.currentTime;
+      [523.25, 659.25].forEach(function (freq, index) {
+        var osc = audioCtx.createOscillator();
+        var gain = audioCtx.createGain();
+        var noteAt = startAt + index * 0.18;
+        osc.type = "sine";
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.0001, noteAt);
+        gain.gain.exponentialRampToValueAtTime(0.06, noteAt + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.0001, noteAt + 0.38);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(noteAt);
+        osc.stop(noteAt + 0.4);
+      });
+    }
+
+    function syncTimer() {
+      var shouldRun = state.status === "running";
+      if (shouldRun && timerId == null) {
+        timerId = setInterval(onTick, 250);
+      } else if (!shouldRun && timerId != null) {
+        clearInterval(timerId);
+        timerId = null;
       }
+    }
 
-      function clearInvalid() {
-        NUMBER_KEYS.forEach(function (k) { dlg.fields[k].removeAttribute('aria-invalid'); });
-        showFormMessage('');
-      }
+    function commit(nextState) {
+      state = nextState;
+      syncTimer();
+      render(state);
+    }
 
-      function fillForm(s) {
-        NUMBER_KEYS.forEach(function (k) { dlg.fields[k].value = s[k]; });
-        dlg.fields.autoStart.checked = s.autoStart;
-        dlg.fields.shortcuts.checked = s.shortcuts;
-        dlg.fields.sound.checked = s.sound;
-        dlg.fields.tone.value = s.tone;
-        dlg.fields.volume.value = s.volume;
-        dlg.fields.notifications.checked = s.notifications && notificationsGranted();
-      }
+    function onTick() {
+      var previous = state;
+      var nextState = tick(previous, Date.now());
+      if (nextState === previous) return;
+      state = nextState;
+      if (nextState.mode !== previous.mode) playChime();
+      render(state);
+    }
 
-      // Lee el formulario; devuelve los ajustes nuevos y los campos inválidos
-      function readForm() {
-        const next = Object.assign({}, state.settings);
-        const invalid = [];
-        NUMBER_KEYS.forEach(function (k) {
-          const n = parseIntInRange(dlg.fields[k].value, LIMITS[k].min, LIMITS[k].max);
-          if (n === null) invalid.push(k);
-          else next[k] = n;
-        });
-        next.autoStart = dlg.fields.autoStart.checked;
-        next.shortcuts = dlg.fields.shortcuts.checked;
-        next.sound = dlg.fields.sound.checked;
-        next.tone = TONE_NAMES.includes(dlg.fields.tone.value) ? dlg.fields.tone.value : DEFAULT_SETTINGS.tone;
-        const vol = Number(dlg.fields.volume.value);
-        next.volume = Number.isFinite(vol) ? Math.min(1, Math.max(0, vol)) : DEFAULT_SETTINGS.volume;
-        next.notifications = dlg.fields.notifications.checked && notificationsGranted();
-        return { next: next, invalid: invalid };
-      }
+    startBtn.addEventListener("click", function () {
+      ensureAudio();
+      var now = Date.now();
+      var nextState = state.status === "paused"
+        ? resume(state, now)
+        : state.status === "done"
+          ? beginAgain(state, now)
+          : startPhase(state, now);
+      commit(nextState);
+    });
 
-      function applySettings(next) {
-        state.settings = next;
-        if (state.status === 'idle') loadMode(state.mode);   // en reposo se aplica al instante
-        const saved = saveSettings();
-        render();
-        say(saved
-          ? 'Ajustes guardados'
-          : 'Ajustes aplicados, pero este navegador no ha permitido guardarlos');
-      }
+    pauseBtn.addEventListener("click", function () {
+      commit(pause(state, Date.now()));
+    });
 
-      function resetCountConfirmCancel() {
-        clearTimeout(resetCountTimer);
-        resetCountTimer = null;
-        dlg.resetCountBtn.textContent = 'Reiniciar';
-      }
+    nextBtn.addEventListener("click", function () {
+      commit(skip(state, Date.now()));
+    });
 
-      function openSettings() {
-        if (dlg.root.open) return;
-        unlockAudio();                       // abrir ajustes es un gesto: permite probar los tonos
-        fillForm(state.settings);
-        clearInvalid();
-        resetCountConfirmCancel();
-        if (typeof dlg.root.showModal === 'function') dlg.root.showModal();
-        else dlg.root.setAttribute('open', '');
-      }
+    resetBtn.addEventListener("click", function () {
+      commit(reset());
+    });
 
-      function closeSettings() {
-        resetCountConfirmCancel();
-        if (typeof dlg.root.close === 'function') dlg.root.close();
-        else dlg.root.removeAttribute('open');
-        releaseDialogFocus();
-      }
+    endBtn.addEventListener("click", function () {
+      commit(endSession(state, Date.now()));
+    });
 
-      // Si el foco sigue en un botón del diálogo ya cerrado (apertura con ratón),
-      // se suelta: así el atajo de Espacio funciona de inmediato
-      function releaseDialogFocus() {
-        const active = document.activeElement;
-        if (active && active !== document.body && dlg.root.contains(active)) active.blur();
-      }
-
-      function previewTone() {
-        if (!dlg.fields.sound.checked) return;
-        unlockAudio();
-        playTone(dlg.fields.tone.value, Number(dlg.fields.volume.value));
-      }
-
-      dlg.openBtn.addEventListener('click', openSettings);
-      dlg.closeBtn.addEventListener('click', closeSettings);
-
-      // Clic en el fondo oscuro (el propio <dialog> es el objetivo): descarta
-      dlg.root.addEventListener('click', function (e) {
-        if (e.target === dlg.root) closeSettings();
-      });
-      // Escape lo gestiona el navegador: 'cancel' llega justo antes de cerrar, y
-      // 'close' justo después (a veces tarde); ambos sueltan el foco del diálogo
-      dlg.root.addEventListener('cancel', releaseDialogFocus);
-      dlg.root.addEventListener('close', function () {
-        resetCountConfirmCancel();
-        releaseDialogFocus();
-      });
-
-      dlg.form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        const result = readForm();
-        NUMBER_KEYS.forEach(function (k) {
-          if (result.invalid.includes(k)) dlg.fields[k].setAttribute('aria-invalid', 'true');
-          else dlg.fields[k].removeAttribute('aria-invalid');
-        });
-        if (result.invalid.length) {
-          const first = result.invalid[0];
-          showFormMessage(FIELD_LABELS[first] + ': introduce un número entero entre ' +
-                          LIMITS[first].min + ' y ' + LIMITS[first].max + '.', 'invalid');
-          dlg.fields[first].focus();
-          return;
-        }
-        applySettings(result.next);
-        closeSettings();
-      });
-
-      NUMBER_KEYS.forEach(function (k) {
-        dlg.fields[k].addEventListener('input', clearInvalid);
-      });
-
-      // Rellena el formulario con los valores por defecto (no guarda hasta pulsar Guardar)
-      dlg.defaultsBtn.addEventListener('click', function () {
-        fillForm(DEFAULT_SETTINGS);
-        clearInvalid();
-      });
-
-      dlg.fields.tone.addEventListener('change', previewTone);
-      dlg.fields.volume.addEventListener('change', previewTone);
-
-      // Activar notificaciones pide permiso al navegador (necesita un gesto: este clic)
-      dlg.fields.notifications.addEventListener('change', function () {
-        const clearNotifMessage = function () {
-          if (dlg.error.dataset.kind === 'notif') showFormMessage('');
-        };
-        if (!dlg.fields.notifications.checked) { clearNotifMessage(); return; }
-        requestNotifications().then(function (result) {
-          if (result === 'granted') { clearNotifMessage(); return; }
-          dlg.fields.notifications.checked = false;
-          showFormMessage(result === 'unsupported'
-            ? 'Este navegador no admite notificaciones.'
-            : 'El navegador no ha dado permiso para las notificaciones. Puedes activarlas en los ajustes del sitio.',
-            'notif');
-        });
-      });
-
-      // Reiniciar el contador pide una segunda pulsación en 3 s para confirmar
-      dlg.resetCountBtn.addEventListener('click', function () {
-        if (resetCountTimer === null) {
-          dlg.resetCountBtn.textContent = '¿Seguro?';
-          resetCountTimer = setTimeout(resetCountConfirmCancel, 3000);
-          return;
-        }
-        resetCountConfirmCancel();
-        state.counterDate = todayKey();
-        state.completed = 0;
-        state.cycleCount = 0;
-        saveCounter();
-        render();
-        say('Contador a cero');
-      });
-
-      /* =========================================================
-         7. EVENTOS
-         ========================================================= */
-
-      // Tras un clic de ratón o toque, el botón suelta el foco: así Espacio y R
-      // siguen funcionando como atajos (y, al cerrar Ajustes, el foco no vuelve
-      // al botón). Con teclado el foco se conserva. Va en fase de captura para
-      // soltarlo antes de que el botón abra el diálogo.
-      document.addEventListener('click', function (e) {
-        if (e.detail === 0) return;                       // activación por teclado
-        const btn = e.target.closest && e.target.closest('.card button, .app-header button');
-        if (btn) btn.blur();
-      }, true);
-
-      // Atajos globales: Espacio inicia/pausa y R reinicia. Se ignoran con
-      // modificadores, con el diálogo de ajustes abierto y al escribir en un
-      // campo. Con un botón enfocado, Espacio ya lo activa el propio navegador.
-      document.addEventListener('keydown', function (e) {
-        if (!state.settings.shortcuts) return;
-        if (e.defaultPrevented || e.isComposing) return;
-        if (e.ctrlKey || e.metaKey || e.altKey) return;
-        if (dlg.root.open) return;
-        const target = e.target;
-        const tag = target && target.tagName;
-        if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
-        if (target && target.isContentEditable) return;
-
-        if (e.code === 'Space' || e.key === ' ') {
-          if (tag === 'BUTTON' || tag === 'A') return;
-          e.preventDefault();                  // evita que la página se desplace
-          if (!e.repeat) toggle();
-        } else if (e.key === 'r' || e.key === 'R') {
-          e.preventDefault();
-          if (!e.repeat) reset();
-        }
-      });
-
-      // Al volver a la pestaña: refresca al instante (o cierra la sesión si
-      // venció mientras estaba oculta) sin esperar al siguiente tick.
-      function onBackToForeground() {
-        if (document.hidden) return;
-        rollCounterIfNewDay();
-        if (state.status === 'running') tick();
-        else render();
-      }
-      document.addEventListener('visibilitychange', onBackToForeground);
-      // Safari/iOS puede restaurar la página desde su caché sin recargarla
-      window.addEventListener('pageshow', function (e) {
-        if (e.persisted) onBackToForeground();
-      });
-
-      els.toggleBtn.addEventListener('click', toggle);
-      els.resetBtn.addEventListener('click', reset);
-      els.skipBtn.addEventListener('click', skip);
-
-      // El audio queda bloqueado hasta el primer gesto del usuario
-      ['pointerdown', 'keydown'].forEach(function (type) {
-        document.addEventListener(type, unlockAudio, { once: true });
-      });
-
-      els.tabs.forEach(function (tab) {
-        tab.addEventListener('click', function () {
-          if (tab.dataset.mode !== state.mode) setMode(tab.dataset.mode, true);
-        });
-      });
-
-      // Navegación con flechas entre pestañas (patrón WAI-ARIA tabs)
-      els.tablist.addEventListener('keydown', function (e) {
-        const i = MODES.indexOf(state.mode);
-        let next = null;
-        if (e.key === 'ArrowRight') next = (i + 1) % MODES.length;
-        else if (e.key === 'ArrowLeft') next = (i + MODES.length - 1) % MODES.length;
-        else if (e.key === 'Home') next = 0;
-        else if (e.key === 'End') next = MODES.length - 1;
-        if (next === null) return;
-        e.preventDefault();
-        setMode(MODES[next], true);
-        $('tab-' + MODES[next]).focus();
-      });
-
-      /* =========================================================
-         8. INIT
-         ========================================================= */
-      state.settings = sanitizeSettings(storageGet(KEY_SETTINGS));
-      loadCounter();
-      const savedSession = sanitizeSession(storageGet(KEY_SESSION));   // leer antes de que loadMode la pise
-      loadMode(state.mode);            // aplica la duración de los ajustes cargados
-      if (savedSession) restoreSession(savedSession);
-      render();
-    })();
+    render(state);
   </script>
 </body>
 </html>
