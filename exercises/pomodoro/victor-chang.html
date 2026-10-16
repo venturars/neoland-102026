@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pomodoro</title>
+<style>
+  :root {
+    --bg: #faf7f5;
+    --surface: #ffffffcc;
+    --text: #2b2523;
+    --muted: #8a7f7a;
+    --track: #ece5e1;
+    --focus: #e5533d;
+    --short: #3a9d6e;
+    --long: #3f7cc4;
+    --accent: var(--focus);
+    --p: 0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161312;
+      --surface: #221d1bcc;
+      --text: #f3ece8;
+      --muted: #9a8f8a;
+      --track: #342d2a;
+      --focus: #ff6a52;
+      --short: #4fc08b;
+      --long: #6aa2e8;
+    }
+  }
+  body[data-mode="short"] { --accent: var(--short); }
+  body[data-mode="long"]  { --accent: var(--long); }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--text);
+    background:
+      radial-gradient(ellipse at 50% 110%,
+        color-mix(in oklab, var(--accent) calc(var(--p) * 45%), transparent) 0%,
+        transparent 70%),
+      var(--bg);
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    transition: background-color .6s;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 380px;
+    background: var(--surface);
+    backdrop-filter: blur(12px);
+    border-radius: 28px;
+    padding: 28px 24px 24px;
+    box-shadow: 0 20px 60px -20px color-mix(in oklab, var(--accent) 35%, transparent);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    position: relative;
+  }
+
+  .sound {
+    position: absolute;
+    top: 14px; right: 14px;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: 13px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .sound:hover { background: var(--track); color: var(--text); }
+  .sound[aria-pressed="true"] { color: var(--accent); }
+
+  .mode {
+    font-size: 13px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    transition: color .4s;
+  }
+
+  .intent {
+    width: 100%;
+    border: 0;
+    border-bottom: 1.5px solid var(--track);
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-size: 16px;
+    text-align: center;
+    padding: 6px 4px;
+    outline: none;
+    transition: border-color .3s;
+  }
+  .intent::placeholder { color: var(--muted); }
+  .intent:focus { border-color: var(--accent); }
+  .intent:disabled { opacity: .5; }
+
+  .ring { position: relative; width: min(260px, 70vw); aspect-ratio: 1; }
+  .ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .ring circle { fill: none; stroke-width: 8; }
+  .ring .track { stroke: var(--track); }
+  .ring .bar {
+    stroke: var(--accent);
+    stroke-linecap: round;
+    transition: stroke .4s;
+  }
+  .time {
+    position: absolute; inset: 0;
+    display: grid; place-items: center;
+    font-size: clamp(48px, 16vw, 64px);
+    font-weight: 300;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.02em;
+  }
+
+  .tomatoes { display: flex; gap: 10px; font-size: 20px; min-height: 26px; }
+  .tomatoes span { filter: grayscale(1); opacity: .3; transition: all .4s; }
+  .tomatoes span.done { filter: none; opacity: 1; transform: scale(1.1); }
+
+  .controls { display: flex; gap: 10px; }
+  button.main {
+    border: 0;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 12px 26px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform .1s, opacity .2s, background .4s;
+  }
+  button.main:active { transform: scale(.96); }
+  button.main:disabled { opacity: .35; cursor: default; transform: none; }
+  #start { background: var(--accent); color: #fff; }
+  #pause, .icon { background: var(--track); color: var(--text); }
+  .icon { padding: 12px 16px; }
+
+  .footer { display: flex; align-items: center; gap: 12px; }
+  .hint { font-size: 12px; color: var(--muted); }
+  .link {
+    border: 0;
+    background: transparent;
+    font: inherit;
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .link:hover { color: var(--accent); }
+</style>
+</head>
+<body data-mode="focus">
+  <main class="card">
+    <button class="sound" id="sound" aria-pressed="false" title="Ambient sound">♪ Off</button>
+
+    <div class="mode" id="mode">Focus</div>
+
+    <input class="intent" id="intent" maxlength="60" placeholder="What are you focusing on?" autocomplete="off">
+
+    <div class="ring">
+      <svg viewBox="0 0 260 260" aria-hidden="true">
+        <circle class="track" cx="130" cy="130" r="120"/>
+        <circle class="bar" id="bar" cx="130" cy="130" r="120"/>
+      </svg>
+      <div class="time" id="time">25:00</div>
+    </div>
+
+    <div class="tomatoes" id="tomatoes" aria-label="Completed focus sessions"></div>
+
+    <div class="controls">
+      <button class="main" id="start">Start</button>
+      <button class="main" id="pause" disabled>Pause</button>
+      <button class="main icon" id="reset" title="Restart this block">↺</button>
+      <button class="main icon" id="next" title="Skip to next block">⏭</button>
+    </div>
+
+    <div class="footer">
+      <span class="hint">Space to start / pause</span>
+      <button class="link" id="resetAll" title="Clear tomatoes and start over">Reset</button>
+    </div>
+  </main>
+
+<script>
+  const MODES = {
+    focus: { label: "Focus",       minutes: 25 },
+    short: { label: "Short break", minutes: 5 },
+    long:  { label: "Long break",  minutes: 15 },
+  };
+  const CYCLE = 4;
+
+  const $ = id => document.getElementById(id);
+  const timeEl = $("time"), modeEl = $("mode"), bar = $("bar"), intent = $("intent");
+  const startBtn = $("start"), pauseBtn = $("pause"), resetBtn = $("reset");
+  const soundBtn = $("sound"), tomatoesEl = $("tomatoes");
+
+  const C = 2 * Math.PI * 120;
+  bar.style.strokeDasharray = C;
+
+  let mode = "focus";
+  let duration = MODES.focus.minutes * 60e3;
+  let remaining = duration;
+  let endAt = null;
+  let timer = null;
+  let completed = 0;
+
+  function fmt(ms) {
+    const s = Math.ceil(ms / 1000);
+    return String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0");
+  }
+
+  function render() {
+    const t = fmt(remaining);
+    const p = 1 - remaining / duration;
+    timeEl.textContent = t;
+    bar.style.strokeDashoffset = C * p;
+    document.body.style.setProperty("--p", p.toFixed(3));
+    document.title = endAt ? `${t} · ${MODES[mode].label}` : "Pomodoro";
+  }
+
+  function renderTomatoes() {
+    tomatoesEl.innerHTML = "";
+    for (let i = 0; i < CYCLE; i++) {
+      const s = document.createElement("span");
+      s.textContent = "🍅";
+      if (i < completed) s.className = "done";
+      tomatoesEl.appendChild(s);
+    }
+  }
+
+  function setMode(next) {
+    mode = next;
+    duration = MODES[mode].minutes * 60e3;
+    remaining = duration;
+    document.body.dataset.mode = mode;
+    modeEl.textContent = MODES[mode].label;
+    intent.disabled = mode !== "focus";
+    render();
+  }
+
+  function start() {
+    if (endAt) return;
+    askNotify();
+    endAt = Date.now() + remaining;
+    timer = setInterval(tick, 250);
+    startBtn.disabled = true;
+    pauseBtn.disabled = false;
+    tick();
+  }
+
+  function pause() {
+    if (!endAt) return;
+    remaining = Math.max(0, endAt - Date.now());
+    stop();
+    render();
+  }
+
+  function stop() {
+    clearInterval(timer);
+    endAt = null;
+    startBtn.disabled = false;
+    pauseBtn.disabled = true;
+  }
+
+  function reset() {
+    stop();
+    setMode(mode);
+  }
+
+  function tick() {
+    remaining = Math.max(0, endAt - Date.now());
+    render();
+    if (remaining === 0) finish();
+  }
+
+  // Move to the following block. Leaving a focus block (finished or skipped) earns a tomato.
+  function advance() {
+    stop();
+    let next;
+    if (mode === "focus") {
+      completed++;
+      next = completed >= CYCLE ? "long" : "short";
+    } else {
+      if (mode === "long") completed = 0;
+      next = "focus";
+    }
+    renderTomatoes();
+    setMode(next);
+  }
+
+  function finish() {
+    chime();
+    if (mode === "focus") {
+      notify("Focus session done 🍅", intent.value ? `“${intent.value}” — time for a break.` : "Time for a break.");
+    } else {
+      notify("Break's over", "Ready to focus again?");
+    }
+    advance();
+  }
+
+  function resetAll() {
+    stop();
+    completed = 0;
+    renderTomatoes();
+    setMode("focus");
+  }
+
+  /* ---------- Notifications ---------- */
+  function askNotify() {
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+  }
+  function notify(title, body) {
+    if ("Notification" in window && Notification.permission === "granted") {
+      try { new Notification(title, { body }); } catch {}
+    }
+  }
+
+  /* ---------- Audio ---------- */
+  let ctx = null;
+  function audio() {
+    ctx ??= new (window.AudioContext || window.webkitAudioContext)();
+    if (ctx.state === "suspended") ctx.resume();
+    return ctx;
+  }
+
+  function chime() {
+    const a = audio(), now = a.currentTime;
+    [660, 880, 1320].forEach((f, i) => {
+      const o = a.createOscillator(), g = a.createGain();
+      o.type = "sine";
+      o.frequency.value = f;
+      const t = now + i * 0.18;
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(0.25, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.9);
+      o.connect(g).connect(a.destination);
+      o.start(t);
+      o.stop(t + 1);
+    });
+  }
+
+  function noiseBuffer(a, kind) {
+    const len = a.sampleRate * 4;
+    const buf = a.createBuffer(1, len, a.sampleRate);
+    const d = buf.getChannelData(0);
+    let last = 0;
+    for (let i = 0; i < len; i++) {
+      const w = Math.random() * 2 - 1;
+      if (kind === "brown") {
+        last = (last + 0.02 * w) / 1.02;
+        d[i] = last * 3.5;
+      } else {
+        d[i] = w;
+      }
+    }
+    return buf;
+  }
+
+  const SOUNDS = ["off", "rain", "brown"];
+  const SOUND_LABEL = { off: "♪ Off", rain: "♪ Rain", brown: "♪ Brown noise" };
+  let soundIdx = 0, ambient = null;
+
+  function stopAmbient() {
+    if (!ambient) return;
+    const { nodes, gain } = ambient;
+    gain.gain.setTargetAtTime(0, ctx.currentTime, 0.2);
+    setTimeout(() => nodes.forEach(n => { try { n.stop(); } catch {} }), 800);
+    ambient = null;
+  }
+
+  function startAmbient(kind) {
+    const a = audio();
+    const src = a.createBufferSource();
+    src.buffer = noiseBuffer(a, kind);
+    src.loop = true;
+    const gain = a.createGain();
+    gain.gain.value = 0;
+    const nodes = [src];
+
+    if (kind === "rain") {
+      const hp = a.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 900;
+      const lp = a.createBiquadFilter(); lp.type = "lowpass";  lp.frequency.value = 7000;
+      const lfo = a.createOscillator(), lfoGain = a.createGain();
+      lfo.frequency.value = 0.15; lfoGain.gain.value = 0.04;
+      lfo.connect(lfoGain).connect(gain.gain);
+      lfo.start();
+      nodes.push(lfo);
+      src.connect(hp).connect(lp).connect(gain);
+      gain.gain.setTargetAtTime(0.12, a.currentTime, 0.5);
+    } else {
+      src.connect(gain);
+      gain.gain.setTargetAtTime(0.35, a.currentTime, 0.5);
+    }
+    gain.connect(a.destination);
+    src.start();
+    ambient = { nodes, gain };
+  }
+
+  soundBtn.addEventListener("click", () => {
+    soundIdx = (soundIdx + 1) % SOUNDS.length;
+    const kind = SOUNDS[soundIdx];
+    stopAmbient();
+    if (kind !== "off") startAmbient(kind);
+    soundBtn.textContent = SOUND_LABEL[kind];
+    soundBtn.setAttribute("aria-pressed", kind !== "off");
+  });
+
+  /* ---------- Wiring ---------- */
+  startBtn.addEventListener("click", start);
+  pauseBtn.addEventListener("click", pause);
+  resetBtn.addEventListener("click", reset);
+  $("next").addEventListener("click", advance);
+  $("resetAll").addEventListener("click", resetAll);
+  document.addEventListener("keydown", e => {
+    if (e.code !== "Space" || e.target === intent) return;
+    e.preventDefault();
+    endAt ? pause() : start();
+  });
+  intent.addEventListener("keydown", e => { if (e.key === "Enter") intent.blur(); });
+
+  renderTomatoes();
+  setMode("focus");
+</script>
+</body>
+</html>
