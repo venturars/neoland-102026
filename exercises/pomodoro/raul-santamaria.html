@@ -1,32 +1,262 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#2d2640">
-  <title>Tiempo de concentración</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%232d2640'/%3E%3Ccircle cx='28' cy='32' r='14' fill='%23f6f0e4'/%3E%3Ccircle cx='36' cy='28' r='11' fill='%232d2640'/%3E%3C/svg%3E">
+  <title>Pomodoro</title>
   <style>
-    *, *::before, *::after { box-sizing: border-box; }
+    :root {
+      --night: #100c14;
+      --mist: #2a1830;
+      --card: #1c1524;
+      --line: #3a3144;
+      --bone: #f4ecdf;
+      --fog: #b7aab8;
+      --ember: #e25b45;
+      --ember-dark: #8e2f2a;
+      --ghost: #8fb8b2;
+      --candle: #e2a85a;
+      --ash: #8a7d90;
+      --ink: #1a0c0c;
+      --accent: var(--ember);
+      --ring-length: 326.73;
+    }
 
-    html { -webkit-text-size-adjust: 100%; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
       min-height: 100vh;
-      min-height: 100dvh;
-      font-family: system-ui, "Segoe UI", Roboto, sans-serif;
-      color: #f6f0e4;
-      background: radial-gradient(1200px 700px at 50% 0%, #3a3158 0%, #2d2640 42%, #221c36 100%);
+      display: grid;
+      place-items: safe center;
+      padding: 1rem;
+      background: radial-gradient(ellipse at center, var(--mist), var(--night) 72%);
+      color: var(--bone);
+      font-family: "Segoe UI", system-ui, sans-serif;
+      color-scheme: dark;
     }
 
-    button { font: inherit; }
+    .card {
+      width: min(26rem, 100%);
+      padding: 1.5rem 1.25rem 1.25rem;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 1.75rem;
+      box-shadow: 0 24px 60px rgb(0 0 0 / 0.45);
+    }
 
-    :focus { outline: none; }
+    .heading {
+      margin-bottom: 0.75rem;
+      text-align: center;
+    }
 
-    :focus-visible {
-      outline: 3px solid #f6f0e4;
-      outline-offset: 3px;
+    .eyebrow {
+      margin: 0 0 0.2rem;
+      color: var(--fog);
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--accent);
+      font-family: Georgia, "Palatino Linotype", Palatino, serif;
+      font-size: 2rem;
+      font-weight: normal;
+      line-height: 1.1;
+    }
+
+    .stage {
+      position: relative;
+      width: 6rem;
+      height: 6rem;
+      margin: 0 auto 0.25rem;
+    }
+
+    .moon {
+      position: absolute;
+      top: -0.55rem;
+      left: -0.9rem;
+      width: 4rem;
+      height: 4rem;
+      border-radius: 50%;
+      background: var(--bone);
+      opacity: 0.22;
+    }
+
+    .character {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      animation: float 3.2s ease-in-out infinite;
+    }
+
+    .character svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .ghost-body {
+      fill: var(--bone);
+    }
+
+    .eye {
+      fill: var(--ink);
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: blink 5.6s ease-in-out infinite;
+    }
+
+    .eye-right {
+      animation-delay: 0.05s;
+    }
+
+    .pupil {
+      fill: var(--ink);
+    }
+
+    .mouth {
+      fill: var(--ink);
+    }
+
+    .timer {
+      display: grid;
+      place-items: center;
+      width: min(15rem, 100%);
+      margin: 0 auto 1rem;
+    }
+
+    .ring,
+    .timer-readout {
+      grid-area: 1 / 1;
+    }
+
+    .ring {
+      width: 100%;
+      height: auto;
+    }
+
+    .ring-track,
+    .ring-value {
+      fill: none;
+      stroke-width: 8;
+      stroke-linecap: round;
+    }
+
+    .ring-track {
+      stroke: var(--line);
+    }
+
+    .ring-value {
+      stroke: var(--accent);
+      stroke-dasharray: var(--ring-length);
+      stroke-dashoffset: 0;
+      transform: rotate(-90deg);
+      transform-origin: 60px 60px;
+      transition: stroke 400ms ease, stroke-dashoffset 400ms linear;
+    }
+
+    .timer-readout {
+      text-align: center;
+    }
+
+    .time {
+      margin: 0;
+      font-size: clamp(2.75rem, 12vw, 3.75rem);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+
+    .status {
+      margin: 0.35rem 0 0;
+      color: var(--fog);
+      font-size: 0.95rem;
+    }
+
+    .score {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .count {
+      margin: 0;
+      color: var(--fog);
+      font-size: 0.95rem;
+    }
+
+    .dots {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .dot {
+      width: 0.7rem;
+      height: 0.7rem;
+      border-radius: 50%;
+      background: var(--line);
+    }
+
+    .dot.is-filled {
+      background: var(--accent);
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      min-height: 44px;
+      padding: 0.55rem 0.75rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--bone);
+      font: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      grid-column: 1 / -1;
+      border-color: var(--accent);
+      background: var(--accent);
+      color: var(--ink);
+    }
+
+    .btn:hover:not(:disabled) {
+      border-color: var(--fog);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      filter: brightness(0.92);
+    }
+
+    .btn:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--bone);
+      outline-offset: 2px;
     }
 
     .sr-only {
@@ -41,528 +271,484 @@
       border: 0;
     }
 
-    .orbs {
-      position: fixed;
-      inset: 0;
-      overflow: hidden;
-      pointer-events: none;
-      z-index: 0;
+    [data-mode="study"] {
+      --accent: var(--ember);
     }
 
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(46px);
-      opacity: 0.42;
-      animation: float 16s ease-in-out infinite;
+    [data-mode="shortBreak"] {
+      --accent: var(--ghost);
     }
 
-    .orb-a {
-      width: 280px;
-      height: 280px;
-      background: #7c6bb5;
-      top: -70px;
-      left: -80px;
+    [data-mode="longBreak"] {
+      --accent: var(--candle);
     }
 
-    .orb-b {
-      width: 240px;
-      height: 240px;
-      background: #e0b15a;
-      top: 18%;
-      right: -70px;
-      animation-delay: -5s;
-      opacity: 0.28;
+    [data-mode="study"] .btn-primary:hover:not(:disabled) {
+      border-color: var(--ember-dark);
+      background: var(--ember-dark);
+      color: var(--bone);
+      filter: none;
     }
 
-    .orb-c {
-      width: 260px;
-      height: 260px;
-      background: #d9899a;
-      bottom: -90px;
-      left: 28%;
-      animation-delay: -9s;
-      opacity: 0.26;
+    [data-status="running"][data-mode="study"] .character {
+      animation-duration: 2.2s;
     }
 
-    main {
-      position: relative;
-      z-index: 1;
-      min-height: 100vh;
-      min-height: 100dvh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px 16px;
+    [data-status="running"] .pupil {
+      fill: var(--accent);
     }
 
-    .card {
-      width: 100%;
-      max-width: 26rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 1.6rem 1.35rem 1.35rem;
-      background: #342b4e;
-      border: 1px solid rgba(246, 240, 228, 0.12);
-      border-radius: 28px;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+    [data-mode="shortBreak"] .character,
+    [data-mode="longBreak"] .character {
+      animation-duration: 4s;
     }
 
-    .count {
-      margin: 0;
-      padding: 0.32rem 0.8rem;
-      border-radius: 999px;
-      background: #4a3d6b;
-      color: #f0d9a0;
-      font-size: 0.85rem;
-      font-weight: 600;
+    [data-status="paused"] .character {
+      animation-play-state: paused;
     }
 
-    .message {
-      margin: 0.9rem 0 0;
-      max-width: 20rem;
-      color: #cbbde0;
-      font-size: 0.98rem;
-      line-height: 1.45;
+    [data-status="paused"] .eye {
+      animation: none;
+      transform: scaleY(0.18);
     }
 
-    .mode {
-      margin: 0.85rem 0 0;
-      font-size: 1rem;
-      font-weight: 600;
-      color: #f0d9a0;
-      transition: color 0.3s ease;
-    }
-
-    body[data-mode="short"] .mode { color: #b7e0d4; }
-    body[data-mode="long"] .mode { color: #f0c49a; }
-
-    .time {
-      margin: 0.35rem 0 0;
-      font-size: 4.5rem;
-      font-weight: 700;
-      line-height: 1;
-      letter-spacing: -0.03em;
-      font-variant-numeric: tabular-nums;
-      color: #f6f0e4;
-    }
-
-    body[data-status="paused"] .time { opacity: 0.8; }
-
-    .companion {
-      width: 148px;
-      height: auto;
-      margin: 0.35rem 0 0.2rem;
-      display: block;
-      transform-origin: 50% 70%;
-    }
-
-    body[data-status="running"] .companion {
-      animation: sway 3.4s ease-in-out infinite;
-    }
-
-    .companion-z {
-      opacity: 0;
-      transform-box: fill-box;
-      transform-origin: center;
-    }
-
-    body[data-mode="short"] .companion-z,
-    body[data-mode="long"] .companion-z {
-      opacity: 1;
-      animation: rise 3.2s ease-in-out infinite;
-    }
-
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      margin-top: 0.85rem;
-    }
-
-    .controls button {
-      min-height: 44px;
-      padding: 0 16px;
-      border: 0;
-      border-radius: 999px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .controls button:disabled {
-      opacity: 0.45;
-      cursor: default;
-    }
-
-    .controls button:not(:disabled):hover { filter: brightness(1.08); }
-
-    .controls button:not(:disabled):active { transform: translateY(1px); }
-
-    #start { background: #e0a23a; color: #2a2108; }
-    #pause,
-    #next { background: #4a4268; color: #f6f0e4; }
-    #reset { background: #3c3654; color: #f6f0e4; }
-    #end { background: #6b4552; color: #ffd5d8; }
-
-    @media (max-width: 380px) {
-      .time { font-size: 3.25rem; }
-      .controls button { padding: 0 12px; }
-    }
-
-    @media (max-height: 700px) {
-      .companion { width: 104px; }
-      .time { font-size: 3.5rem; }
-      .card { padding: 1.15rem 1.1rem 1rem; }
-      .message { margin-top: 0.6rem; }
+    [data-status="paused"] .ring-value,
+    [data-status="paused"] .status {
+      stroke: var(--ash);
+      color: var(--ash);
     }
 
     @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(18px); }
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-6px);
+      }
     }
 
-    @keyframes sway {
-      0%, 100% { transform: rotate(-2.5deg); }
-      50% { transform: rotate(2.5deg); }
-    }
-
-    @keyframes rise {
-      0%, 100% { transform: translateY(0); opacity: 0.7; }
-      50% { transform: translateY(-8px); opacity: 1; }
+    @keyframes blink {
+      0%,
+      46%,
+      52%,
+      100% {
+        transform: scaleY(1);
+      }
+      49% {
+        transform: scaleY(0.12);
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .orb,
-      body[data-status="running"] .companion,
-      body[data-mode="short"] .companion-z,
-      body[data-mode="long"] .companion-z,
-      .mode,
-      .controls button {
-        animation: none;
-        transition: none;
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
       }
-
-      .controls button:not(:disabled):active { transform: none; }
     }
   </style>
 </head>
-<body data-mode="focus" data-status="idle">
-  <div class="orbs" aria-hidden="true">
-    <span class="orb orb-a"></span>
-    <span class="orb orb-b"></span>
-    <span class="orb orb-c"></span>
-  </div>
+<body>
+  <main id="app" class="card" data-mode="study" data-status="idle">
+    <header class="heading">
+      <p class="eyebrow">Pomodoro</p>
+      <h1 id="mode-label">Study</h1>
+    </header>
 
-  <main>
-    <h1 class="sr-only">Pomodoro de estudio</h1>
-    <section class="card">
-      <p class="count" id="count">Pomodoro 0</p>
-      <p class="message" id="message" aria-live="polite">Sin prisa. Empieza cuando quieras.</p>
-      <p class="mode" id="mode">Tiempo de concentración</p>
-      <p class="time" id="time">25:00</p>
-      <svg class="companion" viewBox="0 0 160 120" aria-hidden="true">
-        <g class="companion-body">
-          <circle cx="74" cy="68" r="34" fill="#d9c7f2"/>
-          <circle cx="60" cy="56" r="12" fill="#f6f0e4" opacity="0.28"/>
-          <path d="M58 66 q7 7 14 0" fill="none" stroke="#2a2340" stroke-width="2.4" stroke-linecap="round"/>
-          <path d="M80 66 q7 7 14 0" fill="none" stroke="#2a2340" stroke-width="2.4" stroke-linecap="round"/>
-          <path d="M66 82 q10 7 18 0" fill="none" stroke="#2a2340" stroke-width="2.4" stroke-linecap="round"/>
-          <circle cx="54" cy="76" r="3.2" fill="#d9899a"/>
-          <circle cx="98" cy="76" r="3.2" fill="#d9899a"/>
-          <path d="M74 22 l2.2 6.2 6.2 2.2 -6.2 2.2 -2.2 6.2 -2.2 -6.2 -6.2 -2.2 6.2 -2.2 z" fill="#f0d9a0"/>
-        </g>
-        <g class="companion-z">
-          <text x="116" y="48" fill="#f0d9a0" font-size="22" font-family="Georgia, 'Palatino Linotype', Palatino, serif">z</text>
-        </g>
-      </svg>
-      <div class="controls">
-        <button type="button" id="start">Empezar</button>
-        <button type="button" id="pause" disabled>Pausar</button>
-        <button type="button" id="next" disabled>Siguiente</button>
-        <button type="button" id="reset" disabled>Reiniciar</button>
-        <button type="button" id="end" disabled>Terminar</button>
+    <div class="stage">
+      <div class="moon" aria-hidden="true"></div>
+      <div class="character">
+        <svg viewBox="0 0 96 96" aria-hidden="true">
+          <path class="ghost-body" d="M48 8C28 8 16 30 16 48v28c6-12 12-10 16 0s10 10 16 0 10-12 16 0 12-10 16 0V48C80 30 68 8 48 8z"></path>
+          <g class="eye eye-left">
+            <ellipse cx="35" cy="42" rx="6.5" ry="10"></ellipse>
+            <ellipse class="pupil" cx="36.2" cy="46" rx="2.2" ry="3.2"></ellipse>
+          </g>
+          <g class="eye eye-right">
+            <ellipse cx="61" cy="45" rx="5.2" ry="8.2"></ellipse>
+            <ellipse class="pupil" cx="62" cy="48.2" rx="1.8" ry="2.6"></ellipse>
+          </g>
+          <ellipse class="mouth" cx="49" cy="66" rx="3.4" ry="5.2"></ellipse>
+        </svg>
       </div>
-    </section>
+    </div>
+
+    <div class="timer">
+      <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+        <circle class="ring-track" cx="60" cy="60" r="52"></circle>
+        <circle class="ring-value" cx="60" cy="60" r="52"></circle>
+      </svg>
+      <div class="timer-readout">
+        <p id="time" class="time">25:00</p>
+        <p id="status" class="status">Ready</p>
+      </div>
+    </div>
+
+    <div class="score">
+      <p id="count" class="count">0 pomodoros</p>
+      <div class="dots" aria-hidden="true">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button type="button" class="btn btn-primary" data-action="start">Start</button>
+      <button type="button" class="btn" data-action="pause" disabled>Pause</button>
+      <button type="button" class="btn" data-action="next">Next</button>
+      <button type="button" class="btn" data-action="reset">Reset</button>
+      <button type="button" class="btn" data-action="end">End</button>
+    </div>
+
+    <p id="live" class="sr-only" aria-live="polite">Ready. Study. 25:00.</p>
   </main>
-
   <script>
-    var DURATIONS = { focus: 1500, short: 300, long: 900 };
-    var LONG_EVERY = 4;
+    const CYCLE = [
+      "study",
+      "shortBreak",
+      "study",
+      "shortBreak",
+      "study",
+      "shortBreak",
+      "study",
+      "longBreak"
+    ];
 
-    var MODE_LABELS = {
-      focus: "Tiempo de concentración",
-      short: "Descanso corto",
-      long: "Descanso largo"
+    const DURATIONS_MS = {
+      study: 25 * 60 * 1000,
+      shortBreak: 5 * 60 * 1000,
+      longBreak: 15 * 60 * 1000
     };
 
-    var TITLE_LABELS = {
-      focus: "Concentración",
-      short: "Descanso corto",
-      long: "Descanso largo"
+    const MODE_LABELS = {
+      study: "Study",
+      shortBreak: "Short break",
+      longBreak: "Long break"
     };
 
-    var MESSAGES = {
-      idle: "Sin prisa. Empieza cuando quieras.",
-      focus: "Un minuto detrás de otro.",
-      paused: "La pausa también vale. Quédate lo que necesites.",
-      rest: "Descansar también es estudiar.",
-      done: "Bien. Has estado aquí."
+    const RING_LENGTH = 326.73;
+    const TICK_MS = 250;
+
+    const nodes = {
+      app: document.querySelector("#app"),
+      modeLabel: document.querySelector("#mode-label"),
+      time: document.querySelector("#time"),
+      status: document.querySelector("#status"),
+      count: document.querySelector("#count"),
+      dots: Array.from(document.querySelectorAll(".dot")),
+      start: document.querySelector("[data-action='start']"),
+      pause: document.querySelector("[data-action='pause']"),
+      next: document.querySelector("[data-action='next']"),
+      reset: document.querySelector("[data-action='reset']"),
+      end: document.querySelector("[data-action='end']"),
+      ring: document.querySelector(".ring-value"),
+      live: document.querySelector("#live")
     };
 
-    function createInitialState() {
+    let state;
+    let announcedKey = "";
+    let timerId = null;
+    let audioContext = null;
+
+    function createState() {
       return {
-        mode: "focus",
+        step: 0,
         status: "idle",
-        remaining: DURATIONS.focus,
-        completed: 0,
-        endsAt: null
+        remainingMs: DURATIONS_MS.study,
+        endsAt: null,
+        completedPomodoros: 0
       };
     }
 
-    function formatTime(seconds) {
-      var safe = Math.max(0, Math.floor(seconds));
-      var minutes = Math.floor(safe / 60);
-      var secs = safe % 60;
-      return String(minutes).padStart(2, "0") + ":" + String(secs).padStart(2, "0");
+    function modeOf(current) {
+      return CYCLE[current.step];
     }
 
-    function phaseAfter(state) {
-      if (state.mode !== "focus") return "focus";
-      var nextCount = state.completed + 1;
-      return nextCount % LONG_EVERY === 0 ? "long" : "short";
+    function durationOf(mode) {
+      return DURATIONS_MS[mode];
     }
 
-    function secondsLeft(state, now) {
-      if (state.endsAt == null) return state.remaining;
-      return Math.max(0, Math.ceil((state.endsAt - now) / 1000));
-    }
-
-    function advance(state, now) {
-      var completed = state.mode === "focus" ? state.completed + 1 : state.completed;
-      var mode = phaseAfter(state);
-      var duration = DURATIONS[mode];
-      return {
-        mode: mode,
-        status: "running",
-        remaining: duration,
-        completed: completed,
-        endsAt: now + duration * 1000
-      };
-    }
-
-    function startPhase(state, now) {
-      var duration = DURATIONS[state.mode];
-      return {
-        mode: state.mode,
-        status: "running",
-        remaining: duration,
-        completed: state.completed,
-        endsAt: now + duration * 1000
-      };
-    }
-
-    function pause(state, now) {
-      return {
-        mode: state.mode,
-        status: "paused",
-        remaining: secondsLeft(state, now),
-        completed: state.completed,
-        endsAt: null
-      };
-    }
-
-    function resume(state, now) {
-      return {
-        mode: state.mode,
-        status: "running",
-        remaining: state.remaining,
-        completed: state.completed,
-        endsAt: now + state.remaining * 1000
-      };
-    }
-
-    function tick(state, now) {
-      if (state.status !== "running") return state;
-      var remaining = secondsLeft(state, now);
-      if (remaining <= 0) return advance(state, now);
-      if (remaining === state.remaining) return state;
-      return {
-        mode: state.mode,
-        status: state.status,
-        remaining: remaining,
-        completed: state.completed,
-        endsAt: state.endsAt
-      };
-    }
-
-    function skip(state, now) {
-      return advance(state, now);
-    }
-
-    function reset() {
-      return createInitialState();
-    }
-
-    function endSession(state, now) {
-      return {
-        mode: state.mode,
-        status: "done",
-        remaining: secondsLeft(state, now),
-        completed: state.completed,
-        endsAt: null
-      };
-    }
-
-    function beginAgain(state, now) {
-      return startPhase(state, now);
-    }
-
-    function controls(state) {
-      var status = state.status;
-      return {
-        start: status === "idle" || status === "paused" || status === "done",
-        pause: status === "running",
-        next: status === "running" || status === "paused",
-        reset: status !== "idle",
-        end: status === "running" || status === "paused"
-      };
-    }
-
-    function copyFor(state) {
-      var message = MESSAGES.idle;
-      if (state.status === "done") message = MESSAGES.done;
-      else if (state.status === "paused") message = MESSAGES.paused;
-      else if (state.status === "running" && state.mode === "focus") message = MESSAGES.focus;
-      else if (state.status === "running") message = MESSAGES.rest;
-
-      var modeLabel = MODE_LABELS[state.mode];
-      var title = modeLabel;
-      if (state.status === "running" || state.status === "paused") {
-        title = formatTime(state.remaining) + " · " + TITLE_LABELS[state.mode];
+    function remainingOf(current, now) {
+      if (current.status !== "running" || current.endsAt === null) {
+        return current.remainingMs;
       }
+      return Math.max(0, current.endsAt - now);
+    }
 
+    function formatClock(ms) {
+      const totalSeconds = Math.ceil(ms / 1000);
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      const pad = function (value) {
+        return String(value).padStart(2, "0");
+      };
+      return pad(minutes) + ":" + pad(seconds);
+    }
+
+    function progressRatio(current, now) {
+      return remainingOf(current, now) / durationOf(modeOf(current));
+    }
+
+    function statusLabel(current) {
+      if (current.status === "paused") {
+        return "Paused";
+      }
+      if (current.status === "running" && modeOf(current) === "study") {
+        return "Studying";
+      }
+      if (current.status === "running") {
+        return MODE_LABELS[modeOf(current)];
+      }
+      return "Ready";
+    }
+
+    function filledDots(current) {
+      const done = current.completedPomodoros;
+      if (modeOf(current) === "longBreak" && done > 0 && done % 4 === 0) {
+        return 4;
+      }
+      return done % 4;
+    }
+
+    function countLabel(current) {
+      const total = current.completedPomodoros;
+      const word = total === 1 ? "pomodoro" : "pomodoros";
+      return total + " " + word;
+    }
+
+    function formatTitle(current, now) {
+      const freshStudy = current.status === "idle"
+        && current.step === 0
+        && current.completedPomodoros === 0
+        && current.remainingMs === DURATIONS_MS.study;
+      if (freshStudy) {
+        return "Pomodoro";
+      }
+      return formatClock(remainingOf(current, now)) + " · " + MODE_LABELS[modeOf(current)];
+    }
+
+    function startTimer(current, now) {
+      if (current.status === "running") {
+        return current;
+      }
+      const remainingMs = remainingOf(current, now);
+      if (remainingMs <= 0) {
+        return current;
+      }
       return {
-        count: "Pomodoro " + state.completed,
-        message: message,
-        modeLabel: modeLabel,
-        title: title
+        step: current.step,
+        status: "running",
+        remainingMs: remainingMs,
+        endsAt: now + remainingMs,
+        completedPomodoros: current.completedPomodoros
       };
     }
 
-    var countEl = document.getElementById("count");
-    var messageEl = document.getElementById("message");
-    var modeEl = document.getElementById("mode");
-    var timeEl = document.getElementById("time");
-    var startBtn = document.getElementById("start");
-    var pauseBtn = document.getElementById("pause");
-    var nextBtn = document.getElementById("next");
-    var resetBtn = document.getElementById("reset");
-    var endBtn = document.getElementById("end");
-
-    var state = createInitialState();
-    var timerId = null;
-    var audioCtx = null;
-
-    function render(nextState) {
-      var copy = copyFor(nextState);
-      var enabled = controls(nextState);
-      document.body.dataset.mode = nextState.mode;
-      document.body.dataset.status = nextState.status;
-      document.title = copy.title;
-      countEl.textContent = copy.count;
-      messageEl.textContent = copy.message;
-      modeEl.textContent = copy.modeLabel;
-      timeEl.textContent = formatTime(nextState.remaining);
-      startBtn.disabled = !enabled.start;
-      pauseBtn.disabled = !enabled.pause;
-      nextBtn.disabled = !enabled.next;
-      resetBtn.disabled = !enabled.reset;
-      endBtn.disabled = !enabled.end;
+    function pauseTimer(current, now) {
+      if (current.status !== "running") {
+        return current;
+      }
+      return {
+        step: current.step,
+        status: "paused",
+        remainingMs: remainingOf(current, now),
+        endsAt: null,
+        completedPomodoros: current.completedPomodoros
+      };
     }
 
-    function ensureAudio() {
-      var AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      if (!audioCtx) audioCtx = new AudioCtx();
-      if (audioCtx.state === "suspended") audioCtx.resume();
+    function advancePhase(current, countStudy) {
+      const completedPomodoros = countStudy && modeOf(current) === "study"
+        ? current.completedPomodoros + 1
+        : current.completedPomodoros;
+      const step = (current.step + 1) % CYCLE.length;
+      const mode = CYCLE[step];
+      return {
+        step: step,
+        status: "idle",
+        remainingMs: DURATIONS_MS[mode],
+        endsAt: null,
+        completedPomodoros: completedPomodoros
+      };
+    }
+
+    function skipToNext(current) {
+      return advancePhase(current, false);
+    }
+
+    function finishInterval(current) {
+      return advancePhase(current, true);
+    }
+
+    function resetInterval(current) {
+      return {
+        step: current.step,
+        status: "idle",
+        remainingMs: durationOf(modeOf(current)),
+        endsAt: null,
+        completedPomodoros: current.completedPomodoros
+      };
+    }
+
+    function endSession(current) {
+      return {
+        step: 0,
+        status: "idle",
+        remainingMs: DURATIONS_MS.study,
+        endsAt: null,
+        completedPomodoros: current.completedPomodoros
+      };
+    }
+
+    function applyTick(current, now) {
+      if (current.status !== "running" || current.endsAt === null) {
+        return { state: current, finished: false };
+      }
+      const remainingMs = Math.max(0, current.endsAt - now);
+      if (remainingMs > 0) {
+        return {
+          state: {
+            step: current.step,
+            status: "running",
+            remainingMs: remainingMs,
+            endsAt: current.endsAt,
+            completedPomodoros: current.completedPomodoros
+          },
+          finished: false
+        };
+      }
+      return { state: finishInterval(current), finished: true };
+    }
+
+    function sharedAudio() {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) {
+        return null;
+      }
+      if (audioContext === null) {
+        try {
+          audioContext = new AudioCtx();
+        } catch (error) {
+          return null;
+        }
+      }
+      return audioContext;
+    }
+
+    function unlockAudio() {
+      const context = sharedAudio();
+      if (context && context.state === "suspended") {
+        context.resume();
+      }
+    }
+
+    function playTone(context, frequency, when) {
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(frequency, when);
+      gain.gain.setValueAtTime(0.0001, when);
+      gain.gain.exponentialRampToValueAtTime(0.04, when + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001, when + 0.18);
+      oscillator.connect(gain);
+      gain.connect(context.destination);
+      oscillator.start(when);
+      oscillator.stop(when + 0.2);
     }
 
     function playChime() {
-      if (!audioCtx) return;
-      if (audioCtx.state === "suspended") audioCtx.resume();
-      var startAt = audioCtx.currentTime;
-      [523.25, 659.25].forEach(function (freq, index) {
-        var osc = audioCtx.createOscillator();
-        var gain = audioCtx.createGain();
-        var noteAt = startAt + index * 0.18;
-        osc.type = "sine";
-        osc.frequency.value = freq;
-        gain.gain.setValueAtTime(0.0001, noteAt);
-        gain.gain.exponentialRampToValueAtTime(0.06, noteAt + 0.03);
-        gain.gain.exponentialRampToValueAtTime(0.0001, noteAt + 0.38);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start(noteAt);
-        osc.stop(noteAt + 0.4);
-      });
+      const context = sharedAudio();
+      if (!context) {
+        return;
+      }
+      try {
+        const when = context.currentTime;
+        playTone(context, 659.25, when);
+        playTone(context, 783.99, when + 0.14);
+      } catch (error) {
+        return;
+      }
     }
 
-    function syncTimer() {
-      var shouldRun = state.status === "running";
-      if (shouldRun && timerId == null) {
-        timerId = setInterval(onTick, 250);
-      } else if (!shouldRun && timerId != null) {
+    function syncTicker(current) {
+      const running = current.status === "running";
+      if (running && timerId === null) {
+        timerId = setInterval(function () {
+          const result = applyTick(state, Date.now());
+          state = result.state;
+          if (result.finished) {
+            playChime();
+          }
+          if (state.status !== "running") {
+            syncTicker(state);
+          }
+          render(state);
+        }, TICK_MS);
+      }
+      if (!running && timerId !== null) {
         clearInterval(timerId);
         timerId = null;
       }
     }
 
     function commit(nextState) {
+      unlockAudio();
       state = nextState;
-      syncTimer();
+      syncTicker(state);
       render(state);
     }
 
-    function onTick() {
-      var previous = state;
-      var nextState = tick(previous, Date.now());
-      if (nextState === previous) return;
-      state = nextState;
-      if (nextState.mode !== previous.mode) playChime();
-      render(state);
+    function render(current) {
+      const now = Date.now();
+      const mode = modeOf(current);
+      const filled = filledDots(current);
+
+      nodes.app.dataset.mode = mode;
+      nodes.app.dataset.status = current.status;
+      nodes.modeLabel.textContent = MODE_LABELS[mode];
+      nodes.time.textContent = formatClock(remainingOf(current, now));
+      nodes.status.textContent = statusLabel(current);
+      nodes.count.textContent = countLabel(current);
+      nodes.dots.forEach(function (dot, index) {
+        dot.classList.toggle("is-filled", index < filled);
+      });
+      nodes.start.disabled = current.status === "running";
+      nodes.pause.disabled = current.status !== "running";
+      nodes.ring.style.strokeDashoffset = String(RING_LENGTH * (1 - progressRatio(current, now)));
+      document.title = formatTitle(current, now);
+
+      const key = current.status + ":" + mode;
+      if (key !== announcedKey) {
+        announcedKey = key;
+        nodes.live.textContent = statusLabel(current) + ". " + MODE_LABELS[mode] + ". " + formatClock(remainingOf(current, now)) + ".";
+      }
     }
 
-    startBtn.addEventListener("click", function () {
-      ensureAudio();
-      var now = Date.now();
-      var nextState = state.status === "paused"
-        ? resume(state, now)
-        : state.status === "done"
-          ? beginAgain(state, now)
-          : startPhase(state, now);
-      commit(nextState);
+    nodes.start.addEventListener("click", function () {
+      commit(startTimer(state, Date.now()));
     });
 
-    pauseBtn.addEventListener("click", function () {
-      commit(pause(state, Date.now()));
+    nodes.pause.addEventListener("click", function () {
+      commit(pauseTimer(state, Date.now()));
     });
 
-    nextBtn.addEventListener("click", function () {
-      commit(skip(state, Date.now()));
+    nodes.next.addEventListener("click", function () {
+      commit(skipToNext(state));
     });
 
-    resetBtn.addEventListener("click", function () {
-      commit(reset());
+    nodes.reset.addEventListener("click", function () {
+      commit(resetInterval(state));
     });
 
-    endBtn.addEventListener("click", function () {
-      commit(endSession(state, Date.now()));
+    nodes.end.addEventListener("click", function () {
+      commit(endSession(state));
     });
 
+    state = createState();
     render(state);
   </script>
 </body>
