@@ -33,6 +33,15 @@
       --toggle-bg: rgba(20, 36, 16, 0.88);
       --toggle-text: #e9f6dc;
       --shadow: rgba(0, 0, 0, 0.55);
+      --card-shadow: 0 14px 30px rgba(0, 0, 0, 0.45), 0 36px 80px rgba(0, 0, 0, 0.55);
+      --bot: #7dce55;
+      --bot-deep: #3f9a38;
+      --bot-light: #b6e98a;
+      --bot-accent: #e0a04a;
+      --bot-ink: #173112;
+      --wave-green: #1f7a38;
+      --wave-blue: #2f86d6;
+      --wave-amber: #e0a04a;
       color-scheme: dark;
     }
 
@@ -64,6 +73,15 @@
       --toggle-bg: rgba(255, 255, 255, 0.72);
       --toggle-text: #173112;
       --shadow: rgba(40, 80, 24, 0.14);
+      --card-shadow: 0 12px 28px rgba(40, 80, 24, 0.16), 0 32px 64px rgba(40, 80, 24, 0.2);
+      --bot: #2f8f34;
+      --bot-deep: #1f6d28;
+      --bot-light: #7dce6a;
+      --bot-accent: #c47a22;
+      --bot-ink: #173112;
+      --wave-green: #8dce6a;
+      --wave-blue: #7eb6ea;
+      --wave-amber: #e7c07a;
       color-scheme: light;
     }
 
@@ -83,21 +101,15 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    .bg-dragon {
+    .bg-waves {
       position: fixed;
-      left: 50%;
-      top: 48%;
-      width: min(980px, 108vw);
-      height: auto;
-      transform: translate(-50%, -46%);
-      filter: blur(16px);
-      opacity: 0.78;
+      inset: -8vh 0;
+      width: 100%;
+      height: 116vh;
+      filter: blur(26px);
+      opacity: 0.9;
       pointer-events: none;
       z-index: 0;
-    }
-
-    body.theme-light .bg-dragon {
-      opacity: 0.42;
     }
 
     .theme-toggle {
@@ -138,7 +150,7 @@
       border: 1px solid var(--card-border);
       border-radius: 32px;
       background: var(--card);
-      box-shadow: 0 28px 70px var(--shadow);
+      box-shadow: var(--card-shadow);
       text-align: center;
     }
 
@@ -176,8 +188,8 @@
     }
 
     .dragon-wrap {
-      width: 232px;
-      margin: 0 auto 12px;
+      width: 148px;
+      margin: 6px auto 18px;
     }
 
     .dragon-wrap svg {
@@ -281,24 +293,24 @@
 
     #pause,
     #next {
-      background: var(--action-disabled);
-      color: var(--action-disabled-text);
-    }
-
-    #pause:not(:disabled),
-    #next:not(:disabled) {
-      background: var(--action);
-      color: var(--action-text);
-    }
-
-    #reset {
       background: var(--info-disabled);
       color: var(--info-disabled-text);
     }
 
-    #reset:not(:disabled) {
+    #pause:not(:disabled),
+    #next:not(:disabled) {
       background: var(--info);
       color: var(--info-text);
+    }
+
+    #reset {
+      background: var(--action-disabled);
+      color: var(--action-disabled-text);
+    }
+
+    #reset:not(:disabled) {
+      background: var(--action);
+      color: var(--action-text);
     }
 
     #end {
@@ -330,40 +342,11 @@
   </style>
 </head>
 <body>
-  <svg class="bg-dragon" viewBox="0 0 340 300" aria-hidden="true">
-    <g stroke-linejoin="round" stroke-linecap="round">
-      <path fill="#e8c56e" stroke="#161616" stroke-width="4" d="M214 168c42 8 86 2 104-10l-8 24c-30 10-74 10-104 0z"/>
-      <path fill="#d7ae58" stroke="#161616" stroke-width="4" d="M218 186c40 8 80 2 96-8l-6 22c-28 8-70 8-98 0z"/>
-      <path fill="#e8c56e" stroke="#161616" stroke-width="4" d="M224 206c36 6 70 2 86-6l-4 20c-26 6-64 6-88 0z"/>
-      <path fill="#d7ae58" stroke="#161616" stroke-width="4" d="M232 226c30 4 56 2 70-2l-2 16c-22 4-54 4-72 0z"/>
-      <path fill="#f0d23c" stroke="#161616" stroke-width="4" d="M228 124c22-8 34 0 28 14-10 4-24 0-28-14z"/>
-      <path fill="#f0d23c" stroke="#161616" stroke-width="4" d="M240 106c20-16 36-6 30 10-12 6-26 2-30-10z"/>
-      <path fill="#f0d23c" stroke="#161616" stroke-width="4" d="M218 98c14-18 34-14 34 4-14 6-28 2-34-4z"/>
-      <path fill="#c4843a" stroke="#161616" stroke-width="4" d="M176 98 L204 6 L232 24 L198 104 Z"/>
-      <path fill="#c4843a" stroke="#161616" stroke-width="4" d="M204 38 L238 2 L256 18 L220 52 Z"/>
-      <path fill="#c4843a" stroke="#161616" stroke-width="4" d="M204 90 L270 8 L296 30 L228 110 Z"/>
-      <path fill="#c4843a" stroke="#161616" stroke-width="4" d="M256 30 L302 2 L320 20 L274 50 Z"/>
-      <ellipse cx="186" cy="132" rx="74" ry="60" fill="#43a82e" stroke="#161616" stroke-width="4"/>
-      <ellipse cx="112" cy="156" rx="58" ry="34" fill="#43a82e" stroke="#161616" stroke-width="4"/>
-      <ellipse cx="148" cy="146" rx="30" ry="24" fill="#43a82e"/>
-      <path fill="none" stroke="#1d5c16" stroke-width="2.5" d="M160 104c18 8 32 8 46 0M156 120c20 8 36 8 52 0M172 90c12 6 26 8 38 2"/>
-      <ellipse cx="78" cy="142" rx="6" ry="4" fill="#16320f"/>
-      <ellipse cx="96" cy="154" rx="5" ry="3.4" fill="#16320f"/>
-      <path fill="#d62828" stroke="#161616" stroke-width="4" d="M86 162c30 8 58 8 76 0 6 18-8 32-32 36-26 4-52-6-64-20-6-8 0-16 20-16z"/>
-      <path fill="#fff" stroke="#161616" stroke-width="2" d="M98 162l6 16 10-14zM118 164l5 18 10-16zM136 160l4 16 9-14zM104 188l7-14 9 16zM124 190l5-16 9 16z"/>
-      <path d="M72 158C18 118 4 72 40 38" fill="none" stroke="#161616" stroke-width="12"/>
-      <path d="M72 158C18 118 4 72 40 38" fill="none" stroke="#f0d23c" stroke-width="6"/>
-      <path d="M108 172C168 148 214 196 328 132" fill="none" stroke="#161616" stroke-width="12"/>
-      <path d="M108 172C168 148 214 196 328 132" fill="none" stroke="#f0d23c" stroke-width="6"/>
-      <ellipse cx="142" cy="118" rx="16" ry="18" fill="#fff" stroke="#161616" stroke-width="3"/>
-      <ellipse cx="146" cy="120" rx="8" ry="9" fill="#e23b2c"/>
-      <ellipse cx="148" cy="122" rx="3.4" ry="4" fill="#1a120c"/>
-      <ellipse cx="190" cy="108" rx="15" ry="17" fill="#fff" stroke="#161616" stroke-width="3"/>
-      <ellipse cx="192" cy="110" rx="7.4" ry="8.4" fill="#e23b2c"/>
-      <ellipse cx="194" cy="112" rx="3.2" ry="3.6" fill="#1a120c"/>
-      <path fill="#43a82e" stroke="#161616" stroke-width="4" d="M132 214c-12 22-6 40 12 44 10-16 6-32 0-44zM152 208c2 24 12 38 26 38-2-18-10-32-14-42zM174 204c10 20 22 32 36 28-10-16-18-26-22-36z"/>
-      <path fill="#f7f7f7" stroke="#161616" stroke-width="2" d="M128 250l7 18 10-16zM164 242l5 20 12-18zM198 226l3 18 14-14z"/>
-    </g>
+  <svg class="bg-waves" viewBox="0 0 1200 800" preserveAspectRatio="none" aria-hidden="true">
+    <path fill="var(--wave-green)" d="M0 430C180 300 340 560 560 430C780 300 980 540 1200 390V800H0Z"/>
+    <path fill="var(--wave-blue)" d="M0 560C220 430 420 690 680 540C900 420 1040 620 1200 520V800H0Z"/>
+    <path fill="var(--wave-amber)" d="M0 150C200 40 380 250 620 130C860 10 1020 220 1200 90V0H0Z"/>
+    <path fill="var(--wave-green)" d="M0 250C160 160 340 340 560 230C800 110 1000 300 1200 200V80C980 150 760 40 520 140C300 230 140 120 0 190Z"/>
   </svg>
 
   <button class="theme-toggle" id="theme" type="button" aria-pressed="false" aria-label="Dark color scheme">
@@ -377,43 +360,22 @@
     <p class="phase" id="phase">Quiet time</p>
     <p class="time" id="time">25:00</p>
     <div class="dragon-wrap" id="dragon">
-      <svg viewBox="0 0 340 300" aria-hidden="true">
-        <g class="figure" stroke-linejoin="round" stroke-linecap="round">
-          <path fill="#e8c56e" stroke="#161616" stroke-width="4" d="M214 168c42 8 86 2 104-10l-8 24c-30 10-74 10-104 0z"/>
-          <path fill="#d7ae58" stroke="#161616" stroke-width="4" d="M218 186c40 8 80 2 96-8l-6 22c-28 8-70 8-98 0z"/>
-          <path fill="#e8c56e" stroke="#161616" stroke-width="4" d="M224 206c36 6 70 2 86-6l-4 20c-26 6-64 6-88 0z"/>
-          <path fill="#d7ae58" stroke="#161616" stroke-width="4" d="M232 226c30 4 56 2 70-2l-2 16c-22 4-54 4-72 0z"/>
-          <path fill="#f0d23c" stroke="#161616" stroke-width="4" d="M228 124c22-8 34 0 28 14-10 4-24 0-28-14z"/>
-          <path fill="#f0d23c" stroke="#161616" stroke-width="4" d="M240 106c20-16 36-6 30 10-12 6-26 2-30-10z"/>
-          <path fill="#f0d23c" stroke="#161616" stroke-width="4" d="M218 98c14-18 34-14 34 4-14 6-28 2-34-4z"/>
-          <path fill="#c4843a" stroke="#161616" stroke-width="4" d="M176 98 L204 6 L232 24 L198 104 Z"/>
-          <path fill="#c4843a" stroke="#161616" stroke-width="4" d="M204 38 L238 2 L256 18 L220 52 Z"/>
-          <path fill="#c4843a" stroke="#161616" stroke-width="4" d="M204 90 L270 8 L296 30 L228 110 Z"/>
-          <path fill="#c4843a" stroke="#161616" stroke-width="4" d="M256 30 L302 2 L320 20 L274 50 Z"/>
-          <ellipse cx="186" cy="132" rx="74" ry="60" fill="#43a82e" stroke="#161616" stroke-width="4"/>
-          <ellipse cx="112" cy="156" rx="58" ry="34" fill="#43a82e" stroke="#161616" stroke-width="4"/>
-          <ellipse cx="148" cy="146" rx="30" ry="24" fill="#43a82e"/>
-          <path fill="none" stroke="#1d5c16" stroke-width="2.5" d="M160 104c18 8 32 8 46 0M156 120c20 8 36 8 52 0M172 90c12 6 26 8 38 2"/>
-          <ellipse cx="78" cy="142" rx="6" ry="4" fill="#16320f"/>
-          <ellipse cx="96" cy="154" rx="5" ry="3.4" fill="#16320f"/>
-          <path fill="#d62828" stroke="#161616" stroke-width="4" d="M86 162c30 8 58 8 76 0 6 18-8 32-32 36-26 4-52-6-64-20-6-8 0-16 20-16z"/>
-          <path fill="#fff" stroke="#161616" stroke-width="2" d="M98 162l6 16 10-14zM118 164l5 18 10-16zM136 160l4 16 9-14zM104 188l7-14 9 16zM124 190l5-16 9 16z"/>
-          <path d="M72 158C18 118 4 72 40 38" fill="none" stroke="#161616" stroke-width="12"/>
-          <path d="M72 158C18 118 4 72 40 38" fill="none" stroke="#f0d23c" stroke-width="6"/>
-          <path d="M108 172C168 148 214 196 328 132" fill="none" stroke="#161616" stroke-width="12"/>
-          <path d="M108 172C168 148 214 196 328 132" fill="none" stroke="#f0d23c" stroke-width="6"/>
-          <g class="eye">
-            <ellipse cx="142" cy="118" rx="16" ry="18" fill="#fff" stroke="#161616" stroke-width="3"/>
-            <ellipse cx="146" cy="120" rx="8" ry="9" fill="#e23b2c"/>
-            <ellipse cx="148" cy="122" rx="3.4" ry="4" fill="#1a120c"/>
-          </g>
-          <g class="eye">
-            <ellipse cx="190" cy="108" rx="15" ry="17" fill="#fff" stroke="#161616" stroke-width="3"/>
-            <ellipse cx="192" cy="110" rx="7.4" ry="8.4" fill="#e23b2c"/>
-            <ellipse cx="194" cy="112" rx="3.2" ry="3.6" fill="#1a120c"/>
-          </g>
-          <path fill="#43a82e" stroke="#161616" stroke-width="4" d="M132 214c-12 22-6 40 12 44 10-16 6-32 0-44zM152 208c2 24 12 38 26 38-2-18-10-32-14-42zM174 204c10 20 22 32 36 28-10-16-18-26-22-36z"/>
-          <path fill="#f7f7f7" stroke="#161616" stroke-width="2" d="M128 250l7 18 10-16zM164 242l5 20 12-18zM198 226l3 18 14-14z"/>
+      <svg viewBox="0 0 180 200" aria-hidden="true">
+        <ellipse cx="90" cy="188" rx="34" ry="7" fill="#000" opacity="0.18"/>
+        <g class="figure">
+          <rect x="16" y="118" width="36" height="13" rx="6.5" transform="rotate(24 52 124)" fill="var(--bot-deep)"/>
+          <rect x="128" y="118" width="36" height="13" rx="6.5" transform="rotate(-24 128 124)" fill="var(--bot-deep)"/>
+          <rect x="56" y="126" width="68" height="52" rx="24" fill="var(--bot-light)"/>
+          <circle cx="90" cy="150" r="5.5" fill="var(--bot-accent)"/>
+          <rect x="40" y="42" width="100" height="86" rx="40" fill="var(--bot)"/>
+          <ellipse cx="72" cy="62" rx="16" ry="7" fill="#fff" opacity="0.16"/>
+          <line x1="90" y1="42" x2="90" y2="16" stroke="var(--bot-deep)" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="90" cy="12" r="7" fill="var(--bot-accent)"/>
+          <ellipse class="eye" cx="70" cy="80" rx="6.5" ry="8" fill="var(--bot-ink)"/>
+          <ellipse class="eye" cx="110" cy="80" rx="6.5" ry="8" fill="var(--bot-ink)"/>
+          <circle cx="54" cy="98" r="6.5" fill="var(--bot-accent)" opacity="0.85"/>
+          <circle cx="126" cy="98" r="6.5" fill="var(--bot-accent)" opacity="0.85"/>
+          <path d="M74 104c6 11 26 11 32 0" fill="none" stroke="var(--bot-ink)" stroke-width="3" stroke-linecap="round"/>
         </g>
       </svg>
     </div>
