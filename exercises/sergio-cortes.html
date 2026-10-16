@@ -6,48 +6,64 @@
   <title>Pomodoro</title>
   <style>
     :root {
-      --bg: #2a2438;
-      --card: #342c49;
-      --card-border: rgba(255, 255, 255, 0.16);
-      --text: #f6f1e8;
-      --muted: #c9c3d6;
-      --badge-bg: #5a3948;
-      --badge-text: #f6d5e0;
-      --start: #7dcec4;
-      --start-text: #16302e;
-      --btn: #4a4363;
-      --btn-text: #f0ecf7;
-      --btn-disabled: #3a3450;
-      --btn-disabled-text: #7d7790;
-      --toggle-bg: rgba(255, 255, 255, 0.14);
-      --toggle-text: #f6f1e8;
-      --orb-peach: #e3b5a6;
-      --orb-lilac: #c9b6e6;
-      --orb-teal: #7ecfc4;
-      --shadow: rgba(10, 6, 20, 0.45);
+      --bg: #070b06;
+      --card: #141f10;
+      --card-border: rgba(186, 230, 140, 0.16);
+      --text: #e9f6dc;
+      --muted: #a9c49a;
+      --badge-bg: #24381c;
+      --badge-text: #dff6c8;
+      --start: #8dce55;
+      --start-text: #102006;
+      --start-shadow: rgba(141, 206, 85, 0.28);
+      --start-disabled: #1a2e14;
+      --start-disabled-text: #7d9a68;
+      --action: #e0a04a;
+      --action-text: #2a1606;
+      --action-disabled: #3a2a14;
+      --action-disabled-text: #c4a36a;
+      --info: #2f86d6;
+      --info-text: #f4f9ff;
+      --info-disabled: #162838;
+      --info-disabled-text: #8aabc4;
+      --danger: #d64545;
+      --danger-text: #fff6f6;
+      --danger-disabled: #3a1816;
+      --danger-disabled-text: #c48a86;
+      --toggle-bg: rgba(20, 36, 16, 0.88);
+      --toggle-text: #e9f6dc;
+      --shadow: rgba(0, 0, 0, 0.55);
       color-scheme: dark;
     }
 
-    body.theme-pastel {
-      --bg: #efeaf6;
-      --card: #fbf9fd;
-      --card-border: rgba(80, 70, 110, 0.16);
-      --text: #2c3142;
-      --muted: #5e6578;
-      --badge-bg: #eadce4;
-      --badge-text: #6d4456;
-      --start: #6fbfb6;
-      --start-text: #14302e;
-      --btn: #d9d5e6;
-      --btn-text: #2f3548;
-      --btn-disabled: #eceaf3;
-      --btn-disabled-text: #a7a2b6;
-      --toggle-bg: rgba(255, 255, 255, 0.82);
-      --toggle-text: #3c4154;
-      --orb-peach: #f3c7b8;
-      --orb-lilac: #ddd0f3;
-      --orb-teal: #b7e6df;
-      --shadow: rgba(70, 50, 100, 0.12);
+    body.theme-light {
+      --bg: #d5eeb8;
+      --card: #f4fbe8;
+      --card-border: rgba(47, 110, 32, 0.16);
+      --text: #173112;
+      --muted: #4d6b3c;
+      --badge-bg: #d3efb4;
+      --badge-text: #215c18;
+      --start: #1f7a2e;
+      --start-text: #f4fff4;
+      --start-shadow: rgba(31, 122, 46, 0.22);
+      --start-disabled: #d7efc4;
+      --start-disabled-text: #6d9460;
+      --action: #a85f16;
+      --action-text: #fff8f1;
+      --action-disabled: #f3e0c4;
+      --action-disabled-text: #8d6a3a;
+      --info: #1565b5;
+      --info-text: #f5fbff;
+      --info-disabled: #d5e6f6;
+      --info-disabled-text: #6a88a8;
+      --danger: #c62828;
+      --danger-text: #fff6f6;
+      --danger-disabled: #f6d8d4;
+      --danger-disabled-text: #a86a66;
+      --toggle-bg: rgba(255, 255, 255, 0.72);
+      --toggle-text: #173112;
+      --shadow: rgba(40, 80, 24, 0.14);
       color-scheme: light;
     }
 
@@ -67,36 +83,21 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    .orb {
+    .bg-dragon {
       position: fixed;
-      border-radius: 50%;
-      filter: blur(36px);
+      left: 50%;
+      top: 48%;
+      width: min(980px, 108vw);
+      height: auto;
+      transform: translate(-50%, -46%);
+      filter: blur(16px);
+      opacity: 0.78;
       pointer-events: none;
-      opacity: 0.9;
+      z-index: 0;
     }
 
-    .orb-peach {
-      width: 220px;
-      height: 220px;
-      background: var(--orb-peach);
-      top: 7%;
-      left: 7%;
-    }
-
-    .orb-lilac {
-      width: 280px;
-      height: 280px;
-      background: var(--orb-lilac);
-      top: 16%;
-      right: 3%;
-    }
-
-    .orb-teal {
-      width: 210px;
-      height: 210px;
-      background: var(--orb-teal);
-      bottom: 6%;
-      left: 16%;
+    body.theme-light .bg-dragon {
+      opacity: 0.42;
     }
 
     .theme-toggle {
@@ -122,7 +123,11 @@
       width: 22px;
       height: 22px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #f0b7a4, #d7c6f0 55%, #8fd0c6);
+      background: radial-gradient(circle at 35% 35%, #c6ee8a, #245c18 72%);
+    }
+
+    body.theme-light .theme-toggle .swatch {
+      background: radial-gradient(circle at 35% 35%, #f4fbe8, #7dba55 70%);
     }
 
     .card {
@@ -170,12 +175,12 @@
       line-height: 1;
     }
 
-    .robot-wrap {
-      width: 148px;
-      margin: 6px auto 18px;
+    .dragon-wrap {
+      width: 232px;
+      margin: 0 auto 12px;
     }
 
-    .robot-wrap svg {
+    .dragon-wrap svg {
       display: block;
       width: 100%;
       height: auto;
@@ -187,19 +192,19 @@
       transform-origin: center;
     }
 
-    .robot-wrap.is-running .figure {
+    .dragon-wrap.is-running .figure {
       animation: bob 1.8s ease-in-out infinite;
     }
 
-    .robot-wrap.is-running .eye {
+    .dragon-wrap.is-running .eye {
       animation: blink 3.4s infinite;
     }
 
-    .robot-wrap.is-paused .eye {
+    .dragon-wrap.is-paused .eye {
       transform: scaleY(0.12);
     }
 
-    .robot-wrap.is-done .figure {
+    .dragon-wrap.is-done .figure {
       animation: jump 0.9s ease;
     }
 
@@ -253,8 +258,6 @@
       border: 0;
       border-radius: 999px;
       padding: 0.72rem 0.35rem;
-      background: var(--btn);
-      color: var(--btn-text);
       font: inherit;
       font-size: 0.92rem;
       font-weight: 650;
@@ -262,14 +265,50 @@
     }
 
     .controls button:disabled {
-      background: var(--btn-disabled);
-      color: var(--btn-disabled-text);
       cursor: default;
+    }
+
+    #start {
+      background: var(--start-disabled);
+      color: var(--start-disabled-text);
     }
 
     #start:not(:disabled) {
       background: var(--start);
       color: var(--start-text);
+      box-shadow: 0 8px 18px var(--start-shadow);
+    }
+
+    #pause,
+    #next {
+      background: var(--action-disabled);
+      color: var(--action-disabled-text);
+    }
+
+    #pause:not(:disabled),
+    #next:not(:disabled) {
+      background: var(--action);
+      color: var(--action-text);
+    }
+
+    #reset {
+      background: var(--info-disabled);
+      color: var(--info-disabled-text);
+    }
+
+    #reset:not(:disabled) {
+      background: var(--info);
+      color: var(--info-text);
+    }
+
+    #end {
+      background: var(--danger-disabled);
+      color: var(--danger-disabled-text);
+    }
+
+    #end:not(:disabled) {
+      background: var(--danger);
+      color: var(--danger-text);
     }
 
     .controls button:not(:disabled):hover {
@@ -282,22 +321,54 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .robot-wrap.is-running .figure,
-      .robot-wrap.is-running .eye,
-      .robot-wrap.is-done .figure {
+      .dragon-wrap.is-running .figure,
+      .dragon-wrap.is-running .eye,
+      .dragon-wrap.is-done .figure {
         animation: none;
       }
     }
   </style>
 </head>
 <body>
-  <div class="orb orb-peach"></div>
-  <div class="orb orb-lilac"></div>
-  <div class="orb orb-teal"></div>
+  <svg class="bg-dragon" viewBox="0 0 340 300" aria-hidden="true">
+    <g stroke-linejoin="round" stroke-linecap="round">
+      <path fill="#e8c56e" stroke="#161616" stroke-width="4" d="M214 168c42 8 86 2 104-10l-8 24c-30 10-74 10-104 0z"/>
+      <path fill="#d7ae58" stroke="#161616" stroke-width="4" d="M218 186c40 8 80 2 96-8l-6 22c-28 8-70 8-98 0z"/>
+      <path fill="#e8c56e" stroke="#161616" stroke-width="4" d="M224 206c36 6 70 2 86-6l-4 20c-26 6-64 6-88 0z"/>
+      <path fill="#d7ae58" stroke="#161616" stroke-width="4" d="M232 226c30 4 56 2 70-2l-2 16c-22 4-54 4-72 0z"/>
+      <path fill="#f0d23c" stroke="#161616" stroke-width="4" d="M228 124c22-8 34 0 28 14-10 4-24 0-28-14z"/>
+      <path fill="#f0d23c" stroke="#161616" stroke-width="4" d="M240 106c20-16 36-6 30 10-12 6-26 2-30-10z"/>
+      <path fill="#f0d23c" stroke="#161616" stroke-width="4" d="M218 98c14-18 34-14 34 4-14 6-28 2-34-4z"/>
+      <path fill="#c4843a" stroke="#161616" stroke-width="4" d="M176 98 L204 6 L232 24 L198 104 Z"/>
+      <path fill="#c4843a" stroke="#161616" stroke-width="4" d="M204 38 L238 2 L256 18 L220 52 Z"/>
+      <path fill="#c4843a" stroke="#161616" stroke-width="4" d="M204 90 L270 8 L296 30 L228 110 Z"/>
+      <path fill="#c4843a" stroke="#161616" stroke-width="4" d="M256 30 L302 2 L320 20 L274 50 Z"/>
+      <ellipse cx="186" cy="132" rx="74" ry="60" fill="#43a82e" stroke="#161616" stroke-width="4"/>
+      <ellipse cx="112" cy="156" rx="58" ry="34" fill="#43a82e" stroke="#161616" stroke-width="4"/>
+      <ellipse cx="148" cy="146" rx="30" ry="24" fill="#43a82e"/>
+      <path fill="none" stroke="#1d5c16" stroke-width="2.5" d="M160 104c18 8 32 8 46 0M156 120c20 8 36 8 52 0M172 90c12 6 26 8 38 2"/>
+      <ellipse cx="78" cy="142" rx="6" ry="4" fill="#16320f"/>
+      <ellipse cx="96" cy="154" rx="5" ry="3.4" fill="#16320f"/>
+      <path fill="#d62828" stroke="#161616" stroke-width="4" d="M86 162c30 8 58 8 76 0 6 18-8 32-32 36-26 4-52-6-64-20-6-8 0-16 20-16z"/>
+      <path fill="#fff" stroke="#161616" stroke-width="2" d="M98 162l6 16 10-14zM118 164l5 18 10-16zM136 160l4 16 9-14zM104 188l7-14 9 16zM124 190l5-16 9 16z"/>
+      <path d="M72 158C18 118 4 72 40 38" fill="none" stroke="#161616" stroke-width="12"/>
+      <path d="M72 158C18 118 4 72 40 38" fill="none" stroke="#f0d23c" stroke-width="6"/>
+      <path d="M108 172C168 148 214 196 328 132" fill="none" stroke="#161616" stroke-width="12"/>
+      <path d="M108 172C168 148 214 196 328 132" fill="none" stroke="#f0d23c" stroke-width="6"/>
+      <ellipse cx="142" cy="118" rx="16" ry="18" fill="#fff" stroke="#161616" stroke-width="3"/>
+      <ellipse cx="146" cy="120" rx="8" ry="9" fill="#e23b2c"/>
+      <ellipse cx="148" cy="122" rx="3.4" ry="4" fill="#1a120c"/>
+      <ellipse cx="190" cy="108" rx="15" ry="17" fill="#fff" stroke="#161616" stroke-width="3"/>
+      <ellipse cx="192" cy="110" rx="7.4" ry="8.4" fill="#e23b2c"/>
+      <ellipse cx="194" cy="112" rx="3.2" ry="3.6" fill="#1a120c"/>
+      <path fill="#43a82e" stroke="#161616" stroke-width="4" d="M132 214c-12 22-6 40 12 44 10-16 6-32 0-44zM152 208c2 24 12 38 26 38-2-18-10-32-14-42zM174 204c10 20 22 32 36 28-10-16-18-26-22-36z"/>
+      <path fill="#f7f7f7" stroke="#161616" stroke-width="2" d="M128 250l7 18 10-16zM164 242l5 20 12-18zM198 226l3 18 14-14z"/>
+    </g>
+  </svg>
 
-  <button class="theme-toggle" id="pastel" type="button" aria-pressed="false">
+  <button class="theme-toggle" id="theme" type="button" aria-pressed="false" aria-label="Dark color scheme">
     <span class="swatch" aria-hidden="true"></span>
-    Pastel
+    <span id="theme-label">dark</span>
   </button>
 
   <main class="card">
@@ -305,23 +376,44 @@
     <p class="phrase" id="phrase">No rush — start when you like</p>
     <p class="phase" id="phase">Quiet time</p>
     <p class="time" id="time">25:00</p>
-    <div class="robot-wrap" id="robot">
-      <svg viewBox="0 0 180 200" aria-hidden="true">
-        <ellipse cx="90" cy="188" rx="34" ry="7" fill="#000" opacity="0.18"/>
-        <g class="figure">
-          <rect x="16" y="118" width="36" height="13" rx="6.5" transform="rotate(24 52 124)" fill="#73c4ba"/>
-          <rect x="128" y="118" width="36" height="13" rx="6.5" transform="rotate(-24 128 124)" fill="#73c4ba"/>
-          <rect x="56" y="126" width="68" height="52" rx="24" fill="#8fd4cb"/>
-          <circle cx="90" cy="150" r="5.5" fill="#f0a3b8"/>
-          <rect x="40" y="42" width="100" height="86" rx="40" fill="#7ec8be"/>
-          <ellipse cx="72" cy="62" rx="16" ry="7" fill="#fff" opacity="0.16"/>
-          <line x1="90" y1="42" x2="90" y2="16" stroke="#5eaea4" stroke-width="4" stroke-linecap="round"/>
-          <circle cx="90" cy="12" r="7" fill="#f3a3b8"/>
-          <ellipse class="eye" cx="70" cy="80" rx="6.5" ry="8" fill="#2a3144"/>
-          <ellipse class="eye" cx="110" cy="80" rx="6.5" ry="8" fill="#2a3144"/>
-          <circle cx="54" cy="98" r="6.5" fill="#f4b7c6"/>
-          <circle cx="126" cy="98" r="6.5" fill="#f4b7c6"/>
-          <path d="M74 104c6 11 26 11 32 0" fill="none" stroke="#2a3144" stroke-width="3" stroke-linecap="round"/>
+    <div class="dragon-wrap" id="dragon">
+      <svg viewBox="0 0 340 300" aria-hidden="true">
+        <g class="figure" stroke-linejoin="round" stroke-linecap="round">
+          <path fill="#e8c56e" stroke="#161616" stroke-width="4" d="M214 168c42 8 86 2 104-10l-8 24c-30 10-74 10-104 0z"/>
+          <path fill="#d7ae58" stroke="#161616" stroke-width="4" d="M218 186c40 8 80 2 96-8l-6 22c-28 8-70 8-98 0z"/>
+          <path fill="#e8c56e" stroke="#161616" stroke-width="4" d="M224 206c36 6 70 2 86-6l-4 20c-26 6-64 6-88 0z"/>
+          <path fill="#d7ae58" stroke="#161616" stroke-width="4" d="M232 226c30 4 56 2 70-2l-2 16c-22 4-54 4-72 0z"/>
+          <path fill="#f0d23c" stroke="#161616" stroke-width="4" d="M228 124c22-8 34 0 28 14-10 4-24 0-28-14z"/>
+          <path fill="#f0d23c" stroke="#161616" stroke-width="4" d="M240 106c20-16 36-6 30 10-12 6-26 2-30-10z"/>
+          <path fill="#f0d23c" stroke="#161616" stroke-width="4" d="M218 98c14-18 34-14 34 4-14 6-28 2-34-4z"/>
+          <path fill="#c4843a" stroke="#161616" stroke-width="4" d="M176 98 L204 6 L232 24 L198 104 Z"/>
+          <path fill="#c4843a" stroke="#161616" stroke-width="4" d="M204 38 L238 2 L256 18 L220 52 Z"/>
+          <path fill="#c4843a" stroke="#161616" stroke-width="4" d="M204 90 L270 8 L296 30 L228 110 Z"/>
+          <path fill="#c4843a" stroke="#161616" stroke-width="4" d="M256 30 L302 2 L320 20 L274 50 Z"/>
+          <ellipse cx="186" cy="132" rx="74" ry="60" fill="#43a82e" stroke="#161616" stroke-width="4"/>
+          <ellipse cx="112" cy="156" rx="58" ry="34" fill="#43a82e" stroke="#161616" stroke-width="4"/>
+          <ellipse cx="148" cy="146" rx="30" ry="24" fill="#43a82e"/>
+          <path fill="none" stroke="#1d5c16" stroke-width="2.5" d="M160 104c18 8 32 8 46 0M156 120c20 8 36 8 52 0M172 90c12 6 26 8 38 2"/>
+          <ellipse cx="78" cy="142" rx="6" ry="4" fill="#16320f"/>
+          <ellipse cx="96" cy="154" rx="5" ry="3.4" fill="#16320f"/>
+          <path fill="#d62828" stroke="#161616" stroke-width="4" d="M86 162c30 8 58 8 76 0 6 18-8 32-32 36-26 4-52-6-64-20-6-8 0-16 20-16z"/>
+          <path fill="#fff" stroke="#161616" stroke-width="2" d="M98 162l6 16 10-14zM118 164l5 18 10-16zM136 160l4 16 9-14zM104 188l7-14 9 16zM124 190l5-16 9 16z"/>
+          <path d="M72 158C18 118 4 72 40 38" fill="none" stroke="#161616" stroke-width="12"/>
+          <path d="M72 158C18 118 4 72 40 38" fill="none" stroke="#f0d23c" stroke-width="6"/>
+          <path d="M108 172C168 148 214 196 328 132" fill="none" stroke="#161616" stroke-width="12"/>
+          <path d="M108 172C168 148 214 196 328 132" fill="none" stroke="#f0d23c" stroke-width="6"/>
+          <g class="eye">
+            <ellipse cx="142" cy="118" rx="16" ry="18" fill="#fff" stroke="#161616" stroke-width="3"/>
+            <ellipse cx="146" cy="120" rx="8" ry="9" fill="#e23b2c"/>
+            <ellipse cx="148" cy="122" rx="3.4" ry="4" fill="#1a120c"/>
+          </g>
+          <g class="eye">
+            <ellipse cx="190" cy="108" rx="15" ry="17" fill="#fff" stroke="#161616" stroke-width="3"/>
+            <ellipse cx="192" cy="110" rx="7.4" ry="8.4" fill="#e23b2c"/>
+            <ellipse cx="194" cy="112" rx="3.2" ry="3.6" fill="#1a120c"/>
+          </g>
+          <path fill="#43a82e" stroke="#161616" stroke-width="4" d="M132 214c-12 22-6 40 12 44 10-16 6-32 0-44zM152 208c2 24 12 38 26 38-2-18-10-32-14-42zM174 204c10 20 22 32 36 28-10-16-18-26-22-36z"/>
+          <path fill="#f7f7f7" stroke="#161616" stroke-width="2" d="M128 250l7 18 10-16zM164 242l5 20 12-18zM198 226l3 18 14-14z"/>
         </g>
       </svg>
     </div>
@@ -358,8 +450,9 @@
     const phraseEl = document.getElementById("phrase");
     const phaseEl = document.getElementById("phase");
     const timeEl = document.getElementById("time");
-    const robotEl = document.getElementById("robot");
-    const pastelBtn = document.getElementById("pastel");
+    const robotEl = document.getElementById("dragon");
+    const themeBtn = document.getElementById("theme");
+    const themeLabel = document.getElementById("theme-label");
     const startBtn = document.getElementById("start");
     const pauseBtn = document.getElementById("pause");
     const nextBtn = document.getElementById("next");
@@ -513,9 +606,11 @@
       render();
     });
 
-    pastelBtn.addEventListener("click", () => {
-      const on = document.body.classList.toggle("theme-pastel");
-      pastelBtn.setAttribute("aria-pressed", String(on));
+    themeBtn.addEventListener("click", () => {
+      const light = document.body.classList.toggle("theme-light");
+      themeLabel.textContent = light ? "light" : "dark";
+      themeBtn.setAttribute("aria-pressed", String(light));
+      themeBtn.setAttribute("aria-label", light ? "Light color scheme" : "Dark color scheme");
     });
 
     setInterval(tick, 200);
