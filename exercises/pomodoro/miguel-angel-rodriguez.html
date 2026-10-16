@@ -17,7 +17,7 @@
 
     * { box-sizing: border-box; }
     body { margin: 0; -webkit-font-smoothing: antialiased; }
-    button, input { font: inherit; }
+    button { font: inherit; }
     button { cursor: pointer; }
     :focus-visible { outline: 2px solid #f4f2ec; outline-offset: 3px; }
     ::selection { color: #101214; background: #f4f2ec; }
@@ -59,6 +59,15 @@
       padding: 48px 20px;
     }
 
+    h1 {
+      max-width: 440px;
+      margin: 0 0 36px;
+      text-align: center;
+      font-size: clamp(1.4rem, 4vw, 1.8rem);
+      font-weight: 500;
+      line-height: 1.35;
+    }
+
     .phase-tabs {
       display: flex;
       gap: 4px;
@@ -80,16 +89,6 @@
     }
     .phase-tab:hover { color: #f4f2ec; background: #1a1d20; }
     .phase-tab[aria-pressed="true"] { color: #f4f2ec; background: #262b30; font-weight: 600; }
-    .session-indicator {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      margin-bottom: 20px;
-      color: #a7adb4;
-      font-size: 14px;
-      font-variant-numeric: tabular-nums;
-    }
-    .session-indicator .icon { width: 16px; height: 16px; }
     .countdown { display: flex; align-items: center; justify-content: center; gap: 16px; }
     .timer {
       min-width: 6ch;
@@ -123,49 +122,7 @@
     .primary { color: #101214; background: #f4f2ec; border-color: #f4f2ec; }
     .primary:hover { color: #101214; background: #fffdf7; border-color: #fffdf7; }
     .playback { display: flex; justify-content: center; gap: 12px; margin-top: 32px; }
-
-    .settings {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      max-width: 100%;
-      margin-top: 48px;
-    }
-    .phase-setting {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      width: 88px;
-      min-height: 48px;
-      padding: 6px;
-      border: 1px solid #343a40;
-      border-radius: 10px;
-      background: #1a1d20;
-      color: #a7adb4;
-    }
-    .phase-icon { display: flex; align-items: center; justify-content: center; width: 26px; height: 28px; border-radius: 6px; flex-shrink: 0; }
-    .phase-setting[aria-current="step"] .phase-icon { color: #101214; background: #f4f2ec; }
-    .phase-setting input:focus-visible { outline: none; }
-    .phase-setting:has(input:focus-visible) { outline: 2px solid #f4f2ec; outline-offset: 3px; }
-    .phase-setting:has(input[aria-invalid="true"]) { border-color: #ffb4ab; }
-    .phase-setting input {
-      width: 44px;
-      min-width: 0;
-      min-height: 32px;
-      padding: 0 2px;
-      border: 0;
-      border-radius: 3px;
-      color: #f4f2ec;
-      background: transparent;
-      font-size: 16px;
-      font-variant-numeric: tabular-nums;
-      text-align: center;
-      appearance: textfield;
-    }
-    input::-webkit-inner-spin-button, input::-webkit-outer-spin-button { appearance: none; margin: 0; }
-    .sound[aria-pressed="false"] .sound-waves, .sound[aria-pressed="true"] .muted-mark { display: none; }
-    .sound[aria-pressed="true"] { color: #f4f2ec; border-color: #a7adb4; }
+    .dedication { margin: 36px 0 0; color: #17191b; font-size: 12px; text-align: center; }
 
     @media (prefers-reduced-motion: reduce) {
       .icon-button, .phase-tab { transition: none; }
@@ -182,22 +139,15 @@
       <symbol id="i-skip" viewBox="0 0 24 24"><path d="m5 6 10 6-10 6ZM19 5v14"/></symbol>
       <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
       <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></symbol>
-      <symbol id="i-focus" viewBox="0 0 24 24"><path d="M8 4H4v4m12-4h4v4M4 16v4h4m12-4v4h-4"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></symbol>
-      <symbol id="i-short" viewBox="0 0 24 24"><path d="M4 8h12v7a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5ZM16 9h2a3 3 0 0 1 0 6h-2M7 3v2m5-2v2"/></symbol>
-      <symbol id="i-long" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/></symbol>
-      <symbol id="i-speaker" viewBox="0 0 24 24"><path d="M10 5 5 9H2v6h3l5 4Z"/></symbol>
     </defs>
   </svg>
 
-  <main aria-label="Temporizador Pomodoro">
+  <main aria-labelledby="page-title">
+    <h1 id="page-title">Time to shut up and focus 😎</h1>
     <div class="phase-tabs" role="group" aria-label="Seleccionar fase">
       <button id="phase-focus" class="phase-tab" type="button" data-phase="focus" aria-pressed="true">Pomodoro</button>
       <button id="phase-short" class="phase-tab" type="button" data-phase="shortBreak" aria-pressed="false">Break</button>
       <button id="phase-long" class="phase-tab" type="button" data-phase="longBreak" aria-pressed="false">Long Break</button>
-    </div>
-    <div id="session-indicator" class="session-indicator" role="group" aria-label="Concentración. Sesión 1 de 4." title="Concentración · Sesión 1 de 4">
-      <svg class="icon" aria-hidden="true"><use id="session-icon" href="#i-focus"/></svg>
-      <span id="session-number" aria-hidden="true">1 / 4</span>
     </div>
     <div class="countdown">
       <button id="minus" class="icon-button adjust" type="button" aria-label="Restar un minuto" title="Restar un minuto">
@@ -221,36 +171,7 @@
       </button>
     </div>
 
-    <div class="settings" role="group" aria-label="Duraciones y sonido">
-      <label class="phase-setting" data-phase="focus" aria-current="step" title="Concentración">
-        <span class="phase-icon"><svg class="icon" aria-hidden="true"><use href="#i-focus"/></svg></span>
-        <span class="sr-only">Concentración, minutos</span>
-        <input id="focus-minutes" name="focusMinutes" type="number" inputmode="numeric" min="1" max="180" step="1" required value="25" aria-describedby="duration-help focus-state">
-      </label>
-      <label class="phase-setting" data-phase="shortBreak" title="Descanso corto">
-        <span class="phase-icon"><svg class="icon" aria-hidden="true"><use href="#i-short"/></svg></span>
-        <span class="sr-only">Descanso corto, minutos</span>
-        <input id="short-minutes" name="shortBreakMinutes" type="number" inputmode="numeric" min="1" max="180" step="1" required value="5" aria-describedby="duration-help shortBreak-state">
-      </label>
-      <label class="phase-setting" data-phase="longBreak" title="Descanso largo">
-        <span class="phase-icon"><svg class="icon" aria-hidden="true"><use href="#i-long"/></svg></span>
-        <span class="sr-only">Descanso largo, minutos</span>
-        <input id="long-minutes" name="longBreakMinutes" type="number" inputmode="numeric" min="1" max="180" step="1" required value="15" aria-describedby="duration-help longBreak-state">
-      </label>
-      <button id="sound" class="icon-button sound" type="button" aria-label="Activar sonido" title="Activar sonido" aria-pressed="false">
-        <svg class="icon" aria-hidden="true">
-          <use href="#i-speaker"/>
-          <path class="sound-waves" d="M14 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/>
-          <path class="muted-mark" d="m15 9 6 6m0-6-6 6"/>
-        </svg>
-      </button>
-    </div>
-
-    <p id="duration-help" class="sr-only">Minutos enteros de 1 a 180. Se guardan al editar y se aplican a la próxima fase o al reiniciar.</p>
-    <span id="focus-state" class="sr-only">Fase actual.</span>
-    <span id="shortBreak-state" class="sr-only"></span>
-    <span id="longBreak-state" class="sr-only"></span>
-    <p id="duration-error" class="sr-only">Introduce un número entero entre 1 y 180.</p>
+    <p class="dedication">Meghan I hope this is good enough for you</p>
     <p id="announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
   </main>
 
@@ -258,60 +179,22 @@
     (() => {
       const MINUTE = 60_000;
       const MAX_TIME = 180 * MINUTE;
-      const STORAGE_KEY = 'pomodoro:miguel-angel-rodriguez:v1';
-      const DEFAULTS = { focusMinutes: 25, shortBreakMinutes: 5, longBreakMinutes: 15, sound: false };
-      const DURATION_KEYS = { focus: 'focusMinutes', shortBreak: 'shortBreakMinutes', longBreak: 'longBreakMinutes' };
+      const DURATIONS = { focus: 25, shortBreak: 5, longBreak: 15 };
       const PHASE_NAMES = { focus: 'Concentración', shortBreak: 'Descanso corto', longBreak: 'Descanso largo' };
       const byId = (id) => document.getElementById(id);
       const timer = byId('timer');
       const primary = byId('primary');
-      const sound = byId('sound');
       const announcement = byId('announcement');
-      const sessionIndicator = byId('session-indicator');
       const phaseButtons = [...document.querySelectorAll('.phase-tab')];
-      const phaseLabels = [...document.querySelectorAll('.phase-setting')];
-      const inputs = [...document.querySelectorAll('.phase-setting input')];
-
-      function validMinutes(value) {
-        return Number.isInteger(value) && value >= 1 && value <= 180;
-      }
-
-      function validatePreferences(value) {
-        return value && typeof value === 'object' && !Array.isArray(value)
-          && Object.values(DURATION_KEYS).every((key) => validMinutes(value[key]))
-          && typeof value.sound === 'boolean';
-      }
 
       function announce(message) {
         announcement.textContent = message;
       }
 
-      function loadPreferences() {
-        try {
-          const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-          if (saved?.version === 1 && validatePreferences(saved.preferences)) {
-            const prefs = saved.preferences;
-            return { focusMinutes: prefs.focusMinutes, shortBreakMinutes: prefs.shortBreakMinutes, longBreakMinutes: prefs.longBreakMinutes, sound: prefs.sound };
-          }
-        } catch {
-          announce('Si el almacenamiento no está disponible, los ajustes funcionarán durante esta visita.');
-        }
-        return { ...DEFAULTS };
-      }
-
-      function savePreferences() {
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 1, preferences: state.preferences }));
-        } catch {
-          announce('Los ajustes funcionan durante esta visita, pero no se han podido guardar.');
-        }
-      }
-
-      function createState(preferences = DEFAULTS) {
+      function createState() {
         return {
           phase: 'focus', status: 'ready', cycle: 0,
-          remainingMs: DEFAULTS.focusMinutes * MINUTE, deadlineMs: null,
-          preferences: { ...preferences, focusMinutes: DEFAULTS.focusMinutes },
+          remainingMs: DURATIONS.focus * MINUTE, deadlineMs: null,
         };
       }
 
@@ -327,13 +210,8 @@
       function prepare(state, phase, cycle = state.cycle) {
         return {
           ...state, phase, cycle, status: 'ready', deadlineMs: null,
-          remainingMs: state.preferences[DURATION_KEYS[phase]] * MINUTE,
+          remainingMs: DURATIONS[phase] * MINUTE,
         };
-      }
-
-      function restartFocus(state, cycle = state.cycle) {
-        const preferences = { ...state.preferences, focusMinutes: DEFAULTS.focusMinutes };
-        return prepare({ ...state, preferences }, 'focus', cycle);
       }
 
       function complete(state) {
@@ -347,12 +225,12 @@
       function transition(state, event, now) {
         if (event.type === 'selectPhase') {
           const cycle = state.phase === 'longBreak' ? 0 : state.cycle;
-          if (event.phase === 'focus') return { state: restartFocus(state, cycle), completed: false };
+          if (event.phase === 'focus') return { state: prepare(state, 'focus', cycle), completed: false };
           if (event.phase === state.phase) return { state, completed: false };
           return { state: prepare(state, event.phase, cycle), completed: false };
         }
         if (event.type === 'reset' && state.phase === 'focus') {
-          return { state: restartFocus(state), completed: false };
+          return { state: prepare(state, 'focus'), completed: false };
         }
         // Adjust before reconciling expiry: subtraction can never complete a phase.
         if (event.type === 'adjust') {
@@ -377,14 +255,14 @@
         return { state: next, completed: false };
       }
 
-      let state = createState(loadPreferences());
+      let state = createState();
       let scheduler = null;
       let audioContext = null;
       let noiseBuffer = null;
       let audioAvailable = true;
 
       function prepareAudio() {
-        if (!state.preferences.sound || !audioAvailable) return;
+        if (!audioAvailable) return;
         try {
           const Audio = window.AudioContext || window.webkitAudioContext;
           if (!Audio) { audioAvailable = false; return; }
@@ -394,7 +272,7 @@
       }
 
       function completionSound() {
-        if (!state.preferences.sound || !audioAvailable || audioContext?.state !== 'running') return;
+        if (!audioAvailable || audioContext?.state !== 'running') return;
         try {
           const context = audioContext;
           const start = context.currentTime;
@@ -460,22 +338,8 @@
         timer.setAttribute('aria-label', `${minutes} ${minutes === 1 ? 'minuto' : 'minutos'} y ${rest} ${rest === 1 ? 'segundo' : 'segundos'} restantes`);
         buttonLabel(primary, { ready: 'Iniciar', running: 'Pausar', paused: 'Continuar' }[state.status]);
         byId('play-icon').setAttribute('href', state.status === 'running' ? '#i-pause' : '#i-play');
-        sound.setAttribute('aria-pressed', String(state.preferences.sound));
-        buttonLabel(sound, state.preferences.sound ? 'Silenciar sonido' : 'Activar sonido');
-        const session = state.phase === 'focus' ? state.cycle + 1 : Math.max(1, state.cycle);
-        const sessionLabel = `${PHASE_NAMES[state.phase]}. Sesión ${session} de 4.`;
-        sessionIndicator.setAttribute('aria-label', sessionLabel);
-        sessionIndicator.title = `${sessionLabel} Solo las concentraciones completadas avanzan el ciclo.`;
-        byId('session-number').textContent = `${session} / 4`;
-        byId('session-icon').setAttribute('href', { focus: '#i-focus', shortBreak: '#i-short', longBreak: '#i-long' }[state.phase]);
         for (const button of phaseButtons) {
           button.setAttribute('aria-pressed', String(button.dataset.phase === state.phase));
-        }
-        for (const label of phaseLabels) {
-          const active = label.dataset.phase === state.phase;
-          if (active) label.setAttribute('aria-current', 'step');
-          else label.removeAttribute('aria-current');
-          byId(`${label.dataset.phase}-state`).textContent = active ? 'Fase actual.' : '';
         }
         document.title = `${display} · ${PHASE_NAMES[state.phase]}`;
       }
@@ -497,10 +361,6 @@
         const now = Date.now();
         const result = transition(state, event, now);
         state = result.state;
-        if (previous.preferences.focusMinutes !== state.preferences.focusMinutes) {
-          byId('focus-minutes').value = state.preferences.focusMinutes;
-          savePreferences();
-        }
         render(now);
         schedule();
         if (result.completed) {
@@ -519,36 +379,6 @@
       for (const button of phaseButtons) {
         button.addEventListener('click', () => dispatch({ type: 'selectPhase', phase: button.dataset.phase }));
       }
-      sound.addEventListener('click', () => {
-        dispatch({ type: 'tick' });
-        state.preferences.sound = !state.preferences.sound;
-        savePreferences();
-        prepareAudio();
-        render(Date.now());
-      });
-
-      for (const input of inputs) {
-        const phase = input.closest('.phase-setting').dataset.phase;
-        const description = `duration-help ${phase}-state`;
-        input.value = state.preferences[input.name];
-        input.addEventListener('input', () => {
-          const value = input.valueAsNumber;
-          const valid = validMinutes(value);
-          input.setAttribute('aria-invalid', String(!valid));
-          input.setAttribute('aria-describedby', valid ? description : `${description} duration-error`);
-          if (!valid) return;
-          state.preferences[input.name] = value;
-          savePreferences();
-        });
-        input.addEventListener('blur', () => {
-          if (validMinutes(input.valueAsNumber)) return;
-          input.value = state.preferences[input.name];
-          input.removeAttribute('aria-invalid');
-          input.setAttribute('aria-describedby', description);
-          announce('Valor no válido. Se conserva la duración guardada.');
-        });
-      }
-
       document.addEventListener('visibilitychange', () => dispatch({ type: 'tick' }));
       window.addEventListener('pageshow', () => dispatch({ type: 'tick' }));
       render(Date.now());
