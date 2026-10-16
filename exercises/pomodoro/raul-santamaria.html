@@ -576,10 +576,6 @@
       };
     }
 
-    function skipToNext(current) {
-      return advancePhase(current, false);
-    }
-
     function finishInterval(current) {
       return advancePhase(current, true);
     }
@@ -594,14 +590,8 @@
       };
     }
 
-    function endSession(current) {
-      return {
-        step: 0,
-        status: "idle",
-        remainingMs: DURATIONS_MS.study,
-        endsAt: null,
-        completedPomodoros: current.completedPomodoros
-      };
+    function endSession() {
+      return createState();
     }
 
     function applyTick(current, now) {
@@ -737,7 +727,7 @@
     });
 
     nodes.next.addEventListener("click", function () {
-      commit(skipToNext(state));
+      commit(finishInterval(state));
     });
 
     nodes.reset.addEventListener("click", function () {
@@ -745,7 +735,7 @@
     });
 
     nodes.end.addEventListener("click", function () {
-      commit(endSession(state));
+      commit(endSession());
     });
 
     state = createState();
