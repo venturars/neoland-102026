@@ -421,7 +421,47 @@
     const resetBtn = document.getElementById("reset");
     const endBtn = document.getElementById("end");
 
+    const STORAGE_KEY = "sergio-cortes-pomodoro";
     let finishTimer = null;
+
+    function currentRemaining() {
+      if (state.mode === "running" && state.endsAt != null) {
+        return Math.max(0, state.endsAt - Date.now());
+      }
+      return state.remainingMs;
+    }
+
+    function save() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          step: state.step,
+          pomodoros: state.pomodoros,
+          remainingMs: currentRemaining(),
+          mode: state.mode
+        }));
+      } catch (error) {
+        return error;
+      }
+    }
+
+    function restore() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        const step = data.step;
+        if (!Number.isInteger(step) || step < 0 || step >= CYCLE.length) return;
+        if (!Number.isFinite(data.pomodoros) || data.pomodoros < 0) return;
+        if (!Number.isFinite(data.remainingMs) || data.remainingMs < 0) return;
+        state.step = step;
+        state.pomodoros = Math.floor(data.pomodoros);
+        state.remainingMs = Math.min(data.remainingMs, CYCLE[step].ms);
+        state.endsAt = null;
+        state.mode = data.mode === "idle" ? "idle" : "ended";
+      } catch (error) {
+        return error;
+      }
+    }
 
     function phase() {
       return CYCLE[state.step];
@@ -492,6 +532,18 @@
       resetBtn.disabled = state.mode === "idle";
       endBtn.disabled = state.mode === "idle" || state.mode === "ended";
       syncRobot();
+      save();
+    }
+
+    function endSession() {
+      if (state.mode !== "running" && state.mode !== "paused") {
+        save();
+        return;
+      }
+      captureRemaining();
+      state.mode = "ended";
+      clearFinish();
+      render();
     }
 
     function captureRemaining() {
@@ -562,10 +614,7 @@
 
     endBtn.addEventListener("click", () => {
       if (state.mode !== "running" && state.mode !== "paused") return;
-      captureRemaining();
-      state.mode = "ended";
-      clearFinish();
-      render();
+      endSession();
     });
 
     themeBtn.addEventListener("click", () => {
@@ -575,7 +624,10 @@
       themeBtn.setAttribute("aria-label", light ? "Light color scheme" : "Dark color scheme");
     });
 
+    window.addEventListener("pagehide", endSession);
+
     setInterval(tick, 200);
+    restore();
     render();
   </script>
 </body>
