@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Temporizador Pomodoro: enfoque, descanso, rondas y sonido ambiente.">
+  <meta name="theme-color" content="#9ecf8a">
+  <meta name="color-scheme" content="light">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Pomodoro">
+  <meta property="og:title" content="Pomodoro — Temporizador de enfoque">
+  <title>Pomodoro · Temporizador de enfoque</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html {
+      color-scheme: light;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    :root {
+      --work-bg: #9ecf8a;
+      --break-bg: #f5c987;
+      --fg: #fff;
+      --ease-spring: cubic-bezier(0.34, 1.2, 0.64, 1);
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+      --pill-active: #1c1c1e;
+      --pulse-duration: 5.5s;
+      --ease-pulse: cubic-bezier(0.33, 0, 0.2, 1);
+      --play-size: clamp(4.5rem, 15vw, 5.5rem);
+      --icon-size: clamp(1.4rem, 3.85vw, 1.7rem);
+      --timer-size: clamp(1.62rem, 5.15vw, 2.2rem);
+      --gutter: max(1rem, env(safe-area-inset-left));
+    }
+
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background: var(--work-bg);
+      color: var(--fg);
+      overflow: hidden;
+      transition: background-color 0.85s var(--ease-out);
+    }
+
+    body.mode-break { background: var(--break-bg); }
+
+    body.mode-transition {
+      transition: background-color 1s var(--ease-out);
+    }
+
+    button {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:focus-visible {
+      outline: 2px solid rgba(255, 255, 255, 0.85);
+      outline-offset: 3px;
+    }
+    .settings-panel button:focus-visible {
+      outline-color: #007aff;
+      outline-offset: 2px;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse 120% 80% at 50% 100%, rgba(0, 0, 0, 0.04) 0%, transparent 55%);
+      z-index: 1;
+    }
+
+    .app {
+      position: relative;
+      z-index: 2;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
+
+    .settings-wrap {
+      position: absolute;
+      top: max(1rem, env(safe-area-inset-top));
+      right: max(1rem, env(safe-area-inset-right));
+      z-index: 30;
+    }
+
+    .settings-btn {
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.88);
+      color: var(--work-bg);
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s var(--ease-spring), color 0.8s var(--ease-out);
+    }
+    body.mode-break .settings-btn { color: var(--break-bg); }
+    .settings-btn:active { transform: scale(0.94); }
+    .settings-btn svg { width: 1.25rem; height: 1.25rem; }
+
+    .settings-dismiss {
+      position: fixed;
+      inset: 0;
+      border: none;
+      background: transparent;
+      z-index: 25;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .settings-dismiss.visible { visibility: visible; pointer-events: auto; }
+
+    .settings-panel {
+      position: absolute;
+      top: calc(100% + 0.45rem);
+      right: 0;
+      width: min(17.5rem, calc(100vw - var(--gutter) * 2));
+      overflow: visible;
+      padding: 0.75rem 0.9rem 0.8rem;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 1rem;
+      color: #1c1c1e;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.16);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-6px) scale(0.97);
+      transform-origin: top right;
+      transition: opacity 0.22s ease, transform 0.28s var(--ease-spring), visibility 0.22s;
+      pointer-events: none;
+    }
+    .settings-wrap.open .settings-panel {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.65rem;
+    }
+    .panel-head h2 {
+      margin: 0;
+      font-size: 1.0625rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+    .panel-close {
+      font: inherit;
+      font-size: 1.125rem;
+      line-height: 1;
+      border: none;
+      background: none;
+      color: #8e8e93;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .setting-block { margin-bottom: 0.5rem; }
+    .setting-block:last-child { margin-bottom: 0; }
+
+    .field-label {
+      margin: 0 0 0.35rem;
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: #8e8e93;
+    }
+
+    .duration-row {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .stepper {
+      flex-shrink: 0;
+      width: 2.35rem;
+      height: 2.35rem;
+      border: none;
+      border-radius: 0.55rem;
+      background: #f2f2f7;
+      color: #1c1c1e;
+      font-size: 1.125rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.2s var(--ease-spring);
+    }
+    .stepper:active { transform: scale(0.94); }
+
+    .duration-field {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.05rem;
+      min-width: 0;
+      height: 2.35rem;
+      padding: 0 0.55rem;
+      background: #f2f2f7;
+      border-radius: 0.55rem;
+    }
+
+    .duration-field input {
+      width: 2.25rem;
+      border: none;
+      background: transparent;
+      font: inherit;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      text-align: center;
+      color: #1c1c1e;
+      padding: 0;
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+    .duration-field input:focus {
+      outline: none;
+    }
+    .duration-field input::-webkit-outer-spin-button,
+    .duration-field input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .duration-unit {
+      font-size: 0.75rem;
+      font-weight: 500;
+      line-height: 1;
+      color: #8e8e93;
+    }
+
+    .color-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.35rem;
+    }
+
+    .palette-swatch {
+      flex: 1;
+      max-width: 1.85rem;
+      min-width: 1.5rem;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      padding: 0;
+      cursor: pointer;
+      transition: transform 0.2s var(--ease-spring);
+    }
+    .palette-swatch:active { transform: scale(0.92); }
+    .palette-swatch[aria-pressed="true"] {
+      border-color: #1c1c1e;
+      box-shadow: 0 0 0 1.5px #fff inset;
+    }
+
+    .sound-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.4rem;
+      margin-bottom: 0.45rem;
+    }
+
+    .sound-chip {
+      font: inherit;
+      font-size: 0.75rem;
+      font-weight: 500;
+      min-height: 2rem;
+      padding: 0.4rem 0.35rem;
+      border: none;
+      border-radius: 0.5rem;
+      background: #f2f2f7;
+      color: #48484a;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .sound-chip[aria-pressed="true"] {
+      background: var(--pill-active);
+      color: #fff;
+    }
+
+    .volume-row {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: opacity 0.2s;
+    }
+    .volume-mute-btn {
+      position: relative;
+      width: 1.5rem;
+      height: 1.5rem;
+      flex-shrink: 0;
+      padding: 0;
+      border: none;
+      border-radius: 0.35rem;
+      background: transparent;
+      color: #636366;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .volume-mute-btn:hover { background: #ebebf0; }
+    .volume-mute-btn:active { transform: scale(0.94); }
+    .volume-mute-btn svg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 1.05rem;
+      height: 1.05rem;
+      transform: translate(-50%, -50%);
+    }
+    .volume-mute-btn .vol-muted { display: none; }
+    .volume-row.icon-muted .volume-mute-btn .vol-active { display: none; }
+    .volume-row.icon-muted .volume-mute-btn .vol-muted { display: block; }
+    .volume-mute-btn svg { display: block; }
+    .volume-row.icon-muted .volume-mute-btn { color: #aeaeb2; }
+    .volume-row input[type="range"] {
+      flex: 1;
+      height: 3px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: linear-gradient(to right, #1c1c1e 0%, #1c1c1e var(--vol-pct, 50%), #e5e5ea var(--vol-pct, 50%), #e5e5ea 100%);
+      border-radius: 2px;
+      outline: none;
+    }
+    .volume-row input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+      cursor: pointer;
+    }
+
+    .pulse-layer {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      overflow: hidden;
+      contain: layout style paint;
+    }
+
+    .pulse-glow {
+      position: absolute;
+      width: clamp(9rem, 28vmin, 13rem);
+      height: clamp(9rem, 28vmin, 13rem);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.22) 0%, transparent 70%);
+      opacity: 0;
+    }
+    body.timer-running .pulse-glow {
+      animation: glow-breathe var(--pulse-duration) var(--ease-pulse) infinite;
+    }
+    @keyframes glow-breathe {
+      0%, 100% { opacity: 0.32; transform: scale(0.94); }
+      50% { opacity: 0.52; transform: scale(1.04); }
+    }
+
+    .pulse-ring {
+      position: absolute;
+      width: clamp(4.25rem, 14vmin, 6rem);
+      height: clamp(4.25rem, 14vmin, 6rem);
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      box-shadow: 0 0 24px rgba(255, 255, 255, 0.06);
+      opacity: 0;
+      transform: scale(0.5);
+      will-change: transform, opacity;
+    }
+    body.timer-running .pulse-ring {
+      animation: pulse-ripple var(--pulse-duration) var(--ease-pulse) infinite;
+    }
+    .pulse-ring:nth-child(2) { animation-delay: 0s; }
+    .pulse-ring:nth-child(3) { animation-delay: calc(var(--pulse-duration) * 0.5); }
+    @keyframes pulse-ripple {
+      0% { transform: scale(0.52); opacity: 0; }
+      12% { opacity: 0.42; }
+      45% { opacity: 0.2; }
+      100% { transform: scale(5.4); opacity: 0; }
+    }
+
+    .play-pause-btn {
+      position: relative;
+      z-index: 5;
+      width: var(--play-size);
+      height: var(--play-size);
+      border: none;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #fff 0%, #f5f5f7 100%);
+      color: var(--work-bg);
+      cursor: pointer;
+      transition: transform 0.35s var(--ease-spring), color 0.8s var(--ease-out);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.14);
+    }
+    body.mode-break .play-pause-btn { color: var(--break-bg); }
+    .play-pause-btn:active { transform: scale(0.96); }
+
+    .play-pause-btn > svg {
+      position: absolute;
+      width: var(--icon-size);
+      height: var(--icon-size);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.3s var(--ease-out), transform 0.35s var(--ease-spring);
+    }
+    .icon-play { opacity: 1; }
+    .icon-pause { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    .play-pause-btn.is-playing .icon-play { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    .play-pause-btn.is-playing .icon-pause { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    .play-pause-btn:not(.is-playing) .icon-play { transform: translate(calc(-50% + 2px), -50%); }
+
+    .bottom-controls {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: max(2.25rem, calc(env(safe-area-inset-bottom) + 1.25rem));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      z-index: 6;
+      pointer-events: none;
+    }
+
+    .mode-indicator {
+      margin: 0;
+      font-size: calc(var(--timer-size) * 0.423);
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.55;
+      transition: opacity 0.65s var(--ease-out);
+    }
+
+    body.mode-break .mode-indicator {
+      opacity: 0.58;
+    }
+
+    body.mode-transition .mode-indicator {
+      opacity: 0.68;
+    }
+
+    .timer-core {
+      position: relative;
+      display: inline-block;
+      pointer-events: auto;
+    }
+
+    .bottom-controls .timer-core {
+      margin: 0 auto;
+    }
+
+    .time-display {
+      margin: 0;
+      font-size: var(--timer-size);
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.07em;
+      opacity: 0.72;
+      transition: opacity 0.35s ease;
+    }
+    body.timer-running .time-display { opacity: 0.82; }
+
+    .time-reset-btn {
+      position: absolute;
+      left: 100%;
+      top: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.05rem;
+      height: 2.05rem;
+      margin-left: 0.32rem;
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background: transparent;
+      color: inherit;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      cursor: pointer;
+      transform: translateY(-50%);
+      transition: opacity 0.25s ease, visibility 0.25s, transform 0.2s var(--ease-spring);
+      -webkit-tap-highlight-color: transparent;
+    }
+    body.show-timer-reset .time-reset-btn {
+      opacity: 0.48;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    body.show-timer-reset .time-reset-btn:hover { opacity: 0.68; }
+    .time-reset-btn:active { transform: translateY(-50%) scale(0.9); }
+    .time-reset-btn svg {
+      width: 1.1rem;
+      height: 1.1rem;
+    }
+
+    @media (max-width: 26rem) {
+      .settings-panel {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: auto;
+        border-radius: 1.15rem 1.15rem 0 0;
+        transform: translateY(104%);
+        transform-origin: bottom center;
+        padding-bottom: max(0.9rem, env(safe-area-inset-bottom));
+      }
+      .settings-wrap.open .settings-panel {
+        transform: translateY(0);
+      }
+      .settings-dismiss.visible {
+        background: rgba(0, 0, 0, 0.25);
+      }
+    }
+
+    @media (min-width: 48rem) {
+      :root {
+        --play-size: 5.75rem;
+        --timer-size: 2.35rem;
+      }
+      .settings-panel { width: 19rem; }
+    }
+
+    @media (max-height: 32rem) and (orientation: landscape) {
+      :root { --play-size: 4.25rem; }
+      .bottom-controls {
+        bottom: max(1rem, env(safe-area-inset-bottom));
+      }
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body.timer-running .pulse-ring,
+      body.timer-running .pulse-glow { animation: none; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    @media (pointer: coarse) {
+      .settings-btn {
+        width: 2.75rem;
+        height: 2.75rem;
+      }
+      body.show-timer-reset .time-reset-btn {
+        width: 2.35rem;
+        height: 2.35rem;
+      }
+      body.show-timer-reset .time-reset-btn svg {
+        width: 1.2rem;
+        height: 1.2rem;
+      }
+      .stepper { width: 2.6rem; height: 2.6rem; }
+    }
+  </style>
+</head>
+<body class="mode-focus">
+  <main class="app" id="app">
+    <div class="settings-wrap" id="settings-wrap">
+      <button type="button" class="settings-btn" id="btn-settings" aria-label="Ajustes" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+          <line x1="4" y1="7" x2="20" y2="7"/><circle cx="9" cy="7" r="2" fill="currentColor" stroke="none"/>
+          <line x1="4" y1="12" x2="20" y2="12"/><circle cx="15" cy="12" r="2" fill="currentColor" stroke="none"/>
+          <line x1="4" y1="17" x2="20" y2="17"/><circle cx="11" cy="17" r="2" fill="currentColor" stroke="none"/>
+        </svg>
+      </button>
+      <div class="settings-panel" id="settings-panel" role="dialog" aria-labelledby="settings-title" hidden>
+        <div class="panel-head">
+          <h2 id="settings-title">Ajustes</h2>
+          <button type="button" class="panel-close" id="btn-close-settings" aria-label="Cerrar">×</button>
+        </div>
+
+        <div class="setting-block">
+          <p class="field-label">Enfoque</p>
+          <div class="duration-row">
+            <button type="button" class="stepper" id="focus-dec" aria-label="Reducir minutos de enfoque">−</button>
+            <div class="duration-field">
+              <input type="number" id="focus-min" min="1" max="180" step="1" inputmode="numeric" aria-label="Duración del enfoque en minutos" value="25">
+              <span class="duration-unit">min</span>
+            </div>
+            <button type="button" class="stepper" id="focus-inc" aria-label="Aumentar minutos de enfoque">+</button>
+          </div>
+        </div>
+
+        <div class="setting-block">
+          <p class="field-label">Descanso</p>
+          <div class="duration-row">
+            <button type="button" class="stepper" id="break-dec" aria-label="Reducir minutos de descanso">−</button>
+            <div class="duration-field">
+              <input type="number" id="break-min" min="1" max="180" step="1" inputmode="numeric" aria-label="Duración del descanso en minutos" value="5">
+              <span class="duration-unit">min</span>
+            </div>
+            <button type="button" class="stepper" id="break-inc" aria-label="Aumentar minutos de descanso">+</button>
+          </div>
+        </div>
+
+        <div class="setting-block">
+          <p class="field-label">Ronda</p>
+          <div class="duration-row">
+            <button type="button" class="stepper" id="rounds-dec" aria-label="Reducir bloques de enfoque">−</button>
+            <div class="duration-field">
+              <input type="number" id="focus-rounds" min="1" max="12" step="1" inputmode="numeric" aria-label="Bloques de enfoque por ronda" value="4">
+              <span class="duration-unit" id="rounds-unit">bloques</span>
+            </div>
+            <button type="button" class="stepper" id="rounds-inc" aria-label="Aumentar bloques de enfoque">+</button>
+          </div>
+        </div>
+
+        <div class="setting-block">
+          <p class="field-label">Color enfoque</p>
+          <div class="color-line" id="work-palette" role="group" aria-label="Color del enfoque"></div>
+        </div>
+
+        <div class="setting-block">
+          <p class="field-label">Color descanso</p>
+          <div class="color-line" id="break-palette" role="group" aria-label="Color del descanso"></div>
+        </div>
+
+        <div class="setting-block">
+          <p class="field-label">Sonido</p>
+          <div class="sound-row" id="sound-chips" role="group" aria-label="Sonido"></div>
+          <div class="volume-row" id="volume-row">
+            <button type="button" class="volume-mute-btn" id="btn-volume-mute" aria-label="Silenciar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <g class="vol-active">
+                  <path d="M11 5L6 9H2v6h4l5 4V5z" fill="currentColor" stroke="none"/>
+                  <path d="M15.5 8.5a4 4 0 0 1 0 7"/>
+                  <path d="M18.2 6.2a7.5 7.5 0 0 1 0 11.6"/>
+                </g>
+                <g class="vol-muted">
+                  <path d="M11 5L6 9H2v6h4l5 4V5z" fill="currentColor" stroke="none"/>
+                  <path d="M16 9.5l5.5 5.5M21.5 9.5L16 15"/>
+                </g>
+              </svg>
+            </button>
+            <input type="range" id="volume" min="0" max="100" value="40" aria-label="Volumen">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button type="button" class="settings-dismiss" id="settings-dismiss" tabindex="-1" aria-label="Cerrar ajustes"></button>
+
+    <div class="pulse-layer" aria-hidden="true">
+      <div class="pulse-glow"></div>
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring"></div>
+    </div>
+
+    <button type="button" class="play-pause-btn" id="btn-play-pause" aria-label="Iniciar">
+      <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M7.75 5.1c-.62-.38-1.42-.04-1.42.68v12.44c0 .72.8 1.06 1.42.68l11.08-6.72c.58-.35.58-1.21 0-1.56L7.75 5.1z"/>
+      </svg>
+      <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M6 5h4v14H6V5zm8 0h4v14h-4V5z"/>
+      </svg>
+    </button>
+
+    <div class="bottom-controls">
+      <p class="mode-indicator" id="mode-indicator">Enfoque</p>
+      <div class="timer-core">
+        <p class="time-display" id="time-display" aria-live="polite">25:00</p>
+        <button type="button" class="time-reset-btn" id="btn-reset" aria-label="Reiniciar temporizador" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 12a9 9 0 1 0 2.64-6.36"/>
+            <path d="M3 4v5h5"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <p class="sr-only" id="announcer" aria-live="polite" aria-atomic="true"></p>
+
+  <script>
+    (function () {
+      const STORAGE_KEY = 'pomodoro-settings-v7';
+      const STORAGE_LEGACY_KEYS = [
+        'pomodoro-settings-v6',
+        'pomodoro-settings-v5',
+        'pomodoro-settings-v4',
+        'pomodoro-settings-v3',
+      ];
+      const MS_PER_MIN = 60 * 1000;
+      const TICK_MS = 1000;
+      const APP_NAME = 'Pomodoro';
+      const MIN_MINUTES = 1;
+      const MAX_MINUTES = 180;
+      const MIN_FOCUS_ROUNDS = 1;
+      const MAX_FOCUS_ROUNDS = 12;
+      const COLOR_PALETTE = [
+        '#9ecf8a', '#6ec9c4', '#7eb8e8', '#c4b5e8', '#f0a8a8', '#f5c987',
+      ];
+      const SOUND_OPTIONS = [
+        { id: 'drift', label: 'Ambiente' },
+        { id: 'rain', label: 'Lluvia' },
+        { id: 'waves', label: 'Olas' },
+        { id: 'hum', label: 'Bruma' },
+      ];
+
+      const DEFAULT_FOCUS_MIN = 25;
+      const DEFAULT_BREAK_MIN = 5;
+      const DEFAULT_FOCUS_ROUNDS = 4;
+      const DEFAULT_VOLUME = 40;
+
+      const defaults = {
+        focusMin: DEFAULT_FOCUS_MIN,
+        breakMin: DEFAULT_BREAK_MIN,
+        focusRounds: DEFAULT_FOCUS_ROUNDS,
+        volume: DEFAULT_VOLUME,
+        volumeBeforeMute: DEFAULT_VOLUME,
+        sound: 'drift',
+        workColor: '#9ecf8a',
+        breakColor: '#f5c987',
+      };
+
+      let settings = loadSettings();
+      const state = {
+        mode: 'focus',
+        running: false,
+        endTime: null,
+        remainingMs: settings.focusMin * MS_PER_MIN,
+        durationMs: settings.focusMin * MS_PER_MIN,
+        cycleFocusCurrent: 1,
+      };
+
+      const uiCache = {
+        timeStr: '',
+        docTitle: '',
+        mode: '',
+        modeLabel: '',
+        running: false,
+        showReset: false,
+        playLabel: '',
+      };
+
+      let tickId = null;
+      let volumeSaveTimer = null;
+      let themeColorMeta = null;
+      let audioCtx = null;
+      let audioEngine = null;
+      let previewStopTimer = null;
+      const noiseBuffers = new Map();
+
+      const els = {
+        body: document.body,
+        settingsWrap: document.getElementById('settings-wrap'),
+        btnSettings: document.getElementById('btn-settings'),
+        settingsPanel: document.getElementById('settings-panel'),
+        settingsDismiss: document.getElementById('settings-dismiss'),
+        btnCloseSettings: document.getElementById('btn-close-settings'),
+        btnReset: document.getElementById('btn-reset'),
+        btnPlayPause: document.getElementById('btn-play-pause'),
+        timeDisplay: document.getElementById('time-display'),
+        modeIndicator: document.getElementById('mode-indicator'),
+        announcer: document.getElementById('announcer'),
+        volume: document.getElementById('volume'),
+        volumeRow: document.getElementById('volume-row'),
+        btnVolumeMute: document.getElementById('btn-volume-mute'),
+        soundChips: document.getElementById('sound-chips'),
+        focusMinInput: document.getElementById('focus-min'),
+        breakMinInput: document.getElementById('break-min'),
+        focusDec: document.getElementById('focus-dec'),
+        focusInc: document.getElementById('focus-inc'),
+        breakDec: document.getElementById('break-dec'),
+        breakInc: document.getElementById('break-inc'),
+        focusRoundsInput: document.getElementById('focus-rounds'),
+        roundsUnit: document.getElementById('rounds-unit'),
+        roundsDec: document.getElementById('rounds-dec'),
+        roundsInc: document.getElementById('rounds-inc'),
+        workPalette: document.getElementById('work-palette'),
+        breakPalette: document.getElementById('break-palette'),
+      };
+
+      function isPaletteColor(hex) {
+        if (!hex) return false;
+        const h = String(hex).toLowerCase();
+        return COLOR_PALETTE.some(function (c) { return c.toLowerCase() === h; });
+      }
+
+      function clampMinutes(value, fallback) {
+        const fb = fallback !== undefined ? fallback : DEFAULT_FOCUS_MIN;
+        const n = Math.round(Number(value));
+        if (!Number.isFinite(n)) return fb;
+        return Math.min(MAX_MINUTES, Math.max(MIN_MINUTES, n));
+      }
+
+      function clampFocusRounds(value) {
+        const n = Math.round(Number(value));
+        if (!Number.isFinite(n)) return DEFAULT_FOCUS_ROUNDS;
+        return Math.min(MAX_FOCUS_ROUNDS, Math.max(MIN_FOCUS_ROUNDS, n));
+      }
+
+      function normalizeSettings(data) {
+        const s = { ...defaults, ...(data && typeof data === 'object' ? data : {}) };
+
+        if (!isPaletteColor(s.workColor)) s.workColor = defaults.workColor;
+        if (!isPaletteColor(s.breakColor)) s.breakColor = defaults.breakColor;
+
+        if (s.sound === 'off') {
+          if (Number(s.volume) > 0) s.volumeBeforeMute = s.volume;
+          s.volume = 0;
+          s.sound = defaults.sound;
+        } else if (s.sound === 'birds') {
+          s.sound = defaults.sound;
+        }
+        if (!SOUND_OPTIONS.some(function (opt) { return opt.id === s.sound; })) {
+          s.sound = defaults.sound;
+        }
+
+        s.focusMin = clampMinutes(s.focusMin, DEFAULT_FOCUS_MIN);
+        s.breakMin = clampMinutes(s.breakMin, DEFAULT_BREAK_MIN);
+        s.focusRounds = clampFocusRounds(s.focusRounds);
+
+        const vol = Math.round(Number(s.volume));
+        s.volume = Number.isFinite(vol) ? Math.min(100, Math.max(0, vol)) : DEFAULT_VOLUME;
+
+        let volRestore = Math.round(Number(s.volumeBeforeMute));
+        if (!Number.isFinite(volRestore) || volRestore < 1) volRestore = DEFAULT_VOLUME;
+        s.volumeBeforeMute = Math.min(100, volRestore);
+        if (s.volume > 0) {
+          s.volumeBeforeMute = Math.max(s.volumeBeforeMute, s.volume);
+        }
+
+        return s;
+      }
+
+      function loadSettings() {
+        try {
+          let raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) {
+            for (let i = 0; i < STORAGE_LEGACY_KEYS.length; i++) {
+              raw = localStorage.getItem(STORAGE_LEGACY_KEYS[i]);
+              if (raw) break;
+            }
+          }
+          if (raw) return normalizeSettings(JSON.parse(raw));
+        } catch (e) { /* ignore */ }
+        return normalizeSettings({});
+      }
+
+      function scheduleSettingsSave() {
+        if (volumeSaveTimer) clearTimeout(volumeSaveTimer);
+        volumeSaveTimer = setTimeout(function () {
+          volumeSaveTimer = null;
+          saveSettings();
+        }, 400);
+      }
+
+      function saveSettings() {
+        const payload = {
+          focusMin: settings.focusMin,
+          breakMin: settings.breakMin,
+          focusRounds: settings.focusRounds,
+          volume: settings.volume,
+          volumeBeforeMute: settings.volumeBeforeMute,
+          sound: settings.sound,
+          workColor: settings.workColor,
+          breakColor: settings.breakColor,
+        };
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(payload)); } catch (e) { /* */ }
+      }
+
+      function durationForMode(mode) {
+        return (mode === 'focus' ? settings.focusMin : settings.breakMin) * MS_PER_MIN;
+      }
+
+      function announce(message) {
+        els.announcer.textContent = message;
+      }
+
+      function updateThemeColorMeta() {
+        if (!themeColorMeta) {
+          themeColorMeta = document.querySelector('meta[name="theme-color"]');
+        }
+        if (themeColorMeta) {
+          themeColorMeta.content = state.mode === 'focus' ? settings.workColor : settings.breakColor;
+        }
+      }
+
+      function resumeAudioContextIfNeeded() {
+        const ctx = getAudioContext();
+        if (ctx && ctx.state === 'suspended') ctx.resume();
+      }
+
+      function formatTime(ms) {
+        const totalSec = Math.max(0, Math.ceil(ms / 1000));
+        const m = Math.floor(totalSec / 60);
+        const s = totalSec % 60;
+        return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+      }
+
+      function documentTitleFor(timeStr, mode) {
+        const modeLabel = mode === 'focus' ? 'Enfoque' : 'Descanso';
+        return timeStr + ' · ' + modeLabel + ' · ' + APP_NAME;
+      }
+
+      function palettesBuilt() {
+        return els.workPalette.childElementCount > 0;
+      }
+
+      function ensureSettingsWidgets() {
+        if (palettesBuilt()) return;
+        buildPalette(els.workPalette, 'work');
+        buildPalette(els.breakPalette, 'break');
+        initSoundChips();
+        updatePaletteUI('work');
+        updatePaletteUI('break');
+        updateSoundChipStates();
+      }
+
+      function applyTheme() {
+        document.documentElement.style.setProperty('--work-bg', settings.workColor);
+        document.documentElement.style.setProperty('--break-bg', settings.breakColor);
+        if (palettesBuilt()) {
+          updatePaletteUI('work');
+          updatePaletteUI('break');
+        }
+        updateThemeColorMeta();
+      }
+
+      function shouldPlaySound() {
+        return settings.volume > 0;
+      }
+
+      function updateVolumeUI() {
+        els.volume.value = settings.volume;
+        els.volume.style.setProperty('--vol-pct', settings.volume + '%');
+        els.volumeRow.classList.toggle('icon-muted', settings.volume <= 0);
+        els.btnVolumeMute.setAttribute(
+          'aria-label',
+          settings.volume <= 0 ? 'Activar sonido' : 'Silenciar'
+        );
+      }
+
+      function toggleVolumeMute() {
+        unlockAudio().then(function () {
+          if (settings.volume > 0) {
+            settings.volumeBeforeMute = settings.volume;
+            settings.volume = 0;
+          } else {
+            settings.volume = settings.volumeBeforeMute || DEFAULT_VOLUME;
+          }
+          updateVolumeUI();
+          saveSettings();
+          syncAudio(false);
+        });
+      }
+
+      function getAudioContext() {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return null;
+        if (!audioCtx || audioCtx.state === 'closed') audioCtx = new Ctx();
+        return audioCtx;
+      }
+
+      function unlockAudio() {
+        const ctx = getAudioContext();
+        if (!ctx) return Promise.resolve(false);
+        if (ctx.state === 'running') return Promise.resolve(true);
+        return ctx.resume().then(function () { return ctx.state === 'running'; }).catch(function () { return false; });
+      }
+
+      function rampMasterGain(ctx, master, fadeIn) {
+        if (!shouldPlaySound()) {
+          const now = ctx.currentTime;
+          master.gain.cancelScheduledValues(now);
+          master.gain.setValueAtTime(0, now);
+          return;
+        }
+        const now = ctx.currentTime;
+        const target = volumeGain();
+        master.gain.cancelScheduledValues(now);
+        if (fadeIn) {
+          master.gain.setValueAtTime(0, now);
+          master.gain.linearRampToValueAtTime(target, now + 0.35);
+        } else {
+          master.gain.setValueAtTime(target, now);
+        }
+      }
+
+      function setAudioVolume() {
+        if (!audioEngine || !audioCtx) return;
+        rampMasterGain(audioCtx, audioEngine.master, false);
+      }
+
+      function volumeGain() {
+        return (settings.volume / 100) * 0.38;
+      }
+
+      function clearPreviewStop() {
+        if (previewStopTimer) {
+          clearTimeout(previewStopTimer);
+          previewStopTimer = null;
+        }
+      }
+
+      function schedulePreviewStop() {
+        clearPreviewStop();
+        previewStopTimer = setTimeout(function () {
+          if (!state.running) silenceAudio();
+          previewStopTimer = null;
+        }, 3200);
+      }
+
+      function isSettingsOpen() {
+        return els.settingsWrap.classList.contains('open');
+      }
+
+      function stopSourceNode(node, ctx) {
+        if (!node) return;
+        const t = ctx ? ctx.currentTime : 0;
+        try {
+          if (node.stop) node.stop(t);
+        } catch (e) {
+          try { node.disconnect(); } catch (e2) { /* */ }
+        }
+      }
+
+      function hardStopAudio() {
+        if (!audioEngine) return;
+        const engine = audioEngine;
+        audioEngine = null;
+        detachSoundNodes(engine);
+      }
+
+      function silenceAudio() {
+        clearPreviewStop();
+        hardStopAudio();
+      }
+
+      function shouldKeepAudioPlaying() {
+        if (!shouldPlaySound()) return false;
+        if (state.mode !== 'focus') return false;
+        if (state.running) return true;
+        if (isSettingsOpen()) return true;
+        return false;
+      }
+
+      function syncAudio(forceRebuild) {
+        if (!shouldKeepAudioPlaying()) {
+          silenceAudio();
+          return;
+        }
+        if (state.running) clearPreviewStop();
+
+        unlockAudio().then(function () {
+          if (!shouldKeepAudioPlaying()) {
+            silenceAudio();
+            return;
+          }
+          const ctx = getAudioContext();
+          if (!ctx) return;
+
+          if (!forceRebuild && audioEngine && audioEngine.soundId === settings.sound) {
+            setAudioVolume();
+          } else {
+            rebuildSoundGraph();
+          }
+
+          if (!state.running && isSettingsOpen()) {
+            schedulePreviewStop();
+          }
+        });
+      }
+
+      function playBreakCue() {
+        if (settings.volume <= 0) return;
+        unlockAudio().then(function () {
+          const ctx = getAudioContext();
+          if (!ctx) return;
+          const userScale = settings.volume / 100;
+          const masterPeak = Math.min(0.92, 0.38 + userScale * 0.54);
+
+          function strikeBell(baseHz, startTime, strikeMix) {
+            const partials = [
+              { ratio: 1, amp: 1, ring: 6.2 },
+              { ratio: 2.0, amp: 0.52, ring: 5.4 },
+              { ratio: 2.71, amp: 0.34, ring: 4.8 },
+              { ratio: 3.05, amp: 0.26, ring: 4.2 },
+              { ratio: 4.16, amp: 0.16, ring: 3.4 },
+              { ratio: 5.43, amp: 0.09, ring: 2.6 },
+            ];
+            partials.forEach(function (p) {
+              const osc = ctx.createOscillator();
+              osc.type = 'sine';
+              osc.frequency.value = baseHz * p.ratio;
+              const g = ctx.createGain();
+              const peak = masterPeak * strikeMix * p.amp;
+              g.gain.setValueAtTime(0, startTime);
+              g.gain.linearRampToValueAtTime(peak, startTime + 0.003);
+              g.gain.exponentialRampToValueAtTime(0.00008, startTime + p.ring);
+              osc.connect(g);
+              g.connect(ctx.destination);
+              osc.start(startTime);
+              osc.stop(startTime + p.ring + 0.15);
+            });
+          }
+
+          const now = ctx.currentTime;
+          strikeBell(523.25, now, 1);
+          strikeBell(659.25, now + 1.85, 0.82);
+        });
+      }
+
+      function pulseModeTransition() {
+        els.body.classList.add('mode-transition');
+        window.setTimeout(function () {
+          els.body.classList.remove('mode-transition');
+        }, 1000);
+      }
+
+      function render() {
+        const timeStr = formatTime(state.remainingMs);
+        const isFocus = state.mode === 'focus';
+        const showReset = state.running || state.remainingMs < durationForMode(state.mode);
+        const modeName = isFocus ? 'Enfoque' : 'Descanso';
+        const playLabel = state.running ? 'Pausar' : 'Iniciar';
+
+        const docTitle = documentTitleFor(timeStr, state.mode);
+
+        if (timeStr !== uiCache.timeStr) {
+          uiCache.timeStr = timeStr;
+          els.timeDisplay.textContent = timeStr;
+        }
+
+        if (docTitle !== uiCache.docTitle) {
+          uiCache.docTitle = docTitle;
+          document.title = docTitle;
+        }
+
+        if (state.mode !== uiCache.mode) {
+          uiCache.mode = state.mode;
+          els.body.classList.toggle('mode-break', !isFocus);
+          els.body.classList.toggle('mode-focus', isFocus);
+          updateThemeColorMeta();
+        }
+
+        if (state.running !== uiCache.running) {
+          uiCache.running = state.running;
+          els.body.classList.toggle('timer-running', state.running);
+          els.btnPlayPause.classList.toggle('is-playing', state.running);
+        }
+
+        if (modeName !== uiCache.modeLabel) {
+          uiCache.modeLabel = modeName;
+          els.modeIndicator.textContent = modeName;
+        }
+
+        if (playLabel !== uiCache.playLabel) {
+          uiCache.playLabel = playLabel;
+          els.btnPlayPause.setAttribute('aria-label', playLabel);
+        }
+
+        if (showReset !== uiCache.showReset) {
+          uiCache.showReset = showReset;
+          els.body.classList.toggle('show-timer-reset', showReset);
+          els.btnReset.hidden = !showReset;
+        }
+      }
+
+      function syncDurationInputs() {
+        els.focusMinInput.value = String(settings.focusMin);
+        els.breakMinInput.value = String(settings.breakMin);
+      }
+
+      function updateRoundsUnitLabel() {
+        els.roundsUnit.textContent = settings.focusRounds === 1 ? 'bloque' : 'bloques';
+      }
+
+      function syncRoundsInput() {
+        els.focusRoundsInput.value = String(settings.focusRounds);
+        updateRoundsUnitLabel();
+      }
+
+      function setFocusRounds(rounds) {
+        settings.focusRounds = clampFocusRounds(rounds);
+        if (state.cycleFocusCurrent > settings.focusRounds) {
+          state.cycleFocusCurrent = settings.focusRounds;
+        }
+        saveSettings();
+        syncRoundsInput();
+        render();
+      }
+
+      function setDuration(kind, minutes) {
+        const fallback = kind === 'focus' ? DEFAULT_FOCUS_MIN : DEFAULT_BREAK_MIN;
+        const clamped = clampMinutes(minutes, fallback);
+        if (kind === 'focus') settings.focusMin = clamped;
+        else settings.breakMin = clamped;
+        saveSettings();
+        syncDurationInputs();
+        if (!state.running) {
+          if (kind === 'focus' && state.mode === 'focus') {
+            state.durationMs = durationForMode('focus');
+            state.remainingMs = state.durationMs;
+          }
+          if (kind === 'break' && state.mode === 'break') {
+            state.durationMs = durationForMode('break');
+            state.remainingMs = state.durationMs;
+          }
+        }
+        render();
+      }
+
+      function bindDurationControls() {
+        function bindPair(kind, input, decBtn, incBtn) {
+          input.addEventListener('change', function () {
+            setDuration(kind, input.value);
+          });
+          input.addEventListener('blur', function () {
+            setDuration(kind, input.value);
+          });
+          decBtn.addEventListener('click', function () {
+            setDuration(kind, (kind === 'focus' ? settings.focusMin : settings.breakMin) - 1);
+          });
+          incBtn.addEventListener('click', function () {
+            setDuration(kind, (kind === 'focus' ? settings.focusMin : settings.breakMin) + 1);
+          });
+        }
+        bindPair('focus', els.focusMinInput, els.focusDec, els.focusInc);
+        bindPair('break', els.breakMinInput, els.breakDec, els.breakInc);
+      }
+
+      function bindRoundsControls() {
+        els.focusRoundsInput.addEventListener('change', function () {
+          setFocusRounds(els.focusRoundsInput.value);
+        });
+        els.focusRoundsInput.addEventListener('blur', function () {
+          setFocusRounds(els.focusRoundsInput.value);
+        });
+        els.roundsDec.addEventListener('click', function () {
+          setFocusRounds(settings.focusRounds - 1);
+        });
+        els.roundsInc.addEventListener('click', function () {
+          setFocusRounds(settings.focusRounds + 1);
+        });
+      }
+
+      function buildPalette(container, kind) {
+        container.innerHTML = '';
+        COLOR_PALETTE.forEach(function (hex) {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'palette-swatch';
+          btn.style.backgroundColor = hex;
+          btn.dataset.color = hex;
+          btn.setAttribute('aria-label', hex);
+          btn.addEventListener('click', function () {
+            if (kind === 'work') settings.workColor = hex;
+            else settings.breakColor = hex;
+            saveSettings();
+            applyTheme();
+          });
+          container.appendChild(btn);
+        });
+      }
+
+      function updatePaletteUI(kind) {
+        const container = kind === 'work' ? els.workPalette : els.breakPalette;
+        const current = (kind === 'work' ? settings.workColor : settings.breakColor).toLowerCase();
+        container.querySelectorAll('.palette-swatch').forEach(function (btn) {
+          btn.setAttribute('aria-pressed', btn.dataset.color.toLowerCase() === current ? 'true' : 'false');
+        });
+      }
+
+      function updateSoundChipStates() {
+        els.soundChips.querySelectorAll('.sound-chip').forEach(function (btn) {
+          const active = btn.dataset.soundId === settings.sound;
+          btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+        updateVolumeUI();
+      }
+
+      function selectSound(soundId) {
+        if (settings.sound !== soundId) {
+          settings.sound = soundId;
+          saveSettings();
+          updateSoundChipStates();
+        }
+        syncAudio(true);
+      }
+
+      function initSoundChips() {
+        els.soundChips.innerHTML = '';
+        SOUND_OPTIONS.forEach(function (opt) {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'sound-chip';
+          btn.dataset.soundId = opt.id;
+          btn.textContent = opt.label;
+          btn.addEventListener('pointerdown', resumeAudioContextIfNeeded);
+          btn.addEventListener('click', function () {
+            selectSound(opt.id);
+          });
+          els.soundChips.appendChild(btn);
+        });
+        updateSoundChipStates();
+      }
+
+      function openSettings() {
+        ensureSettingsWidgets();
+        syncDurationInputs();
+        syncRoundsInput();
+        applyTheme();
+        els.settingsPanel.hidden = false;
+        els.settingsWrap.classList.add('open');
+        els.settingsDismiss.classList.add('visible');
+        els.settingsDismiss.removeAttribute('aria-hidden');
+        els.btnSettings.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+        if (!state.running) syncAudio(false);
+        window.requestAnimationFrame(function () {
+          els.btnCloseSettings.focus();
+        });
+      }
+
+      function closeSettings() {
+        if (!state.running) silenceAudio();
+        els.settingsWrap.classList.remove('open');
+        els.settingsDismiss.classList.remove('visible');
+        els.settingsDismiss.setAttribute('aria-hidden', 'true');
+        els.btnSettings.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+        els.btnSettings.focus();
+        setTimeout(function () {
+          if (!els.settingsWrap.classList.contains('open')) els.settingsPanel.hidden = true;
+        }, 280);
+      }
+
+      function isTypingTarget(el) {
+        if (!el || !el.tagName) return false;
+        const tag = el.tagName;
+        return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el.isContentEditable;
+      }
+
+      function createNoiseBuffer(ctx, seconds) {
+        const len = ctx.sampleRate * seconds;
+        const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+        const data = buf.getChannelData(0);
+        let last = 0;
+        for (let i = 0; i < len; i++) {
+          const white = Math.random() * 2 - 1;
+          last = last * 0.98 + white * 0.02;
+          data[i] = last * 2.5;
+        }
+        return buf;
+      }
+
+      function getNoiseBuffer(ctx, seconds) {
+        const key = ctx.sampleRate + ':' + seconds;
+        let buf = noiseBuffers.get(key);
+        if (!buf) {
+          buf = createNoiseBuffer(ctx, seconds);
+          noiseBuffers.set(key, buf);
+        }
+        return buf;
+      }
+
+      function wireSound(type, ctx, master) {
+        const nodes = [];
+        if (type === 'drift') {
+          const filter = ctx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.value = 900;
+          filter.connect(master);
+          [130.81, 196, 261.63].forEach(function (f) {
+            const osc = ctx.createOscillator();
+            osc.type = 'sine';
+            osc.frequency.value = f;
+            const g = ctx.createGain();
+            g.gain.value = 0.14;
+            osc.connect(g);
+            g.connect(filter);
+            osc.start();
+            nodes.push(osc);
+          });
+        } else if (type === 'rain') {
+          const noise = ctx.createBufferSource();
+          noise.buffer = getNoiseBuffer(ctx, 3);
+          noise.loop = true;
+          const bp = ctx.createBiquadFilter();
+          bp.type = 'bandpass';
+          bp.frequency.value = 800;
+          const g = ctx.createGain();
+          g.gain.value = 0.3;
+          noise.connect(bp);
+          bp.connect(g);
+          g.connect(master);
+          noise.start();
+          nodes.push(noise);
+        } else if (type === 'waves') {
+          const noise = ctx.createBufferSource();
+          noise.buffer = getNoiseBuffer(ctx, 4);
+          noise.loop = true;
+          const lp = ctx.createBiquadFilter();
+          lp.type = 'lowpass';
+          lp.frequency.value = 520;
+          const lfo = ctx.createOscillator();
+          lfo.type = 'sine';
+          lfo.frequency.value = 0.1;
+          const lfoDepth = ctx.createGain();
+          lfoDepth.gain.value = 220;
+          lfo.connect(lfoDepth);
+          lfoDepth.connect(lp.frequency);
+          const g = ctx.createGain();
+          g.gain.value = 0.24;
+          noise.connect(lp);
+          lp.connect(g);
+          g.connect(master);
+          noise.start();
+          lfo.start();
+          nodes.push(noise, lfo);
+        } else if (type === 'hum') {
+          const filter = ctx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.value = 320;
+          filter.connect(master);
+          [55, 82.5, 110].forEach(function (f) {
+            const osc = ctx.createOscillator();
+            osc.type = 'sine';
+            osc.frequency.value = f;
+            const g = ctx.createGain();
+            g.gain.value = 0.09;
+            osc.connect(g);
+            g.connect(filter);
+            osc.start();
+            nodes.push(osc);
+          });
+        }
+        return nodes;
+      }
+
+      function detachSoundNodes(engine) {
+        if (!engine) return;
+        if (engine.chirpId) clearInterval(engine.chirpId);
+        const ctx = audioCtx;
+        engine.nodes.forEach(function (n) {
+          stopSourceNode(n, ctx);
+        });
+        try {
+          if (ctx) {
+            const now = ctx.currentTime;
+            engine.master.gain.cancelScheduledValues(now);
+            engine.master.gain.setValueAtTime(0, now);
+          }
+          engine.master.disconnect();
+        } catch (e) { /* */ }
+      }
+
+      function rebuildSoundGraph() {
+        if (!shouldPlaySound()) {
+          hardStopAudio();
+          return;
+        }
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        hardStopAudio();
+        const soundType = settings.sound;
+        const master = ctx.createGain();
+        master.gain.value = 0;
+        master.connect(ctx.destination);
+        const nodes = wireSound(soundType, ctx, master);
+        audioEngine = { master, nodes, soundId: soundType };
+        rampMasterGain(ctx, master, true);
+      }
+
+      function syncRemainingFromDeadline() {
+        if (state.running && state.endTime != null) {
+          state.remainingMs = Math.max(0, state.endTime - Date.now());
+          if (state.remainingMs <= 0) onSegmentComplete();
+        }
+      }
+
+      function onSegmentComplete() {
+        silenceAudio();
+        if (state.mode === 'focus') {
+          state.mode = 'break';
+          state.durationMs = durationForMode('break');
+          state.remainingMs = state.durationMs;
+          state.endTime = Date.now() + state.remainingMs;
+          state.running = true;
+          pulseModeTransition();
+          announce('Descanso iniciado, ' + formatTime(state.remainingMs));
+          playBreakCue();
+          if (!tickId) startTick();
+        } else {
+          const roundComplete = state.cycleFocusCurrent >= settings.focusRounds;
+          state.mode = 'focus';
+          state.durationMs = durationForMode('focus');
+          state.remainingMs = state.durationMs;
+          state.running = false;
+          state.endTime = null;
+          stopTick();
+          pulseModeTransition();
+          if (roundComplete) {
+            state.cycleFocusCurrent = 1;
+            playBreakCue();
+            announce('Ronda completada. Enfoque listo, ' + formatTime(state.remainingMs));
+          } else {
+            state.cycleFocusCurrent += 1;
+            announce('Enfoque listo, ' + formatTime(state.remainingMs));
+          }
+        }
+        render();
+      }
+
+      function startTick() {
+        stopTick();
+        tickId = setInterval(function () {
+          syncRemainingFromDeadline();
+          render();
+        }, TICK_MS);
+      }
+
+      function stopTick() {
+        if (tickId) { clearInterval(tickId); tickId = null; }
+      }
+
+      function resetTimer() {
+        silenceAudio();
+        stopTick();
+        state.mode = 'focus';
+        state.running = false;
+        state.endTime = null;
+        state.durationMs = durationForMode('focus');
+        state.remainingMs = state.durationMs;
+        state.cycleFocusCurrent = 1;
+        render();
+        announce('Temporizador reiniciado, ' + formatTime(state.remainingMs));
+      }
+
+      function togglePlayPause() {
+        if (state.running) {
+          syncRemainingFromDeadline();
+          state.running = false;
+          state.endTime = null;
+          stopTick();
+          silenceAudio();
+        } else {
+          if (state.remainingMs <= 0) state.remainingMs = durationForMode(state.mode);
+          state.durationMs = durationForMode(state.mode);
+          state.endTime = Date.now() + state.remainingMs;
+          state.running = true;
+          startTick();
+          syncAudio();
+        }
+        render();
+      }
+
+      els.btnPlayPause.addEventListener('pointerdown', resumeAudioContextIfNeeded);
+      els.btnPlayPause.addEventListener('click', togglePlayPause);
+      els.btnSettings.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (els.settingsWrap.classList.contains('open')) closeSettings();
+        else openSettings();
+      });
+      els.btnCloseSettings.addEventListener('click', closeSettings);
+      els.btnReset.addEventListener('click', resetTimer);
+      els.settingsDismiss.addEventListener('click', closeSettings);
+
+      els.volume.addEventListener('pointerdown', resumeAudioContextIfNeeded);
+      els.btnVolumeMute.addEventListener('click', toggleVolumeMute);
+      els.volume.addEventListener('input', function () {
+        settings.volume = Number(els.volume.value);
+        if (settings.volume > 0) settings.volumeBeforeMute = settings.volume;
+        updateVolumeUI();
+        scheduleSettingsSave();
+        syncAudio(false);
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && els.settingsWrap.classList.contains('open')) {
+          e.preventDefault();
+          closeSettings();
+          return;
+        }
+        if (e.repeat) return;
+        if (isTypingTarget(e.target)) return;
+
+        const isSpace = e.key === ' ' || e.code === 'Space';
+        if (isSpace || e.key === 'k' || e.key === 'K') {
+          if (isSpace) e.preventDefault();
+          togglePlayPause();
+        }
+      }, true);
+
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'visible' && state.running) {
+          syncRemainingFromDeadline();
+          render();
+        }
+      });
+
+      window.addEventListener('pagehide', function () {
+        if (volumeSaveTimer) {
+          clearTimeout(volumeSaveTimer);
+          volumeSaveTimer = null;
+          saveSettings();
+        }
+      });
+
+      bindDurationControls();
+      bindRoundsControls();
+      applyTheme();
+      syncDurationInputs();
+      syncRoundsInput();
+      updateVolumeUI();
+      state.remainingMs = durationForMode('focus');
+      state.durationMs = state.remainingMs;
+      render();
+    })();
+  </script>
+</body>
+</html>
