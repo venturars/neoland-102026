@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pomodoro</title>
+  <style>
+    :root {
+      --bg: #2a2438;
+      --card: #342c49;
+      --card-border: rgba(255, 255, 255, 0.16);
+      --text: #f6f1e8;
+      --muted: #c9c3d6;
+      --badge-bg: #5a3948;
+      --badge-text: #f6d5e0;
+      --start: #7dcec4;
+      --start-text: #16302e;
+      --btn: #4a4363;
+      --btn-text: #f0ecf7;
+      --btn-disabled: #3a3450;
+      --btn-disabled-text: #7d7790;
+      --toggle-bg: rgba(255, 255, 255, 0.14);
+      --toggle-text: #f6f1e8;
+      --orb-peach: #e3b5a6;
+      --orb-lilac: #c9b6e6;
+      --orb-teal: #7ecfc4;
+      --shadow: rgba(10, 6, 20, 0.45);
+      color-scheme: dark;
+    }
+
+    body.theme-pastel {
+      --bg: #efeaf6;
+      --card: #fbf9fd;
+      --card-border: rgba(80, 70, 110, 0.16);
+      --text: #2c3142;
+      --muted: #5e6578;
+      --badge-bg: #eadce4;
+      --badge-text: #6d4456;
+      --start: #6fbfb6;
+      --start-text: #14302e;
+      --btn: #d9d5e6;
+      --btn-text: #2f3548;
+      --btn-disabled: #eceaf3;
+      --btn-disabled-text: #a7a2b6;
+      --toggle-bg: rgba(255, 255, 255, 0.82);
+      --toggle-text: #3c4154;
+      --orb-peach: #f3c7b8;
+      --orb-lilac: #ddd0f3;
+      --orb-teal: #b7e6df;
+      --shadow: rgba(70, 50, 100, 0.12);
+      color-scheme: light;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 76px 16px 32px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: ui-rounded, "Avenir Next", "Segoe UI", "Trebuchet MS", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(36px);
+      pointer-events: none;
+      opacity: 0.9;
+    }
+
+    .orb-peach {
+      width: 220px;
+      height: 220px;
+      background: var(--orb-peach);
+      top: 7%;
+      left: 7%;
+    }
+
+    .orb-lilac {
+      width: 280px;
+      height: 280px;
+      background: var(--orb-lilac);
+      top: 16%;
+      right: 3%;
+    }
+
+    .orb-teal {
+      width: 210px;
+      height: 210px;
+      background: var(--orb-teal);
+      bottom: 6%;
+      left: 16%;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 0;
+      border-radius: 999px;
+      padding: 5px 12px 5px 5px;
+      background: var(--toggle-bg);
+      color: var(--toggle-text);
+      font: inherit;
+      font-size: 0.86rem;
+      cursor: pointer;
+      box-shadow: 0 8px 24px var(--shadow);
+    }
+
+    .theme-toggle .swatch {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f0b7a4, #d7c6f0 55%, #8fd0c6);
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      width: min(460px, 100%);
+      padding: 34px 22px 26px;
+      border: 1px solid var(--card-border);
+      border-radius: 32px;
+      background: var(--card);
+      box-shadow: 0 28px 70px var(--shadow);
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      margin: 0 0 12px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: var(--badge-bg);
+      color: var(--badge-text);
+      font-size: 0.78rem;
+      font-weight: 650;
+      letter-spacing: 0.01em;
+    }
+
+    .phrase {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .phase {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 650;
+    }
+
+    .time {
+      margin: 6px 0 4px;
+      font-size: clamp(4.2rem, 12vw, 5.3rem);
+      font-weight: 760;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    .robot-wrap {
+      width: 148px;
+      margin: 6px auto 18px;
+    }
+
+    .robot-wrap svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .eye {
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .robot-wrap.is-running .figure {
+      animation: bob 1.8s ease-in-out infinite;
+    }
+
+    .robot-wrap.is-running .eye {
+      animation: blink 3.4s infinite;
+    }
+
+    .robot-wrap.is-paused .eye {
+      transform: scaleY(0.12);
+    }
+
+    .robot-wrap.is-done .figure {
+      animation: jump 0.9s ease;
+    }
+
+    @keyframes bob {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-7px);
+      }
+    }
+
+    @keyframes blink {
+      0%,
+      46%,
+      52%,
+      100% {
+        transform: scaleY(1);
+      }
+      49% {
+        transform: scaleY(0.08);
+      }
+    }
+
+    @keyframes jump {
+      0% {
+        transform: translateY(0) scale(1);
+      }
+      35% {
+        transform: translateY(-18px) scale(1.05);
+      }
+      55% {
+        transform: translateY(0) scale(0.97);
+      }
+      75% {
+        transform: translateY(-8px) scale(1.03);
+      }
+      100% {
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    .controls button {
+      flex: 1;
+      border: 0;
+      border-radius: 999px;
+      padding: 0.72rem 0.35rem;
+      background: var(--btn);
+      color: var(--btn-text);
+      font: inherit;
+      font-size: 0.92rem;
+      font-weight: 650;
+      cursor: pointer;
+    }
+
+    .controls button:disabled {
+      background: var(--btn-disabled);
+      color: var(--btn-disabled-text);
+      cursor: default;
+    }
+
+    #start:not(:disabled) {
+      background: var(--start);
+      color: var(--start-text);
+    }
+
+    .controls button:not(:disabled):hover {
+      filter: brightness(1.06);
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--start);
+      outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .robot-wrap.is-running .figure,
+      .robot-wrap.is-running .eye,
+      .robot-wrap.is-done .figure {
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb orb-peach"></div>
+  <div class="orb orb-lilac"></div>
+  <div class="orb orb-teal"></div>
+
+  <button class="theme-toggle" id="pastel" type="button" aria-pressed="false">
+    <span class="swatch" aria-hidden="true"></span>
+    Pastel
+  </button>
+
+  <main class="card">
+    <p class="badge" id="count">Pomodoro 0</p>
+    <p class="phrase" id="phrase">No rush — start when you like</p>
+    <p class="phase" id="phase">Quiet time</p>
+    <p class="time" id="time">25:00</p>
+    <div class="robot-wrap" id="robot">
+      <svg viewBox="0 0 180 200" aria-hidden="true">
+        <ellipse cx="90" cy="188" rx="34" ry="7" fill="#000" opacity="0.18"/>
+        <g class="figure">
+          <rect x="16" y="118" width="36" height="13" rx="6.5" transform="rotate(24 52 124)" fill="#73c4ba"/>
+          <rect x="128" y="118" width="36" height="13" rx="6.5" transform="rotate(-24 128 124)" fill="#73c4ba"/>
+          <rect x="56" y="126" width="68" height="52" rx="24" fill="#8fd4cb"/>
+          <circle cx="90" cy="150" r="5.5" fill="#f0a3b8"/>
+          <rect x="40" y="42" width="100" height="86" rx="40" fill="#7ec8be"/>
+          <ellipse cx="72" cy="62" rx="16" ry="7" fill="#fff" opacity="0.16"/>
+          <line x1="90" y1="42" x2="90" y2="16" stroke="#5eaea4" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="90" cy="12" r="7" fill="#f3a3b8"/>
+          <ellipse class="eye" cx="70" cy="80" rx="6.5" ry="8" fill="#2a3144"/>
+          <ellipse class="eye" cx="110" cy="80" rx="6.5" ry="8" fill="#2a3144"/>
+          <circle cx="54" cy="98" r="6.5" fill="#f4b7c6"/>
+          <circle cx="126" cy="98" r="6.5" fill="#f4b7c6"/>
+          <path d="M74 104c6 11 26 11 32 0" fill="none" stroke="#2a3144" stroke-width="3" stroke-linecap="round"/>
+        </g>
+      </svg>
+    </div>
+    <div class="controls">
+      <button id="start" type="button">Start</button>
+      <button id="pause" type="button" disabled>Pause</button>
+      <button id="next" type="button" disabled>Next</button>
+      <button id="reset" type="button" disabled>Reset</button>
+      <button id="end" type="button" disabled>End</button>
+    </div>
+  </main>
+
+  <script>
+    const CYCLE = [
+      { label: "Quiet time", kind: "quiet", ms: 25 * 60 * 1000 },
+      { label: "Short rest", kind: "short", ms: 5 * 60 * 1000 },
+      { label: "Quiet time", kind: "quiet", ms: 25 * 60 * 1000 },
+      { label: "Short rest", kind: "short", ms: 5 * 60 * 1000 },
+      { label: "Quiet time", kind: "quiet", ms: 25 * 60 * 1000 },
+      { label: "Short rest", kind: "short", ms: 5 * 60 * 1000 },
+      { label: "Quiet time", kind: "quiet", ms: 25 * 60 * 1000 },
+      { label: "Long rest", kind: "long", ms: 15 * 60 * 1000 }
+    ];
+
+    const state = {
+      mode: "idle",
+      step: 0,
+      pomodoros: 0,
+      remainingMs: CYCLE[0].ms,
+      endsAt: null
+    };
+
+    const countEl = document.getElementById("count");
+    const phraseEl = document.getElementById("phrase");
+    const phaseEl = document.getElementById("phase");
+    const timeEl = document.getElementById("time");
+    const robotEl = document.getElementById("robot");
+    const pastelBtn = document.getElementById("pastel");
+    const startBtn = document.getElementById("start");
+    const pauseBtn = document.getElementById("pause");
+    const nextBtn = document.getElementById("next");
+    const resetBtn = document.getElementById("reset");
+    const endBtn = document.getElementById("end");
+
+    let finishTimer = null;
+
+    function phase() {
+      return CYCLE[state.step];
+    }
+
+    function format(ms) {
+      const totalSeconds = Math.ceil(Math.max(0, ms) / 1000);
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      return String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
+    }
+
+    function phrase() {
+      if (state.mode === "idle") return "No rush — start when you like";
+      if (state.mode === "paused") return "Paused — resume when you like";
+      if (state.mode === "ended") return "Stopped — start when you like";
+      if (phase().kind === "short") return "A short rest";
+      if (phase().kind === "long") return "A long rest";
+      return "Stay with the quiet";
+    }
+
+    function shownMs() {
+      if (state.mode === "running") return Math.max(0, state.endsAt - Date.now());
+      return state.remainingMs;
+    }
+
+    function renderTime() {
+      const text = format(shownMs());
+      if (timeEl.textContent !== text) timeEl.textContent = text;
+    }
+
+    function clearFinish() {
+      clearTimeout(finishTimer);
+      finishTimer = null;
+      robotEl.classList.remove("is-done");
+    }
+
+    function syncRobot() {
+      if (state.mode !== "running" && finishTimer) clearFinish();
+      if (finishTimer && state.mode === "running") return;
+      robotEl.classList.remove("is-running", "is-paused", "is-done");
+      if (state.mode === "running") robotEl.classList.add("is-running");
+      else if (state.mode === "paused" || state.mode === "ended") robotEl.classList.add("is-paused");
+    }
+
+    function playFinish() {
+      robotEl.classList.remove("is-running", "is-paused");
+      robotEl.classList.add("is-done");
+      clearTimeout(finishTimer);
+      finishTimer = setTimeout(() => {
+        finishTimer = null;
+        syncRobot();
+      }, 900);
+    }
+
+    function render() {
+      countEl.textContent = "Pomodoro " + state.pomodoros;
+      phraseEl.textContent = phrase();
+      phaseEl.textContent = phase().label;
+      document.body.dataset.mode = state.mode;
+      document.body.dataset.phase = phase().kind;
+      renderTime();
+
+      startBtn.disabled = state.mode === "running" || state.mode === "paused";
+      pauseBtn.disabled = state.mode === "idle" || state.mode === "ended";
+      pauseBtn.textContent = state.mode === "paused" ? "Resume" : "Pause";
+      nextBtn.disabled = state.mode !== "running";
+      resetBtn.disabled = state.mode === "idle";
+      endBtn.disabled = state.mode === "idle" || state.mode === "ended";
+      syncRobot();
+    }
+
+    function captureRemaining() {
+      if (state.mode === "running") {
+        state.remainingMs = Math.max(0, state.endsAt - Date.now());
+        state.endsAt = null;
+      }
+    }
+
+    // The count increases only when a rest, short or long, is left behind.
+    function advance(fromTimer) {
+      if (phase().kind !== "quiet") state.pomodoros += 1;
+      state.step = (state.step + 1) % CYCLE.length;
+      state.remainingMs = phase().ms;
+      state.endsAt = Date.now() + state.remainingMs;
+      render();
+      if (fromTimer) playFinish();
+    }
+
+    function tick() {
+      if (state.mode !== "running" || state.endsAt == null) return;
+      if (state.endsAt - Date.now() <= 0) {
+        advance(true);
+        return;
+      }
+      renderTime();
+    }
+
+    startBtn.addEventListener("click", () => {
+      if (state.mode !== "idle" && state.mode !== "ended") return;
+      clearFinish();
+      state.mode = "running";
+      state.endsAt = Date.now() + state.remainingMs;
+      render();
+    });
+
+    pauseBtn.addEventListener("click", () => {
+      if (state.mode === "running") {
+        captureRemaining();
+        state.mode = "paused";
+        clearFinish();
+        render();
+        return;
+      }
+      if (state.mode === "paused") {
+        state.mode = "running";
+        state.endsAt = Date.now() + state.remainingMs;
+        render();
+      }
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (state.mode !== "running") return;
+      clearFinish();
+      advance(false);
+    });
+
+    resetBtn.addEventListener("click", () => {
+      if (state.mode === "idle") return;
+      clearFinish();
+      state.mode = "idle";
+      state.step = 0;
+      state.pomodoros = 0;
+      state.remainingMs = CYCLE[0].ms;
+      state.endsAt = null;
+      render();
+    });
+
+    endBtn.addEventListener("click", () => {
+      if (state.mode !== "running" && state.mode !== "paused") return;
+      captureRemaining();
+      state.mode = "ended";
+      clearFinish();
+      render();
+    });
+
+    pastelBtn.addEventListener("click", () => {
+      const on = document.body.classList.toggle("theme-pastel");
+      pastelBtn.setAttribute("aria-pressed", String(on));
+    });
+
+    setInterval(tick, 200);
+    render();
+  </script>
+</body>
+</html>
