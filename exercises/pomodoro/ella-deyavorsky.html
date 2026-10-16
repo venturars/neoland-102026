@@ -1,1404 +1,299 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<!-- ===== META & FAVICON ===== -->
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="A simple, friendly Pomodoro focus timer.">
-<title>Pomodoro</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='37' r='23' fill='%23E5533D'/%3E%3Cellipse cx='24' cy='29' rx='5' ry='3' fill='%23ffffff' opacity='.4'/%3E%3Cellipse cx='24' cy='15' rx='9' ry='4' fill='%233DA35D'/%3E%3Cellipse cx='40' cy='15' rx='9' ry='4' fill='%233DA35D'/%3E%3Cpath d='M32 16V7' stroke='%232F7D45' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Focus · Pomodoro</title>
+  <style>
+    /* Color tokens. Dark theme (default): soft "editor" colors, easy on the eyes at night */
+    :root {
+      color-scheme: dark;
+      --bg: #1e2127; --panel: #282c34; --bar: #21252b; --line: #3a3f4b;
+      --text: #d7dae0; --muted: #9da5b4; --on-accent: #1e2127;
+      --focus: #98c379; --short: #61afef; --long: #c678dd; /* green, blue, purple */
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    /* Light theme: same layout, darker accents so text keeps good contrast */
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #eceff3; --panel: #fafafa; --bar: #f0f1f3; --line: #d4d7dd;
+      --text: #383a42; --muted: #5c6370; --on-accent: #ffffff;
+      --focus: #3f7d3c; --short: #2f62c9; --long: #a626a4;
+    }
+    /* The accent color follows the current phase */
+    body { --accent: var(--focus); }
+    body[data-phase="short"] { --accent: var(--short); }
+    body[data-phase="long"]  { --accent: var(--long); }
 
-<!-- ===== THEME BOOT (runs before paint so the wrong theme never flashes) ===== -->
-<script>
-(function () {
-  var t = null;
-  try { t = localStorage.getItem('pomodoro.theme'); } catch (e) {}
-  if (t !== 'light' && t !== 'dark') {
-    t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-  }
-  document.documentElement.setAttribute('data-theme', t);
-})();
-</script>
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
 
-<style>
-/* ===== THEME TOKENS ===== */
-:root {
-  --page: #F6F1EB;
-  --card: #FFFFFF;
-  --text: #2B2B2B;
-  --muted: #6E6E6E;
-  --btn-bg: #F2ECE5;
-  --btn-bg-hover: #EAE1D7;
-  --track: #EEE7DF;
-  --dot-empty: #D8CFC4;
-  --shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
-  --focus: #1F5FBF;
-  --overlay: rgba(25, 22, 30, 0.45);
-  --dialog: #FFFFFF;
-  --accent: #E5533D;
-  --accent-strong: #C2432D;
-  --on-accent: #FFFFFF;
-  --av: clamp(72px, 22vw, 120px);
-  color-scheme: light;
-}
-[data-theme="dark"] {
-  --page: #16161D;
-  --card: #23232D;
-  --text: #F2F2F2;
-  --muted: #A0A0AA;
-  --btn-bg: #2F2F3B;
-  --btn-bg-hover: #393947;
-  --track: #34343F;
-  --dot-empty: #4A4A58;
-  --shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
-  --focus: #8AB4FF;
-  --overlay: rgba(0, 0, 0, 0.55);
-  --dialog: #2C2C38;
-  color-scheme: dark;
-}
+    body {
+      margin: 0; min-height: 100vh; padding: 16px;
+      display: grid; place-items: center;
+      background: var(--bg); color: var(--text);
+      font: 16px/1.5 var(--sans);
+    }
 
-/* ===== ACCENT COLOR PER STATUS ===== */
-/* --accent = bright color (progress bar); --accent-strong = darker shade used behind text (4.5:1+) */
-.card[data-status="ready"],
-.card[data-status="focus"]      { --accent: #E5533D; --accent-strong: #C2432D; --on-accent: #FFFFFF; }
-.card[data-status="shortBreak"] { --accent: #3DBE8B; --accent-strong: #1F7A56; --on-accent: #FFFFFF; }
-.card[data-status="longBreak"]  { --accent: #5B8DEF; --accent-strong: #3463C9; --on-accent: #FFFFFF; }
-.card[data-status="paused"]     { --accent: #9A9AA5; --accent-strong: #5F5F6A; --on-accent: #FFFFFF; }
-.card[data-status="ended"]      { --accent: #F2B33D; --accent-strong: #F2B33D; --on-accent: #2B2B2B; }
+    .editor {
+      width: 100%; max-width: 520px; overflow: hidden;
+      background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+      box-shadow: 0 12px 40px rgb(0 0 0 / 0.25);
+    }
 
-/* ===== BASE & PAGE LAYOUT (mobile first) ===== */
-*, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-body {
-  margin: 0;
-  min-height: 100vh;
-  min-height: 100dvh;
-  display: flex;
-  overflow-x: hidden;
-  padding:
-    calc(max(16px, env(safe-area-inset-top)) + 56px)
-    max(16px, env(safe-area-inset-right))
-    max(16px, env(safe-area-inset-bottom))
-    max(16px, env(safe-area-inset-left));
-  background: var(--page);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  line-height: 1.4;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-button { font: inherit; color: inherit; }
-.sr-only {
-  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
-}
-:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
-.noscript {
-  margin: auto; padding: 16px 20px; border-radius: 14px;
-  background: var(--card); color: var(--text); font-weight: 600; text-align: center;
-}
+    /* Fake title bar with three window dots + theme switch */
+    .titlebar {
+      display: flex; align-items: center; gap: 12px; padding: 8px 14px;
+      background: var(--bar); border-bottom: 1px solid var(--line);
+    }
+    #theme { flex: none; margin-left: auto; min-height: 36px; padding: 4px 10px; font-size: 0.85rem; }
+    .dots { display: flex; gap: 6px; }
+    .dots i { width: 11px; height: 11px; border-radius: 50%; background: var(--line); }
+    h1 { margin: 0; font: 500 0.85rem var(--mono); color: var(--muted); }
 
-/* ===== THEME BUTTON ===== */
-.theme-btn {
-  position: fixed;
-  top: max(12px, env(safe-area-inset-top));
-  right: max(12px, env(safe-area-inset-right));
-  z-index: 20;
-  width: 44px; height: 44px;
-  display: grid; place-items: center;
-  border-radius: 50%;
-  border: 1px solid transparent;
-  background: var(--card);
-  color: var(--text);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-  cursor: pointer;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none; -webkit-user-select: none;
-  transition: background-color 0.3s ease, color 0.3s ease, transform 0.15s ease;
-}
-.theme-btn svg { width: 20px; height: 20px; }
-[data-theme="dark"] .theme-btn .icon-moon,
-[data-theme="light"] .theme-btn .icon-sun { display: none; }
+    .screen { padding: 24px 20px 8px; text-align: center; }
+    .screen p { margin: 0 0 12px; }
 
-/* ===== CARD ===== */
-.card {
-  position: relative;
-  margin: auto;
-  width: 100%;
-  max-width: 480px;
-  padding: clamp(20px, 5vw, 24px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(8px, 2vh, 14px);
-  text-align: center;
-  background: var(--card);
-  border: 1px solid transparent;
-  border-radius: 28px;
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-}
-.card.is-test { padding-top: 40px; }
-.test-badge {
-  position: absolute; top: 12px; left: 12px;
-  padding: 3px 8px; border-radius: 6px;
-  font-size: 0.68rem; font-weight: 800; letter-spacing: 0.06em;
-  background: #2B2B2B; color: #FFD166;
-}
-[data-theme="dark"] .test-badge { background: #FFD166; color: #2B2B2B; }
+    .phase { font: 1rem var(--mono); color: var(--accent); }
+    .time {
+      font: 600 clamp(3.5rem, 18vw, 6rem)/1 var(--mono);
+      font-variant-numeric: tabular-nums; /* digits don't jump around */
+      letter-spacing: 0.02em;
+    }
+    .counter { font-family: var(--mono); color: var(--muted); }
+    .counter strong { color: var(--accent); }
+    .tip { color: var(--muted); min-height: 3em; }
 
-/* ===== COUNTER ===== */
-.counter { width: 100%; min-width: 0; }
-.counter-label {
-  margin: 0;
-  font-size: 1.05rem; font-weight: 700;
-  overflow-wrap: anywhere;
-}
-.counter-row {
-  margin-top: 4px;
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
-  gap: 4px 12px;
-  min-height: 1.2em;
-}
-.dots { display: inline-flex; gap: 6px; align-items: center; font-size: 0.85rem; font-weight: 700; font-variant-numeric: tabular-nums; }
-.dot {
-  width: 10px; height: 10px; border-radius: 50%;
-  background: transparent;
-  box-shadow: inset 0 0 0 2px var(--dot-empty);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-.dot.is-filled { background: var(--accent-strong); box-shadow: inset 0 0 0 2px var(--accent-strong); }
-.completed { font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+    /* End-of-phase message */
+    .notice {
+      padding: 10px 14px; border-left: 3px solid var(--accent);
+      background: var(--bar); font-family: var(--mono); text-align: left;
+    }
 
-/* ===== STATUS PILL ===== */
-.status { margin: 0; max-width: 100%; }
-.pill {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 14em; max-width: 100%;
-  min-height: 1.9rem;
-  padding: 4px 14px;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  background: var(--accent-strong);
-  color: var(--on-accent);
-  font-size: 0.85rem; font-weight: 700;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
+    /* Buttons: wrap on small screens, big enough to tap */
+    .controls { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 20px 24px; }
+    button {
+      flex: 1 1 auto;               /* width follows the content */
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      white-space: nowrap;          /* icon + text always on one line */
+      min-height: 44px; padding: 8px 12px;
+      font: 600 0.95rem var(--mono); color: var(--text); cursor: pointer;
+      background: var(--bar); border: 1px solid var(--line); border-radius: 6px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    button:hover:not(:disabled) { border-color: var(--accent); }
+    #play { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    /* Clear keyboard focus ring */
+    button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
-/* ===== AVATAR BOX ===== */
-.avatar { width: var(--av); height: var(--av); flex: none; }
-.avatar svg { display: block; width: 100%; height: 100%; overflow: visible; }
-
-/* ===== TIMER & PROGRESS ===== */
-.timer-block { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-.timer {
-  font-size: clamp(3rem, 15vw, 5.5rem);
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-.progress {
-  width: min(100%, 320px); height: 6px;
-  border-radius: 999px;
-  background: var(--track);
-  overflow: hidden;
-}
-.progress-bar {
-  width: 100%; height: 100%;
-  border-radius: 999px;
-  background: var(--accent);
-  transform-origin: left center;
-  transform: scaleX(0);
-  transition: transform 1s linear, background-color 0.3s ease;
-}
-.progress-bar.no-anim { transition: none; }
-
-/* ===== QUOTE ===== */
-.quote {
-  margin: 0;
-  width: 100%; max-width: 34ch;
-  min-height: calc(2 * 1.4em);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.92rem; line-height: 1.4;
-  font-style: italic;
-  color: var(--muted);
-  overflow-wrap: anywhere;
-  transition: opacity 0.15s ease, color 0.3s ease;
-}
-.quote.is-fading { opacity: 0; }
-
-/* ===== BUTTONS ===== */
-.controls {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 8px;
-}
-.btn {
-  min-width: 44px; min-height: 48px;
-  padding: 6px 4px;
-  display: inline-flex; align-items: center; justify-content: center;
-  gap: 6px;
-  border: 1px solid transparent;
-  border-radius: 14px;
-  background: var(--btn-bg);
-  color: var(--text);
-  font-size: 0.85rem; font-weight: 650;
-  cursor: pointer;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.3s ease, color 0.3s ease, opacity 0.2s ease;
-}
-.btn svg { width: 20px; height: 20px; flex: none; }
-.btn-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-.btn-primary { background: var(--accent-strong); color: var(--on-accent); }
-.btn-start, .btn-pause { grid-column: span 3; min-height: 52px; font-size: 0.95rem; }
-.btn-next, .btn-reset, .btn-end { grid-column: span 2; }
-.btn:disabled { opacity: 0.4; cursor: not-allowed; }
-@media (hover: hover) {
-  .btn:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0, 0, 0, 0.14); }
-  .btn:not(:disabled):not(.btn-primary):not(.btn-danger):hover { background: var(--btn-bg-hover); }
-  .theme-btn:hover { transform: translateY(-2px); }
-}
-.btn:not(:disabled):active, .theme-btn:active { transform: scale(0.96); box-shadow: none; }
-
-/* ===== END CONFIRMATION OVERLAY ===== */
-.overlay {
-  position: absolute; inset: 0; z-index: 5;
-  display: flex; align-items: center; justify-content: center;
-  padding: 20px;
-  background: var(--overlay);
-  border-radius: inherit;
-  animation: overlay-in 0.2s ease;
-}
-.overlay[hidden] { display: none; }
-.dialog {
-  width: min(100%, 320px);
-  padding: 22px 20px 20px;
-  border: 1px solid transparent;
-  border-radius: 20px;
-  background: var(--dialog);
-  color: var(--text);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
-}
-.dialog h2 { margin: 0 0 6px; font-size: 1.2rem; }
-.dialog p { margin: 0 0 16px; font-size: 0.88rem; color: var(--muted); }
-.dialog-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-.dialog-actions .btn { flex: 1 1 110px; min-height: 44px; padding: 8px 12px; }
-.btn-danger { background: #C2432D; color: #FFFFFF; }
-@keyframes overlay-in { from { opacity: 0; } to { opacity: 1; } }
-
-/* ===== AVATAR "TOMI": SHAPES ===== */
-.ink { fill: #2B2B2B; }
-.ink-line { fill: none; stroke: #2B2B2B; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-.mouth-fill { fill: #8C2A1C; stroke: #2B2B2B; stroke-width: 2.5; stroke-linejoin: round; }
-.cheek { fill: #FF9AA2; opacity: 0.75; }
-.x-zzz text { fill: var(--muted); font-weight: 800; font-family: inherit; }
-.x-pause rect { fill: var(--muted); }
-.steam { fill: none; stroke: var(--muted); stroke-width: 1.8; stroke-linecap: round; opacity: 0.8; }
-.tomi, .leaf, .e-blink, .pupils, .pause-sym, .z, .star, .steam { transform-box: fill-box; }
-.tomi { transform-origin: 50% 100%; }
-.leaf { transform-origin: 50% 100%; }
-.e-blink, .pupils, .pause-sym, .star { transform-origin: center; }
-
-/* ===== AVATAR "TOMI": EXPRESSIONS (one group per state, cross-faded) ===== */
-.avatar .variant { opacity: 0; transition: opacity 0.35s ease; }
-.avatar[data-state="ready"] .v-ready,
-.avatar[data-state="focus"] .v-focus,
-.avatar[data-state="shortBreak"] .v-shortBreak,
-.avatar[data-state="longBreak"] .v-longBreak,
-.avatar[data-state="paused"] .v-paused,
-.avatar[data-state="ended"] .v-ended { opacity: 1; }
-
-/* ===== AVATAR "TOMI": ANIMATIONS (transform + opacity only) ===== */
-.avatar[data-state="ready"] .tomi { animation: breathe 4s ease-in-out infinite; }
-.avatar[data-state="ready"] .e-blink { animation: blink 4s ease-in-out infinite; }
-.avatar[data-state="focus"] .tomi { animation: work 0.7s ease-in-out infinite; }
-.avatar[data-state="focus"] .leaf { animation: wiggle 1.2s ease-in-out infinite; }
-.avatar[data-state="shortBreak"] .tomi { animation: sway 3s ease-in-out infinite; }
-.avatar[data-state="shortBreak"] .steam { animation: steam 2.4s ease-out infinite; }
-.avatar[data-state="shortBreak"] .steam-2 { animation-delay: -1.2s; }
-.avatar[data-state="longBreak"] .tomi { animation: breathe-slow 6s ease-in-out infinite; }
-.avatar[data-state="longBreak"] .z { animation: float-z 3.6s ease-out infinite both; }
-.avatar[data-state="longBreak"] .z2 { animation-delay: -1.2s; }
-.avatar[data-state="longBreak"] .z3 { animation-delay: -2.4s; }
-.avatar[data-state="paused"] .pupils { animation: look 4s ease-in-out infinite; }
-.avatar[data-state="paused"] .pause-sym { animation: pulse 1.8s ease-in-out infinite; }
-.avatar[data-state="ended"] .tomi { animation: jump 0.6s cubic-bezier(0.3, 0.7, 0.4, 1) 3; }
-.avatar[data-state="ended"] .star { animation: pop 0.9s ease-out both; }
-.avatar[data-state="ended"] .st2 { animation-delay: 0.12s; }
-.avatar[data-state="ended"] .st3 { animation-delay: 0.24s; }
-.avatar[data-state="ended"] .st4 { animation-delay: 0.36s; }
-.avatar[data-state="ended"] .st5 { animation-delay: 0.48s; }
-.avatar[data-state="ended"] .st6 { animation-delay: 0.6s; }
-
-@keyframes breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.035); } }
-@keyframes breathe-slow { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05, 1.03); } }
-@keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
-@keyframes work { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
-@keyframes wiggle { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-8deg); } 75% { transform: rotate(8deg); } }
-@keyframes sway { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
-@keyframes steam { 0% { transform: translateY(3px); opacity: 0; } 40% { opacity: 0.9; } 100% { transform: translateY(-7px); opacity: 0; } }
-@keyframes float-z { 0% { transform: translate(0, 4px); opacity: 0; } 25% { opacity: 1; } 100% { transform: translate(6px, -14px); opacity: 0; } }
-@keyframes look { 0%, 15% { transform: translateX(0); } 30%, 45% { transform: translateX(-2.6px); } 60%, 80% { transform: translateX(2.6px); } 95%, 100% { transform: translateX(0); } }
-@keyframes pulse { 0%, 100% { opacity: 0.45; transform: scale(0.94); } 50% { opacity: 1; transform: scale(1.04); } }
-@keyframes jump {
-  0% { transform: translateY(0) scale(1); }
-  15% { transform: translateY(0) scale(1.06, 0.94); }
-  50% { transform: translateY(-12px) scale(0.97, 1.03); }
-  85% { transform: translateY(0) scale(1.04, 0.96); }
-  100% { transform: translateY(0) scale(1); }
-}
-@keyframes pop {
-  0% { transform: scale(0) rotate(0deg); opacity: 0; }
-  40% { transform: scale(1.4) rotate(45deg); opacity: 1; }
-  100% { transform: scale(1) rotate(90deg); opacity: 1; }
-}
-
-/* ===== RESPONSIVE: under 480px handled by defaults; 480px+ = one row of 5 buttons ===== */
-@media (min-width: 480px) {
-  .controls { grid-template-columns: repeat(5, minmax(0, 1fr)); }
-  .controls .btn { grid-column: auto; flex-direction: column; gap: 4px; min-height: 58px; font-size: 0.78rem; }
-}
-
-/* ===== RESPONSIVE: very small phones (360px or less) ===== */
-@media (max-width: 360px) {
-  .btn-next, .btn-reset, .btn-end { flex-direction: column; gap: 2px; min-height: 54px; font-size: 0.72rem; }
-  .btn-start, .btn-pause { font-size: 0.88rem; }
-}
-
-/* ===== RESPONSIVE: tablets & desktops (square card) ===== */
-@media (min-width: 600px) {
-  body {
-    padding:
-      max(16px, env(safe-area-inset-top))
-      max(16px, env(safe-area-inset-right))
-      max(16px, env(safe-area-inset-bottom))
-      max(16px, env(safe-area-inset-left));
-  }
-}
-@media (min-width: 600px) and (min-height: 640px) {
-  .card { width: min(480px, 90vw); max-width: none; aspect-ratio: 1 / 1; padding: 28px 30px; gap: 10px; }
-  .avatar { --av: 100px; }
-}
-@media (min-width: 1440px) and (min-height: 640px) {
-  .card { width: min(560px, 90vw); padding: 36px; gap: 14px; }
-  .avatar { --av: 120px; }
-}
-
-/* ===== RESPONSIVE: phones in landscape / short screens (two columns) ===== */
-@media (orientation: landscape) and (max-height: 559px) {
-  body {
-    padding:
-      max(12px, env(safe-area-inset-top))
-      calc(max(16px, env(safe-area-inset-right)) + 52px)
-      max(12px, env(safe-area-inset-bottom))
-      max(16px, env(safe-area-inset-left));
-  }
-  .card {
-    width: 100%; max-width: 760px; aspect-ratio: auto;
-    padding: 16px 20px;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-    grid-template-areas:
-      "av co"
-      "av st"
-      "ti qu"
-      "ti bt";
-    align-items: center; justify-items: center; align-content: center;
-    column-gap: 20px; row-gap: 8px;
-  }
-  .card.is-test { padding-top: 34px; }
-  .counter { grid-area: co; }
-  .status { grid-area: st; }
-  .avatar { grid-area: av; --av: clamp(64px, 24vh, 110px); }
-  .timer-block { grid-area: ti; }
-  .quote { grid-area: qu; font-size: 0.85rem; }
-  .controls { grid-area: bt; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
-  .timer { font-size: clamp(2.5rem, 17vh, 4.5rem); }
-  .counter-label { font-size: 0.95rem; }
-  .controls .btn { flex-direction: row; gap: 4px; min-height: 44px; font-size: 0.78rem; }
-  .controls .btn-start, .controls .btn-pause { grid-column: span 3; font-size: 0.85rem; }
-  .controls .btn-next, .controls .btn-reset, .controls .btn-end { grid-column: span 2; }
-}
-
-/* ===== REDUCED MOTION (keep expressions, stop movement) ===== */
-@media (prefers-reduced-motion: reduce) {
-  .avatar, .avatar * { animation: none !important; }
-  .progress-bar, .quote, .btn, .theme-btn { transition: none !important; }
-  .overlay { animation: none; }
-  .btn:not(:disabled):active, .theme-btn:active { transform: none; }
-}
-
-/* ===== WINDOWS HIGH CONTRAST ===== */
-@media (forced-colors: active) {
-  .card, .dialog, .pill { border: 1px solid CanvasText; }
-  .btn, .theme-btn { border: 2px solid ButtonText; }
-  .btn:disabled { border-color: GrayText; }
-  .progress { border: 1px solid CanvasText; }
-  .progress-bar, .dot.is-filled { forced-color-adjust: none; background: Highlight; }
-  .dot { border: 1px solid CanvasText; }
-}
-</style>
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+    }
+  </style>
 </head>
-<body>
-<!-- ===== NO-JAVASCRIPT MESSAGE ===== -->
-<noscript><p class="noscript">This Pomodoro timer needs JavaScript to work.</p></noscript>
+<body data-phase="focus">
+  <main class="editor" aria-labelledby="app-title">
+    <!-- Fake editor title bar (decorative) -->
+    <header class="titlebar">
+      <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <h1 id="app-title">pomodoro.js</h1>
+      <button id="theme" type="button">☀&#xFE0E; Light</button>
+    </header>
 
-<!-- ===== THEME TOGGLE BUTTON ===== -->
-<button type="button" class="theme-btn" id="theme-btn" aria-label="Switch to dark theme" title="Switch to dark theme (T)">
-  <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5z" fill="currentColor"/></svg>
-  <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></g></svg>
-</button>
+    <section class="screen">
+      <p id="phase" class="phase">// focus</p>
+      <p id="time" class="time" role="timer" aria-live="off">25:00</p>
+      <p id="counter" class="counter">Pomodoros: <strong>0</strong></p>
+      <p id="tip" class="tip">Phone face down, out of reach. Your code needs you.</p>
+      <p id="notice" class="notice" role="status" aria-live="polite" hidden></p>
+    </section>
 
-<!-- ===== MAIN CARD ===== -->
-<main class="card" id="card" data-status="ready">
-  <h1 class="sr-only">Pomodoro timer</h1>
-  <span class="test-badge" id="test-badge" hidden>TEST MODE</span>
-
-  <!-- Counter -->
-  <section class="counter" aria-label="Session progress">
-    <p class="counter-label" id="counter-label">Pomodoro 1</p>
-    <div class="counter-row">
-      <span class="dots" id="dots" role="img" aria-label="0 of 4 pomodoros done in this cycle"></span>
-      <span class="completed" id="completed">Completed: 0</span>
+    <!-- Controls: real buttons, so they work with Tab + Enter/Space -->
+    <div class="controls" role="group" aria-label="Timer controls">
+      <button id="play" type="button"><span aria-hidden="true">▶&#xFE0E;</span> Play</button>
+      <button id="pause" type="button" disabled><span aria-hidden="true">❚❚</span> Pause</button>
+      <button id="next" type="button"><span aria-hidden="true">⏭&#xFE0E;</span> Next</button>
+      <button id="reset" type="button"><span aria-hidden="true">↺</span> Reset</button>
+      <button id="end" type="button"><span aria-hidden="true">■</span> End</button>
     </div>
-  </section>
+  </main>
 
-  <!-- Status pill -->
-  <p class="status"><span class="pill" id="pill">Ready to focus</span></p>
+  <script>
+    // ===== 1. Settings (constants never change) =====
+    // Length of each phase, in seconds
+    const DURATIONS = { focus: 25 * 60, short: 5 * 60, long: 15 * 60 };
+    const LABELS = { focus: 'Focus', short: 'Short break', long: 'Long break' };
 
-  <!-- Avatar "Tomi" (decorative) -->
-  <div class="avatar" id="avatar" data-state="ready" aria-hidden="true">
-    <svg viewBox="0 0 120 120" focusable="false">
-      <!-- stars (ended) -->
-      <g class="variant v-ended x-stars">
-        <g transform="translate(14 34)"><path class="star st1" fill="#F2B33D" d="M0-6L1.6-1.6L6 0L1.6 1.6L0 6L-1.6 1.6L-6 0L-1.6-1.6Z"/></g>
-        <g transform="translate(106 30)"><path class="star st2" fill="#FF8A80" d="M0-5L1.4-1.4L5 0L1.4 1.4L0 5L-1.4 1.4L-5 0L-1.4-1.4Z"/></g>
-        <g transform="translate(8 80)"><circle class="star st3" fill="#5B8DEF" r="2.6"/></g>
-        <g transform="translate(112 78)"><path class="star st4" fill="#F2B33D" d="M0-5L1.4-1.4L5 0L1.4 1.4L0 5L-1.4 1.4L-5 0L-1.4-1.4Z"/></g>
-        <g transform="translate(22 112)"><circle class="star st5" fill="#3DBE8B" r="2.2"/></g>
-        <g transform="translate(100 112)"><path class="star st6" fill="#FF8A80" d="M0-6L1.6-1.6L6 0L1.6 1.6L0 6L-1.6 1.6L-6 0L-1.6-1.6Z"/></g>
-      </g>
+    // Messages shown under the timer
+    const FOCUS_TIPS = [
+      'Phone face down, out of reach. Your code needs you.',
+      'One task, one tab. Notifications can wait 25 minutes.',
+      'Bugs fear focused developers. Keep going.',
+      'Small commits, steady progress. You got this.'
+    ];
+    const BREAK_TIPS = [
+      'Stand up and stretch your arms and back.',
+      'Drink a glass of water.',
+      'Look at something 6 meters away for 20 seconds.',
+      'Roll your shoulders and relax your jaw.'
+    ];
+    const FUN_TIPS = [
+      'Explain your bug to a plant. Rubber duck rules apply.',
+      'Do 5 squats. Name each one after a semicolon you forgot.',
+      'Walk to the window and wave at a pigeon.'
+    ];
 
-      <!-- Tomi -->
-      <g class="tomi">
-        <circle cx="60" cy="72" r="38" fill="#E5533D"/>
-        <ellipse cx="44" cy="54" rx="8" ry="4.5" fill="#FFFFFF" opacity="0.35" transform="rotate(-35 44 54)"/>
-        <g class="leaf">
-          <path d="M60 36C52 28 44 30 40 34C46 38 54 38 60 36Z" fill="#3DA35D"/>
-          <path d="M60 36C68 28 76 30 80 34C74 38 66 38 60 36Z" fill="#3DA35D"/>
-          <path d="M60 36C57 30 58 26 60 22C62 26 63 30 60 36Z" fill="#4CB86B"/>
-          <path d="M60 34C60 29 61 26 64 23" fill="none" stroke="#2F7D45" stroke-width="2.5" stroke-linecap="round"/>
-        </g>
-        <ellipse class="cheek" cx="36" cy="80" rx="6" ry="3.5"/>
-        <ellipse class="cheek" cx="84" cy="80" rx="6" ry="3.5"/>
+    // ===== 2. Pure helper functions (same input -> same output) =====
+    // Pick one item from a list, using a random number between 0 and 1
+    const pick = (list, rand) => list[Math.floor(rand * list.length)];
 
-        <!-- eyes -->
-        <g class="variant v-ready"><g class="e-blink"><circle class="ink" cx="47" cy="68" r="4.5"/><circle class="ink" cx="73" cy="68" r="4.5"/></g></g>
-        <g class="variant v-focus">
-          <ellipse class="ink" cx="47" cy="69" rx="5" ry="2.4"/><ellipse class="ink" cx="73" cy="69" rx="5" ry="2.4"/>
-          <path class="ink-line" d="M40 61L53 64M80 61L67 64"/>
-        </g>
-        <g class="variant v-shortBreak"><path class="ink-line" d="M41 70Q47 62 53 70M67 70Q73 62 79 70"/></g>
-        <g class="variant v-longBreak"><path class="ink-line" d="M41 67Q47 73 53 67M67 67Q73 73 79 67"/></g>
-        <g class="variant v-paused">
-          <circle cx="47" cy="68" r="6.5" fill="#FFFFFF" stroke="#2B2B2B" stroke-width="1.5"/>
-          <circle cx="73" cy="68" r="6.5" fill="#FFFFFF" stroke="#2B2B2B" stroke-width="1.5"/>
-          <g class="pupils"><circle class="ink" cx="47" cy="68" r="3.2"/><circle class="ink" cx="73" cy="68" r="3.2"/></g>
-        </g>
-        <g class="variant v-ended">
-          <circle class="ink" cx="47" cy="68" r="5.8"/><circle class="ink" cx="73" cy="68" r="5.8"/>
-          <circle cx="49.2" cy="65.6" r="2" fill="#FFFFFF"/><circle cx="45.2" cy="70.2" r="1.1" fill="#FFFFFF"/>
-          <circle cx="75.2" cy="65.6" r="2" fill="#FFFFFF"/><circle cx="71.2" cy="70.2" r="1.1" fill="#FFFFFF"/>
-        </g>
+    // Choose a tip for a phase. During breaks, about 1 time in 4 it's a funny one.
+    const pickTip = (phase, rand) => {
+      if (phase === 'focus') return pick(FOCUS_TIPS, rand);
+      return rand < 0.25 ? pick(FUN_TIPS, rand * 4) : pick(BREAK_TIPS, (rand - 0.25) / 0.75);
+    };
 
-        <!-- mouths -->
-        <path class="variant v-ready ink-line" d="M54 83Q60 88 66 83"/>
-        <path class="variant v-focus ink-line" d="M54 85H66"/>
-        <path class="variant v-shortBreak mouth-fill" d="M49 82Q60 96 71 82Z"/>
-        <ellipse class="variant v-longBreak" cx="60" cy="86" rx="3" ry="3.6" fill="#8C2A1C"/>
-        <path class="variant v-paused ink-line" d="M55 86Q60 84 65 86"/>
-        <g class="variant v-ended">
-          <path class="mouth-fill" d="M46 81Q60 101 74 81Z"/>
-          <path d="M53 91Q60 87 67 91Q60 96 53 91Z" fill="#FF8A80"/>
-        </g>
-      </g>
+    // Turn seconds into "mm:ss", e.g. 1500 -> "25:00"
+    const formatTime = (seconds) => {
+      const mm = String(Math.floor(seconds / 60)).padStart(2, '0');
+      const ss = String(seconds % 60).padStart(2, '0');
+      return mm + ':' + ss;
+    };
 
-      <!-- pause symbol (paused) -->
-      <g class="variant v-paused x-pause"><g class="pause-sym"><rect x="51" y="2" width="6" height="15" rx="2"/><rect x="63" y="2" width="6" height="15" rx="2"/></g></g>
-
-      <!-- Z z z (long break) -->
-      <g class="variant v-longBreak x-zzz">
-        <text class="z z1" x="88" y="38" font-size="11">Z</text>
-        <text class="z z2" x="98" y="27" font-size="9">z</text>
-        <text class="z z3" x="106" y="18" font-size="7">z</text>
-      </g>
-
-      <!-- tea cup (short break) -->
-      <g class="variant v-shortBreak x-tea">
-        <path class="steam steam-1" d="M98 93Q96 89 98 85Q100 81 98 77"/>
-        <path class="steam steam-2" d="M106 93Q104 89 106 85Q108 81 106 77"/>
-        <path d="M112 100Q118 100 118 104Q118 108 112 107" fill="none" stroke="#8A6A55" stroke-width="2"/>
-        <path d="M92 97H112V104Q112 112 102 112Q92 112 92 104Z" fill="#FFFFFF" stroke="#8A6A55" stroke-width="2" stroke-linejoin="round"/>
-        <ellipse cx="102" cy="99" rx="8.5" ry="1.4" fill="#C98B4E"/>
-        <path d="M88 114H116" stroke="#8A6A55" stroke-width="2" stroke-linecap="round"/>
-      </g>
-    </svg>
-  </div>
-
-  <!-- Timer + progress bar -->
-  <div class="timer-block">
-    <div class="timer" id="timer" role="timer" aria-live="off" aria-atomic="true">25:00</div>
-    <div class="progress" aria-hidden="true"><div class="progress-bar" id="bar"></div></div>
-  </div>
-
-  <!-- Motivational quote -->
-  <p class="quote" id="quote"></p>
-
-  <!-- Buttons -->
-  <div class="controls" role="group" aria-label="Timer controls">
-    <button type="button" class="btn btn-primary btn-start" id="btn-start" aria-label="Start" title="Start (Space)">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>
-      <span class="btn-label" id="start-label">Start</span>
-    </button>
-    <button type="button" class="btn btn-pause" id="btn-pause" aria-label="Pause" title="Pause (Space)" disabled>
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="6.5" y="5" width="4" height="14" rx="1.2" fill="currentColor"/><rect x="13.5" y="5" width="4" height="14" rx="1.2" fill="currentColor"/></svg>
-      <span class="btn-label">Pause</span>
-    </button>
-    <button type="button" class="btn btn-next" id="btn-next" aria-label="Next phase" title="Next phase (N)" disabled>
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 6l9 6-9 6z" fill="currentColor"/><rect x="16" y="5.5" width="3" height="13" rx="1" fill="currentColor"/></svg>
-      <span class="btn-label">Next</span>
-    </button>
-    <button type="button" class="btn btn-reset" id="btn-reset" aria-label="Reset phase" title="Reset phase (R)" disabled>
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M5 3.5v4.2h4.2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span class="btn-label">Reset</span>
-    </button>
-    <button type="button" class="btn btn-end" id="btn-end" aria-label="End session" title="End session (E)" disabled>
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="6" y="6" width="12" height="12" rx="2.5" fill="currentColor"/></svg>
-      <span class="btn-label">End</span>
-    </button>
-  </div>
-
-  <!-- End confirmation (overlay on the card) -->
-  <div class="overlay" id="overlay" hidden>
-    <div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-desc">
-      <h2 id="confirm-title">End this session?</h2>
-      <p id="confirm-desc">The timer keeps running until you decide.</p>
-      <div class="dialog-actions">
-        <button type="button" class="btn" id="btn-cancel">Cancel</button>
-        <button type="button" class="btn btn-danger" id="btn-confirm">Yes, end it</button>
-      </div>
-    </div>
-  </div>
-</main>
-
-<!-- ===== SCREEN READER ANNOUNCEMENTS ===== -->
-<div class="sr-only" id="live" aria-live="polite" aria-atomic="true"></div>
-
-<script>
-'use strict';
-/* ===== 1. SETTINGS (change these values) ===== */
-const FOCUS_MINUTES = 25;
-const SHORT_BREAK_MINUTES = 5;
-const LONG_BREAK_MINUTES = 15;
-const POMODOROS_BEFORE_LONG_BREAK = 4;
-const AUTO_START_NEXT_PHASE = true;
-const KEEP_SCREEN_AWAKE = true;
-const TEST_MODE = false;
-
-/* ===== 2. SETTINGS CHECK (bad values fall back to defaults) ===== */
-const CONFIG = (() => {
-  const read = (getter) => { try { return getter(); } catch (e) { return undefined; } };
-  const int = (name, value, min, max, def) => {
-    if (typeof value === 'number' && Number.isInteger(value) && value >= min && value <= max) return value;
-    console.warn(`[Pomodoro] ${name} = ${String(value)} is not valid (expected a whole number from ${min} to ${max}). Using ${def}.`);
-    return def;
-  };
-  const bool = (name, value, def) => {
-    if (typeof value === 'boolean') return value;
-    console.warn(`[Pomodoro] ${name} = ${String(value)} is not valid (expected true or false). Using ${def}.`);
-    return def;
-  };
-  return Object.freeze({
-    focusMin: int('FOCUS_MINUTES', read(() => FOCUS_MINUTES), 1, 180, 25),
-    shortMin: int('SHORT_BREAK_MINUTES', read(() => SHORT_BREAK_MINUTES), 1, 180, 5),
-    longMin: int('LONG_BREAK_MINUTES', read(() => LONG_BREAK_MINUTES), 1, 180, 15),
-    cycles: int('POMODOROS_BEFORE_LONG_BREAK', read(() => POMODOROS_BEFORE_LONG_BREAK), 1, 12, 4),
-    autoStart: bool('AUTO_START_NEXT_PHASE', read(() => AUTO_START_NEXT_PHASE), true),
-    keepAwake: bool('KEEP_SCREEN_AWAKE', read(() => KEEP_SCREEN_AWAKE), true),
-    testMode: bool('TEST_MODE', read(() => TEST_MODE), false)
-  });
-})();
-
-/* ===== 3. DERIVED CONSTANTS ===== */
-const MINUTE_MS = CONFIG.testMode ? 1000 : 60000;
-const DURATIONS = Object.freeze({
-  focus: CONFIG.focusMin * MINUTE_MS,
-  shortBreak: CONFIG.shortMin * MINUTE_MS,
-  longBreak: CONFIG.longMin * MINUTE_MS
-});
-const MINUTES = Object.freeze({ focus: CONFIG.focusMin, shortBreak: CONFIG.shortMin, longBreak: CONFIG.longMin });
-const PHASES = ['focus', 'shortBreak', 'longBreak'];
-const RUN_STATES = ['ready', 'running', 'paused', 'ended'];
-const PHASE_NAMES = { focus: 'Focus', shortBreak: 'Short break', longBreak: 'Long break' };
-const STORE_KEY = 'pomodoro.state.v1';
-const THEME_KEY = 'pomodoro.theme';
-const AWAY_MS = 60 * 1000;
-const MAX_AGE_MS = 12 * 60 * 60 * 1000;
-const FINGERPRINT = [CONFIG.focusMin, CONFIG.shortMin, CONFIG.longMin, CONFIG.cycles, CONFIG.testMode ? 1 : 0, CONFIG.autoStart ? 1 : 0].join('|');
-const SESSION_KEYS = ['phase', 'runState', 'completedCount', 'cycleCount', 'focusTimeMs', 'phaseFocusMs',
-  'segStartRemaining', 'phaseId', 'endTime', 'remainingMs', 'quote', 'message'];
-
-/* ===== 4. QUOTES ===== */
-const FOCUS_QUOTES = [
-  'Small steps every day add up to big results.',
-  'Focus on the step in front of you.',
-  "One task at a time. You've got this.",
-  'Done is better than perfect.',
-  'Deep work now, free time later.',
-  'The secret of getting ahead is getting started.',
-  'Your future self will thank you for this focus.',
-  'Stay with it. Momentum is building.',
-  'Make these minutes count.',
-  'Progress, not perfection.',
-  'Quiet mind, steady hands, clear goal.',
-  'Little by little, a little becomes a lot.',
-  'Discipline is choosing what you want most.',
-  'Breathe in focus, breathe out distraction.'
-];
-const BREAK_QUOTES = [
-  'Stretch, breathe, and let your mind wander.',
-  'Rest is part of the work.',
-  'Drink some water. Your brain will thank you.',
-  'Look away from the screen and relax your eyes.',
-  'Take a deep breath. You earned this break.',
-  'Stand up, move a little, smile a little.',
-  'A rested mind is a sharper mind.',
-  'Recharge now so you can shine later.',
-  'Let your shoulders drop. Relax.',
-  "Enjoy the pause. It's well deserved."
-];
-function pickQuote(phase, previous) {
-  const list = phase === 'focus' ? FOCUS_QUOTES : BREAK_QUOTES;
-  const options = list.filter((q) => q !== previous);
-  return options[Math.floor(Math.random() * options.length)];
-}
-
-/* ===== 5. STATE (single source of truth) ===== */
-const state = {};
-function freshSession(previousPhaseId) {
-  return {
-    phase: 'focus',
-    runState: 'ready',
-    completedCount: 0,
-    cycleCount: 0,
-    focusTimeMs: 0,
-    phaseFocusMs: 0,          // focus time already credited for the current phase
-    segStartRemaining: 0,     // remaining time when the current running segment started
-    phaseId: (previousPhaseId || 0) + 1,
-    endTime: null,
-    remainingMs: DURATIONS.focus,
-    quote: pickQuote('focus', state.quote),
-    message: null             // special message that temporarily replaces the quote
-  };
-}
-Object.assign(state, freshSession(0), {
-  ui: { confirmOpen: false, themeChoice: null, systemDark: false, announce: { text: '', id: 0 } }
-});
-
-/* ===== 6. HELPERS ===== */
-const now = () => Date.now();
-const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
-const pad = (n) => String(n).padStart(2, '0');
-function getRemaining(t) {
-  const d = DURATIONS[state.phase];
-  if (state.runState === 'running') return clamp(state.endTime - t, 0, d);
-  if (state.runState === 'paused') return clamp(state.remainingMs, 0, d);
-  return d;
-}
-function formatTime(totalSeconds) {
-  const h = Math.floor(totalSeconds / 3600);
-  const m = Math.floor((totalSeconds % 3600) / 60);
-  const s = totalSeconds % 60;
-  return h > 0 ? `${h}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
-}
-function minutesText(phase) {
-  const m = MINUTES[phase];
-  return `${m} minute${m === 1 ? '' : 's'}`;
-}
-function phaseStartText(phase, running) {
-  const label = phase === 'focus' ? 'Focus time' : PHASE_NAMES[phase];
-  return running ? `${label} started, ${minutesText(phase)}` : `${label} ready, paused`;
-}
-function focusDurationText(ms) {
-  const mins = Math.floor(ms / MINUTE_MS);
-  if (mins < 1) return 'less than 1 min of focus';
-  const h = Math.floor(mins / 60);
-  const m = mins % 60;
-  if (h === 0) return `${m} min of focus`;
-  return m === 0 ? `${h} h of focus` : `${h} h ${m} min of focus`;
-}
-function summaryText() {
-  const n = state.completedCount;
-  const focus = focusDurationText(state.focusTimeMs);
-  if (n === 0) return `No full pomodoro this time, but every minute counts! · ${focus}`;
-  return `Great job! ${n} pomodoro${n === 1 ? '' : 's'} · ${focus}`;
-}
-function statusKey() {
-  if (state.runState === 'running') return state.phase;
-  return state.runState; // ready | paused | ended
-}
-function statusText() {
-  switch (state.runState) {
-    case 'ready': return 'Ready to focus';
-    case 'ended': return 'Session complete';
-    case 'paused': return `Paused · ${PHASE_NAMES[state.phase]}`;
-    default:
-      return state.phase === 'focus' ? 'Focus time' : state.phase === 'shortBreak' ? 'Short break' : 'Long break – rest';
-  }
-}
-function counterText() {
-  if (state.runState === 'ended') return `${state.completedCount} done`;
-  if (state.phase === 'focus') return `Pomodoro ${state.completedCount + 1}`;
-  return `Break · ${state.completedCount} done`;
-}
-function effectiveTheme() {
-  return state.ui.themeChoice || (state.ui.systemDark ? 'dark' : 'light');
-}
-function announce(text) {
-  state.ui.announce = { text, id: state.ui.announce.id + 1 };
-}
-
-/* ===== 7. ALLOWED ACTIONS (mirrors the button table) ===== */
-function isAllowed(type) {
-  const open = state.ui.confirmOpen;
-  const rs = state.runState;
-  switch (type) {
-    case 'START': return !open && (rs === 'ready' || rs === 'paused' || rs === 'ended');
-    case 'PAUSE': return !open && rs === 'running';
-    case 'NEXT':
-    case 'RESET':
-    case 'END_OPEN': return !open && (rs === 'running' || rs === 'paused');
-    case 'END_CONFIRM':
-    case 'END_CANCEL': return open;
-    default: return true; // TICK, SYNC, TOGGLE_THEME, SYSTEM_THEME
-  }
-}
-
-/* ===== 8. STATE TRANSITIONS ===== */
-// Credit real focus time of the running segment (never more than one full focus per phase).
-function flushFocus(t) {
-  if (state.phase !== 'focus' || state.runState !== 'running') return;
-  const current = getRemaining(t);
-  const spent = Math.max(0, state.segStartRemaining - current);
-  const room = Math.max(0, DURATIONS.focus - state.phaseFocusMs);
-  const add = Math.min(spent, room);
-  state.phaseFocusMs += add;
-  state.focusTimeMs += add;
-  state.segStartRemaining = current;
-}
-function enterPhase(phase, run, t) {
-  const d = DURATIONS[phase];
-  state.phase = phase;
-  state.phaseId += 1;
-  state.phaseFocusMs = 0;
-  state.remainingMs = d;
-  state.segStartRemaining = d;
-  state.runState = run ? 'running' : 'paused';
-  state.endTime = run ? t + d : null;
-  state.quote = pickQuote(phase, state.quote);
-  state.message = null;
-}
-function nextPhaseAfterSkip() {
-  if (state.phase !== 'focus') return 'focus';
-  return CONFIG.cycles === 1 ? 'longBreak' : 'shortBreak';
-}
-function adopt(saved) {
-  SESSION_KEYS.forEach((k) => { state[k] = saved[k]; });
-  if (state.ui.confirmOpen && state.runState !== 'running' && state.runState !== 'paused') state.ui.confirmOpen = false;
-}
-// Completes the running phase exactly once. Returns 'done', 'away' or 'adopted'.
-function completePhase(t, away) {
-  const stored = readSaved();
-  if (stored && (stored.phaseId !== state.phaseId || stored.runState !== 'running')) {
-    adopt(stored); // another tab already handled this phase
-    return 'adopted';
-  }
-  const finished = state.phase;
-  flushFocus(t);
-  let next;
-  if (finished === 'focus') {
-    state.completedCount += 1;
-    state.cycleCount += 1;
-    next = state.cycleCount >= CONFIG.cycles ? 'longBreak' : 'shortBreak';
-  } else {
-    if (finished === 'longBreak') state.cycleCount = 0;
-    next = 'focus';
-  }
-  const run = CONFIG.autoStart && !away;
-  enterPhase(next, run, t);
-  if (away) {
-    state.message = finished === 'focus'
-      ? 'Welcome back! Your focus session ended while you were away.'
-      : 'Welcome back! Your break ended while you were away.';
-    announce(state.message);
-  } else {
-    announce(phaseStartText(next, run));
-  }
-  return away ? 'away' : 'done';
-}
-
-/* ===== 9. DISPATCH (every user action goes through here) ===== */
-function dispatch(action) {
-  if (!isAllowed(action.type)) return;
-  const t = now();
-  let changed = false;
-
-  switch (action.type) {
-    case 'START': {
-      if (state.runState === 'paused') {
-        state.runState = 'running';
-        state.endTime = t + state.remainingMs;
-        state.segStartRemaining = state.remainingMs;
-        state.message = null;
-        announce(`${PHASE_NAMES[state.phase]} resumed`);
-      } else {
-        Object.assign(state, freshSession(state.phaseId));
-        enterPhase('focus', true, t);
-        announce(phaseStartText('focus', true));
-      }
-      changed = true;
-      break;
-    }
-    case 'PAUSE': {
-      flushFocus(t);
-      state.remainingMs = getRemaining(t);
-      state.runState = 'paused';
-      state.endTime = null;
-      announce('Paused');
-      changed = true;
-      break;
-    }
-    case 'NEXT': {
-      const wasRunning = state.runState === 'running';
-      flushFocus(t);
-      const next = nextPhaseAfterSkip();
-      if (state.phase === 'longBreak') state.cycleCount = 0;
-      enterPhase(next, wasRunning, t);
-      announce(phaseStartText(next, wasRunning));
-      changed = true;
-      break;
-    }
-    case 'RESET': {
-      flushFocus(t);
-      const d = DURATIONS[state.phase];
-      state.runState = 'paused';
-      state.endTime = null;
-      state.remainingMs = d;
-      state.segStartRemaining = d;
-      state.phaseFocusMs = 0;
-      state.phaseId += 1;
-      announce(`${PHASE_NAMES[state.phase]} reset to ${minutesText(state.phase)}, paused`);
-      changed = true;
-      break;
-    }
-    case 'END_OPEN':
-      state.ui.confirmOpen = true;
-      break;
-    case 'END_CANCEL':
-      state.ui.confirmOpen = false;
-      break;
-    case 'END_CONFIRM': {
-      flushFocus(t);
-      state.ui.confirmOpen = false;
-      state.runState = 'ended';
-      state.phase = 'focus';
-      state.endTime = null;
-      state.remainingMs = DURATIONS.focus;
-      state.phaseId += 1;
-      state.message = summaryText();
-      announce(`Session complete. ${state.message}`);
-      changed = true;
-      break;
-    }
-    case 'TOGGLE_THEME': {
-      const choice = effectiveTheme() === 'dark' ? 'light' : 'dark';
-      state.ui.themeChoice = choice;
-      storageSet(THEME_KEY, choice);
-      break;
-    }
-    case 'SYSTEM_THEME':
-      break;
-    case 'THEME_SYNC':
-      state.ui.themeChoice = action.choice;
-      break;
-    case 'SYNC':
-      adopt(action.saved); // from another tab: no save, no sound
-      break;
-    case 'TICK': {
-      if (state.runState !== 'running') return;
-      const d = DURATIONS[state.phase];
-      if (state.endTime - t > d) { // clock moved back: clamp to the full duration
-        state.endTime = t + d;
-        state.segStartRemaining = Math.min(state.segStartRemaining, d);
-        changed = true;
-      }
-      if (state.endTime - t <= 0) {
-        const result = completePhase(t, t - state.endTime > AWAY_MS);
-        if (result === 'adopted') break;
-        changed = true;
-        if (result === 'done') playChime();
-        break;
-      }
-      if (!changed && Math.ceil((state.endTime - t) / 1000) === view.lastSecond) return; // same second: no work
-      break;
-    }
-    default:
-      return;
-  }
-
-  if (changed) save();
-  render();
-  syncEnvironment();
-}
-
-/* ===== 10. STORAGE (every access is wrapped: works even when blocked) ===== */
-function storageGet(key) { try { return window.localStorage.getItem(key); } catch (e) { return null; } }
-function storageSet(key, value) { try { window.localStorage.setItem(key, value); } catch (e) { /* storage blocked */ } }
-function save() {
-  const s = {};
-  SESSION_KEYS.forEach((k) => { s[k] = state[k]; });
-  storageSet(STORE_KEY, JSON.stringify({ v: 1, savedAt: now(), fp: FINGERPRINT, s }));
-}
-function parseSaved(raw) {
-  if (typeof raw !== 'string') return null;
-  let data;
-  try { data = JSON.parse(raw); } catch (e) { return null; }
-  if (!data || typeof data !== 'object' || data.v !== 1 || data.fp !== FINGERPRINT) return null;
-  if (typeof data.savedAt !== 'number' || !isFinite(data.savedAt) || Math.abs(now() - data.savedAt) > MAX_AGE_MS) return null;
-  const s = data.s;
-  if (!s || typeof s !== 'object') return null;
-  const isNum = (v) => typeof v === 'number' && isFinite(v) && v >= 0;
-  const isCount = (v) => Number.isInteger(v) && v >= 0;
-  if (!PHASES.includes(s.phase) || !RUN_STATES.includes(s.runState)) return null;
-  if (![s.completedCount, s.cycleCount, s.phaseId].every(isCount) || s.cycleCount > CONFIG.cycles) return null;
-  if (![s.focusTimeMs, s.phaseFocusMs, s.segStartRemaining, s.remainingMs].every(isNum)) return null;
-  if (s.runState === 'running' && !isNum(s.endTime)) return null;
-  if (typeof s.quote !== 'string' || s.quote.length > 300) return null;
-  if (s.message !== null && (typeof s.message !== 'string' || s.message.length > 300)) return null;
-  const d = DURATIONS[s.phase];
-  return {
-    phase: s.phase,
-    runState: s.runState,
-    completedCount: s.completedCount,
-    cycleCount: s.cycleCount,
-    focusTimeMs: s.focusTimeMs,
-    phaseFocusMs: Math.min(s.phaseFocusMs, d),
-    segStartRemaining: Math.min(s.segStartRemaining, d),
-    phaseId: s.phaseId,
-    endTime: s.runState === 'running' ? s.endTime : null,
-    remainingMs: Math.min(s.remainingMs, d),
-    quote: s.quote,
-    message: s.message
-  };
-}
-function readSaved() { return parseSaved(storageGet(STORE_KEY)); }
-function readThemeChoice(value) { return value === 'light' || value === 'dark' ? value : null; }
-
-/* ===== 11. TICKER (Web Worker from a Blob, setInterval fallback; only one at a time) ===== */
-const ticker = (() => {
-  let worker = null;
-  let intervalId = null;
-  let running = false;
-  let workerFailed = false;
-  const onTick = () => dispatch({ type: 'TICK' });
-  function createWorker() {
-    try {
-      const code = "var id=null;onmessage=function(e){if(e.data==='start'){if(id===null){id=setInterval(function(){postMessage(0)},250)}}else if(id!==null){clearInterval(id);id=null}};";
-      const url = URL.createObjectURL(new Blob([code], { type: 'text/javascript' }));
-      const w = new Worker(url);
-      w.onmessage = onTick;
-      w.onerror = (e) => { if (e && e.preventDefault) e.preventDefault(); fallback(); };
-      return w;
-    } catch (e) {
-      return null;
-    }
-  }
-  function fallback() {
-    if (worker) { try { worker.terminate(); } catch (e) { /* ignore */ } worker = null; }
-    workerFailed = true;
-    if (running && intervalId === null) intervalId = setInterval(onTick, 250);
-  }
-  return {
-    start() {
-      if (running) return;
-      running = true;
-      if (!workerFailed && !worker) worker = createWorker();
-      if (worker) worker.postMessage('start');
-      else fallback();
-    },
-    stop() {
-      if (!running) return;
-      running = false;
-      if (worker) worker.postMessage('stop');
-      if (intervalId !== null) { clearInterval(intervalId); intervalId = null; }
-    }
-  };
-})();
-
-/* ===== 12. SOUND (soft two-note chime, Web Audio API) ===== */
-let audioCtx = null;
-let chimeBusyUntil = 0;
-function unlockAudio() {
-  try {
-    if (!audioCtx) {
-      const AC = window.AudioContext || window.webkitAudioContext;
-      if (!AC) return;
-      audioCtx = new AC();
-      const buffer = audioCtx.createBuffer(1, 1, 22050); // silent blip unlocks iOS
-      const src = audioCtx.createBufferSource();
-      src.buffer = buffer;
-      src.connect(audioCtx.destination);
-      src.start(0);
-    }
-    if (audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
-  } catch (e) { /* sound unsupported */ }
-}
-function playChime() {
-  try {
-    if (!audioCtx) return;
-    const wall = performance.now();
-    if (wall < chimeBusyUntil) return; // never two chimes on top of each other
-    chimeBusyUntil = wall + 1400;
-    if (audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
-    const t0 = audioCtx.currentTime + 0.02;
-    [[659.25, 0], [987.77, 0.24]].forEach(([freq, delay]) => {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0.0001, t0 + delay);
-      gain.gain.exponentialRampToValueAtTime(0.2, t0 + delay + 0.03);
-      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + delay + 1.0);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start(t0 + delay);
-      osc.stop(t0 + delay + 1.05);
+    // ===== 3. State: ONE object that describes everything on screen =====
+    const initialState = () => ({
+      phase: 'focus',              // 'focus' | 'short' | 'long'
+      remaining: DURATIONS.focus,  // seconds left in this phase
+      theme: matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark', // follows the system at first
+      running: false,              // is the timer counting down?
+      endsAt: 0,                   // while running: clock time (ms) when the phase ends
+      count: 0,                    // completed focus sessions
+      tip: pickTip('focus', Math.random()),
+      notice: ''                   // end-of-phase message ('' = hidden)
     });
-  } catch (e) { /* fail silently */ }
-}
 
-/* ===== 13. SCREEN WAKE LOCK ===== */
-let wakeLock = null;
-let wakeLockPending = false;
-async function requestWakeLock() {
-  if (!CONFIG.keepAwake || !('wakeLock' in navigator) || wakeLock || wakeLockPending) return;
-  if (document.visibilityState !== 'visible' || state.runState !== 'running') return;
-  wakeLockPending = true;
-  try {
-    const lock = await navigator.wakeLock.request('screen');
-    wakeLock = lock;
-    lock.addEventListener('release', () => { if (wakeLock === lock) wakeLock = null; });
-    if (state.runState !== 'running' || document.visibilityState !== 'visible') releaseWakeLock();
-  } catch (e) { /* unsupported or refused */ }
-  wakeLockPending = false;
-}
-function releaseWakeLock() {
-  const lock = wakeLock;
-  wakeLock = null;
-  if (lock) lock.release().catch(() => {});
-}
+    let state = initialState();
 
-/* ===== 14. ENVIRONMENT SYNC (ticker + wake lock follow the state) ===== */
-let envRunning = null;
-function syncEnvironment() {
-  const running = state.runState === 'running';
-  if (running === envRunning) return;
-  envRunning = running;
-  if (running) { ticker.start(); requestWakeLock(); }
-  else { ticker.stop(); releaseWakeLock(); }
-}
+    // ===== 4. Render: draw the page from the state =====
+    // Grab each element once
+    const el = (id) => document.getElementById(id);
+    const ui = {
+      phase: el('phase'), time: el('time'), count: el('counter').querySelector('strong'),
+      tip: el('tip'), notice: el('notice'), play: el('play'), pause: el('pause'), theme: el('theme')
+    };
 
-/* ===== 15. RENDER (the only place that updates the interface) ===== */
-const els = {};
-const view = {
-  lastSecond: null, lastRatio: -1, quoteTarget: null, quoteShown: null, quoteTimer: 0,
-  announceId: 0, announceTimer: 0, confirmOpen: false, dots: []
-};
-const FOCUS_FALLBACK = {
-  'btn-start': ['pause', 'next', 'reset', 'end'],
-  'btn-pause': ['start', 'next', 'reset', 'end'],
-  'btn-next': ['start', 'pause'],
-  'btn-reset': ['start', 'pause'],
-  'btn-end': ['start', 'pause']
-};
-function setText(el, text) { if (el.textContent !== text) el.textContent = text; }
-function setAttr(el, name, value) { if (el.getAttribute(name) !== value) el.setAttribute(name, value); }
-function focusFirstEnabled(names) {
-  for (const name of names) {
-    const el = els[name];
-    if (el && !el.disabled) { el.focus(); return; }
-  }
-}
-function renderProgress(ratio) {
-  if (Math.abs(ratio - view.lastRatio) < 1e-6) return;
-  const value = `scaleX(${ratio.toFixed(5)})`;
-  if (ratio < view.lastRatio || view.lastRatio < 0) { // jump back: no backwards animation
-    els.bar.classList.add('no-anim');
-    els.bar.style.transform = value;
-    void els.bar.offsetWidth;
-    els.bar.classList.remove('no-anim');
-  } else {
-    els.bar.style.transform = value;
-  }
-  view.lastRatio = ratio;
-}
-function renderQuote(text) {
-  if (text === view.quoteTarget) return;
-  view.quoteTarget = text;
-  if (view.quoteShown === null) {
-    els.quote.textContent = text;
-    view.quoteShown = text;
-    return;
-  }
-  els.quote.classList.add('is-fading');
-  clearTimeout(view.quoteTimer);
-  view.quoteTimer = setTimeout(() => {
-    els.quote.textContent = view.quoteTarget;
-    view.quoteShown = view.quoteTarget;
-    els.quote.classList.remove('is-fading');
-  }, 150);
-}
-function renderDots() {
-  const n = CONFIG.cycles;
-  if (n > 8) setText(els.dots, `${state.cycleCount} / ${n}`);
-  else view.dots.forEach((dot, i) => dot.classList.toggle('is-filled', i < state.cycleCount));
-  setAttr(els.dots, 'aria-label', `${state.cycleCount} of ${n} pomodoros done in this cycle`);
-}
-function render() {
-  const t = now();
-  const active = document.activeElement;
-  const rs = state.runState;
+    // Tiny helpers: only touch the page when the value really changed (no useless DOM writes)
+    const setText = (node, text) => { if (node.textContent !== String(text)) node.textContent = text; };
+    const setAttr = (node, name, value) => { if (node.getAttribute(name) !== value) node.setAttribute(name, value); };
+    const setFlag = (node, name, on) => { if (node.hasAttribute(name) !== on) node.toggleAttribute(name, on); };
 
-  // theme
-  const theme = effectiveTheme();
-  setAttr(document.documentElement, 'data-theme', theme);
-  const themeLabel = theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
-  setAttr(els.themeBtn, 'aria-label', themeLabel);
-  setAttr(els.themeBtn, 'title', `${themeLabel} (T)`);
+    const render = (s) => {
+      const other = s.theme === 'dark' ? 'light' : 'dark';
+      setAttr(document.documentElement, 'data-theme', s.theme); // switches the color tokens (CSS)
+      setText(ui.theme, other === 'light' ? '☀︎ Light' : '☾ Dark'); // shows the OTHER theme
+      setAttr(ui.theme, 'aria-label', 'Switch to ' + other + ' theme');
+      setAttr(document.body, 'data-phase', s.phase);           // switches the accent color (CSS)
+      const title = LABELS[s.phase] + ' · Pomodoro';            // tab title: phase only, no seconds
+      if (document.title !== title) document.title = title;     // so it changes only with the phase
+      setText(ui.phase, '// ' + LABELS[s.phase].toLowerCase());
+      setText(ui.time, formatTime(s.remaining));
+      setText(ui.count, s.count);
+      setText(ui.tip, s.tip);
+      setText(ui.notice, s.notice);
+      setFlag(ui.notice, 'hidden', s.notice === '');
+      setFlag(ui.play, 'disabled', s.running);                  // can't play twice
+      setFlag(ui.pause, 'disabled', !s.running);                // can't pause if stopped
+    };
 
-  // status, accent, avatar
-  const key = statusKey();
-  setAttr(els.card, 'data-status', key);
-  setAttr(els.avatar, 'data-state', key);
-  setText(els.pill, statusText());
+    // The ONLY place where the state changes: swap in a new object, then redraw
+    const setState = (next) => {
+      state = next;
+      render(state);
+    };
 
-  // counter
-  setText(els.counterLabel, counterText());
-  renderDots();
-  setText(els.completed, `Completed: ${state.completedCount}`);
+    // ===== 5. Pure transitions: take a state, return a NEW state =====
+    // Which phase comes next? Every 4th completed focus earns a long break.
+    const nextPhase = (phase, count) =>
+      phase !== 'focus' ? 'focus' : (count > 0 && count % 4 === 0 ? 'long' : 'short');
 
-  // timer + progress
-  const d = DURATIONS[state.phase];
-  const secs = Math.ceil(getRemaining(t) / 1000);
-  view.lastSecond = secs;
-  const timeText = formatTime(secs);
-  setText(els.timer, timeText);
-  const inPhase = rs === 'running' || rs === 'paused';
-  renderProgress(inPhase ? clamp(1 - (secs * 1000) / d, 0, 1) : 0);
+    // Jump to a phase, full duration, paused
+    const goTo = (s, phase, rand) =>
+      ({ ...s, phase, remaining: DURATIONS[phase], running: false, tip: pickTip(phase, rand) });
 
-  // quote / special message
-  renderQuote(state.message || state.quote);
+    // Start or resume: remember WHEN the phase will end (stays correct even if the tab sleeps)
+    const start = (s, now) => ({ ...s, running: true, notice: '', endsAt: now + s.remaining * 1000 });
+    const pause = (s) => ({ ...s, running: false });
+    const resetPhase = (s, now) =>
+      ({ ...s, remaining: DURATIONS[s.phase], endsAt: now + DURATIONS[s.phase] * 1000, notice: '' });
 
-  // buttons
-  els.start.disabled = !isAllowed('START');
-  els.pause.disabled = !isAllowed('PAUSE');
-  els.next.disabled = !isAllowed('NEXT');
-  els.reset.disabled = !isAllowed('RESET');
-  els.end.disabled = !isAllowed('END_OPEN');
-  const startLabel = rs === 'paused' ? 'Resume' : 'Start';
-  setText(els.startLabel, startLabel);
-  setAttr(els.start, 'aria-label', startLabel);
-  setAttr(els.start, 'title', `${startLabel} (Space)`);
+    // A phase finished: count it (if focus), move on, and show a message
+    const finishPhase = (s, rand) => {
+      const count = s.phase === 'focus' ? s.count + 1 : s.count;
+      const notice = s.phase === 'focus'
+        ? '✔ Focus done! Pomodoro #' + count + '. Take your break, then press Play.'
+        : '☕ Break over. Press Play when you are ready to code.';
+      return { ...goTo({ ...s, count }, nextPhase(s.phase, count), rand), notice };
+    };
 
-  // confirmation overlay
-  if (els.overlay.hidden === state.ui.confirmOpen) els.overlay.hidden = !state.ui.confirmOpen;
+    // Called every second: recompute time left from the end time
+    const tick = (s, now, rand) => {
+      const remaining = Math.max(0, Math.ceil((s.endsAt - now) / 1000));
+      return remaining > 0 ? { ...s, remaining } : finishPhase(s, rand);
+    };
 
-  // tab title
-  let title = 'Pomodoro';
-  if (rs === 'running') title = `${timeText} · ${PHASE_NAMES[state.phase]} – Pomodoro`;
-  else if (rs === 'paused') title = `⏸ ${timeText} · Paused – Pomodoro`;
-  if (document.title !== title) document.title = title;
+    // ===== 6. Side effects: the interval and the sound live outside the state =====
+    let timerId = null; // id of the running setInterval, so we can stop it
+    let audio = null;   // sound engine, created on the first click (browsers require a click)
 
-  // screen reader announcement
-  if (state.ui.announce.id !== view.announceId) {
-    view.announceId = state.ui.announce.id;
-    const text = state.ui.announce.text;
-    els.live.textContent = '';
-    clearTimeout(view.announceTimer);
-    view.announceTimer = setTimeout(() => { els.live.textContent = text; }, 60);
-  }
+    const stopTimer = () => { clearInterval(timerId); timerId = null; };
 
-  // focus management
-  if (state.ui.confirmOpen && !view.confirmOpen) {
-    els.cancel.focus();
-  } else if (!state.ui.confirmOpen && view.confirmOpen) {
-    focusFirstEnabled(['end', 'start', 'pause']);
-  } else if (active && active.disabled && FOCUS_FALLBACK[active.id]) {
-    focusFirstEnabled(FOCUS_FALLBACK[active.id]);
-  }
-  view.confirmOpen = state.ui.confirmOpen;
-}
+    // Soft two-note chime made with the Web Audio API (no sound file needed)
+    const playChime = () => {
+      if (!audio) return;
+      [660, 880].forEach((freq, i) => {
+        const t = audio.currentTime + i * 0.25;      // second note starts a bit later
+        const osc = audio.createOscillator();        // makes the tone
+        const gain = audio.createGain();             // controls the volume
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.exponentialRampToValueAtTime(0.15, t + 0.03); // quick, quiet fade in
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.9); // slow fade out
+        osc.connect(gain).connect(audio.destination);
+        osc.start(t);
+        osc.stop(t + 1);
+      });
+    };
 
-/* ===== 16. KEYBOARD SHORTCUTS ===== */
-function isTextField(el) {
-  if (!el || !el.tagName) return false;
-  if (el.isContentEditable) return true;
-  const tag = el.tagName.toLowerCase();
-  if (tag === 'textarea' || tag === 'select') return true;
-  if (tag !== 'input') return false;
-  return !['button', 'submit', 'reset', 'checkbox', 'radio', 'range', 'color', 'file', 'image'].includes((el.type || '').toLowerCase());
-}
-function trapTab(e) {
-  const items = [els.cancel, els.confirm];
-  const i = items.indexOf(document.activeElement);
-  e.preventDefault();
-  const next = e.shiftKey ? items[(i <= 0 ? items.length : i) - 1] : items[(i + 1) % items.length];
-  next.focus();
-}
-function onKeyDown(e) {
-  if (state.ui.confirmOpen) {
-    if (e.key === 'Escape' || e.key === 'Esc') { e.preventDefault(); dispatch({ type: 'END_CANCEL' }); }
-    else if (e.key === 'Tab') trapTab(e);
-    return;
-  }
-  if (e.metaKey || e.ctrlKey || e.altKey) return;
-  if (isTextField(e.target)) return;
-  if (e.key === ' ' || e.code === 'Space' || e.key === 'Spacebar') {
-    e.preventDefault();
-    if (e.repeat) return;
-    dispatch({ type: state.runState === 'running' ? 'PAUSE' : 'START' });
-    return;
-  }
-  if (e.repeat || typeof e.key !== 'string') return;
-  const map = { n: 'NEXT', r: 'RESET', e: 'END_OPEN', t: 'TOGGLE_THEME' };
-  const type = map[e.key.toLowerCase()];
-  if (type) { e.preventDefault(); dispatch({ type }); }
-}
-function onKeyUp(e) {
-  // stops a focused button from also being "clicked" by Space
-  if (state.ui.confirmOpen || e.metaKey || e.ctrlKey || e.altKey || isTextField(e.target)) return;
-  if (e.key === ' ' || e.code === 'Space' || e.key === 'Spacebar') e.preventDefault();
-}
+    // ===== 7. Event handlers: small functions, one per button =====
+    const onTick = () => {
+      setState(tick(state, Date.now(), Math.random()));
+      if (!state.running) { stopTimer(); playChime(); } // the phase just ended
+    };
+    const onPlay = () => {
+      audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+      setState(start(state, Date.now()));
+      timerId = setInterval(onTick, 1000);
+    };
+    const onPause = () => { stopTimer(); setState(pause(state)); };
+    const onNext = () => {
+      stopTimer();
+      setState({ ...goTo(state, nextPhase(state.phase, state.count), Math.random()), notice: '' });
+    };
+    const onReset = () => setState(resetPhase(state, Date.now())); // keeps running if it was
+    const onEnd = () => { stopTimer(); setState({ ...initialState(), theme: state.theme }); }; // keep the theme
+    const onTheme = () => setState({ ...state, theme: state.theme === 'dark' ? 'light' : 'dark' });
 
-/* ===== 17. INIT (listeners attached once) ===== */
-function init() {
-  ['card', 'avatar', 'pill', 'timer', 'bar', 'quote', 'dots', 'completed', 'overlay', 'live'].forEach((id) => {
-    els[id] = document.getElementById(id);
-  });
-  els.themeBtn = document.getElementById('theme-btn');
-  els.counterLabel = document.getElementById('counter-label');
-  els.testBadge = document.getElementById('test-badge');
-  els.start = document.getElementById('btn-start');
-  els.startLabel = document.getElementById('start-label');
-  els.pause = document.getElementById('btn-pause');
-  els.next = document.getElementById('btn-next');
-  els.reset = document.getElementById('btn-reset');
-  els.end = document.getElementById('btn-end');
-  els.cancel = document.getElementById('btn-cancel');
-  els.confirm = document.getElementById('btn-confirm');
+    ui.play.addEventListener('click', onPlay);
+    ui.pause.addEventListener('click', onPause);
+    el('next').addEventListener('click', onNext);
+    el('reset').addEventListener('click', onReset);
+    el('end').addEventListener('click', onEnd);
+    ui.theme.addEventListener('click', onTheme);
 
-  // dots (built from the setting, never hardcoded)
-  if (CONFIG.cycles <= 8) {
-    for (let i = 0; i < CONFIG.cycles; i++) {
-      const dot = document.createElement('span');
-      dot.className = 'dot';
-      els.dots.appendChild(dot);
-      view.dots.push(dot);
-    }
-  }
-
-  // test mode badge
-  els.testBadge.hidden = !CONFIG.testMode;
-  els.card.classList.toggle('is-test', CONFIG.testMode);
-
-  // theme
-  const mql = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
-  state.ui.systemDark = !!(mql && mql.matches);
-  state.ui.themeChoice = readThemeChoice(storageGet(THEME_KEY));
-  if (mql) {
-    const onSystem = (e) => { state.ui.systemDark = e.matches; dispatch({ type: 'SYSTEM_THEME' }); };
-    if (mql.addEventListener) mql.addEventListener('change', onSystem);
-    else if (mql.addListener) mql.addListener(onSystem);
-  }
-
-  // restore saved session
-  const saved = readSaved();
-  if (saved) {
-    adopt(saved);
-    if (state.runState === 'running' && state.endTime <= now()) {
-      const t = now();
-      completePhase(t, t - state.endTime > AWAY_MS);
-      save();
-    }
-  }
-
-  // buttons
-  els.start.addEventListener('click', () => dispatch({ type: 'START' }));
-  els.pause.addEventListener('click', () => dispatch({ type: 'PAUSE' }));
-  els.next.addEventListener('click', () => dispatch({ type: 'NEXT' }));
-  els.reset.addEventListener('click', () => dispatch({ type: 'RESET' }));
-  els.end.addEventListener('click', () => dispatch({ type: 'END_OPEN' }));
-  els.cancel.addEventListener('click', () => dispatch({ type: 'END_CANCEL' }));
-  els.confirm.addEventListener('click', () => dispatch({ type: 'END_CONFIRM' }));
-  els.overlay.addEventListener('click', (e) => { if (e.target === els.overlay) dispatch({ type: 'END_CANCEL' }); });
-  els.themeBtn.addEventListener('click', () => dispatch({ type: 'TOGGLE_THEME' }));
-
-  // keyboard
-  document.addEventListener('keydown', onKeyDown);
-  document.addEventListener('keyup', onKeyUp);
-
-  // audio unlock on first interaction
-  ['pointerdown', 'touchend', 'click', 'keydown'].forEach((type) => {
-    document.addEventListener(type, unlockAudio, { passive: true, capture: true });
-  });
-
-  // re-check timer when coming back
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') { releaseWakeLock(); return; }
-    dispatch({ type: 'TICK' });
-    requestWakeLock();
-  });
-  window.addEventListener('focus', () => dispatch({ type: 'TICK' }));
-  window.addEventListener('pageshow', (e) => {
-    if (e.persisted) {
-      const s = readSaved();
-      if (s) dispatch({ type: 'SYNC', saved: s });
-    }
-    dispatch({ type: 'TICK' });
-  });
-
-  // other tabs
-  window.addEventListener('storage', (e) => {
-    if (e.key === STORE_KEY) {
-      const s = parseSaved(e.newValue);
-      if (s) dispatch({ type: 'SYNC', saved: s });
-    } else if (e.key === THEME_KEY) {
-      dispatch({ type: 'THEME_SYNC', choice: readThemeChoice(e.newValue) });
-    }
-  });
-
-  render();
-  syncEnvironment();
-}
-
-init();
-</script>
+    render(state); // first draw
+  </script>
 </body>
 </html>
