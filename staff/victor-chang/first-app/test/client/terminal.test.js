@@ -108,3 +108,21 @@ test("CLI-9: DEBUG=1 also prints the stack", () => {
   assert.equal(status, 1);
   assert.match(stderr, /\n\s+at /);
 });
+
+test("CLI-10: get-by-email prints the user", () => {
+  const dbPath = createDbPath();
+  cli(dbPath, ["create", "Ana", "ana@x.com"]);
+  const { status, output } = cli(dbPath, ["get-by-email", "ana@x.com"]);
+  assert.equal(status, 0);
+  assert.deepEqual(output, { id: 1, name: "Ana", email: "ana@x.com" });
+});
+
+test("CLI-11: get-by-email with a missing email exits 3", () => {
+  const { status, error } = cli(createDbPath(), [
+    "get-by-email",
+    "nobody@x.com",
+  ]);
+  assert.equal(status, 3);
+  assert.equal(error.code, "NOT_FOUND");
+  assert.deepEqual(error.details, { resource: "user", email: "nobody@x.com" });
+});

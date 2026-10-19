@@ -5,6 +5,7 @@ import { createUser } from "../../logic/create-user.js";
 import { updateUser } from "../../logic/update-user.js";
 import { deleteUser } from "../../logic/delete-user.js";
 import { getUser } from "../../logic/get-user.js";
+import { getUserByEmail } from "../../logic/get-user-by-email.js";
 import { listUsers } from "../../logic/list-users.js";
 import { AppError, ValidationError } from "../../logic/errors.js";
 
@@ -29,6 +30,10 @@ const commands = {
   get: {
     usage: "get <id>",
     run: (queries, id) => getUser(queries)(parseId(id)),
+  },
+  "get-by-email": {
+    usage: "get-by-email <email>",
+    run: (queries, email) => getUserByEmail(queries)(email),
   },
   update: {
     usage: "update <id> <name> <email>",

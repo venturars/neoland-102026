@@ -4,13 +4,14 @@
 
 `node client/terminal/index.js <command> [args]`
 
-| Command  | Args                  |
-| -------- | --------------------- |
-| `create` | `<name> <email>`      |
-| `list`   | —                     |
-| `get`    | `<id>`                |
-| `update` | `<id> <name> <email>` |
-| `delete` | `<id>`                |
+| Command        | Args                  |
+| -------------- | --------------------- |
+| `create`       | `<name> <email>`      |
+| `list`         | —                     |
+| `get`          | `<id>`                |
+| `get-by-email` | `<email>`             |
+| `update`       | `<id> <name> <email>` |
+| `delete`       | `<id>`                |
 
 ## Rules
 
@@ -24,14 +25,16 @@
 
 ## Scenarios
 
-| ID    | Given                                            | When                             | Then                                                                            |
-| ----- | ------------------------------------------------ | -------------------------------- | ------------------------------------------------------------------------------- |
-| CLI-1 | empty database                                   | `create Ana ana@x.com`           | stdout `{ id: 1, name: 'Ana', email: 'ana@x.com' }`, exit 0                     |
-| CLI-2 | user 1                                           | `delete 1`                       | stdout `{ deleted: 1 }`, exit 0                                                 |
-| CLI-3 | —                                                | `foo`                            | `VALIDATION`, field `command`, exit 2                                           |
-| CLI-4 | —                                                | `update "Victor C" victor@x.com` | `VALIDATION`, field `args`, message `usage: update <id> <name> <email>`, exit 2 |
-| CLI-5 | —                                                | `get abc`                        | `VALIDATION`, field `id`, exit 2                                                |
-| CLI-6 | empty database                                   | `get 9`                          | `NOT_FOUND`, exit 3                                                             |
-| CLI-7 | user with `ana@x.com`                            | `create Bob ana@x.com`           | `DUPLICATE`, exit 4                                                             |
-| CLI-8 | `DB_PATH` points to a folder that does not exist | `list`                           | `SYSTEM`, message `unexpected error`, exit 1, no stack on stderr                |
-| CLI-9 | same as CLI-8, `DEBUG=1`                         | `list`                           | exit 1, stderr also contains the stack                                          |
+| ID     | Given                                            | When                             | Then                                                                            |
+| ------ | ------------------------------------------------ | -------------------------------- | ------------------------------------------------------------------------------- |
+| CLI-1  | empty database                                   | `create Ana ana@x.com`           | stdout `{ id: 1, name: 'Ana', email: 'ana@x.com' }`, exit 0                     |
+| CLI-2  | user 1                                           | `delete 1`                       | stdout `{ deleted: 1 }`, exit 0                                                 |
+| CLI-3  | —                                                | `foo`                            | `VALIDATION`, field `command`, exit 2                                           |
+| CLI-4  | —                                                | `update "Victor C" victor@x.com` | `VALIDATION`, field `args`, message `usage: update <id> <name> <email>`, exit 2 |
+| CLI-5  | —                                                | `get abc`                        | `VALIDATION`, field `id`, exit 2                                                |
+| CLI-6  | empty database                                   | `get 9`                          | `NOT_FOUND`, exit 3                                                             |
+| CLI-7  | user with `ana@x.com`                            | `create Bob ana@x.com`           | `DUPLICATE`, exit 4                                                             |
+| CLI-8  | `DB_PATH` points to a folder that does not exist | `list`                           | `SYSTEM`, message `unexpected error`, exit 1, no stack on stderr                |
+| CLI-9  | same as CLI-8, `DEBUG=1`                         | `list`                           | exit 1, stderr also contains the stack                                          |
+| CLI-10 | user `Ana`, `ana@x.com`                          | `get-by-email ana@x.com`         | stdout `{ id: 1, name: 'Ana', email: 'ana@x.com' }`, exit 0                     |
+| CLI-11 | empty database                                   | `get-by-email nobody@x.com`      | `NOT_FOUND`, details `{ resource: 'user', email: 'nobody@x.com' }`, exit 3      |

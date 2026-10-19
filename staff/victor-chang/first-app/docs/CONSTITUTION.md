@@ -71,12 +71,12 @@ client ──► logic
 
 Single source: `logic/errors.js`. Every app error extends `AppError`, which carries `code` (stable string), `details` (plain object) and the native `cause`.
 
-| Class             | `code`       | `details`          | Raised when                                                       |
-| ----------------- | ------------ | ------------------ | ----------------------------------------------------------------- |
-| `ValidationError` | `VALIDATION` | `{ field }`        | input is missing or malformed, including client arguments         |
-| `NotFoundError`   | `NOT_FOUND`  | `{ resource, id }` | the entity does not exist                                         |
-| `DuplicateError`  | `DUPLICATE`  | `{ field, value }` | a uniqueness rule would break                                     |
-| `SystemError`     | `SYSTEM`     | `{}`               | database, driver or unexpected failure; original error in `cause` |
+| Class             | `code`       | `details`                               | Raised when                                                        |
+| ----------------- | ------------ | --------------------------------------- | ------------------------------------------------------------------ |
+| `ValidationError` | `VALIDATION` | `{ field }`                             | input is missing or malformed, including client arguments          |
+| `NotFoundError`   | `NOT_FOUND`  | `{ resource, <key> }` (`id` or `email`) | the entity does not exist; `<key>` is the field used to look it up |
+| `DuplicateError`  | `DUPLICATE`  | `{ field, value }`                      | a uniqueness rule would break                                      |
+| `SystemError`     | `SYSTEM`     | `{}`                                    | database, driver or unexpected failure; original error in `cause`  |
 
 Layer responsibilities:
 

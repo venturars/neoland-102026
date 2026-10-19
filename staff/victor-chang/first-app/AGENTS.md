@@ -14,6 +14,7 @@ Run from `staff/victor-chang/first-app`:
 node --no-warnings client/terminal/index.js create <name> <email>
 node --no-warnings client/terminal/index.js list
 node --no-warnings client/terminal/index.js get <id>
+node --no-warnings client/terminal/index.js get-by-email <email>
 node --no-warnings client/terminal/index.js update <id> <name> <email>
 node --no-warnings client/terminal/index.js delete <id>
 DEBUG=1 node --no-warnings client/terminal/index.js <command> ...   # print stack and cause on error

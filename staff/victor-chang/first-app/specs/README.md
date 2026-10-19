@@ -14,12 +14,13 @@ Every scenario ID has exactly one test whose name starts with that ID, so filter
 
 ## Index
 
-| Prefix | Spec                           | Tests                            |
-| ------ | ------------------------------ | -------------------------------- |
-| `CU`   | [createUser](create-user.md)   | `test/logic/create-user.test.js` |
-| `GU`   | [getUser](get-user.md)         | `test/logic/get-user.test.js`    |
-| `LU`   | [listUsers](list-users.md)     | `test/logic/list-users.test.js`  |
-| `UU`   | [updateUser](update-user.md)   | `test/logic/update-user.test.js` |
-| `DU`   | [deleteUser](delete-user.md)   | `test/logic/delete-user.test.js` |
-| `SQ`   | [safe queries](safe.md)        | `test/query/safe.test.js`        |
-| `CLI`  | [terminal client](terminal.md) | `test/client/terminal.test.js`   |
+| Prefix | Spec                                   | Tests                                  |
+| ------ | -------------------------------------- | -------------------------------------- |
+| `CU`   | [createUser](create-user.md)           | `test/logic/create-user.test.js`       |
+| `GU`   | [getUser](get-user.md)                 | `test/logic/get-user.test.js`          |
+| `GE`   | [getUserByEmail](get-user-by-email.md) | `test/logic/get-user-by-email.test.js` |
+| `LU`   | [listUsers](list-users.md)             | `test/logic/list-users.test.js`        |
+| `UU`   | [updateUser](update-user.md)           | `test/logic/update-user.test.js`       |
+| `DU`   | [deleteUser](delete-user.md)           | `test/logic/delete-user.test.js`       |
+| `SQ`   | [safe queries](safe.md)                | `test/query/safe.test.js`              |
+| `CLI`  | [terminal client](terminal.md)         | `test/client/terminal.test.js`         |
