@@ -23,12 +23,12 @@ const findUserByEmailSql = `
     created_at AS createdAt,
     updated_at AS updatedAt
   FROM users
-  WHERE email = ?
+  WHERE email = :email
 `;
 
 const insertSql = `
   INSERT INTO users (name, email)
-  VALUES (?, ?)
+  VALUES (:name, :email)
   RETURNING
     id,
     name,
@@ -39,12 +39,12 @@ const insertSql = `
 
 // Look up one user by email. Returns undefined when nobody has that email.
 export function findUserByEmail(email) {
-  return db.prepare(findUserByEmailSql).get(email);
+  return db.prepare(findUserByEmailSql).get({ email });
 }
 
 // Save a new user. SQLite fills id, created_at, and updated_at.
 export function insert(input) {
-  return db.prepare(insertSql).get(input.name, input.email);
+  return db.prepare(insertSql).get({ name: input.name, email: input.email });
 }
 
 const listUsersSql = `
@@ -71,21 +71,21 @@ const findUserByIdSql = `
     created_at AS createdAt,
     updated_at AS updatedAt
   FROM users
-  WHERE id = ?
+  WHERE id = :id
 `;
 
 // Look up one user by id. Returns undefined when that id does not exist.
 export function findUserById(id) {
-  return db.prepare(findUserByIdSql).get(id);
+  return db.prepare(findUserByIdSql).get({ id });
 }
 
 const updateSql = `
   UPDATE users
   SET
-    name = ?,
-    email = ?,
+    name = :name,
+    email = :email,
     updated_at = datetime('now')
-  WHERE id = ?
+  WHERE id = :id
   RETURNING
     id,
     name,
@@ -96,12 +96,16 @@ const updateSql = `
 
 // Change the name and email of one existing user, and refresh updated_at.
 export function update(input) {
-  return db.prepare(updateSql).get(input.name, input.email, input.id);
+  return db.prepare(updateSql).get({
+    id: input.id,
+    name: input.name,
+    email: input.email,
+  });
 }
 
 const removeSql = `
   DELETE FROM users
-  WHERE id = ?
+  WHERE id = :id
   RETURNING
     id,
     name,
@@ -112,5 +116,5 @@ const removeSql = `
 
 // Remove one user and return the row that was deleted.
 export function remove(input) {
-  return db.prepare(removeSql).get(input.id);
+  return db.prepare(removeSql).get({ id: input.id });
 }

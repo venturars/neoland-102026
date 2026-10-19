@@ -1,0 +1,8 @@
+# Paste this in the terminal, with first-app as the current folder
+node --input-type=module <<'EOF'
+import { updateUser } from "./logic/update-user.js";
+
+const result = updateUser({ id: 1, name: "Ada", email: "ada@example.com" });
+
+console.log(result);
+EOF
