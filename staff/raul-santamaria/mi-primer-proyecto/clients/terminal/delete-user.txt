@@ -1,0 +1,21 @@
+# Pega esto en la terminal, con el directorio actual en mi-primer-proyecto
+node --input-type=module <<'EOF'
+import { openDatabase, closeDatabase } from "./db/connection.js";
+import { createSqliteUsers } from "./queries/users.js";
+import { deleteUser } from "./logic/delete-user.js";
+
+let db;
+
+try {
+  db = await openDatabase();
+  const users = await createSqliteUsers(db);
+  await deleteUser(users, 1);
+  console.log("User deleted");
+} catch (error) {
+  console.error(error.message);
+} finally {
+  if (db) {
+    await closeDatabase(db);
+  }
+}
+EOF
