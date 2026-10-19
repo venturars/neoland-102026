@@ -2,8 +2,6 @@
 
 Reglas para crear, actualizar y eliminar usuarios. Esta carpeta no abre una base de datos ni un servidor. Las reglas reciben un almacén y devuelven usuarios o errores.
 
-La base de esas reglas está en [docs/CONSTITUCION.md](docs/CONSTITUCION.md).
-
 ## Tres cajas
 
 | Carpeta | Pregunta | Ahora | Más adelante |
@@ -31,7 +29,7 @@ El almacén, sea memoria o SQL, tiene que ofrecer `guardar`, `buscarPorId`, `bus
 - **Crear.** Exige nombre y email. El email se guarda en minúsculas y no puede repetirse.
 - **Actualizar.** El usuario tiene que existir. Se puede cambiar nombre, email o los dos. El email nuevo no puede ser el de otra persona.
 - **Eliminar.** El usuario tiene que existir. Devuelve el usuario que se borró.
-- **Consultar.** `obtenerUsuario` falla si el id no existe. `listarUsuarios` devuelve la lista.
+- **Consultar.** `obtenerUsuario` falla si el id no existe. `listarUsuarios` devuelve la lista. `buscarUsuarioPorEmail` devuelve el usuario de ese email, o `null` si no está.
 
 Los errores son `DatosInvalidos`, `EmailDuplicado` y `UsuarioNoEncontrado`.
 

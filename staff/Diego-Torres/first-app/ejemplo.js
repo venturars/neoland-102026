@@ -1,5 +1,6 @@
 import {
   actualizarUsuario,
+  buscarUsuarioPorEmail,
   crearAlmacenMemoria,
   crearUsuario,
   eliminarUsuario,
@@ -17,6 +18,7 @@ await crearUsuario(almacen, {
   email: "luis@ejemplo.com",
 });
 await actualizarUsuario(almacen, ana.id, { nombre: "Ana Ruiz López" });
+console.log(await buscarUsuarioPorEmail(almacen, " LUIS@ejemplo.com "));
 await eliminarUsuario(almacen, ana.id);
 
 const quedan = await listarUsuarios(almacen);

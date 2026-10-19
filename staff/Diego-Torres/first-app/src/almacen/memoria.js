@@ -1,4 +1,19 @@
-import { comprobarAlmacen } from "./contrato.js";
+const OPERACIONES_ALMACEN = [
+  "guardar",
+  "buscarPorId",
+  "buscarPorEmail",
+  "listar",
+  "borrar",
+];
+
+function comprobarAlmacen(almacen) {
+  for (const operacion of OPERACIONES_ALMACEN) {
+    if (typeof almacen?.[operacion] !== "function") {
+      throw new Error(`El almacén debe implementar ${operacion}()`);
+    }
+  }
+  return almacen;
+}
 
 export function crearAlmacenMemoria() {
   const porId = new Map();

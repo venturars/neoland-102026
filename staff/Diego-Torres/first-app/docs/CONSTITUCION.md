@@ -1,79 +1,64 @@
 # Constitución — first-app
 
-first-app es una app para aprender a separar las reglas de los usuarios del sitio donde se guardan. Se construye con IA siguiendo esta constitución.
+first-app enseña a separar las reglas de los usuarios del sitio donde se guardan. Se construye con IA siguiendo esta constitución. Si una tarea y esta constitución chocan, gana la constitución.
 
-## Árbol
+## Quién sabe qué
 
-```
-first-app/
-  src/
-    dominio/
-      usuario.js          Qué es un usuario válido. No mira a los demás
-      errores.js          DatosInvalidos, EmailDuplicado, UsuarioNoEncontrado
-    casos-de-uso/
-      crear-usuario.js    Una operación por fichero
-      actualizar-usuario.js
-      eliminar-usuario.js
-      consultar-usuarios.js
-    almacen/
-      contrato.js         Las 5 funciones que cualquier almacén debe tener
-      memoria.js          El almacén de ahora: un Map
-    index.js              Reexporta dominio, casos de uso y almacén
-  paso-1.js               Primer cliente. Solo llama al dominio
-  ejemplo.js              Cliente manual de los casos de uso
-  test/
-    usuarios.test.js      Prueba las reglas con el almacén en memoria
-  docs/
-    CONSTITUCION.md       Esta base
-```
+| Carpeta | Sabe | No sabe |
+|---|---|---|
+| `src/dominio` | Si un nombre y un email son válidos | Si ese email ya existe, ni dónde se guarda |
+| `src/casos-de-uso` | Qué pasa al crear, cambiar, borrar o leer | Cómo está hecho el `Map` |
+| `src/almacen` | Guardar y recuperar `{ id, nombre, email }` | Si el email es válido o está repetido |
+| `paso-1.js`, `ejemplo.js`, `test/` | Llamar y mostrar el resultado | Las reglas. No las repiten |
 
-- `src/dominio/` dice si un nombre y un email son válidos. No abre un almacén, no busca duplicados y no asigna `id`.
-- `src/casos-de-uso/` es el núcleo. Aquí viven las reglas que necesitan mirar a los demás usuarios.
-- `src/almacen/` guarda y recupera. No contiene reglas de negocio.
-- `paso-1.js` es el primer cliente. Sirve de prueba manual del dominio. `ejemplo.js` hace lo mismo con los casos de uso.
+Las importaciones van en una sola dirección: un cliente llama a un caso de uso, un caso de uso llama al dominio y al almacén, el dominio no llama a nadie de la app. `src/index.js` solo reexporta. No contiene reglas.
+
+## El usuario
+
+Un usuario guardado es `{ id, nombre, email }`.
+
+- `id` es un texto. Lo asigna el almacén: `"1"`, `"2"`, `"3"`. El dominio no lo inventa.
+- `nombre` es texto sin espacios al principio ni al final. Vacío no vale.
+- `email` va en minúsculas y tiene forma de email: algo, una `@` y un punto.
+
+La salida de un caso de uso lleva solo esos tres campos. No sale el `Map`, ni la fila interna, ni el almacén.
 
 ## Almacén
 
-Hoy hay un solo almacén: el que devuelve `crearAlmacenMemoria()` en `src/almacen/memoria.js`. No se abre una base de datos.
+Hoy hay uno: `crearAlmacenMemoria()` en `src/almacen/memoria.js`. No se abre una base de datos.
 
-Cualquier almacén, el de memoria o uno que llegue después, exporta estas funciones y ninguna regla:
+Cualquier almacén ofrece estas cinco funciones, todas `async`, y ninguna regla:
 
-- `guardar(usuario)` devuelve el usuario con `id`.
-- `buscarPorId(id)` devuelve el usuario o `null`.
-- `buscarPorEmail(email)` devuelve el usuario o `null`.
-- `listar()` devuelve un array.
+- `guardar(usuario)` devuelve la copia guardada, con `id`.
+- `buscarPorId(id)` devuelve la copia o `null`.
+- `buscarPorEmail(email)` devuelve la copia o `null`.
+- `listar()` devuelve un array de copias.
 - `borrar(id)` devuelve si existía.
 
-Las cinco son `async`. Un caso de uso recibe el almacén como primer argumento. No elige la memoria, SQLite ni el navegador.
+El caso de uso recibe el almacén como primer argumento. No elige memoria, SQLite ni HTTP. Un almacén nuevo cumple esas cinco funciones en un fichero nuevo. No se reescribe `memoria.js` para ello.
 
-El usuario que sale del almacén tiene `id`, `nombre` y `email`. El `id` es un texto. El almacén copia el objeto al guardarlo y al leerlo.
+Al guardar y al leer, el almacén devuelve una copia. Quien la modifique no cambia lo guardado.
 
-## Los casos de uso no se reemplazan
+## Casos de uso
 
-`src/casos-de-uso/` no es un adaptador. No se sustituye por otra implementación, no se convierte en plugins y no se mueven sus reglas a `src/dominio/`, a `src/almacen/` ni a un cliente.
+Las operaciones viven juntas en `src/casos-de-uso/usuarios.js`. No se sacan de esa carpeta. El nombre de la función es la acción y la firma es el contrato: no se pone un comentario de contrato encima. Una operación nueva es una función nueva en ese fichero. Sus reglas no se mudan al dominio, al almacén ni a un cliente.
 
-Cada operación es un fichero. Un fichero ya creado no se reemplaza para encajar otra tarea. Una operación nueva es un fichero nuevo. `consultar-usuarios.js` agrupa las dos lecturas, `obtenerUsuario` y `listarUsuarios`, y no se usa para escribir.
+| Función | Hace | Devuelve |
+|---|---|---|
+| `crearUsuario(almacen, { nombre, email })` | Valida. Si el email ya está, falla. Guarda. | El usuario con `id` |
+| `actualizarUsuario(almacen, id, cambios)` | Si el id no existe, falla. Valida el cambio. Si el email nuevo es de otro, falla. Guarda. | El usuario ya cambiado |
+| `eliminarUsuario(almacen, id)` | Si el id no existe, falla. Borra. | El usuario que borró |
+| `obtenerUsuario(almacen, id)` | Si el id no existe, falla. | El usuario |
+| `listarUsuarios(almacen)` | Lee la lista. | El array, vacío si no hay nadie |
+| `buscarUsuarioPorEmail(almacen, email)` | Valida el email. Lo busca. | El usuario, o `null` si no está |
 
-## Un fichero de caso de uso
+`crearUsuario` recibe `{ nombre, email }` porque el dominio valida ese objeto entero. `actualizarUsuario` recibe el `id` y los `cambios` por separado. `cambios` trae `nombre`, `email` o los dos. Si no trae ninguno, falla.
 
-Un fichero, una operación. El nombre, la entrada y la salida los define la firma. No hay un comentario de contrato encima de la función.
-
-El nombre es la acción (`crearUsuario`, `actualizarUsuario`, `eliminarUsuario`, `obtenerUsuario`, `listarUsuarios`). El primer parámetro es siempre `almacen`. El resto lleva su nombre (`datos`, `id`, `cambios`). `crearUsuario` recibe `{ nombre, email }` porque el dominio valida ese objeto. `actualizarUsuario` recibe el `id` y los `cambios`.
-
-El cuerpo sigue este orden, y no se mezcla:
-
-1. Validar la entrada con el dominio.
-2. Validar el resto de reglas, las que miran el almacén.
-3. Guardar o borrar.
-4. Devolver el usuario o la lista. Solo `id`, `nombre` y `email`.
-
-`eliminarUsuario` devuelve el usuario que borró. `listarUsuarios` devuelve el array. Ninguna función devuelve el `Map` ni un error interno del almacén.
+El orden dentro de la función no se mezcla: primero la regla que se puede decidir con los datos en la mano, después la que necesita mirar el almacén, después guardar o borrar, y al final el dato de salida. En `actualizarUsuario` el usuario se busca antes de validar el cambio, porque el cambio se aplica sobre el usuario que ya existe.
 
 ## Errores
 
-Un fallo de las reglas se señala con una clase de `src/dominio/errores.js`. El mensaje está en español. No se inventan otras clases ni otros textos.
-
-En los pasos 1 y 2:
+Solo existen estas tres clases, en `src/dominio/usuario.js`. El mensaje es exactamente uno de estos:
 
 - `DatosInvalidos`: `El nombre es obligatorio`
 - `DatosInvalidos`: `El email no es válido`
@@ -81,13 +66,18 @@ En los pasos 1 y 2:
 - `EmailDuplicado`: `El email <email> ya está registrado`
 - `UsuarioNoEncontrado`: `No existe un usuario con id <id>`
 
-El dominio solo lanza `DatosInvalidos`. El email repetido y el usuario que no existe los lanzan los casos de uso, porque para saberlo hay que mirar el almacén.
+`DatosInvalidos` lo lanza el dominio. `EmailDuplicado` y `UsuarioNoEncontrado` los lanzan los casos de uso. No se añaden clases, códigos ni mensajes nuevos.
 
 ## Dominio
 
 `src/dominio/usuario.js` no importa el almacén.
 
-- `validarUsuarioNuevo` exige nombre con texto y email con forma de email. Recorta el nombre y pasa el email a minúsculas.
-- `validarCambios` parte de un usuario ya guardado. Aplica nombre, email o los dos. Si no viene ninguno, falla.
+- `validarEmail(email)` recorta el email, lo pasa a minúsculas y lo devuelve. Si no tiene forma de email, falla.
+- `validarUsuarioNuevo({ nombre, email })` recorta el nombre, pasa el email a minúsculas y devuelve `{ nombre, email }`.
+- `validarCambios(actual, cambios)` parte del usuario guardado y cambia el nombre, el email o los dos.
 
-El dominio no comprueba si el email ya existe.
+El dominio no comprueba si el email ya existe. Esa regla vive en el caso de uso, porque hace falta mirar a los demás.
+
+## Qué no entra todavía
+
+SQLite, HTTP, Jupyter y el frontend no se añaden hasta que se pida esa iteración. Cuando lleguen, llaman a los casos de uso que ya existen. No copian la regla de “el email es único”.
