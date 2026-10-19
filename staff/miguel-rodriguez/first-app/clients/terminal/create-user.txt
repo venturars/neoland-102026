@@ -1,0 +1,17 @@
+# Run from staff/miguel-rodriguez/first-app using Node 24.12.0.
+# First run the separate create-users-table.txt example.
+# This changes the local working database; delete is permanent.
+node --input-type=module <<'EOF'
+let database;
+try {
+  const { db } = await import("./db/connection.js");
+  database = db;
+  const { createUser } = await import("./logic/create-user.js");
+  console.log(createUser({ name: "Ada", email: "ada@example.com" }));
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+} finally {
+  if (database) database.close();
+}
+EOF
