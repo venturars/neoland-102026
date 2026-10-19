@@ -1,0 +1,7 @@
+# Pegar en la terminal con el directorio actual en first-app.
+
+# Test 1: id que no existe (error).
+node --input-type=module -e "import { deleteUser } from './logic/delete-user.js'; try { deleteUser(999999); } catch (error) { console.log(error.message); }"
+
+# Test 2: crea un usuario y lo elimina (OK).
+node --input-type=module -e "import { createUser } from './logic/create-user.js'; import { deleteUser } from './logic/delete-user.js'; try { const user = createUser('Ana', 'ana-delete-' + Date.now() + '@mail.com'); deleteUser(user.id); console.log('User deleted'); } catch (error) { console.log(error.message); }"

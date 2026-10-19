@@ -1,0 +1,13 @@
+{
+  "name": "first-app",
+  "version": "1.0.0",
+  "description": "Gestión de usuarios: logic, queries, db y clients",
+  "type": "module",
+  "main": "logic/create-user.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
