@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101214">
+  <title>25:00 · Concentración</title>
+  <!-- Standalone source: no dependencies, generated assets or build step. -->
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 16px;
+      color: #f4f2ec;
+      background: #101214;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; -webkit-font-smoothing: antialiased; }
+    button { font: inherit; }
+    button { cursor: pointer; }
+    :focus-visible { outline: 2px solid #f4f2ec; outline-offset: 3px; }
+    ::selection { color: #101214; background: #f4f2ec; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .icon-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+    .icon {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+      pointer-events: none;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      min-height: 100svh;
+      max-width: 960px;
+      margin: auto;
+      padding: 48px 20px;
+    }
+
+    h1 {
+      max-width: 440px;
+      margin: 0 0 36px;
+      text-align: center;
+      font-size: clamp(1.4rem, 4vw, 1.8rem);
+      font-weight: 500;
+      line-height: 1.35;
+    }
+
+    .phase-tabs {
+      display: flex;
+      gap: 4px;
+      width: min(100%, 360px);
+      margin-bottom: 22px;
+    }
+    .phase-tab {
+      flex: 1;
+      min-width: 0;
+      min-height: 44px;
+      padding: 8px 6px;
+      border: 0;
+      border-radius: 6px;
+      color: #a7adb4;
+      background: transparent;
+      font-size: 14px;
+      line-height: 1.25;
+      transition: background-color 150ms ease, color 150ms ease;
+    }
+    .phase-tab:hover { color: #f4f2ec; background: #1a1d20; }
+    .phase-tab[aria-pressed="true"] { color: #f4f2ec; background: #262b30; font-weight: 600; }
+    .countdown { display: flex; align-items: center; justify-content: center; gap: 16px; }
+    .timer {
+      min-width: 6ch;
+      margin: 0;
+      text-align: center;
+      font-size: clamp(1.75rem, 7.7vw, 4.55rem);
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -.045em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .icon-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      border: 1px solid #343a40;
+      border-radius: 10px;
+      background: #1a1d20;
+      color: #a7adb4;
+      flex-shrink: 0;
+      transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, transform 120ms ease;
+    }
+    .icon-button:hover { color: #f4f2ec; border-color: #747c84; }
+    .icon-button:active { transform: translateY(1px); }
+    .adjust { width: 44px; height: 44px; border-color: transparent; background: transparent; }
+    .primary { color: #101214; background: #f4f2ec; border-color: #f4f2ec; }
+    .primary:hover { color: #101214; background: #fffdf7; border-color: #fffdf7; }
+    .playback { display: flex; justify-content: center; gap: 12px; margin-top: 32px; }
+    .dedication { margin: 36px 0 0; color: #17191b; font-size: 12px; text-align: center; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .icon-button, .phase-tab { transition: none; }
+      .icon-button:active { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="m9 5 11 7-11 7Z" fill="currentColor" stroke="none"/></symbol>
+      <symbol id="i-pause" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14" stroke-width="2.5"/></symbol>
+      <symbol id="i-reset" viewBox="0 0 24 24"><path d="M3.5 10a8.5 8.5 0 1 1 1.8 7.5M3.5 4v6h6"/></symbol>
+      <symbol id="i-skip" viewBox="0 0 24 24"><path d="m5 6 10 6-10 6ZM19 5v14"/></symbol>
+      <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></symbol>
+    </defs>
+  </svg>
+
+  <main aria-labelledby="page-title">
+    <h1 id="page-title">Time to shut up and focus 😎</h1>
+    <div class="phase-tabs" role="group" aria-label="Seleccionar fase">
+      <button id="phase-focus" class="phase-tab" type="button" data-phase="focus" aria-pressed="true">Pomodoro</button>
+      <button id="phase-short" class="phase-tab" type="button" data-phase="shortBreak" aria-pressed="false">Break</button>
+      <button id="phase-long" class="phase-tab" type="button" data-phase="longBreak" aria-pressed="false">Long Break</button>
+    </div>
+    <div class="countdown">
+      <button id="minus" class="icon-button adjust" type="button" aria-label="Restar un minuto" title="Restar un minuto">
+        <svg class="icon" aria-hidden="true"><use href="#i-minus"/></svg>
+      </button>
+      <p id="timer" class="timer" role="timer" aria-live="off" aria-label="25 minutos restantes">25:00</p>
+      <button id="plus" class="icon-button adjust" type="button" aria-label="Añadir un minuto" title="Añadir un minuto">
+        <svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>
+      </button>
+    </div>
+
+    <div class="playback" role="group" aria-label="Controles del temporizador">
+      <button id="primary" class="icon-button primary" type="button" aria-label="Iniciar" title="Iniciar">
+        <svg class="icon" aria-hidden="true"><use id="play-icon" href="#i-play"/></svg>
+      </button>
+      <button id="reset" class="icon-button" type="button" aria-label="Reiniciar" title="Reiniciar">
+        <svg class="icon" aria-hidden="true"><use href="#i-reset"/></svg>
+      </button>
+      <button id="skip" class="icon-button" type="button" aria-label="Saltar fase" title="Saltar fase">
+        <svg class="icon" aria-hidden="true"><use href="#i-skip"/></svg>
+      </button>
+    </div>
+
+    <p class="dedication">Meghan I hope this is good enough for you</p>
+    <p id="announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+  </main>
+
+  <script>
+    (() => {
+      const MINUTE = 60_000;
+      const MAX_TIME = 180 * MINUTE;
+      const DURATIONS = { focus: 25, shortBreak: 5, longBreak: 15 };
+      const PHASE_NAMES = { focus: 'Concentración', shortBreak: 'Descanso corto', longBreak: 'Descanso largo' };
+      const byId = (id) => document.getElementById(id);
+      const timer = byId('timer');
+      const primary = byId('primary');
+      const announcement = byId('announcement');
+      const phaseButtons = [...document.querySelectorAll('.phase-tab')];
+
+      function announce(message) {
+        announcement.textContent = message;
+      }
+
+      function createState() {
+        return {
+          phase: 'focus', status: 'ready', cycle: 0,
+          remainingMs: DURATIONS.focus * MINUTE, deadlineMs: null,
+        };
+      }
+
+      function remaining(state, now) {
+        return Math.max(0, state.status === 'running' ? state.deadlineMs - now : state.remainingMs);
+      }
+
+      function formatTime(milliseconds) {
+        const seconds = Math.ceil(Math.max(0, milliseconds) / 1000);
+        return `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+      }
+
+      function prepare(state, phase, cycle = state.cycle) {
+        return {
+          ...state, phase, cycle, status: 'ready', deadlineMs: null,
+          remainingMs: DURATIONS[phase] * MINUTE,
+        };
+      }
+
+      function complete(state) {
+        if (state.phase === 'focus') {
+          const cycle = state.cycle + 1;
+          return prepare(state, cycle === 4 ? 'longBreak' : 'shortBreak', cycle);
+        }
+        return prepare(state, 'focus', state.phase === 'longBreak' ? 0 : state.cycle);
+      }
+
+      function transition(state, event, now) {
+        if (event.type === 'selectPhase') {
+          const cycle = state.phase === 'longBreak' ? 0 : state.cycle;
+          if (event.phase === 'focus') return { state: prepare(state, 'focus', cycle), completed: false };
+          if (event.phase === state.phase) return { state, completed: false };
+          return { state: prepare(state, event.phase, cycle), completed: false };
+        }
+        if (event.type === 'reset' && state.phase === 'focus') {
+          return { state: prepare(state, 'focus'), completed: false };
+        }
+        // Adjust before reconciling expiry: subtraction can never complete a phase.
+        if (event.type === 'adjust') {
+          const time = Math.max(1000, Math.min(MAX_TIME, remaining(state, now) + event.minutes * MINUTE));
+          return { state: { ...state, remainingMs: time, deadlineMs: state.status === 'running' ? now + time : null }, completed: false };
+        }
+        const completed = state.status === 'running' && now >= state.deadlineMs;
+        if (completed) return { state: complete(state), completed: true };
+
+        let next = state;
+        if (event.type === 'primary') {
+          next = state.status === 'running'
+            ? { ...state, status: 'paused', remainingMs: remaining(state, now), deadlineMs: null }
+            : { ...state, status: 'running', deadlineMs: now + state.remainingMs };
+        } else if (event.type === 'reset') {
+          next = prepare(state, state.phase);
+        } else if (event.type === 'skip') {
+          next = state.phase === 'focus'
+            ? prepare(state, 'shortBreak')
+            : prepare(state, 'focus', state.phase === 'longBreak' ? 0 : state.cycle);
+        }
+        return { state: next, completed: false };
+      }
+
+      let state = createState();
+      let scheduler = null;
+      let audioContext = null;
+      let noiseBuffer = null;
+      let audioAvailable = true;
+
+      function prepareAudio() {
+        if (!audioAvailable) return;
+        try {
+          const Audio = window.AudioContext || window.webkitAudioContext;
+          if (!Audio) { audioAvailable = false; return; }
+          if (!audioContext) audioContext = new Audio();
+          if (audioContext.state === 'suspended') audioContext.resume().catch(() => { audioAvailable = false; });
+        } catch { audioAvailable = false; }
+      }
+
+      function completionSound() {
+        if (!audioAvailable || audioContext?.state !== 'running') return;
+        try {
+          const context = audioContext;
+          const start = context.currentTime;
+          const length = 1.1;
+          if (!noiseBuffer) {
+            noiseBuffer = context.createBuffer(1, Math.ceil(context.sampleRate * length), context.sampleRate);
+            const samples = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < samples.length; i++) samples[i] = Math.random() * 2 - 1;
+          }
+          const air = context.createBufferSource();
+          const filter = context.createBiquadFilter();
+          const airGain = context.createGain();
+          const tone = context.createOscillator();
+          const toneGain = context.createGain();
+          const output = context.createGain();
+
+          // Filtered air and a low sine descend together into a rounded, quiet tail.
+          air.buffer = noiseBuffer;
+          filter.type = 'lowpass';
+          filter.Q.value = 0.6;
+          filter.frequency.setValueAtTime(1100, start);
+          filter.frequency.exponentialRampToValueAtTime(240, start + 0.9);
+          airGain.gain.setValueAtTime(0, start);
+          airGain.gain.linearRampToValueAtTime(0.16, start + 0.16);
+          airGain.gain.exponentialRampToValueAtTime(0.0001, start + 1);
+          airGain.gain.linearRampToValueAtTime(0, start + length);
+          tone.type = 'sine';
+          tone.frequency.setValueAtTime(180, start);
+          tone.frequency.exponentialRampToValueAtTime(82, start + 0.85);
+          toneGain.gain.setValueAtTime(0, start);
+          toneGain.gain.linearRampToValueAtTime(0.13, start + 0.12);
+          toneGain.gain.exponentialRampToValueAtTime(0.0001, start + 1);
+          toneGain.gain.linearRampToValueAtTime(0, start + length);
+          output.gain.value = 0.6;
+          air.connect(filter);
+          filter.connect(airGain);
+          airGain.connect(output);
+          tone.connect(toneGain);
+          toneGain.connect(output);
+          output.connect(context.destination);
+          tone.onended = () => {
+            for (const node of [air, filter, airGain, tone, toneGain, output]) node.disconnect();
+          };
+          air.start(start);
+          tone.start(start);
+          air.stop(start + length);
+          tone.stop(start + length);
+        } catch { audioAvailable = false; }
+      }
+
+      function buttonLabel(button, label) {
+        button.setAttribute('aria-label', label);
+        button.title = label;
+      }
+
+      function render(now) {
+        const time = remaining(state, now);
+        const display = formatTime(time);
+        if (timer.textContent !== display) timer.textContent = display;
+        const seconds = Math.ceil(time / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const rest = seconds % 60;
+        timer.setAttribute('aria-label', `${minutes} ${minutes === 1 ? 'minuto' : 'minutos'} y ${rest} ${rest === 1 ? 'segundo' : 'segundos'} restantes`);
+        buttonLabel(primary, { ready: 'Iniciar', running: 'Pausar', paused: 'Continuar' }[state.status]);
+        byId('play-icon').setAttribute('href', state.status === 'running' ? '#i-pause' : '#i-play');
+        for (const button of phaseButtons) {
+          button.setAttribute('aria-pressed', String(button.dataset.phase === state.phase));
+        }
+        document.title = `${display} · ${PHASE_NAMES[state.phase]}`;
+      }
+
+      function schedule() {
+        if (scheduler !== null) clearTimeout(scheduler);
+        scheduler = null;
+        if (state.status !== 'running') return;
+        const scheduled = setTimeout(() => {
+          if (scheduler !== scheduled) return;
+          scheduler = null;
+          dispatch({ type: 'tick' });
+        }, 250);
+        scheduler = scheduled;
+      }
+
+      function dispatch(event) {
+        const previous = state;
+        const now = Date.now();
+        const result = transition(state, event, now);
+        state = result.state;
+        render(now);
+        schedule();
+        if (result.completed) {
+          announce(`${PHASE_NAMES[previous.phase]} terminada. ${PHASE_NAMES[state.phase]}: listo para iniciar.`);
+          completionSound();
+        } else if (previous.phase !== state.phase || previous.status !== state.status) {
+          announce(`${PHASE_NAMES[state.phase]}. ${{ ready: 'Listo para iniciar.', running: 'En marcha.', paused: 'En pausa.' }[state.status]}`);
+        }
+      }
+
+      primary.addEventListener('click', () => { prepareAudio(); dispatch({ type: 'primary' }); });
+      byId('reset').addEventListener('click', () => dispatch({ type: 'reset' }));
+      byId('skip').addEventListener('click', () => dispatch({ type: 'skip' }));
+      byId('minus').addEventListener('click', () => dispatch({ type: 'adjust', minutes: -1 }));
+      byId('plus').addEventListener('click', () => dispatch({ type: 'adjust', minutes: 1 }));
+      for (const button of phaseButtons) {
+        button.addEventListener('click', () => dispatch({ type: 'selectPhase', phase: button.dataset.phase }));
+      }
+      document.addEventListener('visibilitychange', () => dispatch({ type: 'tick' }));
+      window.addEventListener('pageshow', () => dispatch({ type: 'tick' }));
+      render(Date.now());
+    })();
+  </script>
+</body>
+</html>

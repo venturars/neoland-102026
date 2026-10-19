@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pomodoro Esther</title>
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#fdf3f6; --card:#fffafc; --ink:#5b4a63; --soft:#8d7a96; --ring:#f3d9e4;
+  --petal:#ffffff; --petal-line:#e9d5df; --center:#ffd666;
+  --grass:#cdeacb; --skin:#fde0cf; --hair:#c9a27a; --dress:#bfd9f5; --stem:#8fcf9a;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#2a2430; --card:#352d3c; --ink:#f3e6f3; --soft:#b9a7c4; --ring:#4a3f55;
+    --petal:#f7f1f8; --petal-line:#6a5a76; --grass:#3f5a45; --dress:#6f8fb8; --stem:#6fb27d;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#2a2430; --card:#352d3c; --ink:#f3e6f3; --soft:#b9a7c4; --ring:#4a3f55;
+  --petal:#f7f1f8; --petal-line:#6a5a76; --grass:#3f5a45; --dress:#6f8fb8; --stem:#6fb27d;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"Times New Roman",Times,"Liberation Serif",serif; font-weight:700;
+  display:flex; justify-content:center; align-items:center; min-height:100vh; padding:20px;
+}
+main{
+  width:100%; max-width:520px; background:var(--card); border-radius:32px;
+  padding:28px 22px 30px; text-align:center;
+  box-shadow:0 10px 40px rgba(180,140,170,.22);
+}
+h1{margin:0 0 4px;font-size:1.5rem;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+.mode{margin:0 0 6px;color:var(--soft);font-size:1rem;letter-spacing:.08em}
+.clock{
+  font-size:clamp(4.2rem,22vw,7.6rem); line-height:1; letter-spacing:.03em;
+  font-variant-numeric:tabular-nums; margin:6px 0 10px; color:var(--ink);
+}
+.clock.done{animation:pulse .6s ease-in-out infinite alternate}
+@keyframes pulse{to{transform:scale(1.06)}}
+.scene{max-width:340px;margin:0 auto 18px}
+.scene svg{width:100%;height:auto;display:block;overflow:visible}
+.petal{transform-box:fill-box;transform-origin:center}
+.petal.fall{animation:fall 1.1s ease-in forwards}
+@keyframes fall{
+  to{transform:translate(var(--dx,12px),150px) rotate(var(--rot,120deg));opacity:0}
+}
+.petal.gone{display:none}
+.btns{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+button{
+  font:inherit;font-weight:700;font-size:1.05rem;letter-spacing:.04em;
+  border:0;border-radius:999px;padding:12px 22px;min-width:104px;cursor:pointer;color:#fff;
+  box-shadow:0 4px 0 rgba(0,0,0,.16);transition:transform .08s,box-shadow .08s,filter .15s;
+}
+button:hover{filter:brightness(1.07)}
+button:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.16)}
+button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.start{background:#2e9e6b}
+.pause{background:#f0a81a;color:#3a2a00}
+.reset{background:#3b7dd8}
+.next{background:#8b5cc7}
+.stop{background:#e0525f}
+@media (max-width:420px){button{min-width:90px;padding:11px 16px}}
+</style>
+</head>
+<body>
+<main>
+  <h1>Pomodoro Esther</h1>
+  <p class="mode" id="mode">Sesión de 20 min</p>
+  <div class="clock" id="clock" role="timer" aria-live="off">20:00</div>
+
+  <div class="scene" aria-hidden="true">
+    <svg viewBox="0 0 320 230">
+      <ellipse cx="160" cy="214" rx="150" ry="14" fill="var(--grass)"/>
+      <!-- niña -->
+      <path d="M52 214 Q56 140 88 128 Q120 140 124 214 Z" fill="var(--dress)"/>
+      <rect x="80" y="112" width="16" height="20" rx="6" fill="var(--skin)"/>
+      <path d="M62 78 Q60 40 92 38 Q124 40 122 78 Q124 112 112 118 L72 118 Q60 112 62 78Z" fill="var(--hair)"/>
+      <circle cx="92" cy="82" r="26" fill="var(--skin)"/>
+      <path d="M66 74 Q92 44 118 74 Q104 60 92 62 Q78 60 66 74Z" fill="var(--hair)"/>
+      <circle cx="82" cy="86" r="2.6" fill="#5b4a63"/>
+      <circle cx="102" cy="86" r="2.6" fill="#5b4a63"/>
+      <path d="M85 97 Q92 102 99 97" stroke="#d98a8a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <circle cx="76" cy="94" r="4" fill="#f7b6c2" opacity=".7"/>
+      <circle cx="108" cy="94" r="4" fill="#f7b6c2" opacity=".7"/>
+      <!-- brazo -->
+      <path d="M112 140 Q150 138 186 112" stroke="var(--skin)" stroke-width="11" fill="none" stroke-linecap="round"/>
+      <!-- margarita -->
+      <path d="M205 100 Q210 160 200 214" stroke="var(--stem)" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M205 160 Q228 148 238 128 Q216 134 205 160Z" fill="var(--stem)"/>
+      <g id="petals" transform="translate(205 78)"></g>
+      <circle cx="205" cy="78" r="12" fill="var(--center)"/>
+      <circle cx="187" cy="112" r="6" fill="var(--skin)"/>
+    </svg>
+  </div>
+
+  <div class="btns">
+    <button class="start" id="bStart">Start</button>
+    <button class="pause" id="bPause">Pausa</button>
+    <button class="reset" id="bReset">Reset</button>
+    <button class="next" id="bNext">Next</button>
+    <button class="stop" id="bStop">Finalizar</button>
+  </div>
+</main>
+
+<script>
+(function(){
+  var N = 12;
+  var minutes = 20;
+  var total = minutes * 60000;
+  var remaining = total;
+  var endAt = 0, timer = null, state = "idle", ac = null, bellNodes = [];
+  var clock = document.getElementById("clock");
+  var modeEl = document.getElementById("mode");
+  var petalsG = document.getElementById("petals");
+  var petals = [];
+  var shown = N;
+
+  // construir pétalos
+  for (var i = 0; i < N; i++){
+    var e = document.createElementNS("http://www.w3.org/2000/svg","ellipse");
+    e.setAttribute("cx","0"); e.setAttribute("cy","-24");
+    e.setAttribute("rx","8"); e.setAttribute("ry","18");
+    e.setAttribute("fill","var(--petal)");
+    e.setAttribute("stroke","var(--petal-line)"); e.setAttribute("stroke-width","1.5");
+    e.setAttribute("transform","rotate(" + (i * 360 / N) + ")");
+    e.setAttribute("class","petal");
+    petalsG.appendChild(e); petals.push(e);
+  }
+
+  function fmt(ms){
+    var s = Math.ceil(ms / 1000);
+    var m = Math.floor(s / 60), r = s % 60;
+    return (m < 10 ? "0" : "") + m + ":" + (r < 10 ? "0" : "") + r;
+  }
+
+  function restorePetals(){
+    petals.forEach(function(p){ p.setAttribute("class","petal"); });
+    shown = N;
+  }
+
+  function render(){
+    clock.textContent = fmt(remaining);
+    document.title = (state === "running" ? fmt(remaining) + " · " : "") + "Pomodoro Esther";
+    var want = Math.max(0, Math.ceil(N * remaining / total));
+    if (remaining >= total) want = N;
+    while (shown > want){
+      shown--;
+      var p = petals[shown];
+      p.style.setProperty("--dx", (Math.random() * 50 - 20) + "px");
+      p.style.setProperty("--rot", (Math.random() * 260 - 60) + "deg");
+      p.setAttribute("class","petal fall");
+      (function(el){ setTimeout(function(){ el.setAttribute("class","petal gone"); }, 1100); })(p);
+    }
+  }
+
+  function tick(){
+    remaining = endAt - Date.now();
+    if (remaining <= 0){ remaining = 0; finish(); return; }
+    render();
+  }
+
+  function audio(){
+    if (!ac){
+      var C = window.AudioContext || window.webkitAudioContext;
+      if (C) ac = new C();
+    }
+    if (ac && ac.state === "suspended") ac.resume();
+  }
+
+  function stopBell(){
+    bellNodes.forEach(function(n){ try{ n.stop(); }catch(e){} });
+    bellNodes = [];
+    clock.classList.remove("done");
+  }
+
+  // timbre escolar: tono metálico con trémolo rápido, ~3 s
+  function bell(){
+    audio(); if (!ac) return;
+    var t0 = ac.currentTime, dur = 3.2;
+    var master = ac.createGain();
+    master.gain.setValueAtTime(0.0001, t0);
+    master.gain.exponentialRampToValueAtTime(0.5, t0 + 0.02);
+    master.gain.setValueAtTime(0.5, t0 + dur - 0.5);
+    master.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    master.connect(ac.destination);
+    var trem = ac.createGain(); trem.gain.value = 0.5;
+    trem.connect(master);
+    var lfo = ac.createOscillator(); lfo.type = "square"; lfo.frequency.value = 17;
+    var lfoGain = ac.createGain(); lfoGain.gain.value = 0.5;
+    lfo.connect(lfoGain); lfoGain.connect(trem.gain);
+    lfo.start(t0); lfo.stop(t0 + dur); bellNodes.push(lfo);
+    [1318, 1976, 2637, 3322].forEach(function(f, i){
+      var o = ac.createOscillator(); o.type = i < 2 ? "triangle" : "sine";
+      o.frequency.value = f;
+      var g = ac.createGain(); g.gain.value = [0.5, 0.35, 0.2, 0.1][i];
+      o.connect(g); g.connect(trem);
+      o.start(t0); o.stop(t0 + dur); bellNodes.push(o);
+    });
+  }
+
+  function finish(){
+    clearInterval(timer); timer = null; state = "done";
+    petals.forEach(function(p){ p.setAttribute("class","petal gone"); });
+    shown = 0;
+    render();
+    clock.classList.add("done");
+    modeEl.textContent = "¡Tiempo!";
+    bell();
+  }
+
+  function start(){
+    audio();
+    if (state === "running") return;
+    if (state === "done"){ stopBell(); resetTime(); }
+    endAt = Date.now() + remaining;
+    state = "running";
+    modeEl.textContent = "Sesión de " + minutes + " min";
+    clearInterval(timer);
+    timer = setInterval(tick, 250);
+    tick();
+  }
+
+  function pause(){
+    if (state !== "running") return;
+    remaining = endAt - Date.now();
+    clearInterval(timer); timer = null;
+    state = "paused";
+    modeEl.textContent = "En pausa";
+    render();
+  }
+
+  function resetTime(){
+    clearInterval(timer); timer = null;
+    stopBell();
+    total = minutes * 60000; remaining = total;
+    restorePetals();
+    state = "idle";
+    modeEl.textContent = "Sesión de " + minutes + " min";
+    render();
+  }
+
+  function next(){
+    minutes = (minutes === 20) ? 10 : 20;
+    resetTime();
+  }
+
+  document.getElementById("bStart").onclick = start;
+  document.getElementById("bPause").onclick = pause;
+  document.getElementById("bReset").onclick = resetTime;
+  document.getElementById("bNext").onclick = next;
+  document.getElementById("bStop").onclick = resetTime;
+
+  render();
+})();
+</script>
+</body>
+</html>
