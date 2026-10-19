@@ -1,5 +1,9 @@
 export async function deleteUser(users, id) {
   try {
+    if (!users) {
+      throw new Error("Users store is required");
+    }
+
     const userId = Number(id);
     if (!Number.isInteger(userId) || userId <= 0) {
       throw new Error("User id is not valid");
