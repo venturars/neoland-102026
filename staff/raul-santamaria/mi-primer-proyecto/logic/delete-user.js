@@ -1,21 +1,25 @@
-export async function deleteUser(users, id) {
+import { findById, remove } from "../queries/users.js";
+
+export function deleteUser(input) {
+  const id = Number(input.id);
+  if (!Number.isInteger(id) || id <= 0) {
+    throw new Error("User id is not valid");
+  }
+
+  let current;
   try {
-    if (!users) {
-      throw new Error("Users store is required");
-    }
+    current = findById(id);
+  } catch {
+    throw new Error("Could not delete the user");
+  }
 
-    const userId = Number(id);
-    if (!Number.isInteger(userId) || userId <= 0) {
-      throw new Error("User id is not valid");
-    }
+  if (!current) {
+    throw new Error("No user exists with that id");
+  }
 
-    const current = await users.findById(userId);
-    if (!current) {
-      throw new Error("No user exists with that id");
-    }
-
-    await users.remove(userId);
-  } catch (error) {
-    throw new Error(error.message);
+  try {
+    remove(id);
+  } catch {
+    throw new Error("Could not delete the user");
   }
 }

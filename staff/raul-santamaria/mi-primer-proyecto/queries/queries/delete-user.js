@@ -1,12 +1,17 @@
-export function deleteUser(db, id) {
-  return new Promise((resolve, reject) => {
-    db.run("DELETE FROM users WHERE id = ?", [id], (error) => {
-      if (error) {
-        reject(error);
-        return;
-      }
+import { openDatabase, closeDatabase } from "../../db/connection.js";
+import { createUsersTable } from "./create-users-table.js";
 
-      resolve();
-    });
-  });
+export function remove(id) {
+  const db = openDatabase();
+
+  try {
+    createUsersTable(db);
+
+    db.prepare(
+      `DELETE FROM users
+       WHERE id = ?`,
+    ).run(id);
+  } finally {
+    closeDatabase(db);
+  }
 }

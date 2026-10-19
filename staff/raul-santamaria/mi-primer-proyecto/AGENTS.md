@@ -21,12 +21,12 @@ No hay comandos de ejecución.
 ## Reglas
 
 - El proyecto sigue SDD.
-- No añadas dependencias. La base de datos es SQLite con `sqlite3`.
+- No añadas dependencias. La base de datos es el SQLite de Node (`node:sqlite`).
 - No añadas tests.
 - No añadas comandos de ejecución.
 - Carpetas: `clients/terminal`, `db`, `docs`, `logic`, `queries`.
-- `logic/` no importa `sqlite3`. Recibe el almacén.
-- `CREATE TABLE` está en `queries/queries/` y `queries/users.js` lo ejecuta.
+- `logic/` no importa la base de datos. Recibe el almacén.
+- El SQL está escrito dentro de la función que lo ejecuta.
 - Los errores usan `try/catch` y el mensaje va en inglés.
 
 

@@ -1,17 +1,32 @@
-export function insertUser(db, user) {
-  return new Promise((resolve, reject) => {
-    db.run(
-      "INSERT INTO users (email, name, created_at, updated_at) VALUES (?, ?, ?, ?)",
-      [user.email, user.name, user.created_at, user.updated_at],
-      // function, no flecha: sqlite3 deja el id nuevo en this.lastID.
-      function onInsert(error) {
-        if (error) {
-          reject(error);
-          return;
-        }
+import { openDatabase, closeDatabase } from "../../db/connection.js";
+import { createUsersTable } from "./create-users-table.js";
 
-        resolve({ id: this.lastID });
-      },
-    );
-  });
+function today() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+export function insert(input) {
+  const db = openDatabase();
+
+  try {
+    createUsersTable(db);
+
+    const createdAt = today();
+    const result = db
+      .prepare(
+        `INSERT INTO users (name, email, created_at, updated_at)
+         VALUES (?, ?, ?, ?)`,
+      )
+      .run(input.name, input.email, createdAt, createdAt);
+
+    return {
+      id: Number(result.lastInsertRowid),
+      name: input.name,
+      email: input.email,
+      createdAt,
+      updatedAt: createdAt,
+    };
+  } finally {
+    closeDatabase(db);
+  }
 }

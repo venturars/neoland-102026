@@ -1,18 +1,8 @@
 # Pega esto en la terminal, con el directorio actual en mi-primer-proyecto
 node --input-type=module <<'EOF'
-import { openDatabase, closeDatabase } from "./db/connection.js";
-import { createUsersTable } from "./queries/queries/create-users-table.js";
-import { insertUser } from "./queries/queries/insert-user.js";
+import { createUser } from "./logic/create-user.js";
 
-const db = await openDatabase();
-await createUsersTable(db);
-const result = await insertUser(db, {
-  name: "Hola",
-  email: "hola@example.com",
-  created_at: "2026-10-19",
-  updated_at: "2026-10-19",
-});
+const result = createUser({ name: "Ada", email: "ada@example.com" });
 
 console.log(result);
-await closeDatabase(db);
 EOF

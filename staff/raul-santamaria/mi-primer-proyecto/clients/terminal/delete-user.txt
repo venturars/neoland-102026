@@ -1,13 +1,8 @@
 # Pega esto en la terminal, con el directorio actual en mi-primer-proyecto
 node --input-type=module <<'EOF'
-import { openDatabase, closeDatabase } from "./db/connection.js";
-import { createUsersTable } from "./queries/queries/create-users-table.js";
-import { deleteUser } from "./queries/queries/delete-user.js";
+import { deleteUser } from "./logic/delete-user.js";
 
-const db = await openDatabase();
-await createUsersTable(db);
-await deleteUser(db, 3);
+deleteUser({ id: 1 });
 
 console.log("User deleted");
-await closeDatabase(db);
 EOF

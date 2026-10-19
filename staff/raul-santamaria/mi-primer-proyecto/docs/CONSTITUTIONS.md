@@ -6,7 +6,7 @@ Base de la app. Primera app con IA para alumnos junior de AI Engineering, en esp
 
 ```text
 mi-primer-proyecto/
-  package.json                 Dependencia sqlite3 y "type": "module".
+  package.json                 "type": "module". La base usa el SQLite de Node, sin paquetes.
   .gitignore                   Ignora node_modules/.
   AGENTS.md                    Reglas para quien modifica el proyecto.
   clients/terminal/            Primer cliente de cada funcionalidad. Ficheros .txt para pegar en la terminal.
@@ -26,7 +26,7 @@ mi-primer-proyecto/
   queries/queries/             Una query por fichero. SQL reutilizable.
 ```
 
-`logic/` no importa `sqlite3`. Recibe el almacén. Cuando una funcionalidad de `logic/` existe, no se mueve a otra carpeta ni se sustituye por otra implementación. Pueden cambiar el cliente y el SQL. Las reglas no.
+`logic/` no importa la base de datos. Recibe el almacén. Cuando una funcionalidad de `logic/` existe, no se mueve a otra carpeta ni se sustituye por otra implementación. Pueden cambiar el cliente y el SQL. Las reglas no.
 
 ## Base de datos
 
@@ -58,25 +58,25 @@ El error no se devuelve como objeto. Se lanza con `throw new Error("mensaje en i
 
 ## Funciones de logic
 
-`createUser(users, email, name)`  
-Entrada: almacén, email, nombre.  
-Salida: el usuario creado, con `id`, `email`, `name`, `created_at` y `updated_at`.
+`createUser({ name, email })`  
+Entrada: nombre y email.  
+Salida: el usuario creado, con `id`, `name`, `email`, `createdAt` y `updatedAt`.
 
-`listUsers(users)`  
-Entrada: almacén.  
-Salida: la lista de usuarios, cada uno con `id`, `email`, `name`, `created_at` y `updated_at`.
+`listUsers()`  
+Entrada: ninguna.  
+Salida: la lista de usuarios, cada uno con `id`, `name`, `email`, `createdAt` y `updatedAt`.
 
-`updateUser(users, id, changes)`  
-Entrada: almacén, id y los campos enviados (`email`, `name`).  
-Salida: el usuario ya actualizado, con `id`, `email`, `name`, `created_at` y `updated_at`. `updated_at` pasa a ser el día del cambio.
+`updateUser({ id, name, email })`  
+Entrada: id y los campos enviados (`name`, `email`).  
+Salida: el usuario ya actualizado, con `id`, `name`, `email`, `createdAt` y `updatedAt`. `updatedAt` pasa a ser el día del cambio.
 
-`deleteUser(users, id)`  
-Entrada: almacén e id.  
+`deleteUser({ id })`  
+Entrada: id.  
 Salida: ninguna. No devuelve un objeto.
 
 ## Queries
 
-Cada sentencia SQL es un fichero en `queries/queries/`. `queries/users.js` importa esas funciones y las usa. La query no conoce las reglas de `logic/`.
+Cada sentencia SQL está escrita dentro de su función, en `queries/queries/`. `queries/users.js` exporta esas funciones. La query no conoce las reglas de `logic/`.
 
 ## Cliente
 
