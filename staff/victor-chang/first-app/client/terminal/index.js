@@ -8,7 +8,7 @@ import { getUser } from '../../logic/getUser.js'
 import { listUsers } from '../../logic/listUsers.js'
 import { AppError, ValidationError } from '../../logic/errors.js'
 
-const DB_PATH = fileURLToPath(new URL('../../db/users.db', import.meta.url))
+const DB_PATH = process.env.DB_PATH ?? fileURLToPath(new URL('../../db/users.db', import.meta.url))
 const EXIT_CODES = { VALIDATION: 2, NOT_FOUND: 3, DUPLICATE: 4, SYSTEM: 1 }
 
 const parseId = (value) => {

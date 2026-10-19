@@ -12,7 +12,7 @@ User management CRUD. A user is `{ id, name, email }`, with `email` unique. The 
 - **Zero npm dependencies.** Only Node built-ins:
   - `node:sqlite` — storage, allowed only in `db/` and `query/`.
   - `node:test` + `node:assert` — tests.
-- Database file: `db/users.db`, git-ignored, created on first run.
+- Database file: `db/users.db`, git-ignored, created on first run. Clients may override the path with the `DB_PATH` environment variable.
 
 ## 3. Folder structure
 
@@ -25,6 +25,8 @@ first-app/
   db/               database connection and schema (openDatabase)
   client/<name>/    one folder per consumer; composition root
     terminal/       argv CLI
+  specs/            one spec per use-case or client — the source of truth
+  test/             mirrors the code folders: test/logic, test/query, test/client
 ```
 
 | Folder | Owns | Must never |
@@ -33,6 +35,8 @@ first-app/
 | `query/` | SQL and row → plain object mapping | contain business rules |
 | `db/` | opening the database, creating the schema | contain queries |
 | `client/` | input parsing, wiring, output formatting | contain business rules or SQL |
+| `specs/` | expected behaviour: rules and numbered scenarios | describe implementation details |
+| `test/` | one test per spec scenario | be imported by app code |
 
 ## 4. Dependency direction
 
@@ -49,6 +53,7 @@ client ──► logic
 
 ## 5. Boilerplate for a new feature
 
+0. `specs/<useCase>.md` and `test/<layer>/<useCase>.test.js` — the spec and its tests come first.
 1. `query/<verb><Entity>.js` — the database operation, then register it in `query/index.js`.
 2. `logic/<verb><Entity>.js` — the use-case, using `queries.<operation>`.
 3. `client/<name>/` — expose it (e.g. a new terminal command).
