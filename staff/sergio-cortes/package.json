@@ -1,0 +1,14 @@
+{
+  "name": "crud-app",
+  "version": "1.0.0",
+  "description": "User CRUD with logic separated from SQLite (node:sqlite)",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "sergio cortes",
+  "license": "MIT"
+}
