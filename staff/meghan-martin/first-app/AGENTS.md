@@ -1,7 +1,5 @@
 # AGENTS.md — first-app
 
-Este archivo es para Cursor (y para mí). Node no lo ejecuta.
-
 ## Qué es este proyecto
 
 Una app junior en Node (`"type": "module"`, `node:sqlite`) en `staff/meghan-martin/first-app`. La arquitectura y los mensajes de error están en `docs/CONSTITUTIONS.md`. Lee ese archivo antes de cambiar código.
