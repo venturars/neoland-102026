@@ -1,13 +1,21 @@
 import { findUserById, remove } from "../queries/user.js";
 
-// Remove one existing user.
-export function deleteUser(input) {
-  const currentUser = findUserById(input.id);
-  if (currentUser === undefined || currentUser === null) {
-    return { ok: false, error: "USER_NOT_FOUND" };
+// Remove one user. Returns nothing.
+export function deleteUser(id) {
+  let currentUser;
+  try {
+    currentUser = findUserById(id);
+  } catch {
+    throw new Error("DATABASE_ERROR");
   }
 
-  const user = remove({ id: currentUser.id });
+  if (currentUser === undefined || currentUser === null) {
+    throw new Error("USER_NOT_FOUND");
+  }
 
-  return { ok: true, user };
+  try {
+    remove({ id: currentUser.id });
+  } catch {
+    throw new Error("DATABASE_ERROR");
+  }
 }

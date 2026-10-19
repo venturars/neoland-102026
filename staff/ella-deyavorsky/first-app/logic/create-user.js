@@ -1,32 +1,44 @@
 import { findUserByEmail, insert } from "../queries/user.js";
 
-// An address of 64 characters or more is too long.
+// An address of 64 characters or longer is rejected.
 const MAX_EMAIL_LENGTH = 64;
 
-// Check the input, save one user, and return the saved row.
-
-export function createUser(input) {
-  const name = input.name.trim();
-  if (name === "") {
-    return { ok: false, error: "EMPTY_NAME" };
+// Save one user. name and email are separate parameters.
+export function createUser(name, email) {
+  // Spaces around the name do not count.
+  const cleanedName = typeof name === "string" ? name.trim() : "";
+  if (cleanedName === "") {
+    throw new Error("EMPTY_NAME");
   }
 
-  // Compare emails in one form: no surrounding spaces, all lower case.
-  const email = typeof input?.email === "string" ? input.email.trim().toLowerCase() : "";
-  const emailParts = email.split("@");
+  // Store every email in one form: no surrounding spaces, all lower case.
+  const cleanedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+  const emailParts = cleanedEmail.split("@");
   const hasTwoParts = emailParts.length === 2;
   const bothPartsHaveText = emailParts[0]?.length > 0 && emailParts[1]?.length > 0;
-  if (email.length >= MAX_EMAIL_LENGTH || hasTwoParts === false || bothPartsHaveText === false) {
-    return { ok: false, error: "INVALID_EMAIL" };
+  if (
+    cleanedEmail.length >= MAX_EMAIL_LENGTH ||
+    hasTwoParts === false ||
+    bothPartsHaveText === false
+  ) {
+    throw new Error("INVALID_EMAIL");
+  }
+
+  let existingUser;
+  try {
+    existingUser = findUserByEmail(cleanedEmail);
+  } catch {
+    throw new Error("DATABASE_ERROR");
   }
 
   // The same email cannot belong to two users.
-  const existingUser = findUserByEmail(email);
   if (existingUser !== undefined && existingUser !== null) {
-    return { ok: false, error: "EMAIL_ALREADY_USED" };
+    throw new Error("EMAIL_ALREADY_USED");
   }
 
-  const user = insert({ name, email });
-
-  return { ok: true, user };
+  try {
+    return insert({ name: cleanedName, email: cleanedEmail });
+  } catch {
+    throw new Error("DATABASE_ERROR");
+  }
 }

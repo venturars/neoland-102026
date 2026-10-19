@@ -1,53 +1,67 @@
 import { findUserByEmail, findUserById, update } from "../queries/user.js";
 
-// An address of 64 characters or more is too long.
+// An address of 64 characters or longer is rejected.
 const MAX_EMAIL_LENGTH = 64;
 
-// A field is being changed when the caller included it.
-function hasField(input, fieldName) {
-  return input[fieldName] !== undefined;
-}
+// Change the name, the email, or both. undefined keeps the current value.
+export function updateUser(id, name, email) {
+  if (name === undefined && email === undefined) {
+    throw new Error("NOTHING_TO_UPDATE");
+  }
 
-// Change the name, the email, or both. A missing field stays as it is.
-export function updateUser(input) {
-  const currentUser = findUserById(input.id);
+  let currentUser;
+  try {
+    currentUser = findUserById(id);
+  } catch {
+    throw new Error("DATABASE_ERROR");
+  }
+
   if (currentUser === undefined || currentUser === null) {
-    return { ok: false, error: "USER_NOT_FOUND" };
+    throw new Error("USER_NOT_FOUND");
   }
 
-  const hasName = hasField(input, "name");
-  const hasEmail = hasField(input, "email");
-  if (hasName === false && hasEmail === false) {
-    return { ok: false, error: "NOTHING_TO_UPDATE" };
-  }
-
-  let name = currentUser.name;
-  if (hasName === true) {
-    name = typeof input.name === "string" ? input.name.trim() : "";
-    if (name === "") {
-      return { ok: false, error: "EMPTY_NAME" };
+  let nextName = currentUser.name;
+  if (name !== undefined) {
+    nextName = typeof name === "string" ? name.trim() : "";
+    if (nextName === "") {
+      throw new Error("EMPTY_NAME");
     }
   }
 
-  let email = currentUser.email;
-  if (hasEmail === true) {
-    // Compare emails in one form: no surrounding spaces, all lower case.
-    email = typeof input.email === "string" ? input.email.trim().toLowerCase() : "";
-    const emailParts = email.split("@");
+  let nextEmail = currentUser.email;
+  if (email !== undefined) {
+    nextEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+    const emailParts = nextEmail.split("@");
     const hasTwoParts = emailParts.length === 2;
     const bothPartsHaveText = emailParts[0]?.length > 0 && emailParts[1]?.length > 0;
-    if (email.length >= MAX_EMAIL_LENGTH || hasTwoParts === false || bothPartsHaveText === false) {
-      return { ok: false, error: "INVALID_EMAIL" };
+    if (
+      nextEmail.length >= MAX_EMAIL_LENGTH ||
+      hasTwoParts === false ||
+      bothPartsHaveText === false
+    ) {
+      throw new Error("INVALID_EMAIL");
+    }
+
+    let existingUser;
+    try {
+      existingUser = findUserByEmail(nextEmail);
+    } catch {
+      throw new Error("DATABASE_ERROR");
     }
 
     // This user may keep their own email. Another user may not take it.
-    const existingUser = findUserByEmail(email);
-    if (existingUser !== undefined && existingUser !== null && existingUser.id !== currentUser.id) {
-      return { ok: false, error: "EMAIL_ALREADY_USED" };
+    if (
+      existingUser !== undefined &&
+      existingUser !== null &&
+      existingUser.id !== currentUser.id
+    ) {
+      throw new Error("EMAIL_ALREADY_USED");
     }
   }
 
-  const user = update({ id: currentUser.id, name, email });
-
-  return { ok: true, user };
+  try {
+    return update({ id: currentUser.id, name: nextName, email: nextEmail });
+  } catch {
+    throw new Error("DATABASE_ERROR");
+  }
 }
