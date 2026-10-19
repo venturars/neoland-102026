@@ -1,6 +1,6 @@
 1 Dejaré mi tierra por ti
 2 Dejaré mis campos y me iré
-
+3 Lejos de aquí
 4 Cruzaré, llorando, el jardín
 5 Y, con tus recuerdos, partiré
 6 Lejos de aquí
@@ -40,7 +40,6 @@
 40 Donde el Sol cada mañana brille más
 41 Forjarán mi destino, las piedras del camino
 43 Al partir, un beso y una flor
-
 44 Un te quiero, una caricia y un adiós
 45 Es ligero equipaje
 46 Para tan largo viaje

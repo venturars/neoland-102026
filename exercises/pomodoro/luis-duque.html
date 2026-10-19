@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>25:00 · Trabajo</title>
+    <style>
+      :root {
+        --bg: #070707;
+        --surface: #111111;
+        --surface-alt: #181818;
+        --text: #f3f3f3;
+        --muted: #8d8d8d;
+        --line: #2c2c2c;
+        --accent: #d4af37;
+        --accent-text: #0b0b0b;
+        --shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
+      }
+
+      [data-theme="light"] {
+        --bg: #f3f3f1;
+        --surface: #ffffff;
+        --surface-alt: #f7f7f5;
+        --text: #161616;
+        --muted: #6a6a6a;
+        --line: #e1e1dc;
+        --accent: #8a6d1b;
+        --accent-text: #ffffff;
+        --shadow: 0 18px 44px rgba(22, 22, 22, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        min-height: 100vh;
+        font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      .app {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 36px 24px 56px;
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid var(--line);
+        margin-bottom: 28px;
+      }
+
+      .brand-kicker {
+        display: block;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+      }
+
+      .brand-title {
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .theme-toggle {
+        border: 1px solid var(--line);
+        background: var(--surface);
+        color: var(--text);
+        font: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 10px 14px;
+        cursor: pointer;
+        border-radius: 2px;
+      }
+
+      .theme-toggle:hover {
+        border-color: var(--accent);
+      }
+
+      .panel {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow);
+        padding: 36px 36px 28px;
+      }
+
+      .session-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+      }
+
+      .badge {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        padding: 6px 10px;
+      }
+
+      .status {
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .clock {
+        font-size: 88px;
+        font-weight: 300;
+        line-height: 1;
+        letter-spacing: 0.04em;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+        margin: 8px 0 24px;
+      }
+
+      .progress {
+        height: 2px;
+        background: var(--line);
+        margin-bottom: 28px;
+      }
+
+      .progress-bar {
+        height: 100%;
+        width: 0%;
+        background: var(--accent);
+      }
+
+      .metrics {
+        margin-bottom: 28px;
+      }
+
+      .metric {
+        background: var(--surface-alt);
+        border: 1px solid var(--line);
+        padding: 16px 18px;
+      }
+
+      .metric-label {
+        display: block;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+
+      .metric-value {
+        font-size: 28px;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      button {
+        font: inherit;
+        cursor: pointer;
+        border-radius: 2px;
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        color: var(--accent-text);
+        border: 1px solid var(--accent);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 12px;
+        padding: 14px 12px;
+      }
+
+      .btn-secondary,
+      .btn-mode {
+        background: transparent;
+        color: var(--text);
+        border: 1px solid var(--line);
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 12px;
+        padding: 14px 12px;
+      }
+
+      .btn-mode {
+        width: 100%;
+        background: var(--surface-alt);
+      }
+
+      .btn-primary:hover {
+        filter: brightness(1.06);
+      }
+
+      .btn-secondary:hover,
+      .btn-mode:hover {
+        border-color: var(--text);
+      }
+
+      .hint {
+        margin-top: 18px;
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.55;
+        text-align: center;
+      }
+
+      @media (max-width: 640px) {
+        .clock {
+          font-size: 64px;
+        }
+
+        .controls,
+        header {
+          grid-template-columns: 1fr;
+          display: grid;
+        }
+
+        .panel {
+          padding: 28px 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <div>
+          <span class="brand-kicker">AI Engineering · Focus Protocol</span>
+          <h1 class="brand-title">Pomodoro</h1>
+        </div>
+        <button type="button" class="theme-toggle" id="themeToggle">Tema claro</button>
+      </header>
+
+      <main class="panel">
+        <div class="session-row">
+          <span class="badge" id="modeBadge">Trabajo</span>
+          <span class="status" id="statusLabel">Listo para iniciar</span>
+        </div>
+
+        <div class="clock" id="clock">25:00</div>
+        <div class="progress" aria-hidden="true">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <section class="metrics" aria-label="Iteraciones pomodoro">
+          <article class="metric">
+            <span class="metric-label">Iteraciones pomodoro</span>
+            <span class="metric-value" id="cycleCount">0</span>
+          </article>
+        </section>
+
+        <div class="controls">
+          <button type="button" class="btn-primary" id="startBtn">Iniciar</button>
+          <button type="button" class="btn-secondary" id="pauseBtn">Pausar</button>
+          <button type="button" class="btn-secondary" id="resetBtn">Reiniciar</button>
+        </div>
+
+        <button type="button" class="btn-mode" id="switchModeBtn">Saltar</button>
+        <p class="hint">
+          25 minutos de trabajo y 5 minutos de descanso. Saltar cambia de modo; la iteración
+          suma cuando se completan o se saltan trabajo y descanso. Reiniciar pone el
+          contador a 0.
+        </p>
+      </main>
+    </div>
+
+    <script>
+      const WORK_SECONDS = 25 * 60;
+      const BREAK_SECONDS = 5 * 60;
+      const THEME_KEY = "pomodoro-theme";
+
+      const clockEl = document.getElementById("clock");
+      const modeBadgeEl = document.getElementById("modeBadge");
+      const statusLabelEl = document.getElementById("statusLabel");
+      const progressBarEl = document.getElementById("progressBar");
+      const cycleCountEl = document.getElementById("cycleCount");
+      const startBtn = document.getElementById("startBtn");
+      const pauseBtn = document.getElementById("pauseBtn");
+      const resetBtn = document.getElementById("resetBtn");
+      const switchModeBtn = document.getElementById("switchModeBtn");
+      const themeToggle = document.getElementById("themeToggle");
+
+      const state = {
+        mode: "work",
+        remainingSeconds: WORK_SECONDS,
+        running: false,
+        completed: false,
+        intervalId: null,
+        iterations: 0,
+        cycleWorkDone: false,
+        cycleBreakDone: false,
+      };
+
+      function durationFor(mode) {
+        return mode === "work" ? WORK_SECONDS : BREAK_SECONDS;
+      }
+
+      function formatTime(totalSeconds) {
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
+      }
+
+      function modeLabel(mode) {
+        return mode === "work" ? "Trabajo" : "Descanso";
+      }
+
+      function registerPhase() {
+        if (state.mode === "work") {
+          state.cycleWorkDone = true;
+        } else {
+          state.cycleBreakDone = true;
+        }
+        if (state.cycleWorkDone && state.cycleBreakDone) {
+          state.iterations += 1;
+          state.cycleWorkDone = false;
+          state.cycleBreakDone = false;
+        }
+      }
+
+      function completeSession() {
+        if (state.completed) return;
+        state.completed = true;
+        registerPhase();
+      }
+
+      function render() {
+        const total = durationFor(state.mode);
+        const elapsed = total - state.remainingSeconds;
+        const progress = (elapsed / total) * 100;
+
+        clockEl.textContent = formatTime(state.remainingSeconds);
+        modeBadgeEl.textContent = modeLabel(state.mode);
+        cycleCountEl.textContent = String(state.iterations);
+        progressBarEl.style.width = progress + "%";
+
+        if (state.completed) {
+          statusLabelEl.textContent = "Sesión completada";
+        } else if (state.running) {
+          statusLabelEl.textContent = "En curso";
+        } else if (state.remainingSeconds < total) {
+          statusLabelEl.textContent = "En pausa";
+        } else {
+          statusLabelEl.textContent = "Listo para iniciar";
+        }
+
+        document.title = formatTime(state.remainingSeconds) + " · " + modeLabel(state.mode);
+      }
+
+      function stopTimer() {
+        if (state.intervalId) {
+          clearInterval(state.intervalId);
+          state.intervalId = null;
+        }
+        state.running = false;
+      }
+
+      function tick() {
+        if (state.remainingSeconds <= 0) {
+          stopTimer();
+          completeSession();
+          render();
+          return;
+        }
+
+        state.remainingSeconds -= 1;
+
+        if (state.remainingSeconds <= 0) {
+          state.remainingSeconds = 0;
+          stopTimer();
+          completeSession();
+        }
+
+        render();
+      }
+
+      function start() {
+        if (state.running) return;
+        if (state.remainingSeconds <= 0) return;
+        state.completed = false;
+        state.running = true;
+        state.intervalId = setInterval(tick, 1000);
+        render();
+      }
+
+      function pause() {
+        if (!state.running) return;
+        stopTimer();
+        render();
+      }
+
+      function reset() {
+        stopTimer();
+        state.mode = "work";
+        state.completed = false;
+        state.iterations = 0;
+        state.cycleWorkDone = false;
+        state.cycleBreakDone = false;
+        state.remainingSeconds = WORK_SECONDS;
+        render();
+      }
+
+      function switchMode() {
+        stopTimer();
+        if (!state.completed) {
+          registerPhase();
+        }
+        state.mode = state.mode === "work" ? "break" : "work";
+        state.completed = false;
+        state.remainingSeconds = durationFor(state.mode);
+        render();
+      }
+
+      function applyTheme(theme) {
+        const isLight = theme === "light";
+        document.documentElement.setAttribute("data-theme", isLight ? "light" : "dark");
+        themeToggle.textContent = isLight ? "Tema oscuro" : "Tema claro";
+        localStorage.setItem(THEME_KEY, isLight ? "light" : "dark");
+      }
+
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute("data-theme");
+        applyTheme(current === "light" ? "dark" : "light");
+      }
+
+      startBtn.addEventListener("click", start);
+      pauseBtn.addEventListener("click", pause);
+      resetBtn.addEventListener("click", reset);
+      switchModeBtn.addEventListener("click", switchMode);
+      themeToggle.addEventListener("click", toggleTheme);
+
+      const savedTheme = localStorage.getItem(THEME_KEY);
+      applyTheme(savedTheme === "light" ? "light" : "dark");
+      render();
+    </script>
+  </body>
+</html>

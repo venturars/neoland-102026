@@ -1,0 +1,2 @@
+Diseña un personaje de caricatura que sea un ajolote, quiero que tenga la  la mitad de la carita pintada de catríny un traje de Mariachi, devuélveme una imagen .jpg.
+Además quiero  que generes un audio con el siguiente mensaje "Happy Halloween desde el otro lado del Charco y aprovecho para desearles un Feliz día de muertos también" 
