@@ -68,14 +68,23 @@ La salida del paso 4 es el dato de la operación: el usuario, la lista de usuari
 
 ## Errores
 
-La forma actual de `logic/`, devolver `{ ok: true, user }` o `{ ok: false, error: "CODIGO" }`, no es un buen manejo de errores. No se copia en código nuevo. El código que ya la usa no se cambia hasta que se pida.
+Un fallo se señala con `throw new Error("...")`. El mensaje está en inglés y es siempre uno de los de esta lista. No hay códigos ni clases de error propias.
 
-La forma correcta:
+En los pasos 1 y 2, si la entrada o una regla de negocio falla:
 
-- Si falla la entrada o una regla de negocio, la función lanza `new Error("...")` con un mensaje claro en inglés.
-- Si todo va bien, devuelve el dato del paso 4, sin envolverlo en `{ ok: true }`.
-- No se usan códigos opacos ni clases de error propias.
-- Un error crudo de SQLite no llega al cliente. `logic/` lo convierte en un `Error` con un mensaje que un junior entienda.
+- `Name is empty`
+- `Email is invalid`
+- `Email is already used`
+- `User not found`
+
+En el paso 3, si SQLite falla, ese error no sale de `logic/`. Se lanza uno de estos:
+
+- `Could not create the user`
+- `Could not update the user`
+- `Could not delete the user`
+- `Could not list the users`
+
+En el paso 4, si todo va bien, la función devuelve el dato saneado. Si la operación no tiene datos, no devuelve nada.
 
 ## Queries
 

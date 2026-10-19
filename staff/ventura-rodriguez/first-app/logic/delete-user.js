@@ -1,11 +1,20 @@
 import { findById, remove } from "../queries/users.js";
 
 export function deleteUser(id) {
-  const current = findById(id);
-  if (!current) {
-    return { ok: false, error: "USER_NOT_FOUND" };
+  let current;
+  try {
+    current = findById(id);
+  } catch {
+    throw new Error("Could not delete the user");
   }
 
-  remove(id);
-  return { ok: true };
+  if (!current) {
+    throw new Error("User not found");
+  }
+
+  try {
+    remove(id);
+  } catch {
+    throw new Error("Could not delete the user");
+  }
 }

@@ -3,7 +3,7 @@ import { findByEmail, insert } from "../queries/users.js";
 export function createUser(input) {
   const name = input.name.trim();
   if (name === "") {
-    return { ok: false, error: "EMPTY_NAME" };
+    throw new Error("Name is empty");
   }
 
   const email = input.email.trim().toLowerCase();
@@ -12,13 +12,32 @@ export function createUser(input) {
     parts.length === 2 && parts[0].length > 0 && parts[1].length > 0;
 
   if (!hasSingleAt || email.length > 64) {
-    return { ok: false, error: "INVALID_EMAIL" };
+    throw new Error("Email is invalid");
   }
 
-  if (findByEmail(email)) {
-    return { ok: false, error: "EMAIL_ALREADY_USED" };
+  let owner;
+  try {
+    owner = findByEmail(email);
+  } catch {
+    throw new Error("Could not create the user");
   }
 
-  const user = insert({ name, email });
-  return { ok: true, user };
+  if (owner) {
+    throw new Error("Email is already used");
+  }
+
+  let user;
+  try {
+    user = insert({ name, email });
+  } catch {
+    throw new Error("Could not create the user");
+  }
+
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  };
 }
