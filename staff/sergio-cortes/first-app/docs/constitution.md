@@ -120,14 +120,26 @@ Table `users` (DDL in `queries/user-create-table.js`):
 
 Two layers of errors:
 
-1. **Domain errors (logic)** — Expected failure modes for callers (invalid input, not found, conflict, etc.). Subclass `Error`, set stable `name` and string **`code`**, human-readable **`message`** (English). Define types in a central logic module; throw from validation and use cases.
+1. **Domain errors (logic)** — Expected failure modes for callers. Defined in `logic/errors.js` as a **small set of global types** (not one class per scenario). Each subclasses `Error` with stable `name`, string **`code`**, and English **`message`**. Use **`message`** for the specific reason; do not add new error classes for individual fields or resources.
 2. **Technical errors (queries)** — Infrastructure or constraint failures close to the DB. Use plain `Error` (or similar) with a stable string **`code`** that logic recognizes. Logic **translates** these into domain errors; clients do not interpret DB codes.
+
+### Global domain error types (`logic/errors.js`)
+
+| Type                | `code`       | When to use                                                                                       |
+| ------------------- | ------------ | ------------------------------------------------------------------------------------------------- |
+| **ValidationError** | `VALIDATION` | Input or parameters are missing, malformed, or out of allowed bounds (including invalid ids).     |
+| **NotFoundError**   | `NOT_FOUND`  | A requested entity or record does not exist.                                                      |
+| **ConflictError**   | `CONFLICT`   | An operation conflicts with current state, uniqueness, or a business rule (e.g. duplicate email). |
+
+Examples: empty name → `ValidationError("Name is empty")`; missing user → `NotFoundError("User not found")`; duplicate email → `ConflictError("Email is already used")`.
+
+Logic may expose helpers (e.g. `translateQueryError`) that map **technical** query codes to the appropriate global domain type.
 
 Rules:
 
 - Queries do not import or throw domain error classes.
 - Logic does not swallow unknown errors; unexpected errors propagate.
-- Do not invent new domain error types without a clear, reusable category; prefer reusing existing types when the failure mode matches.
+- Do **not** add domain error types beyond the global set above unless there is a clear, reusable category for it, otherwise reuse the matching type and a clear `message`.
 
 ### Global error handling (clients)
 
