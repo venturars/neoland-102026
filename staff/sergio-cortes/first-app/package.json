@@ -1,5 +1,5 @@
 {
-  "name": "crud-app",
+  "name": "ai-user-db",
   "version": "1.0.0",
   "description": "User CRUD with logic separated from SQLite (node:sqlite)",
   "type": "module",

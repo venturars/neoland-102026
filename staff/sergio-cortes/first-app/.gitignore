@@ -1,0 +1,4 @@
+data/users.sqlite
+data/users.sqlite-journal
+data/users.sqlite-wal
+data/users.sqlite-shm
