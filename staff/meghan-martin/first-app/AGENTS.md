@@ -1,40 +1,33 @@
 # AGENTS.md — first-app
 
-## Proyecto
+Este archivo es para Cursor (y para mí). Node no lo ejecuta.
 
-first-app es la primera app del curso de IA Engineer para alumnos junior. Sirve para construirla con IA siguiendo el sistema SDD.
+## Qué es este proyecto
 
-Está en Node, con módulos ES (`"type": "module"`) y SQLite (`node:sqlite`, fichero `db/users.sqlite`). La arquitectura y las reglas de base están en `docs/CONSTITUTIONS.md`.
+Una app junior en Node (`"type": "module"`, `node:sqlite`) en `staff/meghan-martin/first-app`. La arquitectura y los mensajes de error están en `docs/CONSTITUTIONS.md`. Lee ese archivo antes de cambiar código.
 
 ## Comandos
 
-- Ejecutar: no hay comando de ejecución todavía.
-- Tests: `npm test` (Node test runner). Los tests usan `USERS_DB_PATH` y una base temporal; no tocan `db/users.sqlite`.
-- Lint/formato: Prettier, formato estándar. No hay script de lint ni de formato.
+- No hay script de arranque. Las funcionalidades se prueban pegando `clients/terminal/*.txt` desde dentro de `first-app`.
+- Tests: `npm test`. Usan una base temporal. No deben cambiar `db/users.sqlite`.
+- Formato: Prettier normal (comillas dobles, punto y coma, coma final, 2 espacios, ancho 80).
 
-## Estilo y convenciones
+## Cómo escribir código aquí
 
-El código se escribe en inglés. Los comentarios de los clientes de terminal están en español, porque el proyecto es para alumnos hispanohablantes.
-
-Ficheros en kebab-case, funciones y variables en camelCase, exportaciones con nombre e imports ESM con extensión `.js`. El SQL usa parámetros con nombre (`:id`, `:name`, `:email`). El contrato de `logic/` y el manejo de errores están en `docs/CONSTITUTIONS.md`.
-
-El código tiene que leerse de arriba a abajo, con `if` y con nombres que digan qué hacen. Se evita el código que un programador sin IA no escribiría: envoltorios de resultado, clases de error, helpers genéricos y abstracciones que oculten los pasos.
-
-El formato es el estándar de Prettier, sin configuración propia: comillas dobles, punto y coma, coma final, indentación de 2 espacios y ancho de 80.
-
-`db/users.sqlite` is generated locally and gitignored. Do not commit it.
+- Inglés en los `.js`. Comentarios en español están bien en los `.txt` de terminal.
+- Ficheros: kebab-case. Funciones: camelCase. Imports ESM con `.js`.
+- El SQL usa parámetros con nombre (`:id`, `:name`, `:email`).
+- Prefiere `if` y nombres claros. No añadas envoltorios de resultado, clases de error propias ni capas extra que oculten los pasos.
+- No subas a git `db/users.sqlite`, `.DS_Store` ni restos de Jupyter (`Untitled.ipynb`).
 
 ## Reglas
 
-- Lee docs/CONSTITUTIONS.md y la spec activa antes de tocar código.
-- Temperatura próxima a 0. No inventes: cíñete al plan y a la spec activa.
-- En cada tarea: investiga antes de escribir, compara si la tarea tiene parentesco con otra ya resuelta, y sigue las convenciones y el estilo del código actual.
-- Si aparecen dos fuentes de verdad o dos procedimientos que se contradicen (la constitución, el código actual, una spec o esta guía), no se elige uno. En el plan se pregunta qué camino seguir y si hay que modificar la documentación antes de empezar la spec nueva. No se escribe código hasta tener esa respuesta.
-- No propongas código que no se haya comprobado.
+- Sigue `docs/CONSTITUTIONS.md`. No inventes una segunda base de datos ni otro estilo de errores.
+- Parece al código actual. Si una tarea se parece a create-user, copia ese patrón.
+- Si la constitución, este archivo, una spec y el código no coinciden, para y pregunta cuál seguir. No elijas un lado en silencio.
+- No digas que algo funciona si no has ejecutado `npm test` o el snippet de terminal.
 
-This copy documents one extra error message, `Invalid id`, so missing ids fail before SQLite (review). Tests exist even though the class AGENTS.md started as a placeholder.
+## Cuando una tarea está terminada
 
-## Al terminar cualquier tarea
-
-- Al crear una funcionalidad se crea su primer cliente en `clients/terminal/`, un `.txt` que se pega en la terminal con el directorio actual en `first-app`. Ese cliente importa la función de `logic/` y hace `console.log` del resultado. Es el test manual básico.
-- Comprueba que el desarrollo nuevo funciona antes de dar la tarea por terminada. La comprobación es ejecutar ese fragmento de `clients/terminal/` y `npm test`.
+- Fichero nuevo en logic + nuevo `clients/terminal/*.txt` que lo importa y hace `console.log` del resultado.
+- Ejecuta ese snippet y `npm test` antes de dar el trabajo por cerrado.
