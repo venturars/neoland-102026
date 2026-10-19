@@ -1,0 +1,2 @@
+# Run from first-app/ (project root). Ensure the table exists first (create-table).
+node clients/terminal/create-user/create-user.js
