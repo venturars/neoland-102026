@@ -46,7 +46,8 @@ AI-USER-DB/
     └── terminal/
         ├── comandos.txt
         ├── _shared/
-        │   └── print.js
+        │   ├── print.js
+        │   └── handle-client-error.js
         ├── create-table/
         │   ├── create-table.js
         │   └── create-table.txt

@@ -1,0 +1,2 @@
+# Run from first-app/ (project root):
+node clients/terminal/create-table/create-table.js
