@@ -1,79 +1,97 @@
 # Constitución — first-app
 
-first-app es una app para aprender los conceptos básicos de login. Se construye con IA siguiendo el sistema SDD.
+Este archivo es el reglamento de mi first-app. Lo escribí después de hablar cómo se construye la app. Cursor debe seguir esto y no inventar otra estructura.
 
-## Árbol
+first-app es una app pequeña en Node para usuarios. No es una web. Se usa desde la terminal. Más adelante puede crecer hacia login. Por ahora solo crea, lista, actualiza, busca y borra usuarios en SQLite.
+
+## Flujo de trabajo (obligatorio)
+
+Ningún código de una funcionalidad nueva se escribe antes de aprobar su especificación.
+
+1. Constitución — este archivo (reglas de la app).
+2. Especificación de la funcionalidad — argumentos, retorno, errores, cómo se prueba.
+3. Revisión — se aprueba la spec (o se piden cambios).
+4. Plan de implementación — qué ficheros se crean o tocan.
+5. Implementación — código que obedece constitución + spec.
+6. Verificación de aceptación — `npm test` y el snippet de `clients/terminal/` de esa acción.
+
+Los dos (tests y snippet) son obligatorios. No vale uno solo.
+
+## Carpetas
 
 ```
 first-app/
-  db/
-    connection.js       Única conexión a la base de datos
-    users.sqlite        Único fichero de la base de datos (local, no se sube a git)
-  queries/
-    users.js            Funciones que ejecutan el SQL
-  logic/
-    create-user.js      Una funcionalidad por fichero
-    update-user.js
-    delete-user.js
-    list-users.js
-    find-user-by-email.js
-  clients/
-    terminal/           Primer cliente. Sirve de test manual
-  docs/
-    CONSTITUTIONS.md    Esta base
-  tests/                Tests automáticos con una base temporal
+  db/                 Abre la base de datos. Sin reglas de negocio.
+  queries/            Solo SQL. Nada de "¿este email es válido?"
+  logic/              Las reglas. Un fichero por acción.
+  clients/terminal/   Texto que pegas para probar cada acción.
+  tests/              Tests automáticos con una base temporal.
+  docs/               Esta constitución.
+  AGENTS.md           Cómo debe trabajar Cursor en esta carpeta.
+  package.json
 ```
 
-- `db/` abre la base de datos y no contiene reglas de negocio.
-- `queries/users.js` ejecuta el SQL. No hay reglas de negocio aquí.
-- `logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
-- `clients/terminal/` llama a `logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
+- `db/connection.js` es la única conexión. El fichero en disco es `db/users.sqlite`. No se sube a git. Los tests pueden usar `USERS_DB_PATH` hacia un fichero temporal para no tocar mis datos reales.
+- `queries/users.js` ejecuta el SQL (crear tabla, buscar, insertar, actualizar, borrar, listar).
+- `logic/` es la app. Cada acción es su propio fichero. `user-fields.js` guarda las comprobaciones compartidas de nombre, email e id para que create/update/find sean iguales.
+- `clients/terminal/*.txt` no son programas. Se pegan con el directorio actual en `first-app`.
 
-## Base de datos
+Funcionalidad nueva = fichero nuevo en logic + `.txt` nuevo en terminal. No conviertas un fichero viejo en un cajón de sastre. No muevas las reglas a queries ni a clients.
 
-Hay una sola base de datos: `db/users.sqlite`. Hay una sola conexión: el `db` que exporta `db/connection.js`. No se abre otra base de datos ni otra conexión, salvo los tests, que usan `USERS_DB_PATH` hacia un fichero temporal.
+## Tabla users
 
-Tabla `users`:
+- `id` — INTEGER PRIMARY KEY (1, 2, 3…)
+- `name` — TEXT, obligatorio
+- `email` — único, máximo 64 caracteres
+- `createdAt` / `updatedAt` — TEXT con `datetime('now', 'localtime')`
 
-- `id` es `INTEGER PRIMARY KEY`. SQLite lo incrementa solo: 1, 2, 3…
-- `email` es `VARCHAR(64) NOT NULL UNIQUE`.
-- `name` es `TEXT NOT NULL`.
-- `createdAt` y `updatedAt` son fechas. SQLite no tiene un tipo `DATE` propio. El tipo adecuado es `TEXT` con la fecha en `YYYY-MM-DD HH:MM:SS`, que es lo que devuelve `datetime('now', 'localtime')`.
+## Cómo funciona una función de logic
 
-## Logic no se reemplaza
+Se lee de arriba abajo:
 
-`logic/` no es un adaptador ni una capa intercambiable. No se sustituye por otra implementación, no se convierte en plugins y no se mueven sus reglas a `queries/` ni a `clients/`.
+1. Comprobar las entradas (nombre, email, id).
+2. Comprobar el resto de reglas (email duplicado, el usuario existe).
+3. Hablar con queries (SQLite dentro de try/catch).
+4. Devolver el valor del contrato (abajo). No devolver una fila cruda de SQLite.
 
-Cada funcionalidad es un fichero. Un fichero de `logic/` ya creado no se reemplaza para encajar otra tarea. Una funcionalidad nueva es un fichero nuevo.
+## Contratos de logic
 
-## Un fichero de logic
+Un usuario plano es un objeto con exactamente: `id` (entero), `name` (string), `email` (string en minúsculas), `createdAt` (string), `updatedAt` (string).
 
-Un fichero, una función. El nombre, la entrada y la salida los define la firma. No hay un comentario de contrato encima de la función.
+Normalización de email (create, update si se envía email, find): trim, minúsculas, un solo `@` con las dos partes no vacías, sin espacios, longitud ≤ 64. Si no, `Email is invalid`.
 
-El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `listUsers`, `findUserByEmail`). Los parámetros van en la firma, con su nombre (`name`, `email`, `id`). No se agrupa la entrada en un único objeto si los datos ya se conocen.
+- `createUser({ name, email })` → un usuario plano.
+  Nombre vacío o `"\0"` → `Name is empty`.
+  Email ya usado (tras normalizar) → `Email is already used`.
 
-El cuerpo sigue este orden, y no se mezcla:
+- `listUsers()` → array de usuarios planos, ordenados por `id`.
+  Tabla vacía → `[]`, no un error.
 
-1. Validar los parámetros de entrada.
-2. Validar el resto de reglas de negocio.
-3. Aplicar la lógica de negocio.
-4. Estructurar la salida y sanear la respuesta.
+- `updateUser(id, changes)` → un usuario plano.
+  `id` debe ser un entero ≥ 1; si no, `Invalid id` (antes de SQLite).
+  `changes.name` y `changes.email` son opcionales. Si omites uno, se deja el valor actual. Puedes enviar solo `{ name }`, solo `{ email }`, o ambos.
+  Si el usuario no existe → `User not found`.
+  Si el email nuevo es de otro usuario → `Email is already used`.
 
-La salida del paso 4 es el dato de la operación: el usuario, la lista de usuarios, o nada si la operación no devuelve datos. Solo incluye los campos que el cliente necesita (`id`, `name`, `email`, `createdAt`, `updatedAt`). No salen objetos de SQLite ni errores internos de la base de datos.
+- `findUserByEmail(email)` → un usuario plano.
+  Si no hay fila → `User not found` (no `null`, no `[]`).
+
+- `deleteUser(id)` → no devuelve nada (`undefined`).
+  `Invalid id` / `User not found` igual que update.
 
 ## Errores
 
-Un fallo se señala con `throw new Error("...")`. El mensaje está en inglés y es siempre uno de los de esta lista. No hay códigos ni clases de error propias.
+Si falla, `throw new Error("...")` con una de estas frases en inglés. No devolver `{ ok: false }`.
 
-En los pasos 1 y 2, si la entrada o una regla de negocio falla:
+Entrada y reglas:
 
-- `Name is empty`
-- `Email is invalid`
+- `Name is empty` — nombre vacío, o un nombre que solo es `"\0"`
+- `Email is invalid` — falta `@`, demasiado largo, o espacios dentro del email
 - `Email is already used`
 - `User not found`
-- `Invalid id`
+- `Invalid id` — falta o no es un entero positivo (comprobar esto antes de SQLite)
 
-En el paso 3, si SQLite falla, ese error no sale de `logic/`. Se lanza uno de estos:
+Si falla SQLite:
 
 - `Could not create the user`
 - `Could not update the user`
@@ -81,10 +99,12 @@ En el paso 3, si SQLite falla, ese error no sale de `logic/`. Se lanza uno de es
 - `Could not list the users`
 - `Could not find the user`
 
-En el paso 4, si todo va bien, la función devuelve el dato saneado. Si la operación no tiene datos, no devuelve nada.
+## Orden de construcción
 
-`Invalid id` is extra vs the class list: a missing or non-integer id must fail before querying SQLite.
+1. Conexión + crear tabla, y comprobar que la tabla existe.
+2. Crear un usuario y luego listar, para saber que se guardó.
+3. Actualizar (si solo cambia el nombre, el email se mantiene).
+4. Buscar por email.
+5. Borrar y volver a listar.
 
-## Queries
-
-El SQL no vive dentro de la función que lo ejecuta cuando se añadan ficheros en `queries/queries/`. Hasta entonces, `queries/users.js` prepara y ejecuta el SQL con `db`. Las funciones de este fichero se pueden reutilizar desde `logic/`.
+Después de cada acción: snippet de terminal y `npm test`.
