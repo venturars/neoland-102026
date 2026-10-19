@@ -17,6 +17,7 @@ first-app/
     update-user.js
     delete-user.js
     list-users.js
+    find-user-by-email.js
   clients/
     terminal/           Primer cliente. Sirve de test manual
   docs/
@@ -47,13 +48,7 @@ Cada funcionalidad es un fichero. Un fichero de `logic/` ya creado no se reempla
 
 ## Un fichero de logic
 
-Un fichero, una función. El nombre, la entrada, la salida y el cuerpo quedan definidos en el propio fichero.
-
-La primera línea es un comentario con el contrato, en inglés:
-
-```js
-// createUser(name, email) -> created user
-```
+Un fichero, una función. El nombre, la entrada y la salida los define la firma. No hay un comentario de contrato encima de la función.
 
 El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `listUsers`). Los parámetros van en la firma, con su nombre (`name`, `email`, `id`). No se agrupa la entrada en un único objeto si los datos ya se conocen.
 
@@ -83,6 +78,7 @@ En el paso 3, si SQLite falla, ese error no sale de `logic/`. Se lanza uno de es
 - `Could not update the user`
 - `Could not delete the user`
 - `Could not list the users`
+- `Could not find the user`
 
 En el paso 4, si todo va bien, la función devuelve el dato saneado. Si la operación no tiene datos, no devuelve nada.
 
