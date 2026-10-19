@@ -4,6 +4,19 @@ Este archivo es el reglamento de mi first-app. Lo escribí después de hablar c�
 
 first-app es una app pequeña en Node para usuarios. No es una web. Se usa desde la terminal. Más adelante puede crecer hacia login. Por ahora solo crea, lista, actualiza, busca y borra usuarios en SQLite.
 
+## Flujo de trabajo (obligatorio)
+
+Ningún código de una funcionalidad nueva se escribe antes de aprobar su especificación.
+
+1. Constitución — este archivo (reglas de la app).
+2. Especificación de la funcionalidad — argumentos, retorno, errores, cómo se prueba.
+3. Revisión — se aprueba la spec (o se piden cambios).
+4. Plan de implementación — qué ficheros se crean o tocan.
+5. Implementación — código que obedece constitución + spec.
+6. Verificación de aceptación — `npm test` y el snippet de `clients/terminal/` de esa acción.
+
+Los dos (tests y snippet) son obligatorios. No vale uno solo.
+
 ## Carpetas
 
 ```
@@ -39,9 +52,32 @@ Se lee de arriba abajo:
 1. Comprobar las entradas (nombre, email, id).
 2. Comprobar el resto de reglas (email duplicado, el usuario existe).
 3. Hablar con queries (SQLite dentro de try/catch).
-4. Devolver un usuario plano: `id`, `name`, `email`, `createdAt`, `updatedAt`. Delete no devuelve nada. No devolver una fila cruda de SQLite.
+4. Devolver el valor del contrato (abajo). No devolver una fila cruda de SQLite.
 
-Nombres de las acciones: `createUser`, `updateUser`, `deleteUser`, `listUsers`, `findUserByEmail`.
+## Contratos de logic
+
+Un usuario plano es un objeto con exactamente: `id` (entero), `name` (string), `email` (string en minúsculas), `createdAt` (string), `updatedAt` (string).
+
+Normalización de email (create, update si se envía email, find): trim, minúsculas, un solo `@` con las dos partes no vacías, sin espacios, longitud ≤ 64. Si no, `Email is invalid`.
+
+- `createUser({ name, email })` → un usuario plano.
+  Nombre vacío o `"\0"` → `Name is empty`.
+  Email ya usado (tras normalizar) → `Email is already used`.
+
+- `listUsers()` → array de usuarios planos, ordenados por `id`.
+  Tabla vacía → `[]`, no un error.
+
+- `updateUser(id, changes)` → un usuario plano.
+  `id` debe ser un entero ≥ 1; si no, `Invalid id` (antes de SQLite).
+  `changes.name` y `changes.email` son opcionales. Si omites uno, se deja el valor actual. Puedes enviar solo `{ name }`, solo `{ email }`, o ambos.
+  Si el usuario no existe → `User not found`.
+  Si el email nuevo es de otro usuario → `Email is already used`.
+
+- `findUserByEmail(email)` → un usuario plano.
+  Si no hay fila → `User not found` (no `null`, no `[]`).
+
+- `deleteUser(id)` → no devuelve nada (`undefined`).
+  `Invalid id` / `User not found` igual que update.
 
 ## Errores
 
@@ -71,4 +107,4 @@ Si falla SQLite:
 4. Buscar por email.
 5. Borrar y volver a listar.
 
-Después de cada acción, pegar el snippet de terminal o ejecutar `npm test`.
+Después de cada acción: snippet de terminal y `npm test`.
