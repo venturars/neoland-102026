@@ -1,10 +1,10 @@
 # AGENTS.md — first-app
 
-How to write code in this app. [CONSTITUTION.md](CONSTITUTION.md) defines the structure, libraries and error contract, and wins on any of those topics. This file does not repeat them.
+How to write code in this app. [CONSTITUTION.md](docs/CONSTITUTION.md) defines the structure, libraries and error contract, and wins on any of those topics. This file does not repeat them.
 
 ## Rules
 
-- Read [CONSTITUTION.md](CONSTITUTION.md) and this file before any code change.
+- Read [CONSTITUTION.md](docs/CONSTITUTION.md) and this file before any code change.
 
 ## Commands
 

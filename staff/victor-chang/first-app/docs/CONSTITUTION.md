@@ -1,6 +1,6 @@
 # Constitution — first-app
 
-The non-negotiable structure of this app: **what** exists and **where** it lives. Rules on _how_ to write code are in [AGENTS.md](AGENTS.md). If a change breaks a rule here, the architecture changes — update this file first.
+The non-negotiable structure of this app: **what** exists and **where** it lives. Rules on _how_ to write code are in [AGENTS.md](../AGENTS.md). If a change breaks a rule here, the architecture changes — update this file first.
 
 ## 1. Purpose and scope
 
@@ -28,6 +28,8 @@ first-app/
     terminal/       argv CLI
   specs/            one spec per use-case or client — the source of truth
   test/             mirrors the code folders: test/logic, test/query, test/client
+  docs/             project-level documents (this constitution)
+  AGENTS.md         how to write code; stays at the root so agents find it
 ```
 
 | Folder    | Owns                                             | Must never                                      |
