@@ -2,6 +2,8 @@
 
 Reglas para crear, actualizar y eliminar usuarios. Esta carpeta no abre una base de datos ni un servidor. Las reglas reciben un almacén y devuelven usuarios o errores.
 
+La base de esas reglas está en [docs/CONSTITUCION.md](docs/CONSTITUCION.md).
+
 ## Tres cajas
 
 | Carpeta | Pregunta | Ahora | Más adelante |

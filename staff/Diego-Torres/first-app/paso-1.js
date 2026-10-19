@@ -21,6 +21,12 @@ probar("nombre vacío:", () =>
   validarUsuarioNuevo({ nombre: " ", email: "ana@ejemplo.com" }),
 );
 
+probar("email inválido:", () =>
+  validarUsuarioNuevo({ nombre: "Ana Ruiz", email: "ana" }),
+);
+
 const ana = validarUsuarioNuevo({ nombre: "Ana Ruiz", email: "ana@ejemplo.com" });
 
 probar("cambiar solo el nombre:", () => validarCambios(ana, { nombre: "Ana López" }));
+probar("cambiar solo el email:", () => validarCambios(ana, { email: " ANA.LOPEZ@ejemplo.com " }));
+probar("cambio vacío:", () => validarCambios(ana, {}));
