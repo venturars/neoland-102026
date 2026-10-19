@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pomodoro Ciberpunk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    /* =========================================================
+       Tokens
+       ========================================================= */
+    :root {
+      --bg: #05010c;
+      --cyan: #5df6ff;
+      --purple: #d946ef;
+      --magenta: #ff2bd6;
+      --orange: #ff8a1e;
+      --blue: #3d8bff;
+      --matrix: #39ff14;
+      --text: #e8fbff;
+      --work: 25;
+      --break: 5;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Share Tech Mono", Consolas, monospace;
+    }
+
+    button { font: inherit; cursor: pointer; }
+
+    /* =========================================================
+       Escena: ciudad, lluvia, cuadrícula y profundidad de campo
+       ========================================================= */
+    .world {
+      position: relative;
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 50% 100%, rgba(88, 0, 140, 0.55), transparent 46%),
+        radial-gradient(ellipse at 50% 18%, rgba(40, 0, 80, 0.45), transparent 42%),
+        linear-gradient(180deg, #020008 0%, #0a0218 42%, #12041f 100%);
+    }
+
+    .skyline {
+      position: absolute;
+      left: -4vw;
+      right: -4vw;
+      bottom: 34%;
+      height: 34vh;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 6px;
+      filter: blur(5px);
+      opacity: 0.9;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .tower {
+      flex: 0 0 auto;
+      background-color: #070412;
+      background-image:
+        linear-gradient(180deg, rgba(180, 80, 255, 0.15), transparent 30%),
+        repeating-linear-gradient(
+          180deg,
+          rgba(120, 230, 255, 0.55) 0 1px,
+          transparent 1px 9px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.28) 0 1px,
+          transparent 1px 7px
+        );
+      box-shadow:
+        0 0 18px rgba(140, 40, 255, 0.35),
+        inset 0 0 12px rgba(0, 0, 0, 0.65);
+      border-top: 2px solid rgba(210, 120, 255, 0.85);
+    }
+
+    .horizon-glow {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 30%;
+      height: 140px;
+      background: linear-gradient(180deg, transparent, rgba(168, 40, 255, 0.35), transparent);
+      filter: blur(18px);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .floor {
+      position: absolute;
+      left: -15vw;
+      right: -15vw;
+      bottom: -8vh;
+      height: 52vh;
+      perspective: 520px;
+      z-index: 2;
+      pointer-events: none;
+      mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 72%, transparent 100%);
+    }
+
+    .grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(176, 70, 255, 0.72) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(176, 70, 255, 0.72) 1px, transparent 1px);
+      background-size: 54px 54px;
+      transform: rotateX(68deg);
+      transform-origin: center top;
+      animation: grid-drift 7s linear infinite;
+      filter: drop-shadow(0 0 10px #a020f0) drop-shadow(0 0 24px #6d28d9);
+    }
+
+    @keyframes grid-drift {
+      to { background-position: 0 54px; }
+    }
+
+    .matrix,
+    .rain {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .matrix-bg { z-index: 3; opacity: 0.72; }
+    .rain { z-index: 4; }
+
+    .aux-screen {
+      position: absolute;
+      top: 16vh;
+      width: min(280px, 24vw);
+      min-height: 180px;
+      padding: 14px 12px;
+      z-index: 5;
+      color: #9fffe0;
+      font-size: 11px;
+      line-height: 1.55;
+      letter-spacing: 0.04em;
+      background:
+        linear-gradient(180deg, rgba(8, 20, 24, 0.72), rgba(4, 6, 16, 0.8));
+      border: 1px solid rgba(80, 255, 200, 0.35);
+      box-shadow:
+        0 0 18px rgba(0, 255, 170, 0.25),
+        inset 0 0 24px rgba(0, 0, 0, 0.55);
+      filter: blur(4px);
+      opacity: 0.72;
+      pointer-events: none;
+    }
+
+    .aux-left { left: 3vw; transform: rotate(-7deg); }
+    .aux-right { right: 3vw; top: 22vh; transform: rotate(6deg); color: #d7c4ff; border-color: rgba(180, 120, 255, 0.4); }
+
+    .aux-screen strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #f0abfc;
+      letter-spacing: 0.16em;
+    }
+
+    .cables {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 6;
+      pointer-events: none;
+    }
+
+    .cables path {
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    .cable-near {
+      position: absolute;
+      left: -5vw;
+      right: -8vw;
+      bottom: -20px;
+      height: 90px;
+      z-index: 20;
+      pointer-events: none;
+      filter: blur(3.5px);
+      background:
+        radial-gradient(circle at 12% 40%, #1a1a1a 0 7px, transparent 8px),
+        radial-gradient(circle at 78% 60%, #111 0 5px, transparent 6px);
+    }
+
+    .cable-near span {
+      position: absolute;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #1c1c1c, #3a3a3a, #111);
+      box-shadow: 0 0 8px rgba(255, 43, 214, 0.35);
+    }
+
+    .cable-near span:nth-child(1) { left: 0; right: 18%; bottom: 28px; transform: rotate(-4deg); }
+    .cable-near span:nth-child(2) { left: 22%; right: 0; bottom: 14px; height: 14px; background: #0e0e0e; transform: rotate(3deg); }
+    .cable-near span:nth-child(3) { left: 8%; width: 46%; bottom: 46px; height: 7px; background: linear-gradient(90deg, #241018, #ff2bd6, #120810); }
+
+    .vignette,
+    .grain {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 30;
+    }
+
+    .vignette {
+      background:
+        radial-gradient(ellipse at center, transparent 42%, rgba(0, 0, 0, 0.55) 78%, rgba(0, 0, 0, 0.86) 100%);
+      mix-blend-mode: multiply;
+    }
+
+    .grain {
+      opacity: 0.18;
+      background-image: repeating-radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.18) 0 0.5px, transparent 0.6px 3px);
+      mix-blend-mode: screen;
+    }
+
+    /* =========================================================
+       Monitor en primer plano
+       ========================================================= */
+    .monitor {
+      position: relative;
+      z-index: 10;
+      width: min(920px, 94vw);
+      filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.65));
+    }
+
+    .bezel {
+      padding: 22px 22px 28px;
+      border-radius: 28px;
+      background:
+        linear-gradient(160deg, #2a2e38 0%, #12141a 38%, #07080c 100%);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        0 0 0 1px rgba(0, 0, 0, 0.6),
+        0 0 40px rgba(120, 0, 255, 0.18);
+    }
+
+    .bezel-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 0 8px;
+      color: #8b93a7;
+      font-size: 11px;
+      letter-spacing: 0.22em;
+    }
+
+    .leds { display: flex; gap: 8px; }
+    .leds i {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: block;
+      background: #223;
+      box-shadow: inset 0 0 2px #000;
+    }
+    .leds i:nth-child(1) { background: #ff2bd6; box-shadow: 0 0 8px #ff2bd6; }
+    .leds i:nth-child(2) { background: #5df6ff; box-shadow: 0 0 8px #5df6ff; }
+    .leds i:nth-child(3) { background: #ff8a1e; box-shadow: 0 0 8px #ff8a1e; }
+
+    .screen {
+      position: relative;
+      overflow: hidden;
+      border-radius: 16px;
+      padding: clamp(18px, 3vw, 36px) clamp(14px, 3vw, 32px) 22px;
+      text-align: center;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(88, 20, 140, 0.35), transparent 46%),
+        linear-gradient(180deg, rgba(6, 16, 28, 0.96), rgba(2, 6, 14, 0.98));
+      box-shadow:
+        inset 0 0 80px rgba(80, 0, 160, 0.28),
+        inset 0 0 24px rgba(0, 255, 255, 0.08),
+        0 0 30px rgba(94, 246, 255, 0.12);
+    }
+
+    .screen.is-flash {
+      animation: screen-flash 0.7s ease;
+    }
+
+    @keyframes screen-flash {
+      0% { box-shadow: inset 0 0 80px rgba(255, 43, 214, 0.65), 0 0 40px rgba(255, 43, 214, 0.45); }
+      100% { box-shadow: inset 0 0 80px rgba(80, 0, 160, 0.28), 0 0 30px rgba(94, 246, 255, 0.12); }
+    }
+
+    .matrix-screen {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.38;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .scanlines {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.045) 0 1px,
+        transparent 1px 4px
+      );
+      mix-blend-mode: screen;
+    }
+
+    .glass-shine {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      pointer-events: none;
+      background: linear-gradient(115deg, rgba(255, 255, 255, 0.14), transparent 28%, transparent 70%, rgba(120, 200, 255, 0.05));
+    }
+
+    .screen-ui { position: relative; z-index: 3; }
+
+    .kicker {
+      color: #7dd3fc;
+      letter-spacing: 0.28em;
+      font-size: 12px;
+      text-shadow: 0 0 10px rgba(94, 246, 255, 0.8);
+    }
+
+    h1 {
+      margin: 10px 0 4px;
+      font-family: Orbitron, "Segoe UI", sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.35rem, 3.4vw, 2.35rem);
+      letter-spacing: 0.14em;
+      color: #f0abfc;
+      text-shadow:
+        0 0 6px #fff,
+        0 0 16px var(--purple),
+        0 0 36px #c026d3,
+        0 0 72px #7e22ce;
+    }
+
+    .time {
+      font-family: Orbitron, "Segoe UI", sans-serif;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      font-size: clamp(4.2rem, 12vw, 8rem);
+      line-height: 1;
+      color: var(--cyan);
+      text-shadow:
+        0 0 8px #ecfeff,
+        0 0 22px var(--cyan),
+        0 0 48px #22d3ee,
+        0 0 90px rgba(34, 211, 238, 0.85);
+    }
+
+    .time.is-running {
+      animation: pulse-glow 1.6s ease-in-out infinite;
+    }
+
+    @keyframes pulse-glow {
+      50% { text-shadow: 0 0 10px #fff, 0 0 28px var(--cyan), 0 0 60px #67e8f9, 0 0 100px #06b6d4; }
+    }
+
+    .mode-label {
+      margin-top: 6px;
+      letter-spacing: 0.24em;
+      color: #c4b5fd;
+      font-size: 14px;
+      text-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
+    }
+
+    .cycles {
+      margin: 14px auto 18px;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 12px;
+      padding: 6px 16px 8px;
+      border: 1px solid rgba(94, 246, 255, 0.35);
+      border-radius: 999px;
+      letter-spacing: 0.2em;
+      color: #a5f3fc;
+      background: rgba(0, 20, 30, 0.45);
+      box-shadow: 0 0 16px rgba(94, 246, 255, 0.25), inset 0 0 12px rgba(94, 246, 255, 0.08);
+    }
+
+    .cycles strong {
+      font-family: Orbitron, sans-serif;
+      font-size: 1.6rem;
+      color: var(--cyan);
+      letter-spacing: 0.08em;
+      text-shadow: 0 0 12px var(--cyan);
+    }
+
+    .cycles.pop strong {
+      animation: count-pop 0.45s ease;
+    }
+
+    @keyframes count-pop {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.35); color: #fff; }
+      100% { transform: scale(1); }
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .btn {
+      min-width: 148px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.45);
+      letter-spacing: 0.12em;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+    .btn:active { transform: translateY(1px); }
+    .btn:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+    .btn-start {
+      color: #ffd0f6;
+      border: 1px solid var(--magenta);
+      box-shadow: 0 0 12px var(--magenta), inset 0 0 14px rgba(255, 43, 214, 0.28);
+      text-shadow: 0 0 8px var(--magenta);
+    }
+
+    .btn-start.is-active {
+      background: rgba(255, 43, 214, 0.18);
+      box-shadow: 0 0 18px var(--magenta), 0 0 36px rgba(255, 43, 214, 0.55), inset 0 0 16px rgba(255, 43, 214, 0.4);
+    }
+
+    .btn-reset {
+      color: #ffe0c2;
+      border: 1px solid var(--orange);
+      box-shadow: 0 0 12px var(--orange), inset 0 0 14px rgba(255, 138, 30, 0.28);
+      text-shadow: 0 0 8px var(--orange);
+    }
+
+    .btn-mode {
+      color: #dbeafe;
+      border: 1px solid var(--blue);
+      box-shadow: 0 0 12px var(--blue), inset 0 0 14px rgba(61, 139, 255, 0.28);
+      text-shadow: 0 0 8px var(--blue);
+    }
+
+    .btn-mode.is-break {
+      background: rgba(61, 139, 255, 0.16);
+      box-shadow: 0 0 18px var(--blue), 0 0 32px rgba(61, 139, 255, 0.45), inset 0 0 16px rgba(61, 139, 255, 0.35);
+    }
+
+    @media (max-width: 720px) {
+      .aux-screen { display: none; }
+      .btn { min-width: 100%; }
+      h1 { letter-spacing: 0.08em; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .grid,
+      .time.is-running,
+      .screen.is-flash,
+      .cycles.pop strong { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="world">
+    <div class="skyline" id="skyline" aria-hidden="true"></div>
+    <div class="horizon-glow" aria-hidden="true"></div>
+    <div class="floor" aria-hidden="true"><div class="grid"></div></div>
+    <canvas class="matrix matrix-bg" id="matrix-bg" aria-hidden="true"></canvas>
+    <canvas class="rain" id="rain" aria-hidden="true"></canvas>
+
+    <aside class="aux-screen aux-left" aria-hidden="true">
+      <strong>SYS.LOG</strong>
+      LINK 04 :: STABLE<br>
+      RAIN DENSITY 0.82<br>
+      GRID PHASE LOCKED<br>
+      NEON BUS 12.4V<br>
+      HUM CHANNEL OPEN
+    </aside>
+    <aside class="aux-screen aux-right" aria-hidden="true">
+      <strong>AUX.02</strong>
+      CAM / DOF 1.4<br>
+      CABLE BAY EXPOSED<br>
+      CYCLE BUFFER READY<br>
+      CHIME SYNTH ARMED<br>
+      NIGHT CITY FEED
+    </aside>
+
+    <svg class="cables" viewBox="0 0 1200 800" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M40 80 C 180 140, 120 260, 40 340" stroke="#241018" stroke-width="8"/>
+      <path d="M30 60 C 200 120, 90 280, 20 360" stroke="#ff2bd6" stroke-width="2" opacity="0.8"/>
+      <path d="M1160 40 C 980 160, 1100 300, 1180 460" stroke="#121212" stroke-width="10"/>
+      <path d="M1170 70 C 1000 180, 1120 280, 1190 420" stroke="#3d8bff" stroke-width="2"/>
+      <path d="M80 620 C 240 540, 180 700, 40 760" stroke="#1a1a1a" stroke-width="7"/>
+      <path d="M200 760 C 360 680, 520 790, 700 720" stroke="#ff8a1e" stroke-width="2" opacity="0.7"/>
+    </svg>
+
+    <main class="monitor">
+      <div class="bezel">
+        <div class="bezel-top">
+          <span>TERMINAL-07</span>
+          <span class="leds" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span>LOW LIGHT</span>
+        </div>
+        <section class="screen" id="screen" aria-label="Temporizador Pomodoro">
+          <canvas class="matrix-screen" id="matrix-screen" aria-hidden="true"></canvas>
+          <div class="scanlines" aria-hidden="true"></div>
+          <div class="glass-shine" aria-hidden="true"></div>
+          <div class="screen-ui">
+            <p class="kicker">NEON TERMINAL // NIGHT CITY</p>
+            <h1>POMODORO CIBERPUNK</h1>
+            <p class="time" id="time" aria-live="polite">25:00</p>
+            <p class="mode-label" id="mode-label">TRABAJO · 25 MIN</p>
+            <p class="cycles" id="cycles-wrap">
+              CICLOS
+              <strong id="cycles">00</strong>
+            </p>
+            <div class="controls">
+              <button type="button" class="btn btn-start" id="btn-start" aria-pressed="false">START / STOP</button>
+              <button type="button" class="btn btn-reset" id="btn-reset">RESET</button>
+              <button type="button" class="btn btn-mode" id="btn-mode" aria-pressed="false">WORK / BREAK</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <div class="cable-near" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const DURATIONS = { work: 25 * 60, break: 5 * 60 };
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      const dom = {
+        time: document.querySelector("#time"),
+        cycles: document.querySelector("#cycles"),
+        cyclesWrap: document.querySelector("#cycles-wrap"),
+        modeLabel: document.querySelector("#mode-label"),
+        start: document.querySelector("#btn-start"),
+        reset: document.querySelector("#btn-reset"),
+        mode: document.querySelector("#btn-mode"),
+        screen: document.querySelector("#screen"),
+        skyline: document.querySelector("#skyline"),
+        matrixBg: document.querySelector("#matrix-bg"),
+        matrixScreen: document.querySelector("#matrix-screen"),
+        rain: document.querySelector("#rain")
+      };
+
+      const state = {
+        mode: "work",
+        remaining: DURATIONS.work,
+        running: false,
+        cycles: 0,
+        timerId: null,
+        endsAt: 0
+      };
+
+      /* -------------------------------------------------------
+         Audio: campanilla al cerrar fase
+         ------------------------------------------------------- */
+      const audio = {
+        ctx: null,
+        master: null,
+
+        ensure() {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (!AudioCtx) return null;
+          if (!this.ctx) {
+            this.ctx = new AudioCtx();
+            this.master = this.ctx.createGain();
+            this.master.gain.value = 0.9;
+            this.master.connect(this.ctx.destination);
+          }
+          if (this.ctx.state === "suspended") this.ctx.resume();
+          return this.ctx;
+        },
+
+        chime() {
+          const ctx = this.ensure();
+          if (!ctx) return;
+          const now = ctx.currentTime;
+          [523.25, 659.25, 783.99, 1046.5].forEach((freq, index) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = index % 2 === 0 ? "square" : "triangle";
+            osc.frequency.setValueAtTime(freq, now);
+            gain.gain.setValueAtTime(0.0001, now);
+            gain.gain.exponentialRampToValueAtTime(0.08, now + 0.03 + index * 0.045);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.55 + index * 0.03);
+            osc.connect(gain);
+            gain.connect(this.master);
+            osc.start(now + index * 0.055);
+            osc.stop(now + 0.75);
+          });
+        }
+      };
+
+      /* -------------------------------------------------------
+         Temporizador
+         ------------------------------------------------------- */
+      function formatTime(totalSeconds) {
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
+      }
+
+      function render() {
+        dom.time.textContent = formatTime(state.remaining);
+        dom.cycles.textContent = String(state.cycles).padStart(2, "0");
+        dom.modeLabel.textContent = state.mode === "work" ? "TRABAJO · 25 MIN" : "DESCANSO · 05 MIN";
+        dom.time.classList.toggle("is-running", state.running);
+        dom.start.classList.toggle("is-active", state.running);
+        dom.start.setAttribute("aria-pressed", String(state.running));
+        dom.mode.classList.toggle("is-break", state.mode === "break");
+        dom.mode.setAttribute("aria-pressed", String(state.mode === "break"));
+      }
+
+      function stop() {
+        state.running = false;
+        clearInterval(state.timerId);
+        state.timerId = null;
+        render();
+      }
+
+      function start() {
+        if (state.running || state.remaining <= 0) return;
+        state.running = true;
+        state.endsAt = Date.now() + state.remaining * 1000;
+        state.timerId = window.setInterval(tick, 200);
+        render();
+      }
+
+      function tick() {
+        state.remaining = Math.max(0, Math.ceil((state.endsAt - Date.now()) / 1000));
+        render();
+        if (state.remaining <= 0) finishPhase();
+      }
+
+      function finishPhase() {
+        const finishedWork = state.mode === "work";
+        stop();
+        audio.chime();
+        dom.screen.classList.remove("is-flash");
+        void dom.screen.offsetWidth;
+        dom.screen.classList.add("is-flash");
+
+        if (finishedWork) bumpCycles();
+
+        state.mode = finishedWork ? "break" : "work";
+        state.remaining = DURATIONS[state.mode];
+        render();
+        start();
+      }
+
+      function resetTimer() {
+        stop();
+        state.cycles = 0;
+        state.remaining = DURATIONS[state.mode];
+        render();
+      }
+
+      function bumpCycles() {
+        state.cycles += 1;
+        dom.cyclesWrap.classList.remove("pop");
+        void dom.cyclesWrap.offsetWidth;
+        dom.cyclesWrap.classList.add("pop");
+      }
+
+      function toggleMode() {
+        stop();
+        state.mode = state.mode === "work" ? "break" : "work";
+        state.remaining = DURATIONS[state.mode];
+        if (state.mode === "work") bumpCycles();
+        render();
+      }
+
+      dom.start.addEventListener("click", () => {
+        if (state.running) stop();
+        else start();
+      });
+      dom.reset.addEventListener("click", resetTimer);
+      dom.mode.addEventListener("click", toggleMode);
+
+      /* -------------------------------------------------------
+         Ciudad, Matrix y lluvia
+         ------------------------------------------------------- */
+      function buildSkyline() {
+        const fragment = document.createDocumentFragment();
+        for (let i = 0; i < 36; i += 1) {
+          const tower = document.createElement("div");
+          tower.className = "tower";
+          tower.style.width = (16 + Math.random() * 38) + "px";
+          tower.style.height = (50 + Math.random() * 210) + "px";
+          tower.style.opacity = String(0.45 + Math.random() * 0.55);
+          fragment.appendChild(tower);
+        }
+        dom.skyline.appendChild(fragment);
+      }
+
+      function fitCanvas(canvas) {
+        const rect = canvas.getBoundingClientRect();
+        const width = Math.max(1, Math.floor(rect.width));
+        const height = Math.max(1, Math.floor(rect.height));
+        if (canvas.width !== width || canvas.height !== height) {
+          canvas.width = width;
+          canvas.height = height;
+        }
+      }
+
+      function startMatrix(canvas, speed) {
+        const glyphs = "01ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿABCDEF#$%&";
+        const fontSize = 15;
+        let columns = [];
+
+        function seed() {
+          fitCanvas(canvas);
+          const count = Math.ceil(canvas.width / fontSize);
+          columns = Array.from({ length: count }, () => ({
+            y: Math.random() * canvas.height,
+            tail: 8 + Math.floor(Math.random() * 16)
+          }));
+        }
+
+        function draw() {
+          const ctx = canvas.getContext("2d");
+          fitCanvas(canvas);
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.font = fontSize + "px Share Tech Mono, monospace";
+          columns.forEach((column, index) => {
+            for (let cell = 0; cell < column.tail; cell += 1) {
+              const y = column.y - cell * fontSize;
+              if (y < 0) continue;
+              const alpha = 1 - cell / column.tail;
+              ctx.fillStyle = cell === 0 ? "rgba(220,255,230," + alpha + ")" : "rgba(57,255,20," + alpha + ")";
+              ctx.shadowColor = "#39ff14";
+              ctx.shadowBlur = cell === 0 ? 12 : 0;
+              const glyph = glyphs[Math.floor(Math.random() * glyphs.length)];
+              ctx.fillText(glyph, index * fontSize, y);
+            }
+            column.y += speed;
+            if (column.y - column.tail * fontSize > canvas.height) {
+              column.y = Math.random() * -120;
+              column.tail = 8 + Math.floor(Math.random() * 16);
+            }
+          });
+        }
+
+        seed();
+        window.addEventListener("resize", seed);
+        if (reduceMotion) {
+          draw();
+          return;
+        }
+        window.setInterval(draw, 70);
+      }
+
+      function startRain(canvas) {
+        const drops = Array.from({ length: 160 }, () => ({
+          x: Math.random(),
+          y: Math.random(),
+          z: 0.35 + Math.random() * 0.75,
+          len: 12 + Math.random() * 22
+        }));
+
+        function draw() {
+          const ctx = canvas.getContext("2d");
+          fitCanvas(canvas);
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          drops.forEach((drop) => {
+            drop.y += 0.012 * drop.z;
+            if (drop.y > 1.05) {
+              drop.y = -0.05;
+              drop.x = Math.random();
+            }
+            ctx.strokeStyle = "rgba(198, 226, 255, " + (0.12 + drop.z * 0.35) + ")";
+            ctx.lineWidth = drop.z * 1.3;
+            ctx.beginPath();
+            ctx.moveTo(drop.x * canvas.width, drop.y * canvas.height);
+            ctx.lineTo(drop.x * canvas.width + drop.z * 3, drop.y * canvas.height + drop.len * drop.z);
+            ctx.stroke();
+          });
+          if (!reduceMotion) requestAnimationFrame(draw);
+        }
+
+        draw();
+      }
+
+      buildSkyline();
+      startMatrix(dom.matrixBg, 7);
+      startMatrix(dom.matrixScreen, 5);
+      startRain(dom.rain);
+      render();
+    })();
+  </script>
+</body>
+</html>
