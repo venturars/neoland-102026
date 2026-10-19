@@ -7,7 +7,7 @@ This app is for learning two things:
 - Application logic: the rules that decide what is allowed.
 - Spec-driven development (SDD): write the rules first, then write the code that follows them.
 
-The app manages users. You can create a user, list users, update a user, and delete a user.
+The app manages users. You can create a user, list users, find a user by email, update a user, and delete a user.
 
 ## Tree
 
@@ -25,7 +25,7 @@ first-app/
 - `logic/` decides if an action is allowed. It does not contain SQL.
 - `queries/` talks to the database. It does not decide if a name or an email is valid.
 - `db/` contains `connection.js`, which opens the database, and `users.sqlite`, which stores the users.
-- `clients/terminal/` holds one `.txt` file per feature. You paste that file into the terminal while `first-app` is the current folder. The files are `create-users-table.txt`, `create-user.txt`, `list-users.txt`, `update-user.txt`, and `delete-user.txt`.
+- `clients/terminal/` holds one `.txt` file per feature. You paste that file into the terminal while `first-app` is the current folder. The files are `create-users-table.txt`, `create-user.txt`, `list-users.txt`, `find-user-by-email.txt`, `update-user.txt`, and `delete-user.txt`.
 - `docs/` holds this file.
 
 ## Database
@@ -54,6 +54,7 @@ Each action has its own file:
 
 - `logic/create-user.js`
 - `logic/list-users.js`
+- `logic/find-user-by-email.js`
 - `logic/update-user.js`
 - `logic/delete-user.js`
 
