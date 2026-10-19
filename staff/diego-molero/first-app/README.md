@@ -1,8 +1,9 @@
 # Gestión de usuarios · primera iteración
 
 Aplicación pequeña de Node.js con JavaScript y SQLite. Permite crear, listar,
-actualizar y eliminar usuarios. La lógica recibe el acceso a datos como argumento,
-por lo que puede utilizarse desde distintas interfaces sin importar SQLite.
+actualizar, eliminar y buscar usuarios por correo. La lógica recibe el acceso a
+datos como argumento, por lo que puede utilizarse desde distintas interfaces sin
+importar SQLite.
 
 ## Ejecutar en PowerShell
 
@@ -16,8 +17,9 @@ npm test
 npm run db:init
 ```
 
-- `demo`: muestra las cuatro operaciones, un correo duplicado y un usuario
-  inexistente. Utiliza SQLite en memoria; al terminar desaparecen esos datos.
+- `demo`: muestra las operaciones, un correo duplicado y la búsqueda por correo
+  con éxito, entrada inválida y usuario inexistente. Utiliza SQLite en memoria;
+  al terminar desaparecen esos datos.
 - `test`: ejecuta las pruebas de negocio y de integración con SQLite.
 - `db:init`: crea `db/users.sqlite` y la tabla si no existen. Puede repetirse sin
   borrar usuarios. Este archivo de datos queda excluido de Git.
@@ -35,6 +37,7 @@ first-app/
     list-users.js
     update-user.js
     delete-user.js
+    find-user-by-email.js
   repositories/
     sqlite-user-repository.js  Consultas SQL parametrizadas
   db/
@@ -46,6 +49,7 @@ first-app/
   tests/
     helpers/memory-user-repository.js
     users.test.js          Reglas probadas sin SQLite
+    find-user-by-email.test.js  Búsqueda por correo sin SQLite
     sqlite.test.js         Persistencia y consultas reales
   app.js                   Conecta la lógica con el repositorio SQLite
 ```
@@ -84,6 +88,9 @@ Un usuario contiene `id`, `name`, `email`, `createdAt` y `updatedAt`.
 - Una actualización sin cambios definidos se rechaza. Reenviar un valor existente
   sí está permitido, incluido el correo propio.
 - Eliminar borra definitivamente al usuario.
+- Buscar por correo utiliza las mismas reglas de formato y normalización que
+  crear y actualizar. La búsqueda es exacta sobre el correo normalizado y no
+  modifica datos; si el usuario no existe, devuelve `USER_NOT_FOUND`.
 - Las fechas se generan en SQLite y se expresan en UTC con formato ISO 8601.
 
 ## Consumir la aplicación desde JavaScript
@@ -101,6 +108,7 @@ try {
 
   if (result.ok) {
     const id = result.user.id;
+    console.log(app.findUserByEmail("  LUCIA@EXAMPLE.COM  "));
     console.log(app.updateUser(id, { name: "Lucía García" }));
     console.log(app.listUsers());
     console.log(app.deleteUser(id));
@@ -121,7 +129,7 @@ actual de la terminal. Importar `app.js` no abre ni crea una base de datos.
 
 | Operación | Respuesta correcta |
 | --- | --- |
-| Crear o actualizar | `{ ok: true, user }` |
+| Crear, actualizar o buscar por correo | `{ ok: true, user }` |
 | Listar | `{ ok: true, users: [...] }` |
 | Eliminar | `{ ok: true }` |
 
@@ -135,11 +143,16 @@ Los errores esperados devuelven `{ ok: false, error: "CODIGO" }`:
 | `INVALID_ID` | El identificador no es un entero positivo seguro de JavaScript. |
 | `EMPTY_CHANGES` | No se ha enviado ningún cambio definido. |
 | `EMAIL_ALREADY_USED` | Otro usuario tiene ese correo. |
-| `USER_NOT_FOUND` | No existe el usuario que se quiere actualizar o eliminar. |
+| `USER_NOT_FOUND` | No existe el usuario que se quiere buscar, actualizar o eliminar. |
 
 Los fallos técnicos inesperados, como un archivo inaccesible, lanzan una excepción.
 El cliente debe gestionarlos según su interfaz. Las funciones de negocio no
 imprimen mensajes ni conocen códigos HTTP.
+
+`app.findUserByEmail(email)` recibe el correo como texto. Devuelve `INVALID_EMAIL`
+si la entrada es inválida; si encuentra al usuario, devuelve solo `id`, `name`,
+`email`, `createdAt` y `updatedAt`. La especificación, el plan y las comprobaciones
+de esta funcionalidad están en [docs/find-user-by-email.md](docs/find-user-by-email.md).
 
 ## Contrato del repositorio
 

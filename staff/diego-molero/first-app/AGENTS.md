@@ -33,7 +33,11 @@ Estas instrucciones se aplican a esta carpeta y sus subdirectorios.
   Los errores de negocio devuelven `{ ok: false, error: "CODIGO" }`; los fallos
   técnicos inesperados se propagan como excepciones.
 - Valida antes de modificar datos. Comparte las reglas entre crear y actualizar;
-  no dupliques validaciones en los clientes.
+  la búsqueda por correo reutiliza `validateEmail` de `validate-user.js`.
+  No dupliques validaciones en los clientes.
+- `findUserByEmail` recibe un correo como texto: normaliza, valida y consulta el
+  repositorio. Devuelve `{ ok: true, user }`, `INVALID_EMAIL` o `USER_NOT_FOUND`
+  con el formato de error habitual; no modifica datos ni devuelve campos internos.
 - Guarda todo en UTF-8. Escribe documentación y comentarios en español y mantén
   los identificadores coherentes con el código existente.
 - Cada funcionalidad nueva debe incluir algún comentario corto y explicativo.

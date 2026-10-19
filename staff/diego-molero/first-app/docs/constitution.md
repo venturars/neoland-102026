@@ -20,6 +20,7 @@ first-app/
     update-user.js                 Actualizar un usuario
     delete-user.js                 Eliminar un usuario
     list-users.js                  Listar los usuarios
+    find-user-by-email.js           Buscar un usuario por su correo
   clients/
     terminal/                     Ejemplos de uso y prueba manual
   tests/                          Pruebas de negocio y de SQLite
@@ -53,7 +54,8 @@ La tabla `users` contiene:
 ## Lógica de negocio
 
 Cada operación tiene su fichero y su función. Las validaciones comunes viven en
-`validate-user.js` para que crear y actualizar apliquen las mismas reglas.
+`validate-user.js` para que crear, actualizar y buscar apliquen las mismas reglas
+del correo.
 
 Las funciones reciben el repositorio y los datos que necesitan. No importan
 SQLite, no ejecutan SQL, no imprimen mensajes y no conocen HTTP ni el frontend.
@@ -71,6 +73,10 @@ un único `@`, contenido a ambos lados, ningún espacio interior y un máximo de
 64 caracteres como regla del ejercicio. No puede pertenecer a otro usuario.
 Actualizar conserva los campos omitidos. Eliminar borra definitivamente.
 
+Buscar por correo es una consulta exacta tras recortar y pasar a minúsculas;
+devuelve `INVALID_EMAIL` si la entrada es inválida y `USER_NOT_FOUND` si no existe.
+La búsqueda no modifica datos y devuelve solo los cinco campos del usuario.
+
 ## Repositorio
 
 El repositorio ofrece `findById`, `findByEmail`, `findAll`, `insert`, `update` y
@@ -84,7 +90,7 @@ repositorio es asíncrono, habrá que adaptar las llamadas con `async`/`await`.
 
 ## Resultados y errores
 
-- Crear o actualizar devuelve `{ ok: true, user }`.
+- Crear, actualizar o buscar por correo devuelve `{ ok: true, user }`.
 - Listar devuelve `{ ok: true, users }`.
 - Eliminar devuelve `{ ok: true }`.
 - Un error de negocio devuelve `{ ok: false, error: "CODIGO" }`.

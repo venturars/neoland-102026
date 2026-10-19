@@ -49,6 +49,7 @@ test("una base de archivo conserva los cambios entre aperturas y permite inicial
   const second = createApp({ databasePath });
   try {
     assert.deepEqual(second.listUsers().users, [saved]);
+    assert.deepEqual(second.findUserByEmail("  LUCIA@EXAMPLE.COM  "), { ok: true, user: saved });
     assert.deepEqual(second.deleteUser(saved.id), { ok: true });
   } finally {
     second.close();
@@ -57,6 +58,10 @@ test("una base de archivo conserva los cambios entre aperturas y permite inicial
   const third = createApp({ databasePath });
   try {
     assert.deepEqual(third.listUsers().users, []);
+    assert.deepEqual(third.findUserByEmail("lucia@example.com"), {
+      ok: false,
+      error: "USER_NOT_FOUND",
+    });
   } finally {
     third.close();
   }
@@ -117,4 +122,39 @@ test("buscar y modificar un usuario inexistente no inventa registros", (t) => {
   assert.equal(repository.update({ id: 99, name: "Nadie", email: "nadie@example.com" }), undefined);
   assert.equal(repository.remove(99), false);
   assert.deepEqual(repository.findAll(), []);
+});
+
+// Verifica la nueva operación a través de app.js y una base SQLite real aislada.
+test("buscar por correo en SQLite no modifica datos y refleja actualizaciones y borrados", (t) => {
+  const app = createApp({ databasePath: ":memory:" });
+  t.after(() => app.close());
+  app.createUser({ name: "Diego", email: "diego@example.com" });
+  const created = app.createUser({ name: "Lucía O'Connor", email: "o'connor@example.com" });
+  assert.equal(created.ok, true);
+  const before = app.listUsers();
+
+  const found = app.findUserByEmail("  O'CONNOR@EXAMPLE.COM  ");
+  assert.deepEqual(found, created);
+  found.user.name = "Cambio en el cliente";
+  assert.deepEqual(app.findUserByEmail("o'connor@example.com"), created);
+  assert.deepEqual(app.findUserByEmail("sin-arroba"), { ok: false, error: "INVALID_EMAIL" });
+  assert.deepEqual(app.findUserByEmail(null), { ok: false, error: "INVALID_EMAIL" });
+  assert.deepEqual(app.findUserByEmail("missing'OR'1'='1@example.com"), {
+    ok: false,
+    error: "USER_NOT_FOUND",
+  });
+  assert.deepEqual(app.listUsers(), before);
+
+  const updated = app.updateUser(created.user.id, { email: "nuevo@example.com" });
+  assert.equal(updated.ok, true);
+  assert.deepEqual(app.findUserByEmail("o'connor@example.com"), {
+    ok: false,
+    error: "USER_NOT_FOUND",
+  });
+  assert.deepEqual(app.findUserByEmail(" NUEVO@example.com "), updated);
+  assert.deepEqual(app.deleteUser(created.user.id), { ok: true });
+  assert.deepEqual(app.findUserByEmail("nuevo@example.com"), {
+    ok: false,
+    error: "USER_NOT_FOUND",
+  });
 });
