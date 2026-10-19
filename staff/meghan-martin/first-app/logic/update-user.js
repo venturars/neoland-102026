@@ -1,32 +1,36 @@
 import { findByEmail, findById, update } from "../queries/users.js";
-import { parseEmail, parseName } from "./user-fields.js";
+import { parseEmail, parseId, parseName, toUser } from "./user-fields.js";
 
 export function updateUser(id, changes) {
-  const current = findById(id);
+  const userId = parseId(id);
+  let current;
+  try {
+    current = findById(userId);
+  } catch {
+    throw new Error("Could not update the user");
+  }
   if (!current) {
-    return { ok: false, error: "USER_NOT_FOUND" };
+    throw new Error("User not found");
   }
   const patch = changes ?? {};
-  let name = current.name;
-  if (patch.name !== undefined) {
-    const nameResult = parseName(patch.name);
-    if (!nameResult.ok) {
-      return nameResult;
-    }
-    name = nameResult.name;
+  const name =
+    patch.name === undefined ? current.name : parseName(patch.name);
+  const email =
+    patch.email === undefined ? current.email : parseEmail(patch.email);
+  let owner;
+  try {
+    owner = findByEmail(email);
+  } catch {
+    throw new Error("Could not update the user");
   }
-  let email = current.email;
-  if (patch.email !== undefined) {
-    const emailResult = parseEmail(patch.email);
-    if (!emailResult.ok) {
-      return emailResult;
-    }
-    email = emailResult.email;
-  }
-  const owner = findByEmail(email);
   if (owner && owner.id !== current.id) {
-    return { ok: false, error: "EMAIL_ALREADY_USED" };
+    throw new Error("Email is already used");
   }
-  const user = update({ id: current.id, name, email });
-  return { ok: true, user };
+  let user;
+  try {
+    user = update({ id: current.id, name, email });
+  } catch {
+    throw new Error("Could not update the user");
+  }
+  return toUser(user);
 }
