@@ -11,7 +11,7 @@
 
 ## Scenarios
 
-| ID | Given | When | Then |
-|---|---|---|---|
-| LU-1 | no users | list | returns `[]` |
+| ID   | Given                         | When | Then                      |
+| ---- | ----------------------------- | ---- | ------------------------- |
+| LU-1 | no users                      | list | returns `[]`              |
 | LU-2 | users `Ana` (1) and `Bob` (2) | list | returns both, `Ana` first |

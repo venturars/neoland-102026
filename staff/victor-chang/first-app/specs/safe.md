@@ -13,9 +13,9 @@
 
 ## Scenarios
 
-| ID | Given | When | Then |
-|---|---|---|---|
-| SQ-1 | a function returning `42` | call the wrapped function | returns `42` |
-| SQ-2 | a function throwing `NotFoundError` | call it | the same `NotFoundError` is thrown |
-| SQ-3 | user with email `a@x.com` | `insertUser` with `a@x.com` directly (skipping logic) | throws `DUPLICATE`, details `{ field: 'email', value: 'a@x.com' }`, has `cause` |
-| SQ-4 | the `users` table was dropped | `findAllUsers` | throws `SYSTEM`, message `database error`, has `cause` |
+| ID   | Given                               | When                                                  | Then                                                                            |
+| ---- | ----------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------- |
+| SQ-1 | a function returning `42`           | call the wrapped function                             | returns `42`                                                                    |
+| SQ-2 | a function throwing `NotFoundError` | call it                                               | the same `NotFoundError` is thrown                                              |
+| SQ-3 | user with email `a@x.com`           | `insertUser` with `a@x.com` directly (skipping logic) | throws `DUPLICATE`, details `{ field: 'email', value: 'a@x.com' }`, has `cause` |
+| SQ-4 | the `users` table was dropped       | `findAllUsers`                                        | throws `SYSTEM`, message `database error`, has `cause`                          |
