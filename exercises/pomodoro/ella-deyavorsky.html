@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Focus · Pomodoro</title>
+  <style>
+    /* Color tokens. Dark theme (default): soft "editor" colors, easy on the eyes at night */
+    :root {
+      color-scheme: dark;
+      --bg: #1e2127; --panel: #282c34; --bar: #21252b; --line: #3a3f4b;
+      --text: #d7dae0; --muted: #9da5b4; --on-accent: #1e2127;
+      --focus: #98c379; --short: #61afef; --long: #c678dd; /* green, blue, purple */
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    /* Light theme: same layout, darker accents so text keeps good contrast */
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #eceff3; --panel: #fafafa; --bar: #f0f1f3; --line: #d4d7dd;
+      --text: #383a42; --muted: #5c6370; --on-accent: #ffffff;
+      --focus: #3f7d3c; --short: #2f62c9; --long: #a626a4;
+    }
+    /* The accent color follows the current phase */
+    body { --accent: var(--focus); }
+    body[data-phase="short"] { --accent: var(--short); }
+    body[data-phase="long"]  { --accent: var(--long); }
+
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+
+    body {
+      margin: 0; min-height: 100vh; padding: 16px;
+      display: grid; place-items: center;
+      background: var(--bg); color: var(--text);
+      font: 16px/1.5 var(--sans);
+    }
+
+    .editor {
+      width: 100%; max-width: 520px; overflow: hidden;
+      background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+      box-shadow: 0 12px 40px rgb(0 0 0 / 0.25);
+    }
+
+    /* Fake title bar with three window dots + theme switch */
+    .titlebar {
+      display: flex; align-items: center; gap: 12px; padding: 8px 14px;
+      background: var(--bar); border-bottom: 1px solid var(--line);
+    }
+    #theme { flex: none; margin-left: auto; min-height: 36px; padding: 4px 10px; font-size: 0.85rem; }
+    .dots { display: flex; gap: 6px; }
+    .dots i { width: 11px; height: 11px; border-radius: 50%; background: var(--line); }
+    h1 { margin: 0; font: 500 0.85rem var(--mono); color: var(--muted); }
+
+    .screen { padding: 24px 20px 8px; text-align: center; }
+    .screen p { margin: 0 0 12px; }
+
+    .phase { font: 1rem var(--mono); color: var(--accent); }
+    .time {
+      font: 600 clamp(3.5rem, 18vw, 6rem)/1 var(--mono);
+      font-variant-numeric: tabular-nums; /* digits don't jump around */
+      letter-spacing: 0.02em;
+    }
+    .counter { font-family: var(--mono); color: var(--muted); }
+    .counter strong { color: var(--accent); }
+    .tip { color: var(--muted); min-height: 3em; }
+
+    /* End-of-phase message */
+    .notice {
+      padding: 10px 14px; border-left: 3px solid var(--accent);
+      background: var(--bar); font-family: var(--mono); text-align: left;
+    }
+
+    /* Buttons: wrap on small screens, big enough to tap */
+    .controls { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 20px 24px; }
+    button {
+      flex: 1 1 auto;               /* width follows the content */
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      white-space: nowrap;          /* icon + text always on one line */
+      min-height: 44px; padding: 8px 12px;
+      font: 600 0.95rem var(--mono); color: var(--text); cursor: pointer;
+      background: var(--bar); border: 1px solid var(--line); border-radius: 6px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    button:hover:not(:disabled) { border-color: var(--accent); }
+    #play { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    /* Clear keyboard focus ring */
+    button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+<body data-phase="focus">
+  <main class="editor" aria-labelledby="app-title">
+    <!-- Fake editor title bar (decorative) -->
+    <header class="titlebar">
+      <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <h1 id="app-title">pomodoro.js</h1>
+      <button id="theme" type="button">☀&#xFE0E; Light</button>
+    </header>
+
+    <section class="screen">
+      <p id="phase" class="phase">// focus</p>
+      <p id="time" class="time" role="timer" aria-live="off">25:00</p>
+      <p id="counter" class="counter">Pomodoros: <strong>0</strong></p>
+      <p id="tip" class="tip">Phone face down, out of reach. Your code needs you.</p>
+      <p id="notice" class="notice" role="status" aria-live="polite" hidden></p>
+    </section>
+
+    <!-- Controls: real buttons, so they work with Tab + Enter/Space -->
+    <div class="controls" role="group" aria-label="Timer controls">
+      <button id="play" type="button"><span aria-hidden="true">▶&#xFE0E;</span> Play</button>
+      <button id="pause" type="button" disabled><span aria-hidden="true">❚❚</span> Pause</button>
+      <button id="next" type="button"><span aria-hidden="true">⏭&#xFE0E;</span> Next</button>
+      <button id="reset" type="button"><span aria-hidden="true">↺</span> Reset</button>
+      <button id="end" type="button"><span aria-hidden="true">■</span> End</button>
+    </div>
+  </main>
+
+  <script>
+    // ===== 1. Settings (constants never change) =====
+    // Length of each phase, in seconds
+    const DURATIONS = { focus: 25 * 60, short: 5 * 60, long: 15 * 60 };
+    const LABELS = { focus: 'Focus', short: 'Short break', long: 'Long break' };
+
+    // Messages shown under the timer
+    const FOCUS_TIPS = [
+      'Phone face down, out of reach. Your code needs you.',
+      'One task, one tab. Notifications can wait 25 minutes.',
+      'Bugs fear focused developers. Keep going.',
+      'Small commits, steady progress. You got this.'
+    ];
+    const BREAK_TIPS = [
+      'Stand up and stretch your arms and back.',
+      'Drink a glass of water.',
+      'Look at something 6 meters away for 20 seconds.',
+      'Roll your shoulders and relax your jaw.'
+    ];
+    const FUN_TIPS = [
+      'Explain your bug to a plant. Rubber duck rules apply.',
+      'Do 5 squats. Name each one after a semicolon you forgot.',
+      'Walk to the window and wave at a pigeon.'
+    ];
+
+    // ===== 2. Pure helper functions (same input -> same output) =====
+    // Pick one item from a list, using a random number between 0 and 1
+    const pick = (list, rand) => list[Math.floor(rand * list.length)];
+
+    // Choose a tip for a phase. During breaks, about 1 time in 4 it's a funny one.
+    const pickTip = (phase, rand) => {
+      if (phase === 'focus') return pick(FOCUS_TIPS, rand);
+      return rand < 0.25 ? pick(FUN_TIPS, rand * 4) : pick(BREAK_TIPS, (rand - 0.25) / 0.75);
+    };
+
+    // Turn seconds into "mm:ss", e.g. 1500 -> "25:00"
+    const formatTime = (seconds) => {
+      const mm = String(Math.floor(seconds / 60)).padStart(2, '0');
+      const ss = String(seconds % 60).padStart(2, '0');
+      return mm + ':' + ss;
+    };
+
+    // ===== 3. State: ONE object that describes everything on screen =====
+    const initialState = () => ({
+      phase: 'focus',              // 'focus' | 'short' | 'long'
+      remaining: DURATIONS.focus,  // seconds left in this phase
+      theme: matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark', // follows the system at first
+      running: false,              // is the timer counting down?
+      endsAt: 0,                   // while running: clock time (ms) when the phase ends
+      count: 0,                    // completed focus sessions
+      tip: pickTip('focus', Math.random()),
+      notice: ''                   // end-of-phase message ('' = hidden)
+    });
+
+    let state = initialState();
+
+    // ===== 4. Render: draw the page from the state =====
+    // Grab each element once
+    const el = (id) => document.getElementById(id);
+    const ui = {
+      phase: el('phase'), time: el('time'), count: el('counter').querySelector('strong'),
+      tip: el('tip'), notice: el('notice'), play: el('play'), pause: el('pause'), theme: el('theme')
+    };
+
+    // Tiny helpers: only touch the page when the value really changed (no useless DOM writes)
+    const setText = (node, text) => { if (node.textContent !== String(text)) node.textContent = text; };
+    const setAttr = (node, name, value) => { if (node.getAttribute(name) !== value) node.setAttribute(name, value); };
+    const setFlag = (node, name, on) => { if (node.hasAttribute(name) !== on) node.toggleAttribute(name, on); };
+
+    const render = (s) => {
+      const other = s.theme === 'dark' ? 'light' : 'dark';
+      setAttr(document.documentElement, 'data-theme', s.theme); // switches the color tokens (CSS)
+      setText(ui.theme, other === 'light' ? '☀︎ Light' : '☾ Dark'); // shows the OTHER theme
+      setAttr(ui.theme, 'aria-label', 'Switch to ' + other + ' theme');
+      setAttr(document.body, 'data-phase', s.phase);           // switches the accent color (CSS)
+      const title = LABELS[s.phase] + ' · Pomodoro';            // tab title: phase only, no seconds
+      if (document.title !== title) document.title = title;     // so it changes only with the phase
+      setText(ui.phase, '// ' + LABELS[s.phase].toLowerCase());
+      setText(ui.time, formatTime(s.remaining));
+      setText(ui.count, s.count);
+      setText(ui.tip, s.tip);
+      setText(ui.notice, s.notice);
+      setFlag(ui.notice, 'hidden', s.notice === '');
+      setFlag(ui.play, 'disabled', s.running);                  // can't play twice
+      setFlag(ui.pause, 'disabled', !s.running);                // can't pause if stopped
+    };
+
+    // The ONLY place where the state changes: swap in a new object, then redraw
+    const setState = (next) => {
+      state = next;
+      render(state);
+    };
+
+    // ===== 5. Pure transitions: take a state, return a NEW state =====
+    // Which phase comes next? Every 4th completed focus earns a long break.
+    const nextPhase = (phase, count) =>
+      phase !== 'focus' ? 'focus' : (count > 0 && count % 4 === 0 ? 'long' : 'short');
+
+    // Jump to a phase, full duration, paused
+    const goTo = (s, phase, rand) =>
+      ({ ...s, phase, remaining: DURATIONS[phase], running: false, tip: pickTip(phase, rand) });
+
+    // Start or resume: remember WHEN the phase will end (stays correct even if the tab sleeps)
+    const start = (s, now) => ({ ...s, running: true, notice: '', endsAt: now + s.remaining * 1000 });
+    const pause = (s) => ({ ...s, running: false });
+    const resetPhase = (s, now) =>
+      ({ ...s, remaining: DURATIONS[s.phase], endsAt: now + DURATIONS[s.phase] * 1000, notice: '' });
+
+    // A phase finished: count it (if focus), move on, and show a message
+    const finishPhase = (s, rand) => {
+      const count = s.phase === 'focus' ? s.count + 1 : s.count;
+      const notice = s.phase === 'focus'
+        ? '✔ Focus done! Pomodoro #' + count + '. Take your break, then press Play.'
+        : '☕ Break over. Press Play when you are ready to code.';
+      return { ...goTo({ ...s, count }, nextPhase(s.phase, count), rand), notice };
+    };
+
+    // Called every second: recompute time left from the end time
+    const tick = (s, now, rand) => {
+      const remaining = Math.max(0, Math.ceil((s.endsAt - now) / 1000));
+      return remaining > 0 ? { ...s, remaining } : finishPhase(s, rand);
+    };
+
+    // ===== 6. Side effects: the interval and the sound live outside the state =====
+    let timerId = null; // id of the running setInterval, so we can stop it
+    let audio = null;   // sound engine, created on the first click (browsers require a click)
+
+    const stopTimer = () => { clearInterval(timerId); timerId = null; };
+
+    // Soft two-note chime made with the Web Audio API (no sound file needed)
+    const playChime = () => {
+      if (!audio) return;
+      [660, 880].forEach((freq, i) => {
+        const t = audio.currentTime + i * 0.25;      // second note starts a bit later
+        const osc = audio.createOscillator();        // makes the tone
+        const gain = audio.createGain();             // controls the volume
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.exponentialRampToValueAtTime(0.15, t + 0.03); // quick, quiet fade in
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.9); // slow fade out
+        osc.connect(gain).connect(audio.destination);
+        osc.start(t);
+        osc.stop(t + 1);
+      });
+    };
+
+    // ===== 7. Event handlers: small functions, one per button =====
+    const onTick = () => {
+      setState(tick(state, Date.now(), Math.random()));
+      if (!state.running) { stopTimer(); playChime(); } // the phase just ended
+    };
+    const onPlay = () => {
+      audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+      setState(start(state, Date.now()));
+      timerId = setInterval(onTick, 1000);
+    };
+    const onPause = () => { stopTimer(); setState(pause(state)); };
+    const onNext = () => {
+      stopTimer();
+      setState({ ...goTo(state, nextPhase(state.phase, state.count), Math.random()), notice: '' });
+    };
+    const onReset = () => setState(resetPhase(state, Date.now())); // keeps running if it was
+    const onEnd = () => { stopTimer(); setState({ ...initialState(), theme: state.theme }); }; // keep the theme
+    const onTheme = () => setState({ ...state, theme: state.theme === 'dark' ? 'light' : 'dark' });
+
+    ui.play.addEventListener('click', onPlay);
+    ui.pause.addEventListener('click', onPause);
+    el('next').addEventListener('click', onNext);
+    el('reset').addEventListener('click', onReset);
+    el('end').addEventListener('click', onEnd);
+    ui.theme.addEventListener('click', onTheme);
+
+    render(state); // first draw
+  </script>
+</body>
+</html>
