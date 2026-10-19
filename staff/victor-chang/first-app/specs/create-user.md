@@ -8,8 +8,8 @@
 
 1. `name` is required: a string that is not empty after trimming.
 2. `email` is required: a string containing `@`.
-3. `name` and `email` are stored trimmed.
-4. `email` is unique across all users.
+3. `name` and `email` are stored trimmed; `email` is also stored in lowercase.
+4. `email` is unique across all users, ignoring case.
 5. `id` is assigned by the database.
 
 ## Scenarios
@@ -23,3 +23,5 @@
 | CU-5 | no users                    | create with email `'ana.x.com'`                    | throws `VALIDATION`, details `{ field: 'email' }`                                   |
 | CU-6 | no users                    | create with empty name **and** bad email           | throws `VALIDATION`, details `{ field: 'name' }` (first failing field)              |
 | CU-7 | user with email `ana@x.com` | create another with `ana@x.com`                    | throws `DUPLICATE`, details `{ field: 'email', value: 'ana@x.com' }`; no user added |
+| CU-8 | no users                    | create with email `' Ana@X.com '`                  | returns email `'ana@x.com'`                                                         |
+| CU-9 | user with email `ana@x.com` | create another with `ANA@x.com`                    | throws `DUPLICATE`, details `{ field: 'email', value: 'ana@x.com' }`                |

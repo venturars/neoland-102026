@@ -54,3 +54,14 @@ test("UU-6: rejects an email owned by another user and changes nothing", () => {
   );
   assert.deepEqual(queries.findUserById(2), { id: 2, ...BOB });
 });
+
+test("UU-7: rejects another user's email in another case", () => {
+  const { queries } = createTestQueries(ANA, BOB);
+  assert.throws(
+    () => updateUser(queries)(2, { name: "Bob", email: "ANA@x.com" }),
+    {
+      code: "DUPLICATE",
+      details: { field: "email", value: "ana@x.com" },
+    },
+  );
+});

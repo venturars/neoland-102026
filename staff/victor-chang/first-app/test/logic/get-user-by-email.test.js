@@ -31,9 +31,7 @@ test("GE-4: rejects an invalid email", () => {
   });
 });
 
-test("GE-5: matches the email exactly", () => {
+test("GE-6: ignores case when matching", () => {
   const { queries } = createTestQueries(ANA);
-  assert.throws(() => getUserByEmail(queries)("ANA@x.com"), {
-    code: "NOT_FOUND",
-  });
+  assert.deepEqual(getUserByEmail(queries)("ANA@X.com"), { id: 1, ...ANA });
 });

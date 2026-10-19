@@ -58,3 +58,22 @@ test("CU-7: rejects a duplicate email and adds nothing", () => {
   );
   assert.equal(queries.findAllUsers().length, 1);
 });
+
+test("CU-8: stores the email in lowercase", () => {
+  const { queries } = createTestQueries();
+  assert.equal(
+    createUser(queries)({ name: "Ana", email: " Ana@X.com " }).email,
+    "ana@x.com",
+  );
+});
+
+test("CU-9: rejects a duplicate email in another case", () => {
+  const { queries } = createTestQueries(ANA);
+  assert.throws(
+    () => createUser(queries)({ name: "Ana", email: "ANA@x.com" }),
+    {
+      code: "DUPLICATE",
+      details: { field: "email", value: "ana@x.com" },
+    },
+  );
+});

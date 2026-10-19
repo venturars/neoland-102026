@@ -6,8 +6,8 @@
 
 ## Rules
 
-1. `email` is validated like in [createUser](create-user.md) rule 2 and trimmed before the lookup.
-2. The match is exact: same characters, same case.
+1. `email` is validated and normalized (trimmed, lowercased) like in [createUser](create-user.md) rules 2–3 before the lookup.
+2. The match ignores case: `ANA@x.com` finds `ana@x.com`.
 3. A missing user is an error, never `null`.
 
 ## Scenarios
@@ -18,4 +18,4 @@
 | GE-2 | user 1 `Ana`, `ana@x.com` | get by `'  ana@x.com  '` | returns user 1 (input is trimmed)                                         |
 | GE-3 | no users                  | get by `nobody@x.com`    | throws `NOT_FOUND`, details `{ resource: 'user', email: 'nobody@x.com' }` |
 | GE-4 | —                         | get by `ana.x.com`       | throws `VALIDATION`, details `{ field: 'email' }`                         |
-| GE-5 | user 1 `Ana`, `ana@x.com` | get by `ANA@x.com`       | throws `NOT_FOUND` (match is exact)                                       |
+| GE-6 | user 1 `Ana`, `ana@x.com` | get by `ANA@X.com`       | returns user 1 (match ignores case)                                       |
