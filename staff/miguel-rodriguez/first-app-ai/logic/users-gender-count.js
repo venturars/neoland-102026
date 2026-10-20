@@ -39,7 +39,7 @@ export async function usersGenderCount() {
           { role: 'assistant', content: 'men' },
           { role: 'user', content: 'Kim' },
           { role: 'assistant', content: 'undefined' },
-          { role: 'user', content: batch.map(user => user.name).join('\n') },
+          { role: 'user', content: 'Classify the following names in order. Follow the demonstrated labels consistently. Use undefined when a name is ambiguous or you are uncertain. Return one classification per name. Use undefined for names commonly used by more than one gender, including shortened forms shared across genders, even when one association is more common. Do not choose a category merely because it is the most likely.\n\n' + batch.map(user => user.name).join('\n') },
         ],
         response_format: {
           type: 'json_schema',

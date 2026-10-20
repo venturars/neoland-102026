@@ -16,6 +16,8 @@ Return one result containing exactly three nonnegative whole-number counts:
 - `men`: contacts whose names are classified as men.
 - `genderUndefined`: contacts whose classification is uncertain, ambiguous, or unavailable.
 
+Clarification approved by Miguel on 2026-10-20: names commonly used by more than one gender, including shortened forms shared across genders, count as undefined even when one association is more common. Do not select a category merely because it is most likely.
+
 Each contact contributes to exactly one category. The three counts must sum to the number of saved contacts being classified. With no saved contacts, all three counts are zero.
 
 The feature runs locally without a paid AI service. The result is displayed only; all saved contacts and their creation and update timestamps remain unchanged, including on failure.

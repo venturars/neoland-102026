@@ -42,7 +42,15 @@ Each batch is one request containing exactly these five few-shot user/assistant 
 | Pablo | men |
 | Kim | undefined |
 
-Each few-shot pair uses the name as plain user-message content and its plain label as assistant-message content. Keep the five pairs above in order. Follow the examples with one user message containing that batch's names, one name per line. The example pairs are messages inside the batch request, not separate API requests. Uncertain or ambiguous classifications count as `undefined`.
+Each few-shot pair uses the name as plain user-message content and its plain label as assistant-message content. Keep the five pairs above in order. Amendment approved by Miguel on 2026-10-20: follow the examples with one user message containing this exact instruction:
+
+```text
+Classify the following names in order. Follow the demonstrated labels consistently. Use undefined when a name is ambiguous or you are uncertain. Return one classification per name. Use undefined for names commonly used by more than one gender, including shortened forms shared across genders, even when one association is more common. Do not choose a category merely because it is the most likely.
+```
+
+Business-rule clarification approved by Miguel on 2026-10-20: shared-gender names and shortened forms count as undefined even when one association is more common; likelihood alone must not decide the category. The final-message text above includes the exact approved instruction.
+
+Follow the instruction with a blank line and the batch's names, one per line. The example pairs are messages inside the batch request, not separate API requests. Uncertain or ambiguous classifications count as `undefined`.
 
 Use `response_format` with `json_schema`: an object containing only the required `genders` property, an array of strings whose allowed values are `women`, `men`, and `undefined`; disallow additional object properties. Request one entry per supplied name in the same order.
 

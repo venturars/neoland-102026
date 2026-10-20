@@ -69,3 +69,45 @@ Status: classifier implemented and verified with the real local model. One envir
 - Environment remained Node `v24.12.0`, installed SDK `7.39.0`, model `llama3.2`, and Ollama `0.40.6`. No dependencies were changed or installed for this amendment.
 - Real unavailable-service verification remains outstanding. The running Ollama service was not stopped or changed. Controlled failures do not replace that unrun check.
 - The disposable copy and verification artifacts were removed. Working data was preserved; no working-project database was created. No changes to other operations, SQL, dependencies, or configuration; no Git commands.
+
+## Final-message instruction amendment — 2026-10-20
+
+- Miguel approved prepending the exact task instruction recorded in the amended plan, followed by a blank line and newline-separated batch names. Only the final user-message content changed in the implementation. The five example pairs, eleven-message total, absence of a system message, model/SDK/endpoint/temperature/schema, batching, parsing, counting, and errors were preserved. No hardcoded classifications or count corrections.
+- Commands: `node --check logic/users-gender-count.js`; temporary Python verification harness using `node --input-type=module` assertions; actual classifier heredocs through `/bin/zsh` with a temporary diagnostic preload. Verification ran only in disposable copies using existing installed dependencies. The preload recorded real SDK responses and forwarded requests unchanged; it was not added to the application.
+- Controlled checks passed: exact instruction text plus `\n\n` and ordered names; unchanged five example pairs; exactly eleven messages and six/six/one batches for thirteen contacts; empty data makes no request; unchanged local connection, model, temperature, and full schema; exact result shape/counts; individual fallback; missing/unreadable/malformed/wrong-length response fallback with continuation; first/later request and database errors; unchanged records/timestamps.
+- Real local Ollama: ran the actual terminal client three times with the ten fictional contacts in this order: Carmen, Lucia, Elena, Maria, Javier, Pablo, Mateo, Alex, Kim, Sam. Each run contained two batches of six and four contacts. Captured response contents had the following arrays in all three runs:
+  - Batch 1: `{"genders":["women","women","women","women","men","men"]}`.
+  - Batch 2: `{"genders":["men","men","undefined","men"]}`.
+- Observed labels in each run: Carmen/Lucia/Elena/Maria → women; Javier/Pablo/Mateo/Alex/Sam → men; Kim → undefined. Each actual client printed `{ women: 4, men: 5, genderUndefined: 1 }`, total 10. Each run agreed with 8 of the 10 intended demo labels. Alex and Sam differed from the intended undefined labels. The acceptance target `{ women: 4, men: 3, genderUndefined: 3 }` was met in 0 of 3 runs.
+- Separate real Kim-only execution used the same amended message, examples, and schema. Raw content: `{ "genders": ["undefined"] }`. Actual client result: `{ women: 0, men: 0, genderUndefined: 1 }`.
+- Result: the amendment improved the observed Lucia/Kim behavior compared with the prior diagnosis, but did not meet the ten-contact acceptance target in these trials. No further correction was attempted. These observed guesses do not verify identities or guarantee repeatability.
+- Every real run's returned counts were independently compared with its response-position labels. All records and timestamps were unchanged. The temporary database, diagnostic preload, and copied project were removed. Working data was preserved. No dependencies, models, services, other operations, SQL, or configuration changed; no Git commands.
+- Real unavailable-service verification remains outstanding. The running service was not stopped or changed, and controlled request failures do not replace that check.
+
+## Shared-gender-name clarification — 2026-10-20
+
+- Miguel approved the business clarification: names commonly used by more than one gender, including shared shortened forms, count as undefined even when one association is more common; likelihood alone must not determine a category. Recorded this in the specification and plan and appended exactly the approved instruction to the final user message before its blank line and batch names. Preserved the original instruction, five example pairs, eleven messages, model/SDK/endpoint/temperature/schema, batching, parsing, counting, and errors. No hardcoded names or label/count overrides.
+- Commands: `node --check logic/users-gender-count.js`; temporary Python harness using `node --input-type=module` controlled assertions; actual terminal heredocs through `/bin/zsh` with a disposable diagnostic preload forwarding requests unchanged to real local Ollama. No packages, models, tools, or services were installed or changed.
+- Controlled checks passed: exact amended instruction/blank line/names; unchanged ordered examples and eleven-message count; thirteen contacts in six/six/one batches; unchanged request settings/schema; zero requests for empty data; exact counting, individual unknown-value fallback, malformed/missing/unreadable/non-array/wrong-length response fallbacks, continuation, first/later request failure, database failure, and unchanged records/timestamps.
+- Real ten-contact runs 1, 2, and 3 each returned the same captured label arrays:
+  - Batch 1 (Carmen, Lucia, Elena, Maria, Javier, Pablo): `["women","women","women","women","men","men"]`.
+  - Batch 2 (Mateo, Alex, Kim, Sam): `["men","men","undefined","undefined"]`.
+- Each actual client result was `{ women: 4, men: 4, genderUndefined: 2 }`, total 10. Each run agreed with 9/10 intended demo labels. Alex was labeled men instead of undefined. Acceptance target `{ women: 4, men: 3, genderUndefined: 3 }` was met in 0/3 runs. No prompt retries or further changes were made to obtain a passing result.
+- Separate individual real-client checks captured these raw contents:
+  - Alex: `{ "genders" : ["men", "women"] }`.
+  - Kim: `{ "genders" : ["men", "women", "undefined"] }`.
+  - Sam: `{ "genders" : ["men", "women"] }`.
+- Each individual request contained one name but received multiple labels. All three therefore triggered the existing entire-batch length-mismatch fallback and printed `{ women: 0, men: 0, genderUndefined: 1 }`. These are fallback outcomes, not evidence that the model returned one correct undefined label. Raw response arrays were not overridden or repaired.
+- Counts were independently reconciled with raw response positions and the approved fallback rules. All temporary records and timestamps were unchanged by successful or failed classifications. The disposable project, database, and diagnostic preload were removed; working data was preserved.
+- Outcome: controlled behavior passed, but the real-model acceptance target remains unmet and individual responses violated the required result length. Stopped for review without further changes. No claim of perfect accuracy or verified gender identities.
+- Real unavailable-service verification remains outstanding; controlled failures do not replace it. No Git or publishing actions.
+
+## Final status accepted by Miguel — 2026-10-20
+
+- Implementation, controlled checks, and existing-operation checks passed.
+- The latest ten-contact evaluation consistently returned 4 women, 4 men, and 2 undefined: 9/10 agreement with the intended demo labels.
+- The intended 4/3/3 classification target failed in all three runs. Acceptance of the learning-exercise limitation does not mean this target passed.
+- Individual ambiguous-name requests returned multiple labels; the length-mismatch fallback handled them correctly.
+- Reliable ambiguity classification remains a known model limitation accepted for this learning exercise.
+- Real unavailable-service verification remains outstanding.
+- No further model or prompt changes are authorized. The specification, intended outcomes, and previous evidence remain unchanged.
