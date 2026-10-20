@@ -13,7 +13,6 @@ Cumple `docs/specs/buscar-por-id/spec.md`. Aquí el encaje en first-app.
 - Cambiar email por id: `parseEmail`/`findByEmail` → `parseId`/`findById`.
 - `clients/terminal/find-user-by-id.txt` (copia el de email, llama
   `findUserById(1)`).
-- Tests en `tests/users.test.js`.
 
 ## Errores (inglés, como el resto de la app)
 - `Invalid id` — antes de SQLite

@@ -10,20 +10,20 @@ Ningún código de una funcionalidad nueva se escribe antes de spec, plan y task
 
 Por cada funcionalidad nueva se crea una carpeta nueva en `docs/specs/` con `spec.md`, `plan.md` y `tasks.md`. No se sobrescriben.
 
-- **spec** — solo lógica de producto (qué ve quien usa la app, few-shot). Sin nombres de ficheros ni `npm`.
+- **spec** — solo lógica de producto (qué ve quien usa la app, few-shot). Sin nombres de ficheros ni `pnpm`.
 - **plan** — cómo se encaja aquí: funciones y ficheros. No copiar el spec entero.
 - **tasks** — pasos de trabajo, en orden.
 
-No hay loop (no repetir solo hasta que pase el test). Una persona lee spec → plan → tasks y luego se implementa.
+No hay loop. Una persona lee spec → plan → tasks y luego se implementa.
 
 1. Constitución — este archivo.
 2. `docs/specs/<nombre>/spec.md`
 3. Revisión humana de la spec.
 4. `plan.md` y `tasks.md` en esa misma carpeta.
 5. Implementación.
-6. `npm test` y el snippet de `clients/terminal/` de esa acción.
+6. El snippet de `clients/terminal/` de esa acción.
 
-Los dos (tests y snippet) son obligatorios. No vale uno solo. Paquete: **npm**, no pnpm.
+El snippet es obligatorio. Paquete: **pnpm**, no npm.
 
 ## Carpetas
 
@@ -33,13 +33,12 @@ first-app/
   queries/            Solo SQL. Nada de "¿este email es válido?"
   logic/              Las reglas. Un fichero por acción.
   clients/terminal/   Texto que pegas para probar cada acción.
-  tests/              Tests automáticos con una base temporal.
   docs/               Constitución y specs (una carpeta por función).
   AGENTS.md           Cómo debe trabajar Cursor en esta carpeta.
   package.json
 ```
 
-- `db/connection.js` es la única conexión. El fichero en disco es `db/users.sqlite`. No se sube a git. Los tests pueden usar `USERS_DB_PATH` hacia un fichero temporal para no tocar mis datos reales.
+- `db/connection.js` es la única conexión. El fichero en disco es `db/users.sqlite`. No se sube a git.
 - `queries/users.js` ejecuta el SQL. Las sentencias están en `queries/queries/*.sql` (crear tabla, buscar, insertar, actualizar, borrar, listar).
 - `logic/` es la app. Cada acción es su propio fichero. `user-fields.js` guarda las comprobaciones compartidas de nombre, email e id para que create/update/find sean iguales.
 - `clients/terminal/*.txt` no son programas. Se pegan con el directorio actual en `first-app`.
@@ -129,4 +128,4 @@ Si falla SQLite:
 6. Recuento de géneros (`docs/specs/classifier/`; todas las personas; salida: tres números).
 7. Borrar y volver a listar.
 
-Después de cada acción: snippet de terminal y `npm test`.
+Después de cada acción: snippet de terminal.

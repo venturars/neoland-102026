@@ -15,14 +15,13 @@ Por cada funcionalidad: carpeta nueva `docs/specs/<nombre>/` (`spec.md`, `plan.m
 3. Revisión.
 4. Plan y tasks.
 5. Código.
-6. `npm test` y el snippet de terminal.
+6. El snippet de terminal.
 
-Los dos son obligatorios. Usa **npm**, no pnpm. Un logic ya creado no se reemplaza.
+El snippet es obligatorio. Usa **pnpm**, no npm. Un logic ya creado no se reemplaza.
 
 ## Comandos
 
 - No hay script de arranque. Las funcionalidades se prueban pegando `clients/terminal/*.txt` desde dentro de `first-app`.
-- Tests: `npm test`. Usan una base temporal. No deben cambiar `db/users.sqlite`.
 - Formato: Prettier normal (comillas dobles, punto y coma, coma final, 2 espacios, ancho 80).
 
 ## Cómo escribir código aquí
@@ -38,10 +37,8 @@ Los dos son obligatorios. Usa **npm**, no pnpm. Un logic ya creado no se reempla
 - Sigue `docs/CONSTITUTIONS.md`. No inventes una segunda base de datos ni otro estilo de errores.
 - Parece al código actual. Si una tarea se parece a create-user, copia ese patrón.
 - Si la constitución, este archivo, una spec y el código no coinciden, para y pregunta cuál seguir. No elijas un lado en silencio.
-- No digas que algo funciona si no has ejecutado `npm test` y el snippet de terminal.
+- No digas que algo funciona si no has ejecutado el snippet de terminal.
 
 ## Cuando una tarea está terminada
 
-Solo si hubo spec aprobada, plan, código, y luego:
-- snippet en `clients/terminal/` ejecutado, y
-- `npm test` en verde.
+Solo si hubo spec aprobada, plan, código, y luego el snippet en `clients/terminal/` ejecutado.

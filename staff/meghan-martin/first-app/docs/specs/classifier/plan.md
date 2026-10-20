@@ -39,7 +39,6 @@ va en las instrucciones: Carmen, Lucia, Javier, Pablo, Kim.
   `genderUndefined`.
 - `clients/terminal/users-gender-count.txt` hace `console.log`
   del recuento.
-- `tests/users.test.js` sustituye `fetch` (sin Ollama en `npm test`).
 
 ## No tocar
 
