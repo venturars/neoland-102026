@@ -1,21 +1,20 @@
 import { findById, remove } from "../queries/users.js";
 
-// Remove one user. Returns nothing.
-export function deleteUser(id) {
+export function deleteUser({ id }) {
   let currentUser;
   try {
     currentUser = findById(id);
   } catch {
-    throw new Error("DATABASE_ERROR");
+    throw new Error("The database failed.");
   }
 
   if (currentUser === undefined || currentUser === null) {
-    throw new Error("USER_NOT_FOUND");
+    throw new Error("No user was found.");
   }
 
   try {
     remove(currentUser.id);
   } catch {
-    throw new Error("DATABASE_ERROR");
+    throw new Error("The database failed.");
   }
 }

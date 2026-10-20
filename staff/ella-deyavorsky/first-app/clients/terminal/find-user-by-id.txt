@@ -2,7 +2,7 @@
 node --input-type=module <<'EOF'
 import { findUserById } from "./logic/find-user-by-id.js";
 
-const result = findUserById(9);
+const result = findUserById({ id: 9 });
 
 console.log(result);
 EOF

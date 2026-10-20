@@ -2,7 +2,7 @@
 node --input-type=module <<'EOF'
 import { updateUser } from "./logic/update-user.js";
 
-const result = updateUser(9, "Adi", "ado@example.com");
+const result = updateUser({ id: 9, name: "Adi", email: "ado@example.com" });
 
 console.log(result);
 EOF

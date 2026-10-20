@@ -36,6 +36,7 @@ The active spec is the approved description of the feature you are building now.
 - In SQL, pass values with a name, as in `:email`. Do not use `?`.
 - A new query is a new `.sql` file in `queries/queries/` plus a function in `queries/users.js`. The names follow `docs/CONSTITUTIONS.md`. The SQL string stays in the `.sql` file.
 - Leave short comments that help a junior developer understand what the code does. Write them in simple words, next to the step they explain. Skip comments that only repeat the line.
+- Before finishing a change in `logic/`, check it against the inputs and errors in `docs/CONSTITUTIONS.md`.
 
 Code must read from top to bottom. Use `if` checks, and names that say what they do.
 

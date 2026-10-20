@@ -7,7 +7,7 @@ This app is for learning two things:
 - Application logic: the rules that decide what is allowed.
 - Spec-driven development (SDD): write the rules first, then write the code that follows them.
 
-The app manages users. You can create a user, list users, find a user by email, update a user, and delete a user.
+The app manages users. You can create a user, list users, find a user by email, find a user by id, update a user, and delete a user.
 
 ## Tree
 
@@ -27,7 +27,7 @@ first-app/
 - `logic/` decides if an action is allowed. It does not contain SQL.
 - `queries/users.js` talks to the database. It does not decide if a name or an email is valid. The SQL text lives in `queries/queries/`.
 - `db/` contains `connection.js`, which opens the database, and `users.sqlite`, which stores the users.
-- `clients/terminal/` holds one `.txt` file per feature. You paste that file into the terminal while `first-app` is the current folder. The files are `create-users-table.txt`, `create-user.txt`, `list-users.txt`, `find-user-by-email.txt`, `update-user.txt`, and `delete-user.txt`.
+- `clients/terminal/` holds one `.txt` file per feature. You paste that file into the terminal while `first-app` is the current folder. The files are `create-users-table.txt`, `create-user.txt`, `list-users.txt`, `find-user-by-email.txt`, `find-user-by-id.txt`, `update-user.txt`, and `delete-user.txt`.
 - `docs/` holds this file.
 
 ## Database
@@ -57,38 +57,37 @@ Each action has its own file:
 - `logic/create-user.js`
 - `logic/list-users.js`
 - `logic/find-user-by-email.js`
+- `logic/find-user-by-id.js`
 - `logic/update-user.js`
 - `logic/delete-user.js`
 
 Each file exports one function. The function is built in this order:
 
-1. It receives separate parameters, such as `createUser(name, email)` or `deleteUser(id)`. It does not receive one object.
-2. It cleans the input. The name loses its surrounding spaces. The email loses its surrounding spaces and is put in lower case.
-3. It checks the input, without the database: `EMPTY_NAME`, `INVALID_EMAIL`, `NOTHING_TO_UPDATE`.
-4. It checks the business rules, with the queries it needs: `EMAIL_ALREADY_USED`, `USER_NOT_FOUND`.
+1. A function that takes input receives one object: `createUser({ name, email })`, `findUserByEmail({ email })`, `findUserById({ id })`, `updateUser({ id, name, email })`, or `deleteUser({ id })`. `listUsers()` takes nothing.
+2. It cleans the input by calling `.trim()` on the string directly: `name.trim()`, `email.trim().toLowerCase()`. It does not test the type first. If `name` or `email` is missing, the `TypeError` is expected. Do not catch it. In `updateUser`, a field that is `undefined` is not cleaned, because it keeps its current value.
+3. It checks the input, without the database: "The name is missing.", "The email is not valid.", "There is nothing to update."
+4. It checks the business rules, with the queries it needs: "This email is already used.", "No user was found."
 5. It applies the action with a function exported by `queries/users.js`.
 6. It returns the result: only `id`, `name`, `email`, `createdAt`, `updatedAt`. No SQLite object leaves `logic/`.
 
-There is no comment above the function to describe its input and output. The function signature says it.
-
-`updateUser(id, name, email)` can change the name, the email, or both. A field passed as `undefined` keeps its current value. If both are `undefined`, it throws `NOTHING_TO_UPDATE`.
+`updateUser({ id, name, email })` can change the name, the email, or both. A field passed as `undefined` keeps its current value. If both are `undefined`, it throws "There is nothing to update."
 
 A success returns the user directly, with `id`, `name`, `email`, `createdAt`, and `updatedAt`. List returns the array of users. Delete returns nothing. There is no `{ ok: true, user }` wrapper. A failure throws:
 
 ```js
-throw new Error("EMPTY_NAME");
+throw new Error("The name is missing.");
 ```
 
 ## Errors
 
-A failure throws a short code with `throw new Error("CODE")`. It is not returned inside an object.
+A failure throws an English sentence with `throw new Error(...)`. It is not returned inside an object. These are the only sentences:
 
-- `EMPTY_NAME` — the name is missing or only spaces.
-- `INVALID_EMAIL` — the email is not two parts around `@`, or it is 64 characters or longer.
-- `EMAIL_ALREADY_USED` — another user already has this email.
-- `USER_NOT_FOUND` — no user has this id, or no user has this email.
-- `NOTHING_TO_UPDATE` — an update was sent with no name and no email.
-- `DATABASE_ERROR` — SQLite failed. Every call to `queries/` is wrapped in try/catch and throws this code instead. The original SQLite message stays hidden.
+- "The name is missing." — the name is empty or only spaces.
+- "The email is not valid." — the email is not two parts around `@`, or it is 64 characters or longer.
+- "This email is already used." — another user already has this email.
+- "No user was found." — no user has this id, or no user has this email.
+- "There is nothing to update." — an update was sent with no name and no email.
+- "The database failed." — SQLite failed. Every call to `queries/` is wrapped in try/catch and throws this sentence instead. The original SQLite message stays hidden.
 
 A new failure is added to this list before it is used in code.
 

@@ -2,7 +2,7 @@
 node --input-type=module <<'EOF'
 import { createUser } from "./logic/create-user.js";
 
-const result = createUser("Ady", "ady@example.com");
+const result = createUser({ name: "Ady", email: "ady@example.com" });
 
 console.log(result);
 EOF
