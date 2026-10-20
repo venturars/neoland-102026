@@ -18,3 +18,10 @@ export class ConflictError extends Error {
     this.name = "ConflictError";
   }
 }
+
+export class DatabaseError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "DatabaseError";
+  }
+}

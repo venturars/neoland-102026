@@ -22,7 +22,7 @@ first-app/
 │           Fichero de la base. Lo crea la primera apertura. No se versiona.
 ├── logic/
 │   ├── errors.js
-│   │       Exporta ValidationError, NotFoundError y ConflictError. Cada una extiende Error y el constructor recibe message.
+│   │       Exporta ValidationError, NotFoundError, ConflictError y DatabaseError. Cada una extiende Error y el constructor recibe message.
 │   ├── create-user.js
 │   │       createUser(input). Lee name y email. Lanza ValidationError si el nombre está vacío o el email es inválido. Si el email ya existe, lanza ConflictError. Llama a insert y devuelve la fila. No abre la base.
 │   ├── update-user.js
@@ -117,9 +117,10 @@ El SQL no vive dentro de la función que lo ejecuta. Vive aparte.
 
 Los errores de entrada y de negocio salen de `logic/errors.js`. Ese fichero no exporta una función de negocio: exporta las clases. Cada una extiende `Error`. El constructor recibe `message` y asigna `this.name`. Pueden añadirse más clases en ese mismo fichero.
 
-- `ValidationError`: el dato de entrada no vale. Mensajes: `"Id is invalid"`, `"Name is invalid"`, `"Email is invalid"`.
-- `NotFoundError`: no hay fila. Mensaje: `"User is not found"` or `"Users are not found"`.
+- `ValidationError`: el dato de entrada no vale. Mensajes: `"Id is invalid"`, `"Name is empty"`, `"Email is invalid"`.
+- `NotFoundError`: no hay fila. Mensaje: `"User not found"`.
 - `ConflictError`: el email ya existe. Mensaje: `"Email is already used"`.
+- `DatabaseError`: SQLite lanzó y ese error no sale de `logic/`. Mensajes: `"Could not create the user"`, `"Could not update the user"`, `"Could not delete the user"`, `"Could not list the users"`, `"Could not find the user"`. `"Could not classify the users"` queda reservado para una función futura. Ninguna función lo lanza todavía.
 
 Una entrada o una regla de negocio que no llama a una query se comprueba con `if` y lanza esa clase con el mensaje. No va dentro de `try/catch`.
 

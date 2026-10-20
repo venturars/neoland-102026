@@ -1,4 +1,4 @@
-import { NotFoundError } from "./errors.js";
+import { DatabaseError } from "./errors.js";
 import { findAll } from "../queries/user.js";
 
 export function listUsers() {
@@ -7,7 +7,7 @@ export function listUsers() {
   try {
     rows = findAll();
   } catch (error) {
-    throw new NotFoundError("Users are not found");
+    throw new DatabaseError("Could not list the users");
   }
 
   const users = [];

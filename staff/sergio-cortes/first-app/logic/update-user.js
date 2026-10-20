@@ -1,4 +1,9 @@
-import { ConflictError, NotFoundError, ValidationError } from "./errors.js";
+import {
+  ConflictError,
+  DatabaseError,
+  NotFoundError,
+  ValidationError,
+} from "./errors.js";
 import { findByEmail, findById, update } from "../queries/user.js";
 
 export function updateUser(input) {
@@ -11,7 +16,7 @@ export function updateUser(input) {
   }
 
   if (typeof name !== "string" || name.trim() === "") {
-    throw new ValidationError("Name is invalid");
+    throw new ValidationError("Name is empty");
   }
 
   if (typeof email !== "string" || email.includes(" ")) {
@@ -37,11 +42,11 @@ export function updateUser(input) {
   try {
     current = findById(id);
   } catch (error) {
-    throw new NotFoundError("User is not found");
+    throw new DatabaseError("Could not update the user");
   }
 
   if (current === undefined) {
-    throw new NotFoundError("User is not found");
+    throw new NotFoundError("User not found");
   }
 
   let owner;
@@ -49,7 +54,7 @@ export function updateUser(input) {
   try {
     owner = findByEmail(email);
   } catch (error) {
-    throw new ConflictError("Email is already used");
+    throw new DatabaseError("Could not update the user");
   }
 
   if (owner !== undefined && owner.id !== id) {
@@ -61,11 +66,11 @@ export function updateUser(input) {
   try {
     user = update({ id, name, email });
   } catch (error) {
-    throw new ConflictError("Email is already used");
+    throw new DatabaseError("Could not update the user");
   }
 
   if (user === undefined) {
-    throw new NotFoundError("User is not found");
+    throw new NotFoundError("User not found");
   }
 
   return {

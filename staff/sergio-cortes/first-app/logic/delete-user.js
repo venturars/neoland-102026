@@ -1,4 +1,4 @@
-import { NotFoundError, ValidationError } from "./errors.js";
+import { DatabaseError, NotFoundError, ValidationError } from "./errors.js";
 import { findById, remove } from "../queries/user.js";
 
 export function deleteUser(id) {
@@ -11,17 +11,17 @@ export function deleteUser(id) {
   try {
     user = findById(id);
   } catch (error) {
-    throw new NotFoundError("User is not found");
+    throw new DatabaseError("Could not delete the user");
   }
 
   if (user === undefined) {
-    throw new NotFoundError("User is not found");
+    throw new NotFoundError("User not found");
   }
 
   try {
     remove(id);
   } catch (error) {
-    throw new NotFoundError("User is not found");
+    throw new DatabaseError("Could not delete the user");
   }
 
   return {

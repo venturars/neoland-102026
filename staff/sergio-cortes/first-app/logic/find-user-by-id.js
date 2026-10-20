@@ -1,4 +1,4 @@
-import { NotFoundError, ValidationError } from "./errors.js";
+import { DatabaseError, NotFoundError, ValidationError } from "./errors.js";
 import { findById } from "../queries/user.js";
 
 export function findUserById(id) {
@@ -11,11 +11,11 @@ export function findUserById(id) {
   try {
     user = findById(id);
   } catch (error) {
-    throw new NotFoundError("User is not found");
+    throw new DatabaseError("Could not find the user");
   }
 
   if (user === undefined) {
-    throw new NotFoundError("User is not found");
+    throw new NotFoundError("User not found");
   }
 
   return {
