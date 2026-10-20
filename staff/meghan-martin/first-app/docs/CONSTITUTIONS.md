@@ -40,7 +40,7 @@ first-app/
 
 - `db/connection.js` es la única conexión. El fichero en disco es `db/users.sqlite`. No se sube a git.
 - `queries/users.js` ejecuta el SQL. Las sentencias están en `queries/queries/*.sql` (crear tabla, buscar, insertar, actualizar, borrar, listar).
-- `logic/` es la app. Cada acción es su propio fichero. `user-fields.js` guarda las comprobaciones compartidas de nombre, email e id para que create/update/find sean iguales.
+- `logic/` es la app. Cada acción es su propio fichero. Las comprobaciones de nombre, email e id están dentro de esa acción.
 - `clients/terminal/*.txt` no son programas. Se pegan con el directorio actual en `first-app`.
 - `docs/specs/<funcion>/` — spec, plan y tasks de esa función. Carpeta nueva cada vez.
 

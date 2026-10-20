@@ -1,11 +1,12 @@
 import { findById, remove } from "../queries/users.js";
-import { parseId } from "./user-fields.js";
 
 export function deleteUser(id) {
-  const userId = parseId(id);
+  if (typeof id !== "number" || !Number.isInteger(id) || id < 1) {
+    throw new Error("Invalid id");
+  }
   let current;
   try {
-    current = findById(userId);
+    current = findById(id);
   } catch {
     throw new Error("Could not delete the user");
   }
@@ -13,7 +14,7 @@ export function deleteUser(id) {
     throw new Error("User not found");
   }
   try {
-    remove(userId);
+    remove(id);
   } catch {
     throw new Error("Could not delete the user");
   }
