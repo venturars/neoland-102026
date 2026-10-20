@@ -1,58 +1,73 @@
 # Plan — count users by gender
 
-> **Outdated.** Written for the previous constitution. To be rewritten under the current one before any tasks or code.
+New feature. It replaces no `logic/` file, saves no data and changes no other feature.
 
 ## Files
 
-- Create: `ai/classify-names.js`, `logic/count-users-by-gender.js`.
-- Touch: none. `query/find-all-users.js` already exists.
+- Create: `logic/count-users-by-gender.js`, `clients/terminal/count-users-by-gender.txt`.
+- Touch: `docs/CONSTITUTION.md`, only the tree: `logic/` lists `count-users-by-gender.js`.
 
 ## Looks like
 
-`logic/list-users.js`, plus a second injected dependency (`classifier`) next to `queries`.
+`logic/list-users.js`: it reads every user, then counts instead of returning them.
 
 ## Signature
 
-- `classifyNames(url)(names)` → `Promise<{ [name]: "woman" | "man" | "undefined" }>`
-  - `POST <url>/api/chat` to Ollama, model `llama3.2`, `stream: false`, `format: "json"`.
-  - Asks for one gender per name: `woman`, `man` or `undefined`.
-  - Empty message → `{}`.
-- `countUsersByGender(queries, classifier)()` → `Promise<{ women, men, genderUndefined }>`
-  - Each user is counted once, using the gender given for their name.
-  - A name missing from the answer, or with any value other than `woman` / `man`, counts as undefined.
-  - No users → returns zeros without calling the classifier.
+`countUsersByGender()` → `Promise<{ women, men, genderUndefined }>`
+
+- No parameters. It is `async` because it waits for the AI.
+- The three values are whole numbers. Their sum is the number of users read.
+- No users → `{ women: 0, men: 0, genderUndefined: 0 }`, without calling the AI.
 
 ## SQL
 
-None new. Reuses:
+None new. No writes. Reuses `findAll()` from `queries/users.js`.
 
-```sql
-SELECT * FROM users ORDER BY id
-```
+## AI
+
+- Constants in `logic/count-users-by-gender.js`:
+  - `MODEL` = `"llama3.2"`. Changing model is changing this constant.
+  - `AI_URL` = `"http://127.0.0.1:11434/v1/chat/completions"` (Ollama's OpenAI-compatible API).
+  - `BATCH_SIZE` = `6`.
+- Ollama must be running with `llama3.2` downloaded. Local, no cost, no key.
+- The call is the global `fetch`: `POST AI_URL`, JSON body `{ model: MODEL, temperature: 0, messages }`.
+- Names come from `findAll()`, in that order, and go in batches of 6. The last batch may have fewer. One call per batch. Only names are sent, never the email.
+- `messages`, in this order:
+  1. `system`: "For each line, answer one word on its own line: women, men or undefined. Same number of lines, same order. Nothing else."
+  2. A `user` / `assistant` example, with names not in the database:
+
+     | user   | assistant |
+     | ------ | --------- |
+     | Carmen | women     |
+     | Javier | men       |
+     | Kim    | undefined |
+
+  3. `user`: the batch, one name per line, in the order read.
+
+- The answer is `choices[0].message.content`. It is split into lines; empty lines are dropped; each line is trimmed and lowercased.
+- A valid answer has as many lines as names in the batch. Line by line:
+  - `women` adds 1 to `women`
+  - `men` adds 1 to `men`
+  - `undefined`, or any other value, adds 1 to `genderUndefined`
+- No message, a body that is not JSON, or a different number of lines: every name in that batch adds 1 to `genderUndefined`, and the next batch goes on.
 
 ## Errors
 
-| Spec failure                        | Message                         | Code     |
-| ----------------------------------- | ------------------------------- | -------- |
-| the AI sends no message             | none: every name is undefined   | —        |
-| the answer has no gender for a name | none: that name is undefined    | —        |
-| the AI does not respond             | `users could not be classified` | `SYSTEM` |
+| Spec failure                                               | Message                                             |
+| ---------------------------------------------------------- | --------------------------------------------------- |
+| the AI does not respond (no connection, or status not 2xx) | `Could not classify the users`                      |
+| SQLite fails while reading the users                       | `Could not classify the users`                      |
+| the AI sends no message                                    | not a failure: that batch adds to `genderUndefined` |
+| the answer has no gender for a name                        | not a failure: that batch adds to `genderUndefined` |
+| a value is neither `women` nor `men`                       | not a failure: that name adds to `genderUndefined`  |
 
-- `ai/classify-names.js` turns a failed `fetch` (no connection, non-2xx status) into `SystemError("users could not be classified", {}, { cause })`.
+If one call fails, no partial count is returned.
 
-## Tests
+## Client
 
-`test/logic/count-users-by-gender.test.js` — CG-1 … CG-5.
-
-- The classifier is a fake function passed in by the test; the real AI is never called.
+`clients/terminal/count-users-by-gender.txt` imports `countUsersByGender`, `await`s it and prints the result with `console.log`. When Ollama is not running it prints `error.message`. The current folder is `first-app`.
 
 ## Open questions
 
-Stop here until these are answered. The constitution, the current code and the spec do not say the same thing:
-
-1. **External service.** Section 1 says "user management CRUD" and section 2 lists only SQLite. May the app call a local Ollama server at `http://localhost:11434` with model `llama3.2`, using the built-in `fetch` (no npm dependency)? If yes, section 2 must list it.
-2. **New folder `ai/`.** No folder may do this today: `logic/` must not do I/O and `query/` is for the database only. Add `ai/` to section 3 (owns AI calls, never business rules) and to section 4 (`logic/` receives `classifier` by injection, like `queries`; `ai/` may import only `logic/errors.js`)?
-3. **First async use-case.** Every use-case is synchronous today. This one returns a Promise and its tests use `await`. Accept?
-4. **Terminal client.** Section 8 says the `.txt` block runs SQL with `sqlite3` only. This feature's query is a plain `SELECT`; the AI call would need `curl`. Allow `curl` in the `.txt`, or practise only the SQL?
-5. **Error code.** `users could not be classified` is listed with `SYSTEM` (HTTP 500). Keep it, or add a new code such as `UNAVAILABLE` (HTTP 503)?
-6. **Which AI.** The source text says the gender comes from `llama3.2` but the failure case names `nimble-v3`. The spec assumes both mean `llama3.2`. Confirm.
+1. **Spec vs one word per line.** With one word per line, an answer that misses a name has one line too few, so the code cannot tell which name is missing. The plan counts **every name in that batch** as undefined. The spec says "that name counts as undefined". Change the spec failure to: "The AI's answer does not give one gender per name → every name sent with it counts as undefined"?
+2. **Spec vs batches.** The spec says "The AI sends no message → every name counts as undefined". With batches of 6 there is one message per batch. Change it to: "→ every name sent with it counts as undefined"?
