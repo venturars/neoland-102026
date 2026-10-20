@@ -1,3 +1,4 @@
+import { ConflictError, ValidationError } from "./errors.js";
 import { findByEmail, insert } from "../queries/user.js";
 
 export function createUser(input) {
@@ -5,34 +6,46 @@ export function createUser(input) {
   const email = input.email;
 
   if (typeof name !== "string" || name.trim() === "") {
-    throw new Error("Name is invalid");
+    throw new ValidationError("Name is invalid");
   }
 
   if (typeof email !== "string" || email.includes(" ")) {
-    throw new Error("Email is invalid");
+    throw new ValidationError("Email is invalid");
   }
 
   const atIndex = email.indexOf("@");
   const lastAtIndex = email.lastIndexOf("@");
 
   if (atIndex <= 0 || atIndex !== lastAtIndex) {
-    throw new Error("Email is invalid");
+    throw new ValidationError("Email is invalid");
   }
 
   const domain = email.slice(atIndex + 1);
   const dotIndex = domain.lastIndexOf(".");
 
   if (dotIndex <= 0 || dotIndex === domain.length - 1) {
-    throw new Error("Email is invalid");
+    throw new ValidationError("Email is invalid");
   }
 
-  const owner = findByEmail(email);
+  let owner;
+
+  try {
+    owner = findByEmail(email);
+  } catch (error) {
+    throw new ConflictError("Email is already used");
+  }
 
   if (owner !== undefined) {
-    throw new Error("Email is already used");
+    throw new ConflictError("Email is already used");
   }
 
-  const user = insert({ name, email });
+  let user;
+
+  try {
+    user = insert({ name, email });
+  } catch (error) {
+    throw new ConflictError("Email is already used");
+  }
 
   return {
     id: user.id,

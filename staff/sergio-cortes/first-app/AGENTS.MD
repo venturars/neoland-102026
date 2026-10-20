@@ -19,8 +19,8 @@ El código se escribe en inglés y está pensado para alumnos hispanohablantes.
 - Ficheros en kebab-case.
 - Funciones en camelCase. El nombre es la acción. Una función, un propósito.
 - Constante de fichero en mayúsculas con guion bajo (`const MODEL`).
-- Comportamiento nuevo: función nueva. No se altera una función existente para meterlo y no se provoca un refactor en cascada.
-- El código tiene que leerse de arriba a abajo, con `if` y con nombres que digan qué hacen. Se evita el código que un programador sin IA no escribiría: envoltorios de resultado, clases de error, helpers genéricos y abstracciones que oculten los pasos.
+- El código tiene que leerse de arriba a abajo, con `if` y con nombres que digan qué hacen. Se evita el código que un programador sin IA no escribiría: envoltorios de resultado, helpers genéricos y abstracciones que oculten los pasos.
+- Las clases de error se describen en `docs/CONSTITUTIONS.md`.
 
 
 

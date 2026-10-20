@@ -1,7 +1,15 @@
+import { NotFoundError } from "./errors.js";
 import { findAll } from "../queries/user.js";
 
 export function listUsers() {
-  const rows = findAll();
+  let rows;
+
+  try {
+    rows = findAll();
+  } catch (error) {
+    throw new NotFoundError("Users are not found");
+  }
+
   const users = [];
 
   for (const user of rows) {

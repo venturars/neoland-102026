@@ -21,18 +21,20 @@ first-app/
 │   └── users.sqlite
 │           Fichero de la base. Lo crea la primera apertura. No se versiona.
 ├── logic/
+│   ├── errors.js
+│   │       Exporta ValidationError, NotFoundError y ConflictError. Cada una extiende Error y el constructor recibe message.
 │   ├── create-user.js
-│   │       createUser(input). Lee name y email. Rechaza nombre vacío, email inválido y un email que ya existe. Llama a insert y devuelve la fila. No abre la base.
+│   │       createUser(input). Lee name y email. Lanza ValidationError si el nombre está vacío o el email es inválido. Si el email ya existe, lanza ConflictError. Llama a insert y devuelve la fila. No abre la base.
 │   ├── update-user.js
-│   │       updateUser(input). Lee id, name y email. Rechaza un id que no sea un número, nombre vacío y email inválido. Lee la fila por id y, si no está, no actualiza. Rechaza un email que pertenece a otro usuario. Llama a update y devuelve la fila. No abre la base.
+│   │       updateUser(input). Lee id, name y email. Lanza ValidationError si el id no es un número, el nombre está vacío o el email es inválido. Si no hay fila, lanza NotFoundError y no actualiza. Si el email pertenece a otro usuario, lanza ConflictError. Llama a update y devuelve la fila. No abre la base.
 │   ├── delete-user.js
-│   │       deleteUser(id). El argumento es el id. Rechaza un id que no sea un número. Lee la fila, llama a remove y devuelve la fila. No abre la base.
+│   │       deleteUser(id). El argumento es el id. Lanza ValidationError si el id no es un número. Si no hay fila, lanza NotFoundError y no borra. Llama a remove y devuelve la fila. No abre la base.
 │   ├── find-user-by-id.js
-│   │       findUserById(id). El argumento es el id. Rechaza un id que no sea un número. Llama a findById y devuelve la fila. No abre la base.
+│   │       findUserById(id). El argumento es el id. Lanza ValidationError si el id no es un número. Si no hay fila, lanza NotFoundError. Devuelve la fila. No abre la base.
 │   ├── find-user-by-email.js
-│   │       findUserByEmail(email). El argumento es el email. Rechaza un email inválido. Llama a findByEmail y devuelve la fila. No abre la base.
+│   │       findUserByEmail(email). El argumento es el email. Lanza ValidationError si el email es inválido. Si no hay fila, lanza NotFoundError. Devuelve la fila. No abre la base.
 │   └── list-users.js
-│           listUsers(). No recibe argumentos. Llama a findAll y devuelve las filas. No abre la base.
+│           listUsers(). No recibe argumentos. Llama a findAll y devuelve las filas. Una lista vacía es válida. No abre la base.
 ├── queries/
 │   ├── user.js
 │   │       Importa db. createUsersTable recibe la conexión. insert, findById, findByEmail, findAll, update y remove usan db y ejecutan run, all o get.
@@ -110,3 +112,17 @@ El SQL no vive dentro de la función que lo ejecuta. Vive aparte.
 `queries/queries/` contiene solo SQL agnóstico. Cada sentencia está en su propio `.sql`, sin JavaScript.
 
 `queries/` contiene la función que llama a ese SQL. En este proyecto es `queries/user.js`: lee el `.sql`, lo guarda en una constante y, al final del fichero, la función exportada lo ejecuta con `run`, `all` o `get`.
+
+## Errores
+
+Los errores de entrada y de negocio salen de `logic/errors.js`. Ese fichero no exporta una función de negocio: exporta las clases. Cada una extiende `Error`. El constructor recibe `message` y asigna `this.name`. Pueden añadirse más clases en ese mismo fichero.
+
+- `ValidationError`: el dato de entrada no vale. Mensajes: `"Id is invalid"`, `"Name is invalid"`, `"Email is invalid"`.
+- `NotFoundError`: no hay fila. Mensaje: `"User is not found"` or `"Users are not found"`.
+- `ConflictError`: el email ya existe. Mensaje: `"Email is already used"`.
+
+Una entrada o una regla de negocio que no llama a una query se comprueba con `if` y lanza esa clase con el mensaje. No va dentro de `try/catch`.
+
+Cada llamada a un querie va dentro de `try/catch`. Si la query lanza, el `catch` lanza la clase global de esa llamada, con su mensaje fijo. No relanza el error de SQLite. Si la query devuelve, la regla que mira ese resultado queda fuera del `try`: un `if` y el `throw` de la clase.
+
+El cliente no captura el error. Llama a la función y muestra el resultado. Si logic lanza, el error sale solo.

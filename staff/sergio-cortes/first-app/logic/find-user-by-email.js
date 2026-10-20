@@ -1,28 +1,35 @@
+import { NotFoundError, ValidationError } from "./errors.js";
 import { findByEmail } from "../queries/user.js";
 
 export function findUserByEmail(email) {
   if (typeof email !== "string" || email.includes(" ")) {
-    throw new Error("Email is invalid");
+    throw new ValidationError("Email is invalid");
   }
 
   const atIndex = email.indexOf("@");
   const lastAtIndex = email.lastIndexOf("@");
 
   if (atIndex <= 0 || atIndex !== lastAtIndex) {
-    throw new Error("Email is invalid");
+    throw new ValidationError("Email is invalid");
   }
 
   const domain = email.slice(atIndex + 1);
   const dotIndex = domain.lastIndexOf(".");
 
   if (dotIndex <= 0 || dotIndex === domain.length - 1) {
-    throw new Error("Email is invalid");
+    throw new ValidationError("Email is invalid");
   }
 
-  const user = findByEmail(email);
+  let user;
+
+  try {
+    user = findByEmail(email);
+  } catch (error) {
+    throw new NotFoundError("User is not found");
+  }
 
   if (user === undefined) {
-    return undefined;
+    throw new NotFoundError("User is not found");
   }
 
   return {
