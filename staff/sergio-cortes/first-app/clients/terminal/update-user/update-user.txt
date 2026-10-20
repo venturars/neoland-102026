@@ -1,0 +1,2 @@
+# Run from first-app/ (project root). Set userId in update-user.js to an existing user id.
+node clients/terminal/update-user/update-user.js

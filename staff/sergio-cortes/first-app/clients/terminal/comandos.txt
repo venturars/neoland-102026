@@ -1,0 +1,7 @@
+# Run all commands from first-app/ (project root).
+
+node clients/terminal/create-table/create-table.js
+node clients/terminal/create-user/create-user.js
+node clients/terminal/list-users/list-users.js
+node clients/terminal/update-user/update-user.js
+node clients/terminal/delete-user/delete-user.js

@@ -1,0 +1,2 @@
+# Run from first-app/ (project root). Set userId in delete-user.js to the user to remove.
+node clients/terminal/delete-user/delete-user.js
