@@ -1,0 +1,16 @@
+# Run from staff/miguel-rodriguez/first-app using Node 24.12.0.
+node --input-type=module <<'EOF'
+let database;
+try {
+  const { db } = await import("./db/connection.js");
+  database = db;
+  const { createUsersTable } = await import("./queries/users.js");
+  createUsersTable();
+  console.log("Users table is ready");
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+} finally {
+  if (database) database.close();
+}
+EOF
