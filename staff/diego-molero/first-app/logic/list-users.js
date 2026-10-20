@@ -1,4 +1,6 @@
-// La consulta se delega sin conocer el almacenamiento utilizado.
-export function listUsers(userRepository) {
-  return { ok: true, users: userRepository.findAll() };
+import { findAll } from "../queries/users.js";
+
+// Conserva el formato de salida y el orden por identificador de las consultas.
+export function listUsers() {
+  return { ok: true, users: findAll() };
 }

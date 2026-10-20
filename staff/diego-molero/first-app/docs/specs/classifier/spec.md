@@ -1,7 +1,7 @@
 # Clasificador de géneros
 
-**Estado:** planificado. La primera etapa prepara la tabla de usuarios; el
-clasificador todavía no está implementado.
+**Estado:** implementado y verificado. Incluye la creación explícita de la tabla,
+la conexión compartida y el clasificador local.
 
 ## Objetivo
 
@@ -52,11 +52,8 @@ describen la clasificación del nombre, no una identidad confirmada del usuario.
 
 ## Etapas y límites
 
-La primera etapa consiste en preparar explícitamente el almacenamiento de
-usuarios, conservando los datos existentes. Sus comprobaciones están en el
-[plan](plan.md) y sus pasos en las [tareas](tasks.md).
-
-Completar esa preparación no satisface los criterios del clasificador completo.
-La clasificación, el modelo y su integración quedan para etapas posteriores.
+El almacenamiento se prepara explícitamente conservando los datos existentes.
+Las decisiones técnicas están en el [plan](plan.md) y sus pasos en las
+[tareas](tasks.md). Esta iteración incorpora también la clasificación local.
 Quedan fuera la autenticación, el frontend, los servicios de IA de pago y guardar
 el género de cada usuario.

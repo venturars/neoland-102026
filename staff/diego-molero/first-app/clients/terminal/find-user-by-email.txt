@@ -1,0 +1,6 @@
+// Ejemplo manual: pnpm run find-user-by-email desde first-app.
+import { findUserByEmail } from "./logic/find-user-by-email.js";
+
+const result = findUserByEmail("  ADA@EXAMPLE.COM  ");
+
+console.log(result);

@@ -1,0 +1,6 @@
+// Ejemplo manual: pnpm run update-user desde first-app.
+import { updateUser } from "./logic/update-user.js";
+
+const result = updateUser(1, { name: "Ada Lovelace" });
+
+console.log(result);

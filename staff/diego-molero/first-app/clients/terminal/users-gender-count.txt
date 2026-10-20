@@ -1,0 +1,6 @@
+// Ejemplo manual: pnpm run classify desde first-app.
+import { usersGenderCount } from "./logic/users-gender-count.js";
+
+const result = await usersGenderCount();
+
+console.log(result);

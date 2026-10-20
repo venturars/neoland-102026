@@ -1,44 +1,49 @@
-# Tareas — clasificador de géneros, etapa 1
+# Tareas — reorganización como la PR
 
-**Estado:** documentos preparados. Todas las tareas de implementación están
-pendientes. Esta lista cubre solo la creación explícita de la tabla.
+- [x] Adaptar consultas al singleton y conservar filas y conflictos normalizados.
+- [x] Adaptar operaciones directas y conservar validaciones, errores y resultados.
+- [x] Integrar Ollama en el fichero del clasificador conservando su comportamiento.
+- [x] Crear los ocho clientes txt y sus comandos pnpm.
+- [x] Consolidar constitución e instrucciones en los nombres de la PR.
+- [x] Retirar capas, documentación y clientes anteriores que se han sustituido.
+- [x] Comparar el árbol final con la referencia y revisar imports, enlaces y UTF-8.
+- [x] Comprobar manualmente CRUD, errores y clasificador real en una copia temporal.
 
-- [ ] **1. Extraer el SQL.** Mover `db/schema.sql` a
-  `queries/queries/create-users-table.sql`, conservando exactamente el esquema.
-  Comprobar los cinco campos, las restricciones y las fechas UTC. (E1-02)
+## Registro
 
-- [ ] **2. Añadir la operación de consultas.** Crear `createUsersTable(db)` en
-  `queries/users.js`; leer el SQL relativo al módulo en UTF-8 y ejecutarlo.
-  No devolver datos ni abrir o cerrar conexiones. (E1-02, E1-03, E1-06)
+Comprobaciones realizadas el 20 de octubre de 2026 sobre la nueva estructura:
 
-- [ ] **3. Separar la conexión.** Quitar la ejecución del esquema de
-  `db/connection.js`. Comprobar en una base vacía que abrirla no crea `users`.
-  (E1-01)
+- Árbol: 33 archivos, sin archivos ni directorios adicionales respecto a la PR
+  en el commit de referencia. Se excluyen node_modules y auxiliares de SQLite.
+- Conexión: contenido idéntico byte a byte al de la referencia.
+- Sintaxis de JavaScript y clientes txt, imports relativos, enlaces Markdown,
+  UTF-8 y espacios finales: sin incidencias. git diff --check sin errores.
+- En una copia temporal sin la base personal, pnpm 11.25.0 ejecutó
+  `pnpm install --frozen-lockfile --offline` y los ocho clientes mediante
+  `pnpm run db:init`, `create-user`, `find-user-by-email`, `find-user-by-id`,
+  `update-user`, `list-users`, `classify` y `delete-user`.
+- Alta normalizada, búsqueda, actualización parcial y borrado: resultados
+  correctos en consola. Los duplicados conservan EMAIL_ALREADY_USED;
+  los casos inválidos conservan INVALID_INPUT, INVALID_NAME, INVALID_EMAIL,
+  INVALID_ID y EMPTY_CHANGES. Tras eliminar, la búsqueda devuelve USER_NOT_FOUND.
+- Repetir db:init conservó los tres usuarios y sus datos. La clasificación vacía
+  devolvió tres ceros. Con Ollama real y llama3.2, Ada Lovelace, Mateo y Alex
+  produjeron women: 1, men: 1, genderUndefined: 1; la suma coincide con los tres
+  usuarios procesados.
 
-- [ ] **4. Adaptar la aplicación.** Aceptar una conexión inicializada con
-  `createApp({ db })`, rechazar combinarla con `databasePath` y respetar el cierre
-  y los errores definidos en el plan. (E1-04, E1-05)
+La copia temporal se eliminó al terminar. No se utilizó la base personal ni se
+crearon archivos de tests. Esta comprobación manual no mide la precisión general
+del modelo ni cubre todos los posibles fallos de red.
 
-- [ ] **5. Añadir el cliente.** Crear `clients/terminal/create-users-table.js`
-  y sustituir el cliente anterior en `npm run db:init`. Confirmar el éxito solo
-  después de crear la tabla y cerrar la conexión en `finally`. (E1-06)
+## Ajuste posterior de los clientes de terminal
 
-- [ ] **6. Adaptar la demo.** Inicializar su base en memoria antes de construir
-  la aplicación y reutilizar la misma conexión. Comprobar que se mantienen
-  las operaciones y los resultados mostrados. (E1-04, E1-05)
+- [x] Simplificar los ocho ejemplos sin try/catch/finally, como en la PR.
+- [x] Actualizar constitución y AGENTS para reflejar el formato sencillo.
+- [x] Comprobar los ocho comandos pnpm y el fallo técnico sin tabla en una copia
+  temporal, además de sintaxis y UTF-8.
 
-- [ ] **7. Ajustar las pruebas.** Inicializar explícitamente las bases de
-  integración y añadir comprobaciones E1-01 a E1-06, incluida la conservación
-  de datos y el cierre de recursos ante errores.
-
-- [ ] **8. Retirar referencias antiguas.** Eliminar `db/schema.sql` y el cliente
-  `init-db.js` tras sustituir sus consumidores. Buscar referencias para comprobar
-  que solo queda una ubicación del SQL de creación.
-
-- [ ] **9. Actualizar la documentación.** Reflejar en README, constitución y
-  AGENTS la inicialización explícita, el comando y el uso de `createApp({ db })`.
-  Mantener el clasificador marcado como pendiente.
-
-- [ ] **10. Verificar y registrar.** Ejecutar `npm test`, `npm run demo` y probar
-  el flujo de inicialización con una base temporal. Revisar UTF-8 y el diff;
-  registrar resultados reales sin marcar los criterios del clasificador completo.
+Comprobado el 20 de octubre de 2026: los ocho comandos finalizaron correctamente
+en una copia temporal con pnpm 11.25.0. Ollama real devolvió women: 1, men: 0,
+genderUndefined: 0 para Ada Lovelace. Antes de inicializar, list-users mostró
+el error de Node no such table: users y terminó con código 1. La copia se eliminó;
+no se utilizó la base personal. Sintaxis, UTF-8 y git diff --check sin errores.

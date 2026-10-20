@@ -1,4 +1,4 @@
--- La base garantiza la unicidad del correo y registra las fechas en UTC.
+-- Inicializar varias veces conserva los usuarios y sus fechas UTC.
 CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,

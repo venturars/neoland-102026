@@ -1,0 +1,6 @@
+// Ejemplo manual: pnpm run list-users desde first-app.
+import { listUsers } from "./logic/list-users.js";
+
+const result = listUsers();
+
+console.log(result);

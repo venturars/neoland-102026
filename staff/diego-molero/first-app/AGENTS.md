@@ -1,68 +1,63 @@
-# Instrucciones para first-app
+# AGENTS.md — first-app
 
-Estas instrucciones se aplican a esta carpeta y sus subdirectorios.
+Instrucciones para esta carpeta y sus subdirectorios.
 
-## Contexto y SDD
+## Proyecto y SDD
 
-- Proyecto de aprendizaje: gestión de usuarios con Node.js 24.14 o posterior,
-  JavaScript con módulos ES y SQLite nativo (`node:sqlite`), sin dependencias externas.
-- Antes de trabajar, lee `docs/constitution.md`, el README y la especificación
-  relacionada, si existe.
-- Antes de cambiar un comportamiento, prepara `docs/specs/<nombre>/spec.md`,
-  `plan.md` y `tasks.md`. La spec define negocio y criterios; el plan, técnica y
-  etapas; las tareas, pasos pequeños y verificables de la etapa activa.
-- Mantén los documentos breves y marca tareas solo tras ejecutarlas. Sigue el
-  alcance solicitado: una entrega documental deja pendiente la implementación.
-- Implementa el alcance solicitado y mantén actualizados los documentos afectados.
-
-## Desarrollo activo
-
-- Lee los tres documentos de `docs/specs/classifier/`. La spec describe el
-  clasificador completo; la primera etapa del plan prepara la tabla de usuarios.
-- La inicialización explícita y la capa `queries/` están planificadas. Hoy
-  `openDatabase` aún crea la tabla y `createApp({ db })` todavía no existe.
-- No marques el clasificador como terminado al preparar la tabla. El modelo y
-  la integración con IA se concretarán en etapas posteriores.
+- Node.js 24.14+, módulos ES, SQLite y Ollama local. Usar pnpm 11.25.0,
+  fijado en package.json; conservar pnpm-lock.yaml. No hay dependencias externas.
+- Leer docs/CONSTITUTIONS.md y spec, plan y tareas de docs/specs/classifier.
+  Actualizar los documentos antes de cambiar comportamiento y marcar tareas
+  solo tras comprobarlas.
+- Mantener el árbol de la PR #139: no añadir app.js, repositorios, servicios,
+  validadores independientes, README, demos agrupadas ni specs adicionales
+  sin una solicitud que cambie esta estructura.
+- Mantener nuestras reglas y respuestas; reproducir el árbol no significa copiar
+  los contratos ni el esquema del profesor.
 
 ## Arquitectura
 
-- `logic/`: una operación por fichero; validaciones comunes en `validate-user.js`.
-  Recibe el repositorio como argumento. No importa SQLite ni accede a archivos,
-  terminal, HTTP o interfaces gráficas.
-- `repositories/sqlite-user-repository.js`: concentra el SQL parametrizado y
-  devuelve objetos JavaScript normales. No contiene reglas de negocio.
-- `db/`: conexión y esquema. Conserva los datos existentes al inicializar y usa
-  fechas UTC en formato ISO 8601.
-- `app.js`: conecta la lógica con el repositorio. Importarlo no abre conexiones;
-  cada instancia debe cerrar sus recursos al terminar.
-- `clients/`: recoge entradas y presenta resultados usando la aplicación.
-  Actualmente solo existe una demo de terminal con datos predefinidos.
+- db/connection.js debe seguir idéntico a la PR: solo exporta db, con ruta fija
+  a users.sqlite junto al módulo. Es un singleton por proceso.
+- Crear la tabla explícitamente antes de las operaciones. Los clientes son
+  ejecuciones cortas; la conexión se libera al terminar cada proceso.
+- queries/queries/*.sql contiene un SQL por consulta. queries/users.js importa
+  db, ejecuta SQL parametrizado y normaliza filas y conflictos UNIQUE.
+- logic contiene una operación por fichero que importa las consultas necesarias.
+  Las validaciones viven en cada operación; conservar coherentes sus reglas.
+- users-gender-count.js incluye tanto el conteo como HTTP y JSON de Ollama.
+  Envía solo nombres, en lotes de seis. Conservar modelo configurable, URL local,
+  timeout, categorías y manejo de respuestas incompletas.
+- clients/terminal contiene los ocho .txt de la PR. Son JavaScript que los scripts
+  pnpm pasan a Node por stdin, compatibles con PowerShell. No usar Bash en ellos.
+- Mantener los ejemplos simples como en la PR: importar, guardar el resultado y
+  console.log. No añadir try/catch/finally ni importar db para cerrarlo. Node
+  muestra los fallos técnicos; db:init importa db para mostrar las tablas.
 
-## Contratos y estilo
+## Contratos
 
-- Conserva los contratos síncronos y formatos de resultado documentados en el README.
-  Los errores de negocio devuelven `{ ok: false, error: "CODIGO" }`; los fallos
-  técnicos inesperados se propagan como excepciones.
-- Valida antes de modificar datos. Comparte las reglas entre crear y actualizar;
-  la búsqueda por correo reutiliza `validateEmail` de `validate-user.js`.
-  No dupliques validaciones en los clientes.
-- `findUserByEmail` recibe un correo como texto: normaliza, valida y consulta el
-  repositorio. Devuelve `{ ok: true, user }`, `INVALID_EMAIL` o `USER_NOT_FOUND`
-  con el formato de error habitual; no modifica datos ni devuelve campos internos.
-- Guarda todo en UTF-8. Escribe documentación y comentarios en español y mantén
-  los identificadores coherentes con el código existente.
-- Cada funcionalidad nueva debe incluir algún comentario corto y explicativo.
-  Prioriza funciones sencillas y justifica las nuevas dependencias.
+- Conservar formatos { ok: true, ... } y { ok: false, error: CODIGO } descritos
+  en la constitución. Los fallos técnicos se propagan como excepciones.
+- CRUD síncrono; usersGenderCount asíncrono y con await. Las búsquedas devuelven
+  solo cinco campos públicos y la clasificación no modifica usuarios.
+- No cambiar el esquema existente: AUTOINCREMENT, correo único y fechas UTC.
+  Modificar datos existentes requiere una migración definida previamente.
+- Todo en UTF-8. Documentación y comentarios en español; identificadores coherentes
+  y algún comentario corto por funcionalidad nueva.
 
-## Verificación y entrega
+## Comandos y entrega
 
-- Ejecuta los comandos desde esta carpeta: `npm test` para cambios de código,
-  `npm run demo` si afectan al cliente de terminal y `npm run db:init` si afectan
-  a la inicialización. No hace falta ejecutar `npm install`.
-- Añade o ajusta pruebas de los comportamientos afectados: negocio sin SQLite e
-  integración con SQLite real cuando corresponda.
-- Usa bases en memoria o archivos temporales para pruebas y demos. No modifiques
-  `db/users.sqlite` para probar ni subas bases locales o credenciales a Git.
-- Para cambios solo documentales, revisa contenido, enlaces y UTF-8.
-- Al entregar, indica qué cambió, qué comprobaste y qué queda pendiente. Respeta
-  los cambios ajenos y no presentes comprobaciones no ejecutadas como realizadas.
+Desde first-app:
+
+- `pnpm install --frozen-lockfile`: preparación reproducible.
+- `pnpm run db:init`: crear tabla de forma idempotente.
+- `pnpm run create-user`, `update-user`, `delete-user`, `list-users`,
+  `find-user-by-email`, `find-user-by-id`: clientes de usuarios.
+- `pnpm run classify`: clasificador con Ollama real.
+
+Los ejemplos crean Ada, actualizan/eliminan el ID 1 y buscan por ese ID o su correo.
+Para comprobarlos, usar una copia temporal del código sin copiar la base personal.
+No añadir tests ni restaurar el directorio de pruebas sin petición de Diego.
+Revisar resultados manuales, imports, enlaces, árbol y UTF-8. No subir bases,
+credenciales ni archivos generados. Entregar qué cambió, qué se ejecutó y sus
+límites, respetando los cambios ajenos.

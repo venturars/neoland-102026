@@ -1,0 +1,6 @@
+// Ejemplo manual: pnpm run db:init desde first-app.
+import { createUsersTable } from "./queries/users.js";
+import { db } from "./db/connection.js";
+
+createUsersTable();
+console.log(db.prepare("SELECT name FROM sqlite_master WHERE type = 'table'").all());

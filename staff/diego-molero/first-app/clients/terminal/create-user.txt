@@ -1,0 +1,6 @@
+// Ejemplo manual: pnpm run create-user desde first-app.
+import { createUser } from "./logic/create-user.js";
+
+const result = createUser({ name: "  Ada  ", email: "  ADA@example.com  " });
+
+console.log(result);

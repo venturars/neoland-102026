@@ -1,0 +1,6 @@
+// Ejemplo manual: pnpm run delete-user desde first-app.
+import { deleteUser } from "./logic/delete-user.js";
+
+const result = deleteUser(1);
+
+console.log(result);

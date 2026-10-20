@@ -1,25 +1,17 @@
-import { validateEmail } from "./validate-user.js";
+import { findByEmail } from "../queries/users.js";
 
-// Busca por el correo normalizado y devuelve solo los campos públicos del usuario.
-export function findUserByEmail(userRepository, email) {
-  const validation = validateEmail(email);
-  if (!validation.ok) {
-    return validation;
+// Normaliza el correo antes de consultar y selecciona los cinco campos públicos.
+export function findUserByEmail(input) {
+  if (typeof input !== "string") return { ok: false, error: "INVALID_EMAIL" };
+  const email = input.trim().toLowerCase();
+  if (email.length > 64 || !/^[^\s@]+@[^\s@]+$/u.test(email)) {
+    return { ok: false, error: "INVALID_EMAIL" };
   }
-
-  const user = userRepository.findByEmail(validation.email);
-  if (!user) {
-    return { ok: false, error: "USER_NOT_FOUND" };
-  }
-
+  const user = findByEmail(email);
+  if (!user) return { ok: false, error: "USER_NOT_FOUND" };
   return {
     ok: true,
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-    },
+    user: { id: user.id, name: user.name, email: user.email,
+      createdAt: user.createdAt, updatedAt: user.updatedAt },
   };
 }

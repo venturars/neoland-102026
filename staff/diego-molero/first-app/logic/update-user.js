@@ -1,43 +1,38 @@
-import { isUserInput, isValidId, validateUser } from "./validate-user.js";
+import { findById, findByEmail, update } from "../queries/users.js";
 
-// Una actualización parcial conserva los campos que no se han enviado.
-export function updateUser(userRepository, id, changes) {
-  if (!isValidId(id)) {
+// Los campos omitidos se conservan; las reglas y el orden de errores no cambian.
+export function updateUser(id, changes) {
+  if (!Number.isSafeInteger(id) || id <= 0) {
     return { ok: false, error: "INVALID_ID" };
   }
-
-  if (!isUserInput(changes)) {
+  if (changes === null || typeof changes !== "object" || Array.isArray(changes) ||
+      Object.keys(changes).some((key) => key !== "name" && key !== "email")) {
     return { ok: false, error: "INVALID_INPUT" };
   }
-
   if (changes.name === undefined && changes.email === undefined) {
     return { ok: false, error: "EMPTY_CHANGES" };
   }
+  const current = findById(id);
+  if (!current) return { ok: false, error: "USER_NOT_FOUND" };
 
-  const current = userRepository.findById(id);
-  if (!current) {
-    return { ok: false, error: "USER_NOT_FOUND" };
+  const rawName = changes.name === undefined ? current.name : changes.name;
+  const rawEmail = changes.email === undefined ? current.email : changes.email;
+  if (typeof rawName !== "string" || rawName.trim() === "") {
+    return { ok: false, error: "INVALID_NAME" };
   }
-
-  const validation = validateUser({
-    name: changes.name === undefined ? current.name : changes.name,
-    email: changes.email === undefined ? current.email : changes.email,
-  });
-  if (!validation.ok) {
-    return validation;
+  if (typeof rawEmail !== "string") {
+    return { ok: false, error: "INVALID_EMAIL" };
   }
-
-  const owner = userRepository.findByEmail(validation.data.email);
-  if (owner && owner.id !== id) {
-    return { ok: false, error: "EMAIL_ALREADY_USED" };
+  const name = rawName.trim();
+  const email = rawEmail.trim().toLowerCase();
+  if (email.length > 64 || !/^[^\s@]+@[^\s@]+$/u.test(email)) {
+    return { ok: false, error: "INVALID_EMAIL" };
   }
-
+  const owner = findByEmail(email);
+  if (owner && owner.id !== id) return { ok: false, error: "EMAIL_ALREADY_USED" };
   try {
-    const user = userRepository.update({ id, ...validation.data });
-    if (!user) {
-      return { ok: false, error: "USER_NOT_FOUND" };
-    }
-    return { ok: true, user };
+    const user = update({ id, name, email });
+    return user ? { ok: true, user } : { ok: false, error: "USER_NOT_FOUND" };
   } catch (error) {
     if (error.code === "EMAIL_ALREADY_USED") {
       return { ok: false, error: "EMAIL_ALREADY_USED" };
