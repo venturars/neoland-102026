@@ -1,31 +1,36 @@
-import {
-  createUsersTable,
-  findUserById as findUserRowById,
-} from "../queries/users.js";
+import { findUserById as findUserRowById } from "../queries/users.js";
 
-export function findUserById({ id }) {
-  createUsersTable();
-
-  // Validate the input
-  if (!Number.isInteger(id) || id <= 0) {
+export function findUserById(input) {
+  // The client must send one object. A missing object is rejected
+  // here so the caller gets a business error, not a JavaScript TypeError.
+  if (input === null || typeof input !== "object") {
     throw new Error("User id must be a positive integer");
   }
 
-  // Execute the database operation
+  // Check that id is a whole number greater than zero.
+  // The client sends it as a JavaScript value, so a string like "1"
+  // or a decimal like 1.5 must be rejected here, before any query runs.
+  if (!Number.isInteger(input.id) || input.id <= 0) {
+    throw new Error("User id must be a positive integer");
+  }
+
+  // Ask the database for that id. If SQLite fails, do not return
+  // its message: replace it with a clear error about this operation.
   let user;
 
   try {
-    user = findUserRowById(id);
+    user = findUserRowById(input.id);
   } catch {
     throw new Error("Unable to find user");
   }
 
-  // A missing row is a business rule, not a database failure
+  // A missing row is a business rule, not a database failure.
   if (!user) {
     throw new Error("User does not exist");
   }
 
-  // Return a safe response
+  // Return only the fields the client needs, with camelCase names.
+  // created_at stays inside the database column name until this mapping.
   return {
     id: user.id,
     name: user.name,

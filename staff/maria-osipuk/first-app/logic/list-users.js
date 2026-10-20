@@ -1,8 +1,8 @@
-import { createUsersTable, listUserRows } from "../queries/users.js";
+import { listUserRows } from "../queries/users.js";
 
 export function listUsers() {
-  createUsersTable();
-
+  // Ask the database for every user. If SQLite fails, do not return
+  // its message: replace it with a clear error about this operation.
   let rows;
 
   try {
@@ -14,6 +14,8 @@ export function listUsers() {
   const users = [];
 
   for (const row of rows) {
+    // Return only the fields the client needs, with camelCase names.
+    // created_at stays inside the database column name until this mapping.
     users.push({
       id: row.id,
       name: row.name,
