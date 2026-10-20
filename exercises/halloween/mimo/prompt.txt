@@ -1,0 +1,33 @@
+Crea una felicitación de Halloween divertida para niños de 4-5 años, compuesta por una imagen y un audio de aproximadamente 30 segundos.
+
+Inventa un personaje original, adorable y algo torpe —por ejemplo, una calabaza parlante, un fantasma despistado o un gato hechicero— con nombre corto y personalidad alegre. Añade una situación cómica sencilla, como perder sus caramelos, tropezar con su capa o asustarse de su propio “¡buuu!”.
+
+Imagen:
+
+Formato cuadrado 1:1, optimizado para móvil.
+
+Un único personaje central, expresivo y sonriente.
+
+Escenario mágico con luna, calabazas luminosas, hojas y caramelos.
+
+Estilo 3D colorido y cinematográfico.
+
+Colores naranja, violeta, azul noche y dorado.
+
+Texto exacto y claramente legible: “¡Feliz Halloween!”
+
+Sin sangre, terror intenso, marcas, logotipos, texto adicional ni marcas de agua.
+
+Audio:
+
+Guion en español de 65 a 80 palabras.
+
+Duración de 27 a 32 segundos.
+
+Voz cálida, juvenil, clara y juguetona.
+
+El personaje debe presentarse, contar su pequeño accidente divertido, desear una noche llena de disfraces, caramelos y risas, y terminar con “¡Feliz Halloween!”.
+
+Utiliza humor blanco, frases cortas y como máximo dos efectos como “¡buuu!”, “¡ñam!” o “¡achís!”.
+
+Entrega el nombre y descripción del personaje, el prompt visual, el guion exacto, las indicaciones de voz, la imagen final y el audio en MP3 o WAV. La imagen y la voz deben representar al mismo personaje y contar la misma historia.
