@@ -19,6 +19,7 @@ first-app/
     list-users.js
     find-user-by-email.js
     find-user-by-id.js
+    users-gender-count.js
   clients/
     terminal/           Primer cliente. Sirve de test manual
   docs/
@@ -86,7 +87,9 @@ El cuerpo sigue este orden, y no se mezcla:
 3. Aplicar la lógica de negocio.
 4. Estructurar la salida y sanear la respuesta.
 
-La salida del paso 4 es el dato de la operación: el usuario, la lista de usuarios, o nada si la operación no devuelve datos. Solo incluye los campos que el cliente necesita (`id`, `name`, `email`, `createdAt`, `updatedAt`). No salen objetos de SQLite ni errores internos de la base de datos.
+## Constantes
+
+Un valor fijo de la app es una constante. Su nombre va en mayúsculas (`MODEL`). Una variable sigue en camelCase.
 
 ## Errores
 
@@ -106,6 +109,7 @@ En el paso 3, si SQLite falla, ese error no sale de `logic/`. Se lanza uno de es
 - `Could not delete the user`
 - `Could not list the users`
 - `Could not find the user`
+- `Could not classify the users`
 
 En el paso 4, si todo va bien, la función devuelve el dato saneado. Si la operación no tiene datos, no devuelve nada.
 
