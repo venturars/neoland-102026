@@ -1,31 +1,22 @@
-export function deleteUser(input) {
-  const name = input.name;
-  const email = input.email;
+import { findById, remove } from "../queries/user.js";
 
-  if (typeof name !== "string" || name.trim() === "") {
-    throw new Error("Name is invalid");
+export function deleteUser(id) {
+  if (typeof id !== "number") {
+    throw new Error("Id is invalid");
   }
 
-  if (typeof email !== "string" || email.includes(" ")) {
-    throw new Error("Email is invalid");
-  }
+  const user = findById(id);
+  remove(id);
 
-  const atIndex = email.indexOf("@");
-  const lastAtIndex = email.lastIndexOf("@");
-
-  if (atIndex <= 0 || atIndex !== lastAtIndex) {
-    throw new Error("Email is invalid");
-  }
-
-  const domain = email.slice(atIndex + 1);
-  const dotIndex = domain.lastIndexOf(".");
-
-  if (dotIndex <= 0 || dotIndex === domain.length - 1) {
-    throw new Error("Email is invalid");
+  if (user === undefined) {
+    return undefined;
   }
 
   return {
-    name,
-    email,
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
   };
 }

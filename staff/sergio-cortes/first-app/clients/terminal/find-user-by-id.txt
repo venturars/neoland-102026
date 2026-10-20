@@ -1,13 +1,8 @@
 # Pega esto en la terminal, con el directorio actual en first-app
 node --input-type=module <<'EOF'
-import { openDatabase } from "./db/connections.js";
 import { findUserById } from "./logic/find-user-by-id.js";
-import { findById as findUserById } from "./queries/user.js";
 
-const database = openDatabase();
-
-const found = findUserById({ id: 1 });
-const result = findUserById(database, found.id);
+const result = findUserById(1);
 
 console.log(result);
 EOF

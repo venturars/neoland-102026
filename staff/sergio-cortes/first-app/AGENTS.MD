@@ -2,9 +2,9 @@ AGENTS.md —
 
 Proyecto
 
-first-app es un manejo de usuarios con tres operaciones: crear, actualizar y eliminar. La lógica de negocio es agnóstica de la tecnología que la ejecute.
+first-app es la primera app del curso de IA Engineer para alumnos junior. Sirve para construirla con IA siguiendo el sistema SDD.
 
-Node >= 22, ESM (`"type": "module"`). Gestor de paquetes: pnpm. Persistencia: el módulo integrado `node:sqlite`.
+Está en Node, con módulos ESM (`"type": "module"`) y SQLite (`node:sqlite`, fichero `db/users.sqlite`) y pnpm como gestor de paquetes. La arquitectura y las reglas de base están en `docs/CONSTITUTIONS.md`.
 
 Comandos
 
@@ -26,7 +26,7 @@ El código se escribe en inglés y está pensado para alumnos hispanohablantes.
 
 Reglas
 
--Lee docs/constitution.md y la spec activa antes de tocar código.
+-Lee docs/CONSTITUTIONS.md y la spec activa antes de tocar código.
 -Si esos ficheros no existen, no los crees y sigue con este AGENTS.MD.
 - No inventar ficheros, capas, campos ni enlaces.
 - Añadir código, dependencias, scripts, tests, SQL o clientes solo cuando el usuario lo pida en esa tarea.

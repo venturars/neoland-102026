@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { db } from "../db/connections.js";
 
 const CREATE_USERS_TABLE_SQL = readFileSync(
   new URL("./queries/create-users-table.sql", import.meta.url),
@@ -34,29 +35,29 @@ export function createUsersTable(database) {
   return database.prepare(CREATE_USERS_TABLE_SQL).run();
 }
 
-export function insert(database, user) {
-  return database.prepare(INSERT_SQL).get({
+export function insert(user) {
+  return db.prepare(INSERT_SQL).get({
     name: user.name,
     email: user.email,
   });
 }
 
-export function findById(database, id) {
-  return database.prepare(FIND_BY_ID_SQL).get({ id });
+export function findById(id) {
+  return db.prepare(FIND_BY_ID_SQL).get({ id });
 }
 
-export function findAll(database) {
-  return database.prepare(FIND_ALL_SQL).all();
+export function findAll() {
+  return db.prepare(FIND_ALL_SQL).all();
 }
 
-export function update(database, user) {
-  return database.prepare(UPDATE_SQL).get({
+export function update(user) {
+  return db.prepare(UPDATE_SQL).get({
     name: user.name,
     email: user.email,
     id: user.id,
   });
 }
 
-export function remove(database, id) {
-  return database.prepare(REMOVE_SQL).run({ id });
+export function remove(id) {
+  return db.prepare(REMOVE_SQL).run({ id });
 }

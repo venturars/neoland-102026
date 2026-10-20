@@ -1,6 +1,13 @@
+import { update } from "../queries/user.js";
+
 export function updateUser(input) {
+  const id = input.id;
   const name = input.name;
   const email = input.email;
+
+  if (typeof id !== "number") {
+    throw new Error("Id is invalid");
+  }
 
   if (typeof name !== "string" || name.trim() === "") {
     throw new Error("Name is invalid");
@@ -24,8 +31,17 @@ export function updateUser(input) {
     throw new Error("Email is invalid");
   }
 
+  const user = update({ id, name, email });
+
+  if (user === undefined) {
+    return undefined;
+  }
+
   return {
-    name,
-    email,
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
   };
 }

@@ -13,27 +13,27 @@ first-app/
 ├── AGENTS.MD
 │       Reglas del agente. Apunta a esta constitución.
 ├── docs/
-│   └── constitution.md
+│   └── CONSTITUTIONS.md
 │           Esta información base.
 ├── db/
 │   ├── connections.js
-│   │       openDatabase. DATABASE_PATH se arma con fileURLToPath, dirname y join, y apunta a users.sqlite junto a ese fichero.
+│   │       Exporta db = new DatabaseSync(DATABASE_PATH). DATABASE_PATH se arma con fileURLToPath, dirname y join, y apunta a users.sqlite junto a ese fichero.
 │   └── users.sqlite
 │           Fichero de la base. Lo crea la primera apertura. No se versiona.
 ├── logic/
 │   ├── create-user.js
-│   │       createUser(input). Lee name y email. Rechaza nombre vacío y email inválido. Devuelve name y email. No recibe users ni id.
+│   │       createUser(input). Lee name y email. Rechaza nombre vacío y email inválido. Llama a insert y devuelve la fila. No abre la base.
 │   ├── update-user.js
-│   │       updateUser(input). Lee name y email. Rechaza nombre vacío y email inválido. Devuelve name y email. No recibe users ni id.
+│   │       updateUser(input). Lee id, name y email. Rechaza un id que no sea un número, nombre vacío y email inválido. Llama a update y devuelve la fila. No abre la base.
 │   ├── delete-user.js
-│   │       deleteUser(input). Lee name y email. Rechaza nombre vacío y email inválido. Devuelve name y email. No recibe users ni id.
-│   ├── find-by-id.js
-│   │       findById(input). Lee id. Rechaza un id que no sea un número. Devuelve id. No lee name ni email.
+│   │       deleteUser(id). El argumento es el id. Rechaza un id que no sea un número. Lee la fila, llama a remove y devuelve la fila. No abre la base.
+│   ├── find-user-by-id.js
+│   │       findUserById(id). El argumento es el id. Rechaza un id que no sea un número. Llama a findById y devuelve la fila. No abre la base.
 │   └── list-users.js
-│           listUsers(database). Llama a findAll de queries/user.js y devuelve las filas.
+│           listUsers(). No recibe argumentos. Llama a findAll y devuelve las filas. No abre la base.
 ├── queries/
 │   ├── user.js
-│   │       Una constante por cada .sql. Al final del fichero, las funciones exportadas ejecutan run, all o get: createUsersTable, insert, findById, findAll, update y remove.
+│   │       Importa db. createUsersTable recibe la conexión. insert, findById, findAll, update y remove usan db y ejecutan run, all o get.
 │   └── queries/
 │       ├── create-users-table.sql
 │       │       CREATE TABLE IF NOT EXISTS users con id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL UNIQUE, name TEXT NOT NULL, y createdAt y updatedAt con DEFAULT (datetime('now', 'localtime')).
@@ -50,22 +50,22 @@ first-app/
 └── clients/
     └── terminal/
         ├── create-user-table.txt
-        │       Pegado que abre la base y llama a createUsersTable.
+        │       Importa db y llama a createUsersTable(db).
         ├── create-user.txt
-        │       Comprueba el input, inserta y muestra la fila guardada. No crea la tabla.
+        │       Llama a createUser y muestra la fila. No abre la base.
         ├── update-user.txt
-        │       Valida name y email, actualiza la fila id 1 y muestra la fila guardada. No crea la tabla.
+        │       Llama a updateUser con id 1 y muestra la fila. No abre la base.
         ├── delete-user.txt
-        │       Valida name y email, borra la fila id 1 y muestra name y email. No crea la tabla.
-        ├── find-by-id.txt
-        │       Valida el id 1, lee esa fila y la muestra. No crea la tabla.
+        │       Llama a deleteUser(1) y muestra la fila. No abre la base.
+        ├── find-user-by-id.txt
+        │       Llama a findUserById(1) y muestra la fila. No abre la base.
         └── list-users.txt
-                Lista las filas y las muestra. No crea la tabla.
+                Llama a listUsers y muestra las filas. No abre la base.
 ```
 
 ## Base de datos
 
-Este proyecto tiene una sola base de datos. Es el fichero SQLite `db/users.sqlite`. No hay otra base ni otra tabla.
+Hay una sola base de datos: `db/users.sqlite`. Hay una sola conexión: el `db` que exporta `db/connections.js`. No se abre otra base de datos ni otra conexión.
 
 La tabla se llama `users`. Su formato es este:
 
@@ -82,13 +82,13 @@ Los ficheros de `logic/` no son un adaptador ni una capa intercambiable. No se s
 
 Un fichero, una función. El nombre, la entrada y la salida los define la firma. No hay un comentario de contrato encima de la función.
 
-El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `findById`, `listUsers`).
+El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `findUserById`, `listUsers`).
 
-`createUser`, `updateUser` y `deleteUser` reciben un solo `input` con los datos de un usuario: `name` y `email`. No incluye `id`. El `id` lo asigna la base de datos.
+Si la función usa varios datos, como `name`, `email` e `id`, recibe un solo `input` y lee ahí cada valor. Si el dato es uno solo, como `id`, `email` o `name`, el argumento es ese valor. No se mete en un objeto.
 
-`findById` recibe un solo `input` con `id`. Rechaza un `id` que no sea un número y devuelve `id`.
+`createUser(input)` lee `name` y `email`. `updateUser(input)` lee `id`, `name` y `email`. `deleteUser(id)` y `findUserById(id)` reciben el `id`. `listUsers()` no recibe argumentos.
 
-`listUsers` recibe la base. Llama a `findAll` de `queries/user.js` y devuelve las filas. Es el único fichero de `logic/` que importa `queries/`.
+Ningún fichero de `logic/` abre la base. Llaman a `queries/user.js`. Donde hay una fila, devuelven `id`, `name`, `email`, `createdAt` y `updatedAt`.
 
 El cuerpo sigue este orden, y no se mezcla:
 

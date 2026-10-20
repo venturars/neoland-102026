@@ -1,3 +1,5 @@
+import { insert } from "../queries/user.js";
+
 export function createUser(input) {
   const name = input.name;
   const email = input.email;
@@ -24,8 +26,13 @@ export function createUser(input) {
     throw new Error("Email is invalid");
   }
 
+  const user = insert({ name, email });
+
   return {
-    name,
-    email,
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
   };
 }

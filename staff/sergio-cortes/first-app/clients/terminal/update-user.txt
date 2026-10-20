@@ -1,16 +1,11 @@
 # Pega esto en la terminal, con el directorio actual en first-app
 node --input-type=module <<'EOF'
-import { openDatabase } from "./db/connections.js";
 import { updateUser } from "./logic/update-user.js";
-import { update } from "./queries/user.js";
 
-const database = openDatabase();
-
-const updated = updateUser({ name: "Ada Lovelace", email: "ada@example.com" });
-const result = update(database, {
+const result = updateUser({
   id: 1,
-  name: updated.name,
-  email: updated.email,
+  name: "Ada Lovelace",
+  email: "ada@example.com",
 });
 
 console.log(result);

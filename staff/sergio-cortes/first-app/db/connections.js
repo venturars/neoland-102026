@@ -7,8 +7,4 @@ const DATABASE_PATH = join(
   "users.sqlite",
 );
 
-function openDatabase() {
-  return new DatabaseSync(DATABASE_PATH);
-}
-
-export { openDatabase };
+export const db = new DatabaseSync(DATABASE_PATH);
