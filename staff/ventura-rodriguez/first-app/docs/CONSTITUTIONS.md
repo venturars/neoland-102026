@@ -10,8 +10,8 @@ first-app/
     connection.js       Única conexión a la base de datos
     users.sqlite        Único fichero de la base de datos
   queries/
-    queries/            Texto SQL, un fichero por query, reutilizable
-    users.js            Funciones que importan ese SQL y lo ejecutan
+    queries/            Texto SQL, un fichero .sql por query
+    users.js            Lee esos ficheros, prepara el SQL y lo ejecuta
   logic/
     create-user.js      Una funcionalidad por fichero
     update-user.js
@@ -25,7 +25,7 @@ first-app/
 ```
 
 - `db/` abre la base de datos y no contiene reglas de negocio.
-- `queries/queries/` guarda el SQL. `queries/users.js` lo ejecuta. No hay reglas de negocio aquí.
+- `queries/queries/` guarda el SQL en ficheros `.sql`. `queries/users.js` los lee y los ejecuta. No hay reglas de negocio aquí.
 - `logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
 - `clients/terminal/` llama a `logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
 
@@ -86,5 +86,5 @@ En el paso 4, si todo va bien, la función devuelve el dato saneado. Si la opera
 
 El SQL no vive dentro de la función que lo ejecuta.
 
-- `queries/queries/` tiene un fichero por query. Ese fichero exporta solo el texto SQL, con parámetros con nombre (`:id`, `:name`, `:email`).
-- `queries/users.js` importa esos textos, los prepara con `db` y los ejecuta. Las funciones de este fichero se pueden reutilizar desde `logic/`.
+- `queries/queries/` tiene un fichero `.sql` por query. Ese fichero contiene solo el texto SQL, con parámetros con nombre (`:id`, `:name`, `:email`).
+- `queries/users.js` lee esos ficheros, prepara el texto con `db` y lo ejecuta. Las funciones de este fichero se pueden reutilizar desde `logic/`.
