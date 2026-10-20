@@ -1,9 +1,9 @@
 # Mapa
 
-`ejemplo.js` y `test/` llaman a `logic/operaciones.js`. Si quieren guardar, llaman también a `db/sqlite.js`. Las pruebas usan `test/almacen-memoria.js` para no tocar el fichero.
+`ejemplo.js` y `test/` llaman a `logic/operaciones.js`. Si quieren guardar, llaman también a `queries/sqlite.js`. `ejemplo.js` le pasa la conexión de `db/connection.js`. Las pruebas usan `test/almacen-memoria.js` para no tocar el fichero.
 
 `logic` decide si un usuario es válido y qué pasa al crearlo, cambiarlo o borrarlo. Recibe el almacén como primer argumento. No abre SQLite ni lee `.sql`.
 
-`queries` son las frases SQL, una por fichero. `db/sqlite.js` abre la base, ejecuta `db/esquema.sql` y traduce esas frases a las cinco funciones del almacén: `guardar`, `buscarPorId`, `buscarPorEmail`, `listar` y `borrar`.
+`db/connection.js` abre `db/users.sqlite`. `queries` son las frases SQL, una por fichero. `queries/sqlite.js` ejecuta `queries/esquema.sql` y traduce esas frases a las cinco funciones del almacén: `guardar`, `buscarPorId`, `buscarPorEmail`, `listar` y `borrar`.
 
 `guardar` sin `id` inserta. `guardar` con `id` actualiza.

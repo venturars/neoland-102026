@@ -1,15 +1,13 @@
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
-import { crearAlmacenSqlite } from "./db/sqlite.js";
+import { db } from "./db/connection.js";
 import {
   actualizarUsuario,
   buscarUsuarioPorEmail,
   crearUsuario,
   listarUsuarios,
 } from "./logic/operaciones.js";
+import { crearAlmacenSqlite } from "./queries/sqlite.js";
 
-const ruta = join(dirname(fileURLToPath(import.meta.url)), "db", "usuarios.sqlite");
-const almacen = crearAlmacenSqlite(ruta);
+const almacen = crearAlmacenSqlite(db);
 
 const email = "Ana@Ejemplo.com";
 let ana = await buscarUsuarioPorEmail(almacen, email);

@@ -9,4 +9,4 @@ pnpm test
 pnpm run ejemplo
 ```
 
-`pnpm test` prueba las reglas con un almacén en memoria y un caso con SQLite en `:memory:`. `pnpm run ejemplo` abre `db/usuarios.sqlite`, crea un usuario, lo cambia y lo lista. Ese fichero no se versiona.
+`pnpm test` prueba las reglas con un almacén en memoria y un caso con SQLite en `:memory:`. `pnpm run ejemplo` abre `db/users.sqlite` con `db/connection.js`, crea un usuario, lo cambia y lo lista. Ese fichero no se versiona.

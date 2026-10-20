@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
+import { DatabaseSync } from "node:sqlite";
 import { describe, it } from "node:test";
-import { crearAlmacenSqlite } from "../db/sqlite.js";
+import { crearAlmacenSqlite } from "../queries/sqlite.js";
 import {
   DatosInvalidos,
   EmailDuplicado,
@@ -128,7 +129,7 @@ describe("usuarios en memoria", () => {
 
 describe("usuarios en SQLite", () => {
   it("crea, cambia y borra en memoria", async () => {
-    const almacen = crearAlmacenSqlite(":memory:");
+    const almacen = crearAlmacenSqlite(new DatabaseSync(":memory:"));
     const ana = await crearUsuario(almacen, {
       nombre: "Ana",
       email: "ana@ejemplo.com",

@@ -10,6 +10,12 @@ La arquitectura está en `docs/CONSTITUCION.md`. Esta guía no la repite. Si una
 
 El directorio de trabajo es `staff/Diego-Torres/first-app`.
 
+## Base de datos
+
+`db/` solo contiene `connection.js` y `users.sqlite`.
+
+`db/connection.js` exporta `db`, la conexión a `db/users.sqlite`. No se añade otro fichero en `db/`. El esquema es `queries/esquema.sql`. El almacén es `queries/sqlite.js`: recibe la conexión ya abierta y no abre el fichero.
+
 ## Comandos
 
 Desde esta carpeta:

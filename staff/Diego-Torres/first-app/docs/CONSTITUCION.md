@@ -9,19 +9,33 @@ Si una tarea y esta constitución chocan, gana la constitución.
 | `logic/usuario.js` | Qué es un nombre y un email válidos |
 | `logic/operaciones.js` | Crear, actualizar, eliminar y las tres lecturas |
 | `logic/errores.js` | Los tres errores |
-| `logic/index.js` | Reexporta reglas y errores. No exporta SQLite |
-| `queries/*.sql` | Las frases SQL, una por fichero |
-| `db/esquema.sql` | La tabla `usuarios` |
-| `db/sqlite.js` | El almacén de verdad |
+| `logic/index.js` | Reexporta la lógica. No exporta SQLite |
+| `queries/*.sql` | Las frases SQL, una por fichero. `queries/esquema.sql` es la tabla `users` |
+| `queries/sqlite.js` | El almacén de verdad |
+| `db/connection.js` | La única conexión, a `db/users.sqlite` |
 | `test/almacen-memoria.js` | El doble de las pruebas |
 | `test/usuarios.test.js` | Las pruebas |
 | `ejemplo.js` | Une lógica y SQLite y hace `console.log` |
 
-Las importaciones van en una sola dirección. Un cliente llama a una operación y, si quiere persistir, a `db/sqlite.js`. Una operación llama a `logic/usuario.js` y al almacén que le pasan. `logic` no importa `db` ni `queries`.
+
+## Base de datos
+
+`db/` solo tiene dos cosas: `connection.js` y `users.sqlite`. No hay esquema, SQL ni almacén en esa carpeta.
+
+`db/connection.js` abre `db/users.sqlite` con `node:sqlite` y exporta `db`. Es la única conexión al fichero. No se abre otra base ni otra conexión para ese fichero. Las pruebas no importan `connection.js`: le pasan a `queries/sqlite.js` una conexión en `:memory:`.
+
+`queries/sqlite.js` recibe esa conexión ya abierta. Ejecuta `queries/esquema.sql` y prepara el resto de `.sql`.
+
+Tabla `users`:
+
+- `id` es `INTEGER PRIMARY KEY`. SQLite lo incrementa solo.
+- `name` es `TEXT NOT NULL`.
+- `email` es `VARCHAR(64) NOT NULL UNIQUE`.
+- `createdAt` y `updatedAt` son `TEXT NOT NULL`. La fecha es `YYYY-MM-DD HH:MM:SS`, la de `datetime('now', 'localtime')`.
 
 ## Usuario
 
-Un usuario guardado es `{ id, nombre, email }`. El `id` lo asigna el almacén como texto (`"1"`, `"2"`). SQLite guarda un entero y `db/sqlite.js` lo devuelve como texto.
+Un usuario guardado es `{ id, nombre, email }`. El `id` lo asigna el almacén como texto (`"1"`, `"2"`). SQLite guarda un entero y `queries/sqlite.js` lo devuelve como texto. Traduce `name` a `nombre`. `createdAt` y `updatedAt` no salen del almacén.
 
 - Nombre: texto recortado. Vacío no vale.
 - Email: minúsculas y forma `algo@algo.algo`.
@@ -37,7 +51,7 @@ Cualquier almacén ofrece estas funciones `async` y ninguna regla:
 - `listar()` devuelve un array de copias.
 - `borrar(id)` indica si existía.
 
-`db/sqlite.js` es el almacén de verdad. `test/almacen-memoria.js` es solo el doble de las pruebas. Un almacén nuevo es un fichero nuevo. No se reescribe SQLite para simular memoria.
+`queries/sqlite.js` es el almacén de verdad. `test/almacen-memoria.js` es solo el doble de las pruebas. Un almacén nuevo es un fichero nuevo. No se reescribe SQLite para simular memoria.
 
 ## Operaciones
 

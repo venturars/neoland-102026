@@ -1,3 +1,1 @@
-SELECT id, nombre, email
-FROM usuarios
-WHERE id = :id;
+SELECT * FROM users WHERE id = :id;

@@ -1,3 +1,6 @@
-UPDATE usuarios
-SET nombre = :nombre, email = :email
-WHERE id = :id;
+UPDATE users
+SET name = :name,
+    email = :email,
+    updatedAt = datetime('now', 'localtime')
+WHERE id = :id
+RETURNING *;

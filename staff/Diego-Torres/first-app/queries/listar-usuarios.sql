@@ -1,3 +1,1 @@
-SELECT id, nombre, email
-FROM usuarios
-ORDER BY id;
+SELECT * FROM users ORDER BY id;

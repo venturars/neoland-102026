@@ -1,2 +1,3 @@
-INSERT INTO usuarios (nombre, email)
-VALUES (:nombre, :email);
+INSERT INTO users (name, email)
+VALUES (:name, :email)
+RETURNING *;
