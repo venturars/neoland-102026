@@ -67,34 +67,40 @@ Una solución más larga es preferible si resulta más fácil de comprender.
 - Indentación de 2 espacios.
 - Formato estándar de Prettier.
 
-Los comentarios explican motivos; no repiten lo que ya expresa el código.
+Los comentarios son material de estudio. Deben ser lo más explicativos posible para que la desarrolladora pueda aprender el código leyéndolos.
 
 ## Comentarios educativos en el código
 
-Cuando crees una funcionalidad nueva o modifiques código con autorización, añade comentarios breves que ayuden a la desarrolladora a entender qué etapa se está realizando.
+Cuando crees una funcionalidad nueva o modifiques código con autorización, deja comentarios lo más explicativos posible. Sirven para aprender el código, no solo para marcar un paso.
 
-Los comentarios deben:
+Cada comentario debe poder leerse solo y responder, cuando aplique:
 
-- escribirse en inglés sencillo, como el resto del código;
-- separar los pasos importantes de la función;
-- explicar decisiones o reglas que no sean evidentes;
-- ayudar a relacionar el código con el orden de la lógica de negocio.
+- qué se está haciendo en este punto;
+- por qué se hace así y no de otra forma;
+- qué regla de negocio o de datos se está aplicando;
+- qué entra, qué sale y qué puede fallar;
+- cómo encaja este paso con el anterior y el siguiente.
+
+Escríbelos en inglés sencillo, como el resto del código. Prefiere una frase completa a una etiqueta de una o dos palabras. Si un bloque tiene una decisión, un límite o un caso que no se ve en el nombre de la función, explícalo en el comentario.
 
 Ejemplo:
 
 ```js
-// Validate the input
+// Check that id is a whole number greater than zero.
+// The client sends it as a JavaScript value, so a string like "1"
+// or a decimal like 1.5 must be rejected here, before any query runs.
 
-// Normalize the email
+// Trim spaces and lowercase the email so "Ada@Example.com"
+// and "ada@example.com" are treated as the same address.
 
-// Check the business rules
+// Ask the database for that email. If SQLite fails, do not return
+// its message: replace it with a clear error about this operation.
 
-// Execute the database operation
-
-// Return a safe response
+// Return only the fields the client needs, with camelCase names.
+// created_at stays inside the database column name until this mapping.
 ```
 
-No añadas un comentario a cada línea ni repitas literalmente lo que ya dice una función o variable con un nombre claro.
+Un comentario puede repetir la idea de un nombre si eso aclara el motivo, el límite o el orden. No hace falta comentar una línea cuyo significado ya quedó explicado en el bloque anterior.
 
 No modifiques las funcionalidades antiguas únicamente para añadir comentarios. Esta regla se aplica al código nuevo y a las partes que se modifiquen como parte de una tarea autorizada.
 
@@ -149,6 +155,7 @@ JavaScript no tiene un tipo nativo `email`. En Node se representa como `string`,
 - Debe tener contenido antes y después de `@`.
 - Debe tener como máximo 64 caracteres.
 - No puede repetirse.
+- La comprobación se escribe en pasos visibles: `split("@")`, un solo `@`, texto a ambos lados y longitud. No se sustituye por una expresión regular.
 
 Ejemplo válido:
 
@@ -199,6 +206,8 @@ El formulario no sustituye la validación de `logic/`.
 6. Estructurar la respuesta.
 
 Los pasos deben ser visibles y no combinarse en una única expresión compleja.
+
+La función recibe un solo objeto. Lee cada campo después de comprobar su tipo. No desestructura los campos en la firma, porque eso oculta la comprobación y lanza un `TypeError` si el valor no es un objeto. Una función sin datos, como listar usuarios, no recibe argumento.
 
 ## Gestión de errores
 
@@ -271,6 +280,7 @@ Cada archivo de `clients/terminal/` contiene una sola línea: un ejemplo del cas
 - No devuelvas campos que el cliente no necesita.
 - No conviertas silenciosamente datos inválidos.
 - No cambies el esquema como efecto secundario de otra tarea.
+- `logic/` no llama a `createUsersTable()` ni crea tablas. La tabla `users` queda preparada al cargar `queries/users.js`. Asegurarla con `CREATE TABLE IF NOT EXISTS` no es un cambio de esquema.
 
 ## Seguridad
 
