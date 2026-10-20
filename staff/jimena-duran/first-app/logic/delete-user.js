@@ -1,19 +1,14 @@
 import { findById, remove } from "../queries/users.js";
 
 export function deleteUser(id) {
-  if (!Number.isInteger(id) || id <= 0) {
-    throw new Error("User ID is invalid");
-  }
-
-  let currentUser;
-
+  let current;
   try {
-    currentUser = findById(id);
+    current = findById(id);
   } catch {
     throw new Error("Could not delete the user");
   }
 
-  if (!currentUser) {
+  if (!current) {
     throw new Error("User not found");
   }
 

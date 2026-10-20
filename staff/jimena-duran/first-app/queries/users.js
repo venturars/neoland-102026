@@ -1,58 +1,63 @@
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { db } from "../db/connection.js";
 
-export function findByEmail(email) {
-  return db
-    .prepare("SELECT * FROM users WHERE email = :email")
-    .get({ email }) ?? null;
-}
+const directory = dirname(fileURLToPath(import.meta.url));
 
-export function insert({ name, email }) {
-  return db
-    .prepare(`
-      INSERT INTO users (name, email)
-      VALUES (:name, :email)
-      RETURNING *
-    `)
-    .get({ name, email });
+const createUsersTableSql = readFileSync(
+  join(directory, "queries", "create-users-table.sql"),
+  "utf8",
+);
+const findByIdSql = readFileSync(
+  join(directory, "queries", "find-by-id.sql"),
+  "utf8",
+);
+const findByEmailSql = readFileSync(
+  join(directory, "queries", "find-by-email.sql"),
+  "utf8",
+);
+const insertSql = readFileSync(
+  join(directory, "queries", "insert.sql"),
+  "utf8",
+);
+const updateSql = readFileSync(
+  join(directory, "queries", "update.sql"),
+  "utf8",
+);
+const removeSql = readFileSync(
+  join(directory, "queries", "remove.sql"),
+  "utf8",
+);
+const findAllSql = readFileSync(
+  join(directory, "queries", "find-all.sql"),
+  "utf8",
+);
+
+export function createUsersTable() {
+  db.exec(createUsersTableSql);
 }
 
 export function findById(id) {
-  return db.prepare("SELECT * FROM users WHERE id = :id").get({ id }) ?? null;
+  return db.prepare(findByIdSql).get({ id });
+}
+
+export function findByEmail(email) {
+  return db.prepare(findByEmailSql).get({ email });
+}
+
+export function insert({ name, email }) {
+  return db.prepare(insertSql).get({ name, email });
 }
 
 export function update({ id, name, email }) {
-  return db
-    .prepare(`
-      UPDATE users
-      SET name = :name,
-          email = :email,
-          updatedAt = datetime('now', 'localtime')
-      WHERE id = :id
-      RETURNING *
-    `)
-    .get({ id, name, email });
-}
-
-export function findAll() {
-  return db.prepare("SELECT * FROM users ORDER BY id").all();
+  return db.prepare(updateSql).get({ id, name, email });
 }
 
 export function remove(id) {
-  return db.prepare("DELETE FROM users WHERE id = :id").run({ id });
+  return db.prepare(removeSql).run({ id });
 }
 
-export function createUsersTable() {
-  try {
-    db.exec(`
-      CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY,
-        name TEXT NOT NULL,
-        email VARCHAR(64) NOT NULL UNIQUE,
-        createdAt TEXT NOT NULL DEFAULT (datetime('now', 'localtime')),
-        updatedAt TEXT NOT NULL DEFAULT (datetime('now', 'localtime'))
-      )
-    `);
-  } catch {
-    throw new Error("Could not create the users table");
-  }
+export function findAll() {
+  return db.prepare(findAllSql).all();
 }

@@ -1,16 +1,9 @@
-# Pega este bloque en PowerShell desde la raíz de my-first-app.
-$env:USERS_DB_PATH = ":memory:"
-try {
-  $script = @'
-import { createUser } from "./logic/create-user.js";
+# Pega esto en PowerShell desde la carpeta first-app.
+$script = @'
 import { findUserByEmail } from "./logic/find-user-by-email.js";
-import { createUsersTable } from "./queries/users.js";
 
-createUsersTable();
-createUser({ name: "Ada Lovelace", email: "ada@example.com" });
-console.log(findUserByEmail("ada@example.com"));
+const result = findUserByEmail("ada@example.com");
+
+console.log(result);
 '@
-  $script | node --input-type=module
-} finally {
-  Remove-Item Env:USERS_DB_PATH -ErrorAction SilentlyContinue
-}
+$script | node --input-type=module

@@ -1,9 +1,7 @@
 import { DatabaseSync } from "node:sqlite";
-import { dirname, resolve } from "node:path";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const databaseDirectory = dirname(fileURLToPath(import.meta.url));
-const defaultDatabasePath = resolve(databaseDirectory, "users.sqlite");
-const databasePath = process.env.USERS_DB_PATH ?? defaultDatabasePath;
+const directory = dirname(fileURLToPath(import.meta.url));
 
-export const db = new DatabaseSync(databasePath);
+export const db = new DatabaseSync(join(directory, "users.sqlite"));

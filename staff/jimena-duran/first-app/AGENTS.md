@@ -2,14 +2,12 @@
 
 ## Proyecto
 
-first-app es la primera app del curso de IA Engineer para alumnos junior. Sirve para construirla con IA siguiendo el sistema SDD.
-
 Está en Node, con módulos ES (`"type": "module"`) y SQLite (`node:sqlite`, fichero `db/users.sqlite`). La arquitectura y las reglas de base están en `docs/CONSTITUTIONS.md`.
 
 ## Comandos
 
 - Ejecutar: no hay comando de ejecución todavía.
-- Tests: no hay tests. El script `test` de `package.json` es el placeholder de npm.
+- Tests: no hay tests. El script `test` de `package.json` es el placeholder de pnpm.
 - Lint/formato: Prettier, formato estándar. No hay script de lint ni de formato.
 
 ## Estilo y convenciones
@@ -24,13 +22,13 @@ El formato es el estándar de Prettier, sin configuración propia: comillas dobl
 
 ## Reglas
 
-- Lee `docs/CONSTITUTIONS.md` y los archivos relacionados antes de tocar código.
-- Temperatura próxima a 0. No inventes requisitos; cíñete a la solicitud y a los contratos documentados.
-- En cada tarea: investiga antes de escribir, compara si la tarea tiene parentesco con otra ya resuelta y sigue las convenciones y el estilo del código actual.
-- Si aparecen dos fuentes de verdad o dos procedimientos que se contradicen (la constitución, el código actual o esta guía), no elijas uno por tu cuenta. Explica el conflicto y pide una decisión antes de cambiar el código o la documentación normativa.
+- Lee docs/CONSTITUTIONS.md y la spec activa antes de tocar código.
+- Temperatura próxima a 0. No inventes: cíñete al plan y a la spec activa.
+- En cada tarea: investiga antes de escribir, compara si la tarea tiene parentesco con otra ya resuelta, y sigue las convenciones y el estilo del código actual.
+- Si aparecen dos fuentes de verdad o dos procedimientos que se contradicen (la constitución, el código actual, una spec o esta guía), no se elige uno. En el plan se pregunta qué camino seguir y si hay que modificar la documentación antes de empezar la spec nueva. No se escribe código hasta tener esa respuesta.
 - No propongas código que no se haya comprobado.
 
-## Al terminar cualquier tarea
+## Al terminar una tarea
 
 - Al crear una funcionalidad se crea su primer cliente en `clients/terminal/`, un `.txt` que se pega en la terminal con el directorio actual en `first-app`. Ese cliente importa la función de `logic/` y hace `console.log` del resultado. Es el test manual básico.
 - Comprueba que el desarrollo nuevo funciona antes de dar la tarea por terminada. La comprobación es ejecutar ese fragmento de `clients/terminal/`.
