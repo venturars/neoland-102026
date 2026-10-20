@@ -14,6 +14,7 @@ const { listUsers } = await import("../logic/list-users.js");
 const { updateUser } = await import("../logic/update-user.js");
 const { deleteUser } = await import("../logic/delete-user.js");
 const { findUserByEmail } = await import("../logic/find-user-by-email.js");
+const { findUserById } = await import("../logic/find-user-by-id.js");
 
 function throws(fn, message) {
   assert.throws(fn, (error) => {
@@ -84,16 +85,25 @@ test("missing users throw User not found", () => {
   throws(() => updateUser(99, { name: "Example" }), "User not found");
   throws(() => deleteUser(99), "User not found");
   throws(() => findUserByEmail("missing@example.com"), "User not found");
+  throws(() => findUserById(99), "User not found");
 });
 
 test("invalid ids throw Invalid id instead of crashing", () => {
   throws(() => deleteUser(undefined), "Invalid id");
   throws(() => updateUser(undefined, { name: "Example" }), "Invalid id");
+  throws(() => findUserById(undefined), "Invalid id");
 });
 
 test("find user by email", () => {
   createUser({ name: "Ada", email: "ada@example.com" });
   const found = findUserByEmail("ADA@example.com");
+  assert.equal(found.name, "Ada");
+  assert.equal(found.email, "ada@example.com");
+});
+
+test("find user by id", () => {
+  const created = createUser({ name: "Ada", email: "ada@example.com" });
+  const found = findUserById(created.id);
   assert.equal(found.name, "Ada");
   assert.equal(found.email, "ada@example.com");
 });

@@ -6,16 +6,19 @@ Una app junior en Node (`"type": "module"`, `node:sqlite`) en `staff/meghan-mart
 
 ## Flujo de trabajo (obligatorio)
 
-Ningún código de una funcionalidad nueva se escribe antes de aprobar su especificación.
+Ningún código de una funcionalidad nueva se escribe antes de spec, plan y tasks.
+
+Por cada funcionalidad: carpeta nueva `docs/specs/<nombre>/` (`spec.md`, `plan.md`, `tasks.md`). No se sobrescriben. Spec = producto. Plan = ficheros. Tasks = pasos. Sin loop.
 
 1. Constitución — `docs/CONSTITUTIONS.md`.
-2. Especificación de la funcionalidad — argumentos, retorno, errores, cómo se prueba.
-3. Revisión — se aprueba la spec (o se piden cambios).
-4. Plan de implementación — qué ficheros se crean o tocan.
-5. Implementación — código que obedece constitución + spec.
-6. Verificación de aceptación — `npm test` y el snippet de `clients/terminal/` de esa acción.
+2. Spec en esa carpeta.
+3. Revisión.
+4. Plan y tasks.
+5. Classifier (`docs/classifier/`).
+6. Código.
+7. `npm test` y el snippet de terminal.
 
-Los dos (tests y snippet) son obligatorios. No vale uno solo.
+Los dos son obligatorios. Usa **npm**, no pnpm. Un logic ya creado no se reemplaza.
 
 ## Comandos
 
