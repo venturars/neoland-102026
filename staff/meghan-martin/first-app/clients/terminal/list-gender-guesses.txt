@@ -1,9 +1,0 @@
-# Pega esto en la terminal, con el directorio actual en first-app
-# Ollama debe estar en marcha (modelo nimble-v3)
-node --input-type=module <<'EOF'
-import { listGenderGuesses } from "./logic/count-users-by-gender.js";
-const rows = await listGenderGuesses();
-for (const row of rows) {
-  console.log(row.name, "→", row.gender);
-}
-EOF

@@ -40,7 +40,7 @@ first-app/
 ```
 
 - `db/connection.js` es la única conexión. El fichero en disco es `db/users.sqlite`. No se sube a git. Los tests pueden usar `USERS_DB_PATH` hacia un fichero temporal para no tocar mis datos reales.
-- `queries/users.js` ejecuta el SQL (crear tabla, buscar, insertar, actualizar, borrar, listar).
+- `queries/users.js` ejecuta el SQL. Las sentencias están en `queries/queries/*.sql` (crear tabla, buscar, insertar, actualizar, borrar, listar).
 - `logic/` es la app. Cada acción es su propio fichero. `user-fields.js` guarda las comprobaciones compartidas de nombre, email e id para que create/update/find sean iguales.
 - `clients/terminal/*.txt` no son programas. Se pegan con el directorio actual en `first-app`.
 - `docs/specs/<funcion>/` — spec, plan y tasks de esa función. Carpeta nueva cada vez.
@@ -93,9 +93,9 @@ Normalización de email (create, update si se envía email, find): trim, minúsc
 - `deleteUser(id)` → no devuelve nada (`undefined`).
   `Invalid id` / `User not found` igual que update.
 
-- `countUsersByGender()` → `{ women, men, undefined }` (números).
-  Tabla vacía → ceros. Si Ollama falla → `Could not classify the user`.
-  Solo cuentan las palabras `women`, `men`, `undefined`. Cualquier otra respuesta cuenta como `undefined`.
+- `usersGenderCount()` → `{ women, men, genderUndefined }` (números).
+  Sin argumentos. Tabla vacía → ceros. Si no se puede leer la base o Ollama no responde → `Could not classify the users`.
+  Solo `women` y `men` suman a su número. Cualquier otra respuesta de una persona cuenta como `genderUndefined`. Si a un grupo le faltan respuestas, ese grupo entero cuenta como `genderUndefined`.
   No se guarda en SQLite.
 
 ## Errores
@@ -117,7 +117,7 @@ Si falla SQLite:
 - `Could not delete the user`
 - `Could not list the users`
 - `Could not find the user`
-- `Could not classify the user`
+- `Could not classify the users`
 
 ## Orden de construcción
 
@@ -126,7 +126,7 @@ Si falla SQLite:
 3. Actualizar (si solo cambia el nombre, el email se mantiene).
 4. Buscar por email.
 5. Buscar por id.
-6. Recuento de géneros (todas las personas; salida: tres números).
+6. Recuento de géneros (`docs/specs/classifier/`; todas las personas; salida: tres números).
 7. Borrar y volver a listar.
 
 Después de cada acción: snippet de terminal y `npm test`.
