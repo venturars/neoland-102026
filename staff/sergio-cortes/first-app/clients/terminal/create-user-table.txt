@@ -1,0 +1,10 @@
+# Pega esto en la terminal, con el directorio actual en first-app
+node --input-type=module <<'EOF'
+import { openDatabase } from "./db/connections.js";
+import { createUsersTable } from "./queries/user.js";
+
+const database = openDatabase();
+const result = createUsersTable(database);
+
+console.log(result);
+EOF

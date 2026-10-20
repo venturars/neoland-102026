@@ -1,17 +1,19 @@
 # Pega esto en la terminal, con el directorio actual en first-app
 node --input-type=module <<'EOF'
+import { openDatabase } from "./db/connections.js";
 import { deleteUser } from "./logic/delete-user.js";
+import {
+  createUsersTable,
+  deleteUserById,
+  selectUsers,
+} from "./queries/user.js";
 
-const users = [
-  {
-    id: 1,
-    name: "Ada",
-    email: "ada@example.com",
-    createdAt: "2026-01-01T00:00:00.000Z",
-    updatedAt: "2026-01-01T00:00:00.000Z",
-  },
-];
+const database = openDatabase();
+createUsersTable(database);
+
+const users = selectUsers(database);
 const result = deleteUser({ id: 1, users });
+deleteUserById(database, result.id);
 
 console.log(result);
 EOF
