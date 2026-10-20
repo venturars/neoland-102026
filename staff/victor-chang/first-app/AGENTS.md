@@ -1,6 +1,6 @@
 # AGENTS.md — first-app
 
-How to write code in this app. [CONSTITUTION.md](docs/CONSTITUTION.md) defines the structure, libraries and error contract, and wins on any of those topics. This file does not repeat them.
+How to write code in this app. [CONSTITUTION.md](docs/CONSTITUTION.md) defines the structure, the database, the shape of a `logic/` file and the error list, and wins on any of those topics. This file does not repeat them.
 
 ## Rules
 
@@ -11,59 +11,45 @@ How to write code in this app. [CONSTITUTION.md](docs/CONSTITUTION.md) defines t
 Run from `staff/victor-chang/first-app`:
 
 ```
-npx prettier --write .                                                    # format every file
-npx prettier --check .                                                    # check formatting without changing files
-npm test                                                                  # run every test
-node --no-warnings --test --test-name-pattern="CU-7" "test/**/*.test.js"  # run one example's test
+npx prettier --write .   # format every file
+npx prettier --check .   # check formatting without changing files
 ```
 
-To practice a feature's query, open its `client/terminal/<use-case>.txt`, copy the whole block and paste it into Git Bash from `first-app`. Run tests through `npm test` (or the explicit glob), not a bare `node --test`: Node treats every `.js` file under `test/` as a test, including helpers.
+To try a feature, open its `clients/terminal/<name>.txt`, copy the whole block and paste it into Git Bash from `first-app`.
 
 ## Naming
 
-- Files and folders are kebab-case. A JS file exports a single function and is named after it: `create-user.js` exports `createUser`. Only exceptions: `index.js` (aggregators), `errors.js` (all error classes) and the uppercase docs (`AGENTS.md`, `CONSTITUTION.md`, `README.md`).
-- Functions, variables and parameters are camelCase; fixed module-level configuration (paths, patterns, code maps) is `UPPER_SNAKE_CASE`.
-- Use-cases in `logic/` are named for the business action: `create`, `get`, `list`, `update`, `delete` + entity (`createUser`).
-- Database operations in `query/` are named for the data action: `find`, `insert`, `modify`, `remove` + entity (`findUserById`, `findAllUsers`). Never reuse a `logic/` name in `query/`.
+- Files and folders are kebab-case. A `logic/` file exports one function named after it: `create-user.js` exports `createUser`. Exceptions: `errors.js` (all error classes), `queries/users.js` (all user queries) and the uppercase docs (`AGENTS.md`, `CONSTITUTION.md`, `README.md`).
+- `.sql` files are named for what they do: `find-user-by-id.sql`, `insert-user.sql`.
+- Functions, variables and parameters are camelCase.
 - Error classes end in `Error`; error codes are `UPPER_SNAKE_CASE`.
 
 ## How code is written
 
-- Curried factories: the dependency first, then the arguments — `export const getUser = (queries) => (id) => { ... }`.
+- Plain functions with their parameters in the signature: `export function getUser(id) { ... }`.
 - Named exports only, no default exports.
+- Always use braces with `if`, even for one line.
 - No classes except errors. Plain objects in, plain objects out.
-- Formatting is Prettier's default config, with no config file and no overrides. Run `npx prettier --write .` before committing; never format by hand against it.
-- One responsibility per function; keep functions short enough to read at a glance.
-- Comments only when the _why_ is not obvious from the code.
+- Formatting is Prettier's default config, with no config file and no overrides. Run `npx prettier --write .` before committing.
+- Comments only for the step names of a `logic/` file, or when the _why_ is not obvious.
 
 ## Error handling
 
-The error classes, codes and HTTP statuses are defined in the constitution. When writing code:
+The messages, classes and codes are listed in the constitution. When writing code:
 
-- **Throw only `AppError` subclasses.** Never throw strings or plain `Error`. Never signal failure from `logic/` by returning `null`, `false` or an error object.
-- **Always fill `details`** with the shape given for that error in the constitution, e.g. `new NotFoundError('user not found', { resource: 'user', id })`.
-- **Order of checks in a use-case:** validate input → check existence (`NotFoundError`) → check uniqueness (`DuplicateError`) → write. Validate before any `queries.*` call.
+- **Throw only the classes in `logic/errors.js`.** Never throw strings or plain `Error`. Never signal a failure by returning `null`, `false` or an error object.
+- **Always fill `details`** with the shape the constitution gives, e.g. `new NotFoundError("User not found", { resource: "user", id })`.
 - **Validation stops at the first failing field** and names it in `details.field`.
-- **Messages** are lowercase, no trailing period, safe to show to a user, and never include SQL, file paths or stack traces.
-- **Wrapping:** when turning one error into another, always pass `{ cause: originalError }` as the third argument.
-- **Never swallow** errors (`catch {}`) and never log-and-rethrow. Catch only to translate (in `query/safe.js`) or to output (once, at a JS client's top level).
-- **Wrap every query** with `safe(...)` from `query/safe.js`.
-- **Tests** assert on `error.code` and `error.details`, never on `message` text, unless the spec fixes the message. Every row of the constitution's error table needs at least one test.
-
-## Tests
-
-- One test per spec example. The test name starts with the example ID, followed by what it proves: `test('CU-7: rejects a duplicate email and adds nothing', ...)`.
-- Use `node:test` (`test`) and `node:assert/strict`. No `describe`, no mocks library.
-- Logic and query tests use `createTestQueries(...users)` from `test/create-test-queries.js`: a fresh in-memory database per test, seeded with the given users. Never share state between tests.
-- Errors: `assert.throws(fn, { code, details })`.
+- **One `try/catch` per `logic/` function**, around the calls to `queries/users.js` (and the AI). In the `catch`: rethrow an `AppError` as it is; turn anything else into that feature's `SystemError("Could not …", {}, { cause: error })`.
+- **Never swallow** errors (`catch {}`) and never log and rethrow.
+- `queries/users.js` and `db/` never catch errors.
 
 ## Workflow
 
-1. Write `specs/<use-case>/spec.md` (constitution section 10).
+1. Write `docs/specs/<name>/spec.md`.
 2. Write `plan.md`. If it has an open question, stop and ask.
 3. Write `tasks.md`, then follow it step by step, ticking each step.
-4. Add one test per spec example; run them and see them fail.
-5. Implement until `npm test` passes.
-6. Write the feature's terminal client, `client/terminal/<use-case>.txt` (constitution section 8), and run it once in Git Bash.
-7. Only touch files inside `staff/victor-chang/first-app/`.
-8. Commit on the personal branch and open the PR against `staging`.
+4. Write the code.
+5. Write the feature's `clients/terminal/<name>.txt` and paste it in Git Bash: the output matches its comments.
+6. Only touch files inside `staff/victor-chang/first-app/`.
+7. Commit on the personal branch. Push only when asked.

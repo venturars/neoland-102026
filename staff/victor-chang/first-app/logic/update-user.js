@@ -1,15 +1,36 @@
-import { DuplicateError, NotFoundError } from "./errors.js";
+import {
+  AppError,
+  DuplicateError,
+  NotFoundError,
+  SystemError,
+} from "./errors.js";
 import { validateUser } from "./validate-user.js";
+import * as users from "../queries/users.js";
 
-export const updateUser = (queries) => (id, input) => {
-  const user = validateUser(input);
-  if (!queries.findUserById(id))
-    throw new NotFoundError("user not found", { resource: "user", id });
-  const same = queries.findUserByEmail(user.email);
-  if (same && same.id !== id)
-    throw new DuplicateError("email already exists", {
-      field: "email",
-      value: user.email,
-    });
-  return queries.modifyUser(id, user);
-};
+export function updateUser(id, name, email) {
+  // 1. Validate the input
+  const user = validateUser(name, email);
+
+  try {
+    // 2. Check the other business rules
+    if (!users.findById(id)) {
+      throw new NotFoundError("User not found", { resource: "user", id });
+    }
+    const owner = users.findByEmail(user.email);
+    if (owner && owner.id !== id) {
+      throw new DuplicateError("Email is already used", {
+        field: "email",
+        value: user.email,
+      });
+    }
+
+    // 3. Apply
+    const updated = users.update(id, user.name, user.email);
+
+    // 4. Return a plain object
+    return { ...updated };
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+    throw new SystemError("Could not update the user", {}, { cause: error });
+  }
+}
