@@ -16,6 +16,11 @@ const FIND_BY_ID_SQL = readFileSync(
   "utf8",
 );
 
+const FIND_BY_EMAIL_SQL = readFileSync(
+  new URL("./queries/find-by-email.sql", import.meta.url),
+  "utf8",
+);
+
 const FIND_ALL_SQL = readFileSync(
   new URL("./queries/find-all.sql", import.meta.url),
   "utf8",
@@ -44,6 +49,10 @@ export function insert(user) {
 
 export function findById(id) {
   return db.prepare(FIND_BY_ID_SQL).get({ id });
+}
+
+export function findByEmail(email) {
+  return db.prepare(FIND_BY_EMAIL_SQL).get({ email });
 }
 
 export function findAll() {

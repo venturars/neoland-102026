@@ -22,18 +22,20 @@ first-app/
 │           Fichero de la base. Lo crea la primera apertura. No se versiona.
 ├── logic/
 │   ├── create-user.js
-│   │       createUser(input). Lee name y email. Rechaza nombre vacío y email inválido. Llama a insert y devuelve la fila. No abre la base.
+│   │       createUser(input). Lee name y email. Rechaza nombre vacío, email inválido y un email que ya existe. Llama a insert y devuelve la fila. No abre la base.
 │   ├── update-user.js
-│   │       updateUser(input). Lee id, name y email. Rechaza un id que no sea un número, nombre vacío y email inválido. Llama a update y devuelve la fila. No abre la base.
+│   │       updateUser(input). Lee id, name y email. Rechaza un id que no sea un número, nombre vacío y email inválido. Lee la fila por id y, si no está, no actualiza. Rechaza un email que pertenece a otro usuario. Llama a update y devuelve la fila. No abre la base.
 │   ├── delete-user.js
 │   │       deleteUser(id). El argumento es el id. Rechaza un id que no sea un número. Lee la fila, llama a remove y devuelve la fila. No abre la base.
 │   ├── find-user-by-id.js
 │   │       findUserById(id). El argumento es el id. Rechaza un id que no sea un número. Llama a findById y devuelve la fila. No abre la base.
+│   ├── find-user-by-email.js
+│   │       findUserByEmail(email). El argumento es el email. Rechaza un email inválido. Llama a findByEmail y devuelve la fila. No abre la base.
 │   └── list-users.js
 │           listUsers(). No recibe argumentos. Llama a findAll y devuelve las filas. No abre la base.
 ├── queries/
 │   ├── user.js
-│   │       Importa db. createUsersTable recibe la conexión. insert, findById, findAll, update y remove usan db y ejecutan run, all o get.
+│   │       Importa db. createUsersTable recibe la conexión. insert, findById, findByEmail, findAll, update y remove usan db y ejecutan run, all o get.
 │   └── queries/
 │       ├── create-users-table.sql
 │       │       CREATE TABLE IF NOT EXISTS users con id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL UNIQUE, name TEXT NOT NULL, y createdAt y updatedAt con DEFAULT (datetime('now', 'localtime')).
@@ -41,6 +43,8 @@ first-app/
 │       │       Inserta name y email. Las fechas las pone el default. Devuelve la fila.
 │       ├── find-by-id.sql
 │       │       Una fila por id, con SELECT *.
+│       ├── find-by-email.sql
+│       │       Una fila por email, con SELECT *.
 │       ├── find-all.sql
 │       │       Todas las filas, con SELECT *, ordenadas por id.
 │       ├── update.sql
@@ -59,6 +63,8 @@ first-app/
         │       Llama a deleteUser(1) y muestra la fila. No abre la base.
         ├── find-user-by-id.txt
         │       Llama a findUserById(1) y muestra la fila. No abre la base.
+        ├── find-user-by-email.txt
+        │       Llama a findUserByEmail("ada@example.com") y muestra la fila. No abre la base.
         └── list-users.txt
                 Llama a listUsers y muestra las filas. No abre la base.
 ```
@@ -82,18 +88,18 @@ Los ficheros de `logic/` no son un adaptador ni una capa intercambiable. No se s
 
 Un fichero, una función. El nombre, la entrada y la salida los define la firma. No hay un comentario de contrato encima de la función.
 
-El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `findUserById`, `listUsers`).
+El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `findUserById`, `findUserByEmail`, `listUsers`).
 
 Si la función usa varios datos, como `name`, `email` e `id`, recibe un solo `input` y lee ahí cada valor. Si el dato es uno solo, como `id`, `email` o `name`, el argumento es ese valor. No se mete en un objeto.
 
-`createUser(input)` lee `name` y `email`. `updateUser(input)` lee `id`, `name` y `email`. `deleteUser(id)` y `findUserById(id)` reciben el `id`. `listUsers()` no recibe argumentos.
+`createUser(input)` lee `name` y `email`. `updateUser(input)` lee `id`, `name` y `email`. `deleteUser(id)` y `findUserById(id)` reciben el `id`. `findUserByEmail(email)` recibe el `email`. `listUsers()` no recibe argumentos.
 
 Ningún fichero de `logic/` abre la base. Llaman a `queries/user.js`. Donde hay una fila, devuelven `id`, `name`, `email`, `createdAt` y `updatedAt`.
 
 El cuerpo sigue este orden, y no se mezcla:
 
 1. Validar los parámetros de entrada.
-2. Validar el resto de reglas de negocio.
+2. Validar el resto de reglas de negocio. Ahí se puede llamar a una query de lectura, como `findById` o `findByEmail`, para comprobar la regla antes de escribir.
 3. Aplicar la lógica de negocio.
 4. Estructurar la salida y sanear la respuesta.
 

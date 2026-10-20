@@ -1,4 +1,4 @@
-import { insert } from "../queries/user.js";
+import { findByEmail, insert } from "../queries/user.js";
 
 export function createUser(input) {
   const name = input.name;
@@ -24,6 +24,12 @@ export function createUser(input) {
 
   if (dotIndex <= 0 || dotIndex === domain.length - 1) {
     throw new Error("Email is invalid");
+  }
+
+  const owner = findByEmail(email);
+
+  if (owner !== undefined) {
+    throw new Error("Email is already used");
   }
 
   const user = insert({ name, email });

@@ -1,4 +1,4 @@
-import { update } from "../queries/user.js";
+import { findByEmail, findById, update } from "../queries/user.js";
 
 export function updateUser(input) {
   const id = input.id;
@@ -29,6 +29,18 @@ export function updateUser(input) {
 
   if (dotIndex <= 0 || dotIndex === domain.length - 1) {
     throw new Error("Email is invalid");
+  }
+
+  const current = findById(id);
+
+  if (current === undefined) {
+    return undefined;
+  }
+
+  const owner = findByEmail(email);
+
+  if (owner !== undefined && owner.id !== id) {
+    throw new Error("Email is already used");
   }
 
   const user = update({ id, name, email });
