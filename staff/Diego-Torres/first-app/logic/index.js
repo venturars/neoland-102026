@@ -2,8 +2,12 @@ export {
   DatosInvalidos,
   EmailDuplicado,
   UsuarioNoEncontrado,
-} from "./dominio/usuario.js";
-export { crearAlmacenMemoria } from "./almacen/memoria.js";
+} from "./errores.js";
+export {
+  validarCambios,
+  validarEmail,
+  validarUsuarioNuevo,
+} from "./usuario.js";
 export {
   actualizarUsuario,
   buscarUsuarioPorEmail,
@@ -11,4 +15,4 @@ export {
   eliminarUsuario,
   listarUsuarios,
   obtenerUsuario,
-} from "./casos-de-uso/usuarios.js";
+} from "./operaciones.js";

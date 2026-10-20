@@ -1,35 +1,32 @@
-import {
-  EmailDuplicado,
-  UsuarioNoEncontrado,
-  validarCambios,
-  validarEmail,
-  validarUsuarioNuevo,
-} from "../dominio/usuario.js";
+import { EmailDuplicado, UsuarioNoEncontrado } from "./errores.js";
+import { validarCambios, validarEmail, validarUsuarioNuevo } from "./usuario.js";
 
 export async function crearUsuario(almacen, datos) {
   const usuario = validarUsuarioNuevo(datos);
-  const yaExiste = await almacen.buscarPorEmail(usuario.email);
-  if (yaExiste) {
-    throw new EmailDuplicado(`El email ${usuario.email} ya está registrado`);
+  const existente = await almacen.buscarPorEmail(usuario.email);
+  if (existente) {
+    throw new EmailDuplicado(
+      `El email ${usuario.email} ya está registrado`,
+    );
   }
   return almacen.guardar(usuario);
 }
 
 export async function actualizarUsuario(almacen, id, cambios) {
+  const siguiente = validarCambios(cambios);
   const actual = await almacen.buscarPorId(id);
   if (!actual) {
     throw new UsuarioNoEncontrado(id);
   }
-
-  const siguiente = validarCambios(actual, cambios);
-  if (siguiente.email !== actual.email) {
+  if (siguiente.email !== undefined && siguiente.email !== actual.email) {
     const otro = await almacen.buscarPorEmail(siguiente.email);
-    if (otro && otro.id !== actual.id) {
-      throw new EmailDuplicado(`El email ${siguiente.email} ya está registrado`);
+    if (otro) {
+      throw new EmailDuplicado(
+        `El email ${siguiente.email} ya está registrado`,
+      );
     }
   }
-
-  return almacen.guardar(siguiente);
+  return almacen.guardar({ ...actual, ...siguiente, id: actual.id });
 }
 
 export async function eliminarUsuario(almacen, id) {
@@ -54,6 +51,6 @@ export async function listarUsuarios(almacen) {
 }
 
 export async function buscarUsuarioPorEmail(almacen, email) {
-  const emailLimpio = validarEmail(email);
-  return almacen.buscarPorEmail(emailLimpio);
+  const normalizado = validarEmail(email);
+  return almacen.buscarPorEmail(normalizado);
 }

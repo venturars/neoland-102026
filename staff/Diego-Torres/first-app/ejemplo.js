@@ -1,25 +1,28 @@
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { crearAlmacenSqlite } from "./db/sqlite.js";
 import {
   actualizarUsuario,
   buscarUsuarioPorEmail,
-  crearAlmacenMemoria,
   crearUsuario,
-  eliminarUsuario,
   listarUsuarios,
-} from "./src/index.js";
+} from "./logic/operaciones.js";
 
-const almacen = crearAlmacenMemoria();
+const ruta = join(dirname(fileURLToPath(import.meta.url)), "db", "usuarios.sqlite");
+const almacen = crearAlmacenSqlite(ruta);
 
-const ana = await crearUsuario(almacen, {
-  nombre: "Ana Ruiz",
-  email: "ana@ejemplo.com",
+const email = "Ana@Ejemplo.com";
+let ana = await buscarUsuarioPorEmail(almacen, email);
+if (!ana) {
+  ana = await crearUsuario(almacen, {
+    nombre: " Ana ",
+    email,
+  });
+}
+console.log(ana);
+
+const cambiada = await actualizarUsuario(almacen, ana.id, {
+  nombre: "Ana Torres",
 });
-await crearUsuario(almacen, {
-  nombre: "Luis Peña",
-  email: "luis@ejemplo.com",
-});
-await actualizarUsuario(almacen, ana.id, { nombre: "Ana Ruiz López" });
-console.log(await buscarUsuarioPorEmail(almacen, " LUIS@ejemplo.com "));
-await eliminarUsuario(almacen, ana.id);
-
-const quedan = await listarUsuarios(almacen);
-console.log(quedan);
+console.log(cambiada);
+console.log(await listarUsuarios(almacen));

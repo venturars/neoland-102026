@@ -1,93 +1,150 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import { crearAlmacenSqlite } from "../db/sqlite.js";
+import {
+  DatosInvalidos,
+  EmailDuplicado,
+  UsuarioNoEncontrado,
+} from "../logic/errores.js";
 import {
   actualizarUsuario,
-  crearAlmacenMemoria,
+  buscarUsuarioPorEmail,
   crearUsuario,
-  DatosInvalidos,
   eliminarUsuario,
-  EmailDuplicado,
   listarUsuarios,
   obtenerUsuario,
-  UsuarioNoEncontrado,
-} from "../src/index.js";
+} from "../logic/operaciones.js";
+import { crearAlmacenMemoria } from "./almacen-memoria.js";
 
-function almacenVacio() {
-  return crearAlmacenMemoria();
-}
-
-describe("crear usuario", () => {
-  it("guarda nombre y email normalizados", async () => {
-    const usuario = await crearUsuario(almacenVacio(), {
-      nombre: "  Ana Ruiz ",
-      email: " Ana@Ejemplo.com ",
+describe("usuarios en memoria", () => {
+  it("crea un usuario con id de texto y email en minúsculas", async () => {
+    const almacen = crearAlmacenMemoria();
+    const usuario = await crearUsuario(almacen, {
+      nombre: "  Ana  ",
+      email: "Ana@Ejemplo.com",
     });
 
-    assert.equal(usuario.nombre, "Ana Ruiz");
-    assert.equal(usuario.email, "ana@ejemplo.com");
-    assert.ok(usuario.id);
+    assert.deepEqual(usuario, {
+      id: "1",
+      nombre: "Ana",
+      email: "ana@ejemplo.com",
+    });
   });
 
-  it("rechaza datos vacíos y un email repetido", async () => {
-    const almacen = almacenVacio();
+  it("rechaza nombre vacío y email mal formado", async () => {
+    const almacen = crearAlmacenMemoria();
+
     await assert.rejects(
-      () => crearUsuario(almacen, { nombre: " ", email: "ana@ejemplo.com" }),
-      DatosInvalidos,
+      () => crearUsuario(almacen, { nombre: "  ", email: "ana@ejemplo.com" }),
+      (error) => {
+        assert.ok(error instanceof DatosInvalidos);
+        assert.equal(error.message, "El nombre es obligatorio");
+        return true;
+      },
     );
+
+    await assert.rejects(
+      () => crearUsuario(almacen, { nombre: "Ana", email: "ana" }),
+      (error) => {
+        assert.ok(error instanceof DatosInvalidos);
+        assert.equal(error.message, "El email no es válido");
+        return true;
+      },
+    );
+  });
+
+  it("no deja repetir el email", async () => {
+    const almacen = crearAlmacenMemoria();
     await crearUsuario(almacen, { nombre: "Ana", email: "ana@ejemplo.com" });
+
     await assert.rejects(
-      () => crearUsuario(almacen, { nombre: "Otra Ana", email: "ANA@ejemplo.com" }),
-      EmailDuplicado,
+      () =>
+        crearUsuario(almacen, { nombre: "Otra", email: "ANA@ejemplo.com" }),
+      (error) => {
+        assert.ok(error instanceof EmailDuplicado);
+        assert.equal(
+          error.message,
+          "El email ana@ejemplo.com ya está registrado",
+        );
+        return true;
+      },
+    );
+  });
+
+  it("actualiza, lista, busca y borra", async () => {
+    const almacen = crearAlmacenMemoria();
+    const ana = await crearUsuario(almacen, {
+      nombre: "Ana",
+      email: "ana@ejemplo.com",
+    });
+
+    const cambiada = await actualizarUsuario(almacen, ana.id, {
+      nombre: "Ana Torres",
+    });
+    assert.equal(cambiada.nombre, "Ana Torres");
+    assert.equal(cambiada.email, "ana@ejemplo.com");
+
+    assert.deepEqual(await listarUsuarios(almacen), [cambiada]);
+    assert.deepEqual(
+      await buscarUsuarioPorEmail(almacen, "Ana@Ejemplo.com"),
+      cambiada,
+    );
+    assert.deepEqual(await obtenerUsuario(almacen, ana.id), cambiada);
+    assert.deepEqual(await eliminarUsuario(almacen, ana.id), cambiada);
+    assert.deepEqual(await listarUsuarios(almacen), []);
+  });
+
+  it("exige un cambio y avisa si el usuario no existe", async () => {
+    const almacen = crearAlmacenMemoria();
+
+    await assert.rejects(
+      () => actualizarUsuario(almacen, "1", {}),
+      (error) => {
+        assert.ok(error instanceof DatosInvalidos);
+        assert.equal(error.message, "Hay que indicar un nombre o un email");
+        return true;
+      },
+    );
+
+    await assert.rejects(
+      () => actualizarUsuario(almacen, "9", { nombre: "Ana" }),
+      (error) => {
+        assert.ok(error instanceof UsuarioNoEncontrado);
+        assert.equal(error.message, "No existe un usuario con id 9");
+        return true;
+      },
+    );
+
+    await assert.rejects(
+      () => eliminarUsuario(almacen, "9"),
+      (error) => {
+        assert.ok(error instanceof UsuarioNoEncontrado);
+        assert.equal(error.message, "No existe un usuario con id 9");
+        return true;
+      },
     );
   });
 });
 
-describe("actualizar usuario", () => {
-  it("cambia el nombre y conserva el id", async () => {
-    const almacen = almacenVacio();
-    const ana = await crearUsuario(almacen, { nombre: "Ana", email: "ana@ejemplo.com" });
+describe("usuarios en SQLite", () => {
+  it("crea, cambia y borra en memoria", async () => {
+    const almacen = crearAlmacenSqlite(":memory:");
+    const ana = await crearUsuario(almacen, {
+      nombre: "Ana",
+      email: "ana@ejemplo.com",
+    });
+    assert.equal(ana.id, "1");
 
-    const actualizada = await actualizarUsuario(almacen, ana.id, { nombre: "Ana López" });
+    const cambiada = await actualizarUsuario(almacen, ana.id, {
+      email: "ana.torres@ejemplo.com",
+    });
+    assert.deepEqual(cambiada, {
+      id: "1",
+      nombre: "Ana",
+      email: "ana.torres@ejemplo.com",
+    });
 
-    assert.equal(actualizada.id, ana.id);
-    assert.equal(actualizada.nombre, "Ana López");
-    assert.equal(actualizada.email, "ana@ejemplo.com");
-  });
-
-  it("no deja usar el email de otra persona", async () => {
-    const almacen = almacenVacio();
-    const ana = await crearUsuario(almacen, { nombre: "Ana", email: "ana@ejemplo.com" });
-    await crearUsuario(almacen, { nombre: "Luis", email: "luis@ejemplo.com" });
-
-    await assert.rejects(
-      () => actualizarUsuario(almacen, ana.id, { email: "luis@ejemplo.com" }),
-      EmailDuplicado,
-    );
-  });
-
-  it("falla si el usuario no existe", async () => {
-    await assert.rejects(
-      () => actualizarUsuario(almacenVacio(), "999", { nombre: "Nadie" }),
-      UsuarioNoEncontrado,
-    );
-  });
-});
-
-describe("eliminar y consultar", () => {
-  it("elimina un usuario existente y listar ya no lo devuelve", async () => {
-    const almacen = almacenVacio();
-    const ana = await crearUsuario(almacen, { nombre: "Ana", email: "ana@ejemplo.com" });
-    await crearUsuario(almacen, { nombre: "Luis", email: "luis@ejemplo.com" });
-
-    const borrada = await eliminarUsuario(almacen, ana.id);
-    const quedan = await listarUsuarios(almacen);
-
-    assert.equal(borrada.id, ana.id);
-    assert.deepEqual(quedan.map((usuario) => usuario.nombre), ["Luis"]);
-    await assert.rejects(() => obtenerUsuario(almacen, ana.id), UsuarioNoEncontrado);
-  });
-
-  it("no elimina un id desconocido", async () => {
-    await assert.rejects(() => eliminarUsuario(almacenVacio(), "999"), UsuarioNoEncontrado);
+    assert.deepEqual(await eliminarUsuario(almacen, ana.id), cambiada);
+    assert.equal(await buscarUsuarioPorEmail(almacen, "ana.torres@ejemplo.com"), null);
   });
 });

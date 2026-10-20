@@ -1,9 +1,8 @@
 {
-  "name": "usuarios",
+  "name": "first-app",
   "private": true,
   "type": "module",
   "scripts": {
-    "paso-1": "node paso-1.js",
     "test": "node --test",
     "ejemplo": "node ejemplo.js"
   }
