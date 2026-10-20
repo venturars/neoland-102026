@@ -51,6 +51,9 @@ first-app/
     users.test.js          Reglas probadas sin SQLite
     find-user-by-email.test.js  Búsqueda por correo sin SQLite
     sqlite.test.js         Persistencia y consultas reales
+  docs/
+    constitution.md        Principios del proyecto
+    specs/classifier/     Spec, plan y tareas del desarrollo planificado
   app.js                   Conecta la lógica con el repositorio SQLite
 ```
 
@@ -151,8 +154,7 @@ imprimen mensajes ni conocen códigos HTTP.
 
 `app.findUserByEmail(email)` recibe el correo como texto. Devuelve `INVALID_EMAIL`
 si la entrada es inválida; si encuentra al usuario, devuelve solo `id`, `name`,
-`email`, `createdAt` y `updatedAt`. La especificación, el plan y las comprobaciones
-de esta funcionalidad están en [docs/find-user-by-email.md](docs/find-user-by-email.md).
+`email`, `createdAt` y `updatedAt`.
 
 ## Contrato del repositorio
 
@@ -178,6 +180,22 @@ exponen referencias que permitan modificar los datos guardados directamente.
 El contrato es síncrono para mantener sencillo este primer ejercicio. Si se añade
 un almacenamiento con API asíncrona, habrá que adaptar las llamadas con
 `async`/`await`; separar los módulos no elimina esa diferencia.
+
+## Desarrollo planificado con SDD
+
+El siguiente desarrollo es el clasificador de géneros por nombre:
+
+- [Spec](docs/specs/classifier/spec.md): objetivo completo y criterios de aceptación.
+- [Plan](docs/specs/classifier/plan.md): etapas y diseño técnico de la primera.
+- [Tareas](docs/specs/classifier/tasks.md): pasos de implementación pendientes.
+
+La primera etapa hará explícita la creación de la tabla y separará su SQL en una
+capa de consultas, conservando los datos y la lógica independiente. Preparar la
+tabla no implementa el clasificador; el modelo local y su integración se
+concretarán más adelante.
+
+Esta entrega solo añade documentación. Actualmente la tabla sigue creándose al
+abrir la conexión y los comandos y ejemplos anteriores mantienen su funcionamiento.
 
 ## Próximas iteraciones
 

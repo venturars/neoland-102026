@@ -4,7 +4,7 @@ first-app es una app para aprender a gestionar usuarios con Node.js y SQLite.
 Se construye con IA siguiendo SDD: primero se define el comportamiento y después
 se implementa y se comprueba.
 
-## Árbol
+## Árbol actual
 
 ```text
 first-app/
@@ -26,6 +26,11 @@ first-app/
   tests/                          Pruebas de negocio y de SQLite
   docs/
     constitution.md               Esta base
+    specs/
+      classifier/
+        spec.md                   Objetivo completo del clasificador
+        plan.md                   Etapas y diseño de la primera
+        tasks.md                  Tareas pendientes de la primera etapa
   app.js                          Conecta la lógica con el repositorio
 ```
 
@@ -105,12 +110,31 @@ JavaScript con `id`, `name`, `email`, `createdAt` y `updatedAt`.
 
 ## Trabajo con SDD
 
-- Antes de cambiar un comportamiento, escribir una especificación breve con el
-  objetivo, el alcance, las reglas y ejemplos de éxito y error.
-- Anotar el plan y las tareas en `docs/`. La documentación debe ser proporcional
-  al cambio y mantenerse actualizada.
+- Cada desarrollo se documenta en `docs/specs/<nombre>/`, con nombre en kebab-case.
+- `spec.md` describe el negocio: objetivo, uso, entradas, resultados, errores,
+  límites y criterios de aceptación. No detalla ficheros ni SQL.
+- `plan.md` describe la técnica: etapas, archivos afectados, contratos y
+  comprobaciones. Distingue el estado actual del cambio propuesto.
+- `tasks.md` ordena pasos pequeños y verificables de la etapa activa. Las tareas
+  se marcan solo después de ejecutarlas y comprobarlas.
+- Escribir los documentos antes de cambiar el comportamiento. Mantenerlos breves
+  y actualizados; documentar una etapa no significa haberla implementado.
 - Comprobar lo implementado con los criterios de la especificación y las pruebas
   afectadas. Usar `npm test` y la demo cuando corresponda.
 - Mantener funciones sencillas y añadir dependencias solo cuando sean necesarias.
 - Guardar todo en UTF-8 y añadir algún comentario corto y explicativo por cada
   funcionalidad nueva.
+
+## Cambio planificado: clasificador
+
+El desarrollo activo está en [specs/classifier/spec.md](specs/classifier/spec.md).
+Su primera etapa, detallada en el [plan](specs/classifier/plan.md) y las
+[tareas](specs/classifier/tasks.md), preparará explícitamente la tabla de usuarios.
+
+Se prevé separar el SQL en `queries/queries/`, ejecutarlo desde `queries/users.js`
+y abrir la conexión sin crear la tabla automáticamente. Se conservarán la lógica
+independiente, el repositorio, los resultados actuales y el esquema con fechas UTC.
+
+Esta transición está pendiente. Actualmente `openDatabase` sigue inicializando
+la tabla y la aplicación no acepta todavía `createApp({ db })`. El clasificador
+y la integración con IA también están pendientes; la entrega actual es documental.

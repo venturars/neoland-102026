@@ -8,10 +8,21 @@ Estas instrucciones se aplican a esta carpeta y sus subdirectorios.
   JavaScript con módulos ES y SQLite nativo (`node:sqlite`), sin dependencias externas.
 - Antes de trabajar, lee `docs/constitution.md`, el README y la especificación
   relacionada, si existe.
-- Antes de cambiar un comportamiento, escribe o actualiza una especificación
-  breve en `docs/` con alcance, reglas y criterios de aceptación. Anota también
-  el plan y las tareas, de forma proporcional al cambio.
+- Antes de cambiar un comportamiento, prepara `docs/specs/<nombre>/spec.md`,
+  `plan.md` y `tasks.md`. La spec define negocio y criterios; el plan, técnica y
+  etapas; las tareas, pasos pequeños y verificables de la etapa activa.
+- Mantén los documentos breves y marca tareas solo tras ejecutarlas. Sigue el
+  alcance solicitado: una entrega documental deja pendiente la implementación.
 - Implementa el alcance solicitado y mantén actualizados los documentos afectados.
+
+## Desarrollo activo
+
+- Lee los tres documentos de `docs/specs/classifier/`. La spec describe el
+  clasificador completo; la primera etapa del plan prepara la tabla de usuarios.
+- La inicialización explícita y la capa `queries/` están planificadas. Hoy
+  `openDatabase` aún crea la tabla y `createApp({ db })` todavía no existe.
+- No marques el clasificador como terminado al preparar la tabla. El modelo y
+  la integración con IA se concretarán en etapas posteriores.
 
 ## Arquitectura
 
