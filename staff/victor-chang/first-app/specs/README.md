@@ -1,6 +1,6 @@
 # Specs
 
-One file per use-case or client. A spec is the source of truth: write or change it **before** the tests and the code.
+One file per use-case. A spec is the source of truth: write or change it **before** the tests and the code.
 
 ## Format
 
@@ -23,4 +23,3 @@ Every scenario ID has exactly one test whose name starts with that ID, so filter
 | `UU`   | [updateUser](update-user.md)           | `test/logic/update-user.test.js`       |
 | `DU`   | [deleteUser](delete-user.md)           | `test/logic/delete-user.test.js`       |
 | `SQ`   | [safe queries](safe.md)                | `test/query/safe.test.js`              |
-| `CLI`  | [terminal client](terminal.md)         | `test/client/terminal.test.js`         |

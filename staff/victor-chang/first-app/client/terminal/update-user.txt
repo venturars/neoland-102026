@@ -1,0 +1,22 @@
+# Feature: updateUser — practice the query in query/modify-user.js
+# Run this whole block in Git Bash, with first-app as the current folder.
+# It uses a throwaway practice database (db/practice.db), rebuilt on every run,
+# so your real data in db/users.db is never touched.
+
+# 1. Start a fresh practice database with the users table from db/schema.sql
+DB=db/practice.db
+rm -f $DB
+sqlite3 $DB < db/schema.sql
+
+# 2. Add two users to practice with: Ana gets id 1, Bob gets id 2
+sqlite3 $DB "INSERT INTO users (name, email) VALUES ('Ana', 'ana@x.com');"
+sqlite3 $DB "INSERT INTO users (name, email) VALUES ('Bob', 'bob@x.com');"
+
+# 3. Run the query: change user 1
+sqlite3 $DB "UPDATE users SET name = 'Ana B', email = 'anab@x.com' WHERE id = 1;"
+
+# 4. See the result: user 1 is now Ana B
+sqlite3 -header -column $DB "SELECT * FROM users ORDER BY id;"
+
+# 5. Try to give Bob Ana's new email: fails with "UNIQUE constraint failed: users.email"
+sqlite3 $DB "UPDATE users SET name = 'Bob', email = 'anab@x.com' WHERE id = 2;"

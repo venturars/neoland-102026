@@ -1,0 +1,19 @@
+# Feature: deleteUser — practice the query in query/remove-user.js
+# Run this whole block in Git Bash, with first-app as the current folder.
+# It uses a throwaway practice database (db/practice.db), rebuilt on every run,
+# so your real data in db/users.db is never touched.
+
+# 1. Start a fresh practice database with the users table from db/schema.sql
+DB=db/practice.db
+rm -f $DB
+sqlite3 $DB < db/schema.sql
+
+# 2. Add two users to practice with: Ana gets id 1, Bob gets id 2
+sqlite3 $DB "INSERT INTO users (name, email) VALUES ('Ana', 'ana@x.com');"
+sqlite3 $DB "INSERT INTO users (name, email) VALUES ('Bob', 'bob@x.com');"
+
+# 3. Run the query: remove user 2
+sqlite3 $DB "DELETE FROM users WHERE id = 2;"
+
+# 4. See the result: only Ana is left
+sqlite3 -header -column $DB "SELECT * FROM users ORDER BY id;"
