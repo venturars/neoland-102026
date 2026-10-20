@@ -11,6 +11,7 @@ Está en Node, con módulos ES (`"type": "module"`) y SQLite (`node:sqlite`, fic
 - Ejecutar: pegar el contenido de `clients/terminal/` en la terminal, con el directorio actual en `first-app`.
 - Tests: no hay tests automatizados. El script `test` de `package.json` es el placeholder de npm. El test manual son los `.txt` de `clients/terminal/`.
 - Lint/formato: Prettier, formato estándar. No hay script de lint ni de formato.
+- Dependencias: se instalan con pnpm, no con npm.
 
 ## Estilo y convenciones
 

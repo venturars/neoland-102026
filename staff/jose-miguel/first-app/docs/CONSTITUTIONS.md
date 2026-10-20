@@ -25,6 +25,7 @@ first-app/
     delete-user.js
     list-users.js
     find-user-by-email.js
+    users-gender-count.js
   clients/
     terminal/           Primer cliente. Sirve de test manual
   docs/
@@ -37,7 +38,7 @@ first-app/
 ```
 
 - `clients/` no importa SQL ni abre la base de datos. Solo llama a `logic/`.
-- `logic/` no escribe SQL y no abre SQLite. Solo llama a `queries/users.js`.
+- `logic/` no escribe SQL y no abre SQLite. Solo llama a `queries/users.js`. `logic/users-gender-count.js` también puede usar la librería `openai`.
 - `queries/users.js` no valida reglas de negocio. Solo ejecuta SQL.
 - `db/` no conoce usuarios. Solo abre la conexión.
 
@@ -122,6 +123,7 @@ El error depende del paso del cuerpo:
    - `"Could not delete the user"`
    - `"Could not list the users"`
    - `"Could not find the user"`
+   - `"Could not count the users by gender"`
 4. Estructurar la salida y sanear la respuesta. Este paso no lanza error. Devuelve el dato saneado.
 
 El client de terminal no captura el error para maquillarlo. Lo muestra.

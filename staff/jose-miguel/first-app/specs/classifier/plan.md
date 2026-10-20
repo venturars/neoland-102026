@@ -1,41 +1,45 @@
 # Plan técnico
 
-Firma: `userGendersCount()`. Sin parámetros. El fichero es `logic/user-genders-count.js`. No se reemplaza ningún fichero de `logic/` ya creado.
+Firma: `usersGenderCount(names)`. El fichero es `logic/users-gender-count.js`. No se reemplaza ningún fichero de `logic/` ya creado.
 
-Lee los usuarios con `listUsers` de `queries/users.js`. No hay SQL nuevo. `logic/` no abre la base de datos.
+La prueba pasa la lista de nombres. No lee los usuarios guardados. No hay SQL nuevo. `logic/` no abre la base de datos.
 
-Si no hay usuarios, el resultado es 0, 0, 0.
+El tamaño de tanda es la constante `BATCH_SIZE`, con valor 6. Una llamada de chat por tanda. La última tanda puede traer menos de 6.
+
+Si no hay nombres, el resultado es `{ women: 0, men: 0, genderUndefined: 0 }`.
 
 ## IA
 
-La llamada vive en `logic/user-genders-count.js`. `queries/` sigue siendo solo SQL.
+El modelo es llama3.2. Su nombre vive en la constante `MODEL`, dentro de `logic/users-gender-count.js`. La función no vuelve a escribir el nombre.
 
-Por cada usuario ya guardado, se envía su nombre a Llama 3.2 en local, a través de nimble v3, sin coste.
+llama3.2 admite chat. Corre en local, sin coste. Hace falta Ollama en marcha y el modelo ya descargado.
 
-Se pide el género de ese nombre. La respuesta que cuenta es mujer u hombre.
+El cliente es `OpenAI` de la librería `openai`, instalada con pnpm. `baseURL` es `http://127.0.0.1:11434/v1`. `apiKey` es `ollama`.
 
-Si nimble v3 no manda un mensaje, o la respuesta no trae mujer ni hombre, ese usuario suma un no definido.
+Cada tanda se envía en un chat. La respuesta que cuenta es `women`, `men` o `undefined`, una palabra por nombre y en el mismo orden.
 
-El modelo se carga una vez y se reutiliza para todos los nombres. No se guarda la respuesta.
+Los ejemplos van en ese chat, como muestra. No se entrena el modelo. Carmen es women, Lucia es women, Javier es men, Pablo es men, Kim es undefined.
 
-Antes de escribir código, la constitución tiene que permitir esa llamada, porque hoy `logic/` solo puede llamar a `queries/users.js`.
+Si no hay mensaje, o la respuesta no es una de esas tres palabras, ese usuario suma un no definido.
 
-La salida es un único array de tres números, en este orden: mujeres, hombres, no definidos. No se guarda.
+El cliente se crea una vez y se reutiliza. No se guarda la respuesta.
 
-La llamada a `queries/` va en `try/catch`. El `catch` lanza `"Could not count the users by gender"`. Ese mensaje se añade a la sección 4 de `docs/CONSTITUTIONS.md` antes de escribir código.
+Antes de escribir código, la constitución tiene que permitir que este fichero use la librería `openai`, porque hoy `logic/` solo puede llamar a `queries/users.js`.
 
-El cliente es `clients/terminal/user-genders-count.txt`. Importa `userGendersCount` y hace `console.log` del resultado.
+La salida es `{ women: 0, men: 0, genderUndefined: 0 }`. No se guarda.
+
+El cliente es `clients/terminal/users-gender-count.txt`. Importa `usersGenderCount` y hace `console.log` del resultado.
 
 ## Ficheros
 
 Se crean:
 
-- `logic/user-genders-count.js`
-- `clients/terminal/user-genders-count.txt`
+- `logic/users-gender-count.js`
+- `clients/terminal/users-gender-count.txt`
 
 Se editan:
 
-- `docs/CONSTITUTIONS.md`, para permitir la llamada a nimble v3 y añadir el mensaje de error.
+- `docs/CONSTITUTIONS.md`, para permitir la librería `openai` y añadir el mensaje de error.
 
 Se eliminan:
 
