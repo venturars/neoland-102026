@@ -18,6 +18,7 @@ first-app/
     delete-user.js
     list-users.js
     find-user-by-email.js
+    find-user-by-id.js
   clients/
     terminal/           Primer cliente. Sirve de test manual
   docs/
