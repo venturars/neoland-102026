@@ -132,14 +132,15 @@ After a feature is complete (spec written, `npm test` passing), its **first clie
 
 The only messages a user can see. Specs and plans name failures with these exact messages. A new message is added here first.
 
-| Message                | Code         | Details                                                     | When                                |
-| ---------------------- | ------------ | ----------------------------------------------------------- | ----------------------------------- |
-| `name is required`     | `VALIDATION` | `{ field: "name" }`                                         | name missing or blank               |
-| `email is invalid`     | `VALIDATION` | `{ field: "email" }`                                        | email missing or without `@`        |
-| `user not found`       | `NOT_FOUND`  | `{ resource: "user", id }` or `{ resource: "user", email }` | no user with that id or email       |
-| `email already exists` | `DUPLICATE`  | `{ field: "email", value }`                                 | another user already has that email |
-| `database error`       | `SYSTEM`     | `{}`                                                        | the database failed                 |
-| `unexpected error`     | `SYSTEM`     | `{}`                                                        | any other failure (JS clients only) |
+| Message                         | Code         | Details                                                     | When                                |
+| ------------------------------- | ------------ | ----------------------------------------------------------- | ----------------------------------- |
+| `name is required`              | `VALIDATION` | `{ field: "name" }`                                         | name missing or blank               |
+| `email is invalid`              | `VALIDATION` | `{ field: "email" }`                                        | email missing or without `@`        |
+| `user not found`                | `NOT_FOUND`  | `{ resource: "user", id }` or `{ resource: "user", email }` | no user with that id or email       |
+| `email already exists`          | `DUPLICATE`  | `{ field: "email", value }`                                 | another user already has that email |
+| `database error`                | `SYSTEM`     | `{}`                                                        | the database failed                 |
+| `unexpected error`              | `SYSTEM`     | `{}`                                                        | any other failure (JS clients only) |
+| `users could not be classified` | `SYSTEM`     | `{}`                                                        | the gender AI did not respond       |
 
 ## 10. Specs
 
