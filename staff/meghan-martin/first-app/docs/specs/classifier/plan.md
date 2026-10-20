@@ -5,16 +5,20 @@ Aquí solo el encaje en first-app.
 
 ## Excepción del modelo aprobado
 
-`nimble-v3` no habla chat. No se instala `openai` y no se llama a
-`/v1/chat/completions`. No hay mensajes user/assistant ni un JSON
-con un array `genders`.
+La única diferencia aprobada es la petición. `nimble-v3` no habla
+chat, así que no hay paquete `openai` ni `/v1/chat/completions`.
+No hay mensajes user/assistant ni un JSON con un array `genders`.
 
-La decisión va a Ollama en local:
+`usersGenderCount()` es una sola función: `findAll`, grupos de 6,
+recuento `{ women, men, genderUndefined }`, y
+`Could not classify the users` si falla la base o la petición.
+
+El cuerpo de la petición es lo distinto:
 `POST http://127.0.0.1:11434/v1/systemone`.
 Modelo `process.env.OLLAMA_MODEL` o `nimble-v3`.
-El few-shot del spec va en las instrucciones de cada pregunta.
-Una petición lleva como máximo 6 nombres en `state.names` y una
-pregunta `choice` por nombre (`women` / `men` / `undefined`).
+Como máximo 6 nombres en `state.names` y una pregunta `choice`
+por nombre (`women` / `men` / `undefined`). El few-shot del spec
+va en las instrucciones: Carmen, Lucia, Javier, Pablo, Kim.
 
 ## Reutilizar
 
@@ -24,7 +28,7 @@ pregunta `choice` por nombre (`women` / `men` / `undefined`).
 ## Nuevo
 
 - `usersGenderCount()` en `logic/users-gender-count.js`
-  (sin argumentos). No recibe un `decide` inyectado.
+  (sin argumentos, sin funciones auxiliares, sin `decide`).
 - Lee con `findAll` dentro de try/catch. Tabla vacía devuelve
   `{ women: 0, men: 0, genderUndefined: 0 }` y no llama a Ollama.
 - Grupos de 6. Si `fetch` lanza o la respuesta no es ok:
