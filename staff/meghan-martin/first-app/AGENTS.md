@@ -14,9 +14,8 @@ Por cada funcionalidad: carpeta nueva `docs/specs/<nombre>/` (`spec.md`, `plan.m
 2. Spec en esa carpeta.
 3. Revisión.
 4. Plan y tasks.
-5. Classifier (`docs/classifier/`).
-6. Código.
-7. `npm test` y el snippet de terminal.
+5. Código.
+6. `npm test` y el snippet de terminal.
 
 Los dos son obligatorios. Usa **npm**, no pnpm. Un logic ya creado no se reemplaza.
 

@@ -20,9 +20,8 @@ No hay loop (no repetir solo hasta que pase el test). Una persona lee spec → p
 2. `docs/specs/<nombre>/spec.md`
 3. Revisión humana de la spec.
 4. `plan.md` y `tasks.md` en esa misma carpeta.
-5. `docs/classifier/` — acción nueva vs no reemplazar logic.
-6. Implementación.
-7. `npm test` y el snippet de `clients/terminal/` de esa acción.
+5. Implementación.
+6. `npm test` y el snippet de `clients/terminal/` de esa acción.
 
 Los dos (tests y snippet) son obligatorios. No vale uno solo. Paquete: **npm**, no pnpm.
 
@@ -35,7 +34,7 @@ first-app/
   logic/              Las reglas. Un fichero por acción.
   clients/terminal/   Texto que pegas para probar cada acción.
   tests/              Tests automáticos con una base temporal.
-  docs/               Constitución, specs (una carpeta por función), classifier.
+  docs/               Constitución y specs (una carpeta por función).
   AGENTS.md           Cómo debe trabajar Cursor en esta carpeta.
   package.json
 ```
@@ -45,7 +44,6 @@ first-app/
 - `logic/` es la app. Cada acción es su propio fichero. `user-fields.js` guarda las comprobaciones compartidas de nombre, email e id para que create/update/find sean iguales.
 - `clients/terminal/*.txt` no son programas. Se pegan con el directorio actual en `first-app`.
 - `docs/specs/<funcion>/` — spec, plan y tasks de esa función. Carpeta nueva cada vez.
-- `docs/classifier/` — tipo de cambio (fichero nuevo, no reemplazar).
 
 Funcionalidad nueva = fichero nuevo en logic + `.txt` nuevo en terminal. Un fichero de `logic/` ya creado no se reemplaza para encajar otra tarea. No conviertas un fichero viejo en un cajón de sastre. No muevas las reglas a queries ni a clients.
 
@@ -95,6 +93,11 @@ Normalización de email (create, update si se envía email, find): trim, minúsc
 - `deleteUser(id)` → no devuelve nada (`undefined`).
   `Invalid id` / `User not found` igual que update.
 
+- `countUsersByGender()` → `{ women, men, undefined }` (números).
+  Tabla vacía → ceros. Si Ollama falla → `Could not classify the user`.
+  Solo cuentan las palabras `women`, `men`, `undefined`. Cualquier otra respuesta cuenta como `undefined`.
+  No se guarda en SQLite.
+
 ## Errores
 
 Si falla, `throw new Error("...")` con una de estas frases en inglés. No devolver `{ ok: false }`.
@@ -114,6 +117,7 @@ Si falla SQLite:
 - `Could not delete the user`
 - `Could not list the users`
 - `Could not find the user`
+- `Could not classify the user`
 
 ## Orden de construcción
 
@@ -122,6 +126,7 @@ Si falla SQLite:
 3. Actualizar (si solo cambia el nombre, el email se mantiene).
 4. Buscar por email.
 5. Buscar por id.
-6. Borrar y volver a listar.
+6. Recuento de géneros (todas las personas; salida: tres números).
+7. Borrar y volver a listar.
 
 Después de cada acción: snippet de terminal y `npm test`.

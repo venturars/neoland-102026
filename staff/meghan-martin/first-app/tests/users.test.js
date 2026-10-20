@@ -15,6 +15,9 @@ const { updateUser } = await import("../logic/update-user.js");
 const { deleteUser } = await import("../logic/delete-user.js");
 const { findUserByEmail } = await import("../logic/find-user-by-email.js");
 const { findUserById } = await import("../logic/find-user-by-id.js");
+const { countUsersByGender } = await import(
+  "../logic/count-users-by-gender.js"
+);
 
 function throws(fn, message) {
   assert.throws(fn, (error) => {
@@ -106,4 +109,55 @@ test("find user by id", () => {
   const found = findUserById(created.id);
   assert.equal(found.name, "Ada");
   assert.equal(found.email, "ada@example.com");
+});
+
+function fakeDecide(repliesByName) {
+  return async (name) => {
+    const content = repliesByName[name];
+    if (content instanceof Error) {
+      throw content;
+    }
+    return content;
+  };
+}
+
+test("count users by gender", async () => {
+  createUser({ name: "Ada", email: "ada@example.com" });
+  createUser({ name: "Juan", email: "juan@example.com" });
+  createUser({ name: "Alex", email: "alex@example.com" });
+  const counts = await countUsersByGender({
+    decide: fakeDecide({
+      Ada: "women",
+      Juan: "men",
+      Alex: "undefined",
+    }),
+  });
+  assert.deepEqual(counts, { women: 1, men: 1, undefined: 1 });
+});
+
+test("count users by gender empty table", async () => {
+  const counts = await countUsersByGender({ decide: fakeDecide({}) });
+  assert.deepEqual(counts, { women: 0, men: 0, undefined: 0 });
+});
+
+test("count users by gender only women men or undefined", async () => {
+  createUser({ name: "Ada", email: "ada@example.com" });
+  const counts = await countUsersByGender({
+    decide: fakeDecide({ Ada: "mujer" }),
+  });
+  assert.deepEqual(counts, { women: 0, men: 0, undefined: 1 });
+});
+
+test("count users by gender throws if the model is down", async () => {
+  createUser({ name: "Ada", email: "ada@example.com" });
+  await assert.rejects(
+    () =>
+      countUsersByGender({
+        decide: fakeDecide({ Ada: new Error("down") }),
+      }),
+    (error) => {
+      assert.equal(error.message, "Could not classify the user");
+      return true;
+    },
+  );
 });
