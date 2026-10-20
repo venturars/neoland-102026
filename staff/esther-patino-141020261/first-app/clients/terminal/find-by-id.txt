@@ -1,0 +1,3 @@
+REM Pega esto en cmd, con el directorio actual en first-app.
+REM Ejecuta findById desde logic/update-user.js. Cambia el 1 por el id real.
+node --input-type=module -e "import { findById } from './logic/update-user.js'; console.log(findById(1));"
