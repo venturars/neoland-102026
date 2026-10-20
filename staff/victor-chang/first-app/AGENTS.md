@@ -14,7 +14,7 @@ Run from `staff/victor-chang/first-app`:
 npx prettier --write .                                                    # format every file
 npx prettier --check .                                                    # check formatting without changing files
 npm test                                                                  # run every test
-node --no-warnings --test --test-name-pattern="CU-7" "test/**/*.test.js"  # run one scenario's test
+node --no-warnings --test --test-name-pattern="CU-7" "test/**/*.test.js"  # run one example's test
 ```
 
 To practice a feature's query, open its `client/terminal/<use-case>.txt`, copy the whole block and paste it into Git Bash from `first-app`. Run tests through `npm test` (or the explicit glob), not a bare `node --test`: Node treats every `.js` file under `test/` as a test, including helpers.
@@ -52,16 +52,18 @@ The error classes, codes and HTTP statuses are defined in the constitution. When
 
 ## Tests
 
-- One test per spec scenario. The test name starts with the scenario ID, followed by what it proves: `test('CU-7: rejects a duplicate email and adds nothing', ...)`.
+- One test per spec example. The test name starts with the example ID, followed by what it proves: `test('CU-7: rejects a duplicate email and adds nothing', ...)`.
 - Use `node:test` (`test`) and `node:assert/strict`. No `describe`, no mocks library.
 - Logic and query tests use `createTestQueries(...users)` from `test/create-test-queries.js`: a fresh in-memory database per test, seeded with the given users. Never share state between tests.
 - Errors: `assert.throws(fn, { code, details })`.
 
 ## Workflow
 
-1. Write or update the spec in `specs/` (format in [specs/README.md](specs/README.md)) before any code.
-2. Add or update one test per changed scenario; run them and see them fail.
-3. Implement following the constitution's boilerplate until `npm test` passes.
-4. Write the feature's terminal client, `client/terminal/<use-case>.txt` (constitution section 8), and run it once in Git Bash.
-5. Only touch files inside `staff/victor-chang/first-app/`.
-6. Commit on the personal branch and open the PR against `staging`.
+1. Write `specs/<use-case>/spec.md` (constitution section 10).
+2. Write `plan.md`. If it has an open question, stop and ask.
+3. Write `tasks.md`, then follow it step by step, ticking each step.
+4. Add one test per spec example; run them and see them fail.
+5. Implement until `npm test` passes.
+6. Write the feature's terminal client, `client/terminal/<use-case>.txt` (constitution section 8), and run it once in Git Bash.
+7. Only touch files inside `staff/victor-chang/first-app/`.
+8. Commit on the personal branch and open the PR against `staging`.

@@ -28,7 +28,7 @@ first-app/
   db/               database connection (openDatabase) and schema (schema.sql)
   client/<name>/    one folder per consumer
     terminal/       one .txt practice block per feature
-  specs/            one spec per use-case or client — the source of truth
+  specs/<use-case>/ spec.md, plan.md, tasks.md for each feature (section 10)
   test/             mirrors the code folders: test/logic, test/query, test/client
   docs/             project-level documents (this constitution)
   AGENTS.md         how to write code; stays at the root so agents find it
@@ -40,7 +40,7 @@ first-app/
 | `query/`  | SQL and row → plain object mapping               | contain business rules                          |
 | `db/`     | opening the database, the schema in `schema.sql` | contain queries                                 |
 | `client/` | how a consumer reaches the app                   | contain business rules                          |
-| `specs/`  | expected behaviour: rules and numbered scenarios | describe implementation details                 |
+| `specs/`  | what each feature does, how and in which steps   | disagree with this constitution or the code     |
 | `test/`   | one test per spec scenario                       | be imported by app code                         |
 
 ## 4. Dependency direction
@@ -59,7 +59,7 @@ JS client (future) ──► logic
 
 ## 5. Boilerplate for a new feature
 
-0. `specs/<use-case>.md` and `test/<layer>/<use-case>.test.js` — the spec and its tests come first.
+0. `specs/<use-case>/` (spec.md → plan.md → tasks.md, section 10), then `test/<layer>/<use-case>.test.js`.
 1. `query/<verb>-<entity>.js` — the database operation, then register it in `query/index.js`.
 2. `logic/<verb>-<entity>.js` — the use-case, using `queries.<operation>`.
 3. `client/terminal/<use-case>.txt` — once `npm test` passes, the feature's first client (see section 8).
@@ -67,6 +67,7 @@ JS client (future) ──► logic
 
 ## 6. Data contract
 
+- SQL in `query/` uses named parameters (`:id`, `:name`, `:email`), bound from an object: `.get({ id })`.
 - `query/` returns plain objects, arrays of plain objects, or `null` when a row is not found.
 - `logic/` returns plain objects, or nothing (`undefined`) for deletes.
 
@@ -126,3 +127,63 @@ After a feature is complete (spec written, `npm test` passing), its **first clie
 - **Every step has a `#` comment** saying what it does and what to expect, written for a junior.
 - **Never touches `db/users.db`.**
 - No tests: the block is checked by running it.
+
+## 9. Errors
+
+The only messages a user can see. Specs and plans name failures with these exact messages. A new message is added here first.
+
+| Message                | Code         | Details                                                     | When                                |
+| ---------------------- | ------------ | ----------------------------------------------------------- | ----------------------------------- |
+| `name is required`     | `VALIDATION` | `{ field: "name" }`                                         | name missing or blank               |
+| `email is invalid`     | `VALIDATION` | `{ field: "email" }`                                        | email missing or without `@`        |
+| `user not found`       | `NOT_FOUND`  | `{ resource: "user", id }` or `{ resource: "user", email }` | no user with that id or email       |
+| `email already exists` | `DUPLICATE`  | `{ field: "email", value }`                                 | another user already has that email |
+| `database error`       | `SYSTEM`     | `{}`                                                        | the database failed                 |
+| `unexpected error`     | `SYSTEM`     | `{}`                                                        | any other failure (JS clients only) |
+
+## 10. Specs
+
+Every feature has a folder `specs/<use-case>/`, named like its `logic/` file, with three files. Write them in this order. Keep them short, concrete and deterministic: one fact per line, no explanations that the reader does not need.
+
+**spec.md — the business.** Read by whoever decides if the feature is what they want, without opening the code. It never names files, functions or SQL.
+
+```
+# <Feature name>
+## What        what is asked, in one or two lines
+## Who         who uses it
+## Input       what goes in
+## Output      what comes out, with one example
+## Failures    each failure, named with a message from section 9
+## Examples    table: ID | Given | When | Then
+## Out of scope
+```
+
+- Example IDs are a prefix plus a number (`CU-1`). Each ID has exactly one test whose name starts with it. IDs are never reused.
+
+**plan.md — the technique.** Read by whoever checks that the work fits this constitution.
+
+```
+# Plan — <feature name>
+## Files           files created / files touched
+## Looks like      the logic/ file it resembles (name it, do not paste it)
+## Signature       name, parameters, output
+## SQL             new SQL with named parameters, or "none"
+## Errors          spec failure → message (section 9) → code
+## Tests           test file and example IDs
+## Open questions  empty means go ahead
+```
+
+- A new feature is a new file.
+- If this constitution, the current code and the spec do not say the same thing, write the question under **Open questions** and stop. No tasks and no code until it is answered.
+
+**tasks.md — the steps**, in the order a person would do them.
+
+```
+# Tasks — <feature name>
+1. [ ] <one place, one action, one result you can check>
+```
+
+- Each step opens one place, does one thing and leaves a result you can look at.
+- A step is at most four lines.
+- Work that is not a new feature keeps the same grain: look at what exists, change one place, check.
+- Tick `[x]` when a step is done.
