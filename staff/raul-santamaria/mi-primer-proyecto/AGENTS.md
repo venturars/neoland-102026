@@ -18,6 +18,8 @@ No hay comandos de ejecución.
 
 - El proyecto sigue SDD.
 - Lee el archivo `docs/CONSTITUTIONS.md`.
+- Temperatura próxima a 0.
+- No inventar código. Ceñirse al plan y las specs.
 
 
 ## Al terminar cualquier tarea

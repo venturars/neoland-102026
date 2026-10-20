@@ -3,5 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "CRUD de usuarios con la lógica separada de SQLite y de la terminal"
+  "description": "CRUD de usuarios con la lógica separada de SQLite y de la terminal",
+  "dependencies": {
+    "openai": "^7.39.0"
+  }
 }
