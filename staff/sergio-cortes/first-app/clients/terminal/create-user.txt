@@ -1,0 +1,9 @@
+# Pega esto en la terminal, con el directorio actual en first-app
+node --input-type=module <<'EOF'
+import { createUser } from "./logic/create-user.js";
+
+const users = [];
+const result = createUser({ name: "Ada", email: "ada@example.com", users });
+
+console.log(result);
+EOF
