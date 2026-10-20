@@ -1,10 +1,10 @@
-import { listUsers as readUsers } from "../queries/user.js";
+import { findAll } from "../queries/users.js";
 
 // Return every saved user with the public fields only.
 export function listUsers() {
   let users;
   try {
-    users = readUsers();
+    users = findAll();
   } catch {
     throw new Error("DATABASE_ERROR");
   }

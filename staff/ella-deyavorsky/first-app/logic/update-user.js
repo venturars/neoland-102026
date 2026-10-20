@@ -1,4 +1,4 @@
-import { findUserByEmail, findUserById, update } from "../queries/user.js";
+import { findByEmail, findById, update } from "../queries/users.js";
 
 // An address of 64 characters or longer is rejected.
 const MAX_EMAIL_LENGTH = 64;
@@ -11,7 +11,7 @@ export function updateUser(id, name, email) {
 
   let currentUser;
   try {
-    currentUser = findUserById(id);
+    currentUser = findById(id);
   } catch {
     throw new Error("DATABASE_ERROR");
   }
@@ -44,7 +44,7 @@ export function updateUser(id, name, email) {
 
     let existingUser;
     try {
-      existingUser = findUserByEmail(nextEmail);
+      existingUser = findByEmail(nextEmail);
     } catch {
       throw new Error("DATABASE_ERROR");
     }

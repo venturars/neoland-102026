@@ -16,14 +16,16 @@ Each folder has one job.
 ```text
 first-app/
   logic/              the rules
-  queries/            the SQL
+  queries/
+    users.js          reads each .sql file and exports the functions
+    queries/          one .sql file per statement
   db/                 the database file and the code that opens it
   clients/terminal/   paste files you run by hand
   docs/               this explanation
 ```
 
 - `logic/` decides if an action is allowed. It does not contain SQL.
-- `queries/` talks to the database. It does not decide if a name or an email is valid.
+- `queries/users.js` talks to the database. It does not decide if a name or an email is valid. The SQL text lives in `queries/queries/`.
 - `db/` contains `connection.js`, which opens the database, and `users.sqlite`, which stores the users.
 - `clients/terminal/` holds one `.txt` file per feature. You paste that file into the terminal while `first-app` is the current folder. The files are `create-users-table.txt`, `create-user.txt`, `list-users.txt`, `find-user-by-email.txt`, `update-user.txt`, and `delete-user.txt`.
 - `docs/` holds this file.
@@ -37,10 +39,10 @@ The `users` table has one row per user:
 - `id` — `INTEGER PRIMARY KEY`. SQLite assigns it when the user is created.
 - `name` — `TEXT`. Required. SQLite does not enforce a `VARCHAR` length, so the name has no length code.
 - `email` — `VARCHAR(64)`. Required, and only one user can have it. The logic rejects an email of 64 characters or longer, so the longest saved email is 63 characters.
-- `created_at` — the date `YYYY-MM-DD HH:MM:SS`. SQLite sets it.
-- `updated_at` — the same date format. SQLite sets it when the row is created. The update query sets it again each time the row changes.
+- `created_at` — the date `YYYY-MM-DD HH:MM:SS`. SQL fills it with `datetime('now', 'localtime')`. Not with a JavaScript date.
+- `updated_at` — the same date format. SQL fills it with `datetime('now', 'localtime')` when the row is created. Not with a JavaScript date. The update query sets it again each time the row changes.
 
-`queries/user.js` renames `created_at` and `updated_at` to `createdAt` and `updatedAt` with `AS` in the SQL.
+Each SQL statement lives in its own `.sql` file under `queries/queries/`. `queries/users.js` reads those files, exports the functions, and contains no SQL. The query functions are `createUsersTable`, `insert`, `findById`, `findByEmail`, `findAll`, `update`, and `remove`. Each function reads the `.sql` file with the same name in kebab-case. The query files rename `created_at` and `updated_at` to `createdAt` and `updatedAt` with `AS` in the SQL.
 
 ## Logic is not replaceable
 
@@ -48,7 +50,7 @@ The rules in `logic/` stay even if the database changes, or if a notebook or a w
 
 ## One logic file per action
 
-A new feature is a new file in `logic/`. Do not add a second feature to a file in `logic/` that already exists. New query functions still go in `queries/user.js`.
+A new feature is a new file in `logic/`. Do not add a second feature to a file in `logic/` that already exists. A new query is a new function in `queries/users.js` and a new `.sql` file in `queries/queries/`. The file name is the function name in kebab-case.
 
 Each action has its own file:
 
@@ -61,10 +63,13 @@ Each action has its own file:
 Each file exports one function. The function is built in this order:
 
 1. It receives separate parameters, such as `createUser(name, email)` or `deleteUser(id)`. It does not receive one object.
-2. Before any check, the logic cleans the input. The name loses its surrounding spaces. The email loses its surrounding spaces and is put in lower case.
-3. It checks the rules.
-4. It calls a function in `queries/user.js`.
-5. It returns a result.
+2. It cleans the input. The name loses its surrounding spaces. The email loses its surrounding spaces and is put in lower case.
+3. It checks the input, without the database: `EMPTY_NAME`, `INVALID_EMAIL`, `NOTHING_TO_UPDATE`.
+4. It checks the business rules, with the queries it needs: `EMAIL_ALREADY_USED`, `USER_NOT_FOUND`.
+5. It applies the action with a function exported by `queries/users.js`.
+6. It returns the result: only `id`, `name`, `email`, `createdAt`, `updatedAt`. No SQLite object leaves `logic/`.
+
+There is no comment above the function to describe its input and output. The function signature says it.
 
 `updateUser(id, name, email)` can change the name, the email, or both. A field passed as `undefined` keeps its current value. If both are `undefined`, it throws `NOTHING_TO_UPDATE`.
 
@@ -89,6 +94,22 @@ A new failure is added to this list before it is used in code.
 
 ## Queries
 
-`queries/user.js` is the only file with SQL. SQL is the language that reads and writes the database.
+SQL is the language that reads and writes the database. Each statement lives in one `.sql` file under `queries/queries/`. The file that exports the functions is `queries/users.js`. It reads those files and contains no SQL.
 
-That file can save, find, list, update, and remove rows. It does not decide if a name or an email is valid. Those decisions stay in `logic/`. It uses the one connection from `db/connection.js`.
+The query functions are:
+
+- `createUsersTable` reads `create-users-table.sql`.
+- `insert` reads `insert.sql`. It takes an object.
+- `findById(id)` reads `find-by-id.sql`. The id is a plain value.
+- `findByEmail(email)` reads `find-by-email.sql`. The email is a plain value.
+- `findAll` reads `find-all.sql`.
+- `update` reads `update.sql`. It takes an object.
+- `remove(id)` reads `remove.sql`. The id is a plain value.
+
+A query function does not use the same name as a function in `logic/`.
+
+The SQL text lives only in `queries/queries/`. `queries/users.js` reads a file and runs it. It does not contain a SQL string. Importing `queries/users.js` does not create the table. The table appears only when `createUsersTable()` is called.
+
+`insert`, `findById`, `findByEmail`, and `update` use `.get()`. `findAll` uses `.all()`. `remove` uses `.run()` and returns nothing.
+
+A file in `logic/` calls a function exported by `queries/users.js`. It does not read a `.sql` file. The query functions do not decide if a name or an email is valid. Those decisions stay in `logic/`. They use the one connection from `db/connection.js`.

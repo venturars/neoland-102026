@@ -1,10 +1,10 @@
-import { findUserById, remove } from "../queries/user.js";
+import { findById, remove } from "../queries/users.js";
 
 // Remove one user. Returns nothing.
 export function deleteUser(id) {
   let currentUser;
   try {
-    currentUser = findUserById(id);
+    currentUser = findById(id);
   } catch {
     throw new Error("DATABASE_ERROR");
   }
@@ -14,7 +14,7 @@ export function deleteUser(id) {
   }
 
   try {
-    remove({ id: currentUser.id });
+    remove(currentUser.id);
   } catch {
     throw new Error("DATABASE_ERROR");
   }

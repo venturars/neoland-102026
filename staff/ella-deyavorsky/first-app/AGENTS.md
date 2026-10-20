@@ -30,21 +30,23 @@ The active spec is the approved description of the feature you are building now.
 
 ## Style and conventions
 
-- Folder names use kebab-case: lowercase words joined by `-`, as in `hand-run-clients`.
+- File and folder names use kebab-case: lowercase words joined by `-`, as in `create-user.js`, `find-by-email.sql`, and `clients/terminal`.
 - Function names and variable names use camelCase, as in `createUser` and `emailParts`.
 - Import and export by name. In ESM, the import path includes the file extension: `import { createUser } from "./create-user.js"`.
 - In SQL, pass values with a name, as in `:email`. Do not use `?`.
+- A new query is a new `.sql` file in `queries/queries/` plus a function in `queries/users.js`. The names follow `docs/CONSTITUTIONS.md`. The SQL string stays in the `.sql` file.
 
 Code must read from top to bottom. Use `if` checks, and names that say what they do.
 
 Write code a programmer could write without AI. Do not hide the steps. Avoid result wrappers, error classes, generic helpers, and abstractions.
 
-What a function in `logic/` must accept, what it returns, and how errors work is written in `docs/CONSTITUTIONS.md`. Follow that file. Do not invent a second contract.
+What a function in `logic/` must accept, what it returns, and how errors work is written in `docs/CONSTITUTIONS.md`. The query function names and the `.sql` file names are written there too. The file that exports them is `queries/users.js`. Follow that file. Do not invent a second contract, and do not keep a second list of query names in this guide.
 
 ## When a task is done
 
-1. Check the change by pasting the matching file in `clients/terminal/`. There is still no `npm start`.
-2. Show the result.
-3. Stop.
+1. A new feature gets a new file in `clients/terminal/`, named like its logic file (`find-user-by-email.txt` for `logic/find-user-by-email.js`). It is pasted in the terminal with `first-app` as the current folder. It imports the function from `logic/` and prints the result with `console.log`.
+2. Check the change by pasting the matching file in `clients/terminal/`. There is still no `npm start`.
+3. Show the result.
+4. Stop.
 
 Do not start the next feature. A task is not done if the code has not been run.

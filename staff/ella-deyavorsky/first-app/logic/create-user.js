@@ -1,4 +1,4 @@
-import { findUserByEmail, insert } from "../queries/user.js";
+import { findByEmail, insert } from "../queries/users.js";
 
 // An address of 64 characters or longer is rejected.
 const MAX_EMAIL_LENGTH = 64;
@@ -26,7 +26,7 @@ export function createUser(name, email) {
 
   let existingUser;
   try {
-    existingUser = findUserByEmail(cleanedEmail);
+    existingUser = findByEmail(cleanedEmail);
   } catch {
     throw new Error("DATABASE_ERROR");
   }
