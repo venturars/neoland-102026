@@ -5,28 +5,28 @@ const CREATE_USERS_TABLE_SQL = readFileSync(
   "utf8",
 );
 
-const SELECT_USERS_SQL = readFileSync(
-  new URL("./queries/select-users.sql", import.meta.url),
+const INSERT_SQL = readFileSync(
+  new URL("./queries/insert.sql", import.meta.url),
   "utf8",
 );
 
-const INSERT_USER_SQL = readFileSync(
-  new URL("./queries/insert-user.sql", import.meta.url),
+const FIND_BY_ID_SQL = readFileSync(
+  new URL("./queries/find-by-id.sql", import.meta.url),
   "utf8",
 );
 
-const SELECT_USER_BY_ID_SQL = readFileSync(
-  new URL("./queries/select-user-by-id.sql", import.meta.url),
+const FIND_ALL_SQL = readFileSync(
+  new URL("./queries/find-all.sql", import.meta.url),
   "utf8",
 );
 
-const UPDATE_USER_SQL = readFileSync(
-  new URL("./queries/update-user.sql", import.meta.url),
+const UPDATE_SQL = readFileSync(
+  new URL("./queries/update.sql", import.meta.url),
   "utf8",
 );
 
-const DELETE_USER_SQL = readFileSync(
-  new URL("./queries/delete-user.sql", import.meta.url),
+const REMOVE_SQL = readFileSync(
+  new URL("./queries/remove.sql", import.meta.url),
   "utf8",
 );
 
@@ -34,22 +34,29 @@ export function createUsersTable(database) {
   return database.prepare(CREATE_USERS_TABLE_SQL).run();
 }
 
-export function selectUsers(database) {
-  return database.prepare(SELECT_USERS_SQL).all();
+export function insert(database, user) {
+  return database.prepare(INSERT_SQL).get({
+    name: user.name,
+    email: user.email,
+  });
 }
 
-export function insertUser(database, user) {
-  return database.prepare(INSERT_USER_SQL).run(user.name, user.email);
+export function findById(database, id) {
+  return database.prepare(FIND_BY_ID_SQL).get({ id });
 }
 
-export function selectUserById(database, id) {
-  return database.prepare(SELECT_USER_BY_ID_SQL).get(id);
+export function findAll(database) {
+  return database.prepare(FIND_ALL_SQL).all();
 }
 
-export function updateUserById(database, user) {
-  return database.prepare(UPDATE_USER_SQL).run(user.name, user.email, user.id);
+export function update(database, user) {
+  return database.prepare(UPDATE_SQL).get({
+    name: user.name,
+    email: user.email,
+    id: user.id,
+  });
 }
 
-export function deleteUserById(database, id) {
-  return database.prepare(DELETE_USER_SQL).run(id);
+export function remove(database, id) {
+  return database.prepare(REMOVE_SQL).run({ id });
 }

@@ -1,0 +1,10 @@
+# Pega esto en la terminal, con el directorio actual en first-app
+node --input-type=module <<'EOF'
+import { openDatabase } from "./db/connections.js";
+import { listUsers } from "./logic/list-users.js";
+
+const database = openDatabase();
+const result = listUsers(database);
+
+console.log(result);
+EOF

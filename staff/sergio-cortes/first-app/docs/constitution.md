@@ -25,34 +25,42 @@ first-app/
 │   │       createUser(input). Lee name y email. Rechaza nombre vacío y email inválido. Devuelve name y email. No recibe users ni id.
 │   ├── update-user.js
 │   │       updateUser(input). Lee name y email. Rechaza nombre vacío y email inválido. Devuelve name y email. No recibe users ni id.
-│   └── delete-user.js
-│           deleteUser(input). Lee name y email. Rechaza nombre vacío y email inválido. Devuelve name y email. No recibe users ni id.
+│   ├── delete-user.js
+│   │       deleteUser(input). Lee name y email. Rechaza nombre vacío y email inválido. Devuelve name y email. No recibe users ni id.
+│   ├── find-by-id.js
+│   │       findById(input). Lee id. Rechaza un id que no sea un número. Devuelve id. No lee name ni email.
+│   └── list-users.js
+│           listUsers(database). Llama a findAll de queries/user.js y devuelve las filas.
 ├── queries/
 │   ├── user.js
-│   │       Una constante por cada .sql. Al final del fichero, las funciones exportadas ejecutan run, all o get: createUsersTable, selectUsers, insertUser, selectUserById, updateUserById y deleteUserById.
+│   │       Una constante por cada .sql. Al final del fichero, las funciones exportadas ejecutan run, all o get: createUsersTable, insert, findById, findAll, update y remove.
 │   └── queries/
 │       ├── create-users-table.sql
-│       │       CREATE TABLE IF NOT EXISTS users con id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL UNIQUE, name TEXT NOT NULL, y createdAt y updatedAt con DEFAULT CURRENT_TIMESTAMP.
-│       ├── select-users.sql
-│       │       Todas las filas.
-│       ├── insert-user.sql
-│       │       Inserta name y email.
-│       ├── select-user-by-id.sql
-│       │       Una fila por id.
-│       ├── update-user.sql
-│       │       Cambia name y email, y pone updatedAt = CURRENT_TIMESTAMP.
-│       └── delete-user.sql
+│       │       CREATE TABLE IF NOT EXISTS users con id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL UNIQUE, name TEXT NOT NULL, y createdAt y updatedAt con DEFAULT (datetime('now', 'localtime')).
+│       ├── insert.sql
+│       │       Inserta name y email. Las fechas las pone el default. Devuelve la fila.
+│       ├── find-by-id.sql
+│       │       Una fila por id, con SELECT *.
+│       ├── find-all.sql
+│       │       Todas las filas, con SELECT *, ordenadas por id.
+│       ├── update.sql
+│       │       Cambia name y email, y pone updatedAt = datetime('now', 'localtime'). Devuelve la fila.
+│       └── remove.sql
 │               Borra por id.
 └── clients/
     └── terminal/
         ├── create-user-table.txt
         │       Pegado que abre la base y llama a createUsersTable.
         ├── create-user.txt
-        │       Comprueba el input, inserta y muestra la fila guardada.
+        │       Comprueba el input, inserta y muestra la fila guardada. No crea la tabla.
         ├── update-user.txt
-        │       Lee la fila id 1, valida name y email, actualiza con el id de esa fila y muestra la fila guardada.
-        └── delete-user.txt
-                Lee la fila id 1, valida name y email, borra con el id de esa fila y muestra name y email.
+        │       Valida name y email, actualiza la fila id 1 y muestra la fila guardada. No crea la tabla.
+        ├── delete-user.txt
+        │       Valida name y email, borra la fila id 1 y muestra name y email. No crea la tabla.
+        ├── find-by-id.txt
+        │       Valida el id 1, lee esa fila y la muestra. No crea la tabla.
+        └── list-users.txt
+                Lista las filas y las muestra. No crea la tabla.
 ```
 
 ## Base de datos
@@ -64,8 +72,7 @@ La tabla se llama `users`. Su formato es este:
 - `id`: `INTEGER PRIMARY KEY AUTOINCREMENT`. La base asigna el número.
 - `email`: `TEXT NOT NULL UNIQUE`.
 - `name`: `TEXT NOT NULL`.
-- `createdAt`: `TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP`.
-- `updatedAt`: `TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP`. Al actualizar una fila, el SQL pone `updatedAt = CURRENT_TIMESTAMP`.
+- `createdAt` y `updatedAt` son fechas. SQLite no tiene un tipo `DATE` propio. El tipo es `TEXT` con la fecha en `YYYY-MM-DD HH:MM:SS`, que es lo que devuelve `datetime('now', 'localtime')`. El alta no escribe esas columnas: las pone el default de la tabla. Al actualizar, el SQL pone `updatedAt = datetime('now', 'localtime')`.
 
 ## Logic no se reemplaza
 
@@ -75,7 +82,13 @@ Los ficheros de `logic/` no son un adaptador ni una capa intercambiable. No se s
 
 Un fichero, una función. El nombre, la entrada y la salida los define la firma. No hay un comentario de contrato encima de la función.
 
-El nombre es la acción (`createUser`, `updateUser`, `deleteUser`). La entrada es un solo `input` con los datos de un usuario: `name` y `email`. No incluye `users` ni `id`. El `id` lo asigna la base de datos.
+El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `findById`, `listUsers`).
+
+`createUser`, `updateUser` y `deleteUser` reciben un solo `input` con los datos de un usuario: `name` y `email`. No incluye `id`. El `id` lo asigna la base de datos.
+
+`findById` recibe un solo `input` con `id`. Rechaza un `id` que no sea un número y devuelve `id`.
+
+`listUsers` recibe la base. Llama a `findAll` de `queries/user.js` y devuelve las filas. Es el único fichero de `logic/` que importa `queries/`.
 
 El cuerpo sigue este orden, y no se mezcla:
 

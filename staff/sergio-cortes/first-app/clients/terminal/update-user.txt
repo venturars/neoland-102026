@@ -2,23 +2,16 @@
 node --input-type=module <<'EOF'
 import { openDatabase } from "./db/connections.js";
 import { updateUser } from "./logic/update-user.js";
-import {
-  createUsersTable,
-  selectUserById,
-  updateUserById,
-} from "./queries/user.js";
+import { update } from "./queries/user.js";
 
 const database = openDatabase();
-createUsersTable(database);
 
-const stored = selectUserById(database, 1);
 const updated = updateUser({ name: "Ada Lovelace", email: "ada@example.com" });
-updateUserById(database, {
-  id: stored.id,
+const result = update(database, {
+  id: 1,
   name: updated.name,
   email: updated.email,
 });
-const result = selectUserById(database, stored.id);
 
 console.log(result);
 EOF
