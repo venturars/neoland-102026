@@ -1,7 +1,7 @@
 # Pegar en la terminal con el directorio actual en first-app.
 
 # Test 1: crea un usuario y lo busca por email (OK).
-node --input-type=module -e "import { createUser } from './logic/create-user.js'; import { findUserByEmail } from './logic/find-user-by-email.js'; try { const user = createUser('Ana', 'ana-find-' + Date.now() + '@mail.com'); console.log(findUserByEmail(user.email)); } catch (error) { console.log(error.message); }"
+node --input-type=module -e "import { createUser } from './logic/create-user.js'; import { findUserByEmail } from './logic/find-user-by-email.js'; try { const user = createUser(['Ana', 'ana-find-' + Date.now() + '@mail.com']); console.log(findUserByEmail(user.email)); } catch (error) { console.log(error.message); }"
 
 # Test 2: email que no existe (error).
 node --input-type=module -e "import { findUserByEmail } from './logic/find-user-by-email.js'; try { findUserByEmail('no-existe@mail.com'); } catch (error) { console.log(error.message); }"

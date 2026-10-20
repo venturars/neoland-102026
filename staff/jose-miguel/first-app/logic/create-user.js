@@ -3,7 +3,10 @@ import {
   insertUser,
 } from "../queries/users.js";
 
-export function createUser(name, email) {
+export function createUser(input) {
+  const name = input[0];
+  const email = input[1];
+
   if (name === undefined || name === null || String(name).trim() === "") {
     throw new Error("Name is required");
   }

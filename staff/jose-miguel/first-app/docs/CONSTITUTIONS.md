@@ -10,7 +10,15 @@ first-app/
     connection.js       Única conexión a la base de datos
     users.sqlite        Único fichero de la base de datos
   queries/
-    users.js            Único fichero. Todas las consultas a la base de datos
+    users.js            Lee y ejecuta cada consulta
+    queries/
+      create-users-table.sql
+      find-all.sql
+      find-by-email.sql
+      find-by-id.sql
+      insert.sql
+      remove.sql
+      update.sql
   logic/
     create-user.js      Una funcionalidad por fichero
     update-user.js
@@ -21,6 +29,11 @@ first-app/
     terminal/           Primer cliente. Sirve de test manual
   docs/
     CONSTITUTIONS.md    Esta base
+  specs/
+    <nombre>/           Un desarrollo
+      spec.md           Negocio
+      plan.md           Técnica
+      tasks.md          Pasos
 ```
 
 - `clients/` no importa SQL ni abre la base de datos. Solo llama a `logic/`.
@@ -54,9 +67,9 @@ CREATE TABLE IF NOT EXISTS users (
 
 ## 3. Logic
 
-La logic **no se reemplaza**. Un frontend, HTTP o Jupyter es un client nuevo. Los ficheros de `logic/` siguen. La logic no sabe quién la llama.
+`logic/` no es un adaptador ni una capa intercambiable. No se sustituye por otra implementación, no se convierte en plugins y no se mueven sus reglas a `queries/` ni a `clients/`.
 
-Logic importa `queries/users.js`. No abre `db/users.sqlite`.
+Cada funcionalidad es un fichero. Un fichero de `logic/` ya creado no se reemplaza para encajar otra tarea. Una funcionalidad nueva es un fichero nuevo.
 
 ### Un fichero de logic
 
@@ -64,8 +77,8 @@ Un fichero, una función. El nombre de la función es la acción. Los parámetro
 
 Ejemplos de firma:
 
-- `createUser(name, email)`
-- `updateUser(id, name, email)`
+- `createUser(input)`
+- `updateUser(id, changes)`
 - `deleteUser(id)`
 - `listUsers()`
 - `findUserByEmail(email)`
@@ -92,23 +105,24 @@ El manejo de errores está **solo en `logic/`**. `queries/` no usa `try/catch`.
 
 Sin clases de error. Se usa `throw new Error("clear English message")`.
 
-- Los `if` de validación y de reglas de negocio lanzan el error de la aplicación (nombre, email, duplicado, no existe). Quedan **fuera** del `try`.
-- El `try/catch` envuelve **solo** las llamadas a `queries/`. El `catch` no compara mensajes: lanza el error de la operación en inglés (`Could not create the user`). Así no se muestran errores de SQLite.
+El error depende del paso del cuerpo:
 
-Mensajes:
-
-- `"Name is required"`
-- `"Name cannot exceed 100 characters"`
-- `"Email is required"`
-- `"Email cannot exceed 255 characters"`
-- `"Email is not valid"`
-- `"A user with that email already exists"`
-- `"User does not exist"`
-- `"Could not create the user"`
-- `"Could not update the user"`
-- `"Could not delete the user"`
-- `"Could not list the users"`
-- `"Could not find the user"`
+1. Validar los parámetros de entrada. Las reglas de negocio lanzan el error del dato y quedan **fuera** del `try`.
+   - `"Name is required"`
+   - `"Name cannot exceed 100 characters"`
+   - `"Email is required"`
+   - `"Email cannot exceed 255 characters"`
+   - `"Email is not valid"`
+2. Validar el resto de reglas de negocio. Las reglas de negocio lanzan el error de la regla y quedan **fuera** del `try`, después de la consulta que comprueba la regla.
+   - `"A user with that email already exists"`
+   - `"User does not exist"`
+3. Aplicar la lógica de negocio. El `try/catch` envuelve **solo** las llamadas a `queries/`. El `catch` no compara mensajes: lanza el error de la operación. Así no se muestran errores de SQLite.
+   - `"Could not create the user"`
+   - `"Could not update the user"`
+   - `"Could not delete the user"`
+   - `"Could not list the users"`
+   - `"Could not find the user"`
+4. Estructurar la salida y sanear la respuesta. Este paso no lanza error. Devuelve el dato saneado.
 
 El client de terminal no captura el error para maquillarlo. Lo muestra.
 
@@ -116,8 +130,28 @@ No hay envoltorios del tipo `{ ok, data }` ni tipos `ValidationError` / `NotFoun
 
 ## 5. Queries
 
-`queries/` **no tiene subcarpetas**. El único fichero es `users.js`. Ahí van todas las consultas a la base de datos.
+`queries/` tiene una subcarpeta, `queries/queries/`. Cada consulta vive en su fichero `.sql`.
 
-Cada función de `users.js` prepara y ejecuta su SQL con `db.prepare` y parámetros `:id`, `:name`, `:email`. No hay carpeta de `.sql` aparte.
+`users.js` lee ese fichero y lo ejecuta con `db.exec` o `db.prepare`. Los parámetros son `:id`, `:name` y `:email`.
 
 Queries no valida nombre, email ni unicidad de negocio. Queries no captura errores. Eso es logic.
+
+## 6. Constantes
+
+Un nombre en mayúsculas es un valor fijo. No cambia durante la ejecución. Si el nombre tiene varias palabras, van en mayúsculas y se separan con `_`.
+
+`MAX_NAME_LENGTH` es una constante. `trimmedName` es una variable normal y sigue en camelCase.
+
+Las funciones y las variables normales siguen en camelCase.
+
+## 7. SDD
+
+Un desarrollo nuevo vive en `specs/<nombre>/`. Son tres ficheros cortos. Se leen enteros.
+
+- `spec.md` es el negocio: qué se pide, reglas, salida y errores. Sin código.
+- `plan.md` es la técnica: qué ficheros se tocan y cómo encaja en `logic/`, `queries/` y `clients/`.
+- `tasks.md` son los pasos, en orden, como los haría una persona. Un paso, una acción.
+
+Una persona revisa `spec.md`, después `plan.md`, después `tasks.md`. El código se escribe solo cuando esos tres están aceptados.
+
+No hay bucle. Un fichero anterior no se reescribe salvo que la persona lo pida.

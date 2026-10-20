@@ -4,7 +4,10 @@ import {
   updateUser as updateUserRow,
 } from "../queries/users.js";
 
-export function updateUser(id, name, email) {
+export function updateUser(id, changes) {
+  const name = changes[0];
+  const email = changes[1];
+
   if (id === undefined || id === null || String(id).trim() === "") {
     throw new Error("User does not exist");
   }

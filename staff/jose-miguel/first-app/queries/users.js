@@ -1,60 +1,56 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { db } from "../db/connection.js";
 
+const directory = join(import.meta.dirname, "queries");
+
+const createUsersTableSql = readFileSync(
+  join(directory, "create-users-table.sql"),
+  "utf8",
+);
+
+const findUserByIdSql = readFileSync(
+  join(directory, "find-by-id.sql"),
+  "utf8",
+);
+
+const findUserByEmailSql = readFileSync(
+  join(directory, "find-by-email.sql"),
+  "utf8",
+);
+
+const insertUserSql = readFileSync(join(directory, "insert.sql"), "utf8");
+
+const updateUserSql = readFileSync(join(directory, "update.sql"), "utf8");
+
+const deleteUserSql = readFileSync(join(directory, "remove.sql"), "utf8");
+
+const listUsersSql = readFileSync(join(directory, "find-all.sql"), "utf8");
+
 export function createUsersTable() {
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name VARCHAR(100) NOT NULL,
-      email VARCHAR(255) NOT NULL UNIQUE,
-      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
+  db.exec(createUsersTableSql);
 }
 
-createUsersTable();
-
 export function findUserById(id) {
-  return db.prepare("SELECT * FROM users WHERE id = :id").get({ id });
+  return db.prepare(findUserByIdSql).get({ id });
 }
 
 export function findUserByEmail(email) {
-  return db
-    .prepare("SELECT * FROM users WHERE email = :email")
-    .get({ email });
+  return db.prepare(findUserByEmailSql).get({ email });
 }
 
 export function insertUser(name, email) {
-  return db
-    .prepare(
-      `
-        INSERT INTO users (name, email)
-        VALUES (:name, :email)
-        RETURNING *
-      `,
-    )
-    .get({ name, email });
+  return db.prepare(insertUserSql).get({ name, email });
 }
 
 export function updateUser(id, name, email) {
-  return db
-    .prepare(
-      `
-        UPDATE users
-        SET name = :name,
-            email = :email,
-            updated_at = CURRENT_TIMESTAMP
-        WHERE id = :id
-        RETURNING *
-      `,
-    )
-    .get({ id, name, email });
+  return db.prepare(updateUserSql).get({ id, name, email });
 }
 
 export function deleteUser(id) {
-  return db.prepare("DELETE FROM users WHERE id = :id").run({ id });
+  return db.prepare(deleteUserSql).run({ id });
 }
 
 export function listUsers() {
-  return db.prepare("SELECT * FROM users ORDER BY id").all();
+  return db.prepare(listUsersSql).all();
 }
