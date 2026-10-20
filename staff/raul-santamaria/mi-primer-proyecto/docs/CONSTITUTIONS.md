@@ -6,7 +6,7 @@ Base de la app. Primera app con IA para alumnos junior de AI Engineering, en esp
 
 ```text
 mi-primer-proyecto/
-  package.json                 "type": "module". La base usa el SQLite de Node, sin paquetes.
+  package.json                 Sin paquetes.
   .gitignore                   Ignora node_modules/.
   AGENTS.md                    Reglas para quien modifica el proyecto.
   clients/terminal/            Primer cliente de cada funcionalidad. Ficheros .txt para pegar en la terminal.
@@ -14,7 +14,7 @@ mi-primer-proyecto/
     list-users.txt
     update-user.txt
     delete-user.txt
-  db/connection.js             Abre y cierra el único fichero SQLite. No contiene SQL.
+  db/connection.js             Abre una vez el único fichero SQLite y deja la conexión abierta. No contiene SQL.
   db/users.sqlite              La base. Se crea al abrir la conexión. No hay otra.
   docs/CONSTITUTIONS.md        Este documento.
   logic/                       Reglas de negocio. Una funcionalidad, un fichero. Esta capa no se reemplaza.
@@ -39,7 +39,11 @@ Hay una sola base: `db/users.sqlite`.
 - `updated_at`: fecha de última actualización. `TEXT` en ISO-8601 (`YYYY-MM-DD`).
 - Una fecha se guarda como `TEXT` en ISO-8601 (`YYYY-MM-DD`). SQLite no valida un tipo `DATE`.
 
-El `CREATE TABLE` vive en una query de `queries/queries/`. `queries/users.js` la importa y la ejecuta al preparar el almacén.
+La conexión se abre al cargar `db/connection.js` y se queda abierta. Las queries no la abren ni la cierran.
+
+El SQLite de Node ejecuta cada sentencia en el momento. Las funciones de `queries/users.js` son síncronas.
+
+El `CREATE TABLE` vive en una query de `queries/queries/`. `queries/users.js` la lee y la ejecuta al cargar el módulo.
 
 ## Código para un junior
 
@@ -51,7 +55,7 @@ Orden del cuerpo:
 
 1. Validar los parámetros de entrada.
 2. Validar las reglas de negocio.
-3. Aplicar la regla.
+3. Aplicar la logica de negocio.
 4. Montar la salida y dejar solo los datos que salen de la función.
 
 El error no se devuelve como objeto. Se lanza con `throw new Error("mensaje en inglés")` dentro de `try/catch`.
@@ -76,7 +80,7 @@ Salida: ninguna. No devuelve un objeto.
 
 ## Queries
 
-Cada sentencia SQL está escrita dentro de su función, en `queries/queries/`. `queries/users.js` exporta esas funciones. La query no conoce las reglas de `logic/`.
+Cada sentencia SQL es un fichero `.sql` en `queries/queries/`. Solo contiene SQL. `queries/users.js` lee esos ficheros y los ejecuta.
 
 ## Cliente
 
