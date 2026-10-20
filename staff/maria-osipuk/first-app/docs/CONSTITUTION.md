@@ -12,6 +12,7 @@ Actualmente la aplicación permite:
 
 - crear un usuario;
 - buscar un usuario por email;
+- buscar un usuario por id;
 - actualizar un usuario;
 - borrar un usuario;
 - listar los usuarios;
@@ -47,6 +48,7 @@ first-app/
 │   ├── create-user.js
 │   ├── delete-user.js
 │   ├── find-user-by-email.js
+│   ├── find-user-by-id.js
 │   ├── list-users.js
 │   └── update-user.js
 │
@@ -56,6 +58,7 @@ first-app/
 │       ├── create-user.txt
 │       ├── delete-user.txt
 │       ├── find-user-by-email.txt
+│       ├── find-user-by-id.txt
 │       ├── list-users.txt
 │       └── update-user.txt
 │
