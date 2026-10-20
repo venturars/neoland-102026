@@ -64,3 +64,5 @@ export function insertUser({ name, email, createdAt, updatedAt }) {
 
   return findUserById(result.lastInsertRowid);
 }
+
+createUsersTable();

@@ -108,6 +108,8 @@ Es la capa de ejecución de consultas.
 
 Lee los archivos SQL, prepara las consultas, proporciona sus parámetros y las ejecuta mediante la conexión compartida.
 
+Al cargar este módulo, crea la tabla `users` si todavía no existe.
+
 ### `queries/queries/`
 
 Contiene un archivo `.sql` por consulta.
