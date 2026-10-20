@@ -1,6 +1,6 @@
 # Constitución — first-app
 
-first-app es una app para aprender los conceptos básicos de login. Se construye con IA siguiendo el sistema SDD.
+first-app es una app para aprender los conceptos básicos de login. Se construye con IA siguiendo el sistema SDD. Un desarrollo nuevo no empieza en el código: pasa por `spec.md`, `plan.md` y `tasks.md`, y un humano lee cada uno antes de seguir.
 
 ## Árbol
 
@@ -23,12 +23,38 @@ first-app/
     terminal/           Primer cliente. Sirve de test manual
   docs/
     CONSTITUTIONS.md    Esta base
+    specs/
+      <nombre>/
+        spec.md         Negocio del desarrollo
+        plan.md         El qué se implementa
+        tasks.md        Pasos para hacerlo (el cómo)
 ```
 
 - `db/` abre la base de datos y no contiene reglas de negocio.
 - `queries/queries/` guarda el SQL en ficheros `.sql`. `queries/users.js` los lee y los ejecuta. No hay reglas de negocio aquí.
 - `logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
 - `clients/terminal/` llama a `logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
+- `docs/specs/<nombre>/` es un desarrollo. `<nombre>` es la funcionalidad, en kebab-case. Ahí viven su spec, su plan y sus tareas.
+
+## Specs
+
+`spec.md` es el negocio. Lo lee quien decide si la funcionalidad es la que quiere, sin abrir el código. Dice qué se pide, quién lo usa, qué entra, qué sale con un ejemplo, y qué fallo se ve. Un fallo nombra un mensaje de la lista de «Errores». También dice qué queda fuera. No nombra ficheros, funciones ni SQL.
+
+`plan.md` es la técnica. Lo lee quien comprueba que el desarrollo cabe en esta constitución. Dice:
+
+- qué ficheros se crean y cuáles se tocan
+- a qué fichero de `logic/` se parece, sin pegar su código
+- la firma: nombre, parámetros y salida
+- el SQL nuevo, con los parámetros con nombre (`:id`, `:name`, `:email`)
+- qué mensaje de «Errores» corresponde a cada fallo de la spec
+
+Una funcionalidad nueva es un fichero nuevo. Si la constitución, el código actual y la spec no dicen lo mismo, la pregunta se escribe al final del plan y ahí se para. No hay tareas ni código hasta tener la respuesta.
+
+`tasks.md` son los pasos, en el orden en que los haría una persona. Cada paso abre un sitio, hace una cosa y deja un resultado que se puede mirar. Un paso son como mucho cuatro líneas.
+
+Si el desarrollo no es una funcionalidad nueva, los pasos siguen teniendo el mismo grano: mirar lo que ya existe, cambiar un sitio, comprobar.
+
+Estos ficehros deben contener la información d forma escueta, concreta y determinista. Tratando de no agregar complejidad a la lectura de los ficheros.
 
 ## Base de datos
 
