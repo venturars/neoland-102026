@@ -14,6 +14,8 @@ const { listUsers } = await import("../logic/list-users.js");
 const { updateUser } = await import("../logic/update-user.js");
 const { deleteUser } = await import("../logic/delete-user.js");
 const { findUserByEmail } = await import("../logic/find-user-by-email.js");
+const { findUserById } = await import("../logic/find-user-by-id.js");
+const { usersGenderCount } = await import("../logic/users-gender-count.js");
 
 function throws(fn, message) {
   assert.throws(fn, (error) => {
@@ -84,11 +86,13 @@ test("missing users throw User not found", () => {
   throws(() => updateUser(99, { name: "Example" }), "User not found");
   throws(() => deleteUser(99), "User not found");
   throws(() => findUserByEmail("missing@example.com"), "User not found");
+  throws(() => findUserById(99), "User not found");
 });
 
 test("invalid ids throw Invalid id instead of crashing", () => {
   throws(() => deleteUser(undefined), "Invalid id");
   throws(() => updateUser(undefined, { name: "Example" }), "Invalid id");
+  throws(() => findUserById(undefined), "Invalid id");
 });
 
 test("find user by email", () => {
@@ -96,4 +100,130 @@ test("find user by email", () => {
   const found = findUserByEmail("ADA@example.com");
   assert.equal(found.name, "Ada");
   assert.equal(found.email, "ada@example.com");
+});
+
+test("find user by id", () => {
+  const created = createUser({ name: "Ada", email: "ada@example.com" });
+  const found = findUserById(created.id);
+  assert.equal(found.name, "Ada");
+  assert.equal(found.email, "ada@example.com");
+});
+
+function answersFor(words) {
+  const answers = {};
+  for (let index = 0; index < words.length; index += 1) {
+    answers[`name${index}`] = { choice: words[index] };
+  }
+  return { answers };
+}
+
+function jsonResponse(body, ok = true) {
+  return {
+    ok,
+    json: async () => body,
+  };
+}
+
+async function withFetch(fetchImpl, fn) {
+  const original = globalThis.fetch;
+  globalThis.fetch = fetchImpl;
+  try {
+    return await fn();
+  } finally {
+    globalThis.fetch = original;
+  }
+}
+
+function addUsers(count) {
+  for (let index = 0; index < count; index += 1) {
+    createUser({
+      name: `Name${index}`,
+      email: `name${index}@example.com`,
+    });
+  }
+}
+
+test("users gender count batches names and tallies choices", async () => {
+  addUsers(7);
+  const calls = [];
+  const counts = await withFetch(async (url, options) => {
+    const body = JSON.parse(options.body);
+    calls.push({ url, names: body.state.names, questions: body.questions });
+    const words = body.state.names.map(() => "women");
+    if (calls.length === 2) {
+      words[0] = "men";
+    }
+    return jsonResponse(answersFor(words));
+  }, () => usersGenderCount());
+
+  assert.equal(calls.length, 2);
+  assert.equal(calls[0].names.length, 6);
+  assert.equal(calls[1].names.length, 1);
+  assert.equal(Object.keys(calls[0].questions).length, 6);
+  assert.match(String(calls[0].url), /\/v1\/systemone$/);
+  assert.deepEqual(counts, { women: 6, men: 1, genderUndefined: 0 });
+});
+
+test("users gender count empty table does not call fetch", async () => {
+  let called = false;
+  const counts = await withFetch(async () => {
+    called = true;
+    return jsonResponse(answersFor([]));
+  }, () => usersGenderCount());
+  assert.equal(called, false);
+  assert.deepEqual(counts, { women: 0, men: 0, genderUndefined: 0 });
+});
+
+test("users gender count short answer counts that batch as genderUndefined", async () => {
+  addUsers(7);
+  const counts = await withFetch(async (_url, options) => {
+    const names = JSON.parse(options.body).state.names;
+    if (names.length === 6) {
+      return jsonResponse(answersFor(["women"]));
+    }
+    return jsonResponse(answersFor(["men"]));
+  }, () => usersGenderCount());
+  assert.deepEqual(counts, { women: 0, men: 1, genderUndefined: 6 });
+});
+
+test("users gender count other words count as genderUndefined", async () => {
+  createUser({ name: "Ada", email: "ada@example.com" });
+  const counts = await withFetch(
+    async () => jsonResponse(answersFor(["mujer"])),
+    () => usersGenderCount(),
+  );
+  assert.deepEqual(counts, { women: 0, men: 0, genderUndefined: 1 });
+});
+
+test("users gender count throws if the request fails", async () => {
+  createUser({ name: "Ada", email: "ada@example.com" });
+  await withFetch(
+    async () => {
+      throw new Error("down");
+    },
+    async () => {
+      await assert.rejects(() => usersGenderCount(), {
+        message: "Could not classify the users",
+      });
+    },
+  );
+  await withFetch(
+    async () => jsonResponse({}, false),
+    async () => {
+      await assert.rejects(() => usersGenderCount(), {
+        message: "Could not classify the users",
+      });
+    },
+  );
+});
+
+test("users gender count throws if the table is missing", async () => {
+  db.exec("DROP TABLE users");
+  try {
+    await assert.rejects(() => usersGenderCount(), {
+      message: "Could not classify the users",
+    });
+  } finally {
+    createUsersTable();
+  }
 });
