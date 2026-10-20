@@ -37,7 +37,7 @@ No hay SQL nuevo. No hay escrituras. Se reutiliza `findAll()` de `queries/users.
 
 ## IA
 
-El nombre del modelo vive en una sola constante, `MODEL`, dentro de `logic/users-gender-count.js`. Hoy vale `llama3.2`. Cambiar de modelo es cambiar esa constante. La función no vuelve a escribir el nombre.
+El modelo es `llama3.2`. Su nombre vive en la constante `MODEL`, dentro de `logic/users-gender-count.js`. La función no vuelve a escribir el nombre.
 
 [llama3.2](https://ollama.com/library/llama3.2) admite chat. Corre en local, sin coste. Hace falta Ollama en marcha y el modelo ya descargado.
 

@@ -18,6 +18,6 @@ Si no hay usuarios, los tres números son 0.
 
 Si la IA no manda un mensaje, o la respuesta no trae un género por nombre, esos nombres cuentan como no definidos.
 
-Si nimble-v3 no responde, dime que no se han podido clasificar los usuarios.
+Si llama3.2 no responde, dime que no se han podido clasificar los usuarios.
 
 Queda fuera guardar el género u otro dato nuevo, cambiar el resto de funcionalidades de usuarios, clasificar al crear o al cambiar el nombre, usar el email, devolver la lista de usuarios y usar una IA de pago.
