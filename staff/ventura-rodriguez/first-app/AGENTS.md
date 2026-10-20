@@ -9,7 +9,7 @@ Está en Node, con módulos ES (`"type": "module"`) y SQLite (`node:sqlite`, fic
 ## Comandos
 
 - Ejecutar: no hay comando de ejecución todavía.
-- Tests: no hay tests. El script `test` de `package.json` es el placeholder de npm.
+- Tests: no hay tests. El script `test` de `package.json` es el placeholder de pnpm.
 - Lint/formato: Prettier, formato estándar. No hay script de lint ni de formato.
 
 ## Estilo y convenciones
