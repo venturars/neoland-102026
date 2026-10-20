@@ -2,18 +2,14 @@
 node --input-type=module <<'EOF'
 import { openDatabase } from "./db/connections.js";
 import { deleteUser } from "./logic/delete-user.js";
-import {
-  createUsersTable,
-  deleteUserById,
-  selectUsers,
-} from "./queries/user.js";
+import { createUsersTable, deleteUserById, selectUserById } from "./queries/user.js";
 
 const database = openDatabase();
 createUsersTable(database);
 
-const users = selectUsers(database);
-const result = deleteUser({ id: 1, users });
-deleteUserById(database, result.id);
+const stored = selectUserById(database, 1);
+const result = deleteUser({ name: stored.name, email: stored.email });
+deleteUserById(database, stored.id);
 
 console.log(result);
 EOF

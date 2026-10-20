@@ -5,22 +5,20 @@ import { updateUser } from "./logic/update-user.js";
 import {
   createUsersTable,
   selectUserById,
-  selectUsers,
   updateUserById,
 } from "./queries/user.js";
 
 const database = openDatabase();
 createUsersTable(database);
 
-const users = selectUsers(database);
-const updated = updateUser({
-  id: 1,
-  name: "Ada Lovelace",
-  email: "ada@example.com",
-  users,
+const stored = selectUserById(database, 1);
+const updated = updateUser({ name: "Ada Lovelace", email: "ada@example.com" });
+updateUserById(database, {
+  id: stored.id,
+  name: updated.name,
+  email: updated.email,
 });
-updateUserById(database, updated);
-const result = selectUserById(database, updated.id);
+const result = selectUserById(database, stored.id);
 
 console.log(result);
 EOF

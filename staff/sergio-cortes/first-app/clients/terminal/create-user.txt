@@ -6,14 +6,12 @@ import {
   createUsersTable,
   insertUser,
   selectUserById,
-  selectUsers,
 } from "./queries/user.js";
 
 const database = openDatabase();
 createUsersTable(database);
 
-const users = selectUsers(database);
-const created = createUser({ name: "Ada", email: "ada@example.com", users });
+const created = createUser({ name: "Ada", email: "ada@example.com" });
 const inserted = insertUser(database, created);
 const result = selectUserById(database, inserted.lastInsertRowid);
 

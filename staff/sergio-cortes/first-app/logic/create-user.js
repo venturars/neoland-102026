@@ -1,7 +1,6 @@
 export function createUser(input) {
   const name = input.name;
   const email = input.email;
-  const users = input.users;
 
   if (typeof name !== "string" || name.trim() === "") {
     throw new Error("Name is invalid");
@@ -23,16 +22,6 @@ export function createUser(input) {
 
   if (dotIndex <= 0 || dotIndex === domain.length - 1) {
     throw new Error("Email is invalid");
-  }
-
-  if (!Array.isArray(users)) {
-    throw new Error("Users is invalid");
-  }
-
-  for (const user of users) {
-    if (user.email === email) {
-      throw new Error("Email already exists");
-    }
   }
 
   return {
