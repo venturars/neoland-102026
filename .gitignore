@@ -1,0 +1,72 @@
+# Dependencias y locks de npm (cualquier carpeta)
+node_modules/
+package-lock.json
+npm-shrinkwrap.json
+
+# Variables de entorno (cualquier carpeta)
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+!.env.*.example
+
+# Claude Code
+.claude/
+.mcp.json
+
+# Cursor
+.cursor/
+.cursorignore
+.cursorindexingignore
+
+# VS Code y Visual Studio
+.vscode/
+.vs/
+*.code-workspace
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# OpenCode
+.opencode/
+
+# Codex
+.codex/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Temporary Items
+.apdisk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# Windows
+[Tt]humbs.db
+[Tt]humbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.stackdump
+*.tmp
+*.temp
+~$*
