@@ -6,70 +6,38 @@ first-app es una app para aprender los conceptos básicos de login. Se construye
 
 ```text
 first-app/
-├── package.json
-│       Nombre de la app, ESM, Node >=22, licencia MIT y autor. Sin dependencias.
-├── .gitignore
-│       Ignora node_modules/ y db/users.sqlite.
-├── AGENTS.MD
-│       Reglas del agente. Apunta a esta constitución.
-├── docs/
-│   └── CONSTITUTIONS.md
-│           Esta información base.
-├── db/
-│   ├── connections.js
-│   │       Exporta db = new DatabaseSync(DATABASE_PATH). DATABASE_PATH se arma con fileURLToPath, dirname y join, y apunta a users.sqlite junto a ese fichero.
-│   └── users.sqlite
-│           Fichero de la base. Lo crea la primera apertura. No se versiona.
-├── logic/
-│   ├── errors.js
-│   │       Exporta ValidationError, NotFoundError, ConflictError y DatabaseError. Cada una extiende Error y el constructor recibe message.
-│   ├── create-user.js
-│   │       createUser(input). Lee name y email. Lanza ValidationError si el nombre está vacío o el email es inválido. Si el email ya existe, lanza ConflictError. Llama a insert y devuelve la fila. No abre la base.
-│   ├── update-user.js
-│   │       updateUser(input). Lee id, name y email. Lanza ValidationError si el id no es un número, el nombre está vacío o el email es inválido. Si no hay fila, lanza NotFoundError y no actualiza. Si el email pertenece a otro usuario, lanza ConflictError. Llama a update y devuelve la fila. No abre la base.
-│   ├── delete-user.js
-│   │       deleteUser(id). El argumento es el id. Lanza ValidationError si el id no es un número. Si no hay fila, lanza NotFoundError y no borra. Llama a remove y devuelve la fila. No abre la base.
-│   ├── find-user-by-id.js
-│   │       findUserById(id). El argumento es el id. Lanza ValidationError si el id no es un número. Si no hay fila, lanza NotFoundError. Devuelve la fila. No abre la base.
-│   ├── find-user-by-email.js
-│   │       findUserByEmail(email). El argumento es el email. Lanza ValidationError si el email es inválido. Si no hay fila, lanza NotFoundError. Devuelve la fila. No abre la base.
-│   └── list-users.js
-│           listUsers(). No recibe argumentos. Llama a findAll y devuelve las filas. Una lista vacía es válida. No abre la base.
-├── queries/
-│   ├── user.js
-│   │       Importa db. createUsersTable recibe la conexión. insert, findById, findByEmail, findAll, update y remove usan db y ejecutan run, all o get.
-│   └── queries/
-│       ├── create-users-table.sql
-│       │       CREATE TABLE IF NOT EXISTS users con id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL UNIQUE, name TEXT NOT NULL, y createdAt y updatedAt con DEFAULT (datetime('now', 'localtime')).
-│       ├── insert.sql
-│       │       Inserta name y email. Las fechas las pone el default. Devuelve la fila.
-│       ├── find-by-id.sql
-│       │       Una fila por id, con SELECT *.
-│       ├── find-by-email.sql
-│       │       Una fila por email, con SELECT *.
-│       ├── find-all.sql
-│       │       Todas las filas, con SELECT *, ordenadas por id.
-│       ├── update.sql
-│       │       Cambia name y email, y pone updatedAt = datetime('now', 'localtime'). Devuelve la fila.
-│       └── remove.sql
-│               Borra por id.
-└── clients/
-    └── terminal/
-        ├── create-user-table.txt
-        │       Importa db y llama a createUsersTable(db).
-        ├── create-user.txt
-        │       Llama a createUser y muestra la fila. No abre la base.
-        ├── update-user.txt
-        │       Llama a updateUser con id 1 y muestra la fila. No abre la base.
-        ├── delete-user.txt
-        │       Llama a deleteUser(1) y muestra la fila. No abre la base.
-        ├── find-user-by-id.txt
-        │       Llama a findUserById(1) y muestra la fila. No abre la base.
-        ├── find-user-by-email.txt
-        │       Llama a findUserByEmail("ada@example.com") y muestra la fila. No abre la base.
-        └── list-users.txt
-                Llama a listUsers y muestra las filas. No abre la base.
+  AGENTS.MD                   Reglas del agente; apunta a esta constitución
+  docs/
+    CONSTITUTIONS.md          Esta información base
+  db/
+    connections.js            Única conexión a la base de datos
+    users.sqlite              Único fichero de la base de datos
+  queries/
+    queries/                  Texto SQL, un fichero .sql por sentencia
+    user.js                   Lee esos ficheros y ejecuta el SQL
+  logic/
+    errors.js                 Clases de error compartidas
+    create-user.js            Una funcionalidad por fichero
+    update-user.js
+    delete-user.js
+    find-user-by-id.js
+    find-user-by-email.js
+    list-users.js
+  clients/
+    terminal/
+      create-user-table.txt   Crea la tabla vía queries
+      create-user.txt         Llama a logic y muestra el resultado
+      update-user.txt
+      delete-user.txt
+      find-user-by-id.txt
+      find-user-by-email.txt
+      list-users.txt
 ```
+
+- `db/` abre la base de datos y no contiene reglas de negocio.
+- `queries/queries/` guarda el SQL en ficheros `.sql`. `queries/user.js` los lee y los ejecuta. No hay reglas de negocio aquí.
+- `logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
+- `clients/terminal/` llama a `logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
 
 ## Base de datos
 
