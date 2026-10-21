@@ -1,4 +1,4 @@
-// Ejemplo manual: pnpm run update-user desde first-app.
+// Ejemplo manual. Ejecución: docs/CONSTITUTIONS.md.
 import { updateUser } from "./logic/update-user.js";
 
 const result = updateUser(1, { name: "Ada Lovelace" });

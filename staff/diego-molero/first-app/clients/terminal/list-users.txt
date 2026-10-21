@@ -1,4 +1,4 @@
-// Ejemplo manual: pnpm run list-users desde first-app.
+// Ejemplo manual. Ejecución: docs/CONSTITUTIONS.md.
 import { listUsers } from "./logic/list-users.js";
 
 const result = listUsers();

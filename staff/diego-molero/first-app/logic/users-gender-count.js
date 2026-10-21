@@ -5,17 +5,17 @@ const DEFAULT_MODEL = "llama3.2";
 const DEFAULT_BASE_URL = "http://127.0.0.1:11434";
 const TIMEOUT_MS = 120_000;
 
-// Reúne el conteo y la llamada local a Ollama en el fichero de esta funcionalidad.
+// Clasifica los nombres con Ollama local y devuelve los tres recuentos.
 export async function usersGenderCount() {
   const counts = { women: 0, men: 0, genderUndefined: 0 };
   try {
     const users = findAll();
-    if (users.length === 0) return { ok: true, ...counts };
+    if (users.length === 0) return counts;
 
     const model = process.env.OLLAMA_MODEL || DEFAULT_MODEL;
     const url = new URL(process.env.OLLAMA_BASE_URL || DEFAULT_BASE_URL);
     if (!["127.0.0.1", "localhost", "[::1]"].includes(url.hostname) || url.protocol !== "http:") {
-      throw new Error("OLLAMA_BASE_URL debe apuntar a un servidor HTTP local.");
+      throw new Error("OLLAMA_BASE_URL must point to a local HTTP server.");
     }
     for (let start = 0; start < users.length; start += BATCH_SIZE) {
       const names = users.slice(start, start + BATCH_SIZE).map((user) => user.name);
@@ -54,7 +54,7 @@ export async function usersGenderCount() {
         }),
       });
       if (!response.ok) {
-        throw new Error(`Ollama respondió con HTTP ${response.status}. Comprueba el servidor y el modelo ${model}.`);
+        throw new Error(`Ollama returned HTTP ${response.status}. Check the server and the model ${model}.`);
       }
 
       let genders;
@@ -78,7 +78,7 @@ export async function usersGenderCount() {
         else counts.genderUndefined++;
       }
     }
-    return { ok: true, ...counts };
+    return counts;
   } catch (cause) {
     throw new Error("Could not classify the users", { cause });
   }

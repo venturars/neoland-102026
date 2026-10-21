@@ -24,9 +24,7 @@ function writeUser(sql, parameters) {
     return toUser(db.prepare(sql).get(parameters));
   } catch (error) {
     if (error.code === "ERR_SQLITE_ERROR" && error.errcode === 2067) {
-      const conflict = new Error("El correo ya está registrado.", { cause: error });
-      conflict.code = "EMAIL_ALREADY_USED";
-      throw conflict;
+      throw new Error("Email is already used", { cause: error });
     }
     throw error;
   }

@@ -1,9 +1,9 @@
 import { remove } from "../queries/users.js";
 
-// La eliminación sigue siendo definitiva y distingue un ID inexistente.
+// Elimina el usuario o lanza un error si no existe.
 export function deleteUser(id) {
   if (!Number.isSafeInteger(id) || id <= 0) {
-    return { ok: false, error: "INVALID_ID" };
+    throw new Error("User ID is invalid");
   }
-  return remove(id) ? { ok: true } : { ok: false, error: "USER_NOT_FOUND" };
+  if (!remove(id)) throw new Error("User not found");
 }

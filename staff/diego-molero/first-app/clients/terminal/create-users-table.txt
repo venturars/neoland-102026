@@ -1,4 +1,4 @@
-// Ejemplo manual: pnpm run db:init desde first-app.
+// Ejemplo manual. Ejecución: docs/CONSTITUTIONS.md.
 import { createUsersTable } from "./queries/users.js";
 import { db } from "./db/connection.js";
 

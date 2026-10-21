@@ -1,4 +1,4 @@
-// Ejemplo manual: pnpm run find-user-by-email desde first-app.
+// Ejemplo manual. Ejecución: docs/CONSTITUTIONS.md.
 import { findUserByEmail } from "./logic/find-user-by-email.js";
 
 const result = findUserByEmail("  ADA@EXAMPLE.COM  ");

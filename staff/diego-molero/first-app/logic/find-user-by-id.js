@@ -1,15 +1,14 @@
 import { findById } from "../queries/users.js";
 
-// Mantiene la validación del identificador y devuelve solo campos públicos.
+// Valida el identificador antes de buscar y devuelve los campos públicos.
 export function findUserById(id) {
   if (!Number.isSafeInteger(id) || id <= 0) {
-    return { ok: false, error: "INVALID_ID" };
+    throw new Error("User ID is invalid");
   }
   const user = findById(id);
-  if (!user) return { ok: false, error: "USER_NOT_FOUND" };
+  if (!user) throw new Error("User not found");
   return {
-    ok: true,
-    user: { id: user.id, name: user.name, email: user.email,
-      createdAt: user.createdAt, updatedAt: user.updatedAt },
+    id: user.id, name: user.name, email: user.email,
+    createdAt: user.createdAt, updatedAt: user.updatedAt,
   };
 }

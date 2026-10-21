@@ -1,6 +1,6 @@
-// Ejemplo manual: pnpm run delete-user desde first-app.
+// Ejemplo manual. Ejecución: docs/CONSTITUTIONS.md.
 import { deleteUser } from "./logic/delete-user.js";
 
-const result = deleteUser(1);
+deleteUser(1);
 
-console.log(result);
+console.log("User deleted");
