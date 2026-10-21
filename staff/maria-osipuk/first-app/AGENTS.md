@@ -10,15 +10,15 @@ Si el código contradice la Constitución, explica la contradicción y espera un
 
 ## Antes de editar
 
-1. Inspecciona los archivos relacionados.
-2. Explica en español:
-   - qué se quiere conseguir;
-   - qué archivos habría que cambiar;
-   - por qué son necesarios;
-   - cómo se comprobará el resultado.
-3. Espera autorización explícita.
+Cuando el pedido sea una funcionalidad o una forma de trabajar, crea primero `docs/specs/<nombre-en-kebab-case>/` con `spec.md`, `plan.md` y `tasks.md`. No toques código, consultas, clientes ni la constitución hasta que esa carpeta exista y María diga de forma explícita que la revisión está hecha.
 
-Una petición de explicación, revisión, comparación o planificación no autoriza cambios.
+Una petición de explicación, revisión, comparación o planificación no autoriza cambios. Crear o reescribir esos tres ficheros tampoco autoriza cambios de código.
+
+Cuando la revisión esté hecha, implementa solo ese pedido:
+
+1. Inspecciona los archivos relacionados.
+2. Sigue `tasks.md` de esa carpeta, en orden.
+3. Trabaja un solo pedido a la vez.
 
 ## Forma de trabajar
 
@@ -30,6 +30,8 @@ Una petición de explicación, revisión, comparación o planificación no autor
 - No añadas dependencias sin explicar su necesidad.
 - No hagas `commit`, `push`, merge ni pull request sin autorización.
 - Si hay varias soluciones razonables, presenta primero las opciones.
+
+Las reglas de este documento se aplican al código nuevo y a las partes que se modifiquen dentro de una tarea autorizada. No refactorices una funcionalidad antigua únicamente para adaptarla a una convención añadida después de su creación.
 
 
 ## Nivel del código
@@ -186,15 +188,48 @@ El formulario no sustituye la validación de `logic/`.
 
 - Tipo en JavaScript: `string`.
 - Tipo en SQLite: `TEXT NOT NULL`.
-- Se genera internamente.
+- En código nuevo, lo genera SQLite al insertar la fila con `DEFAULT (datetime('now', 'localtime'))`.
+- `logic/` no crea esta fecha con `new Date()` ni la envía a la consulta.
 - No se acepta desde el cliente.
 
 ### `updated_at`
 
 - Tipo en JavaScript: `string`.
 - Tipo en SQLite: `TEXT NOT NULL`.
-- Se genera internamente.
+- En código nuevo, lo genera SQLite al insertar la fila y lo actualiza la consulta SQL con `datetime('now', 'localtime')`.
+- `logic/` no crea esta fecha con `new Date()` ni la envía a la consulta.
 - No se acepta desde el cliente.
+
+Las fechas de persistencia son responsabilidad de SQLite. La capa `logic/` decide cuándo se crea o modifica una entidad, pero no calcula sus timestamps.
+
+## Firma de las funciones
+
+La firma debe mostrar claramente qué datos necesita la función.
+
+- Una función sin entrada no recibe argumentos: `listUsers()`.
+- Si necesita un solo dato, lo recibe directamente y con un nombre descriptivo: `findUserById(id)` o `findUserByEmail(email)`.
+- Si necesita varios valores fijos y conocidos, los parámetros aparecen de forma visible en la firma.
+- No agrupes un `id`, un `email` u otro dato único dentro de un objeto sin necesidad.
+- Utiliza un objeto solo cuando el grupo tenga un significado propio, como `changes` en una actualización parcial, o cuando la spec defina expresamente ese contrato.
+- El nombre de la función debe describir la acción completa y coincidir con la finalidad de su archivo.
+
+No desestructures un objeto directamente en la firma. Cuando una función reciba un objeto con significado propio, comprueba primero que sea un objeto válido y después lee sus propiedades dentro del cuerpo.
+
+## Actualizaciones parciales
+
+Una nueva función de actualización recibe el identificador y los cambios por separado:
+
+```js
+updateUser(id, changes);
+```
+
+- Valida primero `id`.
+- Comprueba que `changes` sea un objeto válido.
+- Solo modifica las propiedades que estén presentes en `changes` y que la spec permita actualizar.
+- Conserva el valor actual de una propiedad cuando no aparezca en `changes`.
+- Valida y normaliza cada valor proporcionado con las mismas reglas que se aplican al crearlo.
+- Si se modifica un valor único, permite que la entidad conserve su propio valor, pero no que utilice el de otra fila.
+- Devuelve la entidad completa y saneada después de actualizarla, salvo que la spec defina otro resultado.
 
 ## Orden de una función de negocio
 
@@ -206,8 +241,6 @@ El formulario no sustituye la validación de `logic/`.
 6. Estructurar la respuesta.
 
 Los pasos deben ser visibles y no combinarse en una única expresión compleja.
-
-La función recibe un solo objeto. Lee cada campo después de comprobar su tipo. No desestructura los campos en la firma, porque eso oculta la comprobación y lanza un `TypeError` si el valor no es un objeto. Una función sin datos, como listar usuarios, no recibe argumento.
 
 ## Gestión de errores
 
