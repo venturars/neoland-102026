@@ -6,7 +6,8 @@ import shutil
 import subprocess
 import threading
 
-TUNNEL_URL = re.compile(r"https://[a-z0-9-]+\.trycloudflare\.com")
+# Excluye api.trycloudflare.com: cloudflared la nombra en sus mensajes de error.
+TUNNEL_URL = re.compile(r"https://(?!api\.)[a-z0-9-]+\.trycloudflare\.com")
 
 
 class TunnelError(Exception):
@@ -33,7 +34,7 @@ def start_tunnel(port: int, timeout: float = 30) -> tuple[subprocess.Popen, str]
         text=True,
     )
 
-    found: queue.Queue[str] = queue.Queue()
+    found: queue.Queue[str | None] = queue.Queue()
 
     def read_output():
         # Hay que seguir leyendo siempre: si nadie vacía la tubería, cloudflared se bloquea.
@@ -41,13 +42,20 @@ def start_tunnel(port: int, timeout: float = 30) -> tuple[subprocess.Popen, str]
             url = find_tunnel_url(line)
             if url:
                 found.put(url)
+        found.put(None)  # cloudflared terminó: no hace falta esperar al timeout
 
     threading.Thread(target=read_output, daemon=True).start()
 
     try:
-        return process, found.get(timeout=timeout)
+        url = found.get(timeout=timeout)
     except queue.Empty:
         process.terminate()
         raise TunnelError(
             f"cloudflared no dio una URL en {timeout:.0f} s. Revisa tu conexión a internet e inténtalo de nuevo."
         ) from None
+    if url is None:
+        process.terminate()
+        raise TunnelError(
+            "cloudflared se cerró sin dar una URL. Revisa tu conexión a internet e inténtalo de nuevo."
+        )
+    return process, url
