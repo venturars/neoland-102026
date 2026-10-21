@@ -43,6 +43,7 @@ first-app/
       users-gender-count.txt
   docs/
     CONSTITUTIONS.md
+    GIT-WORKFLOW.md
     specs/
       buscar-por-id/
         spec.md
