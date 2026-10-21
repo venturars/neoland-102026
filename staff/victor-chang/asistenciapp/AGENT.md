@@ -123,5 +123,7 @@ Una funcionalidad está terminada cuando:
 | --- | --- | --- |
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
 | `002-discord-bot` | Idea futura | Fuera del MVP |
+| `003-servidor-mcp` | Idea futura | Implementar MCP: que un asistente de IA (p. ej. Claude) pueda abrir y cerrar la asistencia, consultar listas y pedir informes por chat |
+| `004-asistencia-meet` | ⏸️ En pausa (2026-10-21) · 3 · Desglosar: plan aprobado; `tasks.md` pendiente de aprobación. Al retomar: aprobar tareas y empezar por T01 | Asistencia automática de todos los participantes de una reunión de Meet, sin que el alumno haga nada |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
