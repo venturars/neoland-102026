@@ -6,7 +6,8 @@ Base de la app. login con IA para alumnos junior de AI Engineering, en español,
 
 ```text
 mi-primer-proyecto/
-  package.json                 El único paquete es openai.
+  package.json                 El único paquete es openai. El gestor es pnpm.
+  pnpm-lock.yaml               Lockfile de pnpm.
   .gitignore                   Ignora node_modules/.
   AGENTS.md                    Reglas para quien modifica el proyecto.
   clients/terminal/            Primer cliente de cada funcionalidad. Ficheros .txt para pegar en la terminal.
@@ -33,7 +34,7 @@ mi-primer-proyecto/
 
 ## Paquetes
 
-El único paquete es `openai`.
+El único paquete es `openai`. Se instala con pnpm. No se usa npm.
 
 ### Constantes
 

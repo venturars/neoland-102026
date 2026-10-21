@@ -8,6 +8,7 @@ La base está en `docs/CONSTITUTIONS.md`.
 
 ## Comandos
 
+Las dependencias se instalan con pnpm (`pnpm install`). No uses npm ni generes `package-lock.json`.
 No hay comando de ejecución. No hay tests. No hay script de lint ni de formato.
 El formato es el de Prettier que dice `docs/CONSTITUTIONS.md`.
 
