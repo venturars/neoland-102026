@@ -44,6 +44,7 @@ first-app/
     create-user.js
     list-users.js
     find-user-by-email.js
+    find-user-by-id.js
     update-user.js
     delete-user.js
   queries/
@@ -53,6 +54,7 @@ first-app/
       insert-user.sql
       find-all.sql
       find-by-email.sql
+      find-by-id.sql
       update-user.sql
       remove-user.sql
   clients/
@@ -61,6 +63,7 @@ first-app/
       insert-user.txt
       find-all.txt
       find-by-email.txt
+      find-by-id.txt
       update-user.txt
       remove-user.txt
 ```
@@ -95,6 +98,8 @@ Dentro de una acción que guarda o borra, el cuerpo va en este orden:
 `listUsers` no guarda ni borra. Lee con `findAll` y devuelve la lista. Si la tabla está vacía, devuelve `[]`.
 
 `findUserByEmail` no guarda ni borra. Comprueba el email, lee con `findByEmail` y devuelve el usuario plano. Si no hay fila, lanza `User not found`.
+
+`findUserById` no guarda ni borra. Comprueba el id, lee con `findById` y devuelve el usuario plano. Si no hay fila, lanza `User not found`.
 
 ## 6. Errores
 
