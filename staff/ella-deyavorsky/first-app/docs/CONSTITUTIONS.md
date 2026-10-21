@@ -112,3 +112,31 @@ The SQL text lives only in `queries/queries/`. `queries/users.js` reads a file a
 `insert`, `findById`, `findByEmail`, and `update` use `.get()`. `findAll` uses `.all()`. `remove` uses `.run()` and returns nothing.
 
 A file in `logic/` calls a function exported by `queries/users.js`. It does not read a `.sql` file. The query functions do not decide if a name or an email is valid. Those decisions stay in `logic/`. They use the one connection from `db/connection.js`.
+
+## Specs
+
+A new feature is a new folder in `docs/specs/`. The folder name is kebab-case, like `docs/specs/classifier/`. Each folder has three files, written in this order.
+
+### spec.md
+
+The person who decides the feature writes this file. They say what they want. They do not need to know how the code works.
+
+It says what is asked, who will use it, who has access, examples of use, and what goes wrong. It does not name files, functions, or SQL.
+
+### plan.md
+
+This file says how the code will follow the spec. It does not list the work steps. Those belong in `tasks.md`.
+
+Keep it short. It names:
+
+- The files to add or change.
+- The function in `logic/`, what it receives, what it returns, and which error sentences it throws.
+- The query function and the `.sql` file, if the feature touches the database.
+- The order inside the logic file: clean the input, check the input, check the business rules, apply the action, return the result.
+- What stays as it is.
+
+### tasks.md
+
+The steps, in the order a person would do them. Each step does one thing and says its result. Each step is one line.
+
+This environment is one pass: spec, plan, tasks, code. Do not rewrite the three files once the code works, and do not run the cycle again, unless a person asks. The work stops when the last step is done.
