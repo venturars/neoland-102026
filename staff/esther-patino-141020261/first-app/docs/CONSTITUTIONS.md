@@ -38,7 +38,12 @@ first-app/
     connection.js
     users.sqlite
   docs/
-    CONSTITUTION.md
+    CONSTITUTIONS.md
+    specs/
+      <nombre>/
+        spec.md
+        plan.md
+        tasks.md
   logic/
     shared.js
     create-user.js
@@ -69,7 +74,8 @@ first-app/
 ```
 
 `AGENTS.md` dice cómo se trabaja en esta app: el orden de un cambio, el estilo y qué hacer al cerrar una tarea.
-`docs/CONSTITUTION.md` es este documento. Manda sobre el comportamiento de la app.
+`docs/CONSTITUTIONS.md` es este documento. Manda sobre el comportamiento de la app.
+`docs/specs/<nombre>/` es un desarrollo. Ahí están su spec, su plan y sus tareas. 
 `db/` abre la base de datos y no contiene reglas de negocio.
 `queries/queries/` guarda el SQL en ficheros `.sql`. `queries/users.js` los lee y los ejecuta. No hay reglas de negocio aquí.
 `logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
@@ -125,4 +131,27 @@ Cuando se termina de crear una funcionalidad, se crea un cliente.
 El cliente es un archivo en `clients/terminal/`. El nombre dice la acción, en kebab-case, y acaba en `.txt`.
 
 Ese archivo se pega en la terminal desde la raíz del repositorio. Entra en `first-app`, importa la función y hace `console.log` del resultado. No captura el error. Es la prueba manual de esa funcionalidad.
+
+## 8. Cómo se hace un desarrollo
+
+Un cambio del proyecto es un desarrollo. Lo es una funcionalidad, una dependencia, la configuración y la documentación.
+
+Un desarrollo no empieza en el código. Se escribe en `docs/specs/<nombre>/`. `<nombre>` va en kebab-case. Ahí hay tres ficheros. Se leen de arriba abajo. Son cortos y concretos. Una persona los revisa antes de seguir.
+
+No hay loop. No se vuelve a escribir el ciclo hasta que un test pase.
+
+`spec.md` es el negocio. Lo lee quien decide si eso es lo que quiere, sin abrir el código. Dice quién lo usa, qué entra, qué sale con un ejemplo, qué fallo se ve y qué queda fuera. Un fallo nombra un mensaje de la lista de «Errores». No nombra ficheros, funciones ni SQL.
+
+`plan.md` es la técnica. Lo lee quien comprueba que el desarrollo cabe en esta constitución. Dice cómo se aplica el negocio:
+
+- qué ficheros se crean y cuáles se tocan
+- a qué fichero de `logic/` se parece, sin pegar su código
+- la firma: nombre, parámetros y salida
+- el SQL nuevo, si lo hay, con los parámetros con nombre (`:id`, `:name`, `:email`)
+- qué mensaje de «Errores» corresponde a cada fallo de la spec
+
+Si esta constitución, el código actual y la spec no dicen lo mismo, la pregunta se escribe al final del plan. No hay `tasks.md` ni código hasta tener la respuesta.
+
+`tasks.md` son los pasos, en el orden en que los haría una persona. Cada paso abre un sitio, hace una cosa y deja un resultado que se puede mirar. Un paso son como mucho cuatro líneas. Solo se escribe si no hay contradicción.
+ No se inventan pasos.
 
