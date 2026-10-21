@@ -27,7 +27,7 @@ first-app/
 - `logic/` decides if an action is allowed. It does not contain SQL.
 - `queries/users.js` talks to the database. It does not decide if a name or an email is valid. The SQL text lives in `queries/queries/`.
 - `db/` contains `connection.js`, which opens the database, and `users.sqlite`, which stores the users.
-- `clients/terminal/` holds one `.txt` file per feature. You paste that file into the terminal while `first-app` is the current folder. The files are `create-users-table.txt`, `create-user.txt`, `list-users.txt`, `find-user-by-email.txt`, `find-user-by-id.txt`, `update-user.txt`, and `delete-user.txt`.
+- `clients/terminal/` holds one `.txt` file per feature. You paste that file into the terminal while `first-app` is the current folder. The files are `create-users-table.txt`, `create-user.txt`, `list-users.txt`, `find-user-by-email.txt`, `find-user-by-id.txt`, `update-user.txt`, `delete-user.txt`, and `count-users-by-gender.txt`.
 - `docs/` holds this file.
 
 ## Database
@@ -60,6 +60,7 @@ Each action has its own file:
 - `logic/find-user-by-id.js`
 - `logic/update-user.js`
 - `logic/delete-user.js`
+- `logic/count-users-by-gender.js`
 
 Each file exports one function. The function is built in this order:
 
@@ -68,7 +69,9 @@ Each file exports one function. The function is built in this order:
 3. It checks the input, without the database: "The name is missing.", "The email is not valid.", "There is nothing to update."
 4. It checks the business rules, with the queries it needs: "This email is already used.", "No user was found."
 5. It applies the action with a function exported by `queries/users.js`.
-6. It returns the result: only `id`, `name`, `email`, `createdAt`, `updatedAt`. No SQLite object leaves `logic/`.
+6. It returns the result: only `id`, `name`, `email`, `createdAt`, `updatedAt`. No SQLite object leaves `logic/`. `countUsersByGender()` returns a count object, `{ male, female, undefined }`. A count is an allowed return, not only user fields.
+
+A function with no input skips steps 1 and 2. A function that reads an outside tool instead of the database does step 4 and step 5 against that tool.
 
 `updateUser({ id, name, email })` can change the name, the email, or both. A field passed as `undefined` keeps its current value. If both are `undefined`, it throws "There is nothing to update."
 
@@ -88,6 +91,7 @@ A failure throws an English sentence with `throw new Error(...)`. It is not retu
 - "No user was found." — no user has this id, or no user has this email.
 - "There is nothing to update." — an update was sent with no name and no email.
 - "The database failed." — SQLite failed. Every call to `queries/` is wrapped in try/catch and throws this sentence instead. The original SQLite message stays hidden.
+- "The classifier failed." — Ollama did not answer. The original message stays hidden.
 
 A new failure is added to this list before it is used in code.
 
@@ -130,13 +134,26 @@ This file says how the code will follow the spec. It does not list the work step
 Keep it short. It names:
 
 - The files to add or change.
-- The function in `logic/`, what it receives, what it returns, and which error sentences it throws.
-- The query function and the `.sql` file, if the feature touches the database.
-- The order inside the logic file: clean the input, check the input, check the business rules, apply the action, return the result.
+- The function in `logic/`: whether it is sync or async, what it receives, what it returns (the exact shape, even when it is not a user), and which error sentences it throws.
+- The edge cases and what the function returns for each, such as no users or nothing to do.
+- The query function and the `.sql` file, if the feature touches the database. If it does not, say so.
+- Any outside tool or package the feature needs, and what must already be running on the machine for it to work.
+- The order inside the logic file, matching the steps in "One logic file per action".
+- The changes this feature needs in this constitution: a new logic file in the action list, a new error sentence in the Errors list, a new client file in the tree.
 - What stays as it is.
 
 ### tasks.md
 
-The steps, in the order a person would do them. Each step does one thing and says its result. Each step is one line.
+The steps to build the feature, in the order a person would do them.
+
+Rules for the steps:
+
+- Each step does one thing. If a step needs the word "and", split it into two steps.
+- Each step is one line and says its result.
+- Each change to the constitution is its own step. Do not bundle several edits in one step.
+- Each file is its own step. Do not create two files in one step.
+- A step that writes a function in `logic/` is split into one step per part of the order in "One logic file per action": read the input, clean it, check it, check the business rules, apply the action, return the result. A part that does not apply is skipped.
+- An outside tool the feature needs is made ready before the step that uses it, not after.
+- Group the steps under the task they belong to, in this order: update the constitution, get any outside tool ready, write the query, write the logic, write the client, run it.
 
 This environment is one pass: spec, plan, tasks, code. Do not rewrite the three files once the code works, and do not run the cycle again, unless a person asks. The work stops when the last step is done.
