@@ -11,5 +11,8 @@
   "author": "",
   "license": "ISC",
   "type": "module",
-  "packageManager": "pnpm@10.34.7"
+  "packageManager": "pnpm@10.34.7",
+  "dependencies": {
+    "openai": "^7.40.0"
+  }
 }

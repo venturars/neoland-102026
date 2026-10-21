@@ -4,13 +4,13 @@
 
 Contar los usuarios ya guardados según el género de su nombre.
 
-La clasificación la hace un modelo local: Ollama con gemma4. Cada usuario entra en una sola categoría:
+La clasificación la hace Ollama en local, modelo `gemma4`. Los nombres se envían en partes de hasta 6, en el orden en que están guardados. La última parte puede traer menos de 6. Cada usuario entra en una sola categoría:
 
 - `female`
 - `male`
 - `undefined`
 
-El modelo responde con un dato `gender`. Solo los textos exactos `female` y `male` suman en su categoría. `undefined`, otra palabra, otra mayúscula o espacios cuentan en `undefined`. Eso no es un fallo.
+Por cada parte, el modelo responde con un texto por nombre, en el mismo orden. Solo los textos exactos `female` y `male` suman en su categoría. `undefined`, otra palabra, otra mayúscula o espacios cuentan en `undefined`. Eso no es un fallo.
 
 Se cuenta cada usuario una vez, aunque varios compartan el mismo nombre. El nombre se usa tal como está guardado.
 
@@ -46,7 +46,7 @@ Si no se pueden leer los usuarios guardados, se ve este mensaje:
 Unable to list users
 ```
 
-Si no se puede preguntar al modelo, o la respuesta no se puede leer, no hay recuento. Se ve este mensaje:
+Si no se puede preguntar a Ollama, o la respuesta no se puede leer, no hay recuento. Se ve este mensaje:
 
 ```text
 Unable to classify names

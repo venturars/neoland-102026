@@ -22,7 +22,7 @@ Actualmente la aplicación permite:
 
 La aplicación no tiene frontend, API HTTP, Jupyter Notebook ni autenticación.
 
-Contar por género llama a Ollama en local desde `logic/count-users-by-gender.js`, modelo `gemma4`, con `fetch`. No añade una capa. Primero lee los usuarios ya guardados y, solo si hay filas, consulta el modelo.
+Contar por género llama a Ollama en local desde `logic/count-users-by-gender.js`, modelo `gemma4`, usando el paquete `openai` como cliente. No añade una capa. Primero lee los usuarios ya guardados y, solo si hay filas, los envía en partes de hasta 6.
 
 ## Árbol actual
 
@@ -129,7 +129,7 @@ Cada función recibe solo los datos que necesita:
 
 `logic/` no calcula `createdAt` ni `updatedAt` y no los envía a las consultas. Esas fechas las escribe SQLite.
 
-`count-users-by-gender.js` llama a Ollama en local, modelo `gemma4`, sin capa nueva. El diagrama de SQLite de arriba no cambia: la lectura sigue siendo `listUserRows()`.
+`count-users-by-gender.js` llama a Ollama en local, modelo `gemma4`, con el paquete `openai` apuntando a `http://127.0.0.1:11434/v1`. Los nombres salen en partes de hasta 6. No añade una capa. El diagrama de SQLite de arriba no cambia: la lectura sigue siendo `listUserRows()`.
 
 ### `queries/users.js`
 
