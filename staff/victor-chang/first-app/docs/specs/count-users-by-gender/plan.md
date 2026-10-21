@@ -33,14 +33,28 @@ None new. No writes. Reuses `findAll()` from `queries/users.js`.
 - The call is the global `fetch`: `POST AI_URL`, JSON body `{ model: MODEL, temperature: 0, messages }`.
 - Names come from `findAll()`, in that order, and go in batches of 6. The last batch may have fewer. One call per batch. Only names are sent, never the email.
 - `messages`, in this order:
-  1. `system`: "For each line, answer one word on its own line: women, men or undefined. Same number of lines, same order. Nothing else."
-  2. A `user` / `assistant` example, with names not in the database:
+  1. `system`, one sentence per line:
+
+     ```
+     You classify first names by gender.
+     The user sends first names, one per line.
+     Answer with exactly one word per name, one per line, in the same order:
+     women if the name is mostly used by women,
+     men if the name is mostly used by men,
+     undefined if it is used by both or you are not sure.
+     Write nothing else.
+     ```
+
+  2. One `user` / `assistant` example pair, with names not in the database. The `user` message is the left column, one name per line; the `assistant` message is the right column:
 
      | user   | assistant |
      | ------ | --------- |
      | Carmen | women     |
      | Javier | men       |
      | Kim    | undefined |
+     | Lucia  | women     |
+     | Pablo  | men       |
+     | Sam    | undefined |
 
   3. `user`: the batch, one name per line, in the order read.
 
@@ -58,7 +72,7 @@ None new. No writes. Reuses `findAll()` from `queries/users.js`.
 | the AI does not respond (no connection, or status not 2xx) | `Could not classify the users`                      |
 | SQLite fails while reading the users                       | `Could not classify the users`                      |
 | the AI sends no message                                    | not a failure: that batch adds to `genderUndefined` |
-| the answer has no gender for a name                        | not a failure: that batch adds to `genderUndefined` |
+| the answer does not give one gender per name               | not a failure: that batch adds to `genderUndefined` |
 | a value is neither `women` nor `men`                       | not a failure: that name adds to `genderUndefined`  |
 
 If one call fails, no partial count is returned.
@@ -69,5 +83,4 @@ If one call fails, no partial count is returned.
 
 ## Open questions
 
-1. **Spec vs one word per line.** With one word per line, an answer that misses a name has one line too few, so the code cannot tell which name is missing. The plan counts **every name in that batch** as undefined. The spec says "that name counts as undefined". Change the spec failure to: "The AI's answer does not give one gender per name → every name sent with it counts as undefined"?
-2. **Spec vs batches.** The spec says "The AI sends no message → every name counts as undefined". With batches of 6 there is one message per batch. Change it to: "→ every name sent with it counts as undefined"?
+None.

@@ -24,8 +24,8 @@ Example: users Elena, Mateo and Alex → `{ women: 1, men: 1, genderUndefined: 1
 
 ## Failures
 
-- The AI sends no message → every name counts as undefined.
-- The AI's answer has no gender for a name → that name counts as undefined.
+- The AI sends no message → every name sent with it counts as undefined.
+- The AI's answer does not give one gender per name → every name sent with it counts as undefined.
 - The AI does not respond → `Could not classify the users`.
 
 ## Out of scope
