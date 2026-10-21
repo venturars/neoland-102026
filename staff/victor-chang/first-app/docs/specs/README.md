@@ -11,4 +11,4 @@ One folder per piece of work. The structure of `spec.md`, `plan.md` and `tasks.m
 | [update-user](update-user/)                     | done                     |
 | [delete-user](delete-user/)                     | done                     |
 | [align-constitution](align-constitution/)       | done                     |
-| [count-users-by-gender](count-users-by-gender/) | plan ready, no tasks yet |
+| [count-users-by-gender](count-users-by-gender/) | tasks ready, no code yet |
