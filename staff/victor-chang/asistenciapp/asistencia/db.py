@@ -6,6 +6,7 @@ abrirla y cerrarla (en la app, una por petición; plan §2.9).
 
 import secrets
 import sqlite3
+from pathlib import Path
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS config (
@@ -32,7 +33,7 @@ CREATE TABLE IF NOT EXISTS checkins (
 """
 
 
-def connect(path) -> sqlite3.Connection:
+def connect(path: str | Path) -> sqlite3.Connection:
     conn = sqlite3.connect(path)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
@@ -53,7 +54,7 @@ def get_or_create_teacher_token(conn: sqlite3.Connection) -> str:
     return token
 
 
-def _session(row) -> dict | None:
+def _session(row: sqlite3.Row | None) -> dict | None:
     if row is None:
         return None
     session = dict(row)
@@ -97,7 +98,9 @@ def close_session(conn: sqlite3.Connection, session_id: str, closed_at: str) -> 
         )
 
 
-def add_checkin(conn, session_id: str, name: str, key: str, checked_at: str) -> tuple[dict, bool]:
+def add_checkin(
+    conn: sqlite3.Connection, session_id: str, name: str, key: str, checked_at: str
+) -> tuple[dict, bool]:
     """Registra al alumno. Devuelve (registro, creado); si ya existía, creado=False (CA-07)."""
     with conn:
         cursor = conn.execute(

@@ -9,6 +9,7 @@ import os
 import socket
 import sys
 import time
+from collections.abc import Callable
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -53,7 +54,19 @@ def session_json(row: dict) -> dict:
     }
 
 
-def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
+def create_app(
+    db_path: str | Path = DEFAULT_DB,
+    token: str | None = None,
+    now: Callable[[], float] = time.time,
+) -> Flask:
+    """Crea la aplicación Flask con su base de datos ya preparada.
+
+    Args:
+        db_path: archivo SQLite; los tests usan uno temporal.
+        token: token del profesor. Si es None se lee de la BD (o se crea);
+            los tests pasan uno fijo.
+        now: reloj en segundos Unix; los tests pasan un reloj falso.
+    """
     app = Flask(__name__, static_folder="static", static_url_path="")
     app.json.ensure_ascii = False
     # Detrás del túnel, usar la dirección pública que nos indica (plan §2.10, CA-19).
