@@ -17,7 +17,7 @@ docs/       CONSTITUTIONS.md
 Flujo: `terminal → logic → queries → db/connection.js`.
 
 ## Comandos
-Se ejecutan desde la raíz del proyecto (`data-base/`). El flag `--no-warnings` oculta el aviso experimental de `node:sqlite`.
+Se ejecutan desde la raíz del proyecto (`first-app/`). El flag `--no-warnings` oculta el aviso experimental de `node:sqlite`.
 ```
 node --no-warnings logic/createUser.js "<name>" "<email>"
 node --no-warnings logic/findUserByEmail.js "<email>"
