@@ -152,6 +152,7 @@ def test_html_name_is_returned_literally(client, teacher):  # CA-12
 def test_unknown_session(client):
     assert client.get("/api/s/no-existe").status_code == 404
     assert check_in(client, "no-existe", "Ana", "1234").status_code == 404
+    assert client.get("/api/s/no-existe").get_json()["error"] == "Esta clase no existe. Revisa el enlace."
 
 
 # ---------- T09 · vista del profesor (CA-10, CA-11) ----------

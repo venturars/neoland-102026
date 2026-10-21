@@ -12,7 +12,7 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from flask import Flask, Response, abort, g, jsonify, request
+from flask import Flask, Response, g, jsonify, request
 from werkzeug.exceptions import HTTPException, InternalServerError
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -30,6 +30,28 @@ CLOSED = "La asistencia de esta clase ya está cerrada."
 NOT_FOUND = "Esta clase no existe. Revisa el enlace."
 UNAUTHORIZED = "Acceso no autorizado. Abre el panel con tu enlace secreto de profesor."
 GENERIC_ERRORS = {404: "No encontrado.", 405: "Método no permitido."}
+
+
+class SessionNotFound(Exception):
+    """La sesión pedida no existe; se responde 404 con NOT_FOUND."""
+
+
+# ---------- de filas de la BD (snake_case) a JSON de la API (camelCase) ----------
+
+def checkin_json(row: dict) -> dict:
+    data = {"name": row["name"], "checkedAt": row["checked_at"]}
+    if "id" in row:
+        data["id"] = row["id"]
+    return data
+
+
+def session_json(row: dict) -> dict:
+    return {
+        "id": row["id"],
+        "title": row["title"],
+        "openedAt": row["opened_at"],
+        "closedAt": row["closed_at"],
+    }
 
 
 def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
@@ -71,14 +93,16 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
     def session_or_404(session_id: str) -> dict:
         session = db.get_session(get_db(), session_id)
         if session is None:
-            abort(404, NOT_FOUND)
+            raise SessionNotFound
         return session
+
+    @app.errorhandler(SessionNotFound)
+    def session_not_found(_exc):
+        return error(404, NOT_FOUND)
 
     @app.errorhandler(HTTPException)
     def http_error(exc):
         if request.path.startswith("/api/"):
-            if exc.description == NOT_FOUND:
-                return error(404, NOT_FOUND)
             return error(exc.code, GENERIC_ERRORS.get(exc.code, "Error inesperado."))
         return exc
 
@@ -128,22 +152,15 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
 
         row, created = db.add_checkin(get_db(), session_id, name, name_key(name), now_iso())
         if not created:
-            return jsonify(already=True, name=row["name"], checkedAt=row["checked_at"])  # CA-07
-        return jsonify(name=row["name"], checkedAt=row["checked_at"]), 201  # CA-04
+            return jsonify(already=True, **checkin_json(row))  # CA-07
+        return jsonify(checkin_json(row)), 201  # CA-04
 
     # ---------- API del profesor ----------
 
     @app.get("/api/sessions")
     def list_sessions():
         return jsonify([
-            {
-                "id": s["id"],
-                "title": s["title"],
-                "openedAt": s["opened_at"],
-                "closedAt": s["closed_at"],
-                "total": s["total"],
-            }
-            for s in db.list_sessions(get_db())
+            {**session_json(s), "total": s["total"]} for s in db.list_sessions(get_db())
         ])  # CA-16
 
     @app.post("/api/sessions")
@@ -160,16 +177,11 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
         session = session_or_404(session_id)
         checkins = db.list_checkins(get_db(), session_id)
         data = {
-            "id": session["id"],
-            "title": session["title"],
+            **session_json(session),
             "open": session["closed_at"] is None,
-            "openedAt": session["opened_at"],
-            "closedAt": session["closed_at"],
             "studentUrl": f"{request.host_url}alumno.html?s={session_id}",
             "total": len(checkins),  # CA-11
-            "checkins": [
-                {"id": c["id"], "name": c["name"], "checkedAt": c["checked_at"]} for c in checkins
-            ],
+            "checkins": [checkin_json(c) for c in checkins],
         }
         if data["open"]:  # sin código si está cerrada (CA-13)
             data["code"] = code_for(session["secret"], now())
