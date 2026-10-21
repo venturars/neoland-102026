@@ -1,20 +1,9 @@
 # Template de presentación — Bootcamp Neoland
 
-Copia este documento, rellénalo y úsalo para presentarte al resto de la clase. Tiempo: **2–3 minutos**.
-
-Sustituye los textos entre `[corchetes]`. Borra las notas en cursiva antes de hablar.
-
-El objetivo es que tus compañeros sepan quién eres, de dónde vienes y cómo pueden contar contigo. No hace falta impresionar: hace falta que te recuerden.
-
----
-
 ## 1. Quién soy
 
-**Ella** · [ciudad o de dónde eres]
+**Ella** · Barcelona
 
-Ella
-
-_Di el nombre despacio. Si tiene un apodo, dilo ahora. 15 segundos._
 
 ---
 
@@ -22,7 +11,7 @@ _Di el nombre despacio. Si tiene un apodo, dilo ahora. 15 segundos._
 
 Venía de 1 año de freelance creando chatbots.
 
-Lo que más hacía en el día a día era crear chatbots.
+Lo que más hacía en el día a día era crear chatbots y automatizaciones.
 
 _Una escena vale más que un currículum. 30 segundos._
 
@@ -30,9 +19,9 @@ _Una escena vale más que un currículum. 30 segundos._
 
 ## 3. Por qué estoy aquí
 
-Me apunté porque quiero aprender a dessarollar con IA.
+Me apunté porque quiero aprender a dessarollar con IA y ayudar pequenas empresas a automatizar processo o crear productos.
 
-Cuando acabe el bootcamp quiero [qué te gustaría estar haciendo].
+Cuando acabe el bootcamp quiero trabajar en un rol mas tecnico.
 
 _Sé concreto. "Aprender a programar" se lo puede decir cualquiera. 30 segundos._
 
@@ -42,9 +31,9 @@ _Sé concreto. "Aprender a programar" se lo puede decir cualquiera. 30 segundos.
 
 |                             |                                                          |
 | --------------------------- | -------------------------------------------------------- |
-| Experiencia                 | [Ninguna / algo de HTML / un curso / proyectos propios…] |
-| Con lo que me siento cómodo | [una cosa, aunque sea pequeña]                           |
-| Lo que más me cuesta ahora  | [una cosa honesta]                                       |
+| Experiencia                 | [notiones] |
+| Con lo que me siento cómodo | [N8N]                           |
+| Lo que más me cuesta ahora  | [codigo]                                       |
 
 En este grupo puedo echar una mano con [algo que sí sabes: diseño, organización, inglés, explicar, paciencia…].
 
@@ -60,6 +49,6 @@ en proyectos con impacto
 
 ## 6. Cierre
 
-Soy **Ella**, vengo de **Francia** y estoy aquí para **bootcamp**.
+Soy **Ella**, vengo de **Francia** y estoy aquí para **el bootcamp**.
 
 Encantado de conoceros.
