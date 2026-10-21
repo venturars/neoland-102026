@@ -19,6 +19,7 @@ first-app/
     list-users.js
     find-user-by-email.js
     find-user-by-id.js
+    find-user-by-name.js
     users-gender-count.js
   clients/
     terminal/           Primer cliente. Sirve de test manual
