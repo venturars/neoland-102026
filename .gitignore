@@ -6,23 +6,36 @@ npm-shrinkwrap.json
 # Variables de entorno (cualquier carpeta)
 .env
 .env.*
-*.env
+!.env.example
+!.env.sample
+!.env.template
+!.env.*.example
 
-# IDEs: Claude, Cursor, VS Code, Visual Studio, OpenCode y Codex
+# Claude Code
 .claude/
-CLAUDE.local.md
+.mcp.json
+
+# Cursor
 .cursor/
+.cursorignore
+.cursorindexingignore
+
+# VS Code y Visual Studio
 .vscode/
-*.code-workspace
 .vs/
+*.code-workspace
 *.suo
 *.user
 *.userosscache
 *.sln.docstates
+
+# OpenCode
 .opencode/
+
+# Codex
 .codex/
 
-# Temporales de macOS
+# macOS
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -36,23 +49,24 @@ CLAUDE.local.md
 .com.apple.timemachine.donotpresent
 .AppleDB
 .AppleDesktop
-Network Trash Folder
 Temporary Items
 .apdisk
 
-# Temporales de Linux
+# Linux
 *~
 .fuse_hidden*
 .directory
 .Trash-*
 .nfs*
 
-# Temporales de Windows
-Thumbs.db
-Thumbs.db:encryptable
+# Windows
+[Tt]humbs.db
+[Tt]humbs.db:encryptable
 ehthumbs.db
 ehthumbs_vista.db
-*.stackdump
 [Dd]esktop.ini
 $RECYCLE.BIN/
-*.lnk
+*.stackdump
+*.tmp
+*.temp
+~$*
