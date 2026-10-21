@@ -1,6 +1,6 @@
 # Plan técnico 001 · Check-in con código
 
-> Estado: **Aprobado** (2026-10-20, incluidas §2.11–§2.12) · Spec: [spec.md](spec.md) v1.2 · Creado: 2026-10-19 · Re-planificado: 2026-10-20 · Revisado: 2026-10-22 (§2.13, revisión de código)
+> Estado: **Aprobado** (2026-10-20, incluidas §2.11–§2.12) · Spec: [spec.md](spec.md) v1.2 · Creado: 2026-10-19 · Re-planificado: 2026-10-20
 
 Este documento explica **cómo** construimos lo que pide la spec. Cada decisión indica qué criterios de aceptación (`CA-xx`) cubre.
 
@@ -17,8 +17,7 @@ Este documento explica **cómo** construimos lo que pide la spec. Cada decisión
         ▼                                          ▼
  ┌──────────────────────────── app.py (Flask) ──────────────────────────────────┐
  │  /*.html, /*.js, /*.css → static/                                            │
- │  /api/...   → rutas en app.py ──► asistencia/checkin.py (registro)           │
- │                                ──► asistencia/codes.py  (códigos)            │
+ │  /api/...   → rutas en app.py ──► asistencia/codes.py  (códigos)             │
  │                                ──► asistencia/names.py  (validar nombres)    │
  │                                ──► asistencia/export.py (CSV)                │
  │                                ──► asistencia/db.py ──► data/asistencia.db   │
@@ -116,17 +115,6 @@ Este documento explica **cómo** construimos lo que pide la spec. Cada decisión
 - **Interfaz:** cada fila de la lista del profesor tiene un botón "Quitar". Al pulsarlo, la fila cambia a "¿Quitar a *Nombre*? [Sí, quitar] [Cancelar]" (confirmación dentro de la página, como al cerrar).
 - ⚠️ La lista se repinta cada 2 s (polling). El registro pendiente de confirmar se guarda en una variable (`pendingRemoval`), y el repintado lo respeta para que la confirmación no desaparezca.
 
-### 2.13 Entradas mal formadas y errores (revisión de código, 2026-10-22)
-
-Una revisión del código encontró peticiones que devolvían un `500` con una página HTML (y `alumno.js` fallaba al leerla). La API **no cambia**; solo se cierran esos huecos:
-- **Cuerpo JSON:** solo se acepta un objeto. `[1]`, `"x"` o `5` cuentan como cuerpo vacío (`json_body()` en `app.py`).
-- **Nombre que no es texto** (`123`, `["Ana"]`) → `400` "Escribe tu nombre." (CA-08).
-- **Código:** solo 4 dígitos ASCII (`[0-9]{4}`, no `\d`, que acepta dígitos árabes). Cualquier otra cosa → `422` (CA-06). Antes, un código con caracteres no ASCII hacía fallar `hmac.compare_digest`.
-- **Error imprevisto** en cualquier ruta `/api/` → `500 {error}` en JSON, y se anota en el log.
-- **Sesión inexistente:** se detecta con la excepción `SessionNotFound`, no comparando el texto del mensaje.
-- **Reglas del registro en `asistencia/checkin.py`:** `register()` comprueba, en este orden, sesión cerrada (`SessionClosed` → `409`), nombre (`ValueError` → `400`) y código (`InvalidCode` → `422`). La ruta solo traduce esas excepciones a HTTP. Así otra fuente de registros (p. ej. Discord, P1) aplicará las mismas reglas.
-- **Túnel:** no se toma `api.trycloudflare.com` (aparece en los errores de `cloudflared`) como URL pública, y si `cloudflared` termina sin dar URL se avisa al momento en vez de esperar 30 s (CA-20).
-
 ---
 
 ## 3. Modelo de datos (SQLite, `data/asistencia.db`)
@@ -195,7 +183,6 @@ asistenciapp/
 │                          # `python app.py [--tunel]`: crea data/, obtiene el token, (abre el túnel,) imprime la URL del panel y arranca en 127.0.0.1:8000
 ├── asistencia/            # paquete con la lógica (sin nada de Flask)
 │   ├── __init__.py
-│   ├── checkin.py         # register(conn, session, raw_name, raw_code, t, checked_at): reglas del registro (§2.13)
 │   ├── codes.py           # code_for(secret, t), is_valid_code(secret, code, t), seconds_left(t)
 │   ├── names.py           # clean_name(raw), name_key(name)
 │   ├── export.py          # to_csv(rows)
@@ -208,7 +195,6 @@ asistenciapp/
 │   └── styles.css         # estilos comunes, móvil primero
 └── tests/
     ├── conftest.py        # fixtures: app (BD temporal en tmp_path, token fijo, reloj falso) y client
-    ├── test_checkin.py    # reglas del registro con una BD temporal, sin Flask
     ├── test_codes.py
     ├── test_names.py
     ├── test_export.py
@@ -216,7 +202,7 @@ asistenciapp/
     └── test_api.py        # usa app.test_client(): prueba la API sin levantar un servidor real
 ```
 
-**Por qué separar `asistencia/` de `app.py`:** la lógica (reglas del registro, códigos, nombres, CSV, BD) no sabe nada de Flask. Se prueba con funciones normales, y si mañana cambiara el servidor, esa parte no se tocaría.
+**Por qué separar `asistencia/` de `app.py`:** la lógica (códigos, nombres, CSV, BD) no sabe nada de Flask. Se prueba con funciones normales, y si mañana cambiara el servidor, esa parte no se tocaría.
 
 Detalles de la interfaz:
 - **Profesor**: el código se ve con letra muy grande (para compartir pantalla), con una cuenta atrás y un botón "Copiar enlace de alumnos". Cerrar pide confirmación **dentro de la página**, no con `confirm()`.
@@ -230,10 +216,10 @@ Detalles de la interfaz:
 | --- | --- |
 | CA-01, CA-02 | `test_api.py`: crear con y sin título |
 | CA-03 | `test_codes.py`: el código cambia al cambiar de ventana. **Manual**: se actualiza en pantalla |
-| CA-04, CA-05, CA-06 | `test_api.py` con reloj falso: código actual, anterior y antiguo · `test_checkin.py` · `test_codes.py`: dígitos no ASCII → no válido |
-| CA-07 | `test_names.py` (normalización) + `test_api.py` (segundo registro → `already`) + `test_checkin.py` |
-| CA-08 | `test_names.py` (también nombres que no son texto) + `test_api.py` (`400`, también con cuerpos mal formados) + `test_checkin.py` |
-| CA-09, CA-13 | `test_api.py`: cerrar → registro `409` y sin `code` · `test_checkin.py`: la sesión cerrada se comprueba antes que el nombre |
+| CA-04, CA-05, CA-06 | `test_api.py` con reloj falso: código actual, anterior y antiguo |
+| CA-07 | `test_names.py` (normalización) + `test_api.py` (segundo registro → `already`) |
+| CA-08 | `test_names.py` + `test_api.py` (`400`) |
+| CA-09, CA-13 | `test_api.py`: cerrar → registro `409` y sin `code` |
 | CA-10, CA-11 | `test_api.py`: la lista y el total incluyen al nuevo alumno. **Manual**: aparece en ≤ 5 s |
 | CA-12 | `test_api.py`: el nombre se devuelve tal cual. **Manual**: se ve literal en pantalla |
 | CA-14 | `test_export.py` (BOM, `;`, orden, comillas, fórmulas) + `test_api.py` |
@@ -241,7 +227,7 @@ Detalles de la interfaz:
 | CA-16 | `test_api.py`: listado con totales |
 | CA-18 | **Manual**: DevTools a 400 px |
 | CA-19 | `test_api.py`: con cabeceras `X-Forwarded-Proto/Host`, `studentUrl` es `https://<host público>/…`. **Manual**: registrarse desde un móvil con datos móviles |
-| CA-20 | `test_tunnel.py`: se extrae la URL de las líneas reales de `cloudflared`, se ignora `api.trycloudflare.com` y, con un `cloudflared` falso, se falla al momento si termina sin URL. **Manual**: `python app.py --tunel` imprime un enlace que funciona |
+| CA-20 | `test_tunnel.py`: se extrae la URL de las líneas reales de `cloudflared`. **Manual**: `python app.py --tunel` imprime un enlace que funciona |
 | CA-21 | **Manual**: abrir el panel en `localhost` muestra el aviso |
 | CA-22, CA-23 | **Chrome automatizado**: registrarse, recargar → mensaje y sin formulario; abrir otra sesión → formulario visible |
 | CA-24 | `test_api.py`: quitar → desaparece de la lista, del total y del CSV; id de otra sesión → `404`. **Chrome automatizado**: confirmar y cancelar |
@@ -272,5 +258,4 @@ Detalles de la interfaz:
 2. **Separador del CSV** (2026-10-19): `;` (§2.6).
 3. **Re-plan a Python** (2026-10-20): Flask + pytest. Se enmienda la constitución a v2.0.
 4. **Acceso remoto** (2026-10-20): túnel de Cloudflare con un solo comando (`--tunel`). Se enmienda P4 de la constitución a v2.1.
-5. **Revisión de código** (2026-10-21): arreglar las entradas mal formadas y el túnel, y sacar las reglas del registro a `checkin.py` (§2.13). Separar las rutas en Blueprints se deja para la spec 002.
 5. **Un registro por navegador + quitar registros** (2026-10-20, spec v1.2): límite solo en el navegador (§2.11); quitar con confirmación, en sesiones abiertas o cerradas (§2.12).

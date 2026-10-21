@@ -9,17 +9,17 @@ import os
 import socket
 import sys
 import time
-from collections.abc import Callable
 from datetime import datetime, timezone
 from pathlib import Path
 
-from flask import Flask, Response, g, jsonify, request
-from werkzeug.exceptions import HTTPException, InternalServerError
+from flask import Flask, Response, abort, g, jsonify, request
+from werkzeug.exceptions import HTTPException
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from asistencia import checkin, db
-from asistencia.codes import code_for, seconds_left
+from asistencia import db
+from asistencia.codes import code_for, is_valid_code, seconds_left
 from asistencia.export import to_csv
+from asistencia.names import clean_name, name_key
 from asistencia.tunnel import TunnelError, start_tunnel
 
 BASE_DIR = Path(__file__).parent
@@ -32,41 +32,7 @@ UNAUTHORIZED = "Acceso no autorizado. Abre el panel con tu enlace secreto de pro
 GENERIC_ERRORS = {404: "No encontrado.", 405: "Método no permitido."}
 
 
-class SessionNotFound(Exception):
-    """La sesión pedida no existe; se responde 404 con NOT_FOUND."""
-
-
-# ---------- de filas de la BD (snake_case) a JSON de la API (camelCase) ----------
-
-def checkin_json(row: dict) -> dict:
-    data = {"name": row["name"], "checkedAt": row["checked_at"]}
-    if "id" in row:
-        data["id"] = row["id"]
-    return data
-
-
-def session_json(row: dict) -> dict:
-    return {
-        "id": row["id"],
-        "title": row["title"],
-        "openedAt": row["opened_at"],
-        "closedAt": row["closed_at"],
-    }
-
-
-def create_app(
-    db_path: str | Path = DEFAULT_DB,
-    token: str | None = None,
-    now: Callable[[], float] = time.time,
-) -> Flask:
-    """Crea la aplicación Flask con su base de datos ya preparada.
-
-    Args:
-        db_path: archivo SQLite; los tests usan uno temporal.
-        token: token del profesor. Si es None se lee de la BD (o se crea);
-            los tests pasan uno fijo.
-        now: reloj en segundos Unix; los tests pasan un reloj falso.
-    """
+def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
     app = Flask(__name__, static_folder="static", static_url_path="")
     app.json.ensure_ascii = False
     # Detrás del túnel, usar la dirección pública que nos indica (plan §2.10, CA-19).
@@ -97,34 +63,19 @@ def create_app(
     def error(status: int, message: str):
         return jsonify(error=message), status
 
-    def json_body() -> dict:
-        # Solo nos sirve un objeto JSON; cualquier otra cosa ([1], "x", 5...) cuenta como vacío.
-        body = request.get_json(silent=True)
-        return body if isinstance(body, dict) else {}
-
     def session_or_404(session_id: str) -> dict:
         session = db.get_session(get_db(), session_id)
         if session is None:
-            raise SessionNotFound
+            abort(404, NOT_FOUND)
         return session
-
-    @app.errorhandler(SessionNotFound)
-    def session_not_found(_exc):
-        return error(404, NOT_FOUND)
 
     @app.errorhandler(HTTPException)
     def http_error(exc):
         if request.path.startswith("/api/"):
+            if exc.description == NOT_FOUND:
+                return error(404, NOT_FOUND)
             return error(exc.code, GENERIC_ERRORS.get(exc.code, "Error inesperado."))
         return exc
-
-    @app.errorhandler(Exception)
-    def unexpected_error(_exc):
-        # Para que el frontend reciba siempre JSON, también ante un fallo imprevisto.
-        app.logger.exception("Error inesperado")
-        if request.path.startswith("/api/"):
-            return error(500, "Error inesperado. Inténtalo de nuevo.")
-        return InternalServerError()
 
     @app.before_request
     def require_teacher():
@@ -150,33 +101,42 @@ def create_app(
     @app.post("/api/s/<session_id>/checkin")
     def check_in(session_id):
         session = session_or_404(session_id)
-        body = json_body()
-        try:
-            row, created = checkin.register(
-                get_db(), session, body.get("name"), body.get("code"), now(), now_iso()
-            )
-        except checkin.SessionClosed:
+        if session["closed_at"] is not None:
             return error(409, CLOSED)  # CA-09
+
+        body = request.get_json(silent=True) or {}
+        try:
+            name = clean_name(body.get("name"))
         except ValueError as exc:
             return error(400, str(exc))  # CA-08
-        except checkin.InvalidCode:
+
+        if not is_valid_code(session["secret"], body.get("code", ""), now()):
             return error(422, INVALID_CODE)  # CA-06
+
+        row, created = db.add_checkin(get_db(), session_id, name, name_key(name), now_iso())
         if not created:
-            return jsonify(already=True, **checkin_json(row))  # CA-07
-        return jsonify(checkin_json(row)), 201  # CA-04
+            return jsonify(already=True, name=row["name"], checkedAt=row["checked_at"])  # CA-07
+        return jsonify(name=row["name"], checkedAt=row["checked_at"]), 201  # CA-04
 
     # ---------- API del profesor ----------
 
     @app.get("/api/sessions")
     def list_sessions():
         return jsonify([
-            {**session_json(s), "total": s["total"]} for s in db.list_sessions(get_db())
+            {
+                "id": s["id"],
+                "title": s["title"],
+                "openedAt": s["opened_at"],
+                "closedAt": s["closed_at"],
+                "total": s["total"],
+            }
+            for s in db.list_sessions(get_db())
         ])  # CA-16
 
     @app.post("/api/sessions")
     def create_session():
-        title = json_body().get("title")
-        title = title.strip() if isinstance(title, str) else ""
+        body = request.get_json(silent=True) or {}
+        title = str(body.get("title") or "").strip()
         if not title:
             title = datetime.fromtimestamp(now()).strftime("%d/%m/%Y %H:%M")  # CA-02
         session = db.create_session(get_db(), title, now_iso())
@@ -187,11 +147,16 @@ def create_app(
         session = session_or_404(session_id)
         checkins = db.list_checkins(get_db(), session_id)
         data = {
-            **session_json(session),
+            "id": session["id"],
+            "title": session["title"],
             "open": session["closed_at"] is None,
+            "openedAt": session["opened_at"],
+            "closedAt": session["closed_at"],
             "studentUrl": f"{request.host_url}alumno.html?s={session_id}",
             "total": len(checkins),  # CA-11
-            "checkins": [checkin_json(c) for c in checkins],
+            "checkins": [
+                {"id": c["id"], "name": c["name"], "checkedAt": c["checked_at"]} for c in checkins
+            ],
         }
         if data["open"]:  # sin código si está cerrada (CA-13)
             data["code"] = code_for(session["secret"], now())

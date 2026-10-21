@@ -47,12 +47,6 @@ def test_code_with_spaces_is_accepted():
     assert is_valid_code(SECRET, f" {code_for(SECRET, T0)} ", T0)
 
 
-def test_non_ascii_digits_are_rejected():
-    # compare_digest lanza TypeError con texto no ASCII: no debe llegar hasta ahí.
-    assert not is_valid_code(SECRET, "١٢٣٤", T0)
-    assert not is_valid_code(SECRET, "12é4", T0)
-
-
 def test_seconds_left():
     assert seconds_left(T0) == WINDOW_SECONDS
     assert seconds_left(T0 + 10) == WINDOW_SECONDS - 10

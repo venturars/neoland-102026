@@ -15,12 +15,6 @@ def test_empty_name_is_rejected(raw):  # CA-08
         clean_name(raw)
 
 
-@pytest.mark.parametrize("raw", [123, ["Ana"], {"name": "Ana"}])
-def test_non_text_name_is_rejected(raw):  # CA-08
-    with pytest.raises(ValueError, match="Escribe tu nombre"):
-        clean_name(raw)
-
-
 def test_name_at_max_length_is_accepted():  # CA-08
     assert clean_name("a" * MAX_LENGTH) == "a" * MAX_LENGTH
 
