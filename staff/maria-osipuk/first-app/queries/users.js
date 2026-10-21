@@ -51,16 +51,17 @@ export function deleteUserRow(id) {
   database.prepare(deleteUserQuery).run({ id });
 }
 
-export function updateUserRow({ id, name, email, updatedAt }) {
-  database.prepare(updateUserQuery).run({ id, name, email, updatedAt });
+export function updateUserRow(id, name, email) {
+  // updated_at is written by the SQL statement, not by this function.
+  database.prepare(updateUserQuery).run({ id, name, email });
 
   return findUserById(id);
 }
 
-export function insertUser({ name, email, createdAt, updatedAt }) {
-  const result = database
-    .prepare(insertUserQuery)
-    .run({ name, email, createdAt, updatedAt });
+export function insertUser(name, email) {
+  // created_at and updated_at are written by the SQL statement.
+  // They are not parameters, so a caller cannot choose those dates.
+  const result = database.prepare(insertUserQuery).run({ name, email });
 
   return findUserById(result.lastInsertRowid);
 }

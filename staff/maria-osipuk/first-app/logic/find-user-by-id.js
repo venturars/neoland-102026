@@ -1,16 +1,10 @@
 import { findUserById as findUserRowById } from "../queries/users.js";
 
-export function findUserById(input) {
-  // The client must send one object. A missing object is rejected
-  // here so the caller gets a business error, not a JavaScript TypeError.
-  if (input === null || typeof input !== "object") {
-    throw new Error("User id must be a positive integer");
-  }
-
+export function findUserById(id) {
   // Check that id is a whole number greater than zero.
   // The client sends it as a JavaScript value, so a string like "1"
   // or a decimal like 1.5 must be rejected here, before any query runs.
-  if (!Number.isInteger(input.id) || input.id <= 0) {
+  if (!Number.isInteger(id) || id <= 0) {
     throw new Error("User id must be a positive integer");
   }
 
@@ -19,7 +13,7 @@ export function findUserById(input) {
   let user;
 
   try {
-    user = findUserRowById(input.id);
+    user = findUserRowById(id);
   } catch {
     throw new Error("Unable to find user");
   }

@@ -1,36 +1,34 @@
 import { findUserByEmail, insertUser } from "../queries/users.js";
 
-export function createUser(input) {
-  // The client must send one object. A missing object is rejected
-  // here so the caller gets a business error, not a JavaScript TypeError.
-  if (input === null || typeof input !== "object") {
-    throw new Error("User name is required");
-  }
-
+export function createUser(name, email) {
   // A name of another type is not turned into text.
-  if (typeof input.name !== "string") {
+  // The caller passes the name itself, not an object that wraps it.
+  if (typeof name !== "string") {
     throw new Error("User name is required");
   }
 
-  const name = input.name.trim();
+  // Trim spaces so a name made only of spaces is empty and rejected.
+  const normalizedName = name.trim();
 
-  if (name === "") {
+  if (normalizedName === "") {
     throw new Error("User name is required");
   }
 
   // An email of another type is not turned into text.
-  if (typeof input.email !== "string") {
+  if (typeof email !== "string") {
     throw new Error("User email is invalid");
   }
 
   // Trim spaces and lowercase the email so "Ada@Example.com"
   // and "ada@example.com" are treated as the same address.
-  const email = input.email.trim().toLowerCase();
-  const parts = email.split("@");
+  const normalizedEmail = email.trim().toLowerCase();
+  const parts = normalizedEmail.split("@");
   const hasSingleAt =
     parts.length === 2 && parts[0].length > 0 && parts[1].length > 0;
 
-  if (!hasSingleAt || email.length > 64) {
+  // One @, text on both sides, and at most 64 characters.
+  // This stays as visible steps instead of a regular expression.
+  if (!hasSingleAt || normalizedEmail.length > 64) {
     throw new Error("User email is invalid");
   }
 
@@ -39,25 +37,23 @@ export function createUser(input) {
   let owner;
 
   try {
-    owner = findUserByEmail(email);
+    owner = findUserByEmail(normalizedEmail);
   } catch {
     throw new Error("Unable to create user");
   }
 
+  // Two users cannot share an email. This check happens before insert
+  // so the caller sees a business error, not a SQLite unique failure.
   if (owner) {
     throw new Error("User email is already registered");
   }
 
-  const timestamp = new Date().toISOString();
+  // SQLite writes created_at and updated_at inside the insert.
+  // This function does not build those dates and does not send them.
   let user;
 
   try {
-    user = insertUser({
-      name,
-      email,
-      createdAt: timestamp,
-      updatedAt: timestamp,
-    });
+    user = insertUser(normalizedName, normalizedEmail);
   } catch {
     throw new Error("Unable to create user");
   }

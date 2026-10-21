@@ -1,16 +1,10 @@
 import { deleteUserRow, findUserById } from "../queries/users.js";
 
-export function deleteUser(input) {
-  // The client must send one object. A missing object is rejected
-  // here so the caller gets a business error, not a JavaScript TypeError.
-  if (input === null || typeof input !== "object") {
-    throw new Error("User id must be a positive integer");
-  }
-
+export function deleteUser(id) {
   // Check that id is a whole number greater than zero.
   // The client sends it as a JavaScript value, so a string like "1"
   // or a decimal like 1.5 must be rejected here, before any query runs.
-  if (!Number.isInteger(input.id) || input.id <= 0) {
+  if (!Number.isInteger(id) || id <= 0) {
     throw new Error("User id must be a positive integer");
   }
 
@@ -19,19 +13,23 @@ export function deleteUser(input) {
   let user;
 
   try {
-    user = findUserById(input.id);
+    user = findUserById(id);
   } catch {
     throw new Error("Unable to find user");
   }
 
   // A missing row is a business rule, not a database failure.
+  // The delete does not run when there is nobody to remove.
   if (!user) {
     throw new Error("User does not exist");
   }
 
   try {
-    deleteUserRow(input.id);
+    deleteUserRow(id);
   } catch {
     throw new Error("Unable to delete user");
   }
+
+  // A successful delete removes the row and returns nothing.
+  // The caller does not receive a stand-in object.
 }

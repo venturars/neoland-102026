@@ -1,5 +1,5 @@
 UPDATE users
 SET name = :name,
     email = :email,
-    updated_at = :updatedAt
+    updated_at = datetime('now', 'localtime')
 WHERE id = :id;

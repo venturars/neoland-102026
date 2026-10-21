@@ -1,25 +1,22 @@
-import { findUserByEmail } from "../queries/users.js";
+import { findUserByEmail as findUserRowByEmail } from "../queries/users.js";
 
-export function findUser(input) {
-  // The client must send one object. A missing object is rejected
-  // here so the caller gets a business error, not a JavaScript TypeError.
-  if (input === null || typeof input !== "object") {
-    throw new Error("User email is invalid");
-  }
-
+export function findUserByEmail(email) {
   // An email of another type is not turned into text.
-  if (typeof input.email !== "string") {
+  // The caller passes the address itself, not an object that wraps it.
+  if (typeof email !== "string") {
     throw new Error("User email is invalid");
   }
 
   // Trim spaces and lowercase the email so "Ada@Example.com"
   // and "ada@example.com" are treated as the same address.
-  const email = input.email.trim().toLowerCase();
-  const parts = email.split("@");
+  const normalizedEmail = email.trim().toLowerCase();
+  const parts = normalizedEmail.split("@");
   const hasSingleAt =
     parts.length === 2 && parts[0].length > 0 && parts[1].length > 0;
 
-  if (!hasSingleAt || email.length > 64) {
+  // One @, text on both sides, and at most 64 characters.
+  // This stays as visible steps instead of a regular expression.
+  if (!hasSingleAt || normalizedEmail.length > 64) {
     throw new Error("User email is invalid");
   }
 
@@ -28,11 +25,12 @@ export function findUser(input) {
   let user;
 
   try {
-    user = findUserByEmail(email);
+    user = findUserRowByEmail(normalizedEmail);
   } catch {
     throw new Error("Unable to find user");
   }
 
+  // A missing row is a business rule, not a database failure.
   if (!user) {
     throw new Error("User does not exist");
   }
