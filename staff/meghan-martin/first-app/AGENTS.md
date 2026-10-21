@@ -1,44 +1,51 @@
 # AGENTS.md — first-app
 
-## Qué es este proyecto
+## Proyecto
 
-Una app junior en Node (`"type": "module"`, `node:sqlite`) en `staff/meghan-martin/first-app`. La arquitectura, los contratos y los mensajes de error están en `docs/CONSTITUTIONS.md`. Lee ese archivo antes de cambiar código.
+first-app es la app de Meghan en este curso. Se construye con IA siguiendo SDD. No es una web: se usa desde la terminal y guarda personas en SQLite.
 
-## Flujo de trabajo (obligatorio)
+Está en `staff/meghan-martin/first-app`, en Node, con módulos ES (`"type": "module"`) y `node:sqlite`. La conexión es `db/connection.js`. El fichero por defecto es `db/users.sqlite`; si existe `USERS_DB_PATH`, se usa ese. La arquitectura, la base de datos y qué llevan spec, plan y tasks están en `docs/CONSTITUTIONS.md`. Léelo antes de cambiar código.
 
-Ningún código de una funcionalidad nueva se escribe antes de spec, plan y tasks.
+## Flujo
 
-Por cada funcionalidad: carpeta nueva `docs/specs/<nombre>/` (`spec.md`, `plan.md`, `tasks.md`). No se sobrescriben. Spec = producto. Plan = ficheros. Tasks = pasos. Sin loop.
+Ningún código de una funcionalidad nueva se escribe antes de spec, plan y tasks. Carpeta nueva `docs/specs/<nombre>/`. No se sobrescriben. No hay loop.
 
-1. Constitución — `docs/CONSTITUTIONS.md`.
-2. Spec en esa carpeta.
-3. Revisión.
-4. Plan y tasks.
-5. Código.
-6. El snippet de terminal.
+1. Constitución.
+2. `spec.md`, y revisión humana.
+3. `plan.md` y `tasks.md`.
+4. Implementación.
+5. El ejemplo de `clients/terminal/` de esa acción.
 
-El snippet es obligatorio. Usa **pnpm**, no npm. Un logic ya creado no se reemplaza.
+El ejemplo de terminal es obligatorio. Un logic ya creado no se reemplaza.
 
 ## Comandos
 
-- No hay script de arranque. Las funcionalidades se prueban pegando `clients/terminal/*.txt` desde dentro de `first-app`.
-- Formato: Prettier normal (comillas dobles, punto y coma, coma final, 2 espacios, ancho 80).
+- No hay comando de arranque. Cada acción se prueba pegando su `clients/terminal/*.txt` desde dentro de `first-app`.
+- No hay tests. `package.json` no tiene script `test`.
+- El lock que hay es `package-lock.json`. No hay `pnpm-lock.yaml`.
+- Prettier, formato estándar. No hay script de lint ni de formato.
 
-## Cómo escribir código aquí
+## Estilo
 
-- Inglés en los `.js`. Comentarios en español están bien en los `.txt` de terminal.
-- Ficheros: kebab-case. Funciones: camelCase. Imports ESM con `.js`.
-- El SQL usa parámetros con nombre (`:id`, `:name`, `:email`).
-- Prefiere `if` y nombres claros. No añadas envoltorios de resultado, clases de error propias ni capas extra que oculten los pasos.
-- No subas a git `db/users.sqlite`, `.DS_Store` ni restos de Jupyter (`Untitled.ipynb`).
+El código va en inglés. Los comentarios de `clients/terminal/*.txt` van en español. Esos `.txt` son un bloque `node --input-type=module`. Las acciones de `logic/` importan su función y hacen `console.log`. Crear la tabla importa `createUsersTable` y `db`, y muestra el nombre de la tabla.
+
+Ficheros en kebab-case, funciones y variables en camelCase, exportaciones con nombre e imports ESM con `.js`. El SQL usa parámetros con nombre (`:id`, `:name`, `:email`). El contrato de `logic/` está en la constitución. La frase de error de cada acción está en su plan.
+
+Se lee de arriba abajo, con `if` y con nombres que digan qué hacen. No añadas envoltorios de resultado, clases de error, helpers genéricos ni capas que oculten los pasos.
+
+Prettier sin configuración propia: comillas dobles, punto y coma, coma final, 2 espacios, ancho 80.
 
 ## Reglas
 
-- Sigue `docs/CONSTITUTIONS.md`. No inventes una segunda base de datos ni otro estilo de errores.
-- Parece al código actual. Si una tarea se parece a create-user, copia ese patrón.
-- Si la constitución, este archivo, una spec y el código no coinciden, para y pregunta cuál seguir. No elijas un lado en silencio.
-- No digas que algo funciona si no has ejecutado el snippet de terminal.
+- Lee la constitución y la spec activa antes de tocar código.
+- Temperatura próxima a 0. No inventes: cíñete al plan y a la spec activa.
+- En cada tarea: mira lo que ya existe antes de escribir. Si se parece a una acción ya hecha, sigue ese patrón.
+- Si la constitución, el código, una spec y esta guía no dicen lo mismo, no elijas un lado. La pregunta va al final del plan y se para. No hay código hasta la respuesta.
+- No digas que algo funciona si no has ejecutado el ejemplo de terminal.
+- `.gitignore` ignora `node_modules/` y los ficheros `*.sqlite`. No subas tampoco `.DS_Store` ni restos de Jupyter (`Untitled.ipynb`).
 
-## Cuando una tarea está terminada
+## Al terminar
 
-Solo si hubo spec aprobada, plan, código, y luego el snippet en `clients/terminal/` ejecutado.
+Al crear una funcionalidad se crea su ejemplo en `clients/terminal/`: un `.txt` que se pega con el directorio actual en `first-app`. Importa la función de `logic/` y hace `console.log` del resultado. Si la función es async, el ejemplo la espera con `await`. Esa es la comprobación.
+
+La tarea está terminada solo si hubo spec aprobada, plan, código, y ese ejemplo ejecutado.

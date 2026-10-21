@@ -1,131 +1,99 @@
 # Constitución — first-app
 
-Este archivo es el reglamento de mi first-app. Cursor debe seguir esto y no inventar otra estructura.
+Este archivo es el reglamento de la app. Dice qué es, cómo está hecha y qué llevan spec, plan y tasks. El orden de trabajo de Cursor está en `AGENTS.md`.
 
-first-app es una app pequeña en Node para usuarios. No es una web. Se usa desde la terminal. Más adelante puede crecer hacia login. Por ahora solo crea, lista, actualiza, busca y borra usuarios en SQLite.
+first-app es una app pequeña en Node. No es una web. Se usa desde la terminal. Guarda personas en SQLite. Más adelante puede crecer hacia login.
 
-## Flujo de trabajo (obligatorio)
-
-Ningún código de una funcionalidad nueva se escribe antes de spec, plan y tasks.
-
-Por cada funcionalidad nueva se crea una carpeta nueva en `docs/specs/` con `spec.md`, `plan.md` y `tasks.md`. No se sobrescriben.
-
-- **spec** — solo lógica de producto (qué ve quien usa la app, few-shot). Sin nombres de ficheros ni `pnpm`.
-- **plan** — cómo se encaja aquí: funciones y ficheros. No copiar el spec entero.
-- **tasks** — pasos de trabajo, en orden.
-
-No hay loop. Una persona lee spec → plan → tasks y luego se implementa.
-
-1. Constitución — este archivo.
-2. `docs/specs/<nombre>/spec.md`
-3. Revisión humana de la spec.
-4. `plan.md` y `tasks.md` en esa misma carpeta.
-5. Implementación.
-6. El snippet de `clients/terminal/` de esa acción.
-
-El snippet es obligatorio. Paquete: **pnpm**, no npm.
-
-## Carpetas
+## Árbol
 
 ```
 first-app/
-  db/                 Abre la base de datos. Sin reglas de negocio.
-  queries/            Solo SQL. Nada de "¿este email es válido?"
-  logic/              Las reglas. Un fichero por acción.
-  clients/terminal/   Texto que pegas para probar cada acción.
-  docs/               Constitución y specs (una carpeta por función).
-  AGENTS.md           Cómo debe trabajar Cursor en esta carpeta.
+  AGENTS.md
   package.json
+  .gitignore
+  db/
+    connection.js
+  queries/
+    users.js
+    queries/
+      create-users-table.sql
+      find-all.sql
+      find-by-email.sql
+      find-by-id.sql
+      insert.sql
+      remove.sql
+      update.sql
+  logic/
+    create-user.js
+    list-users.js
+    update-user.js
+    delete-user.js
+    find-user-by-email.js
+    find-user-by-id.js
+    users-gender-count.js
+  clients/
+    terminal/
+      create-users-table.txt
+      create-user.txt
+      list-users.txt
+      update-user.txt
+      delete-user.txt
+      find-user-by-email.txt
+      find-user-by-id.txt
+      users-gender-count.txt
+  docs/
+    CONSTITUTIONS.md
+    specs/
+      buscar-por-id/
+        spec.md
+        plan.md
+        tasks.md
+      recuento-generos/
+        spec.md
+        plan.md
+        tasks.md
 ```
 
-- `db/connection.js` es la única conexión. El fichero en disco es `db/users.sqlite`. No se sube a git.
-- `queries/users.js` ejecuta el SQL. Las sentencias están en `queries/queries/*.sql` (crear tabla, buscar, insertar, actualizar, borrar, listar).
-- `logic/` es la app. Cada acción es su propio fichero. Las comprobaciones de nombre, email e id están dentro de esa acción.
-- `clients/terminal/*.txt` no son programas. Se pegan con el directorio actual en `first-app`.
-- `docs/specs/<funcion>/` — spec, plan y tasks de esa función. Carpeta nueva cada vez.
+`db/users.sqlite` existe en disco y no se sube a git.
 
-Funcionalidad nueva = fichero nuevo en logic + `.txt` nuevo en terminal. Un fichero de `logic/` ya creado no se reemplaza para encajar otra tarea. No conviertas un fichero viejo en un cajón de sastre. No muevas las reglas a queries ni a clients.
+- `db/connection.js` abre la única conexión y la exporta como `db`. No se abre otra base ni otra conexión.
+- `queries/queries/*.sql` son solo sentencias. `queries/users.js` las lee y las ejecuta. Ahí no se decide si un email es válido.
+- `logic/` es la app. Cada acción es su propio fichero, con sus comprobaciones dentro. Un fichero ya creado no se reescribe para meter otra acción. Las reglas no se mueven a queries ni a clients.
+- `clients/terminal/*.txt` no son programas. Se pegan con el directorio actual en `first-app`. Solo ahí se imprime el resultado.
+- Una acción nueva es un fichero nuevo en `logic/` y un `.txt` nuevo en `clients/terminal/`.
 
-## Tabla users
+## Specs
 
-- `id` — INTEGER PRIMARY KEY (1, 2, 3…)
-- `name` — TEXT, obligatorio
-- `email` — único, máximo 64 caracteres
-- `createdAt` / `updatedAt` — TEXT con `datetime('now', 'localtime')`
+Cada funcionalidad tiene su carpeta `docs/specs/<nombre>/` con tres ficheros. No se sobrescriben. Se escriben cortos: concreto, y sin rodeos.
 
-## Cómo funciona una función de logic
+`spec.md` es el negocio. Lo lee quien decide si la función es la que quiere, sin abrir el código. Dice qué se pide, quién lo usa, qué entra, qué sale con un ejemplo, y qué fallo se ve. También dice qué queda fuera. No nombra ficheros, funciones ni SQL.
 
-Se lee de arriba abajo:
+`plan.md` es la técnica. Lo lee quien comprueba que el desarrollo cabe aquí. Dice qué ficheros se crean y cuáles se tocan, a qué fichero de `logic/` se parece (sin pegar su código), la firma (nombre, parámetros y salida), el SQL nuevo con parámetros con nombre (`:id`, `:name`, `:email`), y la frase de error en inglés de cada fallo de la spec.
 
-1. Comprobar las entradas (nombre, email, id).
-2. Comprobar el resto de reglas (email duplicado, el usuario existe).
-3. Hablar con queries (SQLite dentro de try/catch).
-4. Devolver el valor del contrato (abajo). No devolver una fila cruda de SQLite.
+Una funcionalidad nueva es un fichero nuevo. Si la constitución, el código y la spec no dicen lo mismo, la pregunta se escribe al final del plan y ahí se para. No hay tareas ni código hasta tener la respuesta.
 
-## Contratos de logic
+`tasks.md` son los pasos, en el orden de una persona. Cada paso abre un sitio, hace una cosa y deja un resultado que se puede mirar. Un paso son como mucho cuatro líneas. Si el cambio no es una funcionalidad nueva, el grano es el mismo: mirar lo que ya existe, cambiar un sitio, comprobar.
 
-Un usuario plano es un objeto con exactamente: `id` (entero), `name` (string), `email` (string en minúsculas), `createdAt` (string), `updatedAt` (string).
+## Base de datos
 
-Normalización de email (create, update si se envía email, find): trim, minúsculas, un solo `@` con las dos partes no vacías, sin espacios, longitud ≤ 64. Si no, `Email is invalid`.
+Hay una sola base: `db/users.sqlite`. Hay una sola conexión: el `db` que exporta `db/connection.js`.
 
-- `createUser({ name, email })` → un usuario plano.
-  Nombre vacío o `"\0"` → `Name is empty`.
-  Email ya usado (tras normalizar) → `Email is already used`.
+Tabla `users`:
 
-- `listUsers()` → array de usuarios planos, ordenados por `id`.
-  Tabla vacía → `[]`, no un error.
+- `id` es `INTEGER PRIMARY KEY`. SQLite lo incrementa solo: 1, 2, 3…
+- `name` es `TEXT NOT NULL`.
+- `email` es `VARCHAR(64) NOT NULL UNIQUE`.
+- `createdAt` y `updatedAt` son fechas. SQLite no tiene un tipo `DATE`. El tipo es `TEXT` con `YYYY-MM-DD HH:MM:SS`, que es lo que devuelve `datetime('now', 'localtime')`.
 
-- `updateUser(id, changes)` → un usuario plano.
-  `id` debe ser un entero ≥ 1; si no, `Invalid id` (antes de SQLite).
-  `changes.name` y `changes.email` son opcionales. Si omites uno, se deja el valor actual. Puedes enviar solo `{ name }`, solo `{ email }`, o ambos.
-  Si el usuario no existe → `User not found`.
-  Si el email nuevo es de otro usuario → `Email is already used`.
+Una persona que devuelve logic es un objeto plano con exactamente `id`, `name`, `email`, `createdAt` y `updatedAt`. No se devuelve la fila cruda de SQLite.
 
-- `findUserByEmail(email)` → un usuario plano.
-  Si no hay fila → `User not found` (no `null`, no `[]`).
+El email se recorta, se pasa a minúsculas y lleva un solo `@`, con las dos partes llenas, sin espacios y con longitud de hasta 64. Si no, no es un email válido.
 
-- `findUserById(id)` → un usuario plano.
-  `id` igual que update/delete (`Invalid id` antes de SQLite).
-  Si no hay fila → `User not found`.
-  Si SQLite falla → `Could not find the user`.
+## Cómo se lee una acción
 
-- `deleteUser(id)` → no devuelve nada (`undefined`).
-  `Invalid id` / `User not found` igual que update.
+De arriba abajo:
 
-- `usersGenderCount()` → `{ women, men, genderUndefined }` (números).
-  Sin argumentos. Tabla vacía → ceros. Si no se puede leer la base o Ollama no responde → `Could not classify the users`.
-  Solo `women` y `men` suman a su número. Cualquier otra respuesta de una persona cuenta como `genderUndefined`. Si a un grupo le faltan respuestas, ese grupo entero cuenta como `genderUndefined`.
-  No se guarda en SQLite.
-
-## Errores
-
-Si falla, `throw new Error("...")` con una de estas frases en inglés. No devolver `{ ok: false }`.
-
-Entrada y reglas:
-
-- `Name is empty` — nombre vacío, o un nombre que solo es `"\0"`
-- `Email is invalid` — falta `@`, demasiado largo, o espacios dentro del email
-- `Email is already used`
-- `User not found`
-- `Invalid id` — falta o no es un entero positivo (comprobar esto antes de SQLite)
-
-Si falla SQLite:
-
-- `Could not create the user`
-- `Could not update the user`
-- `Could not delete the user`
-- `Could not list the users`
-- `Could not find the user`
-- `Could not classify the users`
-
-## Orden de construcción
-
-1. Conexión + crear tabla, y comprobar que la tabla existe.
-2. Crear un usuario y luego listar, para saber que se guardó.
-3. Actualizar (si solo cambia el nombre, el email se mantiene).
-4. Buscar por email.
-5. Buscar por id.
-6. Recuento de géneros (`docs/specs/classifier/`; todas las personas; salida: tres números).
-7. Borrar y volver a listar.
-
-Después de cada acción: snippet de terminal.
+1. Comprobar lo que entra.
+2. Comprobar las reglas (por ejemplo: el email ya existe, la persona no está).
+3. Hablar con queries dentro de try/catch.
+4. Devolver el valor de esa acción.

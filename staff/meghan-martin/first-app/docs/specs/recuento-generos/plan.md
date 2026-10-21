@@ -1,6 +1,6 @@
 # Plan — recuento de géneros
 
-Cumple `docs/specs/classifier/spec.md` (tres números y el few-shot).
+Cumple `docs/specs/recuento-generos/spec.md` (tres números y el few-shot).
 Aquí solo el encaje en first-app.
 
 ## Excepción del modelo aprobado
