@@ -9,8 +9,13 @@ first-app es una app pequeña en Node. No es una web. Se usa desde la terminal. 
 ```
 first-app/
   AGENTS.md
+  README.md
+  SKILL.md
+  MCP.md
   package.json
   .gitignore
+  .github/
+    pull_request_template.md
   db/
     connection.js
   queries/

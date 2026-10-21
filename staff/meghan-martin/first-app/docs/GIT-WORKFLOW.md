@@ -2,7 +2,7 @@
 
 Una tarea nueva es una issue, una rama y una pull request. La rama sale de `staging` y la pull request vuelve a `staging`. `main` no forma parte de este camino.
 
-Las issues, las pull requests y los mensajes de commit van en inglés. Los commits siguen la skill `git-commit`. Las skills están en `SKILL.md`, en la raíz del repositorio.
+Las issues, las pull requests y los mensajes de commit van en inglés. Los commits siguen la skill `git-commit`. Las skills están en `SKILL.md`, en esta app.
 
 La alumna pide el trabajo con sus palabras. El agente lo lleva a un solo momento de esta lista. Si la petición encaja en dos momentos, pregunta cuál es y espera. Antes de actuar, enseña los datos de ese momento y espera el sí.
 
@@ -22,7 +22,7 @@ El agente enseña ese nombre, que la base es `staging`, y el mensaje del commit 
 
 ## 3. La pull request
 
-El agente usa la skill `create-github-pull-request-from-specification`. La base es `staging`. El título es el de la issue. El cuerpo rellena `.github/pull_request_template.md` e incluye `Closes #<número>`. La persona asignada es la alumna. La pull request se queda en draft.
+El agente usa la skill `create-github-pull-request-from-specification`. La base es `staging`. El título es el de la issue. El cuerpo rellena `.github/pull_request_template.md` de esta app e incluye `Closes #<número>`. La persona asignada es la alumna. La pull request se queda en draft.
 
 Si la alumna pide la pull request y todavía no existe, se abre entonces. Si la rama ya tiene una, se actualiza esa.
 

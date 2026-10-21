@@ -1,6 +1,6 @@
 # Skills
 
-Cinco skills, en el orden en que las usa `staff/meghan-martin/first-app/docs/GIT-WORKFLOW.md`. Los pasos van en inglés. En cada una, la nota en español gana si choca con los pasos generales.
+Cinco skills, en el orden en que las usa `docs/GIT-WORKFLOW.md`. Los pasos van en inglés. En cada una, la nota en español gana si choca con los pasos generales.
 
 ## git-commit
 
@@ -36,7 +36,7 @@ EOF
 
 Do not change git config. Do not force-push. Do not skip hooks. If a hook rejects the commit, fix the problem and make a new commit. Do not amend.
 
-**Nota de este repositorio.** Si esta nota choca con los pasos de arriba, manda la nota. Un commit es un trozo pequeño. El mensaje va en inglés. Antes de hacer el commit, se enseña el mensaje y los ficheros y se espera el sí. El camino completo está en `staff/meghan-martin/first-app/docs/GIT-WORKFLOW.md`.
+**Nota de este repositorio.** Si esta nota choca con los pasos de arriba, manda la nota. Un commit es un trozo pequeño. El mensaje va en inglés. Antes de hacer el commit, se enseña el mensaje y los ficheros y se espera el sí. El camino completo está en `docs/GIT-WORKFLOW.md`.
 
 ## github-issues
 
@@ -87,7 +87,7 @@ EOF
 
 If the API rejects `type=Task`, create the issue again without a type and continue. No labels, no milestone, no project. This skill does not close the issue. GitHub closes it when a pull request with `Closes #<number>` is merged.
 
-**Nota de este repositorio.** Si esta nota choca con los pasos de arriba, manda la nota. La alumna explica la tarea y el agente redacta. Se enseña título, autor, persona asignada y cuerpo, y se espera el sí. El alta va con `gh` y su cuenta. Para esta app, «how to test» es pegar el ejemplo de `clients/terminal/` desde `first-app`. No hay script de tests. El camino completo está en `staff/meghan-martin/first-app/docs/GIT-WORKFLOW.md`.
+**Nota de este repositorio.** Si esta nota choca con los pasos de arriba, manda la nota. La alumna explica la tarea y el agente redacta. Se enseña título, autor, persona asignada y cuerpo, y se espera el sí. El alta va con `gh` y su cuenta. Para esta app, «how to test» es pegar el ejemplo de `clients/terminal/` desde `first-app`. No hay script de tests. El camino completo está en `docs/GIT-WORKFLOW.md`.
 
 ## create-github-pull-request-from-specification
 
@@ -103,7 +103,7 @@ description: >-
 
 # Create the pull request
 
-1. Read `.github/pull_request_template.md`.
+1. Read `.github/pull_request_template.md` in this app.
 2. Check whether the current branch already has a pull request. If it does, update that one. Do not open a second one.
 3. Fill the template. The title is the issue title, in English. The body includes `Closes #<number>`. The base is `staging`. The assignee is the logged-in user, from `gh api user --jq .login`.
 4. Show the title, the branch, the base, the `Closes` line, and the assignee. Wait for yes.
@@ -127,7 +127,7 @@ EOF
 
 To update an existing pull request, use `gh pr edit`. Do not mark the pull request ready in this skill. Ready for review is a later moment.
 
-**Nota de este repositorio.** Si esta nota choca con los pasos de arriba, manda la nota. La pull request nace en draft hacia `staging`. El título es el de la issue. El cuerpo sale de la plantilla e incluye `Closes #<número>`. Pasarla a lista es el momento de pedir revisión, no este. El camino completo está en `staff/meghan-martin/first-app/docs/GIT-WORKFLOW.md`.
+**Nota de este repositorio.** Si esta nota choca con los pasos de arriba, manda la nota. La pull request nace en draft hacia `staging`. El título es el de la issue. El cuerpo sale de la plantilla e incluye `Closes #<número>`. Pasarla a lista es el momento de pedir revisión, no este. El camino completo está en `docs/GIT-WORKFLOW.md`.
 
 ## grill-me
 
@@ -146,7 +146,7 @@ Run the `grilling` skill.
 
 Do this only when the user asks. The interview sharpens the task before the issue. During the interview, do not create the issue, the branch, or the pull request. Ask in the user's language. The issue they ask for afterwards is in English.
 
-**Nota de este repositorio.** Si esta nota choca con los pasos de arriba, manda la nota. La alumna tiene que pedirla. La entrevista no abre issue, rama ni pull request. Las preguntas van en su idioma. La issue posterior va en inglés, como dice `staff/meghan-martin/first-app/docs/GIT-WORKFLOW.md`.
+**Nota de este repositorio.** Si esta nota choca con los pasos de arriba, manda la nota. La alumna tiene que pedirla. La entrevista no abre issue, rama ni pull request. Las preguntas van en su idioma. La issue posterior va en inglés, como dice `docs/GIT-WORKFLOW.md`.
 
 ## grilling
 
@@ -179,4 +179,4 @@ Look up facts yourself. Do not ask the user for something you can check in the r
 
 Stop when nothing important is still assumed. Do not create the issue, the branch, or the pull request until the user says the understanding is shared.
 
-**Nota de este repositorio.** Si esta nota choca con los pasos de arriba, manda la nota. Esta skill solo entrevista. No escribe la issue. La llama `grill-me`, y solo cuando la alumna lo pide. El camino completo está en `staff/meghan-martin/first-app/docs/GIT-WORKFLOW.md`.
+**Nota de este repositorio.** Si esta nota choca con los pasos de arriba, manda la nota. Esta skill solo entrevista. No escribe la issue. La llama `grill-me`, y solo cuando la alumna lo pide. El camino completo está en `docs/GIT-WORKFLOW.md`.
