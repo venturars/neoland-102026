@@ -16,10 +16,9 @@ from flask import Flask, Response, g, jsonify, request
 from werkzeug.exceptions import HTTPException, InternalServerError
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from asistencia import db
-from asistencia.codes import code_for, is_valid_code, seconds_left
+from asistencia import checkin, db
+from asistencia.codes import code_for, seconds_left
 from asistencia.export import to_csv
-from asistencia.names import clean_name, name_key
 from asistencia.tunnel import TunnelError, start_tunnel
 
 BASE_DIR = Path(__file__).parent
@@ -138,19 +137,17 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
     @app.post("/api/s/<session_id>/checkin")
     def check_in(session_id):
         session = session_or_404(session_id)
-        if session["closed_at"] is not None:
-            return error(409, CLOSED)  # CA-09
-
         body = json_body()
         try:
-            name = clean_name(body.get("name"))
+            row, created = checkin.register(
+                get_db(), session, body.get("name"), body.get("code"), now(), now_iso()
+            )
+        except checkin.SessionClosed:
+            return error(409, CLOSED)  # CA-09
         except ValueError as exc:
             return error(400, str(exc))  # CA-08
-
-        if not is_valid_code(session["secret"], body.get("code", ""), now()):
+        except checkin.InvalidCode:
             return error(422, INVALID_CODE)  # CA-06
-
-        row, created = db.add_checkin(get_db(), session_id, name, name_key(name), now_iso())
         if not created:
             return jsonify(already=True, **checkin_json(row))  # CA-07
         return jsonify(checkin_json(row)), 201  # CA-04
