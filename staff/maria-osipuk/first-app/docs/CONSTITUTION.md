@@ -31,6 +31,7 @@ first-app/
 ├── AGENTS.md
 ├── .gitignore
 ├── package.json
+├── pnpm-lock.yaml
 │
 ├── db/
 │   ├── connection.js
@@ -70,7 +71,11 @@ first-app/
 └── docs/
     ├── CONSTITUTION.md
     └── specs/
-        └── classifier/
+        ├── classifier/
+        │   ├── spec.md
+        │   ├── plan.md
+        │   └── tasks.md
+        └── gestor-pnpm/
             ├── spec.md
             ├── plan.md
             └── tasks.md
@@ -208,3 +213,19 @@ Son los pasos para implementar el pedido, en el orden en que los haría una pers
 Cada paso abre un sitio, hace una cosa y deja un resultado que se puede mirar. Un paso ocupa como mucho cuatro líneas.
 
 No son tickets de agente.
+
+## Gestión de dependencias
+
+Por política de seguridad, el gestor del proyecto es pnpm 10. También en las próximas funcionalidades.
+
+pnpm 10 no ejecuta los scripts de instalación de las dependencias hasta que se autorizan. Esos scripts son código de terceros y se lanzan al instalar. Además, cada paquete solo puede usar lo que declaró.
+
+- No se usan `npm` ni `npx`. Tampoco yarn ni bun.
+- Instalar lo declarado: `pnpm install`.
+- Añadir una dependencia: `pnpm add`.
+- Ejecutar un script: `pnpm run`.
+- Ejecutar una herramienta ya instalada: `pnpm exec`.
+- Descargar una herramienta de forma temporal: `pnpm dlx`.
+- El archivo de bloqueo que se conserva es `pnpm-lock.yaml`. No se genera `package-lock.json`.
+- `package.json` declara `packageManager` con `pnpm@10.34.7`. El script `preinstall` termina con error si el instalador no es pnpm, así que `npm install` no llega a instalar.
+- Revisar las dependencias y los scripts de instalación antes de autorizar su ejecución. Usar pnpm no sustituye esta revisión.
