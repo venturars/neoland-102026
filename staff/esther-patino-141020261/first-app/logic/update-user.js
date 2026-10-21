@@ -3,7 +3,7 @@ import {
   findByEmail,
   findById,
   updateUser as saveUser,
-} from "../queries/run-query.js";
+} from "../queries/users.js";
 import { parseEmail, parseId, parseName, toUser } from "./user-rules.js";
 
 export { findById, saveUser as updateUserQuery };

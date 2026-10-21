@@ -1,4 +1,4 @@
-import { createUsersTable, findAll } from "../queries/run-query.js";
+import { createUsersTable, findAll } from "../queries/users.js";
 import { toUser } from "./user-rules.js";
 
 export { createUsersTable, findAll };

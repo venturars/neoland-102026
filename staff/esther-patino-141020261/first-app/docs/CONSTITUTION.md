@@ -43,12 +43,12 @@ La lógica no inventa el id ni la hora.
 
 - Una acción de negocio por archivo en `logic/`.
 - Nombre, email e id se comprueban en `logic/user-rules.js`. Crear y actualizar usan las mismas comprobaciones.
-- El SQL está solo en `queries/sql/*.sql`. Un archivo por sentencia.
-- Solo `queries/run-query.js` lee esos archivos y los ejecuta.
-- La lógica no abre los `.sql`. Llama a las funciones de `run-query.js`.
+- El SQL está solo en `queries/queries/*.sql`. Un archivo por sentencia.
+- Solo `queries/users.js` lee esos archivos y los ejecuta.
+- La lógica no abre los `.sql`. Llama a las funciones de `users.js`.
 - Los `.txt` de `clients/terminal` importan desde `logic/`. No capturan errores.
 - Si algo falla, se lanza `throw new Error("...")`. No se devuelve `{ ok: false }`.
-- Los mensajes de error están en inglés y son los de la sección 4.
+- Los mensajes de error están en inglés y son los de la sección 5.
 
 
 ## 4. Estructura
@@ -56,8 +56,8 @@ La lógica no inventa el id ni la hora.
 ```
 first-app/
   logic/                 Acciones y reglas. Una acción por archivo.
-  queries/run-query.js   Único sitio que ejecuta SQL.
-  queries/sql/           Un .sql por sentencia.
+  queries/users.js       Único sitio que ejecuta SQL.
+  queries/queries/       Un .sql por sentencia.
   db/connection.js       Abre db/users.sqlite.
   db/users.sqlite        Base de datos.
   clients/terminal/      Un .txt por consulta, para cmd.
@@ -83,5 +83,10 @@ Orden dentro de cada acción:
 | `User not found` | Actualizar, eliminar o buscar alguien que no está. |
 
 Listar una tabla vacía no es un error: devuelve `[]`.
+
+## Registro de cambios
+
+- 2026-10-21. Índices 3 y 4. La carpeta `queries/sql` pasa a llamarse `queries/queries`. `run-query.js` lee los `.sql` desde ahí.
+- 2026-10-21. Índices 3 y 4. `queries/run-query.js` pasa a llamarse `queries/users.js`. La lógica importa ese archivo.
 
 

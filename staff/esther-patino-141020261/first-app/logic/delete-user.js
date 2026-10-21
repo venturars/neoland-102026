@@ -1,4 +1,4 @@
-import { createUsersTable, findById, removeUser } from "../queries/run-query.js";
+import { createUsersTable, findById, removeUser } from "../queries/users.js";
 import { parseId } from "./user-rules.js";
 
 export { removeUser };

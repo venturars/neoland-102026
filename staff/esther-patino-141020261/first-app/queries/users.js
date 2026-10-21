@@ -6,7 +6,7 @@ import { db } from "../db/connection.js";
 const queriesDirectory = dirname(fileURLToPath(import.meta.url));
 
 function readQuery(name) {
-  return readFileSync(join(queriesDirectory, "sql", `${name}.sql`), "utf8");
+  return readFileSync(join(queriesDirectory, "queries", `${name}.sql`), "utf8");
 }
 
 export function createUsersTable() {

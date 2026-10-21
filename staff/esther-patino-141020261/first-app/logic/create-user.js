@@ -1,4 +1,4 @@
-import { createUsersTable, findByEmail, insertUser } from "../queries/run-query.js";
+import { createUsersTable, findByEmail, insertUser } from "../queries/users.js";
 import { parseEmail, parseName, toUser } from "./user-rules.js";
 
 export { insertUser };
