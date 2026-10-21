@@ -4,14 +4,15 @@ import { DatabaseSync } from "node:sqlite";
 import { fileURLToPath } from "node:url";
 
 const folder = path.dirname(fileURLToPath(import.meta.url));
+const schemaPath = path.join(folder, "../queries/queries/create-table-users.sql");
 
 /**
- * Opens the SQLite file BD/users.db and creates the users table if needed.
+ * Opens the SQLite file db/users.sqlite and creates the users table if needed.
  * The database file stays inside this folder.
  */
 export function openDatabase() {
-  const database = new DatabaseSync(path.join(folder, "users.db"));
-  const schema = fs.readFileSync(path.join(folder, "users.sqlite"), "utf8");
+  const database = new DatabaseSync(path.join(folder, "users.sqlite"));
+  const schema = fs.readFileSync(schemaPath, "utf8");
   database.exec(schema);
   return database;
 }
