@@ -1,13 +1,11 @@
-import { createUsersTable, findByEmail, insertUser } from "../queries/users.js";
-import { parseEmail, parseName, toUser } from "./user-rules.js";
+import { findByEmail, insertUser } from "../queries/users.js";
+import { validateEmail, validateName, toUser } from "./shared.js";
 
 export { insertUser };
 
 export function createUser(input) {
-  const name = parseName(input?.name);
-  const email = parseEmail(input?.email);
-
-  createUsersTable();
+  const name = validateName(input?.name);
+  const email = validateEmail(input?.email);
 
   const owner = findByEmail(email);
   if (owner) {

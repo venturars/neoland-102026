@@ -1,12 +1,10 @@
-import { createUsersTable, findById, removeUser } from "../queries/users.js";
-import { parseId } from "./user-rules.js";
+import { findById, removeUser } from "../queries/users.js";
+import { validateId } from "./shared.js";
 
 export { removeUser };
 
 export function deleteUser(id) {
-  const userId = parseId(id);
-
-  createUsersTable();
+  const userId = validateId(id);
 
   const current = findById(userId);
   if (!current) {

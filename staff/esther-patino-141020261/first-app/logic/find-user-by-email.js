@@ -1,12 +1,10 @@
-import { createUsersTable, findByEmail } from "../queries/users.js";
-import { parseEmail, toUser } from "./user-rules.js";
+import { findByEmail } from "../queries/users.js";
+import { validateEmail, toUser } from "./shared.js";
 
 export { findByEmail };
 
 export function findUserByEmail(email) {
-  const normalizedEmail = parseEmail(email);
-
-  createUsersTable();
+  const normalizedEmail = validateEmail(email);
 
   const user = findByEmail(normalizedEmail);
   if (!user) {

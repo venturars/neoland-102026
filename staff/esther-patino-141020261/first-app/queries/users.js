@@ -9,10 +9,6 @@ function readQuery(name) {
   return readFileSync(join(queriesDirectory, "queries", `${name}.sql`), "utf8");
 }
 
-export function createUsersTable() {
-  db.exec(readQuery("create-users-table"));
-}
-
 export function findById(id) {
   return db.prepare(readQuery("find-by-id")).get({ id });
 }

@@ -1,9 +1,8 @@
-import { createUsersTable, findAll } from "../queries/users.js";
-import { toUser } from "./user-rules.js";
+import { findAll } from "../queries/users.js";
+import { toUser } from "./shared.js";
 
-export { createUsersTable, findAll };
+export { findAll };
 
 export function listUsers() {
-  createUsersTable();
   return findAll().map(toUser);
 }

@@ -1,3 +1,3 @@
-REM Pega esto en cmd, con el directorio actual en first-app.
-REM Ejecuta createUsersTable desde logic/list-users.js.
-node --input-type=module -e "import { createUsersTable } from './logic/list-users.js'; createUsersTable();"
+# .\staff\esther-patino-141020261\first-app
+Set-Location .\staff\esther-patino-141020261\first-app
+node --input-type=module -e "import { db } from './db/connection.js'; db.close();"

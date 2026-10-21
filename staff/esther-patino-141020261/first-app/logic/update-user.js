@@ -1,25 +1,22 @@
 import {
-  createUsersTable,
   findByEmail,
   findById,
   updateUser as saveUser,
 } from "../queries/users.js";
-import { parseEmail, parseId, parseName, toUser } from "./user-rules.js";
+import { validateEmail, validateId, validateName, toUser } from "./shared.js";
 
 export { findById, saveUser as updateUserQuery };
 
 export function updateUser(id, changes = {}) {
-  const userId = parseId(id);
+  const userId = validateId(id);
   const next = {};
 
   if (changes.name !== undefined) {
-    next.name = parseName(changes.name);
+    next.name = validateName(changes.name);
   }
   if (changes.email !== undefined) {
-    next.email = parseEmail(changes.email);
+    next.email = validateEmail(changes.email);
   }
-
-  createUsersTable();
 
   const current = findById(userId);
   if (!current) {

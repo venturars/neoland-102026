@@ -1,4 +1,4 @@
-export function parseName(value) {
+export function validateName(value) {
   if (typeof value !== "string") {
     throw new Error("Name is empty");
   }
@@ -11,7 +11,7 @@ export function parseName(value) {
   return name;
 }
 
-export function parseEmail(value) {
+export function validateEmail(value) {
   if (typeof value !== "string") {
     throw new Error("Email is invalid");
   }
@@ -28,7 +28,7 @@ export function parseEmail(value) {
   return email;
 }
 
-export function parseId(value) {
+export function validateId(value) {
   if (typeof value !== "number" || !Number.isInteger(value) || value < 1) {
     throw new Error("Invalid id");
   }

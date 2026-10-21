@@ -1,4 +1,3 @@
-REM Pega esto en cmd, con el directorio actual en first-app.
-REM Ejecuta insertUser desde logic/create-user.js.
-REM Si el email ya existe, cambia el email.
+# .\staff\esther-patino-141020261\first-app
+Set-Location .\staff\esther-patino-141020261\first-app
 node --input-type=module -e "import { insertUser } from './logic/create-user.js'; console.log(insertUser({ name: 'Ada', email: 'ada@example.com' }));"

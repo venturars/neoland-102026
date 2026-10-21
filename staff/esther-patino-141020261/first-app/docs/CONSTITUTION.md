@@ -1,17 +1,8 @@
 # Constitución — first-app
 
-
-## Índice
-
-1. [Funcionalidad general](#1-funcionalidad-general)
-2. [Funciones ](#2funciones)
-3. [Normas básicas](#3-normas-básicas)
-4. [Estructura](#4-estructura)
-5. [Errores](#5-errores)
-
 ## 1. Funcionalidad general
 
-Una app pequeña de usuarios en Node. No es una web. Se usa desde cmd.
+Una app pequeña de usuarios en Node. No es una web. Se usa desde PowerShell.
 
 Se puede crear, listar, buscar por email, actualizar y eliminar un usuario. Los datos viven en el archivo `db/users.sqlite`.
 
@@ -29,7 +20,7 @@ La lógica no inventa el id ni la hora.
 
 | Texto | Import |
 | --- | --- |
-| `create-users-table.txt` | `createUsersTable` desde `logic/list-users.js` |
+| `create-users-table.txt` | abre `db/connection.js` |
 | `insert-user.txt` | `insertUser` desde `logic/create-user.js` |
 | `find-all.txt` | `findAll` desde `logic/list-users.js` |
 | `find-by-email.txt` | `findByEmail` desde `logic/find-user-by-email.js` |
@@ -42,11 +33,12 @@ La lógica no inventa el id ni la hora.
 ## 3. Normas básicas
 
 - Una acción de negocio por archivo en `logic/`.
-- Nombre, email e id se comprueban en `logic/user-rules.js`. Crear y actualizar usan las mismas comprobaciones.
+- Nombre, email e id se comprueban en `logic/shared.js`. Crear y actualizar usan las mismas comprobaciones.
 - El SQL está solo en `queries/queries/*.sql`. Un archivo por sentencia.
-- Solo `queries/users.js` lee esos archivos y los ejecuta.
+- `create-users-table.sql` solo lo lee y lo ejecuta `db/connection.js`. Si `db/users.sqlite` no existe, se crea al conectar.
+- `queries/users.js` lee y ejecuta el resto de sentencias. No usa `create-users-table.sql`.
 - La lógica no abre los `.sql`. Llama a las funciones de `users.js`.
-- Los `.txt` de `clients/terminal` importan desde `logic/`. No capturan errores.
+- Los `.txt` de `clients/terminal` se pegan en PowerShell desde la raíz del repositorio. Entran en `first-app` y no capturan errores.
 - Si algo falla, se lanza `throw new Error("...")`. No se devuelve `{ ok: false }`.
 - Los mensajes de error están en inglés y son los de la sección 5.
 
@@ -56,11 +48,11 @@ La lógica no inventa el id ni la hora.
 ```
 first-app/
   logic/                 Acciones y reglas. Una acción por archivo.
-  queries/users.js       Único sitio que ejecuta SQL.
+  queries/users.js       Ejecuta el SQL salvo create-users-table.sql.
   queries/queries/       Un .sql por sentencia.
-  db/connection.js       Abre db/users.sqlite.
+  db/connection.js       Crea db/users.sqlite si no existe y ejecuta create-users-table.sql.
   db/users.sqlite        Base de datos.
-  clients/terminal/      Un .txt por consulta, para cmd.
+  clients/terminal/      Un .txt por consulta, para PowerShell.
   docs/CONSTITUTION.md   Este documento.
 ```
 
@@ -86,7 +78,10 @@ Listar una tabla vacía no es un error: devuelve `[]`.
 
 ## Registro de cambios
 
-- 2026-10-21. Índices 3 y 4. La carpeta `queries/sql` pasa a llamarse `queries/queries`. `run-query.js` lee los `.sql` desde ahí.
-- 2026-10-21. Índices 3 y 4. `queries/run-query.js` pasa a llamarse `queries/users.js`. La lógica importa ese archivo.
+- 2026-10-21. Índices 2, 3 y 4. `create-users-table.sql` solo se usa en `db/connection.js`. Esa conexión crea `db/users.sqlite` si no existe. `logic/` y `queries/users.js` ya no llaman a esa sentencia.
+- 2026-10-21. Índice 4. La conexión ya no usa `USERS_DB_PATH`. Abre siempre `db/users.sqlite`.
+- 2026-10-21. Índices 1, 3 y 4. Los `.txt` se pegan en PowerShell desde la raíz del repositorio y entran en `first-app`.
+
+
 
 
