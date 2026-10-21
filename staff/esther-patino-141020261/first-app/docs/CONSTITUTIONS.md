@@ -43,6 +43,7 @@ first-app/
     shared.js
     create-user.js
     list-users.js
+    find-user-by-email.js
     update-user.js
     delete-user.js
   queries/
@@ -51,6 +52,7 @@ first-app/
       create-users-table.sql
       insert-user.sql
       find-all.sql
+      find-by-email.sql
       update-user.sql
       remove-user.sql
   clients/
@@ -58,6 +60,7 @@ first-app/
       create-users-table.txt
       insert-user.txt
       find-all.txt
+      find-by-email.txt
       update-user.txt
       remove-user.txt
 ```
@@ -91,6 +94,8 @@ Dentro de una acción que guarda o borra, el cuerpo va en este orden:
 
 `listUsers` no guarda ni borra. Lee con `findAll` y devuelve la lista. Si la tabla está vacía, devuelve `[]`.
 
+`findUserByEmail` no guarda ni borra. Comprueba el email, lee con `findByEmail` y devuelve el usuario plano. Si no hay fila, lanza `User not found`.
+
 ## 6. Errores
 
 Si algo falla, se lanza el error y se corta la función: throw new Error("Email is invalid");
@@ -103,7 +108,7 @@ Inglés y es uno de esta lista:
 | `Email is invalid` | No es texto, no tiene una sola `@` con texto a cada lado, lleva un espacio o pasa de 64 caracteres. |
 | `Email is already used` | Ese email ya está en otra fila. |
 | `Invalid id` | El id no es un entero mayor o igual que 1. |
-| `User not found` | Se busca, se cambia o se borra un id que no está. |
+| `User not found` | Se busca, se cambia o se borra un id que no está, o se busca un email que no está. |
 
 El email se guarda en minúsculas. `validateEmail` le quita los espacios de los extremos y lo pasa a minúsculas antes de mirar la longitud y la `@`.
 
