@@ -22,6 +22,7 @@ first-app/
     list-users.js
     get-user.js
     get-user-by-email.js
+    count-users-by-gender.js
     errors.js           The error classes
     validate-user.js    Input checks shared by several features
     validate-email.js
