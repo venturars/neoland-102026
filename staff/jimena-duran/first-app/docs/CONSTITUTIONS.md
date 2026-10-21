@@ -1,111 +1,72 @@
-# Constitución — first-app
+﻿# Constitución de first-app
 
-first-app es una app para aprender los conceptos básicos de login. Se construye siguiendo el sistema SDD.
+first-app es una aplicación educativa para practicar los fundamentos de login. El desarrollo se organiza con SDD.
 
-## Árbol
+## Organización
 
 ```
 first-app/
-  db/
-    connection.js       Única conexión a la base de datos
-    users.sqlite        Único fichero de la base de datos
-  queries/
-    queries/            Texto SQL, un fichero .sql por query
-    users.js            Lee esos ficheros, prepara el SQL y lo ejecuta
-  logic/
-    create-user.js      Una funcionalidad por fichero
-    update-user.js
-    delete-user.js
-    list-users.js
-    find-user-by-email.js
-    find-user-by-id.js
+  db/connection.js       conexión única a SQLite
+  db/users.sqlite        base de datos única
+  queries/queries/       un archivo .sql por consulta
+  queries/users.js       carga y ejecuta las consultas
+  logic/                  una función de negocio por archivo
+    create-user.js, update-user.js, delete-user.js
+    list-users.js, find-user-by-email.js, find-user-by-id.js
     users-gender-count.js
-  clients/
-    terminal/           Primer cliente. Sirve de test manual
-  docs/
-    CONSTITUTIONS.md    Esta base
-    specs/
-      <nombre>/
-        spec.md         Negocio del desarrollo
-        plan.md         El qué se implementa
-        tasks.md        Pasos para hacerlo (el cómo)
+  clients/terminal/       cliente inicial y prueba manual
+  docs/CONSTITUTIONS.md   reglas de este proyecto
+  docs/specs/<nombre>/    spec.md, plan.md y tasks.md
 ```
 
-- `db/` abre la base de datos y no contiene reglas de negocio.
-- `queries/queries/` guarda el SQL en ficheros `.sql`. `queries/users.js` los lee y los ejecuta. No hay reglas de negocio aquí.
-- `logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
-- `clients/terminal/` llama a `logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
-- `docs/specs/<nombre>/` es un desarrollo. `<nombre>` es la funcionalidad, en kebab-case. Ahí viven su spec, su plan y sus tareas.
+`db/` solo abre la base. El SQL permanece en `queries/queries/`; `queries/users.js` lo lee y lo ejecuta, sin reglas de negocio. Las decisiones de negocio viven en `logic/`. Los clientes de terminal invocan esa capa y muestran su resultado. El nombre de cada spec usa kebab-case.
 
-## Specs
+## Documentación de funcionalidades
 
-`spec.md` es el negocio. Lo lee quien decide si la funcionalidad es la que quiere, sin abrir el código. Dice qué se pide, quién lo usa, qué entra, qué sale con un ejemplo, y qué fallo se ve. Un fallo nombra un mensaje de la lista de «Errores». También dice qué queda fuera. No nombra ficheros, funciones ni SQL.
+`spec.md` explica el comportamiento desde el punto de vista del negocio: usuario, entradas, salidas ejemplificadas, errores visibles y límites. No incluye nombres de archivos, funciones ni SQL. Cada error debe corresponder a un mensaje de la sección «Errores».
 
-`plan.md` es la técnica. Lo lee quien comprueba que el desarrollo cabe en esta constitución. Dice:
+`plan.md` describe la solución técnica: archivos afectados, una implementación existente que sirva de referencia sin copiarla, firma de la función, SQL con parámetros nombrados (`:id`, `:name`, `:email`) y el error asociado a cada caso de la spec.
 
-- qué ficheros se crean y cuáles se tocan
-- a qué fichero de `logic/` se parece, sin pegar su código
-- la firma: nombre, parámetros y salida
-- el SQL nuevo, con los parámetros con nombre (`:id`, `:name`, `:email`)
-- qué mensaje de «Errores» corresponde a cada fallo de la spec
+Una funcionalidad nueva ocupa un archivo nuevo. Si las reglas, el código y la spec discrepan, la duda se anota al final del plan y se detiene el trabajo hasta resolverla. `tasks.md` divide el trabajo en acciones ordenadas, cada una con un único resultado comprobable y no más de cuatro líneas. Para cambios que no agregan una funcionalidad se conserva ese mismo nivel de detalle: inspeccionar, modificar y verificar.
 
-Una funcionalidad nueva es un fichero nuevo. Si la constitución, el código actual y la spec no dicen lo mismo, la pregunta se escribe al final del plan y ahí se para. No hay tareas ni código hasta tener la respuesta.
+La documentación debe ser breve, concreta y determinista; no se añade complejidad que dificulte leerla.
 
-`tasks.md` son los pasos, en el orden en que los haría una persona. Cada paso abre un sitio, hace una cosa y deja un resultado que se puede mirar. Un paso son como mucho cuatro líneas.
+## Persistencia
 
-Si el desarrollo no es una funcionalidad nueva, los pasos siguen teniendo el mismo grano: mirar lo que ya existe, cambiar un sitio, comprobar.
+La aplicación utiliza únicamente `db/users.sqlite` y la conexión exportada por `db/connection.js`. No se crean bases ni conexiones alternativas.
 
-Estos ficheros deben contener la información de forma escueta, concreta y determinista. Tratando de no agregar complejidad a la lectura de los ficheros.
+La tabla `users` tiene estas reglas:
 
-## Base de datos
-
-Hay una sola base de datos: `db/users.sqlite`. Hay una sola conexión: el `db` que exporta `db/connection.js`. No se abre otra base de datos ni otra conexión.
-
-Tabla `users`:
-
-- `id` es `INTEGER PRIMARY KEY`. SQLite lo incrementa solo: 1, 2, 3…
+- `id` es `INTEGER PRIMARY KEY` y SQLite lo genera de forma incremental.
 - `email` es `VARCHAR(64) NOT NULL UNIQUE`.
 - `name` es `TEXT NOT NULL`.
-- `createdAt` y `updatedAt` son fechas. SQLite no tiene un tipo `DATE` propio. El tipo adecuado es `TEXT` con la fecha en `YYYY-MM-DD HH:MM:SS`, que es lo que devuelve `datetime('now', 'localtime')`.
+- `createdAt` y `updatedAt` se almacenan como `TEXT` con el formato `YYYY-MM-DD HH:MM:SS`, producido por `datetime('now', 'localtime')`.
 
-## Logic no se reemplaza
+## Capa de lógica
 
-`logic/` no es un adaptador ni una capa intercambiable. No se sustituye por otra implementación, no se convierte en plugins y no se mueven sus reglas a `queries/` ni a `clients/`.
+`logic/` es el núcleo estable de la aplicación. No se reemplaza por adaptadores, plugins o implementaciones intercambiables, y sus reglas no se trasladan a `queries/` ni a `clients/`. Cada operación tiene su propio archivo; una operación nueva no modifica otro archivo para reutilizarlo.
 
-Cada funcionalidad es un fichero. Un fichero de `logic/` ya creado no se reemplaza para encajar otra tarea. Una funcionalidad nueva es un fichero nuevo.
+Cada archivo de `logic/` exporta una sola función. La firma define el nombre, las entradas y la salida, y no se acompaña de un comentario de contrato. Las acciones usan nombres como `createUser`, `updateUser`, `deleteUser` y `listUsers`; los argumentos se declaran directamente (`name`, `email`, `id`) en vez de envolverlos en un objeto cuando ya se conocen.
 
-## Un fichero de logic
+El clasificador devuelve únicamente `women`, `men` y `genderUndefined`.
 
-Un fichero, una función. El nombre, la entrada y la salida los define la firma. No hay un comentario de contrato encima de la función.
+El cuerpo de una función mantiene este orden:
 
-El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `listUsers`). Los parámetros van en la firma, con su nombre (`name`, `email`, `id`). No se agrupa la entrada en un único objeto si los datos ya se conocen.
+1. Comprobar los argumentos recibidos.
+2. Comprobar las demás reglas del negocio.
+3. Ejecutar la operación de negocio.
+4. Preparar y limpiar el valor que se devuelve.
 
-La salida del clasificador son `women`, `men` y `genderUndefined`.
+## Valores y errores
 
-El cuerpo sigue este orden, y no se mezcla:
+Los valores fijos se declaran como constantes en MAYÚSCULAS; las variables normales usan camelCase.
 
-1. Validar los parámetros de entrada.
-2. Validar el resto de reglas de negocio.
-3. Aplicar la lógica de negocio.
-4. Estructurar la salida y sanear la respuesta.
-
-## Constantes
-
-Un valor fijo de la app es una constante. Su nombre va en mayúsculas (`MODEL`). Una variable sigue en camelCase.
-
-## Errores
-
-Un fallo se señala con `throw new Error("...")`. El mensaje está en inglés y es siempre uno de los de esta lista. No hay códigos ni clases de error propias.
-
-En los pasos 1 y 2, si la entrada o una regla de negocio falla:
+Los fallos se comunican con `throw new Error("...")`. No se definen códigos ni clases de error propias. El texto siempre está en inglés y pertenece a esta lista:
 
 - `Name is empty`
 - `Email is invalid`
 - `Email is already used`
 - `User not found`
-
-En el paso 3, si SQLite falla, ese error no sale de `logic/`. Se lanza uno de estos:
-
 - `Could not create the user`
 - `Could not update the user`
 - `Could not delete the user`
@@ -113,11 +74,8 @@ En el paso 3, si SQLite falla, ese error no sale de `logic/`. Se lanza uno de es
 - `Could not find the user`
 - `Could not classify the users`
 
-En el paso 4, si todo va bien, la función devuelve el dato saneado. Si la operación no tiene datos, no devuelve nada.
+Los cuatro primeros mensajes corresponden a validación de entrada o reglas de negocio. Si SQLite falla durante la operación se utiliza el mensaje `Could not ...` correspondiente y el error de la base no se propaga desde `logic/`. Cuando la operación termina correctamente se entrega el dato limpio; si no hay datos que devolver, la función no devuelve ningún valor.
 
-## Queries
+## Consultas SQL
 
-El SQL no vive dentro de la función que lo ejecuta.
-
-- `queries/queries/` tiene un fichero `.sql` por query. Ese fichero contiene solo el texto SQL, con parámetros con nombre (`:id`, `:name`, `:email`).
-- `queries/users.js` lee esos ficheros, prepara el texto con `db` y lo ejecuta. Las funciones de este fichero se pueden reutilizar desde `logic/`.
+El texto SQL no se escribe dentro de la función de lógica que lo utiliza. En `queries/queries/` cada consulta tiene su propio `.sql`, que contiene solo SQL y parámetros nombrados (`:id`, `:name`, `:email`). `queries/users.js` carga esos archivos, prepara las sentencias con `db` y las ejecuta; sus funciones pueden ser llamadas desde `logic/`.
