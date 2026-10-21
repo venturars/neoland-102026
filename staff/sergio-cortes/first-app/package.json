@@ -11,5 +11,8 @@
   },
   "keywords": [],
   "author": "sergio cortes",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "openai": "^7.39.0"
+  }
 }

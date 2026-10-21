@@ -9,6 +9,11 @@ first-app/
   AGENTS.MD                   Reglas del agente; apunta a esta constitución
   docs/
     CONSTITUTIONS.md          Esta información base
+    specs/
+      <nombre>/               Una funcionalidad; el nombre lo elige quien la pide
+        spec.md               Negocio
+        plan.md               Técnica
+        task.md               Pasos
   db/
     connections.js            Única conexión a la base de datos
     users.sqlite              Único fichero de la base de datos
@@ -95,3 +100,15 @@ Una entrada o una regla de negocio que no llama a una query se comprueba con `if
 Cada llamada a un querie va dentro de `try/catch`. Si la query lanza, el `catch` lanza la clase global de esa llamada, con su mensaje fijo. No relanza el error de SQLite. Si la query devuelve, la regla que mira ese resultado queda fuera del `try`: un `if` y el `throw` de la clase.
 
 El cliente no captura el error. Llama a la función y muestra el resultado. Si logic lanza, el error sale solo.
+
+## Specs
+
+Una funcionalidad vive en `docs/specs/<nombre>/`. El nombre va en kebab-case. Ahí hay tres ficheros, y se escriben en este orden: `spec.md`, `plan.md`, `task.md`. Cada uno se lee de un tirón. Lo que dice uno no se repite en el otro. El texto es escueto, concreto y determinista.
+
+`spec.md` es el negocio. Lo lee quien decide si la funcionalidad es la que quiere, sin abrir el código. Dice qué se pide, quién lo usa, qué entra, qué sale con un ejemplo, y qué fallo se ve. Un fallo nombra un mensaje de la lista de «Errores». También dice qué queda fuera. No nombra ficheros, funciones ni SQL.
+
+`plan.md` es la técnica. Lo lee quien comprueba que el desarrollo cabe en esta constitución. Dice qué ficheros se crean y cuáles se tocan, a qué fichero de `logic/` se parece (sin pegar su código), la firma (nombre, parámetros y salida), el SQL nuevo con los parámetros con nombre `:id`, `:name` y `:email`, y qué mensaje de «Errores» corresponde a cada fallo de la spec. 
+
+Una funcionalidad nueva es un fichero nuevo. Si la constitución, el código actual y la spec no dicen lo mismo, la pregunta se escribe al final del plan y ahí se para.
+
+`task.md` son los pasos, en el orden en que los haría una persona. Cada paso abre un sitio, hace una cosa y deja un resultado que se puede mirar. Un paso son como mucho cuatro líneas. Si el desarrollo no es una funcionalidad nueva, el grano es el mismo: mirar lo que ya existe, cambiar un sitio, comprobar.

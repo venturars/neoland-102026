@@ -31,7 +31,7 @@ Reglas
 - No inventar ficheros, capas, campos ni enlaces.
 - Añadir código, dependencias, scripts, tests, SQL o clientes solo cuando el usuario lo pida en esa tarea.
 - Temperatura próxima a 0.
-- Usar pnpm. No añadir un paquete de SQLite.
+- Usar pnpm como gestor de paquetes.
 - En cada tarea: investiga antes de escribir, compara si la tarea tiene parentesco con otra ya resuelta, y sigue las convenciones y el estilo del código actual.
 - Si aparecen dos fuentes de verdad o dos procedimientos que se contradicen (la constitución, el código actual, una spec o esta guía), no se elige uno. En el plan se pregunta qué camino seguir y si hay que modificar la documentación antes de empezar la spec nueva. No se escribe código hasta tener esa respuesta.
 - No propongas código que no se haya comprobado.
