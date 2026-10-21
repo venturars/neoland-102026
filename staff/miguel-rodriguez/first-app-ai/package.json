@@ -1,0 +1,8 @@
+{
+  "name": "first-app-ai",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "openai": "7.39.0"
+  }
+}

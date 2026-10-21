@@ -1,0 +1,8 @@
+# Pega esto en la terminal, con el directorio actual en first-app
+node --input-type=module <<'EOF'
+import { usersGenderCount } from "./logic/users-gender-count.js";
+
+const result = await usersGenderCount();
+
+console.log(result);
+EOF
