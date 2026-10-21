@@ -1,6 +1,6 @@
 # Constitution — first-app
 
-first-app is a small app to manage users (create, read, update, delete). It is built with AI following SDD. New work does not start in the code: it goes through `spec.md`, `plan.md` and `tasks.md`, and a human reads each one before going on.
+first-app is a small app to manage users (create, read, update, delete). It is built with AI following SDD. New features or functionalities do not start in the code: they go through `spec.md`, `plan.md` and `tasks.md`, and a human reads each one before going on.
 
 How to write the code (naming, style, commands) is in [AGENTS.md](../AGENTS.md).
 
@@ -41,7 +41,7 @@ first-app/
 - `queries/queries/` holds the SQL in `.sql` files. `queries/users.js` reads and runs them. No business rules.
 - `logic/` is the core of the app. The business rules live here.
 - `clients/terminal/` calls `logic/` and shows the result. It is the first client and the manual test of each feature.
-- `docs/specs/<name>/` is one piece of work. `<name>` is the feature, in kebab-case, named like its `logic/` file.
+- `docs/specs/<name>/` is one feature. `<name>` is the feature, in kebab-case, named like its `logic/` file.
 
 ## Runtime
 
@@ -85,7 +85,7 @@ A new feature is a new file. If this constitution, the current code and the spec
 
 **tasks.md is the steps**, in the order a person would do them. Each step opens one place, does one thing and leaves a result you can look at. A step is at most four lines. Tick `[x]` when it is done.
 
-If the work is not a new feature, the steps keep the same grain: look at what exists, change one place, check.
+If the work changes an existing feature, its tasks keep the same grain: look at what exists, change one place, check.
 
 The three files are short, concrete and deterministic. They add no complexity to reading them.
 
