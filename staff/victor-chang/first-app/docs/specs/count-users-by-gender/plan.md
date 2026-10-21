@@ -30,40 +30,59 @@ None new. No writes. Reuses `findAll()` from `queries/users.js`.
   - `AI_URL` = `"http://127.0.0.1:11434/v1/chat/completions"` (Ollama's OpenAI-compatible API).
   - `BATCH_SIZE` = `6`.
 - Ollama must be running with `llama3.2` downloaded. Local, no cost, no key.
-- The call is the global `fetch`: `POST AI_URL`, JSON body `{ model: MODEL, temperature: 0, messages }`.
 - Names come from `findAll()`, in that order, and go in batches of 6. The last batch may have fewer. One call per batch. Only names are sent, never the email.
+- Each call is a chat completion (`chat.completions.create` in the OpenAI SDK). The SDK would be an npm dependency, so the call is the global `fetch` to the same endpoint: `POST AI_URL`, JSON body `{ model: MODEL, temperature: 0, response_format, messages }`.
+- `response_format` makes the AI answer JSON with this shape:
+
+  ```js
+  {
+    type: "json_schema",
+    json_schema: {
+      name: "genders",
+      strict: true,
+      schema: {
+        type: "object",
+        properties: {
+          genders: {
+            type: "array",
+            items: { type: "string", enum: ["women", "men", "undefined"] },
+          },
+        },
+        required: ["genders"],
+        additionalProperties: false,
+      },
+    },
+  }
+  ```
+
 - `messages`, in this order:
   1. `system`, one sentence per line:
 
      ```
-     You classify first names by gender.
      The user sends first names, one per line.
-     Answer with exactly one word per name, one per line, in the same order:
-     women if the name is mostly used by women,
-     men if the name is mostly used by men,
-     undefined if it is used by both or you are not sure.
-     Write nothing else.
+     Answer genders with one value per name, in the same order.
+     Each value is women, men or undefined.
+     Judge only by the name.
      ```
 
-  2. One `user` / `assistant` example pair, with names not in the database. The `user` message is the left column, one name per line; the `assistant` message is the right column:
+  2. Five `user` / `assistant` example pairs, one name each, with names not in the database:
 
-     | user   | assistant |
-     | ------ | --------- |
-     | Carmen | women     |
-     | Javier | men       |
-     | Kim    | undefined |
-     | Lucia  | women     |
-     | Pablo  | men       |
-     | Sam    | undefined |
+     | user   | assistant                      |
+     | ------ | ------------------------------ |
+     | Carmen | `{ "genders": ["women"] }`     |
+     | Lucia  | `{ "genders": ["women"] }`     |
+     | Javier | `{ "genders": ["men"] }`       |
+     | Pablo  | `{ "genders": ["men"] }`       |
+     | Kim    | `{ "genders": ["undefined"] }` |
 
   3. `user`: the batch, one name per line, in the order read.
 
-- The answer is `choices[0].message.content`. It is split into lines; empty lines are dropped; each line is trimmed and lowercased.
-- A valid answer has as many lines as names in the batch. Line by line:
+- The answer is `choices[0].message.content`, read with `JSON.parse`. Its `genders` must be an array with one value per name in the batch. Value by value:
   - `women` adds 1 to `women`
   - `men` adds 1 to `men`
   - `undefined`, or any other value, adds 1 to `genderUndefined`
-- No message, a body that is not JSON, or a different number of lines: every name in that batch adds 1 to `genderUndefined`, and the next batch goes on.
+- No message, JSON that cannot be read, or `genders` that is not one value per name: every name in that batch adds 1 to `genderUndefined`, and the next batch goes on.
+- Nothing is written to the database. Neither the list nor each user's gender is returned.
 
 ## Errors
 
@@ -72,6 +91,7 @@ None new. No writes. Reuses `findAll()` from `queries/users.js`.
 | the AI does not respond (no connection, or status not 2xx) | `Could not classify the users`                      |
 | SQLite fails while reading the users                       | `Could not classify the users`                      |
 | the AI sends no message                                    | not a failure: that batch adds to `genderUndefined` |
+| the answer cannot be read                                  | not a failure: that batch adds to `genderUndefined` |
 | the answer does not give one gender per name               | not a failure: that batch adds to `genderUndefined` |
 | a value is neither `women` nor `men`                       | not a failure: that name adds to `genderUndefined`  |
 
