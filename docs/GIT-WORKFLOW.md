@@ -12,6 +12,8 @@ El agente reconoce a qué momento del camino se refiere y aplica las reglas de e
 
 Puede pedir un momento o el camino entero. Antes de actuar, el agente enseña los datos de ese momento y espera el sí.
 
+«Quiero agregar una funcionalidad a first-app: buscar un usuario por nombre» es dejar la tarea escrita. El `AGENTS.md` de esa app no se aplica todavía.
+
 ## El camino de una tarea
 
 ### 1. Dejar la tarea escrita
@@ -88,6 +90,7 @@ El agente traduce lo que el alumno pide a un momento del camino. Antes de actuar
 - **Guardar un trozo.** Skill `git-commit`. Enseña el mensaje y los ficheros. Después hace el commit y el push.
 - **Que la miren, o que la vuelvan a mirar.** Enseña la lista de revisores. Luego saca la pull request de draft, si seguía en draft, y asigna a esas personas.
 - **Pasarla a staging.** Enseña la rama de origen y el destino `staging`. Comprueba que hay 2 Approve después del último push. El merge es un merge commit.
+- Un `AGENTS.md` dentro de `staff/` no abre otro primer paso. La funcionalidad nueva se deja escrita antes de seguir las reglas de esa app.
 
 La tarea la explica el alumno. El agente redacta con eso. La pull request nace en draft: pasa a lista cuando el alumno quiere que la miren. La issue la cierra GitHub al mergear, por `Closes`. Cada momento espera el sí.
 
