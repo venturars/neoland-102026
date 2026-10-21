@@ -16,6 +16,7 @@ Si una tarea y esta constitución chocan, gana la constitución.
 | `test/almacen-memoria.js` | El doble de las pruebas |
 | `test/usuarios.test.js` | Las pruebas |
 | `ejemplo.js` | Une lógica y SQLite y hace `console.log` |
+| `clients/terminal/*.js` | Un módulo por operación. Le pasa el almacén y hace `console.log` |
 
 
 ## Base de datos
@@ -35,11 +36,18 @@ Tabla `users`:
 
 ## Usuario
 
-Un usuario guardado es `{ id, nombre, email }`. El `id` lo asigna el almacén como texto (`"1"`, `"2"`). SQLite guarda un entero y `queries/sqlite.js` lo devuelve como texto. Traduce `name` a `nombre`. `createdAt` y `updatedAt` no salen del almacén.
+Un usuario guardado es `{ id, nombre, email }`.
 
-- Nombre: texto recortado. Vacío no vale.
-- Email: minúsculas y forma `algo@algo.algo`.
-- Email único: lo decide `logic`, mirando el almacén. El `UNIQUE` del esquema cierra la tabla. No es la regla que se lee aquí para decidir.
+- `id` es texto (`"1"`, `"2"`). SQLite guarda el entero y `queries/sqlite.js` lo devuelve como texto.
+- `nombre` es la columna `name`.
+- `email` es la columna `email`.
+- `createdAt` y `updatedAt` no forman parte del usuario.
+
+Para crearlo hacen falta los dos campos. El nombre se recorta y no puede quedar vacío. El email se recorta, pasa a minúsculas y tiene la forma texto, una `@` y un punto en el dominio, sin espacios.
+
+Para cambiarlo hace falta el nombre, el email o los dos. El que no llega no se toca. El nombre que llega se recorta y no puede quedar vacío. El email que llega se normaliza igual que al crear.
+
+El email es único. Lo decide `logic` mirando el almacén. El `UNIQUE` de la tabla cierra la base; no es la regla que se lee para decidir.
 
 ## Almacén
 

@@ -20,8 +20,9 @@ El directorio de trabajo es `staff/Diego-Torres/first-app`.
 
 Desde esta carpeta:
 
-- Tests: `pnpm test`
 - Ejemplo: `pnpm run ejemplo`
+
+Si el cambio se ve a mano, se ejecuta `pnpm run ejemplo`.
 
 No hay script de lint ni de formato. No se añade uno salvo que se pida.
 
@@ -40,8 +41,3 @@ El código se lee de arriba a abajo, con `if` y con nombres que dicen qué hacen
 - Lee `docs/CONSTITUCION.md`.
 - No inventes campos, errores, carpetas ni operaciones.
 - Si la constitución, el código y esta guía se contradicen, pregunta antes de escribir.
-
-## Al terminar
-
-- Una operación nueva lleva su prueba en `test/usuarios.test.js`.
-- La tarea no está hecha hasta ejecutar `pnpm test`. Si el cambio se ve a mano, ejecuta también `pnpm run ejemplo`.
