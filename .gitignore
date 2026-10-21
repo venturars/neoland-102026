@@ -13,6 +13,7 @@ npm-shrinkwrap.json
 
 # Claude Code
 .claude/
+.mcp.json
 
 # Cursor
 .cursor/
