@@ -291,3 +291,42 @@ def test_removed_person_can_check_in_again(client, teacher):  # CA-26
     checkin_id = checkins_of(client, teacher, sid)[0]["id"]
     client.delete(f"/api/sessions/{sid}/checkins/{checkin_id}", headers=teacher)
     assert check_in(client, sid, "ana garcia", code).status_code == 201
+
+
+# ---------- Entradas mal formadas: siempre JSON, nunca un 500 ----------
+
+@pytest.mark.parametrize(
+    "raw, status",
+    [
+        ("[1]", 400),  # JSON que no es un objeto
+        ('"Ana"', 400),
+        ('{"name": 123, "code": "1234"}', 400),  # nombre que no es texto
+        ('{"name": ["Ana"], "code": "1234"}', 400),
+        ('{"name": "Ana", "code": "١٢٣٤"}', 422),  # dígitos árabes desde el móvil
+        ('{"name": "Ana", "code": "12é4"}', 422),
+    ],
+)
+def test_malformed_checkin_is_rejected_as_json(client, teacher, raw, status):
+    sid = open_session(client, teacher)
+    res = client.post(f"/api/s/{sid}/checkin", data=raw, content_type="application/json")
+    assert res.status_code == status
+    assert res.get_json()["error"]
+
+
+@pytest.mark.parametrize("raw", ["[1]", '{"title": {"a": 1}}', '{"title": 5}'])
+def test_create_session_with_malformed_body_uses_date(client, teacher, raw):  # CA-02
+    res = client.post("/api/sessions", data=raw, content_type="application/json", headers=teacher)
+    assert res.status_code == 201
+    assert re.fullmatch(r"\d{2}/\d{2}/\d{4} \d{2}:\d{2}", res.get_json()["title"])
+
+
+def test_unexpected_error_is_json_500(client, teacher, monkeypatch):
+    sid = open_session(client, teacher)
+
+    def boom(*_args):
+        raise RuntimeError("fallo simulado")
+
+    monkeypatch.setattr("asistencia.db.list_checkins", boom)
+    res = client.get(f"/api/sessions/{sid}", headers=teacher)
+    assert res.status_code == 500
+    assert res.get_json()["error"]

@@ -13,7 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from flask import Flask, Response, abort, g, jsonify, request
-from werkzeug.exceptions import HTTPException
+from werkzeug.exceptions import HTTPException, InternalServerError
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from asistencia import db
@@ -63,6 +63,11 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
     def error(status: int, message: str):
         return jsonify(error=message), status
 
+    def json_body() -> dict:
+        # Solo nos sirve un objeto JSON; cualquier otra cosa ([1], "x", 5...) cuenta como vacío.
+        body = request.get_json(silent=True)
+        return body if isinstance(body, dict) else {}
+
     def session_or_404(session_id: str) -> dict:
         session = db.get_session(get_db(), session_id)
         if session is None:
@@ -76,6 +81,14 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
                 return error(404, NOT_FOUND)
             return error(exc.code, GENERIC_ERRORS.get(exc.code, "Error inesperado."))
         return exc
+
+    @app.errorhandler(Exception)
+    def unexpected_error(_exc):
+        # Para que el frontend reciba siempre JSON, también ante un fallo imprevisto.
+        app.logger.exception("Error inesperado")
+        if request.path.startswith("/api/"):
+            return error(500, "Error inesperado. Inténtalo de nuevo.")
+        return InternalServerError()
 
     @app.before_request
     def require_teacher():
@@ -104,7 +117,7 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
         if session["closed_at"] is not None:
             return error(409, CLOSED)  # CA-09
 
-        body = request.get_json(silent=True) or {}
+        body = json_body()
         try:
             name = clean_name(body.get("name"))
         except ValueError as exc:
@@ -135,8 +148,8 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
 
     @app.post("/api/sessions")
     def create_session():
-        body = request.get_json(silent=True) or {}
-        title = str(body.get("title") or "").strip()
+        title = json_body().get("title")
+        title = title.strip() if isinstance(title, str) else ""
         if not title:
             title = datetime.fromtimestamp(now()).strftime("%d/%m/%Y %H:%M")  # CA-02
         session = db.create_session(get_db(), title, now_iso())
