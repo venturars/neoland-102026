@@ -10,7 +10,7 @@ Sin filas, devolver `{ female: 0, male: 0, undefined: 0 }` y no llamar al modelo
 ## 2. Clasificar cada nombre
 
 En el mismo archivo, recorrer las filas en orden y usar solo `name`.
-Por cada nombre, hacer la llamada escrita en `docs/specs/plan.md`.
+Por cada nombre, hacer la llamada de `docs/specs/classifier/plan.md`, con los cinco ejemplos fijos del prompt.
 Si no se puede leer, lanzar `Unable to classify names` y no devolver un recuento a medias.
 Si `gender` es exactamente `female` o `male`, sumar ahí; cualquier otro texto suma en `undefined`.
 

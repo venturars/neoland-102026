@@ -20,11 +20,19 @@ La llamada sale de `logic/count-users-by-gender.js` hacia el modelo local `gemma
   "model": "gemma4",
   "stream": false,
   "format": "json",
-  "prompt": "Classify this person's name into one gender category.\nReply with JSON only. The gender value must be exactly female, male, or undefined.\nUse undefined when the name is not clearly female or male.\nDo not add any other field.\n\nName:\nAda Lovelace"
+  "prompt": "Classify this person's name into one gender category.\nReply with JSON only. The gender value must be exactly female, male, or undefined.\nUse undefined when the name is not clearly female or male.\nDo not add any other field.\n\nFollow these examples. Each example is a name and the JSON answer.\n\nName:\nAda Lovelace\n{\"gender\":\"female\"}\n\nName:\nGrace Hopper\n{\"gender\":\"female\"}\n\nName:\nAlan Turing\n{\"gender\":\"male\"}\n\nName:\nCharles Babbage\n{\"gender\":\"male\"}\n\nName:\nJordan\n{\"gender\":\"undefined\"}\n\nName:\nElena Navarro"
 }
 ```
 
-La última línea del prompt es el `name` guardado, sin recortarlo ni cambiarlo. En el ejemplo esa línea es `Ada Lovelace`. `stream: false` hace que Ollama devuelva un solo JSON. `format: "json"` obliga a que el campo `response` sea texto JSON.
+El prompt lleva cinco ejemplos fijos antes del nombre que se quiere clasificar: dos female, dos male y uno undefined. No salen de la base: son texto escrito en la llamada.
+
+- `Ada Lovelace` responde `{"gender":"female"}`.
+- `Grace Hopper` responde `{"gender":"female"}`.
+- `Alan Turing` responde `{"gender":"male"}`.
+- `Charles Babbage` responde `{"gender":"male"}`.
+- `Jordan` responde `{"gender":"undefined"}`, porque el nombre no es claramente female ni male.
+
+Esos cinco bloques enseñan el formato y las tres palabras exactas. La última línea del prompt es el `name` guardado, sin recortarlo ni cambiarlo. En el ejemplo esa línea es `Elena Navarro`. `stream: false` hace que Ollama devuelva un solo JSON. `format: "json"` obliga a que el campo `response` sea texto JSON.
 
 Lectura, en este orden:
 
@@ -48,6 +56,7 @@ node --input-type=module -e "import { countUsersByGender } from './logic/count-u
 ## Comprobación
 
 - Revisar la sintaxis.
+- El prompt de cada llamada incluye, antes del nombre guardado, los cinco ejemplos fijos: Ada Lovelace y Grace Hopper como female, Alan Turing y Charles Babbage como male, y Jordan como undefined.
 - Ejecutar el cliente de terminal.
 - Ver un recuento con usuarios existentes.
 - Ver los tres ceros en el retorno anterior a `fetch` cuando no hay filas. No se vacía ni se sustituye `db/users.sqlite`.

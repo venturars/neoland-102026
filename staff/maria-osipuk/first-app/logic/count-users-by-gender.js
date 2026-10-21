@@ -48,13 +48,37 @@ export async function countUsersByGender() {
 }
 
 async function classifyName(name) {
-  // The last line is the stored name. Do not trim it and do not
+  // These five examples are fixed text. They are not rows from SQLite.
+  // Two show female, two show male, and one shows undefined.
+  // The last Name block is the stored name. Do not trim it and do not
   // change its letters: the model must see the same text as SQLite.
   const prompt =
     "Classify this person's name into one gender category.\n" +
     "Reply with JSON only. The gender value must be exactly female, male, or undefined.\n" +
     "Use undefined when the name is not clearly female or male.\n" +
     "Do not add any other field.\n" +
+    "\n" +
+    "Follow these examples. Each example is a name and the JSON answer.\n" +
+    "\n" +
+    "Name:\n" +
+    "Ada Lovelace\n" +
+    "{\"gender\":\"female\"}\n" +
+    "\n" +
+    "Name:\n" +
+    "Grace Hopper\n" +
+    "{\"gender\":\"female\"}\n" +
+    "\n" +
+    "Name:\n" +
+    "Alan Turing\n" +
+    "{\"gender\":\"male\"}\n" +
+    "\n" +
+    "Name:\n" +
+    "Charles Babbage\n" +
+    "{\"gender\":\"male\"}\n" +
+    "\n" +
+    "Name:\n" +
+    "Jordan\n" +
+    "{\"gender\":\"undefined\"}\n" +
     "\n" +
     "Name:\n" +
     name;
