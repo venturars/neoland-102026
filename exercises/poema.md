@@ -1,9 +1,9 @@
 1 Dejaré mi tierra por ti
 2 Dejaré mis campos y me iré
-
+3 Lejos de aquí
 4 Cruzaré, llorando, el jardín
 5 Y, con tus recuerdos, partiré
-
+6 Lejos de aquí
 7 De día, viviré
 8 Pensando en tus sonrisas
 9 De noche, las estrellas me acompañarán
@@ -15,7 +15,7 @@
 15 Es ligero equipaje
 16 Para tan largo viaje
 17 Las penas pesan en el corazón
-
+18 Más allá del mar, habrá un lugar
 19 Donde el Sol cada mañana brille más
 20 Forjarán mi destino, las piedras del camino
 21 Lo que nos es querido siempre queda atrás
@@ -40,8 +40,7 @@
 40 Donde el Sol cada mañana brille más
 41 Forjarán mi destino, las piedras del camino
 43 Al partir, un beso y una flor
-
 44 Un te quiero, una caricia y un adiós
-
+45 Es ligero equipaje
 46 Para tan largo viaje
 47 Las penas pesan en el corazón

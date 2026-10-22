@@ -1,0 +1,7 @@
+# Pega esto en la terminal, con el directorio actual en first-app
+# Ollama debe estar en marcha (modelo nimble-v3, o OLLAMA_MODEL)
+node --input-type=module <<'EOF'
+import { usersGenderCount } from "./logic/users-gender-count.js";
+const result = await usersGenderCount();
+console.log(result);
+EOF
