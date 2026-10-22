@@ -1,6 +1,6 @@
 # Tareas 001 · Check-in con código
 
-> Estado: **Terminado** (v1.2, 2026-10-20) · Plan: [plan.md](plan.md) · Creado: 2026-10-19 · Re-planificado: 2026-10-20
+> Estado: **Terminado** (v1.2, 2026-10-20; revisión de código 2026-10-21, fase H) · Plan: [plan.md](plan.md) · Creado: 2026-10-19 · Re-planificado: 2026-10-20
 
 Cómo leer esta lista:
 - Se hacen **en orden**, una cada vez. Al terminar una se marca `[x]`.
@@ -120,3 +120,21 @@ Todos los tests de esta fase van en `tests/test_api.py`. Usan las fixtures de `t
   - [x] Capturas a 400 px de la lista con botones "Quitar" y de la confirmación (CA-18). *(Sin scroll horizontal.)*
   - [x] `README.md`: explicar el límite por navegador y cómo quitar registros.
   - [x] Victor lo prueba con su móvil (registrarse dos veces con nombres distintos → bloqueado) y quita un registro desde el panel. *(Victor, 2026-10-20: pasos 1–5 correctos.)*
+
+## Fase H · Revisión de código (2026-10-21)
+
+Arreglos de la revisión del código Python (plan §2.13). No cambian la API ni la spec. Se aprobaron como plan en la conversación y estas tareas se anotan al terminar.
+
+- [x] **T26** 🧪 · Entradas mal formadas: `[1]` y nombres que no son texto → `400`; códigos con caracteres no ASCII → `422`; cualquier error imprevisto en `/api/` → `500` en JSON.
+  - Tests en `test_api.py`, `test_codes.py` y `test_names.py`. 13 de los 14 tests nuevos fallaban con el código anterior.
+  - *Cubre:* CA-06, CA-08.
+- [x] **T27** 🧪 · Túnel: ignorar `api.trycloudflare.com` y avisar al momento si `cloudflared` termina sin URL.
+  - Tests en `test_tunnel.py` con un `cloudflared` falso.
+  - *Cubre:* CA-20.
+- [x] **T28** · `app.py`: `checkin_json` y `session_json` para pasar las filas a JSON; `SessionNotFound` en vez de comparar el texto del `404`.
+  - `test_api.py` comprueba también el mensaje de clase inexistente.
+- [x] **T29** 🧪 · Reglas del registro en `asistencia/checkin.py` (`register`, `SessionClosed`, `InvalidCode`); la ruta solo las traduce a HTTP.
+  - Tests en `test_checkin.py`, sin Flask.
+  - *Cubre:* CA-04, CA-06, CA-07, CA-08, CA-09.
+- [x] **T30** · Anotaciones de tipo y docstring de `create_app`. Sin cambios de comportamiento.
+- Verificación: `pytest` → 102 tests en verde. Prueba con `curl` contra el servidor real (2026-10-21): `400`, `422`, `201`, `200 already`, `404` y `409`, todos en JSON y sin errores en el log.
