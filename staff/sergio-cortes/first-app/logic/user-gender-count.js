@@ -74,8 +74,9 @@ export async function usersGenderCount() {
   const genders = new Map();
 
   for (let index = 0; index < names.length; index += BATCH_SIZE) {
-    const batch = names.slice(index, index + BATCH_SIZE).join("\n");
-    console.log('batch', batch);
+    const batchNames = names.slice(index, index + BATCH_SIZE);
+    const batch = batchNames.join("\n");
+    const batchNameSet = new Set(batchNames);
     const messages = [
       ...EXAMPLES,
       { role: "user", content: batch },
@@ -98,7 +99,13 @@ export async function usersGenderCount() {
       continue;
     }
 
-    const choice = completion.choices[0];
+    const choices = completion?.choices;
+
+    if (!Array.isArray(choices) || choices.length === 0) {
+      continue;
+    }
+
+    const choice = choices[0];
     let message;
 
     if (
@@ -108,8 +115,6 @@ export async function usersGenderCount() {
     ) {
       message = choice.message.content;
     }
-
-    console.log('message', message);
 
     if (typeof message !== "string" || message === "") {
       continue;
@@ -144,7 +149,7 @@ export async function usersGenderCount() {
         continue;
       }
 
-      if (typeof item.name !== "string" || !batch.includes(item.name)) {
+      if (typeof item.name !== "string" || !batchNameSet.has(item.name)) {
         continue;
       }
 

@@ -49,7 +49,8 @@ Ejemplos, en este orden:
 
 - Si no hay filas, se devuelven los tres ceros y no se llama a la IA.
 - Si no se puede conectar con Ollama, se lanza `DatabaseError` con `"Could not classify the users"`. No se devuelve el conteo.
-- Si un lote no trae respuesta, no hay `choices[0].message.content`, o ese texto no es el objeto del esquema, los nombres de ese lote cuentan en `genderUndefined`. Los otros lotes se cuentan con lo que sí respondieron. No se lanza error. Ese caso no entra en el `try` de `findAll`.
+- Si un lote no trae respuesta, falta `choices`, `choices` está vacío, no hay `choices[0].message.content`, o ese texto no es el objeto del esquema, los nombres de ese lote cuentan en `genderUndefined`. Los otros lotes se cuentan con lo que sí respondieron. No se lanza error. Ese caso no entra en el `try` de `findAll`.
+- Cada clasificación del lote se enlaza solo si `name` coincide con un nombre completo de ese lote (línea entera). Un nombre corto no vale para otro del mismo lote: si van `Ada` y `Ada Lovelace`, la respuesta para `Ada` no se aplica a `Ada Lovelace`.
 - Cada fila cuenta una vez. `women` suma en `woman` y `men` suma en `man`. Si el valor es `undefined`, falta el nombre o el valor es otro, cuenta en `genderUndefined`.
 
 ## Cliente

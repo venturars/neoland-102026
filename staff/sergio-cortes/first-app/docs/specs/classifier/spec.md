@@ -33,7 +33,8 @@ La salida es un solo objeto con tres números. El orden de las claves es woman, 
 Ejemplo: hay María, Pedro, Alex y Kim. La IA dice que María es mujer y Pedro es hombre, duda con Alex y no dice nada de Kim. El resultado es el objeto de arriba.
 
 - Si no hay usuarios, la salida es `{ "woman": 0, "man": 0, "genderUndefined": 0 }`.
-- Si no llega respuesta para 4 nombres, la salida es `{ "woman": 0, "man": 0, "genderUndefined": 4 }`.
+- Si no llega respuesta para 4 nombres, la salida es `{ "woman": 0, "man": 0, "genderUndefined": 4 }`. Falta de `choices` en la respuesta de la IA cuenta igual: esos nombres van a `genderUndefined`, sin error.
+- En un mismo lote, cada nombre de la IA debe coincidir con el nombre completo enviado (una línea). Si en el lote están `Ada` y `Ada Lovelace`, clasificar solo `Ada` no cambia el conteo de `Ada Lovelace`.
 
 ## Fallo
 
