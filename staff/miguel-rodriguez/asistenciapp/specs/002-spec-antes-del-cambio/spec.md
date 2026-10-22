@@ -32,6 +32,8 @@ Miguel necesita decidir qué se cambia en su copia antes de que se haga. Tener u
 - **CA-07:** Dadas las decisiones, aprobaciones y verificaciones anteriores, cuando se adaptan las reglas vigentes, entonces sus autores, fechas y resultados históricos permanecen intactos.
 - **CA-08:** Dada la aplicación de asistencia existente, cuando se actualizan estas reglas, entonces su funcionamiento, privacidad y datos permanecen iguales.
 
+- **CA-09 (aclaración aprobada por Miguel el 2026-10-22):** Dado un cambio exclusivamente documental o de instrucciones, cuando se verifica, entonces cada criterio tiene una comprobación documental concreta y su evidencia registrada. Para cambios de comportamiento se mantienen las pruebas automatizadas; revisar reglas escritas no demuestra que otro agente las siga.
+
 ## Fuera de alcance
 
 Corregir los títulos del entorno en las instrucciones de uso; eliminar todas las referencias personales de la documentación; renombrar o mover documentos; reorganizar el código; nuevas funcionalidades; integraciones con Discord o Meet; cambios en herramientas compartidas del repositorio. Esas tareas se abordan por separado.
@@ -39,3 +41,7 @@ Corregir los títulos del entorno en las instrucciones de uso; eliminar todas la
 ## Preguntas abiertas
 
 Ninguna decisión de negocio pendiente. La adaptación del responsable y de la carpeta es parte de la tarea autorizada; el plan identificará las enmiendas necesarias en las reglas actuales antes de implementarlas.
+
+## Aclaración aprobada · 2026-10-22
+
+Miguel autorizó hacer explícita la verificación documental de CA-09. Esta aclaración no cambia los criterios anteriores ni sus resultados.

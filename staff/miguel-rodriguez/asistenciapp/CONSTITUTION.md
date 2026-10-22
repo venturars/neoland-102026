@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 2.2 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-22
+> Versión 2.3 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-22
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -73,6 +73,7 @@ Cambiar el stack requiere enmendar esta constitución.
 ## 5. Calidad
 
 - Cada **criterio de aceptación** de una spec tiene al menos **un test** automatizado (o, si es puramente visual, un paso de verificación manual escrito en el plan).
+- Para cambios exclusivamente documentales o de instrucciones, cada criterio puede verificarse mediante una comprobación documental concreta, con procedimiento y evidencia registrados en el plan y las tareas. Esta excepción no sustituye las pruebas automatizadas de cambios de comportamiento. Revisar reglas escritas no demuestra que una sesión nueva de IA las siga.
 - `pytest` debe pasar antes de dar una tarea por terminada.
 - Los errores que ve el usuario son claros, en español y dicen qué hacer ("El código ha caducado, pide el nuevo al profesor").
 
@@ -107,3 +108,4 @@ Cambiar el stack requiere enmendar esta constitución.
 | 2.0 | 2026-10-20 | §3: stack Node.js → Python (Flask + pytest). P3 pasa de "cero dependencias" a "dependencias mínimas" y permite Flask y pytest | Requisito nuevo: el proyecto debe hacerse en Python. Se elige Flask por ser simple y muy extendido, y pytest por su sintaxis sencilla |
 | 2.1 | 2026-10-20 | P4: distingue *almacenar* (solo en local) de *transitar* (puede pasar cifrado por un proveedor de túnel) | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08) |
 | 2.2 | 2026-10-22 | §4: SDD para todo cambio y aprobaciones separadas; §7–§8: carpeta y aprobación de Miguel para esta copia | Spec 002 y enmienda aprobadas por Miguel; se conserva el historial anterior |
+| 2.3 | 2026-10-22 | §5: verificación documental con procedimiento y evidencia por criterio para cambios exclusivamente documentales o de instrucciones | Aclaración de 002 aprobada por Miguel; se mantienen las pruebas de comportamiento y la evidencia anterior |

@@ -26,7 +26,7 @@ Proponer la versión 2.2, con fecha de implementación y aprobación de Miguel r
 - §7: fijar el ámbito de esta copia en `staff/miguel-rodriguez/asistenciapp/`.
 - §8: Miguel aprueba las enmiendas de esta copia.
 
-Actualizar la cabecera de versión y fecha. No alterar propósito, principios P1–P6, stack, privacidad, seguridad ni exigencias de calidad.
+Actualizar la cabecera de versión y fecha. No alterar propósito, principios P1–P6, stack, privacidad ni seguridad. La aclaración aprobada por Miguel el 2026-10-22 añade una enmienda 2.3 de §5: para cambios exclusivamente documentales o de instrucciones, cada criterio puede verificarse documentalmente con procedimiento y evidencia registrados; para comportamiento se mantienen las pruebas automatizadas y la excepción visual existente. Conservar la entrada 2.2 y añadir la 2.3, sin reescribir resultados anteriores.
 
 La aprobación de este plan autorizará esa enmienda concreta para la fase de implementación; antes solo se documenta la propuesta. Las restricciones heredadas que nombran a Victor y su carpeta se adaptan por la decisión explícita de Miguel para su copia; no se reatribuyen aprobaciones históricas.
 
@@ -43,6 +43,7 @@ Antes de la primera modificación, capturar fuera de la carpeta de trabajo un in
 | CA-05 | Issue, rama y PR no sustituyen la spec aprobada. |
 | CA-06 | Referencias vigentes de carpeta y responsable coinciden en ambos documentos. |
 | CA-07 | Comparar con la captura previa: spec 001 completa y filas históricas sin cambios; el historial nuevo se añade sin sustituir el anterior. |
+| CA-09 | Revisar §5 y su coherencia con la matriz y evidencia de tasks.md: verificación documental acotada, pruebas de comportamiento intactas y ninguna afirmación de seguimiento por otra sesión. |
 | CA-08 | Comparar inventario y hashes con la captura previa de código, estáticos, tests, requisitos, configuración y datos; ejecutar la suite existente con bases temporales. |
 
 Las comprobaciones documentales y la suite existente comprueban las reglas escritas y la ausencia de regresiones; no demuestran por sí solas el comportamiento de una sesión nueva de IA. La revisión humana comprobará además el recorrido ante pedidos de código, README y pruebas, incluyendo un pedido no cubierto, sin ejecutar esos cambios. Si no se realiza una prueba real en sesión nueva, se indicará expresamente.
@@ -58,7 +59,7 @@ Ejecutar las comprobaciones en una copia desechable con Python 3.13+ y un entorn
 - **P5:** interfaz intacta.
 - **P6:** documentos y mensajes de las comprobaciones en español.
 - **§4:** se sigue spec → plan → tareas → implementación; cada fase requiere aprobación de Miguel.
-- **§5:** los criterios tienen comprobaciones trazables y la suite debe pasar antes de declarar terminada la implementación.
+- **§5:** aclaración 2.3 aprobada: comprobación documental con procedimiento y evidencia por criterio para cambios exclusivamente documentales; pruebas automatizadas para comportamiento. La suite debe seguir pasando.
 - **§6:** las reglas de seguridad de asistencia no cambian.
 - **§7–§8:** se enmiendan expresamente el ámbito y el responsable de esta copia; el resto se conserva.
 
