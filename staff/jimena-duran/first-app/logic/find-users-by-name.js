@@ -1,13 +1,15 @@
 import { findByName } from "../queries/users.js";
 
 export function findUsersByName(name) {
-  if (!name.trim()) {
+  const normalizedName = name.trim();
+
+  if (!normalizedName) {
     throw new Error("Name is empty");
   }
 
   let users;
   try {
-    users = findByName(name);
+    users = findByName(normalizedName);
   } catch {
     throw new Error("Could not find the user");
   }

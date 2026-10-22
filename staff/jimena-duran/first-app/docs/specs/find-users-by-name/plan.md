@@ -24,11 +24,11 @@ Las búsquedas únicas usan `.get()`; esta operación necesita `.all()`.
 - No modificar otras operaciones de lógica ni la conexión o el esquema.
 
 La función recibe una cadena y devuelve una lista de objetos con solo
-id, name, email, createdAt y updatedAt. Comprueba `name.trim()` para rechazar
-vacíos, pero consulta el valor original para preservar la coincidencia exacta.
+id, name, email, createdAt y updatedAt. Guarda `name.trim()` en `normalizedName` para rechazar
+vacíos y consulta ese valor recortado. Conserva mayúsculas, acentos y espacios interiores.
 
-SQL propuesto: `SELECT * FROM users WHERE name = :name`.
-La consulta usa `.all({ name })`; no se añade un requisito de orden.
+SQL propuesto: `SELECT * FROM users WHERE name = :name ORDER BY id ASC`.
+La lógica pasa `normalizedName` a `findByName`; la consulta usa `.all({ name })` y ordena por ID ascendente en SQL.
 
 ## Errores y comprobación prevista
 

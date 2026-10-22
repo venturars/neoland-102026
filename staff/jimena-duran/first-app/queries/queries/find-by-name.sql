@@ -1,1 +1,1 @@
-SELECT * FROM users WHERE name = :name
+SELECT * FROM users WHERE name = :name ORDER BY id ASC

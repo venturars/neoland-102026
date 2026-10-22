@@ -13,6 +13,7 @@ first-app/
   logic/                  una función de negocio por archivo
     create-user.js, update-user.js, delete-user.js
     list-users.js, find-user-by-email.js, find-user-by-id.js
+    find-users-by-name.js
     users-gender-count.js
   clients/terminal/       cliente inicial y prueba manual
   docs/CONSTITUTIONS.md   reglas de este proyecto

@@ -19,3 +19,15 @@ Autora: Jimena Durán. Issue: #219. Implementación y comprobaciones completadas
 
 Comprobación: Node.js v24.22.0, aserciones con tabla temporal en la conexión
 existente y ROLLBACK. Casos previstos superados; sin modificar datos persistentes.
+
+## Ajuste de espacios y orden
+
+- [x] Recortar la entrada antes de validar y consultar.
+  Resultado: espacios exteriores ignorados, interiores conservados.
+- [x] Ordenar la consulta por ID ascendente y actualizar spec, plan y árbol.
+  Resultado: comportamiento y documentación coherentes.
+- [x] Verificar recorte, orden, coincidencias, vacíos y fallos de lectura.
+  Resultado: casos previstos superados sin cambiar datos persistentes.
+
+Verificado el ajuste con IDs insertados en orden 30, 10, 20: devuelve 10, 20, 30.
+Cliente ejecutado correctamente y SHA256 de la base sin cambios.
