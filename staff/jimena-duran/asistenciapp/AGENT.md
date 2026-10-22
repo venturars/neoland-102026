@@ -136,4 +136,6 @@ Una funcionalidad está terminada cuando:
 
 | `003-activar-el-entorno` | Implementada y verificada localmente (2026-10-22) | 97 tests pasan; aprobación humana final pendiente |
 
+| `004-quitar-referencias-personales` | Implementada localmente | 100 tests pasan; sin commit de implementación |
+
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.

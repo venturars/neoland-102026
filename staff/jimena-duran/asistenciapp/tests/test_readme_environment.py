@@ -16,7 +16,7 @@ def test_activation_heading():
     section = text.split("## 2. Activar el entorno\n", 1)[1]
     activation = section.split("### Arrancar la app\n", 1)[0]
     assert "En cada terminal nueva, primero activa el entorno:" in activation
-    assert "cd staff/victor-chang/asistenciapp" in activation
+    assert "cd staff/<usuario>/asistenciapp" in activation
     assert "source .venv/bin/activate" in activation
 
 
@@ -37,6 +37,8 @@ def test_activation_before_start():
 
 def test_only_planned_changes():
     data = (ROOT / "README.md").read_bytes()
+    # La spec 004 autoriza únicamente anonimizar las dos rutas del README.
+    data = data.replace(b"staff/<usuario>/asistenciapp", b"staff/victor-chang/asistenciapp")
     assert data.count(b"### Arrancar la app") == 1
     original = data.replace(b"## 2. Activar el entorno", b"## 2. Arrancar la app", 1)
     original = original.replace(b"### Arrancar la app\r\n\r\n", b"", 1) if b"\r\n" in original else original.replace(b"### Arrancar la app\n\n", b"", 1)
