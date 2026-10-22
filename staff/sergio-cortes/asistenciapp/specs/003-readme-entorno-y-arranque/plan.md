@@ -14,7 +14,7 @@ Se editan dos README que ya existen y se actualiza la tabla de estado del manual
 | --- | --- |
 | [README.md](../../README.md) (app) | Rutas a `staff/sergio-cortes/asistenciapp`; separar «Activar el entorno» y «Arrancar la app»; renumerar secciones posteriores |
 | [README.md](../../../../README.md) (personal en `staff/sergio-cortes`) | Nueva sección con el **mismo instructivo** de preparar → activar → arrancar (issue #233) |
-| [AGENT.md](../../AGENT.md) §7 | Fila `003-readme-entorno-y-arranque` en estado implementación / terminada al cerrar tasks |
+| [AGENTS.md](../../AGENTS.md) §7 | Fila `003-readme-entorno-y-arranque` en estado implementación / terminada al cerrar tasks |
 
 No hay arquitectura nueva, ni modelo de datos, ni rutas, ni código, ni tests nuevos. No se añade ninguna dependencia.
 

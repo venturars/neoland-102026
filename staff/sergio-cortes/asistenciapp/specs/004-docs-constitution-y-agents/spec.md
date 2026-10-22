@@ -1,6 +1,6 @@
 # Spec 004 · Constitución en `docs` y manual `AGENTS.md`
 
-> Estado: **Aprobada** (2026-10-22) · Creada: 2026-10-22 · Aprobada: 2026-10-22
+> Estado: **Implementada** (2026-10-22) · Creada: 2026-10-22 · Aprobada: 2026-10-22
 
 ---
 
@@ -78,3 +78,4 @@ Ninguna. **PA-01** (2026-10-22): en specs 001–003 se mantiene el texto histór
 | --- | --- | --- | --- |
 | 0.1 | 2026-10-22 | Borrador inicial | Issue #235; base rama PR #234 |
 | 1.0 | 2026-10-22 | Aprobada | Ok de quien trabaja en esta carpeta; PA-01 cerrada |
+| 1.1 | 2026-10-22 | Implementada | T01–T08; pytest en verde |
