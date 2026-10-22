@@ -1,0 +1,62 @@
+# IDEs
+.cursor/
+.cursorignore
+.vscode/
+*.code-workspace
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.claude/
+.opencode/
+opencode.json
+opencode.jsonc
+.codex/
+.agents/
+.claude/skills/
+.cursor/skills/
+.agents/skills/
+
+# Dependencias y entornos, en cualquier carpeta
+node_modules/
+.env
+.env.*
+
+# Locks de npm
+package-lock.json
+npm-shrinkwrap.json
+
+# Temporales de Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# Temporales de macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.apdisk
+
+# Temporales de Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.stackdump
+*.tmp
+~$*
+*.swp
+*.swo
