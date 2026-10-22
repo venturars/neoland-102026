@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 2.1 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-20
+> Versión 2.2 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-22
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -60,11 +60,13 @@ Cambiar el stack requiere enmendar esta constitución.
 
 ## 4. Desarrollo guiado por especificaciones (SDD)
 
-1. **No hay código sin especificación aprobada.** Cada funcionalidad nace como `specs/NNN-nombre/spec.md` y Victor la aprueba antes de pasar al plan.
-2. El orden siempre es: **spec → plan → tasks → implementación**. No se salta ningún paso.
+1. **No hay cambios de código, pruebas, README, instrucciones de uso u otra documentación de la app sin especificación aprobada.** Si el pedido no tiene una spec aprobada que lo cubra, solo se redacta `specs/NNN-nombre/spec.md`, se muestra y se espera el sí explícito de Miguel antes de preparar el plan o las tareas.
+2. El orden siempre es: **spec → plan → tasks → implementación**. Miguel aprueba por separado la spec antes del plan, el plan antes de las tareas y las tareas antes de implementar. No se salta ningún paso.
 3. La `spec.md` describe el **qué y el porqué**, nunca el cómo (no menciona tecnologías).
 4. El `plan.md` describe el **cómo** e incluye una sección que comprueba que cumple esta constitución.
 5. Las dudas se marcan como `[NECESITA ACLARACIÓN]` y se resuelven **antes** de implementar. No se inventan requisitos.
+
+6. Una issue, una rama o una PR no sustituye la especificación aprobada. Un pedido no cubierto por la spec activa requiere una nueva spec; no se amplía silenciosamente una terminada.
 
 ---
 
@@ -87,13 +89,13 @@ Cambiar el stack requiere enmendar esta constitución.
 
 ## 7. Alcance y límites del repositorio
 
-- El proyecto vive entero en `staff/victor-chang/asistenciapp/`. No se tocan archivos fuera de esta carpeta.
+- El proyecto vive entero en `staff/miguel-rodriguez/asistenciapp/`. No se tocan archivos fuera de esta carpeta.
 
 ---
 
 ## 8. Enmiendas
 
-- Cualquiera (persona o agente) puede **proponer** un cambio, pero solo Victor lo **aprueba**.
+- Cualquiera (persona o agente) puede **proponer** un cambio, pero solo Miguel lo **aprueba** para esta copia.
 - Cada enmienda sube la versión (1.0 → 1.1 para añadidos, 2.0 si se elimina o contradice un principio) y se anota abajo con fecha y motivo.
 
 ### Historial de enmiendas
@@ -104,3 +106,4 @@ Cambiar el stack requiere enmendar esta constitución.
 | 1.1 | 2026-10-19 | §6: los códigos no deben poder adivinarse *a mano*; la protección contra scripts deja de ser obligatoria | En una clase el riesgo real es un alumno ausente, no un ataque automatizado. Evita añadir límites de intentos que no aportan al MVP (P2) |
 | 2.0 | 2026-10-20 | §3: stack Node.js → Python (Flask + pytest). P3 pasa de "cero dependencias" a "dependencias mínimas" y permite Flask y pytest | Requisito nuevo: el proyecto debe hacerse en Python. Se elige Flask por ser simple y muy extendido, y pytest por su sintaxis sencilla |
 | 2.1 | 2026-10-20 | P4: distingue *almacenar* (solo en local) de *transitar* (puede pasar cifrado por un proveedor de túnel) | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08) |
+| 2.2 | 2026-10-22 | §4: SDD para todo cambio y aprobaciones separadas; §7–§8: carpeta y aprobación de Miguel para esta copia | Spec 002 y enmienda aprobadas por Miguel; se conserva el historial anterior |
