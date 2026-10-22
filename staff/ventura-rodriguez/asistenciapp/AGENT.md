@@ -122,6 +122,7 @@ Una funcionalidad está terminada cuando:
 | Spec | Fase | Notas |
 | --- | --- | --- |
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
+| `003-activar-el-entorno` | ✅ Implementada (2026-10-22): T01–T04, 77 tests | El README separa activar el entorno y arrancar la app |
 | `002-discord-bot` | Idea futura | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
