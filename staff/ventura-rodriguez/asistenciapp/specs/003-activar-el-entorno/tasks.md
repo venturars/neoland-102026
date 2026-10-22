@@ -14,7 +14,7 @@ Cómo leer esta lista:
 
 - [x] **T01** · En `README.md`, cambiar el título «2. Arrancar la app» por «2. Activar el entorno».
   - Debajo se quedan la frase «En cada terminal nueva, primero activa el entorno» y el bloque con `cd` y `source .venv/bin/activate`.
-  - La ruta `staff/victor-chang/asistenciapp` no se modifica.
+  - La ruta para entrar en la carpeta no se modifica.
   - *Cubre:* CA-01.
   - *Hecha cuando:* ese bloque se titula «Activar el entorno».
 

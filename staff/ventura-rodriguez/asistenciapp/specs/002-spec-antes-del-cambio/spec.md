@@ -56,7 +56,7 @@ Formato: **Dado** (situación inicial) · **Cuando** (acción) · **Entonces** (
 ## 5. Fuera de alcance (en esta spec)
 
 - Corregir los términos del README de la issue 187.
-- Las rutas del README que todavía dicen `staff/victor-chang/asistenciapp/`.
+- Las rutas del README que todavía nombran una carpeta personal.
 - El bot de Discord. Se queda como idea futura, sin número de spec.
 - Reescribir el historial de la spec `001-checkin-codigo`.
 

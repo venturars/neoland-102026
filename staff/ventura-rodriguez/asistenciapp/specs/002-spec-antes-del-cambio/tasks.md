@@ -34,7 +34,7 @@ Cómo leer esta lista:
   - La ruta de trabajo es `staff/ventura-rodriguez/asistenciapp/`.
   - Quien da el ok, pide los commits y aprueba enmiendas es la persona que trabaja en esta carpeta.
   - *Cubre:* CA-01, CA-02, CA-04, CA-06.
-  - *Hecha cuando:* esos apartados ya no dicen `staff/victor-chang/asistenciapp/` ni dejan el ok en manos de otra persona.
+  - *Hecha cuando:* esos apartados ya no nombran una carpeta personal ni dejan el ok en manos de otra persona.
 
 - [x] **T04** · Actualizar la tabla de `AGENT.md` §7.
   - `002-spec-antes-del-cambio` tiene su fila.
