@@ -31,7 +31,7 @@ Editar `staff/sergio-cortes/README.md` queda **dentro del alcance de esta spec**
 
 ### 2.1 Rutas de carpeta (CA-03)
 
-Sustituir `staff/victor-chang/asistenciapp` por `staff/sergio-cortes/asistenciapp` en todos los bloques `cd` de las secciones de entorno (preparar y activar).
+Usar `staff/sergio-cortes/asistenciapp` en todos los bloques `cd` de las secciones de entorno (preparar y activar).
 
 ### 2.2 Separar activar y arrancar (CA-04, CA-05, CA-06)
 

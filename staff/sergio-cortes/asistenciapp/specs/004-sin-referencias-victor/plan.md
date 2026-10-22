@@ -1,6 +1,6 @@
-# Plan técnico 004 · Sin referencias personales a Victor
+# Plan técnico 004 · Sin referencias personales ajenas
 
-> Estado: **Aprobado** (2026-10-22) · Spec: [spec.md](spec.md) v1.0 · Creado: 2026-10-22 · Aprobado: 2026-10-22
+> Estado: **Implementado** (2026-10-22) · Spec: [spec.md](spec.md) v1.1 · Creado: 2026-10-22 · Aprobado: 2026-10-22
 
 Este documento explica **cómo** se cumple la spec. Solo documentación bajo `staff/sergio-cortes/asistenciapp`; no hay cambios de arquitectura, modelo de datos, rutas, código ni dependencias nuevas.
 
@@ -34,15 +34,15 @@ La spec `002-spec-antes-del-cambio` dejó el historial de `001-checkin-codigo` i
 
 Sustituir nombres personales y rutas de otra copia por formulaciones neutras, **manteniendo fechas y hechos**:
 
-| Antes (ejemplo) | Después (ejemplo) |
+| Tipo de texto | Redacción neutra |
 | --- | --- |
-| «Victor aceptó las propuestas» | «Las propuestas quedaron aceptadas» |
-| «Victor detecta que…» | «En pruebas se detecta que…» |
-| «*(Victor, 2026-10-20: …)*» | «*(2026-10-20: …)*» o «*(Verificado 2026-10-20: …)*» |
-| «Victor lo prueba con su móvil…» | «Prueba manual con móvil…» |
-| «Decisiones tomadas por Victor» | «Decisiones tomadas» |
-| «sustituir `staff/victor-chang/asistenciapp` por…» | «usar `staff/sergio-cortes/asistenciapp` en…» |
-| «no nombran Victor ni `victor-chang`» | «no nombran personas concretas ni rutas de otra copia bajo `staff/`» |
+| Aceptación de propuestas con nombre personal | «Las propuestas quedaron aceptadas» |
+| Detección en pruebas con sujeto personal | «En pruebas se detecta que…» |
+| Nota «*(Nombre, fecha: …)*» | «*(fecha: …)*» o «*(Verificado fecha: …)*» |
+| Prueba descrita como acción de una persona | «Prueba manual con móvil…» |
+| Título «Decisiones tomadas por …» | «Decisiones tomadas» |
+| Instrucción con ruta de otra copia bajo `staff/` | «usar `staff/sergio-cortes/asistenciapp` en…» |
+| Criterio «hecha cuando» con nombre o slug ajeno | «no nombran personas concretas ni rutas de otra copia bajo `staff/`» |
 
 No se reescriben tablas de decisiones funcionales ni se borran filas del historial; solo se quita la atribución personal.
 
@@ -69,7 +69,7 @@ No se reescriben tablas de decisiones funcionales ni se borran filas del histori
 ### 3.4 Cierre de esta spec (CA-08 y CA-01)
 
 - `AGENTS.md` §7: nueva fila `004-sin-referencias-victor` (fase según avance).
-- `specs/004-sin-referencias-victor/spec.md`: tras el resto de edits, reescribir apartados que aún contengan el nombre o el slug buscables, para que **CA-01** y **CA-02** pasen en todo el árbol (la spec puede seguir citando la issue #245).
+- `specs/004-sin-referencias-victor/spec.md`: tras el resto de edits, reescribir apartados que aún contengan cadenas buscables de la issue #245, excepto el identificador de carpeta de esta spec (la spec puede seguir citando la issue #245).
 
 ---
 
@@ -77,8 +77,8 @@ No se reescriben tablas de decisiones funcionales ni se borran filas del histori
 
 | Criterio | Qué mirar |
 | --- | --- |
-| CA-01 | Desde la raíz de la app: `rg -i victor` (o búsqueda equivalente) → sin coincidencias |
-| CA-02 | `rg victor-chang` y `rg 'staff/victor-chang'` → sin coincidencias |
+| CA-01 | Desde la raíz de la app: búsqueda de referencias personales de la issue #245 → sin coincidencias en contenido (salvo el slug de carpeta `004-sin-referencias-victor`) |
+| CA-02 | Búsqueda de rutas ajenas de la issue #245 → sin coincidencias |
 | CA-03 | Leer `README.md`, `docs/CONSTITUTIONS.md`, `AGENTS.md` |
 | CA-04 | Releer los `spec/plan/tasks` editados: fechas y hechos conservados, sin nombres ajenos |
 | CA-05 | En `001-checkin-codigo`: mismos `CA-xx`/`HU-xx`; diff sin cambios en código |
