@@ -30,6 +30,7 @@ Sin un spec aprobado no se puede tocar ninguno de esos README (spec 002).
 - **HU-02**: Como persona que abre el README de la app, quiero que las rutas nombren esta carpeta del ejercicio y no la de otra persona, para poder seguir los comandos en mi ordenador.
 - **HU-03**: Como persona que abre el README de la app, quiero que el bloque que solo activa el entorno no se llame «Arrancar la app», para no dar por hecho que la app ya está en marcha.
 - **HU-04**: Como persona que abre el README de la app, quiero que «Arrancar la app» nombre solo las dos formas de ponerla en marcha (clase online y prueba en el propio ordenador), para saber qué hacer después de activar el entorno.
+- **HU-05**: Como persona que trabaja en esta carpeta, quiero la constitución en `docs/CONSTITUTIONS.md` y el manual del agente como `AGENTS.md`, para alinear la documentación con la issue #233 ampliada sin abrir otra spec.
 
 ---
 
@@ -56,14 +57,20 @@ Formato: **Dado** (situación inicial) · **Cuando** (acción) · **Entonces** (
 
 - **CA-07**: **Dado** el resto del README de la app, **cuando** se aplican estos cambios, **entonces** pasar lista, cerrar la app, problemas frecuentes, tests y privacidad siguen diciendo lo mismo salvo renumerar secciones si hace falta por los títulos nuevos.
 
+### Documentación de reglas y manual (HU-05)
+
+- **CA-08**: **Dado** la app en `staff/sergio-cortes/asistenciapp`, **cuando** se busca la constitución, **entonces** está en `docs/CONSTITUTIONS.md` y no existe `CONSTITUTION.md` en la raíz de la app.
+- **CA-09**: **Dado** la app, **cuando** se busca el manual del agente, **entonces** existe `AGENTS.md` y no existe `AGENT.md`.
+- **CA-10**: **Dado** el README de la app y el manual del agente, **cuando** enlazan la constitución o el manual, **entonces** usan `docs/CONSTITUTIONS.md` y `AGENTS.md`.
+
 ---
 
 ## 5. Fuera de alcance
 
 - Editar el README personal en `staff/sergio-cortes/README.md` (decisión al implementar: ese fichero no se toca; el instructivo queda en el README de la app).
 - Cambiar el comportamiento de la app al arrancar, en clase o en local.
-- Tocar código, tests u otros ficheros fuera de los README indicados en esta spec y lo que el plan derive (por ejemplo, actualizar la tabla de estado en el manual del agente).
-- Renombrar `AGENT.md`, mover la constitución o reorganizar el código.
+- Tocar código o tests de la app (solo documentación y referencias vivas).
+- Reorganizar el código por capas o añadir `ARCHITECTURE.md`.
 - El bot de Discord.
 
 ---
@@ -81,3 +88,4 @@ Ninguna por ahora. Si al planificar conviene un solo README con enlace en lugar 
 | 0.1 | 2026-10-22 | Borrador inicial | Issue #233; puerta spec 002 sobre rama #228 |
 | 1.0 | 2026-10-22 | Aprobada | Ok para pasar al plan |
 | 1.1 | 2026-10-22 | Implementada | T01–T04, T06–T07 hechas; T05 cancelada; pytest en verde |
+| 1.2 | 2026-10-22 | Ampliada e implementada | Issue #233: `docs/CONSTITUTIONS.md` y `AGENTS.md` (T08–T10) |

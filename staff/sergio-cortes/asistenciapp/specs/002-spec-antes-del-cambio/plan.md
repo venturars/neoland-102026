@@ -10,8 +10,8 @@ Este documento explica **cómo** se cumple la spec. Cada decisión indica qué c
 
 Se enmiendan dos ficheros que ya existen. No se crea código ni se toca el README.
 
-- [CONSTITUTION.md](../../CONSTITUTION.md) pasa a la versión 2.2. Ahí está la obligación.
-- [AGENT.md](../../AGENT.md) dice el día a día: qué fichero se puede crear al empezar, cuándo parar y quién da el ok.
+- [docs/CONSTITUTIONS.md](../../docs/CONSTITUTIONS.md) pasa a la versión 2.2. Ahí está la obligación.
+- [AGENTS.md](../../AGENTS.md) dice el día a día: qué fichero se puede crear al empezar, cuándo parar y quién da el ok.
 
 La spec, este plan y las tasks se escriben antes de la enmienda.
 

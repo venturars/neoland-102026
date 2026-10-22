@@ -40,3 +40,16 @@ Cómo leer esta lista:
 
 - [x] **T07** · Comprobar CA-03–CA-07 con la tabla del plan §4 y ejecutar `pytest` desde `staff/sergio-cortes/asistenciapp/`.
   - *Hecha cuando:* la comprobación manual cuadra y `pytest` termina en verde.
+
+## Fase D · Constitución y manual (ampliación #233)
+
+- [x] **T08** · Mover `CONSTITUTION.md` a `docs/CONSTITUTIONS.md`.
+  - *Cubre:* CA-08.
+  - *Hecha cuando:* la constitución vive solo en `docs/CONSTITUTIONS.md`.
+
+- [x] **T09** · Renombrar `AGENT.md` a `AGENTS.md` y actualizar §1, §3 y enlaces internos.
+  - *Cubre:* CA-09, CA-10.
+  - *Hecha cuando:* no queda `AGENT.md` y el manual apunta a `docs/CONSTITUTIONS.md`.
+
+- [x] **T10** · Actualizar `README.md` y comprobar CA-08–CA-10; `pytest` en verde.
+  - *Hecha cuando:* README enlaza bien y los tests pasan.

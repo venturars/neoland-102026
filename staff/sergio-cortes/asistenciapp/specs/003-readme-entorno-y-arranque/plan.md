@@ -14,7 +14,8 @@ Se editan dos README que ya existen y se actualiza la tabla de estado del manual
 | --- | --- |
 | [README.md](../../README.md) (app) | Rutas a `staff/sergio-cortes/asistenciapp`; separar «Activar el entorno» y «Arrancar la app»; renumerar secciones posteriores |
 | [README.md](../../../../README.md) (personal en `staff/sergio-cortes`) | Nueva sección con el **mismo instructivo** de preparar → activar → arrancar (issue #233) |
-| [AGENT.md](../../AGENT.md) §7 | Fila `003-readme-entorno-y-arranque` en estado implementación / terminada al cerrar tasks |
+| [AGENTS.md](../../AGENTS.md) §7 | Fila `003-readme-entorno-y-arranque`; rutas de constitución y manual actualizadas |
+| [docs/CONSTITUTIONS.md](../../docs/CONSTITUTIONS.md) | Constitución movida desde la raíz y renombrada |
 
 No hay arquitectura nueva, ni modelo de datos, ni rutas, ni código, ni tests nuevos. No se añade ninguna dependencia.
 
@@ -82,6 +83,9 @@ La sección **«6. Cierre»** pasa a ser **«7. Cierre»**.
 | CA-05 | App README: bajo «Arrancar la app» solo tabla de clase online y prueba local |
 | CA-06 | App README: no hay `source .venv/bin/activate` bajo «Arrancar la app» |
 | CA-07 | Diff del app README: fuera de §1–3 y la remisión de sección, el resto igual |
+| CA-08 | Existe `docs/CONSTITUTIONS.md`; no hay `CONSTITUTION.md` en la raíz |
+| CA-09 | Existe `AGENTS.md`; no hay `AGENT.md` |
+| CA-10 | README y AGENTS enlazan las rutas nuevas |
 
 `pytest` desde `staff/sergio-cortes/asistenciapp/` al terminar las tasks: debe seguir en verde (77 tests).
 
@@ -112,3 +116,13 @@ La sección **«6. Cierre»** pasa a ser **«7. Cierre»**.
 3. **Misma separación de títulos que spec 003 Ventura** (2026-10-22): activar vs arrancar en el README de la app.
 4. **Sin test automático del README** (2026-10-22): comprobación manual según §4; `pytest` solo confirma que el código no cambió.
 5. **README personal sin editar** (2026-10-22): no se modifica `staff/sergio-cortes/README.md`; CA-01 y CA-02 del README personal quedan fuera de la implementación.
+6. **Constitución y manual** (2026-10-22): `CONSTITUTION.md` → `docs/CONSTITUTIONS.md`; `AGENT.md` → `AGENTS.md`; referencias vivas en README y AGENTS (CA-08–CA-10).
+
+---
+
+## 7. Decisiones — constitución y manual (ampliación issue #233)
+
+- Crear `docs/` y mover la constitución a `docs/CONSTITUTIONS.md`.
+- Renombrar el manual a `AGENTS.md` y actualizar §1, §3 y enlaces.
+- No modificar el contenido normativo de la constitución salvo rutas en el manual.
+- Comprobación: `rg 'CONSTITUTION\.md|AGENT\.md'` en la app debe quedar solo en specs históricas (tasks ya cerradas), no en README ni AGENTS.
