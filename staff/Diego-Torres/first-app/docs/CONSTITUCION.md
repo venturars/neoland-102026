@@ -16,7 +16,7 @@ Si una tarea y esta constitución chocan, gana la constitución.
 | `test/almacen-memoria.js` | El doble de las pruebas |
 | `test/usuarios.test.js` | Las pruebas |
 | `ejemplo.js` | Une lógica y SQLite y hace `console.log` |
-| `clients/terminal/*.js` | Un módulo por operación. Le pasa el almacén y hace `console.log` |
+| `clients/terminal/*.txt` | Un fragmento por operación. Se pega en la terminal, le pasa el almacén y hace `console.log` |
 
 
 ## Base de datos
