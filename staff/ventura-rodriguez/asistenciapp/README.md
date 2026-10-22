@@ -4,7 +4,7 @@ Pasa lista en una clase online (Discord, Google Meet o cualquier otra plataforma
 
 El profesor abre una sesión y comparte en la llamada un **código de 4 cifras** que cambia cada 30 segundos. Los alumnos abren un enlace, escriben su nombre y el código, y aparecen al momento en la lista del profesor. Al final de la clase, la lista se descarga para Excel o Google Sheets.
 
-> Proyecto hecho con *Spec-Driven Development*. Las reglas están en [CONSTITUTION.md](CONSTITUTION.md), el manual para agentes de IA en [AGENT.md](AGENT.md) y la especificación en [specs/001-checkin-codigo/](specs/001-checkin-codigo/spec.md).
+> Proyecto hecho con _Spec-Driven Development_. Las reglas están en [CONSTITUTION.md](CONSTITUTION.md), el manual para agentes de IA en [AGENT.md](AGENT.md) y la especificación en [specs/001-checkin-codigo/](specs/001-checkin-codigo/spec.md).
 
 ---
 
@@ -22,7 +22,7 @@ brew install cloudflared             # el túnel para que los alumnos entren des
 
 ---
 
-## 2. Arrancar la app
+## 2. Activar el entorno
 
 En cada terminal nueva, primero activa el entorno:
 
@@ -31,10 +31,14 @@ cd staff/victor-chang/asistenciapp
 source .venv/bin/activate
 ```
 
-| Para… | Comando |
-| --- | --- |
+---
+
+## 3. Arrancar la app
+
+| Para…                                       | Comando                 |
+| ------------------------------------------- | ----------------------- |
 | **Una clase online** (alumnos en sus casas) | `python app.py --tunel` |
-| Probar solo en tu ordenador | `python app.py` |
+| Probar solo en tu ordenador                 | `python app.py`         |
 
 Al arrancar verás algo así:
 
@@ -51,7 +55,7 @@ Ese enlace es **tu panel privado**: no lo compartas, porque quien lo tenga puede
 
 ---
 
-## 3. Pasar lista, paso a paso
+## 4. Pasar lista, paso a paso
 
 1. Abre el **enlace del panel** que aparece en la terminal.
 2. Escribe un título (opcional; si no, se usa la fecha y hora) y pulsa **Abrir asistencia**.
@@ -59,13 +63,13 @@ Ese enlace es **tu panel privado**: no lo compartas, porque quien lo tenga puede
 4. Pulsa **Copiar enlace de alumnos** y pégalo en el chat de Discord o Meet.
 5. Cada alumno abre el enlace, escribe su **nombre** y el **código** de tu pantalla, y pulsa **Estoy en clase**. Su nombre aparece en tu lista en un par de segundos.
 6. Cuando ya estén todos, pulsa **Cerrar asistencia** y confírmalo. Desde ese momento nadie más puede registrarse.
-7. Pulsa **Descargar lista** para obtener el CSV (columnas *Nombre* y *Hora*).
+7. Pulsa **Descargar lista** para obtener el CSV (columnas _Nombre_ y _Hora_).
 
 **¿Ves un nombre falso o equivocado?** Pulsa **Quitar** en su fila y confirma con **Sí, quitar**. Desaparece de la lista, del total y de la descarga. Funciona también con la asistencia ya cerrada.
 
 ### Un registro por navegador
 
-Cuando un alumno se registra, su navegador lo recuerda **para esa clase**: si vuelve a abrir el enlace, ve *"Ya te registraste en esta clase como Ana García a las 11:07"* y no puede apuntar a otra persona. En la clase siguiente puede registrarse con normalidad.
+Cuando un alumno se registra, su navegador lo recuerda **para esa clase**: si vuelve a abrir el enlace, ve _"Ya te registraste en esta clase como Ana García a las 11:07"_ y no puede apuntar a otra persona. En la clase siguiente puede registrarse con normalidad.
 
 Es un límite **disuasorio**, no una prueba de identidad: se salta con otro navegador, una ventana privada u otro dispositivo. Para lo que se cuele, está el botón **Quitar**. Si quitas a alguien, su navegador sigue mostrando "ya te registraste": tendría que usar otro navegador para registrarse de nuevo.
 
@@ -73,11 +77,11 @@ Las **sesiones anteriores** aparecen en el panel con su número de asistentes, y
 
 ---
 
-## 4. Cerrar la app
+## 5. Cerrar la app
 
 Pulsa **Ctrl+C** en la terminal donde está arrancada. Se paran la app y el túnel. Los datos quedan guardados en `data/asistencia.db`.
 
-> **"Cerrar asistencia"** (el botón del panel) solo cierra los registros de *esa clase*; la app sigue funcionando. **Ctrl+C** apaga la app entera.
+> **"Cerrar asistencia"** (el botón del panel) solo cierra los registros de _esa clase_; la app sigue funcionando. **Ctrl+C** apaga la app entera.
 
 Si ya no encuentras la terminal donde la arrancaste:
 
@@ -89,20 +93,20 @@ pkill cloudflared                    # para el túnel, si lo usabas
 
 ---
 
-## 5. Problemas frecuentes
+## 6. Problemas frecuentes
 
-| Mensaje o síntoma | Qué hacer |
-| --- | --- |
-| `El puerto 8000 ya está en uso` | Ya tienes la app abierta en otra terminal: ciérrala (sección 4). O usa otro puerto: `PORT=8001 python app.py --tunel`. |
-| `No se encontró cloudflared` | Instálalo: `brew install cloudflared`. |
-| El enlace del túnel no carga | Espera unos 20 segundos y recarga: los túneles nuevos tardan en estar accesibles. |
-| Aviso amarillo en el panel: *"tus alumnos no podrán abrir el enlace"* | Abriste el panel en `localhost`. Para la app y arráncala con `python app.py --tunel`. |
-| *"Enlace del panel no válido"* | Usa el enlace exacto de la terminal, incluido todo lo que va detrás de `#t=`. |
-| `command not found: pytest` o `python` no encuentra Flask | No has activado el entorno: `source .venv/bin/activate`. |
+| Mensaje o síntoma                                                     | Qué hacer                                                                                                              |
+| --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `El puerto 8000 ya está en uso`                                       | Ya tienes la app abierta en otra terminal: ciérrala (sección 5). O usa otro puerto: `PORT=8001 python app.py --tunel`. |
+| `No se encontró cloudflared`                                          | Instálalo: `brew install cloudflared`.                                                                                 |
+| El enlace del túnel no carga                                          | Espera unos 20 segundos y recarga: los túneles nuevos tardan en estar accesibles.                                      |
+| Aviso amarillo en el panel: _"tus alumnos no podrán abrir el enlace"_ | Abriste el panel en `localhost`. Para la app y arráncala con `python app.py --tunel`.                                  |
+| _"Enlace del panel no válido"_                                        | Usa el enlace exacto de la terminal, incluido todo lo que va detrás de `#t=`.                                          |
+| `command not found: pytest` o `python` no encuentra Flask             | No has activado el entorno: `source .venv/bin/activate`.                                                               |
 
 ---
 
-## 6. Tests
+## 7. Tests
 
 ```bash
 source .venv/bin/activate
@@ -113,7 +117,7 @@ Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una 
 
 ---
 
-## 7. Privacidad
+## 8. Privacidad
 
 - Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails ni IPs.
 - El límite "un registro por navegador" se guarda **solo en el navegador del alumno**, no en el servidor.

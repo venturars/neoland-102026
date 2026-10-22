@@ -23,14 +23,15 @@ Cada cambio en esta app recorre estas fases **en orden**. Al terminar cada una, 
 
 Al empezar el cambio, el único fichero nuevo permitido es el `spec.md`. El agente lo enseña y espera el ok. El plan, las tasks y el cambio vienen después.
 
-| Fase | Archivo | Pregunta que responde | Puerta de salida |
-| --- | --- | --- | --- |
-| 1. Especificar | `spec.md` | ¿**Qué** hay que hacer y **por qué**? | Sin `[NECESITA ACLARACIÓN]` pendientes + aprobación de la persona que trabaja en esta carpeta |
-| 2. Planificar | `plan.md` | ¿**Cómo** lo hacemos? | Pasa la comprobación de la constitución + esa misma aprobación |
-| 3. Desglosar | `tasks.md` | ¿En qué **pasos pequeños** lo hacemos? | Cada tarea apunta a un criterio de aceptación + esa misma aprobación |
-| 4. Implementar | el cambio que digan las tasks | Hacerlo, tarea a tarea. Incluye el README cuando una task lo diga | Criterios verificados |
+| Fase           | Archivo                       | Pregunta que responde                                             | Puerta de salida                                                                              |
+| -------------- | ----------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| 1. Especificar | `spec.md`                     | ¿**Qué** hay que hacer y **por qué**?                             | Sin `[NECESITA ACLARACIÓN]` pendientes + aprobación de la persona que trabaja en esta carpeta |
+| 2. Planificar  | `plan.md`                     | ¿**Cómo** lo hacemos?                                             | Pasa la comprobación de la constitución + esa misma aprobación                                |
+| 3. Desglosar   | `tasks.md`                    | ¿En qué **pasos pequeños** lo hacemos?                            | Cada tarea apunta a un criterio de aceptación + esa misma aprobación                          |
+| 4. Implementar | el cambio que digan las tasks | Hacerlo, tarea a tarea. Incluye el README cuando una task lo diga | Criterios verificados                                                                         |
 
 ### 2.1 Especificar (`spec.md`)
+
 - Habla del usuario y del problema. **Nunca** nombra tecnologías (nada de "SQLite", "endpoint", "fetch").
 - Estructura: Problema · Usuarios · Historias de usuario · Criterios de aceptación (Dado / Cuando / Entonces) · Fuera de alcance · Preguntas abiertas.
 - Cada criterio de aceptación lleva un identificador (`CA-01`, `CA-02`…) para poder enlazarlo desde tareas y tests.
@@ -38,16 +39,19 @@ Al empezar el cambio, el único fichero nuevo permitido es el `spec.md`. El agen
 - Si la spec activa no describe lo pedido, no se reutiliza: se abre `specs/NNN-nombre/spec.md`.
 
 ### 2.2 Planificar (`plan.md`)
+
 - Arquitectura, modelo de datos, rutas/API, archivos que se crearán.
 - Sección obligatoria **"Comprobación de la constitución"**: repasa P1–P6 y §5–§6 y di cómo los cumple el plan.
 - Si propones una dependencia externa, justifícala aquí (constitución P3).
 
 ### 2.3 Desglosar (`tasks.md`)
+
 - Lista de casillas `- [ ] T01 …` en orden de ejecución.
 - Cada tarea es pequeña (un archivo o una función), tiene un resultado comprobable e indica qué `CA-xx` cubre.
 - Primero el test, luego el código, siempre que sea posible.
 
 ### 2.4 Implementar
+
 - Haz **una tarea cada vez**. Al acabarla, márcala `[x]` en `tasks.md`.
 - Ningún fichero de la app se adelanta al spec. Si la spec activa no cubre el pedido, **para**, escribe el spec y espera aprobación.
 - Si durante la implementación descubres que la spec o el plan están mal o incompletos, **para**, propón el cambio en el documento y espera aprobación.
@@ -84,14 +88,14 @@ Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codi
 
 Ejecutar desde `staff/ventura-rodriguez/asistenciapp/`:
 
-| Acción | Comando |
-| --- | --- |
-| Preparar el entorno (solo la primera vez) | `python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt` |
-| Activar el entorno (en cada terminal nueva) | `source .venv/bin/activate` |
-| Instalar el túnel (solo la primera vez) | `brew install cloudflared` |
-| Arrancar para una clase online | `python app.py --tunel` (imprime el enlace público del panel) |
-| Arrancar solo en local (desarrollo) | `python app.py` (abre en `http://localhost:8000`) |
-| Ejecutar los tests | `pytest` |
+| Acción                                      | Comando                                                                                 |
+| ------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Preparar el entorno (solo la primera vez)   | `python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt` |
+| Activar el entorno (en cada terminal nueva) | `source .venv/bin/activate`                                                             |
+| Instalar el túnel (solo la primera vez)     | `brew install cloudflared`                                                              |
+| Arrancar para una clase online              | `python app.py --tunel` (imprime el enlace público del panel)                           |
+| Arrancar solo en local (desarrollo)         | `python app.py` (abre en `http://localhost:8000`)                                       |
+| Ejecutar los tests                          | `pytest`                                                                                |
 
 Las únicas dependencias son Flask y pytest (constitución P3).
 
@@ -123,10 +127,11 @@ Una funcionalidad está terminada cuando:
 
 ## 7. Estado actual
 
-| Spec | Fase | Notas |
-| --- | --- | --- |
-| `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
-| `002-spec-antes-del-cambio` | ✅ Implementada (2026-10-22) | Ningún fichero de la app se toca sin un spec aprobado |
-| Bot de Discord | Idea futura, sin número | Fuera del MVP |
+| Spec                        | Fase                                                                           | Notas                                                           |
+| --------------------------- | ------------------------------------------------------------------------------ | --------------------------------------------------------------- |
+| `001-checkin-codigo`        | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
+| `002-spec-antes-del-cambio` | ✅ Implementada (2026-10-22)                                                   | Ningún fichero de la app se toca sin un spec aprobado           |
+| Bot de Discord              | Idea futura, sin número                                                        | Fuera del MVP                                                   |
+| `003-activar-el-entorno`    | ✅ Implementada (2026-10-22): T01–T04, 77 tests                                | El README separa activar el entorno y arrancar la app           |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
