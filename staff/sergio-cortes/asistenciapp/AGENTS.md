@@ -1,6 +1,6 @@
-# AGENT.md — Manual de trabajo para agentes de IA
+# AGENTS.md — Manual de trabajo para agentes de IA
 
-Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [CONSTITUTION.md](CONSTITUTION.md) dice **qué reglas** se cumplen; este archivo dice **cómo se trabaja** día a día.
+Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [constitución](docs/CONSTITUTIONS.md) dice **qué reglas** se cumplen; este archivo dice **cómo se trabaja** día a día.
 
 ---
 
@@ -8,8 +8,8 @@ Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en 
 
 Lee en este orden al empezar cualquier tarea:
 
-1. `CONSTITUTION.md`: las reglas no negociables.
-2. Este archivo (`AGENT.md`).
+1. `docs/CONSTITUTIONS.md`: las reglas no negociables.
+2. Este archivo (`AGENTS.md`).
 3. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
 4. Su `plan.md` y su `tasks.md`, si ya existen.
 
@@ -58,8 +58,9 @@ Al empezar el cambio, el único fichero nuevo permitido es el `spec.md`. El agen
 
 ```
 asistenciapp/
-├── CONSTITUTION.md        # reglas no negociables
-├── AGENT.md               # este archivo
+├── docs/
+│   └── CONSTITUTIONS.md   # reglas no negociables
+├── AGENTS.md              # este archivo
 ├── README.md              # cómo arrancar la app (para humanos)
 ├── specs/
 │   └── NNN-nombre/
@@ -127,7 +128,7 @@ Una funcionalidad está terminada cuando:
 | --- | --- | --- |
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
 | `002-spec-antes-del-cambio` | ✅ Implementada (2026-10-22) | Ningún fichero de la app se toca sin un spec aprobado |
-| `003-readme-entorno-y-arranque` | ✅ Implementada (2026-10-22) | Instructivo de entorno y arranque en el README de la app |
+| `003-readme-entorno-y-arranque` | ✅ Implementada (2026-10-22) | README de entorno/arranque; constitución en `docs/CONSTITUTIONS.md`; manual `AGENTS.md` |
 | Bot de Discord | Idea futura, sin número | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
