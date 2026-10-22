@@ -1,5 +1,5 @@
 import { validateId } from "./shared.js";
-import { removeUser } from "../queries/users.js";
+import * as users from "../queries/users.js";
 
 /**
  * Deletes a user from the SQLite database.
@@ -7,7 +7,7 @@ import { removeUser } from "../queries/users.js";
 export async function deleteUser(id) {
   const userId = validateId(id);
 
-  if (removeUser(userId) === 0) {
+  if (users.deleteUser(userId) === 0) {
     throw new Error(`User ${userId} was not found`);
   }
 }

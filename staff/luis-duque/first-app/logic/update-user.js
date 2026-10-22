@@ -1,5 +1,5 @@
 import { validateEmail, validateId, validateNombre } from "./shared.js";
-import { saveUser } from "../queries/users.js";
+import * as users from "../queries/users.js";
 
 /**
  * Updates a user in the SQLite database.
@@ -16,7 +16,7 @@ export async function updateUser(id, changes = {}) {
   const nextName = hasName ? validateNombre(changes.name) : null;
   const nextEmail = hasEmail ? validateEmail(changes.email) : null;
 
-  if (saveUser(userId, nextName, nextEmail) === 0) {
+  if (users.updateUser(userId, nextName, nextEmail) === 0) {
     throw new Error(`User ${userId} was not found`);
   }
 
