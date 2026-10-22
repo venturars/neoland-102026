@@ -23,12 +23,12 @@ Fuente: [github/awesome-copilot — git-commit](https://github.com/github/awesom
 
 name: git-commit
 description: >-
-Execute git commit with conventional commit message analysis, intelligent
-staging, and message generation. Use when user asks to commit changes,
-create a git commit, or mentions "/commit". Supports: (1) Auto-detecting
-type and scope from changes, (2) Generating conventional commit messages
-from diff, (3) Interactive commit with optional type/scope/description
-overrides, (4) Intelligent file staging for logical grouping
+  Execute git commit with conventional commit message analysis, intelligent
+  staging, and message generation. Use when user asks to commit changes,
+  create a git commit, or mentions "/commit". Supports: (1) Auto-detecting
+  type and scope from changes, (2) Generating conventional commit messages
+  from diff, (3) Interactive commit with optional type/scope/description
+  overrides, (4) Intelligent file staging for logical grouping
 license: MIT
 allowed-tools: Bash
 
@@ -481,7 +481,7 @@ Esta sección gana cuando choca con el proceso de arriba. El paso 5 no se ejecut
 - La base es `staging`.
 - Se crea en draft. Pasarla a lista es la acción «pedir revisión».
 - El título es el de la issue, en inglés.
-- El cuerpo rellena `.github/pull_request_template.md` e incluye `Closes #<número>`.
+- El cuerpo rellena `.github/pull_request_template.md` e incluye `Closes #<número>`. Si el workspace es el repositorio de clase, la plantilla es `staff/meghan-martin/first-app/.github/pull_request_template.md`. `${workspaceFolder}/.github/pull_request_template.md` solo vale cuando el workspace abierto es `first-app`.
 - La persona asignada es el alumno. El nombre sale de `gh api user --jq .login`.
 - Si la rama ya tiene una pull request, se actualiza esa y no se abre otra.
 - Antes de crearla o actualizarla, enseña el título, la rama, el destino, el `Closes` y la persona asignada, y espera el sí.

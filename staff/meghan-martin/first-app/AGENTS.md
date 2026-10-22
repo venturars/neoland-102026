@@ -18,6 +18,12 @@ Ningún código de una funcionalidad nueva se escribe antes de spec, plan y task
 
 El ejemplo de terminal es obligatorio. Un logic ya creado no se reemplaza.
 
+## Git
+
+Cada tarea nueva sigue `docs/GIT-WORKFLOW.md` aunque el prompt no nombre ese fichero. Es una issue, una rama desde `staging` y una pull request en draft hacia `staging`.
+
+La plantilla de la pull request es `.github/pull_request_template.md` de esta app. Si el workspace es el repositorio de la clase, la ruta es `staff/meghan-martin/first-app/.github/pull_request_template.md`.
+
 ## Comandos
 
 - No hay comando de arranque. Cada acción se prueba pegando su `clients/terminal/*.txt` desde dentro de `first-app`.
