@@ -1,122 +1,118 @@
 # Tareas 001 · Check-in con código
 
-> Estado: **Terminado** (v1.2, 2026-10-20) · Plan: [plan.md](plan.md) · Creado: 2026-10-19 · Re-planificado: 2026-10-20
+> Estado: **Pendiente de aprobación** · Plan: [plan.md](plan.md) (aprobado 2026-10-22) · Desglose reescrito: 2026-10-22
 
 Cómo leer esta lista:
+
 - Se hacen **en orden**, una cada vez. Al terminar una se marca `[x]`.
-- `🧪` = se escribe primero el test, se ve fallar y luego se escribe el código hasta que pase.
+- `🧪` = primero el test (que falle), luego el código hasta que pase.
 - Cada tarea indica qué **criterios de aceptación** (`CA-xx`) cubre y cómo se sabe que está **hecha**.
-- Las tareas de una misma fase dependen de las anteriores; no se empieza una fase sin cerrar la previa.
+- No se empieza una fase sin cerrar la previa.
+
+Hay código base en esta carpeta (copia de referencia). Al implementar/verificar, se marca cada tarea solo cuando cumple su criterio *Hecha cuando* / tests.
 
 ---
 
 ## Fase A · Preparación
 
-- [x] **T01** · Preparar el entorno de Python:
+- [ ] **T01** · Preparar el entorno de Python:
   - `requirements.txt` con `flask` y `pytest`.
-  - Entorno virtual: `python3 -m venv .venv` y `pip install -r requirements.txt`.
-  - `.gitignore` con `data/` (la BD con nombres reales de alumnos no se sube a git), `.venv/` (se recrea con `requirements.txt`), `__pycache__/` y `.pytest_cache/` (archivos que Python genera solo).
-  - Carpetas `asistencia/` (con un `__init__.py` vacío) y `tests/`, que **sí** se suben.
-  - `pytest.ini` con `testpaths = tests` y `pythonpath = .`, para que los tests puedan hacer `import asistencia`.
-  - *Hecha cuando:* `pytest` se ejecuta sin errores (aunque aún no haya tests).
+  - Entorno virtual: `python3 -m venv .venv` y `pip install -r requirements.txt` (en Windows: `.\.venv\Scripts\Activate.ps1`).
+  - `.gitignore` con `data/`, `.venv/`, `__pycache__/`, `.pytest_cache/`.
+  - Carpetas `asistencia/` (con `__init__.py`) y `tests/`.
+  - `pytest.ini` con `testpaths = tests` y `pythonpath = .`.
+  - *Hecha cuando:* `pytest` corre sin errores (aunque aún no haya tests).
 
 ## Fase B · Lógica pura (sin servidor ni BD)
 
-Primero lo que no depende de nada: es lo más fácil de probar y la base de todo lo demás.
-
-- [x] **T02** 🧪 · `asistencia/codes.py`: `code_for(secret, t)`, `is_valid_code(secret, code, t)` y `seconds_left(t)`.
-  - Tests en `tests/test_codes.py`: siempre 4 dígitos con ceros a la izquierda · mismo secreto y ventana → mismo código · ventana siguiente → código distinto · se acepta el código actual y el anterior · se rechazan el de hace dos ventanas y uno incorrecto · `secondsLeft` correcto.
+- [ ] **T02** 🧪 · `asistencia/codes.py`: `code_for`, `is_valid_code`, `seconds_left`.
+  - Tests en `tests/test_codes.py`: 4 dígitos · misma ventana → mismo código · ventana siguiente → distinto · acepta actual y anterior · rechaza el de hace dos ventanas y uno incorrecto · `seconds_left` coherente.
   - *Cubre:* CA-03, CA-05, CA-06.
-- [x] **T03** 🧪 · `asistencia/names.py`: `clean_name(raw)` y `name_key(name)`.
-  - Tests en `tests/test_names.py`: recorta espacios · vacío → error · 61 caracteres → error, 60 → ok · `"  Ana   García "` y `"ana garcia"` dan la misma clave · `<b>Ana</b>` se conserva tal cual.
+- [ ] **T03** 🧪 · `asistencia/names.py`: `clean_name`, `name_key`.
+  - Tests en `tests/test_names.py`: strip · vacío/61 chars → error · 60 ok · misma clave con mayúsculas/tildes/espacios · `<b>Ana</b>` se conserva.
   - *Cubre:* CA-07, CA-08, CA-12.
-- [x] **T04** 🧪 · `asistencia/export.py` (no `csv.py`, ver plan §2.6): `to_csv(rows)`.
-  - Tests en `tests/test_export.py`: empieza por BOM · cabecera `Nombre;Hora` · separador `;` · nombres con `;` o `"` van entre comillas · nombres que empiezan por `=`, `+`, `-` o `@` llevan `'` delante.
+- [ ] **T04** 🧪 · `asistencia/export.py` (no `csv.py`, plan §2.6): `to_csv`.
+  - Tests en `tests/test_export.py`: BOM · `Nombre;Hora` · `;` · comillas · prefijo `'` en `=+-@`.
   - *Cubre:* CA-14.
 
 ## Fase C · Base de datos
 
-- [x] **T05** · `asistencia/db.py`: `connect(path)` e `init_schema(conn)` crean las tablas del plan §3. Funciones: `get_or_create_teacher_token`, `create_session`, `get_session`, `list_sessions` (con total), `close_session`, `add_checkin` (si el nombre ya existe devuelve el registro previo), `list_checkins`.
-  - *Hecha cuando:* se puede crear una BD y una sesión desde la consola de Python. Sus tests llegan con la API (Fase D), que la usa de verdad.
+- [ ] **T05** · `asistencia/db.py`: `connect`, `init_schema` (plan §3) y consultas: token, sesiones, checkins, `remove_checkin` (fase G también lo usa).
+  - *Hecha cuando:* se puede crear BD y sesión desde la consola de Python. Los tests llegan con la API (fase D).
 
 ## Fase D · API
 
-Todos los tests de esta fase van en `tests/test_api.py`. Usan las fixtures de `tests/conftest.py`: una app con **BD temporal** (`tmp_path`), un token fijo y un **reloj falso**, y su `client = app.test_client()`, que hace peticiones sin levantar un servidor real.
+Tests en `tests/test_api.py` con fixtures de `conftest.py` (BD temporal, token fijo, reloj falso, `test_client`).
 
-- [x] **T06** 🧪 · `app.py` base: `create_app(db_path, token=None, now=time.time)`, una conexión a la BD por petición (`flask.g`), archivos estáticos de `static/` y comprobación del token del profesor. Crear también `tests/conftest.py` con las fixtures.
-  - Tests: las rutas `/api/sessions…` sin token o con token incorrecto → `401` · ruta desconocida → `404`.
+- [ ] **T06** 🧪 · `create_app`, BD por petición, estáticos, token del profesor + `conftest.py`.
+  - Tests: `/api/sessions…` sin token o token malo → `401` · ruta desconocida → `404`.
   - *Cubre:* CA-15, CA-17.
-- [x] **T07** 🧪 · Crear y listar sesiones: `POST /api/sessions`, `GET /api/sessions`.
-  - Tests: con título · sin título → fecha y hora · el listado va de la más reciente a la más antigua y trae el total de cada una.
+- [ ] **T07** 🧪 · `POST/GET /api/sessions`.
+  - Tests: con/sin título · listado reciente→antigua con totales.
   - *Cubre:* CA-01, CA-02, CA-16.
-- [x] **T08** 🧪 · Registro del alumno: `GET /api/s/:id`, `POST /api/s/:id/checkin`.
-  - Tests: código actual → `201` · código anterior → `201` · código de hace dos ventanas → `422` con el texto de la spec · nombre vacío → `400` · mismo nombre normalizado → `200 {already: true}` y no se duplica · `<b>Ana</b>` se devuelve literal · sesión inexistente → `404`.
+- [ ] **T08** 🧪 · `GET/POST /api/s/<id>/…` check-in.
+  - Tests: código actual/anterior → `201` · viejo → `422` · vacío → `400` · duplicado → `already` · HTML literal · `404`.
   - *Cubre:* CA-04, CA-05, CA-06, CA-07, CA-08, CA-12.
-- [x] **T09** 🧪 · Vista del profesor: `GET /api/sessions/:id`.
-  - Tests: trae `code`, `secondsLeft`, `studentUrl`, la lista ordenada por hora y el `total` · tras un registro nuevo, la siguiente llamada lo incluye.
+- [ ] **T09** 🧪 · `GET /api/sessions/<id>`.
+  - Tests: `code`, `secondsLeft`, `studentUrl`, lista, `total` · nuevo registro visible en la siguiente llamada.
   - *Cubre:* CA-10, CA-11.
-- [x] **T10** 🧪 · Cerrar sesión: `POST /api/sessions/:id/close`.
-  - Tests: tras cerrar, `GET` no trae `code` y `open: false` · un registro → `409` con el texto de la spec.
+- [ ] **T10** 🧪 · `POST …/close`.
+  - Tests: cerrada sin `code` · check-in → `409`.
   - *Cubre:* CA-09, CA-13.
-- [x] **T11** 🧪 · Exportar: `GET /api/sessions/:id/export`.
-  - Tests: `Content-Type: text/csv` · nombre de archivo en `Content-Disposition` · contenido con los alumnos en orden.
+- [ ] **T11** 🧪 · `GET …/export`.
+  - Tests: CSV, cabeceras, orden.
   - *Cubre:* CA-14.
-- [x] **T12** · Bloque `if __name__ == "__main__":` en `app.py`: crea `data/` si no existe, obtiene el token, imprime `Panel del profesor: http://localhost:8000/profesor.html#t=<token>` y arranca en `PORT` o `8000`.
-  - *Hecha cuando:* `python app.py` muestra la URL y `curl` a una ruta privada con ese token responde `200`.
+- [ ] **T12** · Arranque `python app.py`: crea `data/`, imprime panel, escucha `PORT` o `8000` en `127.0.0.1`.
+  - *Hecha cuando:* la URL del panel responde `200` a una ruta privada con el token.
 
-## Fase D2 · Acceso desde casa (spec v1.1, plan §2.10)
+## Fase D2 · Acceso desde casa (plan §2.10)
 
-- [x] **T13** 🧪 · `ProxyFix` en `create_app()` para que Flask use la dirección pública que le pasa el túnel.
-  - Tests en `test_api.py`: con `X-Forwarded-Proto: https` y `X-Forwarded-Host: abc.trycloudflare.com`, `studentUrl` es `https://abc.trycloudflare.com/alumno.html?s=<id>`.
+- [ ] **T13** 🧪 · `ProxyFix` para URL pública del túnel.
+  - Tests: con `X-Forwarded-Proto/Host`, `studentUrl` es `https://…`.
   - *Cubre:* CA-19.
-- [x] **T14** 🧪 · `asistencia/tunnel.py` + opción `python app.py --tunel`.
-  - Instalar `cloudflared` (`brew install cloudflared`).
-  - Tests en `tests/test_tunnel.py`: `find_tunnel_url` encuentra la URL en una línea real de la salida de `cloudflared` y devuelve `None` en las demás.
-  - `start_tunnel(port)` lanza `cloudflared`, espera la URL (máx. 30 s) y devuelve `(proceso, url)`; si falla, mensaje claro en español (p. ej. "No se encontró cloudflared. Instálalo con: brew install cloudflared").
-  - `app.py`: escucha en `127.0.0.1`; con `--tunel` imprime el enlace público del panel y al salir para el túnel.
-  - *Hecha cuando:* `python app.py --tunel` imprime un enlace del panel con `https://….trycloudflare.com` y `curl` a esa URL pública responde.
+- [ ] **T14** 🧪 · `asistencia/tunnel.py` + `python app.py --tunel`.
+  - Instalar `cloudflared` (macOS: `brew`; Windows: instalador oficial).
+  - Tests en `test_tunnel.py` para `find_tunnel_url`.
+  - Mensajes de error en español si falta el binario o no sale la URL.
   - *Cubre:* CA-19, CA-20.
-
-- [x] **T14b** 🧪 · Comprobar que el puerto está libre antes de arrancar (incidencia en T12: un servidor de prueba olvidado seguía ocupando el puerto 8000).
-  - Tests en `tests/test_port.py`: `port_in_use(port)` es `True` con un socket escuchando y `False` al cerrarlo.
-  - `main()`: si está ocupado, mensaje "El puerto 8000 ya está en uso…" y salir **antes** de abrir el túnel.
+- [ ] **T14b** 🧪 · `port_in_use` antes de arrancar (y antes del túnel).
+  - Tests en `test_port.py`. Mensaje claro si el puerto está ocupado.
 
 ## Fase E · Interfaz
 
-- [x] **T15** · `static/styles.css` (móvil primero, contraste, foco visible) y `static/index.html` ("Pide el enlace a tu profesor").
+- [ ] **T15** · `static/styles.css` + `index.html`.
   - *Cubre:* CA-18 (base).
-- [x] **T16** · `static/alumno.html` + `alumno.js`: muestra el título de la clase, campos *Nombre* y *Código* (`inputmode="numeric"`), recuerda el nombre en `localStorage` y muestra la confirmación o el error de la API. Si la sesión está cerrada, lo dice sin mostrar el formulario.
-  - *Cubre:* CA-04 a CA-09 (interfaz).
-- [x] **T17** · `static/profesor.html` + `profesor.js`, **panel**: lee el token del `#t=`; formulario "Abrir asistencia"; lista de sesiones anteriores con botón "Descargar lista". Sin token o con token incorrecto → mensaje claro. Si la página está en `localhost`/`127.0.0.1`, aviso de que los alumnos no podrán entrar y cómo arrancar con `--tunel`.
-  - *Cubre:* CA-01, CA-02, CA-14, CA-16, CA-21 (interfaz).
-- [x] **T18** · `profesor.js`, **vista de sesión**: código grande con cuenta atrás, botón "Copiar enlace de alumnos", lista en vivo (consulta cada 2 s) con total, "Cerrar asistencia" con confirmación dentro de la página y "Descargar lista". Todo el texto del alumnado se pinta con `textContent`.
-  - *Cubre:* CA-03, CA-10, CA-11, CA-12, CA-13 (interfaz).
+- [ ] **T16** · `alumno.html` / `alumno.js` (nombre, código, localStorage del nombre, errores, sesión cerrada).
+  - *Cubre:* CA-04…CA-09 (UI).
+- [ ] **T17** · `profesor.html` / panel: token `#t=`, abrir sesión, historial, descarga, aviso localhost → `--tunel`.
+  - *Cubre:* CA-01, CA-02, CA-14, CA-16, CA-21 (UI).
+- [ ] **T18** · Vista de sesión: código grande, countdown, copiar enlace, polling 2 s, cerrar con confirmación, `textContent`.
+  - *Cubre:* CA-03, CA-10, CA-11, CA-12, CA-13 (UI).
 
 ## Fase F · Cierre
 
-- [x] **T19** · `README.md`: qué es, cómo preparar el entorno (`.venv` + `requirements.txt`), cómo instalar `cloudflared`, cómo arrancar (`python app.py --tunel` para clase online), cómo pasar lista paso a paso, cómo ejecutar los tests.
-- [x] **T20** · **Verificación manual** (en dos navegadores o navegador + móvil):
-  - [x] CA-03 · el código cambia solo cada 30 s. *(Chrome automatizado, 2026-10-20: cambió sin recargar y la cuenta atrás volvió a 30 s.)*
-  - [x] CA-10 · un alumno aparece en la lista del profesor en ≤ 5 s. *(Chrome automatizado: 0,5 s.)*
-  - [x] CA-12 · `<b>Ana</b>` se ve literal en la lista. *(Captura a 400 px.)*
-  - [x] CA-18 · todas las pantallas se ven bien a 400 px. *(Emulación móvil de Chrome: 6 páginas sin scroll horizontal.)*
-  - [x] CA-19 · con `--tunel`, un móvil **con datos móviles (sin Wi-Fi)** abre el enlace de alumnos y se registra. *(Victor, 2026-10-20: registro correcto desde su móvil con datos móviles.)*
-  - [x] CA-20 · el enlace del panel que imprime `--tunel` funciona tal cual, sin retocarlo. *(Victor, 2026-10-20: el panel se abre directamente.)*
-  - [x] CA-21 · abrir el panel en `localhost` muestra el aviso. *(Capturas.)*
-  - [x] El CSV descargado se abre bien en Excel o Google Sheets, con tildes. *(Victor, 2026-10-20: dos columnas y tildes correctas.)*
-- [x] **T21** · Repasar la **Definición de terminado** (`AGENT.md` §6) y actualizar el estado en `AGENT.md` §7.
+- [ ] **T19** · `README.md`: entorno, túnel, arranque, pasar lista, tests. Rutas `staff/raul-santamaria/asistenciapp/`.
+- [ ] **T20** · Verificación manual (dos navegadores o navegador + móvil):
+  - [ ] CA-03 · el código rota cada 30 s.
+  - [ ] CA-10 · alumno en lista ≤ 5 s.
+  - [ ] CA-12 · HTML literal en lista.
+  - [ ] CA-18 · usable a ~400 px.
+  - [ ] CA-19 · `--tunel` + registro desde otra red.
+  - [ ] CA-20 · enlace del panel sin retocar.
+  - [ ] CA-21 · aviso en localhost.
+  - [ ] CSV abre bien con tildes.
+- [ ] **T21** · Repasar definición de terminado (`AGENT.md` §6) y actualizar estado en `AGENT.md` §7.
 
-## Fase G · Ampliación v1.2: un registro por navegador + quitar registros
+## Fase G · Un registro por navegador + quitar (spec v1.2)
 
-- [x] **T22** 🧪 · Quitar registros en el servidor: `db.remove_checkin`, ruta `DELETE /api/sessions/<id>/checkins/<checkinId>` e `id` en cada registro de `GET /api/sessions/<id>`.
-  - Tests en `test_api.py`: quitar → desaparece de la lista, del total y del CSV · id inexistente o de **otra** sesión → `404` · sin token → `401` · también funciona con la sesión cerrada · tras quitar, el mismo nombre puede registrarse otra vez (`201`).
+- [ ] **T22** 🧪 · `remove_checkin` + `DELETE …/checkins/<id>` + `id` en listado.
+  - Tests: desaparece de lista/total/CSV · `404`/`401` · sesión cerrada · re-registro tras quitar.
   - *Cubre:* CA-24, CA-25, CA-26.
-- [x] **T23** · `profesor.js`: botón "Quitar" en cada fila con confirmación dentro de la página (`[Sí, quitar] [Cancelar]`), que sobrevive al repintado cada 2 s.
-  - *Cubre:* CA-24 (interfaz).
-- [x] **T24** · `alumno.js`: guardar la marca `asistenciapp.registro.<idSesión>` tras registrarse; al abrir la página, si existe, mostrar "Ya te registraste en esta clase como *Nombre* a las HH:MM." sin formulario.
-  - *Cubre:* CA-22, CA-23.
-- [x] **T25** · Verificación y cierre:
-  - [x] Chrome automatizado: CA-22 (recargar → bloqueado), CA-23 (otra clase → formulario), CA-24 (cancelar no cambia nada; confirmar quita, y la confirmación no desaparece con el repintado). *(2026-10-20: 12 comprobaciones OK, incluida la confirmación tras 4,5 s de polling con un alumno nuevo llegando.)*
-  - [x] Capturas a 400 px de la lista con botones "Quitar" y de la confirmación (CA-18). *(Sin scroll horizontal.)*
-  - [x] `README.md`: explicar el límite por navegador y cómo quitar registros.
-  - [x] Victor lo prueba con su móvil (registrarse dos veces con nombres distintos → bloqueado) y quita un registro desde el panel. *(Victor, 2026-10-20: pasos 1–5 correctos.)*
+- [ ] **T23** · Botón "Quitar" con confirmación que sobrevive al polling.
+  - *Cubre:* CA-24 (UI).
+- [ ] **T24** · Marca en `localStorage` por sesión; mensaje sin formulario (CA-22, CA-23).
+- [ ] **T25** · Verificación y cierre:
+  - [ ] CA-22, CA-23, CA-24 en navegador.
+  - [ ] Capturas ~400 px con "Quitar".
+  - [ ] README: límite por navegador y cómo quitar.
+  - [ ] Prueba en móvil: segundo nombre bloqueado; quitar desde el panel.
