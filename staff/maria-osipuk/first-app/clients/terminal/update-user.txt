@@ -1,0 +1,1 @@
+node --input-type=module -e "import { updateUser } from './logic/update-user.js'; console.log(updateUser(1, { name: 'Carlos Lovelace', email: 'carlos@example.com' }))"

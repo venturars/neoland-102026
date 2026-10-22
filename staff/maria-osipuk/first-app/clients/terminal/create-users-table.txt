@@ -1,0 +1,1 @@
+node --input-type=module -e "import { createUsersTable } from './queries/users.js'; createUsersTable(); console.log('users table ready');"
