@@ -63,3 +63,13 @@ Revisión documental del recorrido, sin ejecutar los cambios propuestos: un pedi
 Esta revisión y las comprobaciones de conservación no son una prueba de seguimiento por otro agente: **no se ejecutó una sesión nueva de IA**. La revisión final de Miguel sigue pendiente.
 
 Se eliminaron la copia desechable, sus bases de prueba, las capturas y los resultados temporales. Se conserva únicamente el `.venv` autorizado. Sin comandos Git, cambios en código, README, requisitos, configuración o documentos 001. No se iniciaron 003–005.
+
+## Aclaración de calidad aprobada · 2026-10-22
+
+Miguel autorizó corregir la discrepancia entre §5 y la verificación documental de 002. La aprobación cubre CA-09, su plan y esta tarea adicional.
+
+- [x] **T10 · Alinear la verificación documental.** Añadir CA-09 y su comprobación al plan; enmendar §5 a versión 2.3, conservando 2.2 e historial anterior. Resultado: revisión documental permitida solo para cambios exclusivamente documentales o de instrucciones, con procedimiento y evidencia por criterio; pruebas automatizadas de comportamiento intactas.
+
+Comprobación de CA-09: lectura comparada de constitución §5, plan (enmienda, matriz y comprobación constitucional) y evidencia de T06–T08. La excepción está acotada y no atribuye seguimiento efectivo a otra sesión de IA. Las filas históricas 1.0–2.2 y todos los archivos fuera de los cuatro documentos de esta aclaración se compararon automáticamente antes y después: idénticos.
+
+No se repitió pytest para esta aclaración exclusivamente documental: se conservan los 77 resultados anteriores como evidencia de aquella ejecución, sin presentarlos como pruebas de esta nueva regla. No se ejecutó una sesión nueva de IA. La revisión final de Miguel sigue pendiente. Estos cambios pertenecen a 002 / PR #220, no a 003.
