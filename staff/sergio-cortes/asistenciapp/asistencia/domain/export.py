@@ -1,13 +1,13 @@
 """Exportación de la lista de asistencia a CSV (plan §2.6, CA-14).
 
-Se llama export.py y no csv.py para no tapar el módulo `csv` estándar.
+Módulo `export` y no `csv` para no tapar el módulo `csv` estándar.
 """
 
 import csv
 import io
 from datetime import datetime
 
-BOM = "﻿"
+BOM = "\ufeff"
 FORMULA_PREFIXES = ("=", "+", "-", "@")
 
 
