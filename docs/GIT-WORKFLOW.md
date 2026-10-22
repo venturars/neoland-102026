@@ -20,7 +20,7 @@ Puede pedir un momento o el camino entero. Antes de actuar, el agente enseña lo
 
 El alumno explica la tarea que va a hacer, o pide dejarla apuntada.
 
-El agente usa la skill `docs/skills/create-issue/SKILL.md`. No abre `SKILL.md` ni `MCP.md`. Rellena `.github/issue_template.md` y lanza `scripts/new-issue.sh`. Enseña la persona asignada y el título, y espera el sí. El título va en inglés y tiene menos de 72 caracteres. La descripción va en español y tiene dos partes: qué hay que hacer y cómo lo prueba un compañero en su ordenador. Con el sí, el script crea la issue. La respuesta incluye la persona asignada, el número, el título y la URL.
+El agente usa la skill `docs/skills/create-issue/SKILL.md`. No abre `SKILL.md` ni `MCP.md`. Si lo que dijo el alumno admite dos tareas, pregunta cuál es y espera. Rellena `.github/issue_template.md` y lanza `scripts/new-issue.sh`. El título va en inglés y tiene menos de 72 caracteres. La descripción va en español y tiene dos partes: qué hay que hacer y cómo se comprueba esa misma tarea. Antes del sí, enseña la persona asignada, el título y las dos secciones. Con el sí, el script crea la issue. La respuesta incluye la persona asignada, el número, el título y la URL.
 
 Si el alumno quiere pensar la tarea antes de dejarla escrita, el agente usa la skill `grill-me`. Es opcional. La issue aparece cuando el alumno pide dejarla escrita.
 
@@ -84,7 +84,7 @@ El agente pide la revisión otra vez. El merge espera 2 Approve hechos después 
 
 El agente traduce lo que el alumno pide a un momento del camino. Antes de actuar, enseña los datos y espera el sí.
 
-- **Dejar la tarea escrita.** Skill `docs/skills/create-issue/SKILL.md`. No abre `SKILL.md` ni `MCP.md`. Enseña la persona asignada y el título, y espera el sí. Con el sí, `scripts/new-issue.sh` crea la issue.
+- **Dejar la tarea escrita.** Skill `docs/skills/create-issue/SKILL.md`. No abre `SKILL.md` ni `MCP.md`. Si lo que dijo admite dos tareas, pregunta y espera. Enseña la persona asignada, el título y las dos secciones, y espera el sí. Con el sí, `scripts/new-issue.sh` crea la issue.
 - **Empezar a trabajar.** Enseña el nombre de la rama, la base `staging` y el mensaje `chore: open #<número>`. Hace el commit vacío, lo sube y abre la pull request en draft.
 - **Abrir la pull request**, si al empezar no quedó abierta. Skill `create-github-pull-request-from-specification`. Enseña título, rama, destino `staging`, `Closes #<número>` y persona asignada. Si la rama ya tiene pull request, actualiza esa.
 - **Guardar un trozo.** Skill `git-commit`. Enseña el mensaje y los ficheros. Después hace el commit y el push.
