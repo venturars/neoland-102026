@@ -24,7 +24,7 @@ La sección 2 pasa a llamarse **Activar el entorno**. Debajo se quedan la frase 
 
 Ese bloque no lleva el título «Arrancar la app».
 
-La ruta `staff/victor-chang/asistenciapp` no se toca. Está fuera de alcance.
+La ruta para entrar en la carpeta no se toca. Está fuera de alcance.
 
 ### 2.2 «Arrancar la app» queda en la sección siguiente (CA-02, CA-03)
 
@@ -58,7 +58,7 @@ En problemas frecuentes, la frase del puerto ocupado dice «ciérrala (sección 
 | CA-01 | El bloque con `cd` y `source .venv/bin/activate` está bajo «Activar el entorno» y no bajo «Arrancar la app» |
 | CA-02 | Bajo «Arrancar la app» solo están `python app.py --tunel` y `python app.py`, más el texto de lo que se ve al arrancar |
 | CA-03 | Bajo «Arrancar la app» no aparece `source .venv/bin/activate` |
-| CA-04 | El diff del README, fuera de los dos títulos y de «sección 4» → «sección 5», no cambia frases de preparar el entorno, pasar lista, cerrar, problemas, tests ni privacidad. La ruta `staff/victor-chang/asistenciapp` sigue igual |
+| CA-04 | El diff del README, fuera de los dos títulos y de «sección 4» → «sección 5», no cambia frases de preparar el entorno, pasar lista, cerrar, problemas, tests ni privacidad. La ruta para entrar en la carpeta sigue igual |
 
 `pytest` se lanza una vez al terminar, para confirmar que el código no se ha tocado. No hay un test nuevo: la constitución §5 admite la verificación manual cuando el criterio no es un comportamiento de la app.
 

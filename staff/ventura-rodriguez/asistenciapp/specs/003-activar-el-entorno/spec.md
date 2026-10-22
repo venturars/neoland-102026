@@ -48,7 +48,7 @@ Formato: **Dado** (situación inicial) · **Cuando** (acción) · **Entonces** (
 
 ## 5. Fuera de alcance
 
-- Las rutas del README que todavía dicen `staff/victor-chang/asistenciapp/`.
+- Las rutas del README que todavía nombran una carpeta personal.
 - El comportamiento de la app al arrancar, en clase o en local.
 - Cualquier otro título del README que no sea el de este paso.
 
