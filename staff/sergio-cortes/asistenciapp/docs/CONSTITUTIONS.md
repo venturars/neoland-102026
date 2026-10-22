@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 2.2 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-22
+> Versión 2.3 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-22
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -56,6 +56,11 @@ Interfaz, mensajes de error, documentación y especificaciones se escriben en es
 
 Cambiar el stack requiere enmendar esta constitución.
 
+### 3.1 Organización del código del servidor
+
+- El código Python del servidor sigue las capas y la regla de dependencias descritas en `docs/ARCHITECTURE.md`.
+- La lógica de negocio vive en dominio y casos de uso; Flask y SQLite son adaptadores, no el núcleo (P2: no añadir capas vacías).
+
 ---
 
 ## 4. Desarrollo guiado por especificaciones (SDD)
@@ -105,3 +110,4 @@ Cambiar el stack requiere enmendar esta constitución.
 | 2.0 | 2026-10-20 | §3: stack Node.js → Python (Flask + pytest). P3 pasa de "cero dependencias" a "dependencias mínimas" y permite Flask y pytest | Requisito nuevo: el proyecto debe hacerse en Python. Se elige Flask por ser simple y muy extendido, y pytest por su sintaxis sencilla |
 | 2.1 | 2026-10-20 | P4: distingue *almacenar* (solo en local) de *transitar* (puede pasar cifrado por un proveedor de túnel) | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08) |
 | 2.2 | 2026-10-22 | §4: ningún fichero de la app sin spec aprobado; issue, rama y pull request no sustituyen al spec. §7: carpeta `staff/sergio-cortes/asistenciapp/`. §8: aprueba quien trabaja en esa carpeta | El texto solo frenaba el código; README y tests podían cambiarse sin spec. Las reglas nombraban otra carpeta (spec 002, issue #228) |
+| 2.3 | 2026-10-22 | §3.1: organización en capas documentada en `docs/ARCHITECTURE.md` | Issue #239; alinear gobernanza y código sin cambiar el stack (spec 005) |
