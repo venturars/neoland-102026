@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 2.2 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-22
+> Versión 2.3 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-22
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -55,12 +55,15 @@ Interfaz, mensajes de error, documentación y especificaciones se escriben en es
 | Capa          | Tecnología                                                                        |
 | ------------- | --------------------------------------------------------------------------------- |
 | Runtime       | Python 3.13+, en un entorno virtual `.venv/` (no se sube a git)                   |
-| Servidor      | Flask                                                                             |
-| Base de datos | SQLite vía `sqlite3` (biblioteca estándar), archivo en `data/` (no se sube a git) |
+| Servidor      | Flask, entrada en `app.py`                                                        |
+| Reglas        | `asistencia/domain/`                                                              |
+| Acciones      | `asistencia/usecases/`                                                            |
+| Guardado      | `asistencia/storage/` con `sqlite3`, archivo en `data/` (no se sube a git)        |
+| Documentos    | `docs/` (esta constitución y `docs/ARCHITECTURE.md`)                              |
 | Frontend      | HTML + CSS + JavaScript sin frameworks, servidos desde `static/`                  |
 | Tests         | `pytest`                                                                          |
 
-Cambiar el stack requiere enmendar esta constitución.
+El detalle de cómo se relacionan esas carpetas está en `docs/ARCHITECTURE.md`. Cambiar el stack requiere enmendar esta constitución.
 
 ---
 
@@ -111,3 +114,4 @@ Cambiar el stack requiere enmendar esta constitución.
 | 2.0     | 2026-10-20 | §3: stack Node.js → Python (Flask + pytest). P3 pasa de "cero dependencias" a "dependencias mínimas" y permite Flask y pytest                                                                                                           | Requisito nuevo: el proyecto debe hacerse en Python. Se elige Flask por ser simple y muy extendido, y pytest por su sintaxis sencilla                                         |
 | 2.1     | 2026-10-20 | P4: distingue _almacenar_ (solo en local) de _transitar_ (puede pasar cifrado por un proveedor de túnel)                                                                                                                                | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08)                                                    |
 | 2.2     | 2026-10-22 | §4: ningún fichero de la app se modifica sin spec aprobado; una issue, una rama o una pull request no sustituyen al spec. §7: la carpeta es `staff/ventura-rodriguez/asistenciapp/`. §8: aprueba la persona que trabaja en esta carpeta | El texto solo frenaba el código de una funcionalidad, así que un cambio de README se escribía sin spec. Las reglas seguían nombrando otra carpeta y a otra persona (spec 002) |
+| 2.3     | 2026-10-22 | §3: el código se reparte en `docs/`, `asistencia/domain/`, `asistencia/usecases/`, `asistencia/storage/` y `app.py`. El archivo sigue en `data/` y las pantallas en `static/` | La organización de archivos y carpetas cambió. El propósito, la privacidad y las reglas de pasar lista siguen (spec 005) |
