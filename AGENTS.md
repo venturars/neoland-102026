@@ -24,6 +24,6 @@ El agente traduce eso a un momento del camino. Si la petición cabe en dos momen
 
 El camino de git está en `docs/GIT-WORKFLOW.md`. Va antes que el `AGENTS.md` de una app.
 
-Si el alumno explica una funcionalidad («quiero agregar…», «va a ser…»), aunque nombre una app, el momento es dejar la tarea escrita. Lee solo `docs/skills/create-issue/SKILL.md`. En ese momento no abras `SKILL.md` ni `MCP.md`. Si lo que dijo admite dos tareas, pregunta cuál es y espera. Enseña la persona asignada, el título y las dos secciones, y espera el sí. En ese momento no escribe la spec de la app.
+Si el alumno explica una funcionalidad («quiero agregar…», «va a ser…»), aunque nombre una app, el momento es dejar la tarea escrita. Lee solo `docs/skills/create-issue/SKILL.md`. En ese momento no abras `SKILL.md` ni `MCP.md`. Si lo que dijo admite dos tareas, pregunta cuál es y espera. Enseña la persona asignada y el título, y espera el sí. No enseñes la descripción. En ese momento no escribe la spec de la app.
 
 El `AGENTS.md` de la app dice cómo se construye esa app. Se usa cuando el momento ya es hacer el cambio en la rama. No sustituye la issue, la rama ni la pull request.
