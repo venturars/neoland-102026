@@ -2,7 +2,7 @@
 
 Una tarea es una issue, una rama y una pull request. Sale de `staging` y vuelve a `staging`. `main` queda fuera de este flujo.
 
-La issue, la pull request y los mensajes de commit van en inglés. Los commits siguen la skill `git-commit`. Las skills están en `SKILL.md`, en la raíz. Cómo instalarlas está en el `README.md`.
+El título de la issue, la pull request y los mensajes de commit van en inglés. La descripción de la issue va en español. Los commits siguen la skill `git-commit`. Las skills están en `SKILL.md`, en la raíz, salvo dejar la tarea escrita, que está en `docs/skills/create-issue/SKILL.md`. Cómo instalarlas está en el `README.md`.
 
 ## Cómo se pide
 
@@ -20,7 +20,7 @@ Puede pedir un momento o el camino entero. Antes de actuar, el agente enseña lo
 
 El alumno explica la tarea que va a hacer, o pide dejarla apuntada.
 
-El agente usa la skill `github-issues`. Enseña el título, el autor, la persona asignada y la descripción. El autor y la persona asignada son el alumno. El título tiene menos de 72 caracteres. La descripción tiene dos partes, en inglés: qué hay que hacer y cómo lo prueba un compañero en su ordenador.
+El agente usa la skill `docs/skills/create-issue/SKILL.md`. No abre `SKILL.md` ni `MCP.md`. Si lo que dijo el alumno admite dos tareas, pregunta cuál es y espera. Rellena `.github/issue_template.md` y lanza `scripts/new-issue.sh`. El título va en inglés y tiene menos de 72 caracteres. La descripción va en español y tiene dos partes: qué hay que hacer y cómo se comprueba esa misma tarea. Antes del sí, enseña la persona asignada y el título. No enseñes la descripción. Con el sí, el script crea la issue. La respuesta incluye la persona asignada, el número, el título y la URL.
 
 Si el alumno quiere pensar la tarea antes de dejarla escrita, el agente usa la skill `grill-me`. Es opcional. La issue aparece cuando el alumno pide dejarla escrita.
 
@@ -84,7 +84,7 @@ El agente pide la revisión otra vez. El merge espera 2 Approve hechos después 
 
 El agente traduce lo que el alumno pide a un momento del camino. Antes de actuar, enseña los datos y espera el sí.
 
-- **Dejar la tarea escrita.** Skill `github-issues`. Enseña título, autor, persona asignada y cuerpo.
+- **Dejar la tarea escrita.** Skill `docs/skills/create-issue/SKILL.md`. No abre `SKILL.md` ni `MCP.md`. Si lo que dijo admite dos tareas, pregunta y espera. Enseña la persona asignada y el título, y espera el sí. No enseñes la descripción. Con el sí, `scripts/new-issue.sh` crea la issue.
 - **Empezar a trabajar.** Enseña el nombre de la rama, la base `staging` y el mensaje `chore: open #<número>`. Hace el commit vacío, lo sube y abre la pull request en draft.
 - **Abrir la pull request**, si al empezar no quedó abierta. Skill `create-github-pull-request-from-specification`. Enseña título, rama, destino `staging`, `Closes #<número>` y persona asignada. Si la rama ya tiene pull request, actualiza esa.
 - **Guardar un trozo.** Skill `git-commit`. Enseña el mensaje y los ficheros. Después hace el commit y el push.
@@ -94,7 +94,7 @@ El agente traduce lo que el alumno pide a un momento del camino. Antes de actuar
 
 La tarea la explica el alumno. El agente redacta con eso. La pull request nace en draft: pasa a lista cuando el alumno quiere que la miren. La issue la cierra GitHub al mergear, por `Closes`. Cada momento espera el sí.
 
-Las lecturas de GitHub pueden usar el MCP descrito en `MCP.md`. Las escrituras van con `gh` y la cuenta del alumno, para que el autor sea el alumno.
+Las lecturas de GitHub, fuera de dejar la tarea escrita, pueden usar el MCP descrito en `MCP.md`. Las escrituras van con `gh` y la cuenta del alumno, para que el autor sea el alumno. Dejar la tarea escrita no abre `MCP.md`: el alta la hace `scripts/new-issue.sh`.
 
 ## El nombre de la rama
 
