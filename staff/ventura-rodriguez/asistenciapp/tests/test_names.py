@@ -1,8 +1,8 @@
-"""Tests de asistencia/names.py · CA-07, CA-08, CA-12."""
+"""Tests de asistencia/domain/names.py · CA-07, CA-08, CA-12."""
 
 import pytest
 
-from asistencia.names import MAX_LENGTH, clean_name, name_key
+from asistencia.domain.names import MAX_LENGTH, clean_name, name_key
 
 
 def test_strips_surrounding_spaces():

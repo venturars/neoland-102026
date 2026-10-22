@@ -4,7 +4,7 @@ Pasa lista en una clase online (Discord, Google Meet o cualquier otra plataforma
 
 El profesor abre una sesión y comparte en la llamada un **código de 4 cifras** que cambia cada 30 segundos. Los alumnos abren un enlace, escriben su nombre y el código, y aparecen al momento en la lista del profesor. Al final de la clase, la lista se descarga para Excel o Google Sheets.
 
-> Proyecto hecho con _Spec-Driven Development_. Las reglas están en [CONSTITUTION.md](CONSTITUTION.md), el manual para agentes de IA en [AGENT.md](AGENT.md) y la especificación en [specs/001-checkin-codigo/](specs/001-checkin-codigo/spec.md).
+> Proyecto hecho con _Spec-Driven Development_. Las reglas están en [CONSTITUTION.md](docs/CONSTITUTION.md), el manual para agentes de IA en [AGENTS.md](AGENTS.md) y la especificación en [specs/001-checkin-codigo/](specs/001-checkin-codigo/spec.md).
 
 ---
 
