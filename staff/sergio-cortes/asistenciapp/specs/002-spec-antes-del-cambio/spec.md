@@ -1,0 +1,78 @@
+# Spec 002 · Spec antes de tocar la app
+
+> Estado: **Implementada** (2026-10-22) · Creada: 2026-10-22 · Aprobada: 2026-10-22
+
+---
+
+## 1. Problema
+
+Quien pide un cambio en esta copia de AsistenciApp y el agente lo escribe enseguida. Las reglas solo frenan el código de una funcionalidad nueva. Un cambio del README, de los tests o de otra documentación de uso cabe fuera de esa frase, así que se hace sin un spec aprobado.
+
+La issue, la rama y la pull request del bootcamp dejan la tarea apuntada. No dicen qué hay que cumplir ni sustituyen al spec de la app. Las reglas, además, siguen nombrando otra carpeta del repositorio y a otra persona, así que no reflejan dónde vive este proyecto ni quién debe dar el ok en cada fase del desarrollo guiado por especificaciones.
+
+---
+
+## 2. Usuarios
+
+| Usuario | Qué quiere |
+| --- | --- |
+| **Quien trabaja en esta carpeta** | Que ningún cambio en la app se escriba sin un spec aprobado que lo cubra. |
+| **Quien trabaja en `staff/ventura-rodriguez/asistenciapp/`** | Decidir el qué de un cambio y dar el ok en cada fase antes de que se escriba el plan, las tasks o el cambio. |
+| **Agente** | Saber cuál es el único fichero que puede crear al empezar un cambio, y cuándo tiene que parar. |
+
+---
+
+## 3. Historias de usuario
+
+- **HU-01**: Como persona que trabaja en esta carpeta, quiero que un cambio de la app no se escriba hasta que haya un spec aprobado que lo cubra, para que el qué quede decidido antes del cambio.
+- **HU-02**: Como persona que trabaja en `staff/ventura-rodriguez/asistenciapp/`, quiero que al empezar un cambio el agente solo escriba el spec y espere mi ok, para poder corregirlo antes del plan y de la implementación.
+- **HU-03**: Como persona que trabaja en `staff/ventura-rodriguez/asistenciapp/`, quiero que un pedido que no cabe en la spec activa abra una spec nueva, para no mezclarlo con una spec ya terminada.
+- **HU-04**: Como persona que trabaja en esta carpeta, quiero que una issue, una rama o una pull request no cuenten como spec, para que el camino de git no se salte esta puerta.
+- **HU-05**: Como persona que trabaja en esta carpeta, quiero que las reglas nombren esta carpeta como alcance del proyecto y digan que quien aprueba cada fase trabaja en `staff/ventura-rodriguez/asistenciapp/`, para que la parada sea clara y no apunte a otro árbol del repositorio.
+
+---
+
+## 4. Criterios de aceptación
+
+Formato: **Dado** (situación inicial) · **Cuando** (acción) · **Entonces** (resultado esperado).
+
+### Antes de escribir (HU-01, HU-02)
+
+- **CA-01**: **Dado** un pedido de cambiar el código, los tests, el README u otra documentación de uso, **cuando** todavía no hay un spec aprobado que lo cubra, **entonces** ese fichero no se modifica y lo primero que se escribe es el spec.
+- **CA-02**: **Dado** un spec recién escrito para ese pedido, **cuando** el agente termina de escribirlo, **entonces** lo enseña y espera el ok de quien trabaja en `staff/ventura-rodriguez/asistenciapp/`. No escribe el plan, las tasks ni el cambio.
+
+### El orden (HU-02, HU-03)
+
+- **CA-03**: **Dado** el ok al spec, **cuando** se sigue con el cambio, **entonces** el orden es plan, luego tasks, luego el cambio. No se salta ninguno.
+- **CA-04**: **Dado** un pedido que la spec activa no describe, **cuando** se empieza, **entonces** se abre otra spec y no se reutiliza `001-checkin-codigo`.
+
+### Qué no cuenta como spec (HU-04, HU-05)
+
+- **CA-05**: **Dado** una issue, una rama o una pull request que describen el cambio, **cuando** aún no hay un spec aprobado, **entonces** esos tres no autorizan a modificar la app.
+- **CA-06**: **Dado** la constitución y el manual del agente, **entonces** nombran `staff/sergio-cortes/asistenciapp/` como alcance del proyecto y dicen que quien aprueba cada fase es la persona que trabaja en `staff/ventura-rodriguez/asistenciapp/`.
+- **CA-07**: **Dado** el historial de la spec `001-checkin-codigo`, **entonces** los nombres y las fechas de quien la aprobó y la probó siguen como estaban.
+
+---
+
+## 5. Fuera de alcance (en esta spec)
+
+- Renombrar `AGENT.md` a `AGENTS.md` o mover la constitución a otra carpeta.
+- Añadir `ARCHITECTURE.md` o reorganizar el código por capas.
+- Cambiar el README de la app o el README personal en `staff/sergio-cortes/`.
+- Quitar referencias personales a Victor fuera de lo que toquen la constitución y el manual en esta enmienda.
+- El bot de Discord. Se queda como idea futura, sin número de spec.
+- Reescribir el historial de la spec `001-checkin-codigo`.
+
+---
+
+## 6. Preguntas abiertas
+
+Ninguna. El alcance, la carpeta del proyecto y quién aprueba cada fase quedaron decididos el 2026-10-22.
+
+---
+
+## 7. Historial de cambios
+
+| Versión | Fecha | Cambio | Motivo |
+| --- | --- | --- | --- |
+| 1.0 | 2026-10-22 | Versión inicial aprobada | Issue 215, fase 2: puerta spec antes de cualquier fichero de la app |
