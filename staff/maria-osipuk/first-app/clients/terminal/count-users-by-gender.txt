@@ -1,0 +1,1 @@
+node --input-type=module -e "import { countUsersByGender } from './logic/count-users-by-gender.js'; console.log(await countUsersByGender())"
