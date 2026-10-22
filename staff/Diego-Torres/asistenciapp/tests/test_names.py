@@ -2,7 +2,7 @@
 
 import pytest
 
-from asistencia.domain.names import MAX_LENGTH, clean_name, name_key
+from asistencia.names import MAX_LENGTH, clean_name, name_key
 
 
 def test_strips_surrounding_spaces():
