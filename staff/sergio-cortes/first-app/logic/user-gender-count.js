@@ -74,10 +74,11 @@ export async function usersGenderCount() {
   const genders = new Map();
 
   for (let index = 0; index < names.length; index += BATCH_SIZE) {
-    const batch = names.slice(index, index + BATCH_SIZE);
+    const batch = names.slice(index, index + BATCH_SIZE).join("\n");
+    console.log('batch', batch);
     const messages = [
       ...EXAMPLES,
-      { role: "user", content: batch.join("\n") },
+      { role: "user", content: batch },
     ];
 
     let completion;
@@ -107,6 +108,8 @@ export async function usersGenderCount() {
     ) {
       message = choice.message.content;
     }
+
+    console.log('message', message);
 
     if (typeof message !== "string" || message === "") {
       continue;
