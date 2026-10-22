@@ -134,4 +134,6 @@ Una funcionalidad está terminada cuando:
 
 | `002-spec-antes-del-cambio` | Implementada y verificada localmente (2026-10-22) | 93 tests pasan; spec 001 intacta |
 
+| `003-activar-el-entorno` | Implementada y verificada localmente (2026-10-22) | 97 tests pasan; aprobación humana final pendiente |
+
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
