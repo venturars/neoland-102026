@@ -33,7 +33,7 @@ En la constitución §4 se sustituye «no hay código sin especificación» por 
 - Constitución §7: el proyecto vive en `staff/ventura-rodriguez/asistenciapp/`.
 - Constitución §8: aprueba la persona que trabaja en esta carpeta.
 - En el manual, la ruta de los comandos y la regla «solo se edita dentro de…» usan esa misma carpeta.
-- Los «Victor» de las reglas vivas (aprobación de cada fase, commits, enmiendas y definición de terminado) pasan a ser esa misma persona.
+- Las menciones a una persona concreta en las reglas vivas (aprobación de cada fase, commits, enmiendas y definición de terminado) pasan a ser esa misma persona.
 
 La versión sube de 2.1 a 2.2: se añade una obligación y se corrige a quién y a qué carpeta se aplica. No se quita un principio. El historial de enmiendas gana una fila con fecha 2026-10-22 y el motivo.
 
@@ -57,7 +57,7 @@ No se modifica `specs/001-checkin-codigo/`. Su historial, y las menciones de qui
 | --- | --- |
 | CA-01, CA-02, CA-03, CA-05 | Constitución §4 y `AGENT.md` §2 y §2.4 |
 | CA-04 | `AGENT.md` §2.1 y la tabla del §7: `001-checkin-codigo` sigue terminada y esta spec tiene su propia fila |
-| CA-06 | Constitución §7 y §8; `AGENT.md` §4, §5 y §6. No queda `staff/victor-chang/asistenciapp/` en esos dos ficheros |
+| CA-06 | Constitución §7 y §8; `AGENT.md` §4, §5 y §6. No queda una carpeta personal en esos dos ficheros |
 | CA-07 | `git diff` de `specs/001-checkin-codigo/` vacío, y el README sin cambios en esta rama |
 
 ---
