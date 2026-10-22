@@ -6,6 +6,16 @@ first-app guarda usuarios. No es una web. Se usa desde la terminal, con Node.
 
 Se puede crear un usuario, listarlos, buscar uno, cambiarlo y borrarlo.
 
+También se pueden contar los usuarios ya guardados según el sexo que sugiere su nombre. El sexo lo decide una IA local, sin coste. El resultado solo se muestra. Es una lectura del nombre, no el sexo verificado de la persona. No se guarda el sexo ni otro campo.
+
+El resultado de ese recuento es un objeto con estos campos y ningún otro:
+
+- `women` — número entero. Cuántos nombres cuentan como mujer.
+- `men` — número entero. Cuántos nombres cuentan como hombre.
+- `undefinedUser` — número entero. Cuántos nombres cuentan como usuario indefinido.
+
+Usuario indefinido es el nombre que no es claramente de un solo sexo, o el caso en que la IA no elige mujer ni hombre. Si la IA no manda un mensaje, o la respuesta no trae un sexo por nombre, esos nombres cuentan como `undefinedUser`. Si no hay usuarios, los tres números son 0.
+
 Un usuario es un objeto con estos campos y ningún otro:
 
 - `id` — número entero. Lo escribe SQLite. El código no lo inventa.
@@ -120,6 +130,7 @@ Inglés y es uno de esta lista:
 | `Email is already used` | Ese email ya está en otra fila. |
 | `Invalid id` | El id no es un entero mayor o igual que 1. |
 | `User not found` | Se busca, se cambia o se borra un id que no está, o se busca un email que no está. |
+| `Could not classify the users` | La IA no responde al contar el sexo de los usuarios ya guardados. |
 
 El email se guarda en minúsculas. `validateEmail` le quita los espacios de los extremos y lo pasa a minúsculas antes de mirar la longitud y la `@`.
 
