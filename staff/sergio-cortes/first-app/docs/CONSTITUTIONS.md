@@ -27,6 +27,7 @@ first-app/
     delete-user.js
     find-user-by-id.js
     find-user-by-email.js
+    find-user-by-name.js
     list-users.js
   clients/
     terminal/
@@ -36,6 +37,7 @@ first-app/
       delete-user.txt
       find-user-by-id.txt
       find-user-by-email.txt
+      find-user-by-name.txt
       list-users.txt
 ```
 
@@ -83,11 +85,11 @@ Los ficheros de `logic/` no son un adaptador ni una capa intercambiable. No se s
 
 Un fichero, una función. El nombre, la entrada y la salida los define la firma. No hay un comentario de contrato encima de la función.
 
-El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `findUserById`, `findUserByEmail`, `listUsers`).
+El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `findUserById`, `findUserByEmail`, `findUserByName`, `listUsers`).
 
 Si la función usa varios datos, como `name`, `email` e `id`, recibe un solo `input` y lee ahí cada valor. Si el dato es uno solo, como `id`, `email` o `name`, el argumento es ese valor. No se mete en un objeto.
 
-`createUser(input)` lee `name` y `email`. `updateUser(input)` lee `id`, `name` y `email`. `deleteUser(id)` y `findUserById(id)` reciben el `id`. `findUserByEmail(email)` recibe el `email`. `listUsers()` no recibe argumentos.
+`createUser(input)` lee `name` y `email`. `updateUser(input)` lee `id`, `name` y `email`. `deleteUser(id)` y `findUserById(id)` reciben el `id`. `findUserByEmail(email)` recibe el `email`. `findUserByName(name)` recibe el `name`. `listUsers()` no recibe argumentos.
 
 Cada funcionalidad nueva añade su firma aquí y en el árbol, en el mismo desarrollo que crea su `logic/`, según el `plan.md`.
 
