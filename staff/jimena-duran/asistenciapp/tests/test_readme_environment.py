@@ -37,6 +37,9 @@ def test_activation_before_start():
 
 def test_only_planned_changes():
     data = (ROOT / "README.md").read_bytes()
+    # La spec 005 autoriza los dos enlaces a documentos reubicados.
+    data = data.replace(b"[CONSTITUTION.md](docs/CONSTITUTION.md)", b"[CONSTITUTION.md](CONSTITUTION.md)")
+    data = data.replace(b"[AGENTS.md](AGENTS.md)", b"[AGENT.md](AGENT.md)")
     # La spec 004 autoriza únicamente anonimizar las dos rutas del README.
     data = data.replace(b"staff/<usuario>/asistenciapp", b"staff/victor-chang/asistenciapp")
     assert data.count(b"### Arrancar la app") == 1

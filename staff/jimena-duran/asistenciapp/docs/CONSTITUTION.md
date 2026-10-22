@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 2.2 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-22
+> Versión 2.3 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-22
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -53,6 +53,11 @@ Interfaz, mensajes de error, documentación y especificaciones se escriben en es
 | Base de datos | SQLite vía `sqlite3` (biblioteca estándar), archivo en `data/` (no se sube a git) |
 | Frontend | HTML + CSS + JavaScript sin frameworks, servidos desde `static/` |
 | Tests | `pytest` |
+
+La organización es: docs/ para reglas y arquitectura, asistencia/domain/ para
+reglas del producto, asistencia/usecases/ para acciones, asistencia/storage/
+para SQLite y app.py para HTTP y arranque. static/ y data/ mantienen su función.
+El detalle está en [ARCHITECTURE.md](ARCHITECTURE.md).
 
 Cambiar el stack requiere enmendar esta constitución.
 
@@ -109,3 +114,5 @@ La spec describe qué y por qué, sin tecnologías; el plan explica cómo y comp
 | 2.1 | 2026-10-20 | P4: distingue *almacenar* (solo en local) de *transitar* (puede pasar cifrado por un proveedor de túnel) | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08) |
 
 | 2.2 | 2026-10-22 | §4: spec aprobada para todo cambio y puertas explícitas; §7: carpeta personal; §8: aprueba Jimena Durán | Aprobación de spec, plan y tareas de la 002 por Jimena Durán; no confundir Git con aprobación SDD |
+
+| 2.3 | 2026-10-22 | §3: documentos y separación domain/usecases/storage; guía AGENTS.md | Reorganización 005 autorizada por Jimena Durán, sin cambios de producto |

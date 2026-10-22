@@ -1,6 +1,6 @@
-# AGENT.md — Manual de trabajo para agentes de IA
+# AGENTS.md — Manual de trabajo para agentes de IA
 
-Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [CONSTITUTION.md](CONSTITUTION.md) dice **qué reglas** se cumplen; este archivo dice **cómo se trabaja** día a día.
+Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [docs/CONSTITUTION.md](docs/CONSTITUTION.md) dice **qué reglas** se cumplen; este archivo dice **cómo se trabaja** día a día.
 
 ---
 
@@ -8,8 +8,8 @@ Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en 
 
 Lee en este orden al empezar cualquier tarea:
 
-1. `CONSTITUTION.md`: las reglas no negociables.
-2. Este archivo (`AGENT.md`). Si no hay spec aprobada que cubra el pedido, preparar solo la nueva spec y esperar a Jimena Durán.
+1. `docs/CONSTITUTION.md`: las reglas no negociables.
+2. Este archivo (`AGENTS.md`). Si no hay spec aprobada que cubra el pedido, preparar solo la nueva spec y esperar a Jimena Durán.
 3. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
 4. Su `plan.md` y su `tasks.md`, si ya existen.
 
@@ -62,22 +62,23 @@ Registrar la aprobación en la propia spec forma parte de su ciclo SDD.
 
 ```
 asistenciapp/
-├── CONSTITUTION.md        # reglas no negociables
-├── AGENT.md               # este archivo
-├── README.md              # cómo arrancar la app (para humanos)
+├── docs/CONSTITUTION.md
+├── docs/ARCHITECTURE.md
+├── AGENTS.md
+├── README.md
 ├── specs/
-│   └── NNN-nombre/
-│       ├── spec.md        # qué y por qué
-│       ├── plan.md        # cómo
-│       └── tasks.md       # pasos
-├── requirements.txt       # dependencias de Python (Flask, pytest)
-├── pytest.ini             # configuración de pytest
-├── app.py                 # aplicación Flask y punto de entrada
-├── asistencia/            # lógica del servidor (paquete de Python)
-├── static/                # HTML, CSS y JS del navegador
-├── tests/                 # tests (test_*.py)
-├── .venv/                 # entorno virtual de Python (no se sube a git)
-└── data/                  # base de datos SQLite (no se sube a git)
+├── asistencia/domain/     # reglas
+├── asistencia/usecases/   # acciones
+├── asistencia/storage/    # SQLite
+├── asistencia/export.py
+├── asistencia/tunnel.py
+├── app.py                # HTTP y arranque
+├── static/
+├── tests/
+├── requirements.txt
+├── pytest.ini
+├── .venv/                # local, no versionado
+└── data/                 # local, no versionado
 ```
 
 Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-spec-antes-del-cambio`.
@@ -138,4 +139,13 @@ Una funcionalidad está terminada cuando:
 
 | `004-quitar-referencias-personales` | Implementada localmente | 100 tests pasan; sin commit de implementación |
 
+| `005-reorganizar-arquitectura` | Implementada y verificada localmente | 108 tests pasan; aprobación humana final pendiente |
+
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
+
+## 8. Forma de escribir el código
+
+Cada módulo abre con una frase de su responsabilidad. Cada función pública
+lleva tipos, dice qué recibe y devuelve con :param, :return y :rtype, y muestra
+un ejemplo Usage:: cuando se llama desde otro módulo. Una función hace una cosa.
+El detalle de capas está en [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).

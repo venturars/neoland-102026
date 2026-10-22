@@ -22,12 +22,33 @@ def _code_for_window(secret: bytes, window: int) -> str:
 
 
 def code_for(secret: bytes, t: float) -> str:
-    """Código vigente en el instante t (segundos Unix)."""
+    """Código vigente en el instante t (segundos Unix).
+
+    :param secret: secreto de la sesión en bytes.
+    :param t: instante Unix en segundos.
+    :return: código vigente de cuatro cifras.
+    :rtype: str
+
+    Usage::
+
+      result = code_for(secret, t)
+    """
     return _code_for_window(secret, _window(t))
 
 
 def is_valid_code(secret: bytes, code: str, t: float) -> bool:
-    """Acepta el código de la ventana actual y el de la anterior (CA-05)."""
+    """Acepta el código de la ventana actual y el de la anterior (CA-05).
+
+    :param secret: secreto de la sesión en bytes.
+    :param code: código introducido.
+    :param t: instante Unix en segundos.
+    :return: si el código pertenece a una ventana válida.
+    :rtype: bool
+
+    Usage::
+
+      result = is_valid_code(secret, code, t)
+    """
     code = str(code).strip()
     current = _window(t)
     return any(
@@ -37,5 +58,14 @@ def is_valid_code(secret: bytes, code: str, t: float) -> bool:
 
 
 def seconds_left(t: float) -> int:
-    """Segundos (redondeados hacia arriba) hasta que cambie el código."""
+    """Segundos (redondeados hacia arriba) hasta que cambie el código.
+
+    :param t: instante Unix en segundos.
+    :return: segundos restantes hasta cambiar de ventana.
+    :rtype: int
+
+    Usage::
+
+      result = seconds_left(t)
+    """
     return math.ceil(WINDOW_SECONDS - (t % WINDOW_SECONDS))
