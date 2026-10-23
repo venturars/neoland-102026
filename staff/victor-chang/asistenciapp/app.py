@@ -9,6 +9,7 @@ import os
 import sys
 import time
 from collections.abc import Callable
+from contextlib import closing
 from pathlib import Path
 
 from flask import Flask, Response, g, jsonify, request
@@ -23,7 +24,7 @@ from attendance.domain.errors import (
     SessionClosedError,
     SessionNotFoundError,
 )
-from attendance.domain.sessions import default_title, to_iso
+from attendance.domain.sessions import Checkin, Session, SessionSummary, default_title, to_iso
 from attendance.infra import storage
 from attendance.infra.export import to_csv
 from attendance.infra.ports import port_in_use
@@ -39,19 +40,20 @@ GENERIC_ERRORS = {404: "No encontrado.", 405: "Método no permitido."}
 
 # ---------- de filas de la BD (snake_case) a JSON de la API (camelCase) ----------
 
-def checkin_json(row: dict) -> dict:
-    data = {"name": row["name"], "checkedAt": row["checked_at"]}
-    if "id" in row:
-        data["id"] = row["id"]
+def checkin_json(checkin: Checkin, with_id: bool = True) -> dict:
+    # El alumno no necesita el id de su registro; solo el panel del profesor (spec 001 · CA-24).
+    data: dict[str, str | int] = {"name": checkin.name, "checkedAt": checkin.checked_at}
+    if with_id:
+        data["id"] = checkin.id
     return data
 
 
-def session_json(row: dict) -> dict:
+def session_json(session: Session | SessionSummary) -> dict:
     return {
-        "id": row["id"],
-        "title": row["title"],
-        "openedAt": row["opened_at"],
-        "closedAt": row["closed_at"],
+        "id": session.id,
+        "title": session.title,
+        "openedAt": session.opened_at,
+        "closedAt": session.closed_at,
     }
 
 
@@ -73,10 +75,11 @@ def create_app(
     # Detrás del túnel, usar la dirección pública que nos indica (plan §2.10, CA-19).
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
-    conn = storage.connect(db_path)
-    storage.init_schema(conn)
-    app.config["TEACHER_TOKEN"] = token or storage.get_or_create_teacher_token(conn)
-    conn.close()
+    # closing() y no solo `with conn`: el `with` de sqlite3 confirma, pero no cierra (D4).
+    with closing(storage.connect(db_path)) as conn:
+        storage.init_schema(conn)
+        with conn:
+            app.config["TEACHER_TOKEN"] = token or storage.get_or_create_teacher_token(conn)
 
     # ---------- utilidades ----------
 
@@ -103,7 +106,7 @@ def create_app(
         body = request.get_json(silent=True)
         return body if isinstance(body, dict) else {}
 
-    def session_or_404(session_id: str) -> dict:
+    def session_or_404(session_id: str) -> Session:
         session = storage.get_session(get_db(), session_id)
         if session is None:
             raise SessionNotFoundError
@@ -146,16 +149,16 @@ def create_app(
     @app.get("/api/s/<session_id>")
     def public_session(session_id):
         session = session_or_404(session_id)
-        return jsonify(title=session["title"], open=session["closed_at"] is None)
+        return jsonify(title=session.title, open=session.is_open)
 
     @app.post("/api/s/<session_id>/checkin")
     def check_in(session_id):
         session = session_or_404(session_id)
         body = json_body()
         try:
-            row, created = checkins.register(
-                get_db(), session, body.get("name"), body.get("code"), now(), now_iso()
-            )
+            # Temporal hasta spec 005 · T10: la transacción la abrirá el caso de uso (D3).
+            with get_db() as conn:
+                result = checkins.register(conn, session, body.get("name"), body.get("code"), now(), now_iso())
         # Temporal hasta spec 005 · T11, cuando la tabla de errores sustituya estos except.
         except SessionClosedError as exc:
             return error(409, exc.MESSAGE)  # CA-09
@@ -163,16 +166,16 @@ def create_app(
             return error(422, exc.MESSAGE)  # CA-06
         except AppError as exc:
             return error(400, exc.MESSAGE)  # CA-08
-        if not created:
-            return jsonify(already=True, **checkin_json(row))  # CA-07
-        return jsonify(checkin_json(row)), 201  # CA-04
+        if not result.created:
+            return jsonify(already=True, **checkin_json(result.checkin, with_id=False))  # CA-07
+        return jsonify(checkin_json(result.checkin, with_id=False)), 201  # CA-04
 
     # ---------- API del profesor ----------
 
     @app.get("/api/sessions")
     def list_sessions():
         return jsonify([
-            {**session_json(s), "total": s["total"]} for s in storage.list_sessions(get_db())
+            {**session_json(s), "total": s.total} for s in storage.list_sessions(get_db())
         ])  # CA-16
 
     @app.post("/api/sessions")
@@ -181,8 +184,10 @@ def create_app(
         title = title.strip() if isinstance(title, str) else ""
         if not title:
             title = default_title(now(), None)  # CA-02
-        session = storage.create_session(get_db(), title, now_iso())
-        return jsonify(id=session["id"], title=session["title"]), 201  # CA-01
+        # Temporal hasta spec 005 · T09: la transacción la abrirá el caso de uso (D3).
+        with get_db() as conn:
+            session = storage.create_session(conn, title, now_iso())
+        return jsonify(id=session.id, title=session.title), 201  # CA-01
 
     @app.get("/api/sessions/<session_id>")
     def teacher_view(session_id):
@@ -190,33 +195,36 @@ def create_app(
         session_checkins = storage.list_checkins(get_db(), session_id)
         data = {
             **session_json(session),
-            "open": session["closed_at"] is None,
+            "open": session.is_open,
             "studentUrl": f"{request.host_url}alumno.html?s={session_id}",
             "total": len(session_checkins),  # CA-11
             "checkins": [checkin_json(c) for c in session_checkins],
         }
         if data["open"]:  # sin código si está cerrada (CA-13)
-            data["code"] = code_for(session["secret"], now())
+            data["code"] = code_for(session.secret, now())
             data["secondsLeft"] = seconds_left(now())
         return jsonify(data)
 
     @app.post("/api/sessions/<session_id>/close")
     def close_session(session_id):
         session_or_404(session_id)
-        storage.close_session(get_db(), session_id, now_iso())  # CA-13
+        with get_db() as conn:  # temporal hasta T09 (D3)
+            storage.close_session(conn, session_id, now_iso())  # CA-13
         return jsonify(ok=True)
 
     @app.delete("/api/sessions/<session_id>/checkins/<int:checkin_id>")
     def remove_checkin(session_id, checkin_id):
         session_or_404(session_id)
-        if not storage.remove_checkin(get_db(), session_id, checkin_id):  # CA-24
+        with get_db() as conn:  # temporal hasta T10 (D3)
+            removed = storage.remove_checkin(conn, session_id, checkin_id)
+        if not removed:  # CA-24
             return error(404, CheckinNotFoundError.MESSAGE)
         return jsonify(ok=True)
 
     @app.get("/api/sessions/<session_id>/export")
     def export(session_id):
         session = session_or_404(session_id)
-        day = session["opened_at"][:10]
+        day = session.opened_at[:10]
         return Response(
             to_csv(storage.list_checkins(get_db(), session_id)),  # CA-14
             mimetype="text/csv",

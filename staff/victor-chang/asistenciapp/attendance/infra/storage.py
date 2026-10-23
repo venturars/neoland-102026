@@ -1,12 +1,15 @@
-"""Acceso a la base de datos SQLite (plan §3).
+"""Acceso a la base de datos SQLite (spec 001 · plan §3; spec 005 · plan §2.5).
 
-Las funciones reciben una conexión abierta: quien llama decide cuándo
-abrirla y cerrarla (en la app, una por petición; plan §2.9).
+Todo el SQL del proyecto vive aquí (ARCHITECTURE.md · D1) y sale convertido en tipos del
+dominio, nunca en filas (D7, M4). Las funciones reciben una conexión abierta y **no confirman**:
+quien llama abre la transacción con `with conn:` (D3, D4).
 """
 
 import secrets
 import sqlite3
 from pathlib import Path
+
+from attendance.domain.sessions import Checkin, CheckinResult, Session, SessionSummary
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS config (
@@ -34,6 +37,7 @@ CREATE TABLE IF NOT EXISTS checkins (
 
 
 def connect(path: str | Path) -> sqlite3.Connection:
+    """Abre la base de datos con filas por nombre y claves ajenas activadas."""
     conn = sqlite3.connect(path)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
@@ -41,44 +45,53 @@ def connect(path: str | Path) -> sqlite3.Connection:
 
 
 def init_schema(conn: sqlite3.Connection) -> None:
+    """Crea las tablas que falten. `executescript` confirma por su cuenta: solo se usa al arrancar."""
     conn.executescript(SCHEMA)
 
 
 def get_or_create_teacher_token(conn: sqlite3.Connection) -> str:
+    """Devuelve el token del profesor, y lo crea la primera vez (spec 001 · CA-15)."""
     row = conn.execute("SELECT value FROM config WHERE key = 'teacher_token'").fetchone()
     if row:
-        return row["value"]
+        return str(row["value"])
     token = secrets.token_urlsafe(24)
-    with conn:
-        conn.execute("INSERT INTO config (key, value) VALUES ('teacher_token', ?)", (token,))
+    conn.execute("INSERT INTO config (key, value) VALUES ('teacher_token', ?)", (token,))
     return token
 
 
-def _session(row: sqlite3.Row | None) -> dict | None:
-    if row is None:
-        return None
-    session = dict(row)
-    session["secret"] = bytes.fromhex(session["secret"])
-    return session
+def _session(row: sqlite3.Row) -> Session:
+    return Session(
+        id=row["id"],
+        title=row["title"],
+        secret=bytes.fromhex(row["secret"]),
+        opened_at=row["opened_at"],
+        closed_at=row["closed_at"],
+    )
 
 
-def create_session(conn: sqlite3.Connection, title: str, opened_at: str) -> dict:
+def _checkin(row: sqlite3.Row) -> Checkin:
+    return Checkin(id=row["id"], name=row["name"], checked_at=row["checked_at"])
+
+
+def create_session(conn: sqlite3.Connection, title: str, opened_at: str) -> Session:
+    """Crea una clase abierta, con su id y su secreto."""
     session_id = secrets.token_urlsafe(6)
     secret = secrets.token_bytes(16)
-    with conn:
-        conn.execute(
-            "INSERT INTO sessions (id, title, secret, opened_at) VALUES (?, ?, ?, ?)",
-            (session_id, title, secret.hex(), opened_at),
-        )
-    return get_session(conn, session_id)
+    conn.execute(
+        "INSERT INTO sessions (id, title, secret, opened_at) VALUES (?, ?, ?, ?)",
+        (session_id, title, secret.hex(), opened_at),
+    )
+    return Session(id=session_id, title=title, secret=secret, opened_at=opened_at, closed_at=None)
 
 
-def get_session(conn: sqlite3.Connection, session_id: str) -> dict | None:
+def get_session(conn: sqlite3.Connection, session_id: str) -> Session | None:
+    """La clase con ese id, o None si no existe."""
     row = conn.execute("SELECT * FROM sessions WHERE id = ?", (session_id,)).fetchone()
-    return _session(row)
+    return None if row is None else _session(row)
 
 
-def list_sessions(conn: sqlite3.Connection) -> list[dict]:
+def list_sessions(conn: sqlite3.Connection) -> list[SessionSummary]:
+    """Todas las clases, de la más nueva a la más antigua, con su total (spec 001 · CA-16)."""
     rows = conn.execute(
         """
         SELECT s.id, s.title, s.opened_at, s.closed_at, COUNT(c.id) AS total
@@ -87,48 +100,52 @@ def list_sessions(conn: sqlite3.Connection) -> list[dict]:
         ORDER BY s.opened_at DESC
         """
     ).fetchall()
-    return [dict(r) for r in rows]
+    return [
+        SessionSummary(
+            id=r["id"],
+            title=r["title"],
+            opened_at=r["opened_at"],
+            closed_at=r["closed_at"],
+            total=r["total"],
+        )
+        for r in rows
+    ]
 
 
 def close_session(conn: sqlite3.Connection, session_id: str, closed_at: str) -> None:
-    with conn:
-        conn.execute(
-            "UPDATE sessions SET closed_at = ? WHERE id = ? AND closed_at IS NULL",
-            (closed_at, session_id),
-        )
+    """Cierra la clase; si ya estaba cerrada, conserva su hora de cierre (spec 001 · CA-13)."""
+    conn.execute(
+        "UPDATE sessions SET closed_at = ? WHERE id = ? AND closed_at IS NULL",
+        (closed_at, session_id),
+    )
 
 
-def add_checkin(
-    conn: sqlite3.Connection, session_id: str, name: str, key: str, checked_at: str
-) -> tuple[dict, bool]:
-    """Registra al alumno. Devuelve (registro, creado); si ya existía, creado=False (CA-07)."""
-    with conn:
-        cursor = conn.execute(
-            """
-            INSERT INTO checkins (session_id, name, name_key, checked_at) VALUES (?, ?, ?, ?)
-            ON CONFLICT (session_id, name_key) DO NOTHING
-            """,
-            (session_id, name, key, checked_at),
-        )
+def add_checkin(conn: sqlite3.Connection, session_id: str, name: str, key: str, checked_at: str) -> CheckinResult:
+    """Registra al alumno; si ya existía uno con la misma clave, devuelve ese (spec 001 · CA-07)."""
+    cursor = conn.execute(
+        """
+        INSERT INTO checkins (session_id, name, name_key, checked_at) VALUES (?, ?, ?, ?)
+        ON CONFLICT (session_id, name_key) DO NOTHING
+        """,
+        (session_id, name, key, checked_at),
+    )
     row = conn.execute(
-        "SELECT name, checked_at FROM checkins WHERE session_id = ? AND name_key = ?",
+        "SELECT id, name, checked_at FROM checkins WHERE session_id = ? AND name_key = ?",
         (session_id, key),
     ).fetchone()
-    return dict(row), cursor.rowcount == 1
+    return CheckinResult(checkin=_checkin(row), created=cursor.rowcount == 1)
 
 
-def list_checkins(conn: sqlite3.Connection, session_id: str) -> list[dict]:
+def list_checkins(conn: sqlite3.Connection, session_id: str) -> list[Checkin]:
+    """Los registros de una clase, por orden de llegada."""
     rows = conn.execute(
         "SELECT id, name, checked_at FROM checkins WHERE session_id = ? ORDER BY checked_at, id",
         (session_id,),
     ).fetchall()
-    return [dict(r) for r in rows]
+    return [_checkin(r) for r in rows]
 
 
 def remove_checkin(conn: sqlite3.Connection, session_id: str, checkin_id: int) -> bool:
-    """Borra el registro si pertenece a esa sesión. Devuelve True si borró algo (CA-24)."""
-    with conn:
-        cursor = conn.execute(
-            "DELETE FROM checkins WHERE id = ? AND session_id = ?", (checkin_id, session_id)
-        )
+    """Borra el registro si pertenece a esa clase. Devuelve True si borró algo (spec 001 · CA-24)."""
+    cursor = conn.execute("DELETE FROM checkins WHERE id = ? AND session_id = ?", (checkin_id, session_id))
     return cursor.rowcount == 1

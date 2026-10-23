@@ -25,28 +25,27 @@ def session(conn):
 
 
 def test_valid_code_registers(conn, session):  # CA-04
-    row, created = register(conn, session, " Ana ", code_for(session["secret"], T), T, AT)
-    assert created
-    assert row == {"name": "Ana", "checked_at": AT}
+    result = register(conn, session, " Ana ", code_for(session.secret, T), T, AT)
+    assert result.created
+    assert (result.checkin.name, result.checkin.checked_at) == ("Ana", AT)
 
 
 def test_same_name_twice_is_not_created_again(conn, session):  # CA-07
-    code = code_for(session["secret"], T)
+    code = code_for(session.secret, T)
     register(conn, session, "Ana García", code, T, AT)
-    _row, created = register(conn, session, "ana garcia", code, T, AT)
-    assert not created
+    assert not register(conn, session, "ana garcia", code, T, AT).created
 
 
 def test_closed_session_is_rejected(conn, session):  # CA-09
-    storage.close_session(conn, session["id"], AT)
-    closed = storage.get_session(conn, session["id"])
+    storage.close_session(conn, session.id, AT)
+    closed = storage.get_session(conn, session.id)
     with pytest.raises(SessionClosedError):
-        register(conn, closed, "Ana", code_for(session["secret"], T), T, AT)
+        register(conn, closed, "Ana", code_for(session.secret, T), T, AT)
 
 
 def test_invalid_name_is_rejected(conn, session):  # CA-08
     with pytest.raises(EmptyNameError):
-        register(conn, session, "  ", code_for(session["secret"], T), T, AT)
+        register(conn, session, "  ", code_for(session.secret, T), T, AT)
 
 
 @pytest.mark.parametrize("code", ["0000x", None, "١٢٣٤"])
@@ -56,14 +55,14 @@ def test_invalid_code_is_rejected(conn, session, code):  # CA-06
 
 
 def test_closed_is_checked_before_name(conn, session):
-    storage.close_session(conn, session["id"], AT)
-    closed = storage.get_session(conn, session["id"])
+    storage.close_session(conn, session.id, AT)
+    closed = storage.get_session(conn, session.id)
     with pytest.raises(SessionClosedError):
         register(conn, closed, "", "", T, AT)
 
 
 def test_numeric_code_is_not_converted_to_text(conn, session):  # spec 005 CA-06, ARCHITECTURE E1
     # Un instante cuyo código no empieza por 0, para que el número tenga las mismas 4 cifras.
-    t = next(T + i * 30 for i in range(100) if not code_for(session["secret"], T + i * 30).startswith("0"))
+    t = next(T + i * 30 for i in range(100) if not code_for(session.secret, T + i * 30).startswith("0"))
     with pytest.raises(InvalidCodeError):
-        register(conn, session, "Ana", int(code_for(session["secret"], t)), t, AT)
+        register(conn, session, "Ana", int(code_for(session.secret, t)), t, AT)

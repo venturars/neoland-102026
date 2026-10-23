@@ -4,11 +4,12 @@ from datetime import timezone
 
 import pytest
 
+from attendance.domain.sessions import Checkin
 from attendance.infra.export import to_csv
 
 
 def rows(*pairs):
-    return [{"name": name, "checked_at": at} for name, at in pairs]
+    return [Checkin(id=i, name=name, checked_at=at) for i, (name, at) in enumerate(pairs, start=1)]
 
 
 def lines(csv_text):

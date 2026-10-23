@@ -1,4 +1,4 @@
-"""Exportación de la lista de asistencia a CSV (plan §2.6, CA-14).
+"""Exportación de la lista de asistencia a CSV (spec 001 · plan §2.6, CA-14).
 
 Se llama export.py y no csv.py para no tapar el módulo `csv` estándar.
 """
@@ -7,6 +7,8 @@ import csv
 import io
 from collections.abc import Iterable
 from datetime import datetime, tzinfo
+
+from attendance.domain.sessions import Checkin
 
 BOM = "﻿"
 FORMULA_PREFIXES = ("=", "+", "-", "@")
@@ -21,11 +23,11 @@ def _local_time(iso: str, tz: tzinfo | None) -> str:
     return datetime.fromisoformat(iso).astimezone(tz).strftime("%d/%m/%Y %H:%M:%S")
 
 
-def to_csv(rows: Iterable[dict], tz: tzinfo | None = None) -> str:
-    """rows: dicts con `name` y `checked_at` (ISO UTC). tz=None → hora local del servidor."""
+def to_csv(checkins: Iterable[Checkin], tz: tzinfo | None = None) -> str:
+    """CSV para Excel con nombre y hora local de cada registro. tz=None → hora local del servidor."""
     out = io.StringIO()
     writer = csv.writer(out, delimiter=";", lineterminator="\r\n")
     writer.writerow(["Nombre", "Hora"])
-    for row in sorted(rows, key=lambda r: r["checked_at"]):
-        writer.writerow([_safe(row["name"]), _local_time(row["checked_at"], tz)])
+    for checkin in sorted(checkins, key=lambda c: c.checked_at):
+        writer.writerow([_safe(checkin.name), _local_time(checkin.checked_at, tz)])
     return BOM + out.getvalue()
