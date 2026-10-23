@@ -165,9 +165,19 @@ Cómo leer esta lista:
 
 ## Fase G · Frontend (plan §2.9)
 
-- [ ] **T16** · `alumno.js`: una única función `api()` para las dos llamadas (U3), que convierte errores y fallos de red en un mensaje.
+- [x] **T16** · `alumno.js`: una única función `api()` para las dos llamadas (U3), que convierte errores y fallos de red en un mensaje.
   - *Hecha cuando:* revisado a mano en el navegador: clase inexistente, código incorrecto, clase cerrada y sin conexión muestran su mensaje; el registro normal sigue igual.
   - *Cubre:* CA-01, CA-05.
+  - **Hecha (2026-10-23):**
+    - `api(path, options)` es la única llamada a `fetch`: envía y lee JSON y devuelve `{ status, ok, data }`. Sin conexión lanza "No se pudo conectar…", y si la respuesta no es JSON, el mensaje genérico de `AppError`.
+    - El aviso de clase cerrada al abrir la página usa el texto nuevo de `SessionClosedError` (constante `CLOSED`, con un comentario que apunta a `errors.py`).
+    - Revisado en Chrome contra un servidor con una BD de prueba nueva (no la de Victor):
+      1. clase inexistente → "Clase no encontrada" y "Esta clase no existe. Revisa el enlace.";
+      2. clase cerrada → el texto nuevo de clase cerrada, sin formulario;
+      3. código incorrecto → "El código no es válido o ha caducado…", con el formulario a la vista;
+      4. registro normal → "¡Listo, Ana Prueba! Registrado a las 12:57." y el formulario se oculta;
+      5. servidor parado → "No se pudo conectar. Revisa tu conexión e inténtalo de nuevo.", y el botón vuelve a estar activo.
+    - Servidor parado al terminar; puerto 8765 libre.
 
 ## Fase H · Estilo y tipos (plan §2.10)
 
