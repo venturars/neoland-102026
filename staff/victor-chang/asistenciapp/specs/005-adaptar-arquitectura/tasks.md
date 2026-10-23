@@ -36,8 +36,9 @@ Cómo leer esta lista:
   - *Cubre:* CA-01.
   - *Hecha cuando:* los 102 tests pasan **sin cambiar nada más que los imports**.
   - **Hecha (2026-10-23):** 102 tests en verde. Además de los imports (ya ordenados, `ruff` `I`): `db.` pasa a `storage.` y `checkin.` a `checkins.` donde se usan; en `app.py`, la variable local `checkins` pasa a `session_checkins` para no tapar el módulo `checkins`; un docstring de una línea en cada `__init__.py`; `mypy` revisa ya `attendance/`. `ruff check`: 50 avisos (antes 51).
-- [ ] **T03** · `port_in_use` sale de `app.py` a `infra/ports.py`; `test_port.py` pasa a `test_ports.py`.
+- [x] **T03** · `port_in_use` sale de `app.py` a `infra/ports.py`; `test_port.py` pasa a `test_ports.py`.
   - *Cubre:* CA-01.
+  - **Hecha (2026-10-23):** 102 tests en verde; `app.py` ya no importa `socket`.
 
 ## Fase C · Dominio (plan §2.2, §2.7)
 

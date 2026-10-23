@@ -6,7 +6,6 @@ Uso: `python app.py` y abrir la URL del panel que se imprime en consola.
 import argparse
 import hmac
 import os
-import socket
 import sys
 import time
 from collections.abc import Callable
@@ -20,6 +19,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from attendance.domain.codes import code_for, seconds_left
 from attendance.infra import storage
 from attendance.infra.export import to_csv
+from attendance.infra.ports import port_in_use
 from attendance.infra.tunnel import TunnelError, start_tunnel
 from attendance.usecases import checkins
 
@@ -225,13 +225,6 @@ def create_app(
         )
 
     return app
-
-
-def port_in_use(port: int) -> bool:
-    """True si ya hay algo escuchando en 127.0.0.1:port (p. ej. otra AsistenciApp)."""
-    with socket.socket() as probe:
-        probe.settimeout(0.5)
-        return probe.connect_ex(("127.0.0.1", port)) == 0
 
 
 def main():
