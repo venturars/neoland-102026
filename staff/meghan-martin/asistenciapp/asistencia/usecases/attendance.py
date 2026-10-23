@@ -1,0 +1,127 @@
+"""Acciones de la asistencia: abrir, cerrar, anotar, listar, borrar y exportar.
+
+Cada acción pide las reglas y el almacén. No pinta la página.
+Ejemplo: check_in(ruta, id_clase, "Ana", "4821", ahora)
+devuelve el registro y si era nuevo.
+"""
+
+from datetime import datetime, timezone
+
+from asistencia.domain.codes import code_for, seconds_left
+from asistencia.domain.names import clean_name, name_key
+from asistencia.domain.session import ensure_code, ensure_open, require_session
+from asistencia.export import to_csv
+from asistencia.storage import sqlite as store
+
+
+def _iso(t: float) -> str:
+    return datetime.fromtimestamp(t, timezone.utc).isoformat(timespec="milliseconds")
+
+
+def prepare(path) -> str:
+    """Prepara el fichero y devuelve la clave del profesor.
+
+    Recibe la ruta. Devuelve la clave.
+    Ejemplo: prepare(ruta).
+    """
+    return store.prepare(path)
+
+
+def public_session(path, session_id: str) -> dict:
+    """Lo que ve el alumno: título y si la clase sigue abierta.
+
+    Recibe la ruta y el id. Devuelve título y si está abierta.
+    Ejemplo: public_session(ruta, id_clase).
+    """
+    session = require_session(store.get_session(path, session_id))
+    return {"title": session["title"], "open": session["closed_at"] is None}
+
+
+def check_in(path, session_id: str, name: str, code: str, t: float) -> tuple[dict, bool]:
+    """Anota a la persona si la clase existe, está abierta y el código vale.
+
+    Recibe la ruta, el id, el nombre, el código y el instante.
+    Devuelve el registro y True si es la primera vez.
+    Ejemplo: check_in(ruta, id_clase, "Ana", "4821", ahora).
+    """
+    session = require_session(store.get_session(path, session_id))
+    ensure_open(session)
+    clean = clean_name(name)
+    ensure_code(session["secret"], code, t)
+    return store.add_checkin(path, session_id, clean, name_key(clean), _iso(t))
+
+
+def list_sessions(path) -> list[dict]:
+    """Devuelve las clases para el panel, las más nuevas primero.
+
+    Recibe la ruta. Devuelve la lista con el total de presentes.
+    Ejemplo: list_sessions(ruta).
+    """
+    return store.list_sessions(path)
+
+
+def create_session(path, title: str | None, t: float) -> dict:
+    """Abre una clase. Si el título viene vacío, usa la fecha y la hora.
+
+    Recibe la ruta, el título y el instante. Devuelve la clase.
+    Ejemplo: create_session(ruta, "Clase de Python", ahora).
+    """
+    text = str(title or "").strip()
+    if not text:
+        text = datetime.fromtimestamp(t).strftime("%d/%m/%Y %H:%M")
+    return store.create_session(path, text, _iso(t))
+
+
+def close_session(path, session_id: str, t: float) -> None:
+    """Cierra la clase si existe.
+
+    Recibe la ruta, el id y el instante. No devuelve nada.
+    Ejemplo: close_session(ruta, id_clase, ahora).
+    """
+    require_session(store.get_session(path, session_id))
+    store.close_session(path, session_id, _iso(t))
+
+
+def export_csv(path, session_id: str) -> tuple[str, str]:
+    """Devuelve el CSV de la clase y el día del nombre de fichero.
+
+    Recibe la ruta y el id. Devuelve el texto CSV y el día (YYYY-MM-DD).
+    Ejemplo: export_csv(ruta, id_clase).
+    """
+    session = require_session(store.get_session(path, session_id))
+    rows = store.list_checkins(path, session_id)
+    return to_csv(rows), session["opened_at"][:10]
+
+
+def remove_checkin(path, session_id: str, checkin_id: int) -> bool:
+    """Borra un presente si la clase existe y el registro es suyo.
+
+    Recibe la ruta, el id de la clase y el id del registro.
+    Devuelve True si lo borró.
+    Ejemplo: remove_checkin(ruta, id_clase, 3).
+    """
+    require_session(store.get_session(path, session_id))
+    return store.remove_checkin(path, session_id, checkin_id)
+
+
+def teacher_view(path, session_id: str, t: float) -> dict:
+    """Lo que ve el profesor: clase, presentes y, si sigue abierta, el código.
+
+    Recibe la ruta, el id y el instante. Devuelve esos datos.
+    Ejemplo: teacher_view(ruta, id_clase, ahora).
+    """
+    session = require_session(store.get_session(path, session_id))
+    checkins = store.list_checkins(path, session_id)
+    data = {
+        "id": session["id"],
+        "title": session["title"],
+        "open": session["closed_at"] is None,
+        "openedAt": session["opened_at"],
+        "closedAt": session["closed_at"],
+        "total": len(checkins),
+        "checkins": checkins,
+    }
+    if data["open"]:
+        data["code"] = code_for(session["secret"], t)
+        data["secondsLeft"] = seconds_left(t)
+    return data

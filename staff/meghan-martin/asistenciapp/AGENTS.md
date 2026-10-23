@@ -1,6 +1,6 @@
-# AGENT.md — Manual de trabajo para agentes de IA
+# AGENTS.md — Manual de trabajo para agentes de IA
 
-Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [CONSTITUTION.md](CONSTITUTION.md) dice **qué reglas** se cumplen. [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) dice **cómo se reparte el código**. Este archivo dice **cómo se trabaja** día a día.
+Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [docs/CONSTITUTION.md](docs/CONSTITUTION.md) dice **qué reglas** se cumplen. [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) dice **cómo se reparte el código**. Este archivo dice **cómo se trabaja** día a día.
 
 ---
 
@@ -8,9 +8,9 @@ Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en 
 
 Lee en este orden al empezar cualquier tarea:
 
-1. `CONSTITUTION.md`: las reglas no negociables.
+1. `docs/CONSTITUTION.md`: las reglas no negociables.
 2. `docs/ARCHITECTURE.md`: cómo se reparte el código.
-3. Este archivo (`AGENT.md`).
+3. Este archivo (`AGENTS.md`).
 4. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
 5. Su `plan.md` y su `tasks.md`, si ya existen.
 
@@ -60,9 +60,9 @@ Hasta el sí del spec, el agente no crea el plan, ni las tasks, ni toca el fiche
 ```
 asistenciapp/
 ├── docs/
+│   ├── CONSTITUTION.md    # reglas no negociables
 │   └── ARCHITECTURE.md    # cómo se reparte el código
-├── CONSTITUTION.md        # reglas no negociables
-├── AGENT.md               # este archivo
+├── AGENTS.md              # este archivo
 ├── README.md              # cómo arrancar la app (para humanos)
 ├── specs/
 │   └── NNN-nombre/
@@ -71,8 +71,13 @@ asistenciapp/
 │       └── tasks.md       # pasos
 ├── requirements.txt       # dependencias de Python (Flask, pytest)
 ├── pytest.ini             # configuración de pytest
-├── app.py                 # aplicación Flask y punto de entrada
-├── asistencia/            # lógica del servidor (paquete de Python)
+├── app.py                 # recibe la petición y pide una acción
+├── asistencia/
+│   ├── domain/            # reglas
+│   ├── usecases/          # acciones
+│   ├── storage/           # almacén SQLite
+│   ├── export.py          # CSV
+│   └── tunnel.py          # enlace público
 ├── static/                # HTML, CSS y JS del navegador
 ├── tests/                 # tests (test_*.py)
 ├── .venv/                 # entorno virtual de Python (no se sube a git)
@@ -132,6 +137,24 @@ Un cambio está terminado cuando:
 | `002-spec-antes-del-cambio` | ✅ Implementada (2026-10-22) | Cualquier fichero espera un spec con el sí |
 | `003-activar-el-entorno` | ✅ Implementada (2026-10-22) | Activar el entorno y arrancar la app son dos títulos |
 | `004-quitar-referencias-personales` | ✅ Implementada (2026-10-22) | Las instrucciones usan `staff/<usuario>/asistenciapp` |
+| `005-reorganizar-arquitectura` | ✅ Implementada (2026-10-23) | Documentos en `docs/`, reglas, acciones y almacén separados |
 | Bot de Discord | Idea futura | Sin número de spec |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
+
+---
+
+## 8. Cómo se escribe una función
+
+Una función pública dice qué recibe, qué devuelve y un ejemplo corto.
+
+```python
+def code_for(secret: bytes, t: float) -> str:
+    """El código de 4 cifras en ese instante.
+
+    Recibe el secreto de la clase y el instante, en segundos.
+    Devuelve cuatro dígitos.
+
+    Ejemplo: code_for(secreto, ahora) -> "4821"
+    """
+```
