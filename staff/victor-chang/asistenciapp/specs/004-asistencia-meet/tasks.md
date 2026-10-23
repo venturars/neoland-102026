@@ -1,6 +1,6 @@
 # Tareas 004 · Asistencia automática desde Google Meet
 
-> Versión 2.0 · Estado: **Borrador (pendiente de aprobación)** · Plan: [plan.md](plan.md) v2.0 · Creado: 2026-10-21 · Reescrito: 2026-10-23
+> Versión 2.0 · Estado: **Aprobado** (2026-10-23) · Plan: [plan.md](plan.md) v2.0 · Creado: 2026-10-21 · Reescrito: 2026-10-23
 
 Cómo leer esta lista:
 - Se hacen **en orden**, una cada vez. Al terminar una se marca `[x]`.
@@ -16,10 +16,11 @@ Cómo leer esta lista:
 
 Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con una cuenta gratuita.
 
-- [ ] **T01** · Dependencia nueva (plan §7.1, P3):
+- [x] **T01** · Dependencia nueva (plan §7.1, P3):
   - Añadir `google-auth-oauthlib` a `requirements.txt` e instalarlo.
   - Si `mypy --strict` pide tipos de las bibliotecas de Google, añadir en `pyproject.toml` la excepción mínima, solo para esos módulos.
   - *Hecha cuando:* `python -c "import google_auth_oauthlib"` funciona y siguen en verde los 240 tests, `ruff` y `mypy`.
+  - **Hecha (2026-10-23):** `google-auth-oauthlib` 1.5.0, que trae `google-auth` 2.62.0 y `requests` 2.34.2. Solo `google_auth_oauthlib` no publica tipos: en `pyproject.toml` se le aplica `ignore_missing_imports`, solo a ese módulo (comprobado con un archivo de prueba en `mypy --strict`). `google-auth` y `requests` sí traen tipos. 240 tests, `ruff` y `mypy` en verde.
 - [ ] **T02** 👤 · Preparar Google Cloud (Victor, guiado paso a paso; unos 15 min):
   1. Crear un proyecto en Google Cloud Console.
   2. Activar la **Google Meet REST API**.

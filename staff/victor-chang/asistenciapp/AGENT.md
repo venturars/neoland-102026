@@ -104,7 +104,7 @@ Ejecutar desde `staff/victor-chang/asistenciapp/`, **con el entorno activado**. 
 | Revisar los tipos | `mypy` |
 | Probar con otra BD, puerto o zona horaria | `ASISTENCIA_DB=/tmp/copia.db PORT=8001 ASISTENCIA_TZ=Europe/Madrid python app.py` |
 
-La única dependencia de la app es Flask. pytest, ruff y mypy son herramientas de desarrollo: no cuentan como dependencias (constitución P3 v3.1).
+Las dependencias de la app son Flask y `google-auth-oauthlib` (justificada en el plan 004 §7.1). pytest, ruff y mypy son herramientas de desarrollo: no cuentan como dependencias (constitución P3 v3.1).
 
 ---
 
@@ -141,7 +141,7 @@ Una funcionalidad está terminada cuando:
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): CA-01 a CA-26 verificados. Revisión de código (2026-10-21, fase H): 30 tareas, 102 tests | Check-in con código rotatorio, válido para cualquier plataforma |
 | `002-discord-bot` | Idea futura | Fuera del MVP |
 | `003-servidor-mcp` | Idea futura | Implementar MCP: que un asistente de IA (p. ej. Claude) pueda abrir y cerrar la asistencia, consultar listas y pedir informes por chat |
-| `004-asistencia-meet` | ⏸️ 3 · Desglosar (2026-10-23): spec v1.1 y plan v2.0 aprobados; `tasks.md` v2.0 pendiente de aprobación. Al aprobarlo, empezar por T01 (y T02–T03 con Victor) | Asistencia automática de todos los participantes de una reunión de Meet, sin que el alumno haga nada |
+| `004-asistencia-meet` | 4 · Implementar (2026-10-23): spec v1.1, plan v2.0 y tareas v2.0 aprobados. T01 hecha; siguiente T02 (Victor, Google Cloud) | Asistencia automática de todos los participantes de una reunión de Meet, sin que el alumno haga nada |
 | `005-adaptar-arquitectura` | ✅ Terminada v1.1 (2026-10-23): 21 tareas, CA-01 a CA-08 verificados, 240 tests; `ruff` y `mypy --strict` sin avisos | Código adaptado a `ARCHITECTURE.md` sin cambiar el comportamiento, salvo errores más claros y el título de 20 caracteres como máximo |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
