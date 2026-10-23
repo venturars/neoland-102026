@@ -8,14 +8,14 @@ que escribe abre su transacción con `with conn:` (D3).
 import sqlite3
 
 from attendance.domain.codes import is_valid_code
-from attendance.domain.errors import CheckinNotFoundError, EmptyNameError, InvalidCodeError, SessionClosedError
+from attendance.domain.errors import CheckinNotFoundError, InvalidCodeError, SessionClosedError
 from attendance.domain.names import clean_name, name_key
 from attendance.domain.sessions import CheckinResult, to_iso
 from attendance.infra import storage
 from attendance.usecases.sessions import find_session
 
 
-def check_in(conn: sqlite3.Connection, session_id: str, raw_name: object, raw_code: object, t: float) -> CheckinResult:
+def check_in(conn: sqlite3.Connection, session_id: str, name: str, code: str, t: float) -> CheckinResult:
     """Registra al alumno en la clase; si ya estaba, devuelve su registro con created=False (CA-07).
 
     Las comprobaciones van en este orden: clase cerrada, nombre, código.
@@ -23,8 +23,8 @@ def check_in(conn: sqlite3.Connection, session_id: str, raw_name: object, raw_co
     Args:
         conn: conexión abierta a la base de datos.
         session_id: la clase.
-        raw_name: el nombre tal como llega; en T13 pasa a ser `str`.
-        raw_code: el código tal como llega; en T13 pasa a ser `str`.
+        name: el nombre tal como lo escribió el alumno.
+        code: el código tal como lo escribió el alumno.
         t: instante del registro, en segundos Unix.
 
     Raises:
@@ -36,16 +36,11 @@ def check_in(conn: sqlite3.Connection, session_id: str, raw_name: object, raw_co
     session = find_session(conn, session_id)
     if not session.is_open:
         raise SessionClosedError
-    # Temporal hasta spec 005 · T13: la entrada aún no comprueba el tipo (E1), y un nombre
-    # que no es texto se sigue tratando como vacío, como hasta ahora.
-    if not isinstance(raw_name, str):
-        raise EmptyNameError
-    name = clean_name(raw_name)
-    # Temporal hasta spec 005 · T13, como el nombre: un código que no es texto no es válido.
-    if not isinstance(raw_code, str) or not is_valid_code(session.secret, raw_code, t):
+    clean = clean_name(name)
+    if not is_valid_code(session.secret, code, t):
         raise InvalidCodeError
     with conn:
-        return storage.add_checkin(conn, session.id, name, name_key(name), to_iso(t))
+        return storage.add_checkin(conn, session.id, clean, name_key(clean), to_iso(t))
 
 
 def remove_checkin(conn: sqlite3.Connection, session_id: str, checkin_id: int) -> None:

@@ -9,7 +9,7 @@ from flask.typing import ResponseReturnValue
 
 from attendance.entrypoints.web import context
 from attendance.entrypoints.web.serializers import check_in_result_json, public_session_json
-from attendance.entrypoints.web.validation import json_body
+from attendance.entrypoints.web.validation import json_object, optional_str
 from attendance.usecases import checkins, sessions
 
 blueprint = Blueprint("public", __name__, url_prefix="/api/s")
@@ -24,7 +24,11 @@ def public_session(session_id: str) -> ResponseReturnValue:
 
 @blueprint.post("/<session_id>/checkin")
 def check_in(session_id: str) -> ResponseReturnValue:
-    """Registra al alumno: 201 si es nuevo, 200 con already=True si ya estaba (spec 001 · CA-04, CA-07)."""
-    body = json_body()
-    result = checkins.check_in(context.db(), session_id, body.get("name"), body.get("code"), context.now())
+    """Registra al alumno: 201 si es nuevo, 200 con already=True si ya estaba (spec 001 · CA-04, CA-07).
+
+    La forma y el tipo se comprueban aquí, antes que nada (spec 005 · CA-06; E1).
+    """
+    body = json_object()
+    name, code = optional_str(body, "name"), optional_str(body, "code")
+    result = checkins.check_in(context.db(), session_id, name, code, context.now())
     return jsonify(check_in_result_json(result)), 201 if result.created else 200

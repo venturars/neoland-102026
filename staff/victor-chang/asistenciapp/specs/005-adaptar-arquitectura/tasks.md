@@ -133,10 +133,16 @@ Cómo leer esta lista:
     - Las rutas ya los usan: no queda ningún JSON montado a mano en ellas (F2). Las respuestas no cambian (siguen en verde los tests de la spec 001).
     - `json_object`: sin cuerpo → objeto vacío (para abrir una clase sin título, spec 001 CA-02); un cuerpo que no es un objeto JSON, JSON roto o un formulario → `MalformedRequestError`. `optional_str`: campo ausente → `""`; presente y no texto (incluido `null`) → `MalformedRequestError`.
     - Las rutas aún leen con el `json_body` antiguo: pasan a `json_object` y `optional_str` en T13 y T14, que es donde cambia el comportamiento.
-- [ ] **T13** 🧪 · `public.py`: rutas del alumno, sin `try/except` (E4). Sus tests pasan de `test_api.py` a `test_web_public.py`.
+- [x] **T13** 🧪 · `public.py`: rutas del alumno, sin `try/except` (E4). Sus tests pasan de `test_api.py` a `test_web_public.py`.
   - Tests nuevos (T3): `code` numérico, `name` lista, cuerpo que no es objeto → `400` y nada guardado; nombre con otros alfabetos y demasiado largo.
   - Cambia el test de entradas mal formadas: los casos de tipo equivocado pasan a esperar el mensaje de `MalformedRequestError`.
   - *Cubre:* CA-01, CA-06.
+  - **Hecha (2026-10-23):** 212 tests en verde (los 9 nuevos fallaron primero).
+    - `public.py` lee con `json_object` y `optional_str`; `usecases/checkins.check_in` recibe ya `str` y pierde los arreglos temporales de T04 y T06.
+    - Los tests del alumno pasan **sin cambios** a `test_web_public.py`; las ayudas comunes (`open_session`, `current_code`, `check_in`) a `tests/web_helpers.py`.
+    - Cambia el test de entradas mal formadas de la spec 001, como preveía el plan §2.6: nombre que no es texto, cuerpo que no es objeto y JSON roto → `400` con el mensaje de `MalformedRequestError`; se añaden código numérico, `null` y lista. Los dígitos de otros alfabetos y `12é4` siguen siendo `422` (código no válido).
+    - Tests nuevos (T3): sin cuerpo → "Escribe tu nombre."; nombres en cirílico, chino, árabe y con tildes; el límite de 60 cuenta caracteres, no bytes; un cuerpo mal formado en una clase cerrada da `400` (la forma se comprueba primero).
+    - El test de código numérico pasa del caso de uso a la ruta, que es donde ahora se rechaza; en el caso de uso ya no aplica porque recibe `str` (lo comprueba `mypy`).
 - [ ] **T14** 🧪 · `teacher.py`: rutas del profesor. Sus tests pasan de `test_api.py` a `test_web_teacher.py`, y se borra `test_api.py`.
   - Cambia `test_create_session_with_malformed_body_uses_date`: ahora espera `400` (spec P1). Se conserva el caso "sin título → fecha" (spec 001 CA-02).
   - Tests nuevos (T3) para `title`: vacío, tipo equivocado, demasiado largo.
