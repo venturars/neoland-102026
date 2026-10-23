@@ -1,6 +1,6 @@
 # Plan — recuento de géneros
 
-Cumple `docs/specs/classifier/spec.md` (tres números y el few-shot).
+Cumple `docs/specs/recuento-generos/spec.md` (tres números y el few-shot).
 Aquí solo el encaje en first-app.
 
 ## Excepción del modelo aprobado
@@ -39,7 +39,6 @@ va en las instrucciones: Carmen, Lucia, Javier, Pablo, Kim.
   `genderUndefined`.
 - `clients/terminal/users-gender-count.txt` hace `console.log`
   del recuento.
-- `tests/users.test.js` sustituye `fetch` (sin Ollama en `npm test`).
 
 ## No tocar
 

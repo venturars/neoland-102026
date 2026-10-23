@@ -6,13 +6,7 @@
 3. Crear `logic/users-gender-count.js` según el plan
    (`findAll`, grupos de 6, systemone, recuento).
 4. Crear `clients/terminal/users-gender-count.txt`.
-5. Tests en `tests/users.test.js`: mock de `fetch`
-   (URL systemone; 7 personas → 2 peticiones; respuesta corta →
-   ese grupo `genderUndefined`; fallo →
-   `Could not classify the users`; tabla vacía no llama a fetch;
-   tabla ausente lanza el mismo error).
-6. Desde `first-app`: `npm test`.
-7. Snippet real con Ollama en marcha y con Ollama parado.
+5. Ejemplo real con Ollama en marcha y con Ollama parado.
    En marcha, 16 personas guardadas:
    `{ women: 7, men: 9, genderUndefined: 0 }`.
    Parado: `Could not classify the users`.
