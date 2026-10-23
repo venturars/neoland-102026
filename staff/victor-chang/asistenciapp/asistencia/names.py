@@ -5,13 +5,17 @@ import unicodedata
 MAX_LENGTH = 60
 
 
-def clean_name(raw) -> str:
+def clean_name(raw: object) -> str:
     """Devuelve el nombre sin espacios sobrantes o lanza ValueError (CA-08).
 
     El nombre se guarda tal como lo escribió el alumno: no se escapa HTML
     aquí, porque el frontend lo muestra siempre como texto (CA-12).
     """
-    name = (raw or "").strip()
+    if raw is None:
+        raw = ""
+    if not isinstance(raw, str):
+        raise ValueError("Escribe tu nombre.")
+    name = raw.strip()
     if not name:
         raise ValueError("Escribe tu nombre.")
     if len(name) > MAX_LENGTH:

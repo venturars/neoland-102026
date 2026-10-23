@@ -8,8 +8,11 @@ guardar ni borrar códigos.
 import hashlib
 import hmac
 import math
+import re
 
 WINDOW_SECONDS = 30
+# [0-9] y no \d: \d también acepta dígitos Unicode (p. ej. árabes), que compare_digest no admite.
+CODE_FORMAT = re.compile(r"[0-9]{4}")
 
 
 def _window(t: float) -> int:
@@ -29,6 +32,8 @@ def code_for(secret: bytes, t: float) -> str:
 def is_valid_code(secret: bytes, code: str, t: float) -> bool:
     """Acepta el código de la ventana actual y el de la anterior (CA-05)."""
     code = str(code).strip()
+    if not CODE_FORMAT.fullmatch(code):
+        return False
     current = _window(t)
     return any(
         hmac.compare_digest(code, _code_for_window(secret, w))
