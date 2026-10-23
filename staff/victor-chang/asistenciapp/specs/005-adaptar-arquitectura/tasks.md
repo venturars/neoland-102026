@@ -60,8 +60,11 @@ Cómo leer esta lista:
     - `TeacherView.checkins` es una tupla y no una lista, para que el tipo sea inmutable de verdad (`frozen`).
     - Los tests van en `tests/test_domain_sessions.py`: `test_sessions.py` queda para los casos de uso (plan §2.11), porque los dos módulos se llaman `sessions`.
     - `app.py` ya usa `to_iso` y `default_title` en lugar de calcular las fechas por su cuenta (el título sigue en la zona del sistema hasta T08).
-- [ ] **T06** 🧪 · `domain/codes.py`: `is_valid_code` recibe solo `str` y ya no convierte con `str()` (E1).
+- [x] **T06** 🧪 · `domain/codes.py`: `is_valid_code` recibe solo `str` y ya no convierte con `str()` (E1).
   - *Cubre:* base de CA-06.
+  - **Hecha (2026-10-23):** 122 tests en verde. El test nuevo (`test_checkin.py`) falló primero: un `1234` numérico se aceptaba como el código `"1234"`.
+    - Desde ahora un código numérico responde `422` (código no válido) en vez de registrar al alumno. En T13 pasa a `400` (`MalformedRequestError`).
+    - Temporal hasta T13: `usecases/checkins.register` trata un código que no es texto como no válido.
 
 ## Fase D · Infraestructura y configuración (plan §2.4, §2.5)
 

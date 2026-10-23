@@ -1,4 +1,4 @@
-"""Códigos de asistencia de 4 dígitos que rotan cada 30 s (plan §2.1).
+"""Códigos de asistencia de 4 dígitos que rotan cada 30 s (spec 001 · plan §2.1).
 
 El código se calcula a partir del secreto de la sesión y de la "ventana"
 de tiempo actual, como en las apps de doble factor (TOTP): no hay que
@@ -30,8 +30,11 @@ def code_for(secret: bytes, t: float) -> str:
 
 
 def is_valid_code(secret: bytes, code: str, t: float) -> bool:
-    """Acepta el código de la ventana actual y el de la anterior (CA-05)."""
-    code = str(code).strip()
+    """Acepta el código de la ventana actual y el de la anterior (CA-05).
+
+    Recibe siempre texto: un número no se convierte (spec 005 · CA-06; ARCHITECTURE.md · E1).
+    """
+    code = code.strip()
     if not CODE_FORMAT.fullmatch(code):
         return False
     current = _window(t)
