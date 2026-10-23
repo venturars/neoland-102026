@@ -1,6 +1,6 @@
-# AGENT.md — Manual de trabajo para agentes de IA
+# AGENTS.md — Manual de trabajo para agentes de IA
 
-Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [CONSTITUTION.md](CONSTITUTION.md) dice **qué reglas** se cumplen; este archivo dice **cómo se trabaja** día a día.
+Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [constitución](docs/CONSTITUTIONS.md) dice **qué reglas** se cumplen; este archivo dice **cómo se trabaja** día a día.
 
 ---
 
@@ -8,10 +8,11 @@ Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en 
 
 Lee en este orden al empezar cualquier tarea:
 
-1. `CONSTITUTION.md`: las reglas no negociables.
-2. Este archivo (`AGENT.md`).
-3. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
-4. Su `plan.md` y su `tasks.md`, si ya existen.
+1. `docs/CONSTITUTIONS.md`: las reglas no negociables.
+2. `docs/ARCHITECTURE.md`: capas del servidor y reglas de dependencias.
+3. Este archivo (`AGENTS.md`).
+4. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
+5. Su `plan.md` y su `tasks.md`, si ya existen.
 
 Si algo de lo que te piden contradice la constitución, **para y avisa** antes de escribir nada.
 
@@ -58,8 +59,10 @@ Al empezar el cambio, el único fichero nuevo permitido es el `spec.md`. El agen
 
 ```
 asistenciapp/
-├── CONSTITUTION.md        # reglas no negociables
-├── AGENT.md               # este archivo
+├── docs/
+│   ├── CONSTITUTIONS.md   # reglas no negociables
+│   └── ARCHITECTURE.md    # capas y dependencias del servidor
+├── AGENTS.md              # este archivo
 ├── README.md              # cómo arrancar la app (para humanos)
 ├── specs/
 │   └── NNN-nombre/
@@ -68,8 +71,13 @@ asistenciapp/
 │       └── tasks.md       # pasos
 ├── requirements.txt       # dependencias de Python (Flask, pytest)
 ├── pytest.ini             # configuración de pytest
-├── app.py                 # aplicación Flask y punto de entrada
-├── asistencia/            # lógica del servidor (paquete de Python)
+├── app.py                 # arranque (`main`, --tunel, puerto)
+├── asistencia/            # paquete del servidor
+│   ├── domain/            # reglas puras (códigos, nombres, CSV, errores)
+│   ├── use_cases/         # orquestación (check-in, sesiones, export)
+│   ├── ports/             # contratos (repositorio)
+│   ├── infra/             # SQLite, túnel cloudflared
+│   └── web/               # Flask (factory y rutas)
 ├── static/                # HTML, CSS y JS del navegador
 ├── tests/                 # tests (test_*.py)
 ├── .venv/                 # entorno virtual de Python (no se sube a git)
@@ -127,6 +135,9 @@ Una funcionalidad está terminada cuando:
 | --- | --- | --- |
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
 | `002-spec-antes-del-cambio` | ✅ Implementada (2026-10-22) | Ningún fichero de la app se toca sin un spec aprobado |
+| `003-readme-entorno-y-arranque` | ✅ Implementada (2026-10-22) | README de entorno/arranque; constitución en `docs/CONSTITUTIONS.md`; manual `AGENTS.md` |
+| `004-sin-referencias-victor` | ✅ Implementada (2026-10-22) | Issue #245; documentación sin referencias personales ajenas ni rutas de otra copia bajo `staff/` |
+| `005-clean-architecture` | ✅ Implementada (2026-10-22) | Issue #239; `ARCHITECTURE.md`, capas domain/use_cases/ports/infra/web |
 | Bot de Discord | Idea futura, sin número | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
