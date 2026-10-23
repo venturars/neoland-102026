@@ -68,7 +68,7 @@ Cómo leer esta lista:
 
 ## Fase D · Infraestructura y configuración (plan §2.4, §2.5)
 
-- [ ] **T07** 🧪 · `infra/storage.py` devuelve los tipos de T05, nunca filas, y **no confirma** por su cuenta.
+- [x] **T07** 🧪 · `infra/storage.py` devuelve los tipos de T05, nunca filas, y **no confirma** por su cuenta.
   - Mientras no existan los casos de uso (T09, T10), `app.py` abre la transacción con `with conn:` alrededor de cada escritura.
   - `create_app` abre su conexión de preparación con `contextlib.closing`.
   - Tests nuevos en `test_storage.py`:
@@ -76,6 +76,11 @@ Cómo leer esta lista:
     - las restricciones `UNIQUE` y `NOT NULL` se cumplen en la propia BD;
     - una BD creada con el esquema de la spec 001 se lee sin cambios (CA-02).
   - *Cubre:* CA-02.
+  - **Hecha (2026-10-23):** 129 tests en verde (los nuevos fallaron primero). `storage.py`, `export.py` y `usecases/` pasan `ruff` y `mypy --strict`.
+    - `to_csv` y `usecases/checkins.register` reciben y devuelven los tipos del dominio; `test_checkin.py` y `test_export.py` se adaptan a ellos (mismas comprobaciones).
+    - `create_session` ya no vuelve a leer la clase de la BD: devuelve la `Session` que acaba de crear.
+    - El check-in sigue respondiendo **sin** `id`, como hasta ahora: `checkin_json(..., with_id=False)` (T12 lo pasa a su serializador).
+    - Comprobación extra de CA-02: una **copia** de `data/asistencia.db` (5 clases, 17 registros, token de profesor) se lee entera con el código nuevo; el original no se toca.
 - [ ] **T08** 🧪 · `attendance/config.py`: `Config` y `load_config(environ)` (`ASISTENCIA_DB`, `PORT`, `ASISTENCIA_TZ`).
   - Tests en `test_config.py`: valores por defecto, valores válidos, y `PORT=abc` o una zona que no existe → `ConfigError` con un mensaje que dice qué variable corregir.
   - *Cubre:* CA-03.
