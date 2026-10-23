@@ -59,7 +59,7 @@ Cómo leer esta lista:
     - `is_open` es una propiedad de `Session`, no una función suelta.
     - `TeacherView.checkins` es una tupla y no una lista, para que el tipo sea inmutable de verdad (`frozen`).
     - Los tests van en `tests/test_domain_sessions.py`: `test_sessions.py` queda para los casos de uso (plan §2.11), porque los dos módulos se llaman `sessions`.
-    - `app.py` ya usa `to_iso` y `default_title` en lugar de calcular las fechas por su cuenta (el título sigue en la zona del sistema hasta T08).
+    - `app.py` ya usa `to_iso` y `default_title` en lugar de calcular las fechas por su cuenta (el título sigue en la zona del sistema hasta que `create_app` reciba la `Config`, en T11).
 - [x] **T06** 🧪 · `domain/codes.py`: `is_valid_code` recibe solo `str` y ya no convierte con `str()` (E1).
   - *Cubre:* base de CA-06.
   - **Hecha (2026-10-23):** 122 tests en verde. El test nuevo (`test_checkin.py`) falló primero: un `1234` numérico se aceptaba como el código `"1234"`.
@@ -81,9 +81,13 @@ Cómo leer esta lista:
     - `create_session` ya no vuelve a leer la clase de la BD: devuelve la `Session` que acaba de crear.
     - El check-in sigue respondiendo **sin** `id`, como hasta ahora: `checkin_json(..., with_id=False)` (T12 lo pasa a su serializador).
     - Comprobación extra de CA-02: una **copia** de `data/asistencia.db` (5 clases, 17 registros, token de profesor) se lee entera con el código nuevo; el original no se toca.
-- [ ] **T08** 🧪 · `attendance/config.py`: `Config` y `load_config(environ)` (`ASISTENCIA_DB`, `PORT`, `ASISTENCIA_TZ`).
+- [x] **T08** 🧪 · `attendance/config.py`: `Config` y `load_config(environ)` (`ASISTENCIA_DB`, `PORT`, `ASISTENCIA_TZ`).
   - Tests en `test_config.py`: valores por defecto, valores válidos, y `PORT=abc` o una zona que no existe → `ConfigError` con un mensaje que dice qué variable corregir.
   - *Cubre:* CA-03.
+  - **Hecha (2026-10-23):** 143 tests en verde (fallaron primero); `config.py` pasa `ruff` y `mypy --strict`.
+    - Un valor vacío cuenta como no puesto. `PORT` solo admite cifras ASCII entre 1 y 65535 (E1).
+    - Errores con nombre: `InvalidPortError` e `InvalidTimezoneError`, hijos de `ConfigError` (y este de `AppError`), cada uno con su mensaje.
+    - Aún no se usa: `app.py` la leerá en T15 y `create_app` la recibirá en T11. Hasta entonces el título por defecto sigue en la zona del sistema (nota de T05).
 
 ## Fase E · Casos de uso (plan §2.3)
 
