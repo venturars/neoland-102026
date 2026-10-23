@@ -1,6 +1,6 @@
-"""Exportación de la lista de asistencia a CSV (plan §2.6, CA-14).
+"""Exportación de la lista de asistencia a CSV.
 
-Se llama export.py y no csv.py para no tapar el módulo `csv` estándar.
+Se llama export.py y no csv.py para no tapar el módulo csv de la biblioteca estándar.
 """
 
 import csv
@@ -21,7 +21,12 @@ def _local_time(iso: str, tz) -> str:
 
 
 def to_csv(rows, tz=None) -> str:
-    """rows: dicts con `name` y `checked_at` (ISO UTC). tz=None → hora local del servidor."""
+    """Convierte los registros en un CSV con punto y coma.
+
+    :param rows: diccionarios con name y checked_at en ISO UTC.
+    :param tz: zona horaria. None usa la hora local del servidor.
+    :return: el CSV, con la marca de orden de bytes al inicio.
+    """
     out = io.StringIO()
     writer = csv.writer(out, delimiter=";", lineterminator="\r\n")
     writer.writerow(["Nombre", "Hora"])
