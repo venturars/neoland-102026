@@ -1,6 +1,6 @@
 # Tareas 005 · Adaptar el código a la arquitectura
 
-> Estado: **Borrador (pendiente de aprobación)** · Plan: [plan.md](plan.md) · Creado: 2026-10-23
+> Estado: **Aprobado** (2026-10-23) · Plan: [plan.md](plan.md) · Creado: 2026-10-23
 
 Cómo leer esta lista:
 - Se hacen **en orden**, una cada vez. Al terminar una se marca `[x]`.
@@ -13,12 +13,18 @@ Cómo leer esta lista:
 
 ## Fase A · Herramientas (plan §2.10)
 
-- [ ] **T01** · ruff y mypy:
+- [x] **T01** · ruff y mypy:
   - Añadir `ruff` y `mypy` a `requirements.txt` e instalarlos.
   - Crear `pyproject.toml` con la configuración del plan §2.10, y la excepción de los tests (plan §5).
   - Ejecutar `ruff check` y `mypy` y **anotar aquí cuántos avisos dan** (punto de partida). No se arregla nada todavía.
   - *Cubre:* base de CA-04.
   - *Hecha cuando:* los tres comandos (`ruff format --check`, `ruff check`, `mypy`) se ejecutan, y el número de avisos está anotado.
+  - **Punto de partida (2026-10-23, ruff 0.17.2, mypy 2.4.0):**
+    - `ruff format --check`: 6 archivos por reformatear.
+    - `ruff check`: 51 avisos. Sobre todo anotaciones de tipo que faltan (`ANN`, 29) y docstrings (`D`, 13). Además: `datetime.UTC` en vez de `timezone.utc` (`UP017`, 6), complejidad de `create_app` (`C901`), un `f-string` sin variables (`F541`) y `subprocess` en `tunnel.py` (`S603`, uso legítimo; se justificará en T17).
+    - `mypy --strict`: 47 errores en 5 archivos, casi todos funciones sin anotar.
+    - `pytest`: 102 en verde.
+    - Se ignora `N818` (sufijo `Error` en excepciones): el plan §2.7 ya fija sus nombres.
 
 ## Fase B · Mover sin cambiar nada (plan §2.1)
 
