@@ -40,6 +40,10 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
     - [ ] ¿Qué responde Google si la reunión **no está en curso** o el código no existe? (plan §2.7)
     - [x] ¿Funciona en el SQLite del proyecto `ALTER TABLE … ADD COLUMN` con los `CHECK` de plan §3, y rechaza un modo no válido? (plan §0.4)
       - **Sí** (2026-10-23, SQLite 3.49.1, en memoria): la migración añade las dos columnas y la clase antigua queda en `code`; la BD rechaza un modo no válido, una clase automática sin reunión y pasar a automática sin reunión; acepta los casos válidos.
+  - **Hallazgos de las primeras ejecuciones (2026-10-23), para el plan:**
+    - Google deja **conceder solo parte** de los permisos (casillas en su pantalla). Sin la casilla de Meet solo concede `openid`. La app tiene que comprobar los permisos concedidos y explicar cuál falta, en vez de fallar.
+    - Google responde **el mismo `403 PERMISSION_DENIED`** cuando la API de Meet no está activada en el proyecto de Google Cloud. `GoogleMeet` tiene que leer el motivo de la respuesta: API desactivada → error de configuración (`MeetNotConfiguredError`); sin acceso a la reunión → `MeetingAccessDeniedError` (CA-13).
+    - El `sub` de la cuenta llega bien con `openid` (no se copia aquí: identifica la cuenta de Victor).
   - Guarda en `tests/fixtures/meet/` las respuestas de Google de ejemplo, **con los nombres cambiados** (P4), para los tests de T09.
   - *Cubre:* riesgo de §0; base de CA-09, CA-13, CA-14, CA-15.
   - *Hecha cuando:* las cinco preguntas tienen respuesta. Si alguna obliga a cambiar el plan o la spec, se actualizan **antes** de seguir.
