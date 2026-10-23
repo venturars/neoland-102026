@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 2.2 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-23
+> Versión 2.3 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-23
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -60,7 +60,7 @@ Cambiar el stack requiere enmendar esta constitución.
 
 ## 4. Desarrollo guiado por especificaciones (SDD)
 
-1. **Ningún fichero de la app se modifica sin un spec aprobado que cubra ese cambio.** Esos ficheros son el código, los tests, el documento de uso de la app y cualquier otra documentación de uso. Cada cambio nace como `specs/NNN-nombre/spec.md`. Victor lo aprueba antes de pasar al plan y antes de modificar esos ficheros. Una issue, una rama o una pull request no sustituyen a ese spec. Un spec aprobado de otro cambio no cubre este.
+1. **Ningún fichero de la app se modifica sin un spec aprobado que cubra ese cambio.** Esos ficheros son el código, los tests, el documento de uso de la app y cualquier otra documentación de uso. Cada cambio nace como `specs/NNN-nombre/spec.md`. Quien trabaja en el proyecto lo aprueba antes de pasar al plan y antes de modificar esos ficheros. Una issue, una rama o una pull request no sustituyen a ese spec. Un spec aprobado de otro cambio no cubre este.
 2. El orden siempre es: **spec → plan → tasks → implementación**. No se salta ningún paso.
 3. La `spec.md` describe el **qué y el porqué**, nunca el cómo (no menciona tecnologías).
 4. El `plan.md` describe el **cómo** e incluye una sección que comprueba que cumple esta constitución.
@@ -87,13 +87,13 @@ Cambiar el stack requiere enmendar esta constitución.
 
 ## 7. Alcance y límites del repositorio
 
-- El proyecto vive entero en `staff/victor-chang/asistenciapp/`. No se tocan archivos fuera de esta carpeta.
+- El proyecto vive entero en la carpeta de este proyecto. No se tocan archivos fuera de esta carpeta.
 
 ---
 
 ## 8. Enmiendas
 
-- Cualquiera (persona o agente) puede **proponer** un cambio, pero solo Victor lo **aprueba**.
+- Cualquiera (persona o agente) puede **proponer** un cambio, y quien trabaja en el proyecto lo **aprueba**.
 - Cada enmienda sube la versión (1.0 → 1.1 para añadidos, 2.0 si se elimina o contradice un principio) y se anota abajo con fecha y motivo.
 
 ### Historial de enmiendas
@@ -105,3 +105,4 @@ Cambiar el stack requiere enmendar esta constitución.
 | 2.0 | 2026-10-20 | §3: stack Node.js → Python (Flask + pytest). P3 pasa de "cero dependencias" a "dependencias mínimas" y permite Flask y pytest | Requisito nuevo: el proyecto debe hacerse en Python. Se elige Flask por ser simple y muy extendido, y pytest por su sintaxis sencilla |
 | 2.1 | 2026-10-20 | P4: distingue *almacenar* (solo en local) de *transitar* (puede pasar cifrado por un proveedor de túnel) | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08) |
 | 2.2 | 2026-10-23 | §4: el apartado 4 cierra cualquier fichero de la app y deja claro que una issue, una rama o una pull request no sustituyen al spec | La regla solo hablaba del código nuevo. Una issue, una rama o una pull request podían tomarse como permiso para editar (spec 002) |
+| 2.3 | 2026-10-23 | §4, §7 y §8 dejan de nombrar a una persona | Quien trabaja en el proyecto puede aprobar y seguir las reglas (spec 004) |
