@@ -91,10 +91,16 @@ Cómo leer esta lista:
 
 ## Fase E · Casos de uso (plan §2.3)
 
-- [ ] **T09** 🧪 · `usecases/sessions.py`: `create_session`, `close_session`, `find_session`, `teacher_view`, `export_attendance`.
+- [x] **T09** 🧪 · `usecases/sessions.py`: `create_session`, `close_session`, `find_session`, `teacher_view`, `export_attendance`.
   - Tests en `test_sessions.py`, con BD temporal y reloj falso: título por defecto, sin código en una clase cerrada, nombre del archivo exportado, clase inexistente → `SessionNotFoundError`.
   - Las rutas de `app.py` pasan a llamar a estos casos de uso.
   - *Cubre:* CA-01 (spec 001 CA-01, CA-02, CA-13, CA-14).
+  - **Hecha (2026-10-23):** 155 tests en verde (fallaron primero); `attendance/` pasa `mypy --strict` salvo `tunnel.py` (T18).
+    - Los casos de uso reciben la hora como `t` (segundos Unix) en vez del reloj: quien llama lo lee una sola vez por petición, así todo lo de una petición usa la misma hora (M5).
+    - El id y el secreto de cada clase los genera `create_session` con `secrets` (X1); `storage.create_session` solo los guarda.
+    - Las rutas de abrir, cerrar, ver y exportar ya llaman a los casos de uso y no deciden nada. Desaparece `session_or_404`.
+    - Temporal hasta T14: un título que no es texto se sigue tratando como vacío. Hasta T11: el título y el CSV usan la zona del sistema.
+    - `test_storage.py` y `test_checkin.py` crean las clases con el id y el secreto nuevos.
 - [ ] **T10** 🧪 · `usecases/checkins.py`: `check_in` (todo en una transacción) y `remove_checkin` (`CheckinNotFoundError`).
   - `test_checkin.py` pasa a `test_checkins.py`; se conserva el test del orden "cerrada → nombre → código".
   - *Cubre:* CA-01 (spec 001 CA-04 a CA-09, CA-24).

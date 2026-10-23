@@ -16,7 +16,6 @@ from flask import Flask, Response, g, jsonify, request
 from werkzeug.exceptions import HTTPException, InternalServerError
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from attendance.domain.codes import code_for, seconds_left
 from attendance.domain.errors import (
     AppError,
     CheckinNotFoundError,
@@ -24,12 +23,11 @@ from attendance.domain.errors import (
     SessionClosedError,
     SessionNotFoundError,
 )
-from attendance.domain.sessions import Checkin, Session, SessionSummary, default_title, to_iso
+from attendance.domain.sessions import Checkin, Session, SessionSummary, to_iso
 from attendance.infra import storage
-from attendance.infra.export import to_csv
 from attendance.infra.ports import port_in_use
 from attendance.infra.tunnel import TunnelError, start_tunnel
-from attendance.usecases import checkins
+from attendance.usecases import checkins, sessions
 
 BASE_DIR = Path(__file__).parent
 DEFAULT_DB = BASE_DIR / "data" / "asistencia.db"
@@ -106,12 +104,6 @@ def create_app(
         body = request.get_json(silent=True)
         return body if isinstance(body, dict) else {}
 
-    def session_or_404(session_id: str) -> Session:
-        session = storage.get_session(get_db(), session_id)
-        if session is None:
-            raise SessionNotFoundError
-        return session
-
     @app.errorhandler(SessionNotFoundError)
     def session_not_found(exc):
         return error(404, exc.MESSAGE)
@@ -148,12 +140,12 @@ def create_app(
 
     @app.get("/api/s/<session_id>")
     def public_session(session_id):
-        session = session_or_404(session_id)
+        session = sessions.find_session(get_db(), session_id)
         return jsonify(title=session.title, open=session.is_open)
 
     @app.post("/api/s/<session_id>/checkin")
     def check_in(session_id):
-        session = session_or_404(session_id)
+        session = sessions.find_session(get_db(), session_id)
         body = json_body()
         try:
             # Temporal hasta spec 005 · T10: la transacción la abrirá el caso de uso (D3).
@@ -181,40 +173,35 @@ def create_app(
     @app.post("/api/sessions")
     def create_session():
         title = json_body().get("title")
-        title = title.strip() if isinstance(title, str) else ""
-        if not title:
-            title = default_title(now(), None)  # CA-02
-        # Temporal hasta spec 005 · T09: la transacción la abrirá el caso de uso (D3).
-        with get_db() as conn:
-            session = storage.create_session(conn, title, now_iso())
-        return jsonify(id=session.id, title=session.title), 201  # CA-01
+        # Temporal hasta spec 005 · T14: un título que no es texto se sigue tratando como vacío.
+        title = title if isinstance(title, str) else ""
+        # Zona del sistema hasta que create_app reciba la Config (spec 005 · T11).
+        session = sessions.create_session(get_db(), title, now(), None)  # CA-01, CA-02
+        return jsonify(id=session.id, title=session.title), 201
 
     @app.get("/api/sessions/<session_id>")
     def teacher_view(session_id):
-        session = session_or_404(session_id)
-        session_checkins = storage.list_checkins(get_db(), session_id)
+        view = sessions.teacher_view(get_db(), session_id, now())
         data = {
-            **session_json(session),
-            "open": session.is_open,
+            **session_json(view.session),
+            "open": view.session.is_open,
             "studentUrl": f"{request.host_url}alumno.html?s={session_id}",
-            "total": len(session_checkins),  # CA-11
-            "checkins": [checkin_json(c) for c in session_checkins],
+            "total": len(view.checkins),  # CA-11
+            "checkins": [checkin_json(c) for c in view.checkins],
         }
-        if data["open"]:  # sin código si está cerrada (CA-13)
-            data["code"] = code_for(session.secret, now())
-            data["secondsLeft"] = seconds_left(now())
+        if view.code is not None:  # sin código si está cerrada (CA-13)
+            data["code"] = view.code
+            data["secondsLeft"] = view.seconds_left
         return jsonify(data)
 
     @app.post("/api/sessions/<session_id>/close")
     def close_session(session_id):
-        session_or_404(session_id)
-        with get_db() as conn:  # temporal hasta T09 (D3)
-            storage.close_session(conn, session_id, now_iso())  # CA-13
+        sessions.close_session(get_db(), session_id, now())  # CA-13
         return jsonify(ok=True)
 
     @app.delete("/api/sessions/<session_id>/checkins/<int:checkin_id>")
     def remove_checkin(session_id, checkin_id):
-        session_or_404(session_id)
+        sessions.find_session(get_db(), session_id)
         with get_db() as conn:  # temporal hasta T10 (D3)
             removed = storage.remove_checkin(conn, session_id, checkin_id)
         if not removed:  # CA-24
@@ -223,14 +210,12 @@ def create_app(
 
     @app.get("/api/sessions/<session_id>/export")
     def export(session_id):
-        session = session_or_404(session_id)
-        day = session.opened_at[:10]
+        # Zona del sistema hasta que create_app reciba la Config (spec 005 · T11).
+        export_file = sessions.export_attendance(get_db(), session_id, None)  # CA-14
         return Response(
-            to_csv(storage.list_checkins(get_db(), session_id)),  # CA-14
+            export_file.content,
             mimetype="text/csv",
-            headers={
-                "Content-Disposition": f'attachment; filename="asistencia-{day}-{session_id}.csv"'
-            },
+            headers={"Content-Disposition": f'attachment; filename="{export_file.filename}"'},
         )
 
     return app

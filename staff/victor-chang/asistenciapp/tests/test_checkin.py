@@ -1,10 +1,13 @@
 """Tests de attendance/usecases/checkins.py · CA-04, CA-06 a CA-09, sin Flask."""
 
+from datetime import UTC
+
 import pytest
 
 from attendance.domain.codes import code_for
 from attendance.domain.errors import EmptyNameError, InvalidCodeError, SessionClosedError
 from attendance.infra import storage
+from attendance.usecases import sessions
 from attendance.usecases.checkins import register
 
 T = 1_800_000_000.0
@@ -21,7 +24,7 @@ def conn(tmp_path):
 
 @pytest.fixture
 def session(conn):
-    return storage.create_session(conn, "Clase", AT)
+    return sessions.create_session(conn, "Clase", T, UTC)
 
 
 def test_valid_code_registers(conn, session):  # CA-04
@@ -37,8 +40,8 @@ def test_same_name_twice_is_not_created_again(conn, session):  # CA-07
 
 
 def test_closed_session_is_rejected(conn, session):  # CA-09
-    storage.close_session(conn, session.id, AT)
-    closed = storage.get_session(conn, session.id)
+    sessions.close_session(conn, session.id, T)
+    closed = sessions.find_session(conn, session.id)
     with pytest.raises(SessionClosedError):
         register(conn, closed, "Ana", code_for(session.secret, T), T, AT)
 
@@ -55,8 +58,8 @@ def test_invalid_code_is_rejected(conn, session, code):  # CA-06
 
 
 def test_closed_is_checked_before_name(conn, session):
-    storage.close_session(conn, session.id, AT)
-    closed = storage.get_session(conn, session.id)
+    sessions.close_session(conn, session.id, T)
+    closed = sessions.find_session(conn, session.id)
     with pytest.raises(SessionClosedError):
         register(conn, closed, "", "", T, AT)
 
