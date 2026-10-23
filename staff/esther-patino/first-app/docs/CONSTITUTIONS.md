@@ -44,6 +44,7 @@ La tabla se llama `users`. Las columnas son estas:
 first-app/
   AGENTS.md
   package.json
+  pnpm-lock.yaml
   db/
     connection.js
     users.sqlite
@@ -62,6 +63,7 @@ first-app/
     find-user-by-id.js
     update-user.js
     delete-user.js
+    users-gender-count.js
   queries/
     users.js
     queries/
@@ -81,6 +83,7 @@ first-app/
       find-by-id.txt
       update-user.txt
       remove-user.txt
+      users-gender-count.txt
 ```
 
 `AGENTS.md` dice cómo se trabaja en esta app: el orden de un cambio, el estilo y qué hacer al cerrar una tarea.
@@ -130,7 +133,7 @@ Inglés y es uno de esta lista:
 | `Email is already used` | Ese email ya está en otra fila. |
 | `Invalid id` | El id no es un entero mayor o igual que 1. |
 | `User not found` | Se busca, se cambia o se borra un id que no está, o se busca un email que no está. |
-| `Could not classify the users` | La IA no responde al contar el sexo de los usuarios ya guardados. |
+| `Could not classify the users` | La IA no responde al contar el sexo de los usuarios ya guardados, o SQLite falla al leer los usuarios. |
 
 El email se guarda en minúsculas. `validateEmail` le quita los espacios de los extremos y lo pasa a minúsculas antes de mirar la longitud y la `@`.
 
