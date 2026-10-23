@@ -47,7 +47,7 @@ Formato: **Dado** (situación inicial) · **Cuando** (acción) · **Entonces** (
 
 ### Errores más claros (HU-03)
 - **CA-05**: **Dado** cualquier error que pueda ver el profesor o el alumno (clase cerrada, clase o registro que no existe, dirección o acción desconocida, fallo inesperado), **entonces** el mensaje dice **qué ha pasado y qué hacer**.
-- **CA-06**: **Dado** un alumno o un programa que envía un dato con un **tipo equivocado** (p. ej. el código como número en vez de como texto, o el nombre como lista), **cuando** intenta registrarse o abrir una clase, **entonces** se rechaza con un mensaje claro y no se guarda nada.
+- **CA-06**: **Dado** un alumno o un programa que envía algo **mal formado** (que no es un formulario con los campos esperados) o un dato con un **tipo equivocado** (p. ej. el código como número en vez de como texto, o el nombre como lista), **cuando** intenta registrarse o abrir una clase, **entonces** se rechaza con un mensaje claro y no se guarda nada.
 - **CA-07**: **Dado** el registro de lo que hace la app mientras funciona, **entonces** no aparece ningún nombre de alumno, dirección IP ni credencial.
 
 ---
@@ -71,7 +71,7 @@ Formato: **Dado** (situación inicial) · **Cuando** (acción) · **Entonces** (
 
 | # | Pregunta | Decisión |
 | --- | --- | --- |
-| P1 | Hoy, si el profesor abre una clase enviando algo que no es un formulario válido, la app lo ignora y pone la fecha como título (decisión de la spec 001, plan §2.13). La arquitectura (E1) pide **rechazar** lo mal formado. ¿Se rechaza, o se mantiene el comportamiento actual? | `[NECESITA ACLARACIÓN: propuesta, rechazarlo con un mensaje claro (E1) y ajustar esa comprobación de la spec 001]` |
+| P1 | Hoy, si el profesor abre una clase enviando algo que no es un formulario válido, la app lo ignora y pone la fecha como título (decisión de la spec 001, plan §2.13). La arquitectura (E1) pide **rechazar** lo mal formado. ¿Se rechaza, o se mantiene el comportamiento actual? | **Se rechaza** con un mensaje claro (E1), y se ajusta esa comprobación de la spec 001 (cubierto por CA-06). Decidido por Victor el 2026-10-23. |
 | P2 | ¿Se aprovecha esta spec para añadir herramientas de desarrollo que revisen el estilo y los tipos de forma automática (constitución P3 v3.1)? | `[NECESITA ACLARACIÓN: propuesta, sí; así CA-04 se comprueba en parte de forma automática]` |
 
 ---
