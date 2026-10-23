@@ -21,3 +21,7 @@ class InvalidName(Exception):
 
 class CheckinNotFound(Exception):
     """El registro de asistencia no existe en esa sesión."""
+
+
+class IpBlocked(Exception):
+    """La dirección de conexión está en la lista de bloqueo."""

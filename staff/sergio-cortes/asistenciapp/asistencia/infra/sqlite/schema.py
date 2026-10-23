@@ -20,4 +20,18 @@ CREATE TABLE IF NOT EXISTS checkins (
   checked_at  TEXT NOT NULL,
   UNIQUE (session_id, name_key)
 );
+
+CREATE TABLE IF NOT EXISTS blocked_ips (
+  ip         TEXT PRIMARY KEY,
+  blocked_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS invalid_code_attempts (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  ip            TEXT NOT NULL,
+  attempted_at  TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_attempts_ip_time
+  ON invalid_code_attempts (ip, attempted_at);
 """
