@@ -34,7 +34,8 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
   - Inicia sesión con Google, pide un código de reunión e imprime, de cada participante activo, su tipo (`signedinUser` / `anonymousUser` / `phoneUser`), su `displayName` y su `user`; y el `sub` de la cuenta que ha iniciado sesión.
   - Victor crea una reunión con su cuenta gratuita, se une desde otro dispositivo (con otra cuenta o como invitado) y lo ejecuta.
   - Responde y anota aquí:
-    - [ ] ¿Lee los participantes con una cuenta **gratuita**? (si **no** → **parar**, plan §0)
+    - [x] ¿Lee los participantes con una cuenta **gratuita**? (si **no** → **parar**, plan §0)
+      - **Sí** (2026-10-23), pero por `conferenceRecords`, no por `spaces/{código}`: `spaces.get` responde `403` incluso con una reunión propia creada desde meet.google.com. `conferenceRecords?filter=space.meeting_code="…"` devuelve la reunión en curso (sin `endTime`), y sus `participants?filter=latest_end_time IS NULL` dan quién está ahora. Cambia plan §2.3.
     - [ ] ¿`users/<sub>` coincide con el profesor? (si no → excluir por nombre, plan §2.5)
     - [ ] ¿Qué ve una **segunda cuenta** que no organiza la reunión? (decide CA-13 y CA-15, plan §2.6)
     - [ ] ¿Qué responde Google si la reunión **no está en curso** o el código no existe? (plan §2.7)
