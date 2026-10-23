@@ -134,6 +134,7 @@ Un cambio está terminado cuando:
 | `002-spec-antes-del-cambio` | Terminada con conformidad final (2026-10-23) | CA-01 a CA-08 revisados; 77 tests en verde; revisión de compañeros e incorporación a `staging` pendientes |
 | `003-activar-el-entorno` | Implementada y comprobada (2026-10-23); entrega autorizada | CA-01 a CA-04 revisados; 77 tests en verde; revisión de compañeros e incorporación a `staging` pendientes |
 | `004-quitar-referencias-personales` | Implementada y comprobada (2026-10-23); entrega autorizada | CA-01 a CA-04 revisados; 80 tests en verde; revisión de compañeros e incorporación a `staging` pendientes |
+| `005-reorganizar-arquitectura` | Implementada y comprobada (2026-10-23); entrega autorizada | CA-01 a CA-09 revisados; 93 tests en verde, incluida compatibilidad de datos; revisión de compañeros e incorporación a `staging` pendientes |
 | Bot de Discord | Idea futura, sin número | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.

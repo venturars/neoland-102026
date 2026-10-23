@@ -1,6 +1,6 @@
 # Spec 005 · Organización de documentos y responsabilidades
 
-> Estado: **Aprobada por autorización anticipada** · Versión: 1.0 · Creada y autorizada: 2026-10-23
+> Estado: **Implementada y comprobada; entrega autorizada** · Versión: 1.1 · Creada, autorizada e implementada: 2026-10-23
 >
 > Tarea: [#278](https://github.com/venturars/neoland-102026/issues/278)
 
@@ -51,3 +51,4 @@ Ninguna. Todas las fases y la entrega están autorizadas anticipadamente. Las re
 | Versión | Fecha | Cambio |
 | --- | --- | --- |
 | 1.0 | 2026-10-23 | Especificación redactada bajo autorización anticipada. |
+| 1.1 | 2026-10-23 | Documentos y responsabilidades separados; nueve criterios revisados y 93 tests superados por el agente, incluida compatibilidad de datos anteriores. Revisión y merge pendientes. |
