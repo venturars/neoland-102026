@@ -1,6 +1,6 @@
 # Spec 006 · Límite de intentos de código por origen de conexión
 
-> Estado: **Borrador** · Creada: 2026-10-23 · **Pendiente de aprobación** · Issue: [#318](https://github.com/venturars/neoland-102026/issues/318)
+> Estado: **Aprobada** (2026-10-23) · Creada: 2026-10-23 · Issue: [#318](https://github.com/venturars/neoland-102026/issues/318) · PR: [#319](https://github.com/venturars/neoland-102026/pull/319)
 
 ---
 
@@ -91,3 +91,4 @@ Ninguna por ahora. Las decisiones de la issue #318 (umbrales, solo código invá
 | Fecha | Cambio |
 | --- | --- |
 | 2026-10-23 | Borrador inicial para issue #318. |
+| 2026-10-23 | Aprobada por quien trabaja en esta carpeta. |
