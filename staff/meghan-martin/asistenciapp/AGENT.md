@@ -1,6 +1,6 @@
 # AGENT.md — Manual de trabajo para agentes de IA
 
-Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [CONSTITUTION.md](CONSTITUTION.md) dice **qué reglas** se cumplen; este archivo dice **cómo se trabaja** día a día.
+Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [CONSTITUTION.md](CONSTITUTION.md) dice **qué reglas** se cumplen. [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) dice **cómo se reparte el código**. Este archivo dice **cómo se trabaja** día a día.
 
 ---
 
@@ -9,9 +9,10 @@ Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en 
 Lee en este orden al empezar cualquier tarea:
 
 1. `CONSTITUTION.md`: las reglas no negociables.
-2. Este archivo (`AGENT.md`).
-3. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
-4. Su `plan.md` y su `tasks.md`, si ya existen.
+2. `docs/ARCHITECTURE.md`: cómo se reparte el código.
+3. Este archivo (`AGENT.md`).
+4. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
+5. Su `plan.md` y su `tasks.md`, si ya existen.
 
 Si algo de lo que te piden contradice la constitución, **para y avisa** antes de escribir nada.
 
@@ -58,6 +59,8 @@ Hasta el sí del spec, el agente no crea el plan, ni las tasks, ni toca el fiche
 
 ```
 asistenciapp/
+├── docs/
+│   └── ARCHITECTURE.md    # cómo se reparte el código
 ├── CONSTITUTION.md        # reglas no negociables
 ├── AGENT.md               # este archivo
 ├── README.md              # cómo arrancar la app (para humanos)
