@@ -119,7 +119,7 @@ A file in `logic/` calls a function exported by `queries/users.js`. It does not 
 
 ## Specs
 
-A new feature is a new folder in `docs/specs/`. The folder name is kebab-case, like `docs/specs/classifier/`. Each folder has three files, written in this order.
+A new feature is a new folder in `docs/specs/`. The folder name is kebab-case, like `docs/specs/classifier/`. Each folder has three files, written in this order. No code for a feature is written until its `spec.md`, `plan.md`, and `tasks.md` exist, in that order. If the folder or a file is missing, write the missing file.
 
 ### spec.md
 

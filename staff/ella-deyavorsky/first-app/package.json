@@ -9,5 +9,6 @@
   "author": "Ella Deyavorsky",
   "license": "ISC",
   "description": "Small user management app — logic first",
-  "type": "module"
+  "type": "module",
+  "packageManager": "pnpm@12.14.0"
 }
