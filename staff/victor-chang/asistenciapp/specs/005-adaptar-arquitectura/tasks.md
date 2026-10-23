@@ -154,10 +154,14 @@ Cómo leer esta lista:
     - Los tests del profesor pasan **sin cambios** a `test_web_teacher.py`, y se borra `test_api.py`.
     - Cambia `test_create_session_with_malformed_body_uses_date` (spec P1): ahora espera `400` con el mensaje de `MalformedRequestError` y que no se abra ninguna clase; se añaden `null`, JSON roto y un texto suelto. Se conserva "sin cuerpo o sin título → fecha".
     - Dos tests de `test_api.py` no se mueven porque ya los cubre, con más comprobaciones, `test_web_errors.py`: `test_unknown_api_route_is_404_json` y `test_unexpected_error_is_json_500`.
-- [ ] **T15** 🧪 · `app.py` queda solo como arranque: argumentos, `load_config(os.environ)`, puerto, túnel, `create_app`, `run`.
+- [x] **T15** 🧪 · `app.py` queda solo como arranque: argumentos, `load_config(os.environ)`, puerto, túnel, `create_app`, `run`.
   - Silencia el registro de accesos (plan §2.8). Test en `test_app.py`.
   - Los errores del túnel y de la configuración se imprimen con su mensaje y la app termina.
   - *Cubre:* CA-03, CA-07.
+  - **Hecha (2026-10-23):** 235 tests en verde; `app.py` pasa `ruff` y `mypy --strict`.
+    - `main()` queda en 15 líneas y llama a funciones cortas (M2): argumentos, configuración, puerto, túnel y enlaces.
+    - `configure_logging()`: registros de la app por consola y el de werkzeug solo con avisos. El test de CA-07 se vio fallar primero; los otros cinco de `test_app.py` describen lo que `main()` ya hacía (configuración mala, puerto ocupado, error del túnel, enlace del túnel y cierre del túnel al parar), para poder reorganizarlo sin riesgo.
+    - Prueba real con una copia de la BD en el puerto 8765: abrir clase, registrar a "Zoe Prueba" y rechazar un título de 25 caracteres. La consola solo muestra el enlace del panel y dos líneas de Flask: ninguna IP ni ningún nombre. Parado y puerto libre.
 
 ## Fase G · Frontend (plan §2.9)
 
