@@ -1,4 +1,6 @@
-"""Tests de las rutas del profesor (attendance/entrypoints/web/teacher.py) · spec 001 CA-01, CA-02, CA-09 a CA-19, CA-24 a CA-26; spec 005 CA-06, CA-08.
+"""Tests de las rutas del profesor (attendance/entrypoints/web/teacher.py).
+
+spec 001 CA-01, CA-02, CA-09 a CA-19, CA-24 a CA-26; spec 005 CA-06, CA-08.
 
 Vienen de test_api.py (spec 005 · T14). Cambia solo el de abrir con un cuerpo mal formado (spec 005 · P1).
 """
@@ -188,7 +190,7 @@ def test_remove_unknown_or_other_session_checkin(client, teacher):  # CA-24
 
     assert client.delete(f"/api/sessions/{sid}/checkins/{other_id}", headers=teacher).status_code == 404
     assert client.delete(f"/api/sessions/{sid}/checkins/99999", headers=teacher).status_code == 404
-    assert client.delete(f"/api/sessions/no-existe/checkins/1", headers=teacher).status_code == 404
+    assert client.delete("/api/sessions/no-existe/checkins/1", headers=teacher).status_code == 404
     assert len(checkins_of(client, teacher, other)) == 1  # la de la otra sesión sigue ahí
 
 

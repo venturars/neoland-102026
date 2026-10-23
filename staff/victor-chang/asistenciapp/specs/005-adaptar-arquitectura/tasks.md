@@ -181,11 +181,16 @@ Cómo leer esta lista:
 
 ## Fase H · Estilo y tipos (plan §2.10)
 
-- [ ] **T17** · `ruff format` y `ruff check` sin avisos.
+- [x] **T17** · `ruff format` y `ruff check` sin avisos.
   - Incluye los docstrings que faltan, con su rastro a la spec (S3: `spec 001 · plan §2.1 · CA-05`, y `spec 005` donde aplique).
   - *Cubre:* CA-04.
-- [ ] **T18** · `mypy` (modo `strict`) sin errores.
+- [x] **T18** · `mypy` (modo `strict`) sin errores.
   - *Cubre:* CA-04.
+  - **Hechas T17 y T18 (2026-10-23):** `ruff check` sin avisos (antes 51), `ruff format` sin cambios pendientes (antes 6 archivos), `mypy --strict` sin errores en 25 archivos (antes 47), y 240 tests en verde.
+    - Casi todo se resolvió al reescribir cada pieza en T02–T16. Lo que quedaba era `tunnel.py`, dos detalles de `test_web_teacher.py`, `datetime.UTC` en `test_export.py`, el formato de `codes.py` y un bloque de Python en el plan 005.
+    - `tunnel.py` sigue E3 como el resto: `TunnelError` hereda de `AppError`, con tres errores con nombre y mensaje fijo (`CloudflaredMissingError`, `TunnelTimeoutError`, `TunnelExitedError`). Lleva tipos, y el aviso `S603` de `subprocess` queda justificado en el código: ejecutable de `shutil.which`, argumentos fijos y sin shell.
+    - Tests nuevos del túnel: cloudflared no instalado, y un cloudflared que no dice nada (se rinde tras el tiempo máximo y lo para, F4). `test_app.py` lanza ya el error con nombre.
+    - Todos los módulos citan en su docstring la spec, el plan o la regla que implementan (S3).
 
 ## Fase I · Verificación y cierre
 
