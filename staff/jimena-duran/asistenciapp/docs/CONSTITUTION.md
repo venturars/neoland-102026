@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 2.1 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-20
+> Versión 2.3 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-22
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -54,17 +54,25 @@ Interfaz, mensajes de error, documentación y especificaciones se escriben en es
 | Frontend | HTML + CSS + JavaScript sin frameworks, servidos desde `static/` |
 | Tests | `pytest` |
 
+La organización es: docs/ para reglas y arquitectura, asistencia/domain/ para
+reglas del producto, asistencia/usecases/ para acciones, asistencia/storage/
+para SQLite y app.py para HTTP y arranque. static/ y data/ mantienen su función.
+El detalle está en [ARCHITECTURE.md](ARCHITECTURE.md).
+
 Cambiar el stack requiere enmendar esta constitución.
 
 ---
 
 ## 4. Desarrollo guiado por especificaciones (SDD)
 
-1. **No hay código sin especificación aprobada.** Cada funcionalidad nace como `specs/NNN-nombre/spec.md` y Victor la aprueba antes de pasar al plan.
-2. El orden siempre es: **spec → plan → tasks → implementación**. No se salta ningún paso.
-3. La `spec.md` describe el **qué y el porqué**, nunca el cómo (no menciona tecnologías).
-4. El `plan.md` describe el **cómo** e incluye una sección que comprueba que cumple esta constitución.
-5. Las dudas se marcan como `[NECESITA ACLARACIÓN]` y se resuelven **antes** de implementar. No se inventan requisitos.
+1. Todo cambio de código, tests, README u otra documentación de uso requiere una spec aprobada que lo cubra.
+2. Sin esa aprobación, solo se prepara la spec y se espera el ok de Jimena Durán; no se escriben plan, tasks ni implementación.
+3. El orden es spec → plan → tasks → implementación, con aprobación explícita de Jimena Durán al terminar cada fase de preparación.
+4. Si la spec activa no cubre el pedido, se abre una spec nueva.
+5. Una issue, una rama o una pull request no sustituyen la spec aprobada.
+6. Jimena Durán aprueba cada fase antes de continuar. Las dudas se marcan con `[NECESITA ACLARACIÓN]` y se resuelven antes de implementar. No se inventan requisitos.
+
+La spec describe qué y por qué, sin tecnologías; el plan explica cómo y comprueba esta constitución. Registrar la aprobación en la propia spec forma parte de su ciclo SDD.
 
 ---
 
@@ -87,13 +95,13 @@ Cambiar el stack requiere enmendar esta constitución.
 
 ## 7. Alcance y límites del repositorio
 
-- El proyecto vive entero en `staff/victor-chang/asistenciapp/`. No se tocan archivos fuera de esta carpeta.
+- El proyecto vive entero en `staff/jimena-duran/asistenciapp/`. No se tocan archivos fuera de esta carpeta.
 
 ---
 
 ## 8. Enmiendas
 
-- Cualquiera (persona o agente) puede **proponer** un cambio, pero solo Victor lo **aprueba**.
+- Cualquiera (persona o agente) puede **proponer** un cambio, pero solo Jimena Durán lo **aprueba**.
 - Cada enmienda sube la versión (1.0 → 1.1 para añadidos, 2.0 si se elimina o contradice un principio) y se anota abajo con fecha y motivo.
 
 ### Historial de enmiendas
@@ -104,3 +112,7 @@ Cambiar el stack requiere enmendar esta constitución.
 | 1.1 | 2026-10-19 | §6: los códigos no deben poder adivinarse *a mano*; la protección contra scripts deja de ser obligatoria | En una clase el riesgo real es un alumno ausente, no un ataque automatizado. Evita añadir límites de intentos que no aportan al MVP (P2) |
 | 2.0 | 2026-10-20 | §3: stack Node.js → Python (Flask + pytest). P3 pasa de "cero dependencias" a "dependencias mínimas" y permite Flask y pytest | Requisito nuevo: el proyecto debe hacerse en Python. Se elige Flask por ser simple y muy extendido, y pytest por su sintaxis sencilla |
 | 2.1 | 2026-10-20 | P4: distingue *almacenar* (solo en local) de *transitar* (puede pasar cifrado por un proveedor de túnel) | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08) |
+
+| 2.2 | 2026-10-22 | §4: spec aprobada para todo cambio y puertas explícitas; §7: carpeta personal; §8: aprueba Jimena Durán | Aprobación de spec, plan y tareas de la 002 por Jimena Durán; no confundir Git con aprobación SDD |
+
+| 2.3 | 2026-10-22 | §3: documentos y separación domain/usecases/storage; guía AGENTS.md | Reorganización 005 autorizada por Jimena Durán, sin cambios de producto |
