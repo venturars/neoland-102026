@@ -36,24 +36,17 @@ TIMEOUT = 10
 
 def main() -> None:
     """Inicia sesión, consulta la reunión e imprime las respuestas a las preguntas del spike."""
-    parser = argparse.ArgumentParser(description="Spike de la API de Meet (spec 004, T03).")
-    parser.add_argument("reunion", help="enlace o código de la reunión de Meet")
-    parser.add_argument("--guardar", action="store_true", help="guarda ejemplos anonimizados para los tests")
-    args = parser.parse_args()
-
-    match = CODE.fullmatch(args.reunion.strip().lower())
-    if not match:
-        sys.exit("No parece un enlace o código de Meet (p. ej. abc-defg-hij).")
-    code = match.group(1)
-    if not CLIENT_FILE.exists():
-        sys.exit(f"Falta {CLIENT_FILE.relative_to(ROOT)} (tarea T02).")
+    args, code = parse_args()
 
     credentials = login()
     session = requests.Session()
     session.headers["Authorization"] = f"Bearer {credentials.token}"
 
-    me = get(session, "https://openidconnect.googleapis.com/v1/userinfo")
+    me = get(session, "https://openidconnect.googleapis.com/v1/userinfo") or {}
     print(f"\n[Pregunta 2] sub de la cuenta que ha iniciado sesión: {me.get('sub')}")
+    if args.diagnostico:
+        diagnose(session, code)
+        return
 
     space = get(session, f"{API}/spaces/{code}", label="spaces")
     if space is None:
@@ -106,6 +99,59 @@ def login() -> Credentials:
             "Google Auth Platform → Acceso a datos (Data access)."
         )
     return credentials
+
+
+def parse_args() -> tuple[argparse.Namespace, str]:
+    """Lee los argumentos y el código de la reunión; sale con un mensaje si algo falta."""
+    parser = argparse.ArgumentParser(description="Spike de la API de Meet (spec 004, T03).")
+    parser.add_argument("reunion", help="enlace o código de la reunión de Meet")
+    parser.add_argument("--guardar", action="store_true", help="guarda ejemplos anonimizados para los tests")
+    parser.add_argument(
+        "--diagnostico",
+        action="store_true",
+        help="prueba la otra vía de la API (conferenceRecords) en vez de spaces/{código}",
+    )
+    args = parser.parse_args()
+    match = CODE.fullmatch(args.reunion.strip().lower())
+    if not match:
+        sys.exit("No parece un enlace o código de Meet (p. ej. abc-defg-hij).")
+    if not CLIENT_FILE.exists():
+        sys.exit(f"Falta {CLIENT_FILE.relative_to(ROOT)} (tarea T02).")
+    return args, match.group(1)
+
+
+def diagnose(session: requests.Session, code: str) -> None:
+    """Prueba conferenceRecords: primero sin filtro y luego filtrando por el código de la reunión."""
+    print("\n[Diagnóstico 1] Últimas reuniones de esta cuenta (conferenceRecords, sin filtro):")
+    records = get(session, f"{API}/conferenceRecords", params={"pageSize": "5"}, label="conferenceRecords")
+    if records is not None:
+        items = records.get("conferenceRecords", [])
+        print(f"  {len(items)} reuniones devueltas")
+        for r in items:
+            print(
+                f"  - {r.get('name')} · espacio {r.get('space')} · inicio {r.get('startTime')} · fin {r.get('endTime')}"
+            )
+
+    print(f"\n[Diagnóstico 2] Reuniones con el código {code}:")
+    query = {"filter": f'space.meeting_code = "{code}"', "pageSize": "5"}
+    filtered = get(session, f"{API}/conferenceRecords", params=query, label="conferenceRecords filtrado")
+    if filtered is None:
+        return
+    items = filtered.get("conferenceRecords", [])
+    print(f"  {len(items)} reuniones con ese código")
+    active = [r for r in items if not r.get("endTime")]
+    if not active:
+        print("  Ninguna está en curso ahora mismo.")
+        return
+    url = f"{API}/{active[0]['name']}/participants"
+    page = get(session, url, params={"filter": "latest_end_time IS NULL", "pageSize": "250"}, label="participants")
+    if page is not None:
+        print(f"\n[Diagnóstico 3] Participantes en la llamada ahora: {len(page.get('participants', []))}")
+        for p in page.get("participants", []):
+            kind = next((k for k in ("signedinUser", "anonymousUser", "phoneUser") if k in p), "?")
+            print(
+                f"  - {kind}: displayName={p.get(kind, {}).get('displayName')!r} user={p.get(kind, {}).get('user')!r}"
+            )
 
 
 def get(
