@@ -128,6 +128,6 @@ Una funcionalidad está terminada cuando:
 | `002-discord-bot` | Idea futura | Fuera del MVP |
 | `003-servidor-mcp` | Idea futura | Implementar MCP: que un asistente de IA (p. ej. Claude) pueda abrir y cerrar la asistencia, consultar listas y pedir informes por chat |
 | `004-asistencia-meet` | ⏸️ En pausa (2026-10-23) · 2 · Planificar: el plan se reescribe sobre `ARCHITECTURE.md` cuando termine la spec 005 (decisiones en plan §8). `tasks.md` sin aprobar | Asistencia automática de todos los participantes de una reunión de Meet, sin que el alumno haga nada |
-| `005-adaptar-arquitectura` | 4 · Implementar (2026-10-23): T01–T04 hechas; siguiente T05 | Adaptar el código a `ARCHITECTURE.md` sin cambiar el comportamiento |
+| `005-adaptar-arquitectura` | 4 · Implementar (2026-10-23): T01–T05 hechas; siguiente T06 | Adaptar el código a `ARCHITECTURE.md` sin cambiar el comportamiento |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
