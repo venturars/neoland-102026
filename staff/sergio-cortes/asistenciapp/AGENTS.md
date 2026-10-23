@@ -128,7 +128,8 @@ Una funcionalidad está terminada cuando:
 | --- | --- | --- |
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
 | `002-spec-antes-del-cambio` | ✅ Implementada (2026-10-22) | Ningún fichero de la app se toca sin un spec aprobado |
-| `003-readme-entorno-y-arranque` | ✅ Implementada (2026-10-22) | README: rutas, activar entorno vs arrancar app (issue #233) |
+| `003-readme-entorno-y-arranque` | ✅ Implementada (2026-10-22) | README de entorno/arranque; constitución en `docs/CONSTITUTIONS.md`; manual `AGENTS.md` |
+| `004-sin-referencias-victor` | ✅ Implementada (2026-10-22) | Issue #245; documentación sin referencias personales ajenas ni rutas de otra copia bajo `staff/` |
 | Bot de Discord | Idea futura, sin número | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.

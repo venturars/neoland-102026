@@ -34,7 +34,7 @@ Cómo leer esta lista:
   - La ruta de trabajo es `staff/sergio-cortes/asistenciapp/`.
   - Quien da el ok, pide los commits y aprueba enmiendas es quien trabaja en esa carpeta.
   - *Cubre:* CA-01, CA-02, CA-04, CA-06.
-  - *Hecha cuando:* esos apartados ya no nombran Victor ni `victor-chang`.
+  - *Hecha cuando:* esos apartados ya no nombran personas concretas ni rutas de otra copia bajo `staff/`.
 
 - [x] **T04** · Actualizar la tabla de `AGENT.md` §7.
   - `002-spec-antes-del-cambio` tiene su fila.

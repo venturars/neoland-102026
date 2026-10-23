@@ -100,10 +100,10 @@ Todos los tests de esta fase van en `tests/test_api.py`. Usan las fixtures de `t
   - [x] CA-10 · un alumno aparece en la lista del profesor en ≤ 5 s. *(Chrome automatizado: 0,5 s.)*
   - [x] CA-12 · `<b>Ana</b>` se ve literal en la lista. *(Captura a 400 px.)*
   - [x] CA-18 · todas las pantallas se ven bien a 400 px. *(Emulación móvil de Chrome: 6 páginas sin scroll horizontal.)*
-  - [x] CA-19 · con `--tunel`, un móvil **con datos móviles (sin Wi-Fi)** abre el enlace de alumnos y se registra. *(Victor, 2026-10-20: registro correcto desde su móvil con datos móviles.)*
-  - [x] CA-20 · el enlace del panel que imprime `--tunel` funciona tal cual, sin retocarlo. *(Victor, 2026-10-20: el panel se abre directamente.)*
+  - [x] CA-19 · con `--tunel`, un móvil **con datos móviles (sin Wi-Fi)** abre el enlace de alumnos y se registra. *(2026-10-20: registro correcto desde un móvil con datos móviles.)*
+  - [x] CA-20 · el enlace del panel que imprime `--tunel` funciona tal cual, sin retocarlo. *(2026-10-20: el panel se abre directamente.)*
   - [x] CA-21 · abrir el panel en `localhost` muestra el aviso. *(Capturas.)*
-  - [x] El CSV descargado se abre bien en Excel o Google Sheets, con tildes. *(Victor, 2026-10-20: dos columnas y tildes correctas.)*
+  - [x] El CSV descargado se abre bien en Excel o Google Sheets, con tildes. *(2026-10-20: dos columnas y tildes correctas.)*
 - [x] **T21** · Repasar la **Definición de terminado** (`AGENT.md` §6) y actualizar el estado en `AGENT.md` §7.
 
 ## Fase G · Ampliación v1.2: un registro por navegador + quitar registros
@@ -119,4 +119,4 @@ Todos los tests de esta fase van en `tests/test_api.py`. Usan las fixtures de `t
   - [x] Chrome automatizado: CA-22 (recargar → bloqueado), CA-23 (otra clase → formulario), CA-24 (cancelar no cambia nada; confirmar quita, y la confirmación no desaparece con el repintado). *(2026-10-20: 12 comprobaciones OK, incluida la confirmación tras 4,5 s de polling con un alumno nuevo llegando.)*
   - [x] Capturas a 400 px de la lista con botones "Quitar" y de la confirmación (CA-18). *(Sin scroll horizontal.)*
   - [x] `README.md`: explicar el límite por navegador y cómo quitar registros.
-  - [x] Victor lo prueba con su móvil (registrarse dos veces con nombres distintos → bloqueado) y quita un registro desde el panel. *(Victor, 2026-10-20: pasos 1–5 correctos.)*
+  - [x] Prueba manual con móvil (registrarse dos veces con nombres distintos → bloqueado) y quitar un registro desde el panel. *(2026-10-20: pasos 1–5 correctos.)*

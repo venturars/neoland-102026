@@ -11,7 +11,7 @@ Cómo leer esta lista:
 
 ## Fase A · README de la app — rutas y títulos
 
-- [x] **T01** · En `asistenciapp/README.md`, sustituir `staff/victor-chang/asistenciapp` por `staff/sergio-cortes/asistenciapp` en los bloques `cd`.
+- [x] **T01** · En `asistenciapp/README.md`, usar `staff/sergio-cortes/asistenciapp` en los bloques `cd`.
   - *Cubre:* CA-03.
   - *Hecha cuando:* no queda ninguna ruta a otra carpeta personal.
 
