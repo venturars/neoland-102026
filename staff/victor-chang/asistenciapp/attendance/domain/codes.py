@@ -38,10 +38,7 @@ def is_valid_code(secret: bytes, code: str, t: float) -> bool:
     if not CODE_FORMAT.fullmatch(code):
         return False
     current = _window(t)
-    return any(
-        hmac.compare_digest(code, _code_for_window(secret, w))
-        for w in (current, current - 1)
-    )
+    return any(hmac.compare_digest(code, _code_for_window(secret, w)) for w in (current, current - 1))
 
 
 def seconds_left(t: float) -> int:

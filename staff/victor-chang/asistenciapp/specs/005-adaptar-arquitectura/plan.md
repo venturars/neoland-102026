@@ -124,6 +124,7 @@ El dominio recibe ya `str` y sigue comprobando sus reglas (E2): nombre vacío o 
 ```python
 class AppError(Exception):
     """Base de los errores que puede provocar un usuario."""
+
     MESSAGE = "Error inesperado. Inténtalo de nuevo en unos segundos."
 ```
 

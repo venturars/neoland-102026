@@ -10,7 +10,7 @@ from flask import Flask
 
 import app
 from attendance.config import InvalidPortError
-from attendance.infra.tunnel import TunnelError
+from attendance.infra.tunnel import CloudflaredMissingError
 
 
 @pytest.fixture
@@ -58,13 +58,13 @@ def test_busy_port_stops_with_advice(started, monkeypatch):
 
 def test_tunnel_error_stops_with_its_message(started, monkeypatch):  # spec 001 CA-20
     def no_tunnel(_port):
-        raise TunnelError("No se encontró cloudflared.")
+        raise CloudflaredMissingError
 
     monkeypatch.setattr(app, "start_tunnel", no_tunnel)
     monkeypatch.setattr("sys.argv", ["app.py", "--tunel"])
     with pytest.raises(SystemExit) as exc:
         app.main()
-    assert "No se encontró cloudflared." in str(exc.value.code)
+    assert CloudflaredMissingError.MESSAGE in str(exc.value.code)
     assert started == []
 
 
