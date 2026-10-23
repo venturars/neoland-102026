@@ -118,6 +118,7 @@ Una funcionalidad está terminada cuando:
 | `003-activar-el-entorno`            | ✅ Implementada (2026-10-22): T01–T04, 77 tests                                | El README separa activar el entorno y arrancar la app           |
 | `004-quitar-referencias-personales` | ✅ Implementada (2026-10-22): T01–T12, 80 tests                                | El README entra con un usuario genérico                         |
 | `005-reorganizar-arquitectura`      | ✅ Implementada (2026-10-22): T01–T12, 87 tests                                | Documentos en `docs/` y código en reglas, acciones y borde      |
+| `006-limite-por-ip-publica`         | ✅ Implementada (2026-10-23): T01–T11, 102 tests                               | Límite de intentos de registro por IP y lista de bloqueo        |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
 

@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 2.3 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-22
+> Versión 3.0 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-23
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -35,7 +35,7 @@ El registro de asistencia no depende de una plataforma concreta. Las integracion
 ### P4 · Privacidad mínima
 
 - Del alumno solo se guarda el **nombre que él mismo escribe** y la **hora del registro**.
-- **Prohibido** guardar emails, IPs, identificadores de dispositivo o cualquier dato no imprescindible.
+- **Prohibido** guardar emails, identificadores de dispositivo o cualquier dato no imprescindible. La IP pública estática es la excepción: se recuerda solo para contar los intentos de registrarse y para la lista de bloqueo. No forma parte del registro del alumno.
 - Los datos se **almacenan** solo en local (SQLite). Ningún servicio de terceros los guarda.
 - Para que los alumnos lleguen a la app desde sus casas, el tráfico puede **pasar cifrado (HTTPS)** por un proveedor de túnel (p. ej. Cloudflare). Ese proveedor no los almacena, pero técnicamente podría verlos en tránsito; por eso solo se envía lo imprescindible (nombre y código).
 
@@ -115,3 +115,4 @@ El detalle de cómo se relacionan esas carpetas está en `docs/ARCHITECTURE.md`.
 | 2.1     | 2026-10-20 | P4: distingue _almacenar_ (solo en local) de _transitar_ (puede pasar cifrado por un proveedor de túnel)                                                                                                                                | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08)                                                    |
 | 2.2     | 2026-10-22 | §4: ningún fichero de la app se modifica sin spec aprobado; una issue, una rama o una pull request no sustituyen al spec. §7: la carpeta es `staff/ventura-rodriguez/asistenciapp/`. §8: aprueba la persona que trabaja en esta carpeta | El texto solo frenaba el código de una funcionalidad, así que un cambio de README se escribía sin spec. Las reglas seguían nombrando otra carpeta y a otra persona (spec 002) |
 | 2.3     | 2026-10-22 | §3: el código se reparte en `docs/`, `asistencia/domain/`, `asistencia/usecases/`, `asistencia/storage/` y `app.py`. El archivo sigue en `data/` y las pantallas en `static/` | La organización de archivos y carpetas cambió. El propósito, la privacidad y las reglas de pasar lista siguen (spec 005) |
+| 3.0     | 2026-10-23 | P4: la IP pública estática se puede recordar solo para contar los intentos de registrarse y para la lista de bloqueo. No se guarda con el nombre ni con la hora | El límite por IP necesita recordar esa IP. Contradice la prohibición de guardar IPs. Los máximos y la duración de la lista se quedan en la spec 006 |

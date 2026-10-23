@@ -73,6 +73,10 @@ Cuando un alumno se registra, su navegador lo recuerda **para esa clase**: si vu
 
 Es un límite **disuasorio**, no una prueba de identidad: se salta con otro navegador, una ventana privada u otro dispositivo. Para lo que se cuele, está el botón **Quitar**. Si quitas a alguien, su navegador sigue mostrando "ya te registraste": tendría que usar otro navegador para registrarse de nuevo.
 
+### Intentos de registrarse
+
+Una misma dirección puede intentar registrarse **5 veces por segundo** y **20 por minuto**. Si se pasa, queda bloqueada para siempre. No hay forma de quitar esa dirección. El código de 4 cifras no cambia.
+
 Las **sesiones anteriores** aparecen en el panel con su número de asistentes, y puedes volver a verlas o descargarlas cuando quieras.
 
 ---
@@ -119,7 +123,8 @@ Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una 
 
 ## 8. Privacidad
 
-- Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails ni IPs.
+- Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails.
+- La dirección desde la que intenta registrarse se recuerda **solo** para contar esos intentos y para la lista de bloqueo, en el mismo archivo local. No se guarda junto al nombre ni a la hora.
 - El límite "un registro por navegador" se guarda **solo en el navegador del alumno**, no en el servidor.
 - Quitar un registro lo **borra de verdad** (no queda en ninguna papelera).
 - Los datos se guardan **solo en tu ordenador** (`data/`, que no se sube a git).
