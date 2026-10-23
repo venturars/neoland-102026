@@ -44,6 +44,9 @@ def main() -> None:
 
     me = get(session, "https://openidconnect.googleapis.com/v1/userinfo") or {}
     print(f"\n[Pregunta 2] sub de la cuenta que ha iniciado sesión: {me.get('sub')}")
+    if args.contar_pasadas:
+        count_past(session)
+        return
     if args.diagnostico:
         diagnose(session, code)
         return
@@ -104,20 +107,51 @@ def login() -> Credentials:
 def parse_args() -> tuple[argparse.Namespace, str]:
     """Lee los argumentos y el código de la reunión; sale con un mensaje si algo falta."""
     parser = argparse.ArgumentParser(description="Spike de la API de Meet (spec 004, T03).")
-    parser.add_argument("reunion", help="enlace o código de la reunión de Meet")
+    parser.add_argument("reunion", nargs="?", default="", help="enlace o código de la reunión de Meet")
     parser.add_argument("--guardar", action="store_true", help="guarda ejemplos anonimizados para los tests")
+    parser.add_argument(
+        "--contar-pasadas",
+        action="store_true",
+        help="pregunta 3: cuenta (sin nombres) los participantes de las últimas reuniones ya terminadas",
+    )
     parser.add_argument(
         "--diagnostico",
         action="store_true",
         help="prueba la otra vía de la API (conferenceRecords) en vez de spaces/{código}",
     )
     args = parser.parse_args()
+    if not CLIENT_FILE.exists():
+        sys.exit(f"Falta {CLIENT_FILE.relative_to(ROOT)} (tarea T02).")
+    if args.contar_pasadas:
+        return args, ""
     match = CODE.fullmatch(args.reunion.strip().lower())
     if not match:
         sys.exit("No parece un enlace o código de Meet (p. ej. abc-defg-hij).")
-    if not CLIENT_FILE.exists():
-        sys.exit(f"Falta {CLIENT_FILE.relative_to(ROOT)} (tarea T02).")
     return args, match.group(1)
+
+
+def count_past(session: requests.Session) -> None:
+    """Pregunta 3: de las últimas reuniones terminadas, cuántos participantes ve esta cuenta y de qué tipo.
+
+    No muestra ni guarda nombres ni identificadores de nadie: solo números y tipos (P4).
+    """
+    records = get(session, f"{API}/conferenceRecords", params={"pageSize": "10"}, label="conferenceRecords")
+    if records is None:
+        return
+    ended = [r for r in records.get("conferenceRecords", []) if r.get("endTime")]
+    print(f"\n[Pregunta 3] Reuniones terminadas en la lista: {len(ended)}")
+    for r in ended:
+        print(f"\n  · sala {r.get('space')} · {r.get('startTime', '')[:16]} → {r.get('endTime', '')[:16]} (UTC)")
+        url = f"{API}/{r['name']}/participants"
+        page = get(session, url, params={"pageSize": "250"}, label="participants (sin filtro)")
+        if page is None:
+            continue
+        kinds: dict[str, int] = {}
+        for p in page.get("participants", []):
+            kind = next((k for k in ("signedinUser", "anonymousUser", "phoneUser") if k in p), "?")
+            kinds[kind] = kinds.get(kind, 0) + 1
+        more = " (hay más páginas)" if page.get("nextPageToken") else ""
+        print(f"    participantes que estuvieron en algún momento: {sum(kinds.values())}{more} · por tipo: {kinds}")
 
 
 def diagnose(session: requests.Session, code: str) -> None:
