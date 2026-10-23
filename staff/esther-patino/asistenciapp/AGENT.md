@@ -78,7 +78,7 @@ asistenciapp/
 └── data/                  # base de datos SQLite (no se sube a git)
 ```
 
-Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `003-discord-bot`.
+Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `003-startup-headings`.
 
 ---
 
@@ -130,6 +130,7 @@ Una funcionalidad está terminada cuando:
 | --- | --- | --- |
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
 | `002-require-approved-spec` | ✅ Terminada (2026-10-23): constitución 2.2 y este manual. T01 a T07 hechas; CA-01 a CA-04 leídos | Ningún fichero de la app sin un spec aprobado que cubra ese cambio |
-| `003-discord-bot` | Idea futura, sin carpeta | Fuera del MVP |
+| `003-startup-headings` | 4. Implementar · T01 a T03 hechas (2026-10-23) | CA-01 a CA-03 leídos en el diff del README. Falta el visto bueno |
+
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
