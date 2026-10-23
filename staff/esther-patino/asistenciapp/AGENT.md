@@ -19,19 +19,19 @@ Si algo de lo que te piden contradice la constitución, **para y avisa** antes d
 
 ## 2. Flujo SDD paso a paso
 
-Cada funcionalidad recorre estas fases **en orden**. Al terminar cada una, el agente **se detiene** y pide la aprobación de Victor. No se avanza sin un "ok" explícito.
+Cada funcionalidad recorre estas fases **en orden**. Al terminar cada una, el agente **se detiene** y pide la aprobación de quien trabaja en el proyecto. No se avanza sin un "ok" explícito.
 
 Antes de tocar un fichero de la app:
 
 - No se modifican código, tests, el documento de uso de la app ni otra documentación de uso sin un spec aprobado que cubra ese cambio.
 - Un spec aprobado de otro cambio no cubre este.
-- Una issue, una rama o una pull request no sustituyen a ese spec ni al «ok» de Victor.
+- Una issue, una rama o una pull request no sustituyen a ese spec ni al «ok» de quien trabaja en el proyecto.
 
 | Fase | Archivo | Pregunta que responde | Puerta de salida |
 | --- | --- | --- | --- |
-| 1. Especificar | `spec.md` | ¿**Qué** hay que construir y **por qué**? | Sin `[NECESITA ACLARACIÓN]` pendientes + aprobación de Victor |
-| 2. Planificar | `plan.md` | ¿**Cómo** lo construimos? | Pasa la comprobación de la constitución + aprobación de Victor |
-| 3. Desglosar | `tasks.md` | ¿En qué **pasos pequeños** lo hacemos? | Cada tarea apunta a un criterio de aceptación + aprobación de Victor |
+| 1. Especificar | `spec.md` | ¿**Qué** hay que construir y **por qué**? | Sin `[NECESITA ACLARACIÓN]` pendientes + aprobación de quien trabaja en el proyecto |
+| 2. Planificar | `plan.md` | ¿**Cómo** lo construimos? | Pasa la comprobación de la constitución + aprobación de quien trabaja en el proyecto |
+| 3. Desglosar | `tasks.md` | ¿En qué **pasos pequeños** lo hacemos? | Cada tarea apunta a un criterio de aceptación + aprobación de quien trabaja en el proyecto |
 | 4. Implementar | código + tests | Hacerlo, tarea a tarea | `pytest` en verde + criterios verificados |
 
 ### 2.1 Especificar (`spec.md`)
@@ -84,7 +84,7 @@ Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codi
 
 ## 4. Comandos
 
-Ejecutar desde `staff/victor-chang/asistenciapp/`:
+Ejecutar desde la carpeta de este proyecto:
 
 | Acción | Comando |
 | --- | --- |
@@ -101,14 +101,14 @@ Las únicas dependencias son Flask y pytest (constitución P3).
 
 ## 5. Reglas de comportamiento
 
-- **Ningún fichero de la app sin spec aprobado.** No se modifican código, tests, el documento de uso de la app ni otra documentación de uso sin un spec aprobado que cubra ese cambio. Un spec aprobado de otro cambio no cubre este. Una issue, una rama o una pull request no sustituyen a ese spec ni al «ok» de Victor.
-- **Solo se edita dentro de `staff/victor-chang/asistenciapp/`.**
+- **Ningún fichero de la app sin spec aprobado.** No se modifican código, tests, el documento de uso de la app ni otra documentación de uso sin un spec aprobado que cubra ese cambio. Un spec aprobado de otro cambio no cubre este. Una issue, una rama o una pull request no sustituyen a ese spec ni al «ok» de quien trabaja en el proyecto.
+- **Solo se edita dentro de la carpeta de este proyecto.**
 - **Pregunta antes de suponer.** Ante una ambigüedad, pregunta o márcala con `[NECESITA ACLARACIÓN]`.
-- **Explica lo que haces.** Victor está aprendiendo SDD: al cerrar cada fase, resume qué se ha hecho, por qué y qué tiene que revisar.
+- **Explica lo que haces.** Quien trabaja en el proyecto está aprendiendo este modo de trabajo: al cerrar cada fase, resume qué se ha hecho, por qué y qué tiene que revisar.
 - **Cambios pequeños.** Mejor varias tareas cortas que una enorme.
-- **Nada de commits ni pushes** sin que Victor lo pida.
+- **Nada de commits ni pushes** sin que lo pida quien trabaja en el proyecto.
 - **Para todo lo que arranques.** Si levantas el servidor o `cloudflared` para probar, páralos al terminar y comprueba que el puerto queda libre: `lsof -nP -iTCP:8000 -sTCP:LISTEN` no debe mostrar nada. Ojo: en macOS el proceso aparece como `Python` (con mayúscula). (Incidencia del 2026-10-20 en T12.)
-- **No toques la constitución** salvo para proponer una enmienda, que solo Victor aprueba (constitución §8).
+- **No toques la constitución** salvo para proponer una enmienda, que la aprueba quien trabaja en el proyecto (constitución §8).
 
 ---
 
@@ -120,7 +120,7 @@ Una funcionalidad está terminada cuando:
 - [ ] `pytest` pasa.
 - [ ] Cada `CA-xx` de la spec tiene su test o su verificación manual hecha.
 - [ ] El `README.md` explica cómo usar lo nuevo.
-- [ ] Victor la ha probado y la ha dado por buena.
+- [ ] Quien trabaja en el proyecto la ha probado y la ha dado por buena.
 
 ---
 
@@ -131,6 +131,7 @@ Una funcionalidad está terminada cuando:
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
 | `002-require-approved-spec` | ✅ Terminada (2026-10-23): constitución 2.2 y este manual. T01 a T07 hechas; CA-01 a CA-04 leídos | Ningún fichero de la app sin un spec aprobado que cubra ese cambio |
 | `003-startup-headings` | 4. Implementar · T01 a T03 hechas (2026-10-23) | CA-01 a CA-03 leídos en el diff del README. Falta el visto bueno |
+| `004-impersonal-references` | 4. Implementar · T01 a T04 hechas (2026-10-23) | CA-01, CA-02 y CA-05 leídos. Las specs 001, 002 y 003 no se han tocado. Falta el visto bueno |
 
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
