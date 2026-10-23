@@ -42,11 +42,17 @@ Cómo leer esta lista:
 
 ## Fase C · Dominio (plan §2.2, §2.7)
 
-- [ ] **T04** 🧪 · `domain/errors.py`: `AppError` y `EmptyName`, `NameTooLong`, `InvalidCode`, `SessionClosed`, `SessionNotFound`, `CheckinNotFound`, cada una con su `MESSAGE` (plan §2.7).
-  - `clean_name` lanza `EmptyName` / `NameTooLong` en vez de `ValueError`, y recibe solo `str`.
+- [x] **T04** 🧪 · `domain/errors.py`: `AppError` y `EmptyNameError`, `NameTooLongError`, `InvalidCodeError`, `SessionClosedError`, `SessionNotFoundError`, `CheckinNotFoundError`, cada una con su `MESSAGE` (plan §2.7).
+  - `clean_name` lanza `EmptyNameError` / `NameTooLongError` en vez de `ValueError`, y recibe solo `str`.
   - Las excepciones de `usecases/checkins.py` pasan a importarse de `domain/errors.py`. `app.py` captura las nuevas mientras no exista la tabla de errores (T11).
   - Tests en `test_names.py` y `test_errors.py`: cada excepción tiene un mensaje en español que dice qué hacer.
   - *Cubre:* CA-05.
+  - **Hecha (2026-10-23):** 115 tests en verde (los tests se vieron fallar primero).
+    - Por decisión de Victor, las excepciones llevan el sufijo `Error` (`SessionClosedError`…), y `ruff` vuelve a comprobarlo (`N818`).
+    - Cambia un test de la spec 001: `CLOSED` en `test_api.py` tiene el texto nuevo (plan §2.7). También cambia el mensaje de "registro inexistente".
+    - `test_names.py`: se quita el test de nombres que no son texto, porque `clean_name` ya solo recibe `str` (lo comprueba `mypy`). El caso sigue cubierto en `test_api.py` y pasará a `MalformedRequestError` en T13.
+    - Temporal hasta T13: `usecases/checkins.register` trata un nombre que no es texto como vacío, como hasta ahora.
+    - Pendiente para T16: `alumno.js` escribe su propio aviso de clase cerrada con el texto antiguo.
 - [ ] **T05** 🧪 · `domain/sessions.py`: los tipos `Session`, `SessionSummary`, `Checkin`, `CheckinResult`, `TeacherView`, `ExportFile` (plan §2.2), y las funciones puras `is_open`, `to_iso(t)` y `default_title(t, tz)`.
   - *Cubre:* base de CA-01 (spec 001 CA-02 y CA-13).
 - [ ] **T06** 🧪 · `domain/codes.py`: `is_valid_code` recibe solo `str` y ya no convierte con `str()` (E1).
@@ -69,10 +75,10 @@ Cómo leer esta lista:
 ## Fase E · Casos de uso (plan §2.3)
 
 - [ ] **T09** 🧪 · `usecases/sessions.py`: `create_session`, `close_session`, `find_session`, `teacher_view`, `export_attendance`.
-  - Tests en `test_sessions.py`, con BD temporal y reloj falso: título por defecto, sin código en una clase cerrada, nombre del archivo exportado, clase inexistente → `SessionNotFound`.
+  - Tests en `test_sessions.py`, con BD temporal y reloj falso: título por defecto, sin código en una clase cerrada, nombre del archivo exportado, clase inexistente → `SessionNotFoundError`.
   - Las rutas de `app.py` pasan a llamar a estos casos de uso.
   - *Cubre:* CA-01 (spec 001 CA-01, CA-02, CA-13, CA-14).
-- [ ] **T10** 🧪 · `usecases/checkins.py`: `check_in` (todo en una transacción) y `remove_checkin` (`CheckinNotFound`).
+- [ ] **T10** 🧪 · `usecases/checkins.py`: `check_in` (todo en una transacción) y `remove_checkin` (`CheckinNotFoundError`).
   - `test_checkin.py` pasa a `test_checkins.py`; se conserva el test del orden "cerrada → nombre → código".
   - *Cubre:* CA-01 (spec 001 CA-04 a CA-09, CA-24).
 
@@ -88,7 +94,7 @@ Cómo leer esta lista:
   - *Cubre:* CA-06.
 - [ ] **T13** 🧪 · `public.py`: rutas del alumno, sin `try/except` (E4). Sus tests pasan de `test_api.py` a `test_web_public.py`.
   - Tests nuevos (T3): `code` numérico, `name` lista, cuerpo que no es objeto → `400` y nada guardado; nombre con otros alfabetos y demasiado largo.
-  - Cambia el test de entradas mal formadas: los casos de tipo equivocado pasan a esperar el mensaje de `MalformedRequest`.
+  - Cambia el test de entradas mal formadas: los casos de tipo equivocado pasan a esperar el mensaje de `MalformedRequestError`.
   - *Cubre:* CA-01, CA-06.
 - [ ] **T14** 🧪 · `teacher.py`: rutas del profesor. Sus tests pasan de `test_api.py` a `test_web_teacher.py`, y se borra `test_api.py`.
   - Cambia `test_create_session_with_malformed_body_uses_date`: ahora espera `400` (spec P1). Se conserva el caso "sin título → fecha" (spec 001 CA-02).

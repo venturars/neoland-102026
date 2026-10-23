@@ -3,8 +3,9 @@
 import pytest
 
 from attendance.domain.codes import code_for
+from attendance.domain.errors import EmptyNameError, InvalidCodeError, SessionClosedError
 from attendance.infra import storage
-from attendance.usecases.checkins import InvalidCode, SessionClosed, register
+from attendance.usecases.checkins import register
 
 T = 1_800_000_000.0
 AT = "2027-01-15T08:00:00.000+00:00"
@@ -39,23 +40,23 @@ def test_same_name_twice_is_not_created_again(conn, session):  # CA-07
 def test_closed_session_is_rejected(conn, session):  # CA-09
     storage.close_session(conn, session["id"], AT)
     closed = storage.get_session(conn, session["id"])
-    with pytest.raises(SessionClosed):
+    with pytest.raises(SessionClosedError):
         register(conn, closed, "Ana", code_for(session["secret"], T), T, AT)
 
 
 def test_invalid_name_is_rejected(conn, session):  # CA-08
-    with pytest.raises(ValueError, match="Escribe tu nombre"):
+    with pytest.raises(EmptyNameError):
         register(conn, session, "  ", code_for(session["secret"], T), T, AT)
 
 
 @pytest.mark.parametrize("code", ["0000x", None, "١٢٣٤"])
 def test_invalid_code_is_rejected(conn, session, code):  # CA-06
-    with pytest.raises(InvalidCode):
+    with pytest.raises(InvalidCodeError):
         register(conn, session, "Ana", code, T, AT)
 
 
 def test_closed_is_checked_before_name(conn, session):
     storage.close_session(conn, session["id"], AT)
     closed = storage.get_session(conn, session["id"])
-    with pytest.raises(SessionClosed):
+    with pytest.raises(SessionClosedError):
         register(conn, closed, "", "", T, AT)

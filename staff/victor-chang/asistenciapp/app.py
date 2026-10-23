@@ -17,6 +17,13 @@ from werkzeug.exceptions import HTTPException, InternalServerError
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from attendance.domain.codes import code_for, seconds_left
+from attendance.domain.errors import (
+    AppError,
+    CheckinNotFoundError,
+    InvalidCodeError,
+    SessionClosedError,
+    SessionNotFoundError,
+)
 from attendance.infra import storage
 from attendance.infra.export import to_csv
 from attendance.infra.ports import port_in_use
@@ -26,15 +33,8 @@ from attendance.usecases import checkins
 BASE_DIR = Path(__file__).parent
 DEFAULT_DB = BASE_DIR / "data" / "asistencia.db"
 
-INVALID_CODE = "El código no es válido o ha caducado. Pide el código actual al profesor."
-CLOSED = "La asistencia de esta clase ya está cerrada."
-NOT_FOUND = "Esta clase no existe. Revisa el enlace."
 UNAUTHORIZED = "Acceso no autorizado. Abre el panel con tu enlace secreto de profesor."
 GENERIC_ERRORS = {404: "No encontrado.", 405: "Método no permitido."}
-
-
-class SessionNotFound(Exception):
-    """La sesión pedida no existe; se responde 404 con NOT_FOUND."""
 
 
 # ---------- de filas de la BD (snake_case) a JSON de la API (camelCase) ----------
@@ -106,12 +106,12 @@ def create_app(
     def session_or_404(session_id: str) -> dict:
         session = storage.get_session(get_db(), session_id)
         if session is None:
-            raise SessionNotFound
+            raise SessionNotFoundError
         return session
 
-    @app.errorhandler(SessionNotFound)
-    def session_not_found(_exc):
-        return error(404, NOT_FOUND)
+    @app.errorhandler(SessionNotFoundError)
+    def session_not_found(exc):
+        return error(404, exc.MESSAGE)
 
     @app.errorhandler(HTTPException)
     def http_error(exc):
@@ -156,12 +156,13 @@ def create_app(
             row, created = checkins.register(
                 get_db(), session, body.get("name"), body.get("code"), now(), now_iso()
             )
-        except checkins.SessionClosed:
-            return error(409, CLOSED)  # CA-09
-        except ValueError as exc:
-            return error(400, str(exc))  # CA-08
-        except checkins.InvalidCode:
-            return error(422, INVALID_CODE)  # CA-06
+        # Temporal hasta spec 005 · T11, cuando la tabla de errores sustituya estos except.
+        except SessionClosedError as exc:
+            return error(409, exc.MESSAGE)  # CA-09
+        except InvalidCodeError as exc:
+            return error(422, exc.MESSAGE)  # CA-06
+        except AppError as exc:
+            return error(400, exc.MESSAGE)  # CA-08
         if not created:
             return jsonify(already=True, **checkin_json(row))  # CA-07
         return jsonify(checkin_json(row)), 201  # CA-04
@@ -209,7 +210,7 @@ def create_app(
     def remove_checkin(session_id, checkin_id):
         session_or_404(session_id)
         if not storage.remove_checkin(get_db(), session_id, checkin_id):  # CA-24
-            return error(404, "Ese registro no existe en esta clase.")
+            return error(404, CheckinNotFoundError.MESSAGE)
         return jsonify(ok=True)
 
     @app.get("/api/sessions/<session_id>/export")

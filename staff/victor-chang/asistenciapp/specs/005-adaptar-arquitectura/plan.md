@@ -77,10 +77,10 @@ Las fechas siguen siendo texto ISO 8601 en UTC (D6).
 | Acción | Dónde | Reglas que se mueven de la ruta al caso de uso |
 | --- | --- | --- |
 | Abrir clase | `usecases.sessions.create_session(conn, title, clock, tz)` | Título por defecto con la fecha local (spec 001 CA-02). Genera id y secreto con `secrets` (X1) |
-| Cerrar clase | `usecases.sessions.close_session(conn, session_id, clock)` | Clase inexistente → `SessionNotFound` |
+| Cerrar clase | `usecases.sessions.close_session(conn, session_id, clock)` | Clase inexistente → `SessionNotFoundError` |
 | Vista del profesor | `usecases.sessions.teacher_view(conn, session_id, clock)` | Código y segundos solo si está abierta (spec 001 CA-13) |
 | Exportar | `usecases.sessions.export_attendance(conn, session_id, tz)` | Nombre del archivo con el día de apertura |
-| Información pública de una clase | `usecases.sessions.find_session(conn, session_id)` | Clase inexistente → `SessionNotFound` |
+| Información pública de una clase | `usecases.sessions.find_session(conn, session_id)` | Clase inexistente → `SessionNotFoundError` |
 | Registrarse | `usecases.checkins.check_in(conn, session_id, name, code, clock)` | El orden actual: cerrada → nombre → código |
 | Quitar registro | `usecases.checkins.remove_checkin(conn, session_id, checkin_id)` | Clase o registro inexistentes → error con nombre |
 | Lista de clases | la ruta llama a `infra.storage.list_sessions` (C5) | Ninguna: solo lee |
@@ -103,8 +103,8 @@ Las fechas siguen siendo texto ISO 8601 en UTC (D6).
 
 ### 2.6 Validación de lo que llega (E1, E2)
 `entrypoints/web/validation.py`:
-- `json_object()`: si el cuerpo no es un objeto JSON → `MalformedRequest` (`400`).
-- `optional_str(body, key)`: campo ausente → `""`; presente y no texto → `MalformedRequest` (`400`), **sin convertir** (un número no se convierte en texto).
+- `json_object()`: si el cuerpo no es un objeto JSON → `MalformedRequestError` (`400`).
+- `optional_str(body, key)`: campo ausente → `""`; presente y no texto → `MalformedRequestError` (`400`), **sin convertir** (un número no se convierte en texto).
 
 Cambios de comportamiento que esto trae (spec 005, CA-06 y P1):
 
@@ -128,14 +128,14 @@ class AppError(Exception):
 
 | Excepción | Dónde se define | HTTP | Mensaje (E5: qué pasa y qué hacer) |
 | --- | --- | --- | --- |
-| `EmptyName` | dominio | 400 | "Escribe tu nombre." |
-| `NameTooLong` | dominio | 400 | "El nombre no puede tener más de 60 caracteres. Escríbelo más corto." |
-| `InvalidCode` | dominio | 422 | "El código no es válido o ha caducado. Pide el código actual al profesor." |
-| `SessionClosed` | dominio | 409 | "La asistencia de esta clase ya está cerrada. Si acabas de llegar, avisa al profesor." |
-| `SessionNotFound` | dominio | 404 | "Esta clase no existe. Revisa el enlace." |
-| `CheckinNotFound` | dominio | 404 | "Ese registro ya no está en esta clase. Recarga la lista." |
-| `MalformedRequest` | entrada web | 400 | "No se ha entendido lo que se ha enviado. Recarga la página e inténtalo de nuevo." |
-| `TeacherUnauthorized` | entrada web | 401 | "Acceso no autorizado. Abre el panel con tu enlace secreto de profesor." |
+| `EmptyNameError` | dominio | 400 | "Escribe tu nombre." |
+| `NameTooLongError` | dominio | 400 | "El nombre no puede tener más de 60 caracteres. Escríbelo más corto." |
+| `InvalidCodeError` | dominio | 422 | "El código no es válido o ha caducado. Pide el código actual al profesor." |
+| `SessionClosedError` | dominio | 409 | "La asistencia de esta clase ya está cerrada. Si acabas de llegar, avisa al profesor." |
+| `SessionNotFoundError` | dominio | 404 | "Esta clase no existe. Revisa el enlace." |
+| `CheckinNotFoundError` | dominio | 404 | "Ese registro ya no está en esta clase. Recarga la lista." |
+| `MalformedRequestError` | entrada web | 400 | "No se ha entendido lo que se ha enviado. Recarga la página e inténtalo de nuevo." |
+| `TeacherUnauthorizedError` | entrada web | 401 | "Acceso no autorizado. Abre el panel con tu enlace secreto de profesor." |
 | `ConfigError`, errores del túnel | infraestructura / config | — (se imprimen al arrancar) | Los textos actuales de `tunnel.py`, como constantes |
 
 - La tabla excepción → código vive **solo** en `entrypoints/web/errors.py` (E4). Las rutas no tienen `try/except`.

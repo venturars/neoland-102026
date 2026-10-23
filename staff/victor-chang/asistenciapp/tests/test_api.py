@@ -5,7 +5,7 @@ import re
 import pytest
 
 INVALID_CODE = "El código no es válido o ha caducado. Pide el código actual al profesor."
-CLOSED = "La asistencia de esta clase ya está cerrada."
+CLOSED = "La asistencia de esta clase ya está cerrada. Si acabas de llegar, avisa al profesor."
 
 
 def open_session(client, teacher, title="Clase de prueba"):

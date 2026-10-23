@@ -7,16 +7,9 @@ registros (p. ej. Discord, constitución P1) aplique exactamente las mismas.
 import sqlite3
 
 from attendance.domain.codes import is_valid_code
+from attendance.domain.errors import EmptyNameError, InvalidCodeError, SessionClosedError
 from attendance.domain.names import clean_name, name_key
 from attendance.infra import storage
-
-
-class SessionClosed(Exception):
-    """La sesión ya está cerrada y no acepta registros (CA-09)."""
-
-
-class InvalidCode(Exception):
-    """El código es incorrecto o ha caducado (CA-06)."""
 
 
 def register(
@@ -32,13 +25,17 @@ def register(
     Las comprobaciones van en este orden: sesión cerrada, nombre, código.
 
     Raises:
-        SessionClosed: la sesión ya está cerrada (CA-09).
-        ValueError: el nombre no es válido (CA-08).
-        InvalidCode: el código es incorrecto o ha caducado (CA-06).
+        SessionClosedError: la sesión ya está cerrada (CA-09).
+        EmptyNameError, NameTooLongError: el nombre no es válido (CA-08).
+        InvalidCodeError: el código es incorrecto o ha caducado (CA-06).
     """
     if session["closed_at"] is not None:
-        raise SessionClosed
+        raise SessionClosedError
+    # Temporal hasta spec 005 · T13: la entrada aún no comprueba el tipo (E1), y un nombre
+    # que no es texto se sigue tratando como vacío, como hasta ahora.
+    if not isinstance(raw_name, str):
+        raise EmptyNameError
     name = clean_name(raw_name)
     if not is_valid_code(session["secret"], "" if raw_code is None else raw_code, t):
-        raise InvalidCode
+        raise InvalidCodeError
     return storage.add_checkin(conn, session["id"], name, name_key(name), checked_at)
