@@ -48,7 +48,7 @@ def main() -> None:
         count_past(session)
         return
     if args.diagnostico:
-        diagnose(session, code)
+        diagnose(session, code, args.guardar)
         return
 
     space = get(session, f"{API}/spaces/{code}", label="spaces")
@@ -154,8 +154,11 @@ def count_past(session: requests.Session) -> None:
         print(f"    participantes que estuvieron en algún momento: {sum(kinds.values())}{more} · por tipo: {kinds}")
 
 
-def diagnose(session: requests.Session, code: str) -> None:
-    """Prueba conferenceRecords: primero sin filtro y luego filtrando por el código de la reunión."""
+def diagnose(session: requests.Session, code: str, store: bool = False) -> None:
+    """Prueba conferenceRecords: primero sin filtro y luego filtrando por el código de la reunión.
+
+    Con --guardar solo se guarda la reunión de ese código (la de prueba de Victor), anonimizada.
+    """
     print("\n[Diagnóstico 1] Últimas reuniones de esta cuenta (conferenceRecords, sin filtro):")
     records = get(session, f"{API}/conferenceRecords", params={"pageSize": "5"}, label="conferenceRecords")
     if records is not None:
@@ -173,13 +176,20 @@ def diagnose(session: requests.Session, code: str) -> None:
         return
     items = filtered.get("conferenceRecords", [])
     print(f"  {len(items)} reuniones con ese código")
+    save(store, "conference_records_by_code.json", anonymize_records(filtered))
     active = [r for r in items if not r.get("endTime")]
     if not active:
         print("  Ninguna está en curso ahora mismo.")
+        if store and items:
+            url = f"{API}/{items[0]['name']}/participants"
+            ended = get(session, url, params={"pageSize": "250"}, label="participants (terminada)")
+            if ended is not None:
+                save(store, "participants_ended.json", anonymize(ended))
         return
     url = f"{API}/{active[0]['name']}/participants"
     page = get(session, url, params={"filter": "latest_end_time IS NULL", "pageSize": "250"}, label="participants")
     if page is not None:
+        save(store, "participants_in_call.json", anonymize(page))
         print(f"\n[Diagnóstico 3] Participantes en la llamada ahora: {len(page.get('participants', []))}")
         for p in page.get("participants", []):
             kind = next((k for k in ("signedinUser", "anonymousUser", "phoneUser") if k in p), "?")
@@ -225,6 +235,15 @@ def anonymize(page: dict[str, Any]) -> dict[str, Any]:
                     p[kind]["displayName"] = f"Persona {i}"
                 if "user" in p[kind]:
                     p[kind]["user"] = f"users/{1000 + i}"
+    return copy
+
+
+def anonymize_records(page: dict[str, Any]) -> dict[str, Any]:
+    """Copia de una lista de conferenceRecords con los identificadores cambiados."""
+    copy = json.loads(json.dumps(page))
+    for i, r in enumerate(copy.get("conferenceRecords", []), start=1):
+        r["name"] = f"conferenceRecords/ejemplo-{i}"
+        r["space"] = "spaces/ejemplo"
     return copy
 
 
