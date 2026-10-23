@@ -22,6 +22,7 @@ from pathlib import Path
 from typing import Any
 
 import requests
+from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -47,21 +48,7 @@ def main() -> None:
     if not CLIENT_FILE.exists():
         sys.exit(f"Falta {CLIENT_FILE.relative_to(ROOT)} (tarea T02).")
 
-    print("Abriendo Google en el navegador. Elige la cuenta con la que quieres probar…")
-    # Google deja conceder solo parte de los permisos (casillas en la pantalla de consentimiento).
-    # Sin esto, oauthlib se para con un Warning; así el spike puede decir qué permiso falta.
-    os.environ["OAUTHLIB_RELAX_TOKEN_SCOPE"] = "1"
-    flow = InstalledAppFlow.from_client_secrets_file(str(CLIENT_FILE), SCOPES)
-    credentials = flow.run_local_server(port=0, prompt="select_account consent", timeout_seconds=120)
-    granted = set(getattr(credentials, "granted_scopes", None) or flow.oauth2session.token.get("scope", []))
-    missing = [s for s in SCOPES if s not in granted]
-    print(f"\nPermisos concedidos: {sorted(granted)}")
-    if missing:
-        sys.exit(
-            f"Falta el permiso {missing}. Vuelve a ejecutar y, en la pantalla de Google, marca la casilla "
-            "«Ver información sobre tus reuniones de Google Meet». Si no aparece, añade ese permiso en "
-            "Google Auth Platform → Acceso a datos (Data access)."
-        )
+    credentials = login()
     session = requests.Session()
     session.headers["Authorization"] = f"Bearer {credentials.token}"
 
@@ -99,6 +86,26 @@ def main() -> None:
         print(f"  - {kind}: displayName={info.get('displayName')!r} user={info.get('user')!r}{mark}")
     for i, page in enumerate(pages, start=1):
         save(args.guardar, f"participants_page{i}.json", anonymize(page))
+
+
+def login() -> Credentials:
+    """Inicia sesión con Google en el navegador y comprueba que se han concedido los dos permisos."""
+    print("Abriendo Google en el navegador. Elige la cuenta con la que quieres probar…")
+    # Google deja conceder solo parte de los permisos (casillas en la pantalla de consentimiento).
+    # Sin esto, oauthlib se para con un Warning; así el spike puede decir qué permiso falta.
+    os.environ["OAUTHLIB_RELAX_TOKEN_SCOPE"] = "1"  # noqa: S105 — es un ajuste de oauthlib, no un secreto
+    flow = InstalledAppFlow.from_client_secrets_file(str(CLIENT_FILE), SCOPES)
+    credentials = flow.run_local_server(port=0, prompt="select_account consent", timeout_seconds=120)
+    granted = set(getattr(credentials, "granted_scopes", None) or flow.oauth2session.token.get("scope", []))
+    missing = [s for s in SCOPES if s not in granted]
+    print(f"\nPermisos concedidos: {sorted(granted)}")
+    if missing:
+        sys.exit(
+            f"Falta el permiso {missing}. Vuelve a ejecutar y, en la pantalla de Google, marca la casilla "
+            "«Ver información sobre tus reuniones de Google Meet». Si no aparece, añade ese permiso en "
+            "Google Auth Platform → Acceso a datos (Data access)."
+        )
+    return credentials
 
 
 def get(
