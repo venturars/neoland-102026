@@ -33,11 +33,39 @@ def test_constitution_amendment():
     assert "solo Jimena Durán lo **aprueba**" in text
 
 
-@pytest.mark.parametrize("filename,expected", [
-    ("plan.md", "40FD09DE5E88DB0F29DD3BF00E69BDF07D039C59B85D1BD3CD144C9FFE7DC186"),
-    ("spec.md", "FF35CC0FFBC9AB2049DFF64D2D104C3F24092E4DC098428E4F71B64933435C93"),
-    ("tasks.md", "CB15465A2BB7C957FF387338F9A1DF996DD8DD9153F1A96530A9E68D0F946FF8"),
-])
+SPEC_BASELINES = [
+    ("plan.md", "2A34371026BA29BD8573E0A595095AEA4DA576914E222E4250849F33032124C9"),
+    ("spec.md", "A98973E10B5AE5AF3A242F63D970D7501B5E310BF01F1F62FF1263E93930F49E"),
+    ("tasks.md", "BDB761AF609BAF66BF475BEFC380F53B877BB2D70C60BD8E3F0DECBC85C46EE3"),
+]
+
+
+@pytest.mark.parametrize("filename,expected", SPEC_BASELINES)
 def test_inherited_spec_anonymized_baseline(filename, expected):
     content = (ROOT / "specs" / "001-checkin-codigo" / filename).read_bytes()
+    # Misma base publicada, con CRLF normalizado a LF solo en memoria.
+    content = content.replace(b"\r\n", b"\n")
     assert hashlib.sha256(content).hexdigest().upper() == expected
+
+
+@pytest.mark.parametrize("filename,expected", SPEC_BASELINES)
+@pytest.mark.parametrize("newline", [b"\n", b"\r\n"])
+@pytest.mark.parametrize("change", ["none", "text", "space", "final_newline"])
+def test_spec_integrity_line_endings_and_changes(tmp_path, monkeypatch, filename, expected, newline, change):
+    content = (ROOT / "specs/001-checkin-codigo" / filename).read_bytes().replace(b"\r\n", b"\n")
+    if change == "text":
+        content += b"Cambio real.\n"
+    elif change == "space":
+        content += b" "
+    elif change == "final_newline":
+        assert content.endswith(b"\n")
+        content = content[:-1]
+    target = tmp_path / "specs/001-checkin-codigo" / filename
+    target.parent.mkdir(parents=True)
+    target.write_bytes(content.replace(b"\n", newline))
+    monkeypatch.setitem(globals(), "ROOT", tmp_path)
+    if change == "none":
+        test_inherited_spec_anonymized_baseline(filename, expected)
+    else:
+        with pytest.raises(AssertionError):
+            test_inherited_spec_anonymized_baseline(filename, expected)

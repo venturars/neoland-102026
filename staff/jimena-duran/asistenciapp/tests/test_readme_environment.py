@@ -2,9 +2,10 @@
 
 import hashlib
 from pathlib import Path
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-BASE_SHA256 = "af7400a1c0349b55266b1292ae6ce64e7589229eacf94244cd66e2e6733f981b"
+BASE_SHA256 = "38e7d41655369de32d93de72beac7cc5a8dd4999c553f41a5c57343622657590"
 
 
 def readme():
@@ -37,6 +38,8 @@ def test_activation_before_start():
 
 def test_only_planned_changes():
     data = (ROOT / "README.md").read_bytes()
+    # Conservar todo el contenido salvo la representación CRLF del checkout.
+    data = data.replace(b"\r\n", b"\n")
     # La spec 005 autoriza los dos enlaces a documentos reubicados.
     data = data.replace(b"[CONSTITUTION.md](docs/CONSTITUTION.md)", b"[CONSTITUTION.md](CONSTITUTION.md)")
     data = data.replace(b"[AGENTS.md](AGENTS.md)", b"[AGENT.md](AGENT.md)")
@@ -44,5 +47,25 @@ def test_only_planned_changes():
     data = data.replace(b"staff/<usuario>/asistenciapp", b"staff/victor-chang/asistenciapp")
     assert data.count(b"### Arrancar la app") == 1
     original = data.replace(b"## 2. Activar el entorno", b"## 2. Arrancar la app", 1)
-    original = original.replace(b"### Arrancar la app\r\n\r\n", b"", 1) if b"\r\n" in original else original.replace(b"### Arrancar la app\n\n", b"", 1)
+    original = original.replace(b"### Arrancar la app\n\n", b"", 1)
     assert hashlib.sha256(original).hexdigest() == BASE_SHA256
+
+
+@pytest.mark.parametrize("newline", [b"\n", b"\r\n"])
+@pytest.mark.parametrize("change", ["none", "text", "space", "final_newline"])
+def test_readme_integrity_line_endings_and_changes(tmp_path, monkeypatch, newline, change):
+    content = (ROOT / "README.md").read_bytes().replace(b"\r\n", b"\n")
+    if change == "text":
+        content += b"Cambio real.\n"
+    elif change == "space":
+        content += b" "
+    elif change == "final_newline":
+        assert content.endswith(b"\n")
+        content = content[:-1]
+    (tmp_path / "README.md").write_bytes(content.replace(b"\n", newline))
+    monkeypatch.setitem(globals(), "ROOT", tmp_path)
+    if change == "none":
+        test_only_planned_changes()
+    else:
+        with pytest.raises(AssertionError):
+            test_only_planned_changes()
