@@ -27,6 +27,9 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
   3. Configurar la pantalla de consentimiento: tipo *Externo*, permisos `meetings.space.readonly` y `openid`, y **publicarla "En producción"** sin verificar (decisión §8.1).
   4. Crear credenciales **OAuth de tipo "Aplicación de escritorio"** y guardar el JSON como `data/google-client.json`.
   - *Hecha cuando:* el archivo existe en `data/` y `git status` **no** lo muestra.
+  - **Notas (2026-10-23):**
+    - Para publicar "En producción", Google pide una URL de página principal y de política de privacidad. Victor no las tiene, así que la app queda en **Testing**, con sus dos cuentas como usuarios de prueba: basta para el spike. La decisión §8.1 se revisa después del spike (permiso semanal o publicar con páginas sencillas).
+    - El primer archivo era un cliente **Web**; hace falta uno de tipo **Aplicación de escritorio** para el flujo *loopback* (plan §2.4).
 - [ ] **T03** 👤 · Spike: `scripts/spike_meet.py` (desechable):
   - Inicia sesión con Google, pide un código de reunión e imprime, de cada participante activo, su tipo (`signedinUser` / `anonymousUser` / `phoneUser`), su `displayName` y su `user`; y el `sub` de la cuenta que ha iniciado sesión.
   - Victor crea una reunión con su cuenta gratuita, se une desde otro dispositivo (con otra cuenta o como invitado) y lo ejecuta.
@@ -35,7 +38,8 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
     - [ ] ¿`users/<sub>` coincide con el profesor? (si no → excluir por nombre, plan §2.5)
     - [ ] ¿Qué ve una **segunda cuenta** que no organiza la reunión? (decide CA-13 y CA-15, plan §2.6)
     - [ ] ¿Qué responde Google si la reunión **no está en curso** o el código no existe? (plan §2.7)
-    - [ ] ¿Funciona en el SQLite del proyecto `ALTER TABLE … ADD COLUMN` con los `CHECK` de plan §3, y rechaza un modo no válido? (plan §0.4)
+    - [x] ¿Funciona en el SQLite del proyecto `ALTER TABLE … ADD COLUMN` con los `CHECK` de plan §3, y rechaza un modo no válido? (plan §0.4)
+      - **Sí** (2026-10-23, SQLite 3.49.1, en memoria): la migración añade las dos columnas y la clase antigua queda en `code`; la BD rechaza un modo no válido, una clase automática sin reunión y pasar a automática sin reunión; acepta los casos válidos.
   - Guarda en `tests/fixtures/meet/` las respuestas de Google de ejemplo, **con los nombres cambiados** (P4), para los tests de T09.
   - *Cubre:* riesgo de §0; base de CA-09, CA-13, CA-14, CA-15.
   - *Hecha cuando:* las cinco preguntas tienen respuesta. Si alguna obliga a cambiar el plan o la spec, se actualizan **antes** de seguir.
