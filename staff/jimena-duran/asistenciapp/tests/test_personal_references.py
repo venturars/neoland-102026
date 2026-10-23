@@ -7,7 +7,7 @@ def test_generic_paths():
     assert [line for line in lines if line.startswith('cd staff/')] == ['cd staff/<usuario>/asistenciapp'] * 2
 
 def test_no_inherited_personal_references():
-    for folder in [ROOT, ROOT/'specs']:
+    for folder in [ROOT, ROOT/'specs', ROOT/'docs']:
         files = folder.glob('*.md') if folder == ROOT else folder.rglob('*.md')
         for file in files:
             if '004-quitar-referencias-personales' in file.parts:
