@@ -1,6 +1,6 @@
 # Spec 004 · Asistencia automática desde Google Meet
 
-> Estado: **Aprobada** (2026-10-21) · Creada: 2026-10-21
+> Estado: **Aprobada** v1.1 (2026-10-23) · Creada: 2026-10-21
 
 ---
 
@@ -51,6 +51,7 @@ Formato: **Dado** (situación inicial) · **Cuando** (acción) · **Entonces** (
 - **CA-06**: **Dado** una clase en la que ya se tomó asistencia, **cuando** el profesor la lanza otra vez, **entonces** se añaden solo las personas nuevas; los que ya estaban **no se duplican** (misma regla que CA-07 de la spec 001: sin distinguir mayúsculas, tildes ni espacios extra).
 - **CA-07**: **Dado** un alumno registrado que **sale de la llamada** después, **cuando** el profesor vuelve a lanzar la toma de asistencia, **entonces** el alumno **sigue en la lista**: salir no borra a nadie.
 - **CA-08**: **Dado** un participante sin nombre visible (p. ej. un invitado anónimo), **cuando** se toma asistencia, **entonces** aparece como **"Invitado sin nombre"**, y el profesor puede quitarlo.
+  - *Límite conocido (v1.1):* los invitados sin nombre no se distinguen entre sí. Si uno sale y entra otro invitado sin nombre distinto, la siguiente toma no lo añade, porque distinguirlos exigiría guardar el identificador que les da la plataforma (constitución P4). El profesor ve en la llamada si falta alguien.
 - **CA-09**: **Dado** el profesor (o el coorganizador) que lanza la toma de asistencia, **entonces** **su propio nombre no aparece** en la lista.
 - **CA-10**: **Dado** una reunión vacía (solo el profesor), **cuando** se toma asistencia, **entonces** el profesor ve "No hay participantes en la reunión" y la lista queda vacía.
 
@@ -108,3 +109,4 @@ Todas resueltas el 2026-10-21 con Victor.
 | --- | --- | --- | --- |
 | 0.1 | 2026-10-21 | Borrador inicial con P1–P6 resueltas | Victor quiere pasar lista en Meet sin intervención de los alumnos |
 | 1.0 | 2026-10-21 | Aprobada por Victor | — |
+| 1.1 | 2026-10-23 | CA-08: se anota el límite de los invitados sin nombre | Decidido por Victor al reescribir el plan (plan §8.7) |

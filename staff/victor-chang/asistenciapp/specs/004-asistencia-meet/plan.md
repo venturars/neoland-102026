@@ -1,6 +1,6 @@
 # Plan técnico 004 · Asistencia automática desde Google Meet
 
-> Versión 2.0 · Estado: **Borrador (pendiente de aprobación)** · Spec: [spec.md](spec.md) v1.0 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Constitución v3.1 · Creado: 2026-10-21 · Reescrito: 2026-10-23
+> Versión 2.0 · Estado: **Aprobado** (2026-10-23) · Spec: [spec.md](spec.md) v1.1 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Constitución v3.1 · Creado: 2026-10-21 · Reescrito: 2026-10-23
 
 Este documento explica **cómo** construimos lo que pide la spec 004 sobre el código ya adaptado a `ARCHITECTURE.md` (spec 005). Meet es una **segunda forma de llenar la lista**: una entrada nueva que llama a casos de uso, y una pieza de infraestructura nueva que habla con Google (C3, P1). Las reglas se citan por su identificador (`C2`, `E4`…).
 
@@ -143,7 +143,7 @@ Todos heredan de `AppError` y llevan su mensaje como constante. Viven en `domain
 
 Después cada nombre pasa por `name_key` y `storage.add_checkin`, sin cambios.
 
-*Límite conocido (pendiente de decidir, §8.7):* los invitados sin nombre no se distinguen entre sí. Si uno sale y entra otro distinto, la segunda toma genera otra vez "Invitado sin nombre" y no lo añade.
+*Límite conocido (spec CA-08, decisión §8.7):* los invitados sin nombre no se distinguen entre sí. Si uno sale y entra otro distinto, la segunda toma genera otra vez "Invitado sin nombre" y no lo añade.
 
 ### 2.9 Modo por clase (CA-01 a CA-04)
 
@@ -304,7 +304,8 @@ asistenciapp/
 4. **Orden** (2026-10-23): primero se adapta el código a `ARCHITECTURE.md` (spec 005, terminada) y después se reescribe este plan.
 5. **Errores de Meet** (2026-10-23): `422` para lo que el profesor puede arreglar; `502` solo cuando falla Google o la red. Cada caso es una excepción con nombre (§2.7).
 6. **Valores de `mode`** (2026-10-23): `code` y `automatic`. Las etiquetas del panel siguen en español ("código", "Meet").
-7. **Invitados sin nombre** (pendiente): no se distinguen entre sí (§2.8). Propuesta: aceptarlo como límite conocido y anotarlo en la spec junto a CA-08.
+7. **Invitados sin nombre** (2026-10-23): se acepta como límite conocido y se anota en la spec junto a CA-08 (spec v1.1). No se guarda ningún identificador de la plataforma (P4).
+8. **Plan v2.0 aprobado** (2026-10-23).
 
 ---
 
