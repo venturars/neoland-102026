@@ -1,4 +1,7 @@
-"""AsistenciApp: servidor Flask (plan §1, §4).
+"""AsistenciApp: entrada HTTP.
+
+Recibe la petición, llama a una acción y devuelve la respuesta.
+No abre el archivo donde se guarda la asistencia.
 
 Uso: `python app.py` y abrir la URL del panel que se imprime en consola.
 """
@@ -9,65 +12,71 @@ import os
 import socket
 import sys
 import time
-from datetime import datetime, timezone
 from pathlib import Path
 
-from flask import Flask, Response, abort, g, jsonify, request
+from flask import Flask, Response, jsonify, request
 from werkzeug.exceptions import HTTPException
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from asistencia import db
-from asistencia.codes import code_for, is_valid_code, seconds_left
-from asistencia.export import to_csv
-from asistencia.names import clean_name, name_key
+from asistencia.domain.session import InvalidCode, SessionClosed, SessionNotFound
 from asistencia.tunnel import TunnelError, start_tunnel
+from asistencia.usecases.attendance import (
+    check_in,
+    close_session,
+    create_session,
+    export_csv,
+    list_sessions,
+    prepare,
+    public_session,
+    remove_checkin,
+    teacher_view,
+)
 
 BASE_DIR = Path(__file__).parent
 DEFAULT_DB = BASE_DIR / "data" / "asistencia.db"
 
-INVALID_CODE = "El código no es válido o ha caducado. Pide el código actual al profesor."
-CLOSED = "La asistencia de esta clase ya está cerrada."
 NOT_FOUND = "Esta clase no existe. Revisa el enlace."
 UNAUTHORIZED = "Acceso no autorizado. Abre el panel con tu enlace secreto de profesor."
+MISSING_CHECKIN = "Ese registro no existe en esta clase."
 GENERIC_ERRORS = {404: "No encontrado.", 405: "Método no permitido."}
 
 
 def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
+    """Construye la aplicación web.
+
+    :param db_path: ruta del archivo de asistencia.
+    :param token: token del profesor. Si no viene, se pide al preparar la app.
+    :param now: función que devuelve el instante Unix actual.
+    :return: aplicación lista para servir.
+    :rtype: Flask
+
+    Usage::
+
+      app = create_app()
+    """
     app = Flask(__name__, static_folder="static", static_url_path="")
     app.json.ensure_ascii = False
-    # Detrás del túnel, usar la dirección pública que nos indica (plan §2.10, CA-19).
+    # Detrás del túnel, usar la dirección pública que nos indica.
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
-
-    conn = db.connect(db_path)
-    db.init_schema(conn)
-    app.config["TEACHER_TOKEN"] = token or db.get_or_create_teacher_token(conn)
-    conn.close()
-
-    # ---------- utilidades ----------
-
-    def get_db():
-        # Una conexión por petición (plan §2.9).
-        if "db" not in g:
-            g.db = db.connect(db_path)
-        return g.db
-
-    @app.teardown_appcontext
-    def close_db(_exc):
-        conn = g.pop("db", None)
-        if conn is not None:
-            conn.close()
-
-    def now_iso() -> str:
-        return datetime.fromtimestamp(now(), timezone.utc).isoformat(timespec="milliseconds")
+    app.config["DB_PATH"] = db_path
+    app.config["NOW"] = now
+    teacher_token = prepare(db_path)
+    app.config["TEACHER_TOKEN"] = token if token is not None else teacher_token
 
     def error(status: int, message: str):
         return jsonify(error=message), status
 
-    def session_or_404(session_id: str) -> dict:
-        session = db.get_session(get_db(), session_id)
-        if session is None:
-            abort(404, NOT_FOUND)
-        return session
+    def run(action):
+        try:
+            return action()
+        except SessionNotFound as exc:
+            return error(404, str(exc))
+        except SessionClosed as exc:
+            return error(409, str(exc))
+        except InvalidCode as exc:
+            return error(422, str(exc))
+        except ValueError as exc:
+            return error(400, str(exc))
 
     @app.errorhandler(HTTPException)
     def http_error(exc):
@@ -79,120 +88,132 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
 
     @app.before_request
     def require_teacher():
-        # Todo lo que cuelga de /api/sessions es solo para el profesor (CA-15, CA-17).
+        # Todo lo que cuelga de /api/sessions es solo para el profesor.
         if request.path == "/api/sessions" or request.path.startswith("/api/sessions/"):
             given = request.headers.get("X-Teacher-Token", "").encode()
             if not hmac.compare_digest(given, app.config["TEACHER_TOKEN"].encode()):
                 return error(401, UNAUTHORIZED)
 
-    # ---------- páginas ----------
-
     @app.get("/")
     def index():
         return app.send_static_file("index.html")
 
-    # ---------- API pública (alumno) ----------
-
     @app.get("/api/s/<session_id>")
-    def public_session(session_id):
-        session = session_or_404(session_id)
-        return jsonify(title=session["title"], open=session["closed_at"] is None)
+    def public_session_route(session_id):
+        def action():
+            info = public_session(db_path, session_id)
+            return jsonify(title=info["title"], open=info["open"])
+
+        return run(action)
 
     @app.post("/api/s/<session_id>/checkin")
-    def check_in(session_id):
-        session = session_or_404(session_id)
-        if session["closed_at"] is not None:
-            return error(409, CLOSED)  # CA-09
-
+    def check_in_route(session_id):
         body = request.get_json(silent=True) or {}
-        try:
-            name = clean_name(body.get("name"))
-        except ValueError as exc:
-            return error(400, str(exc))  # CA-08
 
-        if not is_valid_code(session["secret"], body.get("code", ""), now()):
-            return error(422, INVALID_CODE)  # CA-06
+        def action():
+            row, created = check_in(
+                db_path,
+                session_id,
+                body.get("name"),
+                body.get("code", ""),
+                now,
+            )
+            payload = {"name": row["name"], "checkedAt": row["checked_at"]}
+            if not created:
+                return jsonify(already=True, **payload)
+            return jsonify(payload), 201
 
-        row, created = db.add_checkin(get_db(), session_id, name, name_key(name), now_iso())
-        if not created:
-            return jsonify(already=True, name=row["name"], checkedAt=row["checked_at"])  # CA-07
-        return jsonify(name=row["name"], checkedAt=row["checked_at"]), 201  # CA-04
-
-    # ---------- API del profesor ----------
+        return run(action)
 
     @app.get("/api/sessions")
-    def list_sessions():
+    def list_sessions_route():
         return jsonify([
             {
-                "id": s["id"],
-                "title": s["title"],
-                "openedAt": s["opened_at"],
-                "closedAt": s["closed_at"],
-                "total": s["total"],
+                "id": row["id"],
+                "title": row["title"],
+                "openedAt": row["opened_at"],
+                "closedAt": row["closed_at"],
+                "total": row["total"],
             }
-            for s in db.list_sessions(get_db())
-        ])  # CA-16
+            for row in list_sessions(db_path)
+        ])
 
     @app.post("/api/sessions")
-    def create_session():
+    def create_session_route():
         body = request.get_json(silent=True) or {}
-        title = str(body.get("title") or "").strip()
-        if not title:
-            title = datetime.fromtimestamp(now()).strftime("%d/%m/%Y %H:%M")  # CA-02
-        session = db.create_session(get_db(), title, now_iso())
-        return jsonify(id=session["id"], title=session["title"]), 201  # CA-01
+        loaded = create_session(db_path, body.get("title"), now)
+        return jsonify(id=loaded["id"], title=loaded["title"]), 201
 
     @app.get("/api/sessions/<session_id>")
-    def teacher_view(session_id):
-        session = session_or_404(session_id)
-        checkins = db.list_checkins(get_db(), session_id)
-        data = {
-            "id": session["id"],
-            "title": session["title"],
-            "open": session["closed_at"] is None,
-            "openedAt": session["opened_at"],
-            "closedAt": session["closed_at"],
-            "studentUrl": f"{request.host_url}alumno.html?s={session_id}",
-            "total": len(checkins),  # CA-11
-            "checkins": [
-                {"id": c["id"], "name": c["name"], "checkedAt": c["checked_at"]} for c in checkins
-            ],
-        }
-        if data["open"]:  # sin código si está cerrada (CA-13)
-            data["code"] = code_for(session["secret"], now())
-            data["secondsLeft"] = seconds_left(now())
-        return jsonify(data)
+    def teacher_view_route(session_id):
+        def action():
+            detail = teacher_view(db_path, session_id, now)
+            data = {
+                "id": detail["id"],
+                "title": detail["title"],
+                "open": detail["open"],
+                "openedAt": detail["opened_at"],
+                "closedAt": detail["closed_at"],
+                "studentUrl": f"{request.host_url}alumno.html?s={session_id}",
+                "total": detail["total"],
+                "checkins": [
+                    {"id": row["id"], "name": row["name"], "checkedAt": row["checked_at"]}
+                    for row in detail["checkins"]
+                ],
+            }
+            if detail["open"]:
+                data["code"] = detail["code"]
+                data["secondsLeft"] = detail["seconds_left"]
+            return jsonify(data)
+
+        return run(action)
 
     @app.post("/api/sessions/<session_id>/close")
-    def close_session(session_id):
-        session_or_404(session_id)
-        db.close_session(get_db(), session_id, now_iso())  # CA-13
-        return jsonify(ok=True)
+    def close_session_route(session_id):
+        def action():
+            close_session(db_path, session_id, now)
+            return jsonify(ok=True)
+
+        return run(action)
 
     @app.delete("/api/sessions/<session_id>/checkins/<int:checkin_id>")
-    def remove_checkin(session_id, checkin_id):
-        session_or_404(session_id)
-        if not db.remove_checkin(get_db(), session_id, checkin_id):  # CA-24
-            return error(404, "Ese registro no existe en esta clase.")
-        return jsonify(ok=True)
+    def remove_checkin_route(session_id, checkin_id):
+        def action():
+            if not remove_checkin(db_path, session_id, checkin_id):
+                return error(404, MISSING_CHECKIN)
+            return jsonify(ok=True)
+
+        return run(action)
 
     @app.get("/api/sessions/<session_id>/export")
-    def export(session_id):
-        session = session_or_404(session_id)
-        day = session["opened_at"][:10]
-        return Response(
-            to_csv(db.list_checkins(get_db(), session_id)),  # CA-14
-            mimetype="text/csv",
-            headers={
-                "Content-Disposition": f'attachment; filename="asistencia-{day}-{session_id}.csv"'
-            },
-        )
+    def export_route(session_id):
+        def action():
+            text, day = export_csv(db_path, session_id)
+            return Response(
+                text,
+                mimetype="text/csv",
+                headers={
+                    "Content-Disposition": f'attachment; filename="asistencia-{day}-{session_id}.csv"'
+                },
+            )
+
+        return run(action)
 
     return app
 
 
 def port_in_use(port: int) -> bool:
-    """True si ya hay algo escuchando en 127.0.0.1:port (p. ej. otra AsistenciApp)."""
+    """True si ya hay algo escuchando en 127.0.0.1:port.
+
+    :param port: puerto local.
+    :return: True si el puerto está ocupado.
+    :rtype: bool
+
+    Usage::
+
+      if port_in_use(8000):
+          ...
+    """
     with socket.socket() as probe:
         probe.settimeout(0.5)
         return probe.connect_ex(("127.0.0.1", port)) == 0
@@ -229,7 +250,7 @@ def main():
     else:
         print("  (Solo funciona en este ordenador. Para una clase online: python app.py --tunel)\n")
     try:
-        # Solo en 127.0.0.1: desde fuera se entra únicamente por el túnel (plan §2.10).
+        # Solo en 127.0.0.1: desde fuera se entra únicamente por el túnel.
         app.run(host="127.0.0.1", port=port)
     finally:
         if tunnel:
