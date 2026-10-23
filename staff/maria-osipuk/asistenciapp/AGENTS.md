@@ -127,6 +127,7 @@ Una funcionalidad está terminada cuando:
 | --- | --- | --- |
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
 | `002-spec-antes-del-cambio` | ✅ Implementada (2026-10-23) | Ningún fichero de esta app se toca sin un spec local aprobado |
+| `004-quitar-referencias-personales` | ✅ Implementada (2026-10-23) | Referencias personales quitadas de la documentación. Instrucciones con un usuario genérico |
 | Bot de Discord | Idea futura, sin número | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.

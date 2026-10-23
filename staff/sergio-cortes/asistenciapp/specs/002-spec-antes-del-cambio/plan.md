@@ -10,8 +10,8 @@ Este documento explica **cómo** se cumple la spec. Cada decisión indica qué c
 
 Se enmiendan dos ficheros que ya existen. No se crea código ni se toca el README.
 
-- [CONSTITUTION.md](../../CONSTITUTION.md) pasa a la versión 2.2. Ahí está la obligación.
-- [AGENT.md](../../AGENT.md) dice el día a día: qué fichero se puede crear al empezar, cuándo parar y quién da el ok.
+- [docs/CONSTITUTIONS.md](../../docs/CONSTITUTIONS.md) pasa a la versión 2.2. Ahí está la obligación.
+- [AGENTS.md](../../AGENTS.md) dice el día a día: qué fichero se puede crear al empezar, cuándo parar y quién da el ok.
 
 La spec, este plan y las tasks se escriben antes de la enmienda.
 
@@ -33,7 +33,7 @@ En la constitución §4 se sustituye «no hay código sin especificación» por 
 - Constitución §7: el proyecto vive en `staff/sergio-cortes/asistenciapp/`.
 - Constitución §8: aprueba la persona que trabaja en esa carpeta.
 - En el manual, la ruta de los comandos y la regla «solo se edita dentro de…» usan esa misma carpeta.
-- Las menciones a Victor y a `staff/victor-chang/asistenciapp/` en las reglas vivas (aprobación de cada fase, commits, enmiendas y definición de terminado) pasan a ser quien trabaja en esta carpeta.
+- Las menciones personales y las rutas de otra copia del repositorio en las reglas vivas (aprobación de cada fase, commits, enmiendas y definición de terminado) pasan a ser quien trabaja en esta carpeta.
 
 La versión sube de 2.1 a 2.2: se añade una obligación y se corrige a qué carpeta se aplica y quién aprueba. No se quita un principio. El historial de enmiendas gana una fila con fecha 2026-10-22 y el motivo.
 
@@ -84,5 +84,5 @@ No se modifica `specs/001-checkin-codigo/`. Su historial, y las menciones de qui
 ## 5. Decisiones tomadas
 
 1. **Versión 2.2** (2026-10-22): la puerta pasa de «código de una funcionalidad» a «cualquier fichero de la app».
-2. **Quién aprueba** (2026-10-22): la persona que trabaja en `staff/sergio-cortes/asistenciapp/`, no Victor ni otra carpeta del repositorio.
+2. **Quién aprueba** (2026-10-22): la persona que trabaja en `staff/sergio-cortes/asistenciapp/`, no otra carpeta del repositorio.
 3. **Número 002** (2026-10-22): lo usa esta spec. El bot de Discord se queda sin número.
