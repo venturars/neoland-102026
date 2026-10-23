@@ -129,5 +129,6 @@ Una funcionalidad está terminada cuando:
 | `002-spec-antes-del-cambio` | ✅ Implementada (2026-10-22) | Ningún fichero de la app se toca sin un spec aprobado |
 | Bot de Discord | Idea futura, sin número | Fuera del MVP |
 | `003-activar-el-entorno` | ✅ Implementada (2026-10-22): T01–T04 | El README separa activar el entorno y arrancar la app |
+| `004-quitar-referencias-personales` | ✅ Implementada (2026-10-22): T01–T12 | El README entra con un usuario genérico |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
