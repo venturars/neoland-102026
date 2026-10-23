@@ -21,6 +21,12 @@ Si algo de lo que te piden contradice la constitución, **para y avisa** antes d
 
 Cada funcionalidad recorre estas fases **en orden**. Al terminar cada una, el agente **se detiene** y pide la aprobación de Victor. No se avanza sin un "ok" explícito.
 
+Antes de tocar un fichero de la app:
+
+- No se modifican código, tests, el documento de uso de la app ni otra documentación de uso sin un spec aprobado que cubra ese cambio.
+- Un spec aprobado de otro cambio no cubre este.
+- Una issue, una rama o una pull request no sustituyen a ese spec ni al «ok» de Victor.
+
 | Fase | Archivo | Pregunta que responde | Puerta de salida |
 | --- | --- | --- | --- |
 | 1. Especificar | `spec.md` | ¿**Qué** hay que construir y **por qué**? | Sin `[NECESITA ACLARACIÓN]` pendientes + aprobación de Victor |
@@ -46,7 +52,7 @@ Cada funcionalidad recorre estas fases **en orden**. Al terminar cada una, el ag
 
 ### 2.4 Implementar
 - Haz **una tarea cada vez**. Al acabarla, márcala `[x]` en `tasks.md`.
-- Si durante la implementación descubres que la spec o el plan están mal o incompletos, **para**, propón el cambio en el documento y espera aprobación. El código nunca se adelanta a los documentos.
+- Si durante la implementación descubres que la spec o el plan están mal o incompletos, **para**, propón el cambio en el documento y espera aprobación. El código, los tests, el documento de uso de la app y cualquier otra documentación de uso nunca se adelantan a los documentos.
 
 ---
 
@@ -72,7 +78,7 @@ asistenciapp/
 └── data/                  # base de datos SQLite (no se sube a git)
 ```
 
-Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-discord-bot`.
+Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `003-discord-bot`.
 
 ---
 
@@ -95,6 +101,7 @@ Las únicas dependencias son Flask y pytest (constitución P3).
 
 ## 5. Reglas de comportamiento
 
+- **Ningún fichero de la app sin spec aprobado.** No se modifican código, tests, el documento de uso de la app ni otra documentación de uso sin un spec aprobado que cubra ese cambio. Un spec aprobado de otro cambio no cubre este. Una issue, una rama o una pull request no sustituyen a ese spec ni al «ok» de Victor.
 - **Solo se edita dentro de `staff/victor-chang/asistenciapp/`.**
 - **Pregunta antes de suponer.** Ante una ambigüedad, pregunta o márcala con `[NECESITA ACLARACIÓN]`.
 - **Explica lo que haces.** Victor está aprendiendo SDD: al cerrar cada fase, resume qué se ha hecho, por qué y qué tiene que revisar.
@@ -122,6 +129,7 @@ Una funcionalidad está terminada cuando:
 | Spec | Fase | Notas |
 | --- | --- | --- |
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
-| `002-discord-bot` | Idea futura | Fuera del MVP |
+| `002-require-approved-spec` | ✅ Terminada (2026-10-23): constitución 2.2 y este manual. T01 a T07 hechas; CA-01 a CA-04 leídos | Ningún fichero de la app sin un spec aprobado que cubra ese cambio |
+| `003-discord-bot` | Idea futura, sin carpeta | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
