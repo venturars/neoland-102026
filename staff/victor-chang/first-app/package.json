@@ -1,5 +1,8 @@
 {
   "name": "first-app",
   "private": true,
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "openai": "^7.42.0"
+  }
 }

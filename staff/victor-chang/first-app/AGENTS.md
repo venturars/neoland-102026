@@ -11,6 +11,7 @@ How to write code in this app. [CONSTITUTION.md](docs/CONSTITUTION.md) defines t
 Run from `staff/victor-chang/first-app`:
 
 ```
+pnpm install             # install the npm dependencies (openai)
 npx prettier --write .   # format every file
 npx prettier --check .   # check formatting without changing files
 ```

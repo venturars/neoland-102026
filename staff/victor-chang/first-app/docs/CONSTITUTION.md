@@ -36,6 +36,8 @@ first-app/
         plan.md         What gets built
         tasks.md        The steps to build it
   AGENTS.md             How to write the code
+  package.json          The npm dependencies, installed with pnpm
+  pnpm-lock.yaml        The exact installed versions
 ```
 
 - `db/` opens the database. No business rules.
@@ -47,7 +49,8 @@ first-app/
 ## Runtime
 
 - Node.js 24+, ES modules (`"type": "module"` in `package.json`).
-- Zero npm dependencies. Only Node built-ins: `node:sqlite`, `node:fs`, `node:url`, and the global `fetch` for the local AI (Ollama).
+- Node built-ins: `node:sqlite`, `node:fs`, `node:url`.
+- One npm dependency, `openai`, to call the local AI (Ollama). Packages are installed with pnpm (`pnpm install`); `node_modules/` is git-ignored, `pnpm-lock.yaml` is committed.
 - Tooling: Prettier, run through `npx`, default config, no config file.
 
 ## Specs
@@ -122,7 +125,7 @@ The body follows this order and the steps are not mixed:
 
 A step with nothing to do is skipped. Each step starts with a short comment naming it.
 
-`logic/` imports `queries/users.js` directly. It may call the local AI with `fetch`.
+`logic/` imports `queries/users.js` directly. It may call the local AI with the `openai` client.
 
 ## Constants
 

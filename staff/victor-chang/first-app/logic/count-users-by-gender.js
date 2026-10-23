@@ -1,8 +1,9 @@
+import OpenAI from "openai";
 import { AppError, SystemError } from "./errors.js";
 import * as users from "../queries/users.js";
 
 const MODEL = "llama3.2";
-const AI_URL = "http://127.0.0.1:11434/v1/chat/completions";
+const AI_URL = "http://127.0.0.1:11434/v1";
 const BATCH_SIZE = 6;
 
 const SYSTEM_PROMPT = [
@@ -19,6 +20,9 @@ const EXAMPLES = [
   { name: "Pablo", gender: "men" },
   { name: "Kim", gender: "undefined" },
 ];
+
+// Ollama ignores the key, but the client needs one
+const ai = new OpenAI({ baseURL: AI_URL, apiKey: "ollama" });
 
 const RESPONSE_FORMAT = {
   type: "json_schema",
@@ -60,30 +64,19 @@ export async function countUsersByGender() {
     for (let start = 0; start < names.length; start += BATCH_SIZE) {
       const batch = names.slice(start, start + BATCH_SIZE);
 
-      const response = await fetch(AI_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: MODEL,
-          temperature: 0,
-          response_format: RESPONSE_FORMAT,
-          messages: [
-            { role: "system", content: SYSTEM_PROMPT },
-            ...exampleMessages,
-            { role: "user", content: batch.join("\n") },
-          ],
-        }),
+      const completion = await ai.chat.completions.create({
+        model: MODEL,
+        temperature: 0,
+        response_format: RESPONSE_FORMAT,
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          ...exampleMessages,
+          { role: "user", content: batch.join("\n") },
+        ],
       });
-      if (!response.ok) {
-        throw new SystemError(
-          "Could not classify the users",
-          {},
-          { cause: `AI answered with status ${response.status}` },
-        );
-      }
 
       // An answer that cannot be read is not a failure: the batch counts as undefined
-      const genders = await readGenders(response);
+      const genders = readGenders(completion);
 
       if (!Array.isArray(genders) || genders.length !== batch.length) {
         count.genderUndefined += batch.length;
@@ -109,10 +102,9 @@ export async function countUsersByGender() {
   }
 }
 
-async function readGenders(response) {
+function readGenders(completion) {
   try {
-    const body = await response.json();
-    const content = body.choices[0].message.content;
+    const content = completion.choices[0].message.content;
     return JSON.parse(content).genders;
   } catch {
     return null;

@@ -27,11 +27,12 @@ None new. No writes. Reuses `findAll()` from `queries/users.js`.
 
 - Constants in `logic/count-users-by-gender.js`:
   - `MODEL` = `"llama3.2"`. Changing model is changing this constant.
-  - `AI_URL` = `"http://127.0.0.1:11434/v1/chat/completions"` (Ollama's OpenAI-compatible API).
+  - `AI_URL` = `"http://127.0.0.1:11434/v1"` (Ollama's OpenAI-compatible API).
   - `BATCH_SIZE` = `6`.
 - Ollama must be running with `llama3.2` downloaded. Local, no cost, no key.
 - Names come from `findAll()`, in that order, and go in batches of 6. The last batch may have fewer. One call per batch. Only names are sent, never the email.
-- Each call is a chat completion (`chat.completions.create` in the OpenAI SDK). The SDK would be an npm dependency, so the call is the global `fetch` to the same endpoint: `POST AI_URL`, JSON body `{ model: MODEL, temperature: 0, response_format, messages }`.
+- The client is the `openai` npm package, installed with pnpm: `new OpenAI({ baseURL: AI_URL, apiKey: "ollama" })`. Ollama ignores the key, but the client needs one.
+- Each call is `chat.completions.create({ model: MODEL, temperature: 0, response_format, messages })`. A failed call (Ollama stopped, error status) throws, and the `catch` turns it into `Could not classify the users`.
 - `response_format` makes the AI answer JSON with this shape:
 
   ```js
