@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 2.3 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-22
+> Versión 2.4 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-23
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -53,6 +53,8 @@ Interfaz, mensajes de error, documentación y especificaciones se escriben en es
 | Base de datos | SQLite vía `sqlite3` (biblioteca estándar), archivo en `data/` (no se sube a git) |
 | Frontend | HTML + CSS + JavaScript sin frameworks, servidos desde `static/` |
 | Tests | `pytest` |
+
+La organización separa las reglas en `asistencia/domain/`, las acciones en `asistencia/usecases/`, la persistencia en `asistencia/storage/` y la entrada HTTP y el arranque en `app.py`. La constitución y la arquitectura están en `docs/`; el manual vigente es `AGENTS.md` en la raíz. El detalle está en [ARCHITECTURE.md](ARCHITECTURE.md).
 
 Cambiar el stack requiere enmendar esta constitución.
 
@@ -109,3 +111,4 @@ Cambiar el stack requiere enmendar esta constitución.
 | 2.1 | 2026-10-20 | P4: distingue *almacenar* (solo en local) de *transitar* (puede pasar cifrado por un proveedor de túnel) | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08) |
 | 2.2 | 2026-10-22 | §4: SDD para todo cambio y aprobaciones separadas; §7–§8: carpeta y aprobación de Miguel para esta copia | Spec 002 y enmienda aprobadas por Miguel; se conserva el historial anterior |
 | 2.3 | 2026-10-22 | §5: verificación documental con procedimiento y evidencia por criterio para cambios exclusivamente documentales o de instrucciones | Aclaración de 002 aprobada por Miguel; se mantienen las pruebas de comportamiento y la evidencia anterior |
+| 2.4 | 2026-10-23 | §3: documentos en docs/, manual AGENTS.md y responsabilidades domain/usecases/storage | Spec y plan 005 aprobados por Miguel; organización actualizada sin cambiar principios, stack ni reglas de asistencia |
