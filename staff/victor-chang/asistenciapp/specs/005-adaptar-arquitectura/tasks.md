@@ -112,11 +112,19 @@ Cómo leer esta lista:
 
 ## Fase F · Entrada web (plan §2.6, §2.7)
 
-- [ ] **T11** 🧪 · `entrypoints/web/`: `create_app(config, clock, teacher_token)` en `__init__.py`, `auth.py` (X3) y `errors.py` (la tabla excepción → HTTP, y los manejadores de `404`, `405` y `500`).
+- [x] **T11** 🧪 · `entrypoints/web/`: `create_app(config, clock, teacher_token)` en `__init__.py`, `auth.py` (X3) y `errors.py` (la tabla excepción → HTTP, y los manejadores de `404`, `405` y `500`).
   - `conftest.py` monta la app con una `Config` de prueba.
   - Tests nuevos en `test_web_errors.py`: cada excepción de la tabla responde con su código y su mensaje; `404`, `405` y `500` con su mensaje y en JSON; un error inesperado en un check-in no deja el nombre del alumno en el registro (`caplog`).
   - Cambian los tests que comparan los mensajes de `CLOSED` y de los errores genéricos (plan §2.7).
   - *Cubre:* CA-05, CA-07.
+  - **Hecha (2026-10-23):** 176 tests en verde (los nuevos fallaron primero). `attendance/` pasa `ruff` y `mypy --strict` salvo `tunnel.py` (T17, T18): `ruff` baja de 41 a 3 avisos y `mypy` de 34 a 3.
+    - Además de lo previsto: las rutas ya viven en `public.py` y `teacher.py` (*blueprints*), tal cual estaban pero sin `try/except`. T13 y T14 les añaden la validación, los serializadores y el traslado de sus tests.
+    - `context.py` (nuevo, no estaba en el plan): guarda la `Config`, el reloj, el token y la conexión de cada petición, para que las rutas no dependan de variables globales (M5).
+    - Las excepciones de la entrada web (`MalformedRequestError`, `TeacherUnauthorizedError`) viven en `entrypoints/web/errors.py`, junto a la tabla. Un test comprueba que la tabla no deja ningún error sin código.
+    - `serializers.py` y `validation.py` ya existen con lo que había en `app.py`; T12 los completa.
+    - `app.py` ya usa `load_config` y la nueva `create_app` (adelanta parte de T15). Ya usan la zona de `ASISTENCIA_TZ`: el título por defecto y el CSV.
+    - No cambia ningún test de la spec 001: `test_api.py` solo comprobaba que hubiera un mensaje de error, y sigue en verde.
+    - Prueba real: servidor arrancado con una copia de la BD en el puerto 8765; responde la página, la lista (5 clases), el `401` y el `404` con sus mensajes nuevos. Parado y puerto libre.
 - [ ] **T12** 🧪 · `validation.py` y `serializers.py` (una función por tipo, F2, D7).
   - Tests: los serializadores no sacan nunca el secreto de una clase; `json_object` y `optional_str` rechazan lo que no es objeto o texto sin convertirlo.
   - *Cubre:* CA-06.

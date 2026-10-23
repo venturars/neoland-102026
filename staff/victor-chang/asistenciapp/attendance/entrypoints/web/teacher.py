@@ -1,0 +1,75 @@
+"""Rutas del profesor; todas exigen su token (spec 001 · plan §4 "Privada"; CA-01, CA-02, CA-10 a CA-17, CA-24).
+
+Cada ruta lee lo que llega, llama a un caso de uso (o a una lectura sin reglas, C5) y responde
+(ARCHITECTURE.md · C2). Los errores los convierte `errors.py` (E4).
+"""
+
+from flask import Blueprint, Response, jsonify, request
+from flask.typing import ResponseReturnValue
+
+from attendance.entrypoints.web import context
+from attendance.entrypoints.web.serializers import checkin_json, session_json
+from attendance.entrypoints.web.validation import json_body
+from attendance.infra import storage
+from attendance.usecases import checkins, sessions
+
+blueprint = Blueprint("teacher", __name__, url_prefix="/api/sessions")
+
+
+@blueprint.get("")
+def list_sessions() -> ResponseReturnValue:
+    """Todas las clases con su total, de la más nueva a la más antigua (spec 001 · CA-16)."""
+    summaries = storage.list_sessions(context.db())  # lectura sin reglas (C5)
+    return jsonify([{**session_json(s), "total": s.total} for s in summaries])
+
+
+@blueprint.post("")
+def create_session() -> ResponseReturnValue:
+    """Abre una clase; sin título, se titula con la fecha (spec 001 · CA-01, CA-02)."""
+    title = json_body().get("title")
+    # Temporal hasta spec 005 · T14: un título que no es texto se sigue tratando como vacío.
+    title = title if isinstance(title, str) else ""
+    session = sessions.create_session(context.db(), title, context.now(), context.current().config.timezone)
+    return jsonify(id=session.id, title=session.title), 201
+
+
+@blueprint.get("/<session_id>")
+def teacher_view(session_id: str) -> ResponseReturnValue:
+    """La clase, sus registros y, si está abierta, el código y su cuenta atrás (spec 001 · CA-10 a CA-13)."""
+    view = sessions.teacher_view(context.db(), session_id, context.now())
+    data = {
+        **session_json(view.session),
+        "open": view.session.is_open,
+        "studentUrl": f"{request.host_url}alumno.html?s={session_id}",
+        "total": len(view.checkins),
+        "checkins": [checkin_json(c) for c in view.checkins],
+    }
+    if view.code is not None:
+        data["code"] = view.code
+        data["secondsLeft"] = view.seconds_left
+    return jsonify(data)
+
+
+@blueprint.post("/<session_id>/close")
+def close_session(session_id: str) -> ResponseReturnValue:
+    """Cierra la clase (spec 001 · CA-13)."""
+    sessions.close_session(context.db(), session_id, context.now())
+    return jsonify(ok=True)
+
+
+@blueprint.delete("/<session_id>/checkins/<int:checkin_id>")
+def remove_checkin(session_id: str, checkin_id: int) -> ResponseReturnValue:
+    """Quita un registro de la clase (spec 001 · CA-24)."""
+    checkins.remove_checkin(context.db(), session_id, checkin_id)
+    return jsonify(ok=True)
+
+
+@blueprint.get("/<session_id>/export")
+def export(session_id: str) -> ResponseReturnValue:
+    """Descarga la lista en CSV (spec 001 · CA-14)."""
+    export_file = sessions.export_attendance(context.db(), session_id, context.current().config.timezone)
+    return Response(
+        export_file.content,
+        mimetype="text/csv",
+        headers={"Content-Disposition": f'attachment; filename="{export_file.filename}"'},
+    )
