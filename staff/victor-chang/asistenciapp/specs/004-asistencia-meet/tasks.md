@@ -30,7 +30,7 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
   - **Notas (2026-10-23):**
     - Para publicar "En producción", Google pide una URL de página principal y de política de privacidad. Victor no las tiene, así que la app queda en **Testing**, con sus dos cuentas como usuarios de prueba: basta para el spike. La decisión §8.1 se revisa después del spike (permiso semanal o publicar con páginas sencillas).
     - El primer archivo era un cliente **Web**; hace falta uno de tipo **Aplicación de escritorio** para el flujo *loopback* (plan §2.4).
-- [ ] **T03** 👤 · Spike: `scripts/spike_meet.py` (desechable):
+- [x] **T03** 👤 · Spike: `scripts/spike_meet.py` (desechable):
   - Inicia sesión con Google, pide un código de reunión e imprime, de cada participante activo, su tipo (`signedinUser` / `anonymousUser` / `phoneUser`), su `displayName` y su `user`; y el `sub` de la cuenta que ha iniciado sesión.
   - Victor crea una reunión con su cuenta gratuita, se une desde otro dispositivo (con otra cuenta o como invitado) y lo ejecuta.
   - Responde y anota aquí:
@@ -38,8 +38,10 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
       - **Sí** (2026-10-23), pero por `conferenceRecords`, no por `spaces/{código}`: `spaces.get` responde `403` incluso con una reunión propia creada desde meet.google.com. `conferenceRecords?filter=space.meeting_code="…"` devuelve la reunión en curso (sin `endTime`), y sus `participants?filter=latest_end_time IS NULL` dan quién está ahora. Cambia plan §2.3.
     - [x] ¿`users/<sub>` coincide con el profesor? (si no → excluir por nombre, plan §2.5)
       - **Sí** (2026-10-23): el participante `signedinUser` del profesor trae `user = users/<sub>`, el mismo `sub` del inicio de sesión. El invitado anónimo llega como `anonymousUser`, con `displayName` y sin `user`.
-    - [ ] ¿Qué ve una **segunda cuenta** que no organiza la reunión? (decide CA-13 y CA-15, plan §2.6)
-    - [ ] ¿Qué responde Google si la reunión **no está en curso** o el código no existe? (plan §2.7)
+    - [x] ¿Qué ve una **segunda cuenta** que no organiza la reunión? (decide CA-13 y CA-15, plan §2.6)
+      - Se probó con las clases reales del bootcamp, en las que Victor **participa sin organizar** (decisión de Victor: solo recuentos, sin nombres ni identificadores, y sin guardar nada). Su cuenta ve los participantes de las 8 clases de la lista (15 a 18 por clase). Un participante puede leer la lista; la segunda cuenta ya no hace falta.
+    - [x] ¿Qué responde Google si la reunión **no está en curso** o el código no existe? (plan §2.7)
+      - No está en curso → `conferenceRecords` filtrado por código la devuelve **con** `endTime`. No existe → **0 reuniones**, sin error. Google no distingue "no existe", "aún no ha empezado", "caducada" ni "esta cuenta no la ve": todo es una lista vacía.
     - [x] ¿Funciona en el SQLite del proyecto `ALTER TABLE … ADD COLUMN` con los `CHECK` de plan §3, y rechaza un modo no válido? (plan §0.4)
       - **Sí** (2026-10-23, SQLite 3.49.1, en memoria): la migración añade las dos columnas y la clase antigua queda en `code`; la BD rechaza un modo no válido, una clase automática sin reunión y pasar a automática sin reunión; acepta los casos válidos.
   - **Hallazgos de las primeras ejecuciones (2026-10-23), para el plan:**
@@ -50,6 +52,15 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
   - Guarda en `tests/fixtures/meet/` las respuestas de Google de ejemplo, **con los nombres cambiados** (P4), para los tests de T09.
   - *Cubre:* riesgo de §0; base de CA-09, CA-13, CA-14, CA-15.
   - *Hecha cuando:* las cinco preguntas tienen respuesta. Si alguna obliga a cambiar el plan o la spec, se actualizan **antes** de seguir.
+  - **Hecha (2026-10-23).** La puerta de la fase A se pasa: una cuenta gratuita lee los participantes. Hallazgos que cambian la spec y el plan (se proponen como spec v1.2 y plan v2.1 antes de seguir):
+    1. **Vía de la API:** `spaces/{código}` responde `403` con reuniones creadas desde meet.google.com; la que funciona es `conferenceRecords?filter=space.meeting_code="…"` → `participants`.
+    2. **Quién puede leer:** un participante que no organiza ve la lista (no solo el organizador).
+    3. **Reuniones terminadas:** sin filtro, `participants` da **todos los que estuvieron en algún momento**, cada uno una vez, con su primera entrada y su última salida.
+    4. **Caducidad:** cada reunión trae `expireTime` a los **30 días** de terminar.
+    5. **La misma sala cada día:** las clases usan siempre la misma sala (mismo código), y cada día es una reunión distinta. Filtrar por código devuelve varias.
+    6. **Lista vacía para todo:** inexistente, sin empezar, caducada o no visible para esa cuenta dan lo mismo (0 reuniones).
+    7. **Permisos a medias** y **`403` con la API desactivada** (anotados arriba).
+  - Ejemplos guardados en `tests/fixtures/meet/` (solo la reunión de prueba de Victor, anonimizados y revisados campo a campo): `conference_records_by_code.json` y `participants_ended.json`.
 
 ## Fase B · Dominio (plan §2.7 a §2.9)
 
