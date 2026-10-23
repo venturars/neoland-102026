@@ -22,7 +22,7 @@ brew install cloudflared             # el túnel para que los alumnos entren des
 
 ---
 
-## 2. Arrancar la app
+## 2. Activar el entorno
 
 En cada terminal nueva, primero activa el entorno:
 
@@ -30,6 +30,8 @@ En cada terminal nueva, primero activa el entorno:
 cd staff/victor-chang/asistenciapp
 source .venv/bin/activate
 ```
+
+### Arrancar la app
 
 | Para… | Comando |
 | --- | --- |
