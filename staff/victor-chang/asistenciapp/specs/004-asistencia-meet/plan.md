@@ -1,6 +1,6 @@
 # Plan técnico 004 · Asistencia automática desde Google Meet
 
-> Versión 2.0 · Estado: **Aprobado** (2026-10-23) · Spec: [spec.md](spec.md) v1.1 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Constitución v3.1 · Creado: 2026-10-21 · Reescrito: 2026-10-23
+> Versión 2.1 · Estado: **Borrador (pendiente de aprobación)** · La v2.0 se aprobó el 2026-10-23 · Spec: [spec.md](spec.md) v1.2 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Constitución v3.1 · Creado: 2026-10-21 · Reescrito: 2026-10-23
 
 Este documento explica **cómo** construimos lo que pide la spec 004 sobre el código ya adaptado a `ARCHITECTURE.md` (spec 005). Meet es una **segunda forma de llenar la lista**: una entrada nueva que llama a casos de uso, y una pieza de infraestructura nueva que habla con Google (C3, P1). Las reglas se citan por su identificador (`C2`, `E4`…).
 
@@ -10,22 +10,24 @@ La versión 1.0 (aprobada el 2026-10-21) se escribió para la estructura anterio
 
 ## 0. Riesgo principal: verificarlo antes de construir
 
-La documentación de Google no deja del todo claro si la API de Meet funciona con una **cuenta de Google gratuita** (Neoland no tiene plan de pago, spec P6).
+La documentación de Google no dejaba claro si la API de Meet funciona con una **cuenta de Google gratuita** (Neoland no tiene plan de pago, spec P6). Por eso la primera tarea fue una prueba de concepto (*spike*, tarea T03).
 
-Por eso la **primera tarea es una prueba de concepto** (*spike*): un script desechable que, con la cuenta gratuita de Victor, lea los participantes de una reunión real.
+**Resultado (2026-10-23): funciona, y la puerta se pasa.** Lo que mostró, y que esta versión del plan ya aplica:
 
-- **Si funciona**, se sigue con el resto del plan.
-- **Si no funciona**, se **para** y se vuelve a la spec (decisión §8.3).
+| # | Hallazgo | Dónde se aplica |
+| --- | --- | --- |
+| 1 | `spaces/{código}` responde `403` con reuniones creadas desde meet.google.com; la vía que funciona es `conferenceRecords` filtrado por código | §2.3 |
+| 2 | Una cuenta **participante** que no organiza ve la lista (las clases del bootcamp) | §2.6, spec CA-15 |
+| 3 | Sin filtro, `participants` da **todos los que estuvieron** en algún momento, una vez cada uno | §2.3, spec CA-18, CA-19 |
+| 4 | Cada reunión caduca a los **30 días** de terminar (`expireTime`) | §2.3, spec CA-14 |
+| 5 | La clase usa **la misma sala cada día**: un código, varias reuniones | §2.3, spec CA-20 |
+| 6 | Inexistente, sin empezar, caducada o no visible dan lo mismo: **0 reuniones** | §2.7, spec CA-13, CA-14 |
+| 7 | El participante del profesor trae `users/<sub>`, el mismo `sub` del inicio de sesión | §2.5 |
+| 8 | Google deja **conceder solo parte** de los permisos | §2.4 |
+| 9 | `403 PERMISSION_DENIED` también cuando **la API está desactivada** en el proyecto | §2.7 |
+| 10 | `ALTER TABLE … ADD COLUMN` con los `CHECK` de §3 funciona en SQLite 3.49 | §3 |
 
-La misma prueba responde a cuatro dudas que cambian detalles de este plan:
-1. si el identificador del profesor en Meet coincide con el de su inicio de sesión, para excluirle (CA-09, §2.5);
-2. qué ve una cuenta que **no** organiza la reunión (CA-13, CA-15, §2.6);
-3. qué responde Google si la reunión no existe o no está en curso (CA-14, §2.7);
-4. si `ALTER TABLE … ADD COLUMN` con `CHECK` funciona en el SQLite del proyecto (3.49) como se espera (§3).
-
-El spike guarda **ejemplos de respuesta de Google, con los nombres cambiados** (P4), para los tests de §2.10.
-
----
+Los ejemplos de respuesta guardados (con nombres e identificadores cambiados, P4) están en `tests/fixtures/meet/`.
 
 ## 1. Visión general
 
@@ -43,7 +45,7 @@ El spike guarda **ejemplos de respuesta de Google, con los nombres cambiados** (
 ```
 
 - La **clase** sigue siendo una sesión, con dos campos nuevos: su **modo** (`code` o `automatic`) y, en modo automático, su **código de reunión**.
-- "Tomar asistencia ahora" pide a Google **quién está ahora** en la reunión y registra a cada persona con la **misma regla anti-duplicados** de la spec 001 (`name_key` y la restricción `UNIQUE`). Repetirla solo añade a los nuevos; **nunca se borra** a nadie por salir (CA-06, CA-07).
+- Tomar asistencia pide a Google, según elija el profesor en cada toma, **quién está ahora** o **todos los que han estado** en la reunión (spec CA-18), y registra a cada persona con la **misma regla anti-duplicados** de la spec 001 (`name_key` y la restricción `UNIQUE`). Repetirla solo añade a los nuevos; **nunca se borra** a nadie por salir (CA-06, CA-07). Funciona durante la clase y después, hasta 30 días (CA-20, CA-21).
 - Atajo de línea de comandos (decisión §8.2): `python app.py --meet abc-defg-hij` (combinable con `--tunel`) crea la clase automática, toma asistencia una vez e imprime el enlace del panel **a esa clase**.
 
 ---
@@ -55,7 +57,7 @@ El spike guarda **ejemplos de respuesta de Google, con los nombres cambiados** (
 | Capa | Archivo | Qué hace |
 | --- | --- | --- |
 | Dominio | `domain/sessions.py` | `Mode` (`code` / `automatic`); `Session` y `SessionSummary` ganan `mode` y `meeting_code` |
-| Dominio | `domain/participants.py` **(nuevo)** | `names_from_platform(display_names)`: de los nombres que da una plataforma a los nombres de la lista (invitados sin nombre, numeración, recorte). No sabe nada de Google: sirve también para Discord (C3, P1) |
+| Dominio | `domain/participants.py` **(nuevo)** | `Who` (`now` / `everyone`), `MeetingAttendance` (los nombres y de qué reunión son) y `names_from_platform(display_names)`: de los nombres que da una plataforma a los nombres de la lista (invitados sin nombre, numeración, recorte). No sabe nada de Google: sirve también para Discord (C3, P1) |
 | Dominio | `domain/errors.py` | Los errores nuevos de §2.7 |
 | Casos de uso | `usecases/sessions.py` | `create_session` recibe el modo y el enlace; `teacher_view` no da código en modo automático |
 | Casos de uso | `usecases/checkins.py` | `check_in` rechaza las clases automáticas (CA-02) |
@@ -68,17 +70,24 @@ El spike guarda **ejemplos de respuesta de Google, con los nombres cambiados** (
 
 ### 2.2 Los participantes llegan como una función (C4, M3, §12)
 
-- El caso de uso recibe **una función** `fetch_participants(meeting_code) -> list[str]`: los nombres visibles de quienes están ahora en la reunión, **sin el profesor**.
-- En la app es el método `participants` de un `GoogleMeet` que se crea en `app.py` (el punto de montaje, C4) y llega a `create_app` por parámetro. En los tests es una función falsa que devuelve la lista que decide cada test.
-- **Sin `Protocol` ni clase base**: hay una sola implementación real, y una función con su tipo (`Callable[[str], list[str]]`) basta (ARCHITECTURE §12). Si llega Discord (spec 002) con su propia fuente, se revisa.
+- El caso de uso recibe **una función** `fetch_participants(meeting_code, who) -> MeetingAttendance`:
+  - `who` es `Who.NOW` (quién está ahora) o `Who.EVERYONE` (todos los que han estado);
+  - `MeetingAttendance` lleva los **nombres visibles**, **sin el profesor**, y la **hora de inicio** de la reunión elegida y si **ya terminó**, para que el panel diga de qué reunión es la toma (CA-20).
+- En la app es el método `participants` de un `GoogleMeet` que se crea en `app.py` (el punto de montaje, C4) y llega a `create_app` por parámetro. En los tests es una función falsa que devuelve lo que decide cada test.
+- **Sin `Protocol` ni clase base**: hay una sola implementación real, y una función con su tipo (`Callable[[str, Who], MeetingAttendance]`) basta (ARCHITECTURE §12). Si llega Discord (spec 002) con su propia fuente, se revisa.
 - `GoogleMeet` sí es una clase: guarda estado que comparten sus operaciones, las credenciales y la sesión HTTP (M3).
 
 ### 2.3 Cómo se habla con Google (CA-05, CA-14; F4)
 
-Dos llamadas a la API REST de Meet v2, desde `infra/google_meet.py`:
+Dos llamadas a la API REST de Meet v2, desde `infra/google_meet.py` (§0, hallazgos 1, 3 y 5):
 
-1. `GET spaces/{códigoReunión}` → si hay reunión en curso, devuelve `activeConference.conferenceRecord`.
-2. `GET {conferenceRecord}/participants?filter=latest_end_time IS NULL&pageSize=250` → **solo quienes siguen en la llamada** (spec P2). Se siguen las páginas (`nextPageToken`) hasta un máximo de 10.
+1. `GET conferenceRecords?filter=space.meeting_code = "{código}"` → las reuniones con ese código que **esta cuenta puede ver** (organizadas o en las que participó).
+   - **Qué reunión se usa** (spec CA-20): la que no tiene `endTime` (en curso); si no hay, la de `endTime` más reciente. Ninguna → `MeetingNotVisibleError` (CA-13, CA-14).
+   - Con `Who.NOW` y la reunión elegida ya terminada → `MeetingEndedError` (CA-21), sin pedir los participantes.
+2. `GET {conferenceRecord}/participants` → los participantes:
+   - `Who.NOW` → con `filter=latest_end_time IS NULL`: solo quienes siguen en la llamada (CA-05);
+   - `Who.EVERYONE` → sin filtro: todos los que entraron en algún momento, cada uno una vez (CA-18, CA-19).
+   - `pageSize=250`, siguiendo `nextPageToken` hasta un máximo de 10 páginas.
 
 Límites (F4):
 - cada llamada lleva un **tiempo máximo de 10 s**;
@@ -91,27 +100,28 @@ El **enlace o código** de la reunión se acepta pegando el enlace completo (`ht
 
 - Google exige **OAuth**: el profesor inicia sesión y acepta que la app "vea información sobre sus reuniones de Meet".
 - Permisos mínimos: `meetings.space.readonly` (solo lectura) y `openid` (para saber qué cuenta es y excluirla, §2.5). **No** se pide el email (P4).
+- **Permisos a medias** (§0, hallazgo 8): Google deja conceder solo una parte, con casillas. Tras el inicio de sesión se comprueban los permisos concedidos; si falta el de Meet → `MeetPermissionMissingError`, y no se guarda ese permiso incompleto.
 - **Primera vez** (CA-11): al tomar asistencia sin permiso guardado, la app abre el navegador **del ordenador donde corre** con la pantalla de Google (flujo de escritorio *loopback*, en un puerto libre que elige el sistema). Al aceptar, la toma continúa sola. Si en 2 minutos no se acepta → `MeetLoginNotCompletedError`.
   - El servidor de Flask atiende varias peticiones a la vez, así que el panel no se bloquea mientras tanto.
 - **Siguientes veces** (CA-12): el permiso se guarda y se renueva solo.
+- **Caducidad semanal** (spec P7, opción A): mientras la app de Google esté **en prueba**, Google invalida el permiso a los 7 días. Cuando la renovación falla por eso, `GoogleMeet` borra el permiso guardado y vuelve al flujo de la primera vez, sin que el profesor tenga que hacer nada más que aceptar.
+  - *Paso futuro (P7, opción B):* publicar una página principal y una política de privacidad y pasar la app a producción; entonces el permiso deja de caducar y este punto no cambia de código.
 - Archivos, leídos por `Config` (F5), los dos en `data/` (fuera de git):
 
   | Variable | Por defecto | Qué es |
   | --- | --- | --- |
-  | `ASISTENCIA_GOOGLE_CLIENT` | `data/google-client.json` | La "llave" de la app, que el profesor crea una vez en Google Cloud (README) |
+  | `ASISTENCIA_GOOGLE_CLIENT` | `data/google-client.json` | La "llave" de la app, de tipo **Aplicación de escritorio**, que el profesor crea una vez en Google Cloud (README) |
   | `ASISTENCIA_GOOGLE_TOKEN` | `data/google-token.json` | El permiso guardado. Se escribe con permisos `0600` (solo el usuario), porque es un secreto (X) |
-
-- Estado de la app en Google Cloud: **"En producción" sin verificar** (decisión §8.1), para que el permiso no caduque cada 7 días.
 
 ### 2.5 Excluir al profesor (CA-09)
 
-- Con `openid`, el permiso trae el identificador de la cuenta (`sub`). `GoogleMeet` descarta el participante cuyo `signedinUser.user` sea `users/<sub>`.
+- Con `openid`, el permiso trae el identificador de la cuenta (`sub`). `GoogleMeet` descarta el participante cuyo `signedinUser.user` sea `users/<sub>`; el spike confirmó que coinciden (§0, hallazgo 7).
 - Ese identificador **solo se usa en memoria**; no se guarda (P4).
-- *A confirmar en el spike (§0.1).* Si no coincide, alternativa: pedir también `profile` y excluir por nombre visible.
+- En "Todos los que han estado" también se excluye: el profesor estuvo, pero no es alumno.
 
-### 2.6 Coorganizador (HU-06, CA-15, opcional)
+### 2.6 Cualquier participante (HU-06, CA-15)
 
-En cuentas gratuitas de Meet la figura de coanfitrión no existe, y la API solo enseña los participantes al **dueño** de la reunión. Lo más probable es que HU-06 no sea viable: el spike lo comprueba con una segunda cuenta (§0.2). Si no lo es, CA-15 se marca "no aplicable" en la spec. CA-13 se cumple igualmente: es el mensaje que verá esa cuenta.
+El spike mostró que una cuenta **participante** ve la lista de una reunión que no organiza (§0, hallazgo 2). Por eso la spec v1.2 deja que tome la asistencia **quien arranca la app con su propia cuenta**, si organiza la reunión **o** estuvo en ella. No hace falta nada especial en el código: `conferenceRecords` ya devuelve las reuniones que esa cuenta puede ver.
 
 ### 2.7 Errores nuevos (E3, E4, E5; decisión §8.5)
 
@@ -121,16 +131,17 @@ Todos heredan de `AppError` y llevan su mensaje como constante. Viven en `domain
 | --- | --- | --- | --- |
 | `NotCodeSessionError` | Check-in por código en una clase automática (CA-02) | 409 | "Esta clase no usa código: la asistencia se toma automáticamente desde Meet." |
 | `NotAutomaticSessionError` | Tomar asistencia de Meet en una clase de código | 409 | "Esta clase usa código: los alumnos se registran con el enlace y el código." |
-| `MeetingLinkInvalidError` | Enlace o código de Meet mal escrito, o que falta en modo automático (CA-14) | 422 | "Pega el enlace o el código de la reunión de Meet (p. ej. abc-defg-hij)." |
-| `MeetingNotFoundError` | Google responde `404` (CA-14) | 422 | "No existe ninguna reunión con ese código. Revisa el enlace de Meet." |
-| `MeetingNotInProgressError` | Sin `activeConference` (CA-14) | 422 | "La reunión no está en curso. Toma la asistencia mientras la clase está en marcha." |
-| `MeetingAccessDeniedError` | Google responde `403` (CA-13) | 422 | "Esta cuenta no tiene acceso a la reunión. Pide al organizador de la reunión que tome la asistencia o que te haga coorganizador." |
-| `MeetLoginNotCompletedError` | No se aceptó el permiso en 2 minutos (CA-11) | 422 | "No se completó el permiso de Google. Vuelve a pulsar «Tomar asistencia ahora» y acepta en la ventana de Google." |
-| `MeetNotConfiguredError` | Falta `google-client.json` | 422 | "Falta la llave de Google de la app. Sigue los pasos de «Modo automático» en el README." |
+| `MeetingLinkInvalidError` | Enlace o código de Meet mal escrito, o que falta en modo automático | 422 | "Pega el enlace o el código de la reunión de Meet (p. ej. abc-defg-hij)." |
+| `MeetingNotVisibleError` | Ninguna reunión con ese código para esta cuenta: no existe, no ha empezado, caducó o no la ve (CA-13, CA-14; §0, hallazgo 6). También un `403` que no sea de API desactivada | 422 | "No hay ninguna reunión con ese enlace que esta cuenta pueda ver. Revisa el enlace, entra en la reunión con esta cuenta o pide al organizador que tome la asistencia." |
+| `MeetingEndedError` | "Quién está ahora" en una reunión que ya terminó (CA-21) | 422 | "Esta reunión ya terminó. Usa «Todos los que han estado» para registrar a quienes estuvieron." |
+| `MeetPermissionMissingError` | Se aceptó el inicio de sesión sin la casilla de Meet (§2.4) | 422 | "Falta el permiso de Google Meet. Vuelve a tomar la asistencia y marca la casilla «Ver información sobre tus reuniones de Google Meet»." |
+| `MeetLoginNotCompletedError` | No se aceptó el permiso en 2 minutos (CA-11) | 422 | "No se completó el permiso de Google. Vuelve a tomar la asistencia y acepta en la ventana de Google." |
+| `MeetNotConfiguredError` | Falta `google-client.json`, o Google dice que la API de Meet está desactivada en el proyecto (`403` con ese motivo; §0, hallazgo 9) | 422 | "Falta preparar la app en Google Cloud. Sigue los pasos de «Modo automático» en el README." |
 | `MeetServiceError` | Google o la red fallan (`5xx`, tiempo agotado, sin conexión) | 502 | "Google Meet no responde ahora mismo. Inténtalo de nuevo en unos segundos." |
 
 - Una clase automática **cerrada** responde a la toma con `SessionClosedError` (`409`, el de la spec 001).
-- En cada fallo de Google se registra **solo el tipo de error y el código HTTP**, nunca el cuerpo de la respuesta, que lleva nombres (E7).
+- Para distinguir "API desactivada" de "sin acceso", `GoogleMeet` lee el **motivo** que Google pone en el cuerpo del error (`SERVICE_DISABLED`), sin registrarlo ni mostrarlo.
+- En cada fallo de Google se registra **solo el tipo de error y el código HTTP**, nunca el cuerpo de la respuesta, que puede llevar nombres (E7).
 
 ### 2.8 Del participante al nombre (CA-05, CA-08, CA-17)
 
@@ -157,16 +168,14 @@ Después cada nombre pasa por `name_key` y `storage.add_checkin`, sin cambios.
 
 ### 2.10 Pruebas sin Google (T2, T4)
 
-- **Dominio y casos de uso**: `fetch_participants` falso, que devuelve una lista o lanza el error que decida el test.
-- **`infra/google_meet.py`**: `GoogleMeet` recibe por parámetro su sesión HTTP; en los tests es una falsa que devuelve las respuestas de ejemplo guardadas en el spike (con nombres cambiados), o un `403`, `404`, `500`, o un tiempo agotado. Así se prueban sin red la paginación, la exclusión del profesor y la traducción de cada fallo (T4: se simula solo lo externo).
-- El flujo OAuth real (abrir el navegador de Google) no se prueba de forma automática: se verifica a mano en la prueba final (CA-11, CA-12).
+- **Dominio y casos de uso**: `fetch_participants` falso, que devuelve un `MeetingAttendance` o lanza el error que decida el test.
+- **`infra/google_meet.py`**: `GoogleMeet` recibe por parámetro su sesión HTTP; en los tests es una falsa que devuelve los ejemplos de `tests/fixtures/meet/` (`conference_records_by_code.json`, `participants_ended.json`; los demás casos, como una reunión en curso o varias reuniones con el mismo código, se derivan de ellos en el propio test), o un `403` (con y sin el motivo `SERVICE_DISABLED`), un `500` o un tiempo agotado. Así se prueban sin red la elección de la reunión, los dos modos, la paginación, la exclusión del profesor y la traducción de cada fallo (T4: se simula solo lo externo).
+- El flujo OAuth real (abrir el navegador de Google, permisos a medias, caducidad semanal) se verifica a mano en la prueba final (CA-11, CA-12). La comprobación de los permisos concedidos sí se prueba, con unas credenciales falsas.
 - **Entrada web y CLI**: con `create_app(..., fetch_participants=falsa)`.
 
 ### 2.11 Horas (D6)
 
-Todos los registros de una misma toma llevan **la hora de la toma** (`to_iso(t)`): es la hora a la que se comprobó que estaban, no la de entrada (la spec deja fuera las entradas y salidas).
-
----
+Todos los registros de una misma toma llevan **la hora de la toma** (`to_iso(t)`), también con "Todos los que han estado" y al terminar la clase: es cuándo se pasó lista, no cuándo entró cada uno (la spec deja fuera las entradas y salidas). La descarga en CSV (CA-16) muestra esa hora.
 
 ## 3. Modelo de datos
 
@@ -178,7 +187,7 @@ meeting_code TEXT CHECK (mode = 'code' OR meeting_code IS NOT NULL)
 ```
 
 - Las reglas que deben cumplirse siempre (modo válido; toda clase automática tiene su reunión) las impone la propia base de datos (D5).
-- **Migración** (D5): `init_schema()` comprueba las columnas con `PRAGMA table_info(sessions)` y añade las que falten con `ALTER TABLE … ADD COLUMN`. Las clases que ya existen quedan como `code`, que es lo que eran. La tabla nueva de una base de datos vacía ya nace con ellas.
+- **Migración** (D5): `init_schema()` comprueba las columnas con `PRAGMA table_info(sessions)` y añade las que falten con `ALTER TABLE … ADD COLUMN`. Las clases que ya existen quedan como `code`, que es lo que eran. La tabla nueva de una base de datos vacía ya nace con ellas. Comprobado en el spike con SQLite 3.49 (§0, hallazgo 10).
 - `meeting_code` es un dato de la **reunión**, no del alumno: no afecta a P4. Nombre genérico (no `meet_code`) para servir a otras plataformas (P1).
 
 ---
@@ -190,12 +199,12 @@ meeting_code TEXT CHECK (mode = 'code' OR meeting_code IS NOT NULL)
 | `POST /api/sessions` | Cuerpo `{title?, mode?, meeting?}`. `mode` por defecto `code`. En `automatic`, `meeting` es obligatorio (`422` `MeetingLinkInvalidError` si falta o está mal escrito); `mode` desconocido → `400`. Respuesta: `{id, title, mode}` |
 | `GET /api/sessions` | Cada clase incluye `mode` |
 | `GET /api/sessions/<id>` | Incluye `mode` y `meetingCode`. En modo automático, **sin** `code`, `secondsLeft` ni `studentUrl` |
-| **`POST /api/sessions/<id>/meet-sync`** (nueva) | Sin cuerpo. `200 {added, inCall, total}` · `409` si la clase es de código o está cerrada · `422`/`502` con los errores de §2.7 · `404` si no existe · `401` sin token |
+| **`POST /api/sessions/<id>/meet-sync`** (nueva) | Cuerpo `{who}`: `"now"` o `"everyone"` (obligatorio; otro valor → `400`). `200 {added, found, total, meetingStartedAt, meetingEnded}` · `409` si la clase es de código o está cerrada · `422`/`502` con los errores de §2.7 · `404` si no existe · `401` sin token |
 | `GET /api/s/<id>` | Incluye `mode` |
 | `POST /api/s/<id>/checkin` | `409` `NotCodeSessionError` si la clase es automática |
 
 - Los serializadores nuevos o ampliados viven en `entrypoints/web/serializers.py` (F2, D7). `teacher_view_json` solo incluye `studentUrl` en modo código: es elegir campos, no una regla del negocio.
-- El panel compone el texto del resultado: "Añadidas 3 personas nuevas · 12 en la llamada ahora"; con `inCall = 0`, "No hay participantes en la reunión" (CA-10).
+- El panel compone el texto del resultado, con la reunión de la que es (CA-20): "Reunión del 23/10 a las 08:56 · Añadidas 3 personas nuevas · 12 en la llamada ahora" (o "· 17 estuvieron en la reunión" con `everyone`); con `found = 0`, "No hay participantes en la reunión" (CA-10).
 
 ---
 
@@ -226,13 +235,13 @@ asistenciapp/
 │   ├── alumno.js                    # aviso "Esta clase no usa código…"
 │   └── styles.css                   # selector y etiqueta
 ├── tests/
-│   ├── fixtures/meet/               # NUEVO: respuestas de ejemplo de Google, con nombres cambiados
+│   ├── fixtures/meet/               # respuestas de ejemplo del spike, con nombres cambiados (ya guardadas)
 │   ├── test_participants.py         # NUEVO
 │   ├── test_attendance.py           # NUEVO
 │   ├── test_google_meet.py          # NUEVO
 │   ├── test_cli.py                  # NUEVO
 │   └── test_web_meet.py             # NUEVO (+ cambios en test_web_*, test_sessions, test_checkins, test_storage, test_config)
-├── scripts/spike_meet.py            # NUEVO y desechable (§0): se borra al terminar
+├── scripts/spike_meet.py            # desechable (§0, ya usado): se borra al terminar
 └── README.md                        # sección "Modo automático (Google Meet)"
 ```
 
@@ -246,20 +255,21 @@ asistenciapp/
 | CA-02 | `test_sessions`: vista automática sin código; `test_checkins` y `test_web_public`: check-in → `409` `NotCodeSessionError` |
 | CA-03 | Los tests de la spec 001 siguen en verde; `meet-sync` en clase de código → `409` |
 | CA-04 | `test_web_teacher`: `GET /api/sessions` incluye `mode`. Manual: etiqueta visible en el panel |
-| CA-05 | `test_attendance`: 3 nombres → 3 registros con la hora de la toma, en una transacción |
+| CA-05 | `test_attendance`: "ahora" con 3 nombres → 3 registros con la hora de la toma, en una transacción. `test_google_meet`: `now` pide los participantes con `latest_end_time IS NULL` |
 | CA-06 | `test_attendance`: segunda toma con 2 repetidos (uno con otra tilde o mayúscula) + 1 nuevo → `added = 1` |
 | CA-07 | `test_attendance`: segunda toma sin una persona → sigue en la lista |
 | CA-08 | `test_participants`: vacío → "Invitado sin nombre"; varios → numerados; 80 caracteres → 60 |
-| CA-09 | `test_google_meet`: el participante `users/<sub>` no sale. Manual en el spike y en la prueba final |
-| CA-10 | `test_attendance`: reunión vacía → `inCall = 0`, `added = 0`. Manual: mensaje en el panel |
-| CA-11, CA-12 | Manual: la primera toma abre Google; otro día no lo vuelve a pedir |
-| CA-13 | `test_google_meet`: `403` → `MeetingAccessDeniedError`; `test_web_meet`: `422` con su mensaje. Manual con la segunda cuenta |
-| CA-14 | `test_google_meet`: enlaces válidos y no válidos, `404`, sin reunión en curso; `test_web_meet`: `422` |
-| CA-15 | Manual en el spike (probablemente "no aplicable", §2.6) |
+| CA-09 | `test_google_meet`: el participante `users/<sub>` no sale, en los dos modos. Manual en la prueba final |
+| CA-10 | `test_attendance`: reunión vacía → `found = 0`, `added = 0`. Manual: mensaje en el panel |
+| CA-11, CA-12 | `test_google_meet`: permisos a medias → `MeetPermissionMissingError`; permiso caducado → vuelve al inicio de sesión. Manual: la primera toma abre Google; otra toma en la misma semana no lo pide |
+| CA-13, CA-14 | `test_google_meet`: 0 reuniones y `403` sin motivo de API → `MeetingNotVisibleError`; enlaces válidos y no válidos; `test_web_meet`: `422` con su mensaje |
+| CA-15 | Comprobado en el spike: una cuenta participante ve la lista de las clases del bootcamp (§0). Manual en la prueba final |
 | CA-16 | `test_web_meet`: quitar y exportar en una clase automática |
 | CA-17 | `test_google_meet`: solo salen nombres aunque el JSON traiga `user` y `phoneUser`; `test_storage`: `checkins` no tiene columnas nuevas |
-
----
+| CA-18 | `test_google_meet`: `everyone` pide los participantes sin filtro; `test_web_meet`: `who` obligatorio y con valores válidos. Manual: los dos botones en el panel |
+| CA-19 | `test_attendance`: el mismo nombre dos veces en una toma de "todos" → un registro |
+| CA-20 | `test_google_meet`: varias reuniones con el mismo código → la en curso; si no hay, la más reciente; `test_web_meet`: `meetingStartedAt` en la respuesta |
+| CA-21 | `test_google_meet`: `now` con la reunión terminada → `MeetingEndedError` sin pedir los participantes |
 
 ## 7. Comprobaciones
 
@@ -298,7 +308,7 @@ asistenciapp/
 
 ## 8. Decisiones tomadas por Victor
 
-1. **Estado de la app en Google Cloud** (2026-10-21): **"En producción" sin verificar**. Hay un aviso de Google al iniciar sesión, pero el permiso no caduca cada semana (§2.4, CA-12).
+1. **Estado de la app en Google Cloud** (2026-10-21; **cambiado el 2026-10-23**): se quería "En producción" sin verificar, pero Google exige para ello una página principal y una política de privacidad. **Por ahora queda en prueba**, con el permiso semanal (spec P7, opción A); publicarla es un paso futuro (P7, opción B) (§2.4).
 2. **Atajo `--meet`** (2026-10-21): **sí** (§1).
 3. **Spike primero** (2026-10-21): si la cuenta gratuita no puede leer participantes, se para y se revisa la spec (§0).
 4. **Orden** (2026-10-23): primero se adapta el código a `ARCHITECTURE.md` (spec 005, terminada) y después se reescribe este plan.
@@ -306,6 +316,9 @@ asistenciapp/
 6. **Valores de `mode`** (2026-10-23): `code` y `automatic`. Las etiquetas del panel siguen en español ("código", "Meet").
 7. **Invitados sin nombre** (2026-10-23): se acepta como límite conocido y se anota en la spec junto a CA-08 (spec v1.1). No se guarda ningún identificador de la plataforma (P4).
 8. **Plan v2.0 aprobado** (2026-10-23).
+9. **Quién toma la asistencia** (2026-10-23, tras el spike): quien arranca la app, si organiza la reunión o participa en ella (spec v1.2, HU-06).
+10. **Quién cuenta** (2026-10-23): las dos opciones, elegidas en cada toma: "Quién está ahora" o "Todos los que han estado" (spec CA-18).
+11. **Qué reunión** (2026-10-23): la en curso; si no hay, la última que terminó (spec CA-20).
 
 ---
 
@@ -314,4 +327,5 @@ asistenciapp/
 | Versión | Fecha | Cambio | Motivo |
 | --- | --- | --- | --- |
 | 1.0 | 2026-10-21 | Versión inicial, aprobada por Victor | — |
+| 2.1 | 2026-10-23 | Resultados del spike (§0): vía `conferenceRecords` y elección de la reunión (§2.3), dos modos de toma (§2.2, §2.3, §4), cualquier participante (§2.6), errores revisados (§2.7), permisos a medias y caducidad semanal (§2.4), trazabilidad de CA-18 a CA-21 (§6), decisiones §8.1 y §8.9 a §8.11 | Spike de la tarea T03 y spec v1.2 |
 | 2.0 | 2026-10-23 | Reescrito sobre `ARCHITECTURE.md`: capas (§2.1), participantes como función (§2.2), errores con nombre y sus códigos (§2.7), tiempos máximos (§2.3, §2.4), `CHECK` en la BD (§3), pruebas de `GoogleMeet` sin red (§2.10) y comprobación de la arquitectura (§7.2) | Decisión §8.4: la spec 005 dejó el código en capas |
