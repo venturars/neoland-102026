@@ -71,5 +71,5 @@ $RECYCLE.BIN/
 *.temp
 ~$*
 
-   # Bases de datos locales
-   *.sqlite
+# Bases de datos locales
+*.sqlite
