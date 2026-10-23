@@ -10,7 +10,7 @@ Este documento explica **cómo** se cumple la spec. Cada decisión indica qué c
 
 Se enmienda la constitución y se renombra el manual del agente. No se crea código. No se cambia cómo se pasa lista.
 
-- [CONSTITUTION.md](../../CONSTITUTION.md) pasa a la versión 2.2. Ahí está la obligación.
+- [CONSTITUTION.md](../../docs/CONSTITUTION.md) pasa a la versión 2.2. Ahí está la obligación.
 - `AGENT.md` se renombra a `AGENTS.md` y dice el día a día: dónde buscar specs, qué fichero se puede crear al empezar, cuándo parar y quién da el ok.
 - El README solo cambia el enlace al manual.
 

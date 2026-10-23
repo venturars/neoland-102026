@@ -5,7 +5,8 @@ Se llama export.py y no csv.py para no tapar el módulo `csv` estándar.
 
 import csv
 import io
-from datetime import datetime
+from collections.abc import Iterable
+from datetime import datetime, tzinfo
 
 BOM = "﻿"
 FORMULA_PREFIXES = ("=", "+", "-", "@")
@@ -16,12 +17,22 @@ def _safe(name: str) -> str:
     return "'" + name if name.startswith(FORMULA_PREFIXES) else name
 
 
-def _local_time(iso: str, tz) -> str:
+def _local_time(iso: str, tz: tzinfo | None) -> str:
     return datetime.fromisoformat(iso).astimezone(tz).strftime("%d/%m/%Y %H:%M:%S")
 
 
-def to_csv(rows, tz=None) -> str:
-    """rows: dicts con `name` y `checked_at` (ISO UTC). tz=None → hora local del servidor."""
+def to_csv(rows: Iterable[dict[str, str]], tz: tzinfo | None = None) -> str:
+    """Convierte filas ya cargadas en CSV. No abre la base.
+
+    :param rows: Diccionarios con name y checked_at en ISO UTC.
+    :param tz: Zona horaria. None usa la del servidor.
+    :return: CSV con BOM, separador ; y la hora local.
+    :rtype: str
+
+    Usage::
+
+        to_csv([{"name": "Ana", "checked_at": "2026-10-23T09:00:00.000+00:00"}])
+    """
     out = io.StringIO()
     writer = csv.writer(out, delimiter=";", lineterminator="\r\n")
     writer.writerow(["Nombre", "Hora"])
