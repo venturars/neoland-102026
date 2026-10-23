@@ -36,7 +36,8 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
   - Responde y anota aquí:
     - [x] ¿Lee los participantes con una cuenta **gratuita**? (si **no** → **parar**, plan §0)
       - **Sí** (2026-10-23), pero por `conferenceRecords`, no por `spaces/{código}`: `spaces.get` responde `403` incluso con una reunión propia creada desde meet.google.com. `conferenceRecords?filter=space.meeting_code="…"` devuelve la reunión en curso (sin `endTime`), y sus `participants?filter=latest_end_time IS NULL` dan quién está ahora. Cambia plan §2.3.
-    - [ ] ¿`users/<sub>` coincide con el profesor? (si no → excluir por nombre, plan §2.5)
+    - [x] ¿`users/<sub>` coincide con el profesor? (si no → excluir por nombre, plan §2.5)
+      - **Sí** (2026-10-23): el participante `signedinUser` del profesor trae `user = users/<sub>`, el mismo `sub` del inicio de sesión. El invitado anónimo llega como `anonymousUser`, con `displayName` y sin `user`.
     - [ ] ¿Qué ve una **segunda cuenta** que no organiza la reunión? (decide CA-13 y CA-15, plan §2.6)
     - [ ] ¿Qué responde Google si la reunión **no está en curso** o el código no existe? (plan §2.7)
     - [x] ¿Funciona en el SQLite del proyecto `ALTER TABLE … ADD COLUMN` con los `CHECK` de plan §3, y rechaza un modo no válido? (plan §0.4)
@@ -45,6 +46,7 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
     - Google deja **conceder solo parte** de los permisos (casillas en su pantalla). Sin la casilla de Meet solo concede `openid`. La app tiene que comprobar los permisos concedidos y explicar cuál falta, en vez de fallar.
     - Google responde **el mismo `403 PERMISSION_DENIED`** cuando la API de Meet no está activada en el proyecto de Google Cloud. `GoogleMeet` tiene que leer el motivo de la respuesta: API desactivada → error de configuración (`MeetNotConfiguredError`); sin acceso a la reunión → `MeetingAccessDeniedError` (CA-13).
     - El `sub` de la cuenta llega bien con `openid` (no se copia aquí: identifica la cuenta de Victor).
+    - `conferenceRecords` sin filtro devuelve también reuniones de **otra** sala en las que Victor solo participa (parecen las clases del bootcamp). Puede que un participante que no organiza vea la lista: es la pregunta 3.
   - Guarda en `tests/fixtures/meet/` las respuestas de Google de ejemplo, **con los nombres cambiados** (P4), para los tests de T09.
   - *Cubre:* riesgo de §0; base de CA-09, CA-13, CA-14, CA-15.
   - *Hecha cuando:* las cinco preguntas tienen respuesta. Si alguna obliga a cambiar el plan o la spec, se actualizan **antes** de seguir.
