@@ -194,13 +194,37 @@ Cómo leer esta lista:
 
 ## Fase I · Verificación y cierre
 
-- [ ] **T19** 👤 · Prueba real (Victor):
+- [x] **T19** 👤 · Prueba real (Victor):
   1. Arrancar con **una copia** de `data/asistencia.db`: siguen las clases y el mismo enlace de profesor (CA-02).
   2. `python app.py` y `python app.py --tunel`: arrancan como antes (CA-03).
   3. Abrir una clase, registrarse desde el móvil, quitar un registro, cerrar y exportar: todo igual que antes (CA-01).
   4. Revisar la consola: ninguna IP ni ningún nombre de alumno (CA-07).
-- [ ] **T20** · Lista de comprobación de `ARCHITECTURE.md` §13, anotada aquí punto por punto (cumple, o dónde está su excepción en el plan §5). Comprobar también que cada `# CA-xx` de la spec 001 sigue en algún test.
+  - **Hecha (2026-10-23):** Victor lo probó todo y funciona. Primero le salió `SyntaxError: Non-ASCII character` porque `python` era el Python 2 del sistema: hay que activar `.venv` antes (lo aclara T21).
+- [x] **T20** · Lista de comprobación de `ARCHITECTURE.md` §13, anotada aquí punto por punto (cumple, o dónde está su excepción en el plan §5). Comprobar también que cada `# CA-xx` de la spec 001 sigue en algún test.
   - *Cubre:* CA-01, CA-04.
+  - **Hecha (2026-10-23).** Marcas de la spec 001: no se ha perdido ninguna. Antes del cambio (commit `c219b1d`) los tests marcaban 22 de los 26 CA; ahora 23, porque se añade CA-21 (`test_app.py`: el túnel se cierra al parar). CA-18, CA-22 y CA-23 son comprobaciones manuales o en el navegador (plan 001 §6): CA-22 y CA-23 se repitieron en Chrome porque T16 tocó `alumno.js` (registrarse en A, volver a A → "Ya te registraste…" sin formulario; abrir B → formulario con el nombre recordado). CA-18 (móvil a 400 px) no se repite: la spec 005 no cambia el HTML ni el CSS de ninguna pantalla, salvo el `maxlength` del título.
+
+    | Punto de ARCHITECTURE.md §13 | Resultado | Cómo se ha comprobado |
+    | --- | --- | --- |
+    | Dependencias hacia el dominio (C1, O1) | ✅ | `domain/` solo importa la biblioteca estándar y el propio dominio; `usecases/` no importa Flask ni nada de HTTP o JSON; `infra/` solo importa tipos y errores del dominio |
+    | Dominio sin E/S, reloj ni configuración (C1, M5) | ✅ | Ninguna llamada a `time.time`, `datetime.now`, `os.environ`, `sqlite3` ni archivos en `domain/`; la hora llega como `t` |
+    | Entrada fina (C2, C5) | ✅ | Ningún `if` ni `try/except` en `public.py` y `teacher.py`; cada ruta llama a un caso de uso, salvo la lista de clases, que es una lectura sin reglas (C5) |
+    | Un único punto de montaje (C4, F5) | ✅ | Solo `app.py` lee el entorno (`load_config(os.environ)`); `create_app` lo recibe todo por parámetro |
+    | Límites de tamaño (M1, M2) | ✅ | Ningún módulo pasa de 300 líneas (el mayor, `storage.py`, tiene 149); ninguna función pasa de 40; `ruff` `C90` (complejidad) sin avisos |
+    | Tipos con nombre entre capas (M4) | ✅ | `Session`, `SessionSummary`, `Checkin`, `CheckinResult`, `TeacherView`, `ExportFile`, `Config`; los diccionarios solo existen al leer filas y al construir JSON |
+    | SQL solo en `infra/`, con parámetros; transacciones en el caso de uso (D1–D4) | ✅ | Ningún `execute` fuera de `storage.py`; ningún SQL construido con texto; ningún `commit()`; `with conn:` solo en los casos de uso y en la preparación de `create_app` |
+    | Cada respuesta elige sus campos, en una sola función (D7, F2) | ✅ | Todas las rutas responden con un serializador (o `{"ok": true}`); un test comprueba que el secreto no sale en ninguno |
+    | Forma, tipo y formato de lo que entra, sin conversiones (E1) | ✅ | `json_object` y `optional_str`; tests con cuerpos que no son objetos, números, listas, `null` y otros alfabetos |
+    | Errores con nombre, traducidos en una única tabla (E3, E4) | ✅ | Todos heredan de `AppError` con su `MESSAGE`; no se lanza ninguna excepción estándar; `STATUS` en `errors.py` y un test comprueba que no falta ninguna |
+    | Errores en JSON, en español y diciendo qué hacer (F3, E5) | ✅ | `test_web_errors.py`: cada error de la tabla, `404`, `405` y `500` |
+    | Registros sin datos personales (E7) | ✅ | Un solo `logger.exception` (método y ruta, sin el cuerpo); el registro de accesos queda silenciado; test con `caplog` y prueba real con la consola |
+    | Datos pintados como texto en el navegador (U2, X4) | ✅ | Ningún `innerHTML` en `static/`; el CSV neutraliza fórmulas (`test_export.py`) |
+    | Tipos y docstring con su rastro a la spec (S2, S3) | ✅ | `mypy --strict` y `ruff` (`ANN`, `D`) sin avisos; todos los módulos citan su spec, plan o regla. Los tests quedan fuera de `ANN` y `D` (excepción del plan §5) |
+    | Tests de criterios y de caminos de error; solo se simula lo externo (T1, T3, T4) | ✅ tras un arreglo | Al revisarlo, `test_app.py` (T15) sustituía dos funciones nuestras (`port_in_use` y `start_tunnel`), cosa que T4 no permite. Se arregló: el puerto ocupado es un socket real y lo que se simula es cloudflared (`shutil.which`, `subprocess.Popen`). Solo quedan dos sustituciones de funciones nuestras, para provocar a propósito un error inesperado (T4 lo permite) |
+    | Abstracciones o dependencias sin su condición (§12) | ✅ | Sin `Protocol`, clases abstractas, `async` ni `__all__`; las dependencias de la app siguen siendo Flask (más pytest, ruff y mypy, que son herramientas de desarrollo, P3 v3.1) |
+    | `pytest` en verde | ✅ | 240 tests en verde; `ruff check`, `ruff format --check` y `mypy` sin avisos |
+
+    - Excepciones a la arquitectura: solo las dos del plan §5 (los tests sin anotaciones ni docstrings; el reloj en segundos Unix).
 - [ ] **T21** · Cierre:
   - `AGENT.md`: estructura (§3), comandos de `ruff` y `mypy` (§4), definición de terminado con `ruff` y `mypy` en verde (§6) y estado (§7);
   - `README.md`: estructura, comandos nuevos y variables de entorno (`ASISTENCIA_DB`, `PORT`, `ASISTENCIA_TZ`);
