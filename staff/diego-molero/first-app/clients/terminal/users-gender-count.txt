@@ -1,0 +1,6 @@
+// Ejemplo manual. Ejecución: docs/CONSTITUTIONS.md.
+import { usersGenderCount } from "./logic/users-gender-count.js";
+
+const result = await usersGenderCount();
+
+console.log(result);
