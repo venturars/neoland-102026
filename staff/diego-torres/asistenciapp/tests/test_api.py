@@ -154,6 +154,12 @@ def test_unknown_session(client):
     assert check_in(client, "no-existe", "Ana", "1234").status_code == 404
 
 
+def test_list_body_on_missing_session_is_404(client):
+    res = client.post("/api/s/no-existe/checkin", json=[1])
+    assert res.status_code == 404
+    assert res.get_json()["error"] == "Esta clase no existe. Revisa el enlace."
+
+
 # ---------- T09 · vista del profesor (CA-10, CA-11) ----------
 
 def test_teacher_view(client, teacher, clock):  # CA-10, CA-11
@@ -189,6 +195,9 @@ def test_closed_session(client, teacher):  # CA-09, CA-13
     res = check_in(client, sid, "Ana", code)
     assert res.status_code == 409
     assert res.get_json()["error"] == CLOSED
+    listed = client.post(f"/api/s/{sid}/checkin", json=[1])
+    assert listed.status_code == 409
+    assert listed.get_json()["error"] == CLOSED
 
 
 def test_close_unknown_session(client, teacher):
