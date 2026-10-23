@@ -15,6 +15,7 @@ llevan los nombres y los identificadores cambiados (P4).
 
 import argparse
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -47,8 +48,20 @@ def main() -> None:
         sys.exit(f"Falta {CLIENT_FILE.relative_to(ROOT)} (tarea T02).")
 
     print("Abriendo Google en el navegador. Elige la cuenta con la que quieres probar…")
+    # Google deja conceder solo parte de los permisos (casillas en la pantalla de consentimiento).
+    # Sin esto, oauthlib se para con un Warning; así el spike puede decir qué permiso falta.
+    os.environ["OAUTHLIB_RELAX_TOKEN_SCOPE"] = "1"
     flow = InstalledAppFlow.from_client_secrets_file(str(CLIENT_FILE), SCOPES)
     credentials = flow.run_local_server(port=0, prompt="select_account consent", timeout_seconds=120)
+    granted = set(getattr(credentials, "granted_scopes", None) or flow.oauth2session.token.get("scope", []))
+    missing = [s for s in SCOPES if s not in granted]
+    print(f"\nPermisos concedidos: {sorted(granted)}")
+    if missing:
+        sys.exit(
+            f"Falta el permiso {missing}. Vuelve a ejecutar y, en la pantalla de Google, marca la casilla "
+            "«Ver información sobre tus reuniones de Google Meet». Si no aparece, añade ese permiso en "
+            "Google Auth Platform → Acceso a datos (Data access)."
+        )
     session = requests.Session()
     session.headers["Authorization"] = f"Bearer {credentials.token}"
 
