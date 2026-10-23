@@ -61,6 +61,7 @@ first-app/
     list-users.js
     find-user-by-email.js
     find-user-by-id.js
+    find-user-by-name.js
     update-user.js
     delete-user.js
     users-gender-count.js
@@ -72,6 +73,7 @@ first-app/
       find-all.sql
       find-by-email.sql
       find-by-id.sql
+      find-by-name.sql
       update-user.sql
       remove-user.sql
   clients/
@@ -81,6 +83,7 @@ first-app/
       find-all.txt
       find-by-email.txt
       find-by-id.txt
+      find-user-by-name.txt
       update-user.txt
       remove-user.txt
       users-gender-count.txt
@@ -133,6 +136,7 @@ Inglés y es uno de esta lista:
 | `Email is already used` | Ese email ya está en otra fila. |
 | `Invalid id` | El id no es un entero mayor o igual que 1. |
 | `User not found` | Se busca, se cambia o se borra un id que no está, o se busca un email que no está. |
+| `Could not find the user` | SQLite falla al leer los usuarios por nombre. |
 | `Could not classify the users` | La IA no responde al contar el sexo de los usuarios ya guardados, o SQLite falla al leer los usuarios. |
 
 El email se guarda en minúsculas. `validateEmail` le quita los espacios de los extremos y lo pasa a minúsculas antes de mirar la longitud y la `@`.

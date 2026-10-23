@@ -17,6 +17,10 @@ export function findByEmail(email) {
   return db.prepare(readQuery("find-by-email")).get({ email });
 }
 
+export function findByName(name) {
+  return db.prepare(readQuery("find-by-name")).all({ name });
+}
+
 export function insertUser({ name, email }) {
   return db.prepare(readQuery("insert-user")).get({ name, email });
 }
