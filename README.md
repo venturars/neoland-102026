@@ -1,5 +1,13 @@
 # bootcamp-102026
 
+## Documentación
+
+En `docs/` está la documentación compartida del repositorio.
+
+- [Flujo de git](docs/GIT-WORKFLOW.md). El camino de una tarea: de dejarla escrita a volver a `staging`.
+
+Las reglas que sigue el agente están en `AGENTS.md`, en la raíz.
+
 ## Skills
 
 En la raíz está `SKILL.md`. Ahí están las skills compartidas del repositorio. El fichero irá sumando skills; la de git es una de ellas.
