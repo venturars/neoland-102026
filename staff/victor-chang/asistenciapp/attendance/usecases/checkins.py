@@ -6,9 +6,9 @@ registros (p. ej. Discord, constitución P1) aplique exactamente las mismas.
 
 import sqlite3
 
-from asistencia import db
-from asistencia.codes import is_valid_code
-from asistencia.names import clean_name, name_key
+from attendance.domain.codes import is_valid_code
+from attendance.domain.names import clean_name, name_key
+from attendance.infra import storage
 
 
 class SessionClosed(Exception):
@@ -27,7 +27,7 @@ def register(
     t: float,
     checked_at: str,
 ) -> tuple[dict, bool]:
-    """Registra al alumno en la sesión. Devuelve (registro, creado) como db.add_checkin.
+    """Registra al alumno en la sesión. Devuelve (registro, creado) como storage.add_checkin.
 
     Las comprobaciones van en este orden: sesión cerrada, nombre, código.
 
@@ -41,4 +41,4 @@ def register(
     name = clean_name(raw_name)
     if not is_valid_code(session["secret"], "" if raw_code is None else raw_code, t):
         raise InvalidCode
-    return db.add_checkin(conn, session["id"], name, name_key(name), checked_at)
+    return storage.add_checkin(conn, session["id"], name, name_key(name), checked_at)

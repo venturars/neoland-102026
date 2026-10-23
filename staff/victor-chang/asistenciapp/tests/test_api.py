@@ -327,7 +327,7 @@ def test_unexpected_error_is_json_500(client, teacher, monkeypatch):
     def boom(*_args):
         raise RuntimeError("fallo simulado")
 
-    monkeypatch.setattr("asistencia.db.list_checkins", boom)
+    monkeypatch.setattr("attendance.infra.storage.list_checkins", boom)
     res = client.get(f"/api/sessions/{sid}", headers=teacher)
     assert res.status_code == 500
     assert res.get_json()["error"]
