@@ -36,6 +36,7 @@ def register(
     if not isinstance(raw_name, str):
         raise EmptyNameError
     name = clean_name(raw_name)
-    if not is_valid_code(session["secret"], "" if raw_code is None else raw_code, t):
+    # Temporal hasta spec 005 · T13, como el nombre: un código que no es texto no es válido.
+    if not isinstance(raw_code, str) or not is_valid_code(session["secret"], raw_code, t):
         raise InvalidCodeError
     return storage.add_checkin(conn, session["id"], name, name_key(name), checked_at)

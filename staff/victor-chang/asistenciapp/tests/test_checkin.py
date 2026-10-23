@@ -60,3 +60,10 @@ def test_closed_is_checked_before_name(conn, session):
     closed = storage.get_session(conn, session["id"])
     with pytest.raises(SessionClosedError):
         register(conn, closed, "", "", T, AT)
+
+
+def test_numeric_code_is_not_converted_to_text(conn, session):  # spec 005 CA-06, ARCHITECTURE E1
+    # Un instante cuyo código no empieza por 0, para que el número tenga las mismas 4 cifras.
+    t = next(T + i * 30 for i in range(100) if not code_for(session["secret"], T + i * 30).startswith("0"))
+    with pytest.raises(InvalidCodeError):
+        register(conn, session, "Ana", int(code_for(session["secret"], t)), t, AT)
