@@ -7,6 +7,10 @@ desde fuera, en segundos Unix (M5; excepción de spec 005 · plan §5).
 from dataclasses import dataclass
 from datetime import UTC, datetime, tzinfo
 
+from attendance.domain.errors import TitleTooLongError
+
+MAX_TITLE_LENGTH = 20
+
 
 @dataclass(frozen=True)
 class Session:
@@ -73,6 +77,18 @@ class ExportFile:
 def to_iso(t: float) -> str:
     """Instante t (segundos Unix) en ISO 8601 UTC, con milisegundos (D6)."""
     return datetime.fromtimestamp(t, UTC).isoformat(timespec="milliseconds")
+
+
+def clean_title(raw: str) -> str:
+    """El título sin los espacios de los extremos; vacío si no hay título (spec 005 · CA-08).
+
+    Raises:
+        TitleTooLongError: pasa de MAX_TITLE_LENGTH caracteres.
+    """
+    title = raw.strip()
+    if len(title) > MAX_TITLE_LENGTH:
+        raise TitleTooLongError
+    return title
 
 
 def default_title(t: float, tz: tzinfo | None) -> str:

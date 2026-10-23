@@ -18,6 +18,7 @@ from attendance.domain.errors import (
     NameTooLongError,
     SessionClosedError,
     SessionNotFoundError,
+    TitleTooLongError,
 )
 
 logger = logging.getLogger(__name__)
@@ -42,6 +43,7 @@ class TeacherUnauthorizedError(AppError):
 STATUS: dict[type[AppError], int] = {
     EmptyNameError: 400,
     NameTooLongError: 400,
+    TitleTooLongError: 400,
     MalformedRequestError: 400,
     TeacherUnauthorizedError: 401,
     SessionNotFoundError: 404,

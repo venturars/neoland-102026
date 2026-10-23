@@ -1,6 +1,6 @@
 # Plan técnico 005 · Adaptar el código a la arquitectura
 
-> Estado: **Aprobado** (2026-10-23) · Spec: [spec.md](spec.md) v1.0 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Creado: 2026-10-23
+> Estado: **Aprobado** (2026-10-23) · Spec: [spec.md](spec.md) v1.1 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Creado: 2026-10-23
 
 Este documento explica **cómo** se adapta el código de la spec 001 a `ARCHITECTURE.md` sin cambiar lo que hace la app (spec 005, CA-01). Las reglas se citan por su identificador (`C2`, `E4`…).
 
@@ -114,8 +114,9 @@ Cambios de comportamiento que esto trae (spec 005, CA-06 y P1):
 | Abrir clase con un cuerpo que no es objeto o con `title` que no es texto | Se ignora y el título es la fecha | `400` |
 | Check-in con cuerpo mal formado en una clase cerrada | `409` | `400` (la forma se comprueba primero, E1) |
 | Abrir clase sin cuerpo o con `title` vacío | Título con la fecha | Igual (spec 001, CA-02) |
+| Abrir clase con un título de más de 20 caracteres (tras quitar espacios) | Se acepta | `400` (spec 005, CA-08) |
 
-El dominio recibe ya `str` y sigue comprobando sus reglas (E2): nombre vacío o demasiado largo, formato del código con `[0-9]{4}`.
+El dominio recibe ya `str` y sigue comprobando sus reglas (E2): nombre vacío o demasiado largo, título demasiado largo (`MAX_TITLE_LENGTH = 20` en `domain/sessions.py`; cuenta caracteres, no bytes), formato del código con `[0-9]{4}`. La fecha que se pone por defecto mide siempre 16.
 
 ### 2.7 Errores (E3–E6, F3)
 `domain/errors.py`:
@@ -130,6 +131,7 @@ class AppError(Exception):
 | --- | --- | --- | --- |
 | `EmptyNameError` | dominio | 400 | "Escribe tu nombre." |
 | `NameTooLongError` | dominio | 400 | "El nombre no puede tener más de 60 caracteres. Escríbelo más corto." |
+| `TitleTooLongError` | dominio | 400 | "El título no puede tener más de 20 caracteres. Escríbelo más corto." |
 | `InvalidCodeError` | dominio | 422 | "El código no es válido o ha caducado. Pide el código actual al profesor." |
 | `SessionClosedError` | dominio | 409 | "La asistencia de esta clase ya está cerrada. Si acabas de llegar, avisa al profesor." |
 | `SessionNotFoundError` | dominio | 404 | "Esta clase no existe. Revisa el enlace." |
@@ -211,6 +213,7 @@ Mismas rutas, cuerpos y respuestas que la spec 001 (plan 001 §4), con dos difer
 | CA-04 | `ruff check` y `mypy` sin errores. Revisión manual de la lista de `ARCHITECTURE.md` §13, anotada en `tasks.md` punto por punto |
 | CA-05 | `test_web_errors`: cada excepción de la tabla de §2.7 responde con su código y su mensaje; `404`, `405` y `500` con su mensaje |
 | CA-06 | `test_web_public` y `test_web_teacher`: cuerpos que no son objeto, `code` numérico, `name` lista, `title` número → `400` y nada guardado |
+| CA-08 | `test_domain_sessions` y `test_sessions`: 20 caracteres se aceptan, 21 no. `test_web_teacher`: `400` con su mensaje y ninguna clase nueva. Manual: el campo del panel no deja escribir más de 20 |
 | CA-07 | `test_web_errors`: un error inesperado durante un check-in no deja el nombre del alumno en el registro (`caplog`). `test_app`: el arranque silencia el registro de accesos. Manual: arrancar, registrarse y revisar la consola |
 
 ---
@@ -236,5 +239,6 @@ Mismas rutas, cuerpos y respuestas que la spec 001 (plan 001 §4), con dos difer
 1. **Orden** (2026-10-23): esta spec va antes de reescribir el plan 004.
 2. **Cuerpos mal formados** (2026-10-23): se rechazan con `400` (spec P1).
 3. **Herramientas de desarrollo** (2026-10-23): ruff y mypy (spec P2).
+5. **Límite del título** (2026-10-23, durante T14): 20 caracteres como máximo al abrir una clase (spec CA-08). El campo del panel pasa de `maxlength="100"` a `20`.
 
 4. **Plan aprobado** (2026-10-23), incluidos el nuevo nombre del paquete (`attendance`, §2.1), los textos de los mensajes (§2.7) y las excepciones de §5.

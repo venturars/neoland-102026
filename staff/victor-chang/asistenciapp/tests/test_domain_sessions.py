@@ -6,7 +6,16 @@ from zoneinfo import ZoneInfo
 
 import pytest
 
-from attendance.domain.sessions import Checkin, Session, SessionSummary, default_title, to_iso
+from attendance.domain.errors import TitleTooLongError
+from attendance.domain.sessions import (
+    MAX_TITLE_LENGTH,
+    Checkin,
+    Session,
+    SessionSummary,
+    clean_title,
+    default_title,
+    to_iso,
+)
 
 T = 1_800_000_000.0  # 2027-01-15 08:00:00 UTC
 
@@ -42,3 +51,16 @@ def test_types_are_immutable():
 
 def test_session_summary_has_no_secret():  # D7
     assert "secret" not in {f.name for f in dataclasses.fields(SessionSummary)}
+
+
+def test_title_limit():  # spec 005 CA-08
+    assert MAX_TITLE_LENGTH == 20
+    assert clean_title("  " + "a" * 20 + "  ") == "a" * 20  # los espacios de los extremos no cuentan
+    assert clean_title("Клас 1 · 李雷") == "Клас 1 · 李雷"  # cuenta caracteres, no bytes
+    assert clean_title("   ") == ""
+    with pytest.raises(TitleTooLongError):
+        clean_title("a" * 21)
+
+
+def test_default_title_fits_the_limit():  # spec 005 CA-08
+    assert len(default_title(T, UTC)) <= MAX_TITLE_LENGTH

@@ -4,10 +4,12 @@ import pytest
 
 from attendance.domain import errors
 from attendance.domain.names import MAX_LENGTH
+from attendance.domain.sessions import MAX_TITLE_LENGTH
 
 USER_ERRORS = [
     errors.EmptyNameError,
     errors.NameTooLongError,
+    errors.TitleTooLongError,
     errors.InvalidCodeError,
     errors.SessionClosedError,
     errors.SessionNotFoundError,
@@ -29,7 +31,7 @@ def test_each_error_has_its_own_message(error):  # CA-05
 
 @pytest.mark.parametrize(
     "error",
-    [errors.NameTooLongError, errors.SessionClosedError, errors.CheckinNotFoundError],
+    [errors.NameTooLongError, errors.TitleTooLongError, errors.SessionClosedError, errors.CheckinNotFoundError],
 )
 def test_messages_say_what_to_do(error):  # CA-05: el mensaje tiene dos frases, qué pasa y qué hacer
     assert error.MESSAGE.count(". ") >= 1
@@ -37,3 +39,7 @@ def test_messages_say_what_to_do(error):  # CA-05: el mensaje tiene dos frases, 
 
 def test_name_too_long_message_uses_the_real_limit():
     assert f"{MAX_LENGTH} caracteres" in errors.NameTooLongError.MESSAGE
+
+
+def test_title_too_long_message_uses_the_real_limit():
+    assert f"{MAX_TITLE_LENGTH} caracteres" in errors.TitleTooLongError.MESSAGE

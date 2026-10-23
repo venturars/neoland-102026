@@ -28,6 +28,13 @@ class NameTooLongError(AppError):
     MESSAGE = "El nombre no puede tener más de 60 caracteres. Escríbelo más corto."
 
 
+class TitleTooLongError(AppError):
+    """El título de una clase nueva pasa de `sessions.MAX_TITLE_LENGTH` (spec 005 · CA-08)."""
+
+    # El número coincide con sessions.MAX_TITLE_LENGTH; lo comprueba test_errors.py.
+    MESSAGE = "El título no puede tener más de 20 caracteres. Escríbelo más corto."
+
+
 class InvalidCodeError(AppError):
     """El código es incorrecto o ha caducado (spec 001 · CA-06)."""
 

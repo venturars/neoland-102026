@@ -1,14 +1,21 @@
-"""Tests de la API del profesor (app.py) · spec 001 T06–T11. Los del alumno ya están en test_web_public.py (spec 005 · T13)."""
+"""Tests de las rutas del profesor (attendance/entrypoints/web/teacher.py) · spec 001 CA-01, CA-02, CA-09 a CA-19, CA-24 a CA-26; spec 005 CA-06, CA-08.
+
+Vienen de test_api.py (spec 005 · T14). Cambia solo el de abrir con un cuerpo mal formado (spec 005 · P1).
+"""
 
 import re
 
 import pytest
 from web_helpers import check_in, current_code, open_session
 
+from attendance.domain.errors import TitleTooLongError
+from attendance.entrypoints.web.errors import MalformedRequestError
+
 CLOSED = "La asistencia de esta clase ya está cerrada. Si acabas de llegar, avisa al profesor."
 
 
 # ---------- T06 · base y acceso del profesor (CA-15, CA-17) ----------
+
 
 @pytest.mark.parametrize(
     "method, path",
@@ -27,13 +34,8 @@ def test_teacher_routes_require_token(client, method, path, headers):
     assert "error" in res.get_json()
 
 
-def test_unknown_api_route_is_404_json(client):
-    res = client.get("/api/no-existe")
-    assert res.status_code == 404
-    assert "error" in res.get_json()
-
-
 # ---------- T07 · crear y listar sesiones (CA-01, CA-02, CA-16) ----------
+
 
 def test_create_session_with_title(client, teacher):  # CA-01
     res = client.post("/api/sessions", json={"title": "  Clase 20/10 – SDD "}, headers=teacher)
@@ -66,6 +68,7 @@ def test_list_sessions_newest_first_with_totals(client, teacher, clock):  # CA-1
 
 # ---------- T09 · vista del profesor (CA-10, CA-11) ----------
 
+
 def test_teacher_view(client, teacher, clock):  # CA-10, CA-11
     sid = open_session(client, teacher)
     data = client.get(f"/api/sessions/{sid}", headers=teacher).get_json()
@@ -84,6 +87,7 @@ def test_teacher_view(client, teacher, clock):  # CA-10, CA-11
 
 
 # ---------- T10 · cerrar sesión (CA-09, CA-13) ----------
+
 
 def test_closed_session(client, teacher):  # CA-09, CA-13
     sid = open_session(client, teacher)
@@ -107,6 +111,7 @@ def test_close_unknown_session(client, teacher):
 
 # ---------- T11 · exportar (CA-14) ----------
 
+
 def test_export_csv(client, teacher, clock):  # CA-14
     sid = open_session(client, teacher)
     check_in(client, sid, "Luis", current_code(client, teacher, sid))
@@ -126,6 +131,7 @@ def test_export_csv(client, teacher, clock):  # CA-14
 
 # ---------- T13 · acceso a través del túnel (CA-19) ----------
 
+
 def test_student_url_uses_public_tunnel_address(client, teacher):  # CA-19
     sid = open_session(client, teacher)
     res = client.get(
@@ -136,6 +142,7 @@ def test_student_url_uses_public_tunnel_address(client, teacher):  # CA-19
 
 
 # ---------- T22 · quitar registros (CA-24, CA-25, CA-26) ----------
+
 
 def checkins_of(client, teacher, sid):
     return client.get(f"/api/sessions/{sid}", headers=teacher).get_json()["checkins"]
@@ -203,22 +210,37 @@ def test_removed_person_can_check_in_again(client, teacher):  # CA-26
     assert check_in(client, sid, "ana garcia", code).status_code == 201
 
 
-# ---------- Entradas mal formadas: siempre JSON, nunca un 500 ----------
+# ---------- Entradas mal formadas y título (spec 005 · plan §2.6, CA-06, CA-08; ARCHITECTURE T3) ----------
 
-@pytest.mark.parametrize("raw", ["[1]", '{"title": {"a": 1}}', '{"title": 5}'])
-def test_create_session_with_malformed_body_uses_date(client, teacher, raw):  # CA-02
+
+def sessions_of(client, teacher):
+    return client.get("/api/sessions", headers=teacher).get_json()
+
+
+@pytest.mark.parametrize("raw", ["[1]", '"Clase"', "{roto", '{"title": {"a": 1}}', '{"title": 5}', '{"title": null}'])
+def test_create_session_with_malformed_body_is_rejected(client, teacher, raw):  # spec 005 CA-06 y P1
     res = client.post("/api/sessions", data=raw, content_type="application/json", headers=teacher)
+    assert res.status_code == 400
+    assert res.get_json() == {"error": MalformedRequestError.MESSAGE}
+    assert sessions_of(client, teacher) == []
+
+
+def test_create_session_without_body_uses_date(client, teacher):  # spec 001 CA-02
+    res = client.post("/api/sessions", headers=teacher)
     assert res.status_code == 201
     assert re.fullmatch(r"\d{2}/\d{2}/\d{4} \d{2}:\d{2}", res.get_json()["title"])
 
 
-def test_unexpected_error_is_json_500(client, teacher, monkeypatch):
-    sid = open_session(client, teacher)
+@pytest.mark.parametrize("title", ["a" * 20, "  " + "b" * 20 + "  ", "Клас 1 · 李雷", "مرحبا"])
+def test_titles_up_to_the_limit_are_accepted(client, teacher, title):  # spec 005 CA-08
+    res = client.post("/api/sessions", json={"title": title}, headers=teacher)
+    assert res.status_code == 201
+    assert res.get_json()["title"] == title.strip()
 
-    def boom(*_args):
-        raise RuntimeError("fallo simulado")
 
-    monkeypatch.setattr("attendance.infra.storage.list_checkins", boom)
-    res = client.get(f"/api/sessions/{sid}", headers=teacher)
-    assert res.status_code == 500
-    assert res.get_json()["error"]
+@pytest.mark.parametrize("title", ["a" * 21, "é" * 21, "x" * 1000])
+def test_title_over_the_limit_is_rejected(client, teacher, title):  # spec 005 CA-08
+    res = client.post("/api/sessions", json={"title": title}, headers=teacher)
+    assert res.status_code == 400
+    assert res.get_json() == {"error": TitleTooLongError.MESSAGE}
+    assert sessions_of(client, teacher) == []
