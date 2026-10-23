@@ -29,3 +29,18 @@ Responsable: Jimena Durán. Issue #244. Preparación e implementación autorizad
   cierre, eliminación y exportación. No se modificaron sus aserciones.
 - diff --check sin errores. Solo cambios de la 005 respecto de la rama 004.
 - Sin servidores ni túneles. Sin commit ni push de implementación.
+
+## Corrección de revisión de PR #246 (2026-10-23)
+
+- Miguel detectó una discrepancia en el hash de tasks.md de la 004.
+- Causa: hashes de bytes locales con CRLF (mezclados con LF en ese archivo)
+  y rutas con separadores de Windows. La suite local original pasaba 108 tests.
+- integrity.json usa ahora rutas POSIX y SHA256 con saltos LF, contrastados
+  con la base publicada 180cd52044b38d96ab5d2de748dc757ed4774d9a.
+- La prueba normaliza exclusivamente CRLF a LF en memoria y comprueba también
+  el inventario completo. Siete casos cubren LF, CRLF, mezcla de ambos y cambios
+  reales de contenido, espacios, salto final y retorno aislado.
+- Suite completa: 115 passed en 6.45 s. Comprobaciones de arquitectura e
+  integridad sobre copia temporal con LF: 15 passed en 0.11 s.
+- Sin diferencias de static/ ni specs 001–004 contra la base; diff --check pasa.
+- Sin commit ni push.

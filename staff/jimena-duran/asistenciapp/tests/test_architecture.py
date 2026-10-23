@@ -39,5 +39,26 @@ def test_writing_and_architecture():
     assert "Versión 2.3" in constitution
 
 def test_static_and_closed_specs_unchanged():
-    manifest=json.loads((ROOT/"specs/005-reorganizar-arquitectura/integrity.json").read_text())
-    for name,digest in manifest.items(): assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest,name
+    # Referencia: bytes LF publicados en la base 180cd52 de la PR #246.
+    manifest=json.loads((ROOT/"specs/005-reorganizar-arquitectura/integrity.json").read_text(encoding="utf-8"))
+    expected = {path.relative_to(ROOT).as_posix() for path in (ROOT/"static").rglob("*") if path.is_file()}
+    for folder in sorted((ROOT/"specs").glob("00[1-4]-*")):
+        expected.update(path.relative_to(ROOT).as_posix() for path in folder.rglob("*") if path.is_file())
+    assert set(manifest) == expected
+    for name,digest in manifest.items():
+        assert content_digest((ROOT/name).read_bytes()) == digest, name
+
+
+def content_digest(data: bytes) -> str:
+    """Calcula SHA256 normalizando solo los saltos CRLF del checkout a LF."""
+    return hashlib.sha256(data.replace(b"\r\n", b"\n")).hexdigest()
+
+
+@pytest.mark.parametrize("data", [b"uno\ndos\n", b"uno\r\ndos\r\n", b"uno\r\ndos\n"])
+def test_integrity_accepts_checkout_line_endings(data):
+    assert content_digest(data) == hashlib.sha256(b"uno\ndos\n").hexdigest()
+
+
+@pytest.mark.parametrize("data", [b"Uno\ndos\n", b"uno \ndos\n", b"uno\ndos", b"uno\rdos\n"])
+def test_integrity_detects_content_changes(data):
+    assert content_digest(data) != content_digest(b"uno\ndos\n")
