@@ -42,7 +42,7 @@ Cómo leer esta lista:
   - Quien da el ok, pide los commits y aprueba enmiendas es quien trabaja en esa carpeta.
   - El ejemplo de numeración deja de usar `002-discord-bot`.
   - *Cubre:* CA-01, CA-02, CA-04, CA-06, CA-07.
-  - *Hecha cuando:* esos apartados ya no nombran Victor ni `victor-chang`, y las specs se buscan solo en esta carpeta.
+  - *Hecha cuando:* esos apartados ya no nombran a una persona ni a su carpeta, y las specs se buscan solo en esta carpeta.
 
 - [x] **T05** · Actualizar la tabla de `AGENTS.md` §7.
   - `002-spec-antes-del-cambio` tiene su fila.

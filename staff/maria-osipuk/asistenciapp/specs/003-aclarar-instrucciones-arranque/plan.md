@@ -43,7 +43,7 @@ No se añade una frase nueva. La frase que ya existe se queda, ahora bajo el tí
 
 No se tocan:
 
-- Las rutas `staff/victor-chang/asistenciapp`.
+- Las rutas personales de las instrucciones de uso.
 - Los comandos, los comentarios de esos comandos y el ejemplo de lo que se ve al arrancar.
 - El código, los tests y el resto de ficheros de la app.
 - El texto de pasar lista, cerrar, problemas frecuentes, tests y privacidad.
