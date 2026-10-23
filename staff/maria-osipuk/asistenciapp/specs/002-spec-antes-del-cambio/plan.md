@@ -34,7 +34,7 @@ En la constitución §4 se sustituye «no hay código sin especificación» por 
 - Constitución §7: el proyecto vive en `staff/maria-osipuk/asistenciapp/`. No se tocan archivos fuera de esta carpeta.
 - Constitución §8: aprueba la persona que trabaja en esa carpeta.
 - En el manual, la ruta de los comandos y la regla «solo se edita dentro de…» usan esa misma carpeta.
-- Las menciones a Victor y a `staff/victor-chang/asistenciapp/` en las reglas vivas (aprobación de cada fase, commits, enmiendas y definición de terminado) pasan a ser quien trabaja en esta carpeta.
+- Las menciones personales en las reglas vivas (aprobación de cada fase, commits, enmiendas y definición de terminado) pasan a ser quien trabaja en esta carpeta.
 - El agente busca specs **únicamente** en `staff/maria-osipuk/asistenciapp/specs/`. Un spec o una aprobación de un compañero no autorizan un cambio aquí.
 - Una spec nueva usa el siguiente número disponible en esa carpeta. No se reutiliza `001-checkin-codigo`.
 
@@ -93,7 +93,7 @@ No se modifica `specs/001-checkin-codigo/`. Su historial, y las menciones de qui
 ## 5. Decisiones tomadas
 
 1. **Versión 2.2** (2026-10-23): la puerta pasa de «código de una funcionalidad» a «cualquier fichero de esta app».
-2. **Quién aprueba** (2026-10-23): la persona que trabaja en `staff/maria-osipuk/asistenciapp/`, no Victor ni otra carpeta del repositorio.
+2. **Quién aprueba** (2026-10-23): la persona que trabaja en `staff/maria-osipuk/asistenciapp/`, no otra persona ni otra carpeta del repositorio.
 3. **Specs locales** (2026-10-23): solo cuentan las de `staff/maria-osipuk/asistenciapp/specs/`.
 4. **Número 002** (2026-10-23): lo usa esta spec. El bot de Discord se queda sin número.
 5. **Nombre del manual** (2026-10-23): `AGENT.md` pasa a `AGENTS.md`. El README solo actualiza ese enlace.

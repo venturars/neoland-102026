@@ -30,7 +30,7 @@ Cómo leer esta lista:
 ## Fase B · Comprobar lo que no se toca
 
 - [x] **T03** · Comprobar el diff del README y que el resto de la app no ha cambiado.
-  - Las rutas `staff/victor-chang/asistenciapp` siguen igual.
+  - Las rutas personales de las instrucciones de uso siguen igual.
   - Los comandos y sus comentarios siguen igual.
   - No hay diff fuera del README y de esta carpeta de spec.
   - *Cubre:* CA-04.
