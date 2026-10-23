@@ -1,6 +1,6 @@
 # Spec 005 · Adaptar el código a la arquitectura
 
-> Estado: **Borrador (pendiente de aprobación)** · Creada: 2026-10-23
+> Estado: **Aprobada** (2026-10-23) · Creada: 2026-10-23
 
 ---
 
@@ -69,10 +69,12 @@ Formato: **Dado** (situación inicial) · **Cuando** (acción) · **Entonces** (
 
 ## 7. Preguntas abiertas
 
+Todas resueltas el 2026-10-23 con Victor.
+
 | # | Pregunta | Decisión |
 | --- | --- | --- |
 | P1 | Hoy, si el profesor abre una clase enviando algo que no es un formulario válido, la app lo ignora y pone la fecha como título (decisión de la spec 001, plan §2.13). La arquitectura (E1) pide **rechazar** lo mal formado. ¿Se rechaza, o se mantiene el comportamiento actual? | **Se rechaza** con un mensaje claro (E1), y se ajusta esa comprobación de la spec 001 (cubierto por CA-06). Decidido por Victor el 2026-10-23. |
-| P2 | ¿Se aprovecha esta spec para añadir herramientas de desarrollo que revisen el estilo y los tipos de forma automática (constitución P3 v3.1)? | `[NECESITA ACLARACIÓN: propuesta, sí; así CA-04 se comprueba en parte de forma automática]` |
+| P2 | ¿Se aprovecha esta spec para añadir herramientas de desarrollo que revisen el estilo y los tipos de forma automática (constitución P3 v3.1)? | **Sí, las dos**: una que revisa el estilo y los errores habituales, y otra que comprueba los tipos. Así CA-04 se comprueba en parte de forma automática. Decidido por Victor el 2026-10-23. |
 
 ---
 
@@ -81,3 +83,4 @@ Formato: **Dado** (situación inicial) · **Cuando** (acción) · **Entonces** (
 | Versión | Fecha | Cambio | Motivo |
 | --- | --- | --- | --- |
 | 0.1 | 2026-10-23 | Borrador inicial | `ARCHITECTURE.md` v1.1 aprobada; Victor decide adaptar el código antes de construir la spec 004 |
+| 1.0 | 2026-10-23 | P1 y P2 resueltas; aprobada por Victor | — |
