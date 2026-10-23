@@ -6,6 +6,19 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE_SHA256 = "38e7d41655369de32d93de72beac7cc5a8dd4999c553f41a5c57343622657590"
+SECURITY_SECTION = """### Límite de intentos de registro
+
+Una misma dirección puede realizar **5 intentos por segundo** y **20 por minuto**, contando también los fallidos y compartiendo los máximos entre clases. Abrir páginas y consultar el panel no cuenta.
+
+Superar cualquiera de los límites devuelve HTTP **429** con el aviso «Esta dirección queda bloqueada por haber superado los intentos permitidos.». El bloqueo es **permanente**, persiste al reiniciar y esta versión está **sin desbloqueo**. El intento que supera el límite no registra asistencia. El código de cuatro cifras conserva su funcionamiento.
+
+La dirección es la de la conexión recibida por el servidor (`request.remote_addr`); no se acepta otra IP del formulario ni de cabeceras enviadas por el cliente. Detrás de **Cloudflare Tunnel** puede ser la del proxy, normalmente `127.0.0.1`, en lugar de la IP pública individual. En ese caso los límites son compartidos y el bloqueo puede afectar a **toda la clase**. Mejorar esta identificación queda para otra especificación.
+
+""".encode("utf-8")
+SECURITY_PRIVACY = """- Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails.
+- La IP se guarda solo para contar intentos de registro y conservar la lista de bloqueo, en el mismo archivo local y separada de la asistencia. Los intentos anteriores al último minuto se eliminan al procesar nuevos intentos de direcciones no bloqueadas; la blacklist no caduca.
+""".encode("utf-8")
+PREVIOUS_PRIVACY = "- Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails ni IPs.\n".encode("utf-8")
 
 
 def readme():
@@ -40,6 +53,12 @@ def test_only_planned_changes():
     data = (ROOT / "README.md").read_bytes()
     # Conservar todo el contenido salvo la representación CRLF del checkout.
     data = data.replace(b"\r\n", b"\n")
+    # Revertir exclusivamente los dos textos aprobados por la 006, exigiendo
+    # su presencia exacta. El hash histórico se conserva, no se recalcula.
+    assert data.count(SECURITY_SECTION) == 1
+    assert data.count(SECURITY_PRIVACY) == 1
+    data = data.replace(SECURITY_SECTION, b"", 1)
+    data = data.replace(SECURITY_PRIVACY, PREVIOUS_PRIVACY, 1)
     # La spec 005 autoriza los dos enlaces a documentos reubicados.
     data = data.replace(b"[CONSTITUTION.md](docs/CONSTITUTION.md)", b"[CONSTITUTION.md](CONSTITUTION.md)")
     data = data.replace(b"[AGENTS.md](AGENTS.md)", b"[AGENT.md](AGENT.md)")
@@ -52,7 +71,7 @@ def test_only_planned_changes():
 
 
 @pytest.mark.parametrize("newline", [b"\n", b"\r\n"])
-@pytest.mark.parametrize("change", ["none", "text", "space", "final_newline"])
+@pytest.mark.parametrize("change", ["none", "text", "space", "final_newline", "limit", "tunnel", "privacy"])
 def test_readme_integrity_line_endings_and_changes(tmp_path, monkeypatch, newline, change):
     content = (ROOT / "README.md").read_bytes().replace(b"\r\n", b"\n")
     if change == "text":
@@ -62,6 +81,12 @@ def test_readme_integrity_line_endings_and_changes(tmp_path, monkeypatch, newlin
     elif change == "final_newline":
         assert content.endswith(b"\n")
         content = content[:-1]
+    elif change == "limit":
+        content = content.replace(b"**5 intentos por segundo**", b"**6 intentos por segundo**")
+    elif change == "tunnel":
+        content = content.replace(b"127.0.0.1", b"127.0.0.2")
+    elif change == "privacy":
+        content = content.replace(b"la blacklist no caduca", b"la blacklist caduca")
     (tmp_path / "README.md").write_bytes(content.replace(b"\n", newline))
     monkeypatch.setitem(globals(), "ROOT", tmp_path)
     if change == "none":
