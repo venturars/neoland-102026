@@ -22,7 +22,7 @@ brew install cloudflared             # el túnel para que los alumnos entren des
 
 ---
 
-## 2. Activar el entorno
+## 2. Arrancar la app
 
 En cada terminal nueva, primero activa el entorno:
 
@@ -30,10 +30,6 @@ En cada terminal nueva, primero activa el entorno:
 cd staff/victor-chang/asistenciapp
 source .venv/bin/activate
 ```
-
----
-
-## 3. Arrancar la app
 
 | Para… | Comando |
 | --- | --- |
@@ -55,7 +51,7 @@ Ese enlace es **tu panel privado**: no lo compartas, porque quien lo tenga puede
 
 ---
 
-## 4. Pasar lista, paso a paso
+## 3. Pasar lista, paso a paso
 
 1. Abre el **enlace del panel** que aparece en la terminal.
 2. Escribe un título (opcional; si no, se usa la fecha y hora) y pulsa **Abrir asistencia**.
@@ -77,7 +73,7 @@ Las **sesiones anteriores** aparecen en el panel con su número de asistentes, y
 
 ---
 
-## 5. Cerrar la app
+## 4. Cerrar la app
 
 Pulsa **Ctrl+C** en la terminal donde está arrancada. Se paran la app y el túnel. Los datos quedan guardados en `data/asistencia.db`.
 
@@ -93,11 +89,11 @@ pkill cloudflared                    # para el túnel, si lo usabas
 
 ---
 
-## 6. Problemas frecuentes
+## 5. Problemas frecuentes
 
 | Mensaje o síntoma | Qué hacer |
 | --- | --- |
-| `El puerto 8000 ya está en uso` | Ya tienes la app abierta en otra terminal: ciérrala (sección 5). O usa otro puerto: `PORT=8001 python app.py --tunel`. |
+| `El puerto 8000 ya está en uso` | Ya tienes la app abierta en otra terminal: ciérrala (sección 4). O usa otro puerto: `PORT=8001 python app.py --tunel`. |
 | `No se encontró cloudflared` | Instálalo: `brew install cloudflared`. |
 | El enlace del túnel no carga | Espera unos 20 segundos y recarga: los túneles nuevos tardan en estar accesibles. |
 | Aviso amarillo en el panel: *"tus alumnos no podrán abrir el enlace"* | Abriste el panel en `localhost`. Para la app y arráncala con `python app.py --tunel`. |
@@ -106,7 +102,7 @@ pkill cloudflared                    # para el túnel, si lo usabas
 
 ---
 
-## 7. Tests
+## 6. Tests
 
 ```bash
 source .venv/bin/activate
@@ -117,7 +113,7 @@ Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una 
 
 ---
 
-## 8. Privacidad
+## 7. Privacidad
 
 - Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails ni IPs.
 - El límite "un registro por navegador" se guarda **solo en el navegador del alumno**, no en el servidor.
