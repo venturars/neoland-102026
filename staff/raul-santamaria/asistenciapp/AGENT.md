@@ -54,6 +54,7 @@ Al empezar el cambio, el único fichero nuevo permitido es el `spec.md`. El agen
 
 - Haz **una tarea cada vez**. Al acabarla, márcala `[x]` en `tasks.md`.
 - Ningún fichero de la app se adelanta al spec. Si la spec activa no cubre el pedido, **para**, escribe el spec y espera aprobación.
+- Una issue, una rama o una pull request **no sustituyen** al spec y **no autorizan** a modificar la app sin un spec aprobado.
 - Si durante la implementación descubres que la spec o el plan están mal o incompletos, **para**, propón el cambio en el documento y espera aprobación.
 
 ---
@@ -133,6 +134,7 @@ Una funcionalidad está terminada cuando:
 | Spec | Fase | Notas |
 | --- | --- | --- |
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
+| `002-spec-antes-del-cambio` | ✅ Implementada (2026-10-23) | Ningún fichero de la app se toca sin un spec aprobado; issue/rama/PR no sustituyen al spec |
 | Bot de Discord | Idea futura, sin número | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
