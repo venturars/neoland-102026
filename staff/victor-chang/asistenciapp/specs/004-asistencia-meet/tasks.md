@@ -46,7 +46,7 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
       - **Sí** (2026-10-23, SQLite 3.49.1, en memoria): la migración añade las dos columnas y la clase antigua queda en `code`; la BD rechaza un modo no válido, una clase automática sin reunión y pasar a automática sin reunión; acepta los casos válidos.
   - **Hallazgos de las primeras ejecuciones (2026-10-23), para el plan:**
     - Google deja **conceder solo parte** de los permisos (casillas en su pantalla). Sin la casilla de Meet solo concede `openid`. La app tiene que comprobar los permisos concedidos y explicar cuál falta, en vez de fallar.
-    - Google responde **el mismo `403 PERMISSION_DENIED`** cuando la API de Meet no está activada en el proyecto de Google Cloud. `GoogleMeet` tiene que leer el motivo de la respuesta: API desactivada → error de configuración (`MeetNotConfiguredError`); sin acceso a la reunión → `MeetingAccessDeniedError` (CA-13).
+    - Google responde **el mismo `403 PERMISSION_DENIED`** cuando la API de Meet no está activada en el proyecto de Google Cloud. `GoogleMeet` tiene que leer el motivo de la respuesta: API desactivada → error de configuración (`MeetNotConfiguredError`); sin acceso a la reunión → `MeetingNotVisibleError` (CA-13; nombre de la v2.1 del plan).
     - El `sub` de la cuenta llega bien con `openid` (no se copia aquí: identifica la cuenta de Victor).
     - `conferenceRecords` sin filtro devuelve también reuniones de **otra** sala en las que Victor solo participa (parecen las clases del bootcamp). Puede que un participante que no organiza vea la lista: es la pregunta 3.
   - Guarda en `tests/fixtures/meet/` las respuestas de Google de ejemplo, **con los nombres cambiados** (P4), para los tests de T09.
