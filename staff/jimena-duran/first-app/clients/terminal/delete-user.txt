@@ -1,0 +1,9 @@
+# Pega esto en PowerShell desde la carpeta first-app.
+$script = @'
+import { deleteUser } from "./logic/delete-user.js";
+
+const result = deleteUser(1);
+
+console.log(result);
+'@
+$script | node --input-type=module

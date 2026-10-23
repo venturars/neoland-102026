@@ -1,0 +1,925 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#315f4a" />
+  <meta name="description" content="Un temporizador Pomodoro botánico para cultivar la concentración." />
+  <title>Cultiva — Pomodoro</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --cream: #f7f2e9;
+      --paper: rgba(255, 253, 248, .88);
+      --paper-solid: #fffdf8;
+      --sage-50: #edf3ed;
+      --sage-100: #dfe9df;
+      --sage-500: #648473;
+      --forest: #315f4a;
+      --forest-dark: #234536;
+      --ink: #24352d;
+      --muted: #66736c;
+      --rose: #e9b9b2;
+      --gold: #e3b95f;
+      --shadow: 0 24px 64px rgba(49, 75, 61, .12);
+      --progress: 0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { min-width: 320px; background: var(--cream); }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 12%, rgba(233, 185, 178, .3), transparent 30rem),
+        radial-gradient(circle at 92% 84%, rgba(140, 169, 147, .3), transparent 32rem),
+        linear-gradient(145deg, #fbf7f0 0%, #f3eee5 54%, #edf1e9 100%);
+      font-family: ui-rounded, "SF Pro Rounded", "Segoe UI", system-ui, -apple-system, sans-serif;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    button { font: inherit; }
+    button:focus-visible, [tabindex]:focus-visible {
+      outline: 3px solid rgba(49, 95, 74, .36);
+      outline-offset: 3px;
+    }
+
+    .ambient-leaf {
+      position: fixed;
+      z-index: 0;
+      width: 17rem;
+      height: 8rem;
+      border: 1px solid rgba(49, 95, 74, .07);
+      border-radius: 100% 0 100% 0;
+      pointer-events: none;
+    }
+    .ambient-leaf--one { top: -5rem; right: -6rem; rotate: 24deg; }
+    .ambient-leaf--two { bottom: -4rem; left: -8rem; rotate: 198deg; }
+
+    .app-shell {
+      position: relative;
+      z-index: 1;
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 30px 0 42px;
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+    .brand { display: inline-flex; align-items: center; gap: 12px; }
+    .brand-mark {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      color: white;
+      background: var(--forest);
+      border-radius: 14px 14px 14px 5px;
+      box-shadow: 0 8px 20px rgba(49, 95, 74, .18);
+    }
+    .brand-mark svg { width: 23px; height: 23px; }
+    .brand-name {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.55rem;
+      font-weight: 600;
+      letter-spacing: -.035em;
+    }
+    .today-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 0 15px;
+      color: var(--forest-dark);
+      background: rgba(255, 253, 248, .7);
+      border: 1px solid rgba(49, 95, 74, .1);
+      border-radius: 999px;
+      font-size: .85rem;
+      font-weight: 700;
+      backdrop-filter: blur(8px);
+    }
+    .today-pill::before {
+      width: 7px; height: 7px; background: var(--rose); border-radius: 50%; content: "";
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 318px;
+      gap: 20px;
+      align-items: stretch;
+    }
+    .main-card, .garden-card {
+      background: var(--paper);
+      border: 1px solid rgba(49, 95, 74, .09);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+    .main-card { overflow: hidden; border-radius: 32px; }
+    .mode-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin: 0;
+      padding: 10px;
+      background: rgba(223, 233, 223, .58);
+      border-bottom: 1px solid rgba(49, 95, 74, .08);
+    }
+    .mode-button {
+      min-width: 0;
+      min-height: 48px;
+      padding: 10px 12px;
+      color: #57665e;
+      background: transparent;
+      border: 0;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: .88rem;
+      font-weight: 750;
+      transition: background 180ms ease, color 180ms ease, box-shadow 180ms ease, transform 120ms ease;
+    }
+    .mode-button:hover { color: var(--forest-dark); background: rgba(255, 255, 255, .55); }
+    .mode-button:active { transform: scale(.98); }
+    .mode-button[aria-selected="true"] {
+      color: var(--forest-dark);
+      background: var(--paper-solid);
+      box-shadow: 0 5px 16px rgba(49, 75, 61, .09);
+    }
+
+    .session-content {
+      display: grid;
+      grid-template-columns: minmax(330px, 1.05fr) minmax(290px, .95fr);
+      min-height: 580px;
+    }
+    .plant-zone {
+      position: relative;
+      display: grid;
+      overflow: hidden;
+      min-height: 510px;
+      padding: 32px;
+      place-items: center;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(255,255,255,.7), transparent 16rem),
+        linear-gradient(180deg, rgba(238,244,235,.82), rgba(226,235,223,.52));
+      border-right: 1px solid rgba(49, 95, 74, .08);
+    }
+    .plant-zone::before, .plant-zone::after {
+      position: absolute;
+      border: 1px solid rgba(49, 95, 74, .07);
+      border-radius: 50%;
+      content: "";
+    }
+    .plant-zone::before { width: 350px; height: 350px; }
+    .plant-zone::after { width: 260px; height: 260px; }
+    .plant-visual { position: relative; z-index: 1; width: min(100%, 390px); aspect-ratio: 1; }
+    .progress-ring { position: absolute; inset: 0; width: 100%; height: 100%; rotate: -90deg; }
+    .progress-track, .progress-value { fill: none; stroke-width: 4; }
+    .progress-track { stroke: rgba(49, 95, 74, .09); }
+    .progress-value {
+      stroke: var(--forest);
+      stroke-linecap: round;
+      stroke-dasharray: 603.19;
+      stroke-dashoffset: 603.19;
+      transition: stroke-dashoffset 380ms linear;
+    }
+    .plant-illustration { position: absolute; inset: 11%; width: 78%; height: 78%; overflow: visible; }
+    .plant-illustration .stem, .plant-illustration .branch {
+      stroke: var(--forest); stroke-linecap: round; fill: none;
+    }
+    .plant-illustration .stem {
+      stroke-width: 6;
+      transform: scaleY(var(--stem-grow, .05));
+      transform-box: fill-box;
+      transform-origin: center bottom;
+    }
+    .plant-illustration .branch { stroke-width: 4; }
+    .seed {
+      opacity: var(--seed-opacity, 1);
+      transform: translateY(var(--seed-lift, 0));
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    .sprout, .leaf, .bud, .flower { transform-box: fill-box; transform-origin: center; }
+    .sprout {
+      opacity: var(--sprout-opacity, 0);
+      transform: scale(var(--sprout-scale, .2));
+    }
+    .leaf--one {
+      opacity: var(--leaf-one, 0);
+      transform: scale(var(--leaf-one, 0)) rotate(-3deg);
+    }
+    .leaf--two {
+      opacity: var(--leaf-two, 0);
+      transform: scale(var(--leaf-two, 0)) rotate(3deg);
+    }
+    .bud {
+      opacity: var(--bud-grow, 0);
+      transform: scale(var(--bud-grow, 0));
+    }
+    .flower {
+      opacity: var(--flower-grow, 0);
+      transform: scale(var(--flower-scale, .05));
+    }
+    .plant-visual.is-running .leaf { animation: breathe 4.8s ease-in-out infinite alternate; }
+    .plant-visual.is-running .leaf--two { animation-delay: -2.1s; }
+    .plant-visual.is-complete .flower { animation: bloom 780ms cubic-bezier(.2,.9,.2,1) both; }
+    .ground-shadow { opacity: .22; }
+    .particles { position: absolute; inset: 4%; z-index: 2; pointer-events: none; }
+    .particle {
+      --angle: 0deg;
+      --distance: 120px;
+      position: absolute;
+      top: 46%; left: 50%;
+      width: 8px; height: 13px;
+      opacity: 0;
+      background: var(--particle-color, var(--rose));
+      border-radius: 80% 20% 70% 30%;
+    }
+    .particles.is-celebrating .particle {
+      animation: scatter 1.3s cubic-bezier(.15,.72,.28,1) both;
+      animation-delay: var(--delay, 0ms);
+    }
+    .stage-caption {
+      position: absolute;
+      bottom: 30px;
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      padding: 8px 13px;
+      color: var(--forest-dark);
+      background: rgba(255, 253, 248, .7);
+      border: 1px solid rgba(49, 95, 74, .08);
+      border-radius: 999px;
+      font-size: .79rem;
+      font-weight: 700;
+      backdrop-filter: blur(8px);
+    }
+    .stage-caption::before { width: 6px; height: 6px; background: var(--sage-500); border-radius: 50%; content: ""; }
+
+    .timer-panel { display: flex; flex-direction: column; justify-content: center; padding: 54px 46px; }
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--sage-500);
+      font-size: .73rem;
+      font-weight: 850;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .mode-title {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.9rem, 4vw, 2.75rem);
+      font-weight: 500;
+      letter-spacing: -.045em;
+      line-height: 1.05;
+    }
+    .time-display {
+      margin: 28px 0 8px;
+      font-size: clamp(4.2rem, 8vw, 6.4rem);
+      font-variant-numeric: tabular-nums;
+      font-weight: 680;
+      letter-spacing: -.07em;
+      line-height: .96;
+    }
+    .time-helper { min-height: 1.5em; margin: 0; color: var(--muted); font-size: .88rem; }
+    .control-row { display: grid; grid-template-columns: minmax(0, 1fr) 54px; gap: 10px; margin-top: 34px; }
+    .primary-button, .icon-button {
+      border: 0;
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 180ms ease, background 180ms ease;
+    }
+    .primary-button {
+      min-height: 56px;
+      padding: 0 22px;
+      color: white;
+      background: var(--forest);
+      border-radius: 17px;
+      box-shadow: 0 11px 22px rgba(49, 95, 74, .23);
+      font-weight: 800;
+    }
+    .primary-button:hover { background: var(--forest-dark); box-shadow: 0 13px 26px rgba(49,95,74,.28); transform: translateY(-1px); }
+    .primary-button:active, .icon-button:active { transform: translateY(1px) scale(.985); }
+    .primary-button:disabled, .icon-button:disabled { cursor: not-allowed; opacity: .46; box-shadow: none; transform: none; }
+    .icon-button {
+      display: grid;
+      min-width: 54px; min-height: 54px;
+      color: var(--forest-dark);
+      background: var(--sage-50);
+      border: 1px solid rgba(49, 95, 74, .1);
+      border-radius: 17px;
+      place-items: center;
+    }
+    .icon-button:hover:not(:disabled) { background: var(--sage-100); }
+    .icon-button svg { width: 20px; height: 20px; }
+    .motivation {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-top: 28px;
+      padding-top: 22px;
+      color: var(--muted);
+      border-top: 1px solid rgba(49, 95, 74, .1);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1rem;
+      font-style: italic;
+      line-height: 1.55;
+    }
+    .motivation svg { flex: 0 0 auto; width: 18px; height: 18px; margin-top: 2px; color: var(--rose); }
+
+    .garden-card { display: flex; flex-direction: column; min-width: 0; padding: 28px; border-radius: 32px; }
+    .garden-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+    .garden-heading h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.6rem;
+      font-weight: 500;
+      letter-spacing: -.035em;
+    }
+    .garden-heading p { margin: 4px 0 0; color: var(--muted); font-size: .8rem; }
+    .garden-icon {
+      display: grid; flex: 0 0 auto; width: 42px; height: 42px;
+      color: var(--forest); background: var(--sage-50); border-radius: 14px; place-items: center;
+    }
+    .garden-icon svg { width: 21px; height: 21px; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 26px 0; }
+    .stat {
+      padding: 17px 15px;
+      background: rgba(237, 243, 237, .75);
+      border: 1px solid rgba(49, 95, 74, .07);
+      border-radius: 18px;
+    }
+    .stat-value {
+      display: block;
+      font-size: 1.65rem;
+      font-variant-numeric: tabular-nums;
+      font-weight: 760;
+      letter-spacing: -.045em;
+      line-height: 1;
+    }
+    .stat-label { display: block; margin-top: 7px; color: var(--muted); font-size: .72rem; font-weight: 680; line-height: 1.25; }
+    .collection-title { margin: 0 0 13px; font-size: .78rem; font-weight: 830; letter-spacing: .08em; text-transform: uppercase; }
+    .flower-collection { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; min-height: 120px; align-content: start; }
+    .empty-garden {
+      grid-column: 1 / -1;
+      display: grid;
+      min-height: 120px;
+      padding: 18px;
+      color: var(--muted);
+      background: rgba(247, 242, 233, .62);
+      border: 1px dashed rgba(49, 95, 74, .17);
+      border-radius: 18px;
+      place-items: center;
+      text-align: center;
+      font-size: .78rem;
+    }
+    .earned-flower {
+      display: grid;
+      aspect-ratio: 1;
+      color: hsl(var(--hue), 48%, 70%);
+      background: rgba(247, 242, 233, .7);
+      border: 1px solid rgba(49, 95, 74, .07);
+      border-radius: 16px;
+      place-items: center;
+      animation: flower-arrive 480ms cubic-bezier(.2,.9,.3,1) both;
+    }
+    .earned-flower svg { width: 72%; height: 72%; overflow: visible; }
+    .daily-note { margin: auto 0 0; padding-top: 22px; color: var(--muted); font-size: .74rem; line-height: 1.55; }
+    .sr-only {
+      position: absolute; overflow: hidden; width: 1px; height: 1px; padding: 0; margin: -1px;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+
+    @keyframes breathe { from { rotate: -1.2deg; } to { rotate: 1.2deg; } }
+    @keyframes bloom {
+      0% { opacity: 0; transform: scale(.1) rotate(-12deg); }
+      68% { opacity: 1; transform: scale(1.12) rotate(2deg); }
+      100% { opacity: 1; transform: scale(1) rotate(0); }
+    }
+    @keyframes scatter {
+      0% { opacity: 0; transform: translate(-50%,-50%) rotate(var(--angle)) translateY(0) scale(.35); }
+      16% { opacity: .95; }
+      100% { opacity: 0; transform: translate(-50%,-50%) rotate(var(--angle)) translateY(calc(var(--distance) * -1)) rotate(150deg) scale(.85); }
+    }
+    @keyframes flower-arrive {
+      from { opacity: 0; transform: scale(.72) translateY(6px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    @media (max-width: 990px) {
+      .layout { grid-template-columns: 1fr; }
+      .garden-card { display: grid; grid-template-columns: 1fr 1fr; gap: 0 26px; }
+      .garden-heading, .stats-grid { grid-column: 1; }
+      .collection-wrap { grid-column: 2; grid-row: 1 / 3; }
+      .daily-note { grid-column: 1 / -1; }
+    }
+    @media (max-width: 760px) {
+      .app-shell { width: min(100% - 24px, 620px); padding-top: 18px; }
+      .session-content { grid-template-columns: 1fr; }
+      .plant-zone { min-height: 390px; padding: 20px; border-right: 0; border-bottom: 1px solid rgba(49,95,74,.08); }
+      .plant-visual { width: min(100%, 330px); }
+      .stage-caption { bottom: 18px; }
+      .timer-panel { padding: 38px 30px 42px; text-align: center; }
+      .time-display { margin-top: 22px; }
+      .motivation { text-align: left; }
+    }
+    @media (max-width: 540px) {
+      .topbar { margin-bottom: 16px; }
+      .today-pill { min-height: 36px; padding: 0 11px; font-size: .72rem; }
+      .main-card, .garden-card { border-radius: 24px; }
+      .mode-tabs { overflow-x: auto; grid-template-columns: repeat(3, minmax(116px, 1fr)); scrollbar-width: none; }
+      .mode-tabs::-webkit-scrollbar { display: none; }
+      .mode-button { font-size: .78rem; }
+      .plant-zone { min-height: 345px; }
+      .plant-zone::before { width: 280px; height: 280px; }
+      .plant-zone::after { width: 210px; height: 210px; }
+      .timer-panel { padding: 34px 22px 36px; }
+      .time-display { font-size: clamp(4.2rem, 23vw, 5.5rem); }
+      .garden-card { display: flex; padding: 22px; }
+      .collection-wrap { display: block; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-leaf ambient-leaf--one" aria-hidden="true"></div>
+  <div class="ambient-leaf ambient-leaf--two" aria-hidden="true"></div>
+
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand" aria-label="Cultiva, temporizador Pomodoro">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 20V9.5M12 13.5C9 13.5 6.5 11.4 6.5 8.5C9.6 8.5 12 10.4 12 13.5ZM12 10.5C15 10.5 17.5 8.4 17.5 5.5C14.4 5.5 12 7.4 12 10.5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </span>
+        <h1 class="brand-name">Cultiva</h1>
+      </div>
+      <div class="today-pill">Tu jardín de hoy</div>
+    </header>
+
+    <div class="layout">
+      <section class="main-card" aria-labelledby="modeTitle">
+        <nav class="mode-tabs" aria-label="Tipo de sesión" role="tablist">
+          <button class="mode-button" type="button" role="tab" aria-selected="true" data-mode="focus">Concentración</button>
+          <button class="mode-button" type="button" role="tab" aria-selected="false" data-mode="short">Descanso corto</button>
+          <button class="mode-button" type="button" role="tab" aria-selected="false" data-mode="long">Descanso largo</button>
+        </nav>
+
+        <div class="session-content">
+          <div class="plant-zone" aria-label="El crecimiento de la planta muestra el progreso de la sesión">
+            <div class="plant-visual" id="plantVisual" aria-hidden="true">
+              <svg class="progress-ring" viewBox="0 0 220 220">
+                <circle class="progress-track" cx="110" cy="110" r="96" />
+                <circle class="progress-value" id="progressCircle" cx="110" cy="110" r="96" />
+              </svg>
+              <svg class="plant-illustration" viewBox="0 0 260 260">
+                <defs>
+                  <linearGradient id="potGradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d89981" /><stop offset="1" stop-color="#bb725d" /></linearGradient>
+                  <radialGradient id="petalGradient" cx="50%" cy="42%" r="64%"><stop offset="0" stop-color="#f8ddd7" /><stop offset="1" stop-color="#d99590" /></radialGradient>
+                </defs>
+                <ellipse class="ground-shadow" cx="130" cy="230" rx="62" ry="10" fill="#315f4a" />
+                <g class="plant-body">
+                  <path class="stem" d="M130 194 C130 160 127 124 131 83" />
+                  <g class="sprout">
+                    <path d="M130 175 C110 173 98 159 98 143 C115 143 127 153 130 168Z" fill="#789b81" />
+                    <path d="M130 168 C143 151 157 149 170 152 C166 166 151 176 130 175Z" fill="#648473" />
+                  </g>
+                  <g class="leaf leaf--one">
+                    <path class="branch" d="M129 146 C113 138 102 128 94 115" />
+                    <path d="M96 116 C77 117 64 104 63 85 C83 85 97 96 99 113Z" fill="#7fa487" />
+                    <path d="M96 113 C84 104 76 96 69 89" stroke="#5f806a" stroke-width="2" stroke-linecap="round" fill="none" />
+                  </g>
+                  <g class="leaf leaf--two">
+                    <path class="branch" d="M130 126 C145 115 157 107 172 98" />
+                    <path d="M169 101 C170 80 185 66 205 65 C205 87 193 101 173 104Z" fill="#648f72" />
+                    <path d="M174 99 C185 88 194 78 200 70" stroke="#4d725b" stroke-width="2" stroke-linecap="round" fill="none" />
+                  </g>
+                  <g class="bud">
+                    <path d="M130 86 C115 76 115 58 130 48 C145 58 145 76 130 86Z" fill="#d99a95" />
+                    <path d="M130 84 C120 78 115 69 117 59 C126 62 132 70 130 84Z" fill="#edc2ba" />
+                  </g>
+                  <g class="flower">
+                    <ellipse cx="130" cy="54" rx="13" ry="27" fill="url(#petalGradient)" />
+                    <ellipse cx="130" cy="54" rx="13" ry="27" fill="url(#petalGradient)" transform="rotate(60 130 54)" />
+                    <ellipse cx="130" cy="54" rx="13" ry="27" fill="url(#petalGradient)" transform="rotate(120 130 54)" />
+                    <circle cx="130" cy="54" r="10" fill="#e3b95f" /><circle cx="127" cy="51" r="2.3" fill="#f8e2a3" />
+                  </g>
+                  <g class="seed"><ellipse cx="130" cy="197" rx="8" ry="5" fill="#785644" transform="rotate(-14 130 197)" /></g>
+                  <path d="M84 190 H176 L166 226 Q165 234 156 234 H104 Q95 234 94 226Z" fill="url(#potGradient)" />
+                  <path d="M78 185 Q78 178 86 178 H174 Q182 178 182 185 V194 H78Z" fill="#ca826d" />
+                  <path d="M90 194 H170" stroke="#a95f4d" stroke-width="2" opacity=".38" />
+                  <path d="M101 206 C119 212 143 212 161 205" stroke="#e6aa95" stroke-width="3" stroke-linecap="round" opacity=".45" fill="none" />
+                </g>
+              </svg>
+              <div class="particles" id="particles"></div>
+            </div>
+            <p class="stage-caption" id="stageCaption">Una semilla preparada</p>
+          </div>
+
+          <div class="timer-panel">
+            <p class="eyebrow" id="statusLabel">Lista para empezar</p>
+            <h2 class="mode-title" id="modeTitle">Tiempo de concentración</h2>
+            <div class="time-display" id="timeDisplay" role="timer" aria-label="25 minutos restantes">25:00</div>
+            <p class="time-helper" id="timeHelper">25 minutos para una sola tarea</p>
+            <div class="control-row">
+              <button class="primary-button" id="primaryButton" type="button" aria-label="Iniciar sesión de concentración">Iniciar sesión</button>
+              <button class="icon-button" id="resetButton" type="button" aria-label="Reiniciar temporizador" title="Reiniciar" disabled>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 10a8 8 0 1 1 2 7.2M4 10V5m0 5h5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </button>
+            </div>
+            <div class="motivation" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21c-1.9-3.7-7-6.2-7-11.2C5 6.6 7.3 4 10.4 4c1 0 1.7.3 2.3.8C13.7 2.5 16.4 1 19 1c.3 4.1-1.7 7.8-6.4 8.6.3.9.4 2 .4 3.1V21h-1Z" /></svg>
+              <span id="motivationText">Elige una tarea y deja que crezca.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="garden-card" aria-labelledby="gardenTitle">
+        <div class="garden-heading">
+          <div><h2 id="gardenTitle">Tu jardín</h2><p id="gardenDate">Hoy</p></div>
+          <span class="garden-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 20V9.5M12 14c-3 0-5.5-2.1-5.5-5 3.1 0 5.5 1.9 5.5 5Zm0-3c3 0 5.5-2.1 5.5-5-3.1 0-5.5 1.9-5.5 5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /><path d="M7 20h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+          </span>
+        </div>
+        <div class="stats-grid" aria-label="Resumen de hoy">
+          <div class="stat"><span class="stat-value" id="sessionCount">0</span><span class="stat-label">sesiones<br />completadas</span></div>
+          <div class="stat"><span class="stat-value" id="minuteCount">0</span><span class="stat-label">minutos de<br />concentración</span></div>
+        </div>
+        <div class="collection-wrap">
+          <h3 class="collection-title">Flores de hoy</h3>
+          <div class="flower-collection" id="flowerCollection" aria-live="polite"></div>
+        </div>
+        <p class="daily-note">Cada sesión terminada suma una flor. Tu jardín vuelve a empezar con cada nuevo día.</p>
+      </aside>
+    </div>
+  </div>
+  <div class="sr-only" id="announcer" aria-live="assertive" aria-atomic="true"></div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const MODES = {
+        focus: { duration: 25 * 60, title: "Tiempo de concentración", helper: "25 minutos para una sola tarea", startLabel: "Iniciar sesión", startAria: "Iniciar sesión de concentración" },
+        short: { duration: 5 * 60, title: "Descanso corto", helper: "Cinco minutos para soltar y respirar", startLabel: "Iniciar descanso", startAria: "Iniciar descanso corto" },
+        long: { duration: 15 * 60, title: "Descanso largo", helper: "Quince minutos para recuperar energía", startLabel: "Iniciar descanso", startAria: "Iniciar descanso largo" }
+      };
+      const STORAGE_KEY = "cultiva_daily_v1";
+      const BASE_TITLE = "Cultiva — Pomodoro";
+      const CIRCLE_LENGTH = 2 * Math.PI * 96;
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const elements = {
+        modeButtons: [...document.querySelectorAll(".mode-button")], modeTitle: document.getElementById("modeTitle"),
+        statusLabel: document.getElementById("statusLabel"), timeDisplay: document.getElementById("timeDisplay"),
+        timeHelper: document.getElementById("timeHelper"), primaryButton: document.getElementById("primaryButton"),
+        resetButton: document.getElementById("resetButton"), progressCircle: document.getElementById("progressCircle"),
+        plantVisual: document.getElementById("plantVisual"), stageCaption: document.getElementById("stageCaption"),
+        motivationText: document.getElementById("motivationText"), particles: document.getElementById("particles"),
+        sessionCount: document.getElementById("sessionCount"), minuteCount: document.getElementById("minuteCount"),
+        flowerCollection: document.getElementById("flowerCollection"), gardenDate: document.getElementById("gardenDate"),
+        announcer: document.getElementById("announcer")
+      };
+      let currentMode = "focus";
+      let timerState = "idle";
+      let remainingMs = MODES.focus.duration * 1000;
+      let endTime = null;
+      let intervalId = null;
+      let celebrationTimeout = null;
+      let dailyProgress = loadDailyProgress();
+
+      function localDateKey(date = new Date()) {
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+      }
+      function emptyDailyProgress() { return { date: localDateKey(), sessions: 0, minutes: 0, flowers: [] }; }
+      function loadDailyProgress() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+          if (saved && saved.date === localDateKey() && Number.isFinite(saved.sessions) && Number.isFinite(saved.minutes) && Array.isArray(saved.flowers)) return saved;
+        } catch (error) { console.info("No se pudo recuperar el jardín anterior; se inicia uno nuevo."); }
+        const fresh = emptyDailyProgress();
+        saveDailyProgress(fresh);
+        return fresh;
+      }
+      function saveDailyProgress(progress = dailyProgress) {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); }
+        catch (error) { console.info("El progreso no se pudo guardar en este navegador."); }
+      }
+      function syncDay() {
+        if (dailyProgress.date !== localDateKey()) {
+          dailyProgress = emptyDailyProgress();
+          saveDailyProgress();
+          renderGarden();
+        }
+      }
+      function formatTime(milliseconds) {
+        const totalSeconds = Math.max(0, Math.ceil(milliseconds / 1000));
+        return `${String(Math.floor(totalSeconds / 60)).padStart(2, "0")}:${String(totalSeconds % 60).padStart(2, "0")}`;
+      }
+      function formatRemainingLabel(milliseconds) {
+        const totalSeconds = Math.max(0, Math.ceil(milliseconds / 1000));
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${minutes} ${minutes === 1 ? "minuto" : "minutos"} y ${seconds} ${seconds === 1 ? "segundo" : "segundos"} restantes`;
+      }
+      function getProgress() {
+        const totalMs = MODES[currentMode].duration * 1000;
+        return Math.min(1, Math.max(0, (totalMs - remainingMs) / totalMs));
+      }
+      function clamp(value) { return Math.min(1, Math.max(0, value)); }
+      function updatePlantGrowth(progress) {
+        const sprout = clamp((progress - .12) / .1);
+        const leafOne = clamp((progress - .34) / .12);
+        const leafTwo = clamp((progress - .47) / .12);
+        const bud = clamp((progress - .72) / .09);
+        const flower = clamp((progress - .94) / .06);
+        const styles = {
+          "--progress": progress.toFixed(4),
+          "--stem-grow": (.05 + clamp((progress - .14) / .56) * .95).toFixed(4),
+          "--seed-opacity": (1 - clamp((progress - .16) / .14)).toFixed(4),
+          "--seed-lift": `${(clamp(progress / .2) * -6).toFixed(2)}px`,
+          "--sprout-opacity": sprout.toFixed(4),
+          "--sprout-scale": (.2 + clamp((progress - .1) / .12) * .8).toFixed(4),
+          "--leaf-one": leafOne.toFixed(4),
+          "--leaf-two": leafTwo.toFixed(4),
+          "--bud-grow": bud.toFixed(4),
+          "--flower-grow": flower.toFixed(4),
+          "--flower-scale": (.05 + clamp((progress - .92) / .08) * .95).toFixed(4)
+        };
+        Object.entries(styles).forEach(([name, value]) => elements.plantVisual.style.setProperty(name, value));
+      }
+      function getStage(progress) {
+        if (progress >= 1) return "Flor abierta";
+        if (progress >= .78) return "El capullo está casi listo";
+        if (progress >= .42) return "Las hojas buscan la luz";
+        if (progress >= .18) return "El primer brote aparece";
+        return "Una semilla preparada";
+      }
+      function getMotivation(progress) {
+        if (timerState === "complete") return currentMode === "focus" ? "¡Sesión completada! Ha florecido tu esfuerzo." : "Descanso completado. Vuelve con energía renovada.";
+        if (timerState === "paused") return "Tu progreso te espera. Continúa cuando estés lista.";
+        if (timerState === "idle") return currentMode === "focus" ? "Elige una tarea y deja que crezca." : "Descansar también forma parte del proceso.";
+        if (currentMode !== "focus") return "Respira despacio. Tu atención también necesita espacio.";
+        if (progress < .4) return "Tu concentración está echando raíces.";
+        if (progress < .8) return "Sigue presente: cada minuto fortalece el hábito.";
+        return "Ya casi florece. Mantén la atención un poco más.";
+      }
+      function updateView() {
+        const config = MODES[currentMode];
+        const progress = getProgress();
+        const displayedTime = formatTime(remainingMs);
+        elements.timeDisplay.textContent = displayedTime;
+        elements.timeDisplay.setAttribute("aria-label", formatRemainingLabel(remainingMs));
+        elements.progressCircle.style.strokeDashoffset = String(CIRCLE_LENGTH * (1 - progress));
+        updatePlantGrowth(progress);
+        elements.stageCaption.textContent = getStage(progress);
+        elements.motivationText.textContent = getMotivation(progress);
+        elements.plantVisual.classList.toggle("is-running", timerState === "running");
+        elements.plantVisual.classList.toggle("is-complete", timerState === "complete");
+        elements.resetButton.disabled = timerState === "idle" && remainingMs === config.duration * 1000;
+        if (timerState === "running") {
+          elements.primaryButton.textContent = "Pausar";
+          elements.primaryButton.setAttribute("aria-label", "Pausar temporizador");
+          elements.statusLabel.textContent = currentMode === "focus" ? "Cultivando atención" : "Recuperando energía";
+          document.title = `${displayedTime} · ${BASE_TITLE}`;
+        } else if (timerState === "paused") {
+          elements.primaryButton.textContent = "Continuar";
+          elements.primaryButton.setAttribute("aria-label", "Continuar temporizador");
+          elements.statusLabel.textContent = "Sesión en pausa";
+          document.title = `En pausa · ${BASE_TITLE}`;
+        } else if (timerState === "complete") {
+          elements.primaryButton.textContent = currentMode === "focus" ? "Cultivar otra" : "Empezar de nuevo";
+          elements.primaryButton.setAttribute("aria-label", currentMode === "focus" ? "Iniciar otra sesión de concentración" : "Iniciar otro descanso");
+          elements.statusLabel.textContent = "Sesión completada";
+          document.title = BASE_TITLE;
+        } else {
+          elements.primaryButton.textContent = config.startLabel;
+          elements.primaryButton.setAttribute("aria-label", config.startAria);
+          elements.statusLabel.textContent = "Lista para empezar";
+          document.title = BASE_TITLE;
+        }
+      }
+      function announce(message) {
+        elements.announcer.textContent = "";
+        window.setTimeout(() => { elements.announcer.textContent = message; }, 40);
+      }
+      function requestNotificationPermission() {
+        try {
+          if ("Notification" in window && Notification.permission === "default") Notification.requestPermission().catch(() => {});
+        } catch (error) {
+          // Algunas aperturas locales no permiten solicitar este permiso.
+        }
+      }
+      function startTimer() {
+        syncDay();
+        if (timerState === "complete") {
+          remainingMs = MODES[currentMode].duration * 1000;
+          timerState = "idle";
+        }
+        endTime = Date.now() + remainingMs;
+        timerState = "running";
+        requestNotificationPermission();
+        tick();
+        window.clearInterval(intervalId);
+        intervalId = window.setInterval(tick, 250);
+        announce(currentMode === "focus" ? "Sesión de concentración iniciada." : "Descanso iniciado.");
+      }
+      function pauseTimer() {
+        if (timerState !== "running") return;
+        remainingMs = Math.max(0, endTime - Date.now());
+        if (remainingMs <= 0) {
+          completeTimer();
+          return;
+        }
+        timerState = "paused";
+        endTime = null;
+        window.clearInterval(intervalId);
+        intervalId = null;
+        updateView();
+        announce("Temporizador en pausa.");
+      }
+      function resetTimer(shouldAnnounce = true) {
+        window.clearInterval(intervalId);
+        intervalId = null;
+        endTime = null;
+        remainingMs = MODES[currentMode].duration * 1000;
+        timerState = "idle";
+        stopCelebration();
+        updateView();
+        if (shouldAnnounce) announce("Temporizador reiniciado.");
+      }
+      function switchMode(mode) {
+        if (!MODES[mode] || mode === currentMode) return;
+        if (timerState === "running" && endTime !== null && Date.now() >= endTime) completeTimer();
+        window.clearInterval(intervalId);
+        intervalId = null;
+        endTime = null;
+        currentMode = mode;
+        timerState = "idle";
+        remainingMs = MODES[mode].duration * 1000;
+        stopCelebration();
+        elements.modeButtons.forEach((button) => {
+          const isActive = button.dataset.mode === mode;
+          button.setAttribute("aria-selected", String(isActive));
+          button.tabIndex = isActive ? 0 : -1;
+        });
+        elements.modeTitle.textContent = MODES[mode].title;
+        elements.timeHelper.textContent = MODES[mode].helper;
+        updateView();
+        announce(`Modo cambiado a ${MODES[mode].title.toLowerCase()}.`);
+      }
+      function tick() {
+        if (timerState !== "running" || endTime === null) return;
+        remainingMs = Math.max(0, endTime - Date.now());
+        if (remainingMs <= 0) return completeTimer();
+        updateView();
+      }
+      function completeTimer() {
+        window.clearInterval(intervalId);
+        intervalId = null;
+        endTime = null;
+        remainingMs = 0;
+        timerState = "complete";
+        if (currentMode === "focus") {
+          syncDay();
+          const flowerHue = [4, 18, 38, 328, 346][dailyProgress.sessions % 5];
+          dailyProgress.sessions += 1;
+          dailyProgress.minutes += MODES.focus.duration / 60;
+          dailyProgress.flowers.push({ hue: flowerHue, earnedAt: new Date().toISOString() });
+          saveDailyProgress();
+          renderGarden();
+        }
+        playCompletionChime();
+        showSystemNotification();
+        celebrate();
+        updateView();
+        announce(currentMode === "focus" ? "¡Sesión completada! Tu esfuerzo ha florecido." : "Descanso completado.");
+      }
+      function playCompletionChime() {
+        try {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContextClass) return;
+          const context = new AudioContextClass();
+          [523.25, 659.25, 783.99].forEach((frequency, index) => {
+            const oscillator = context.createOscillator();
+            const gain = context.createGain();
+            const start = context.currentTime + index * .16;
+            oscillator.type = "sine";
+            oscillator.frequency.value = frequency;
+            gain.gain.setValueAtTime(.0001, start);
+            gain.gain.exponentialRampToValueAtTime(.11, start + .025);
+            gain.gain.exponentialRampToValueAtTime(.0001, start + .55);
+            oscillator.connect(gain).connect(context.destination);
+            oscillator.start(start);
+            oscillator.stop(start + .58);
+          });
+          window.setTimeout(() => context.close().catch(() => {}), 1300);
+        } catch (error) { console.info("El navegador no ha podido reproducir la señal sonora."); }
+      }
+      function showSystemNotification() {
+        if (!("Notification" in window) || Notification.permission !== "granted") return;
+        const title = currentMode === "focus" ? "Tu esfuerzo ha florecido" : "Descanso completado";
+        const body = currentMode === "focus" ? "Has completado 25 minutos de concentración." : "Es momento de continuar con calma.";
+        try { new Notification(title, { body, silent: true, tag: "cultiva-timer" }); }
+        catch (error) { console.info("La notificación del sistema no está disponible."); }
+      }
+      function buildParticles() {
+        const colors = ["#e9b9b2", "#e3b95f", "#789b81", "#f0cec7"];
+        const fragment = document.createDocumentFragment();
+        for (let index = 0; index < 16; index += 1) {
+          const particle = document.createElement("span");
+          particle.className = "particle";
+          particle.style.setProperty("--angle", `${index * 22.5}deg`);
+          particle.style.setProperty("--distance", `${100 + (index % 4) * 20}px`);
+          particle.style.setProperty("--delay", `${(index % 5) * 30}ms`);
+          particle.style.setProperty("--particle-color", colors[index % colors.length]);
+          fragment.appendChild(particle);
+        }
+        elements.particles.appendChild(fragment);
+      }
+      function celebrate() {
+        if (prefersReducedMotion) return;
+        elements.particles.classList.remove("is-celebrating");
+        void elements.particles.offsetWidth;
+        elements.particles.classList.add("is-celebrating");
+        window.clearTimeout(celebrationTimeout);
+        celebrationTimeout = window.setTimeout(stopCelebration, 1800);
+      }
+      function stopCelebration() {
+        window.clearTimeout(celebrationTimeout);
+        elements.particles.classList.remove("is-celebrating");
+      }
+      function flowerMarkup() {
+        return `<svg viewBox="0 0 64 64" aria-hidden="true"><g fill="currentColor"><ellipse cx="32" cy="18" rx="8" ry="15"/><ellipse cx="32" cy="18" rx="8" ry="15" transform="rotate(72 32 32)"/><ellipse cx="32" cy="18" rx="8" ry="15" transform="rotate(144 32 32)"/><ellipse cx="32" cy="18" rx="8" ry="15" transform="rotate(216 32 32)"/><ellipse cx="32" cy="18" rx="8" ry="15" transform="rotate(288 32 32)"/></g><circle cx="32" cy="32" r="8" fill="#e3b95f"/><path d="M32 40v17" stroke="#648473" stroke-width="3" stroke-linecap="round"/><path d="M32 49c-7-1-11-5-12-10 7 0 11 3 12 8" fill="#789b81"/></svg>`;
+      }
+      function renderGarden() {
+        elements.sessionCount.textContent = String(dailyProgress.sessions);
+        elements.minuteCount.textContent = String(dailyProgress.minutes);
+        elements.flowerCollection.replaceChildren();
+        if (dailyProgress.flowers.length === 0) {
+          const empty = document.createElement("div");
+          empty.className = "empty-garden";
+          empty.textContent = "Completa una sesión de concentración para ver aquí tu primera flor.";
+          elements.flowerCollection.appendChild(empty);
+          return;
+        }
+        dailyProgress.flowers.forEach((flower, index) => {
+          const item = document.createElement("span");
+          item.className = "earned-flower";
+          item.style.setProperty("--hue", String(Number.isFinite(flower.hue) ? flower.hue : 4));
+          item.style.animationDelay = `${Math.min(index * 45, 360)}ms`;
+          item.setAttribute("role", "img");
+          item.setAttribute("aria-label", `Flor conseguida en la sesión ${index + 1}`);
+          item.innerHTML = flowerMarkup();
+          elements.flowerCollection.appendChild(item);
+        });
+      }
+      function setDateLabels() {
+        const today = new Intl.DateTimeFormat("es-ES", { weekday: "long", day: "numeric", month: "long" }).format(new Date());
+        elements.gardenDate.textContent = today.charAt(0).toUpperCase() + today.slice(1);
+      }
+
+      elements.primaryButton.addEventListener("click", () => timerState === "running" ? pauseTimer() : startTimer());
+      elements.resetButton.addEventListener("click", () => resetTimer(true));
+      elements.modeButtons.forEach((button) => {
+        button.addEventListener("click", () => switchMode(button.dataset.mode));
+        button.addEventListener("keydown", (event) => {
+          if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+          event.preventDefault();
+          const direction = event.key === "ArrowRight" ? 1 : -1;
+          const currentIndex = elements.modeButtons.indexOf(button);
+          const nextIndex = (currentIndex + direction + elements.modeButtons.length) % elements.modeButtons.length;
+          elements.modeButtons[nextIndex].focus();
+          switchMode(elements.modeButtons[nextIndex].dataset.mode);
+        });
+      });
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden && timerState === "running") tick();
+        syncDay();
+      });
+      window.addEventListener("storage", (event) => {
+        if (event.key === STORAGE_KEY) { dailyProgress = loadDailyProgress(); renderGarden(); }
+      });
+
+      elements.modeButtons.slice(1).forEach((button) => { button.tabIndex = -1; });
+      elements.progressCircle.style.strokeDasharray = String(CIRCLE_LENGTH);
+      buildParticles();
+      setDateLabels();
+      renderGarden();
+      updateView();
+    })();
+  </script>
+</body>
+</html>

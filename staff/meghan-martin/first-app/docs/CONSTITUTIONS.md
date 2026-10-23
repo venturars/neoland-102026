@@ -1,90 +1,105 @@
 # Constitución — first-app
 
-first-app es una app para aprender los conceptos básicos de login. Se construye con IA siguiendo el sistema SDD.
+Este archivo es el reglamento de la app. Dice qué es, cómo está hecha y qué llevan spec, plan y tasks. El orden de trabajo de Cursor está en `AGENTS.md`.
+
+first-app es una app pequeña en Node. No es una web. Se usa desde la terminal. Guarda personas en SQLite. Más adelante puede crecer hacia login.
 
 ## Árbol
 
 ```
 first-app/
+  AGENTS.md
+  README.md
+  SKILL.md
+  MCP.md
+  package.json
+  .gitignore
+  .github/
+    pull_request_template.md
   db/
-    connection.js       Única conexión a la base de datos
-    users.sqlite        Único fichero de la base de datos (local, no se sube a git)
+    connection.js
   queries/
-    users.js            Funciones que ejecutan el SQL
+    users.js
+    queries/
+      create-users-table.sql
+      find-all.sql
+      find-by-email.sql
+      find-by-id.sql
+      insert.sql
+      remove.sql
+      update.sql
   logic/
-    create-user.js      Una funcionalidad por fichero
+    create-user.js
+    list-users.js
     update-user.js
     delete-user.js
-    list-users.js
     find-user-by-email.js
+    find-user-by-id.js
+    users-gender-count.js
   clients/
-    terminal/           Primer cliente. Sirve de test manual
+    terminal/
+      create-users-table.txt
+      create-user.txt
+      list-users.txt
+      update-user.txt
+      delete-user.txt
+      find-user-by-email.txt
+      find-user-by-id.txt
+      users-gender-count.txt
   docs/
-    CONSTITUTIONS.md    Esta base
-  tests/                Tests automáticos con una base temporal
+    CONSTITUTIONS.md
+    GIT-WORKFLOW.md
+    specs/
+      buscar-por-id/
+        spec.md
+        plan.md
+        tasks.md
+      recuento-generos/
+        spec.md
+        plan.md
+        tasks.md
 ```
 
-- `db/` abre la base de datos y no contiene reglas de negocio.
-- `queries/users.js` ejecuta el SQL. No hay reglas de negocio aquí.
-- `logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
-- `clients/terminal/` llama a `logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
+`db/users.sqlite` existe en disco y no se sube a git.
+
+- `db/connection.js` abre la única conexión y la exporta como `db`. No se abre otra base ni otra conexión.
+- `queries/queries/*.sql` son solo sentencias. `queries/users.js` las lee y las ejecuta. Ahí no se decide si un email es válido.
+- `logic/` es la app. Cada acción es su propio fichero, con sus comprobaciones dentro. Un fichero ya creado no se reescribe para meter otra acción. Las reglas no se mueven a queries ni a clients.
+- `clients/terminal/*.txt` no son programas. Se pegan con el directorio actual en `first-app`. Solo ahí se imprime el resultado.
+- Una acción nueva es un fichero nuevo en `logic/` y un `.txt` nuevo en `clients/terminal/`.
+
+## Specs
+
+Cada funcionalidad tiene su carpeta `docs/specs/<nombre>/` con tres ficheros. No se sobrescriben. Se escriben cortos: concreto, y sin rodeos.
+
+`spec.md` es el negocio. Lo lee quien decide si la función es la que quiere, sin abrir el código. Dice qué se pide, quién lo usa, qué entra, qué sale con un ejemplo, y qué fallo se ve. También dice qué queda fuera. No nombra ficheros, funciones ni SQL.
+
+`plan.md` es la técnica. Lo lee quien comprueba que el desarrollo cabe aquí. Dice qué ficheros se crean y cuáles se tocan, a qué fichero de `logic/` se parece (sin pegar su código), la firma (nombre, parámetros y salida), el SQL nuevo con parámetros con nombre (`:id`, `:name`, `:email`), y la frase de error en inglés de cada fallo de la spec.
+
+Una funcionalidad nueva es un fichero nuevo. Si la constitución, el código y la spec no dicen lo mismo, la pregunta se escribe al final del plan y ahí se para. No hay tareas ni código hasta tener la respuesta.
+
+`tasks.md` son los pasos, en el orden de una persona. Cada paso abre un sitio, hace una cosa y deja un resultado que se puede mirar. Un paso son como mucho cuatro líneas. Si el cambio no es una funcionalidad nueva, el grano es el mismo: mirar lo que ya existe, cambiar un sitio, comprobar.
 
 ## Base de datos
 
-Hay una sola base de datos: `db/users.sqlite`. Hay una sola conexión: el `db` que exporta `db/connection.js`. No se abre otra base de datos ni otra conexión, salvo los tests, que usan `USERS_DB_PATH` hacia un fichero temporal.
+Hay una sola base: `db/users.sqlite`. Hay una sola conexión: el `db` que exporta `db/connection.js`.
 
 Tabla `users`:
 
 - `id` es `INTEGER PRIMARY KEY`. SQLite lo incrementa solo: 1, 2, 3…
-- `email` es `VARCHAR(64) NOT NULL UNIQUE`.
 - `name` es `TEXT NOT NULL`.
-- `createdAt` y `updatedAt` son fechas. SQLite no tiene un tipo `DATE` propio. El tipo adecuado es `TEXT` con la fecha en `YYYY-MM-DD HH:MM:SS`, que es lo que devuelve `datetime('now', 'localtime')`.
+- `email` es `VARCHAR(64) NOT NULL UNIQUE`.
+- `createdAt` y `updatedAt` son fechas. SQLite no tiene un tipo `DATE`. El tipo es `TEXT` con `YYYY-MM-DD HH:MM:SS`, que es lo que devuelve `datetime('now', 'localtime')`.
 
-## Logic no se reemplaza
+Una persona que devuelve logic es un objeto plano con exactamente `id`, `name`, `email`, `createdAt` y `updatedAt`. No se devuelve la fila cruda de SQLite.
 
-`logic/` no es un adaptador ni una capa intercambiable. No se sustituye por otra implementación, no se convierte en plugins y no se mueven sus reglas a `queries/` ni a `clients/`.
+El email se recorta, se pasa a minúsculas y lleva un solo `@`, con las dos partes llenas, sin espacios y con longitud de hasta 64. Si no, no es un email válido.
 
-Cada funcionalidad es un fichero. Un fichero de `logic/` ya creado no se reemplaza para encajar otra tarea. Una funcionalidad nueva es un fichero nuevo.
+## Cómo se lee una acción
 
-## Un fichero de logic
+De arriba abajo:
 
-Un fichero, una función. El nombre, la entrada y la salida los define la firma. No hay un comentario de contrato encima de la función.
-
-El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `listUsers`, `findUserByEmail`). Los parámetros van en la firma, con su nombre (`name`, `email`, `id`). No se agrupa la entrada en un único objeto si los datos ya se conocen.
-
-El cuerpo sigue este orden, y no se mezcla:
-
-1. Validar los parámetros de entrada.
-2. Validar el resto de reglas de negocio.
-3. Aplicar la lógica de negocio.
-4. Estructurar la salida y sanear la respuesta.
-
-La salida del paso 4 es el dato de la operación: el usuario, la lista de usuarios, o nada si la operación no devuelve datos. Solo incluye los campos que el cliente necesita (`id`, `name`, `email`, `createdAt`, `updatedAt`). No salen objetos de SQLite ni errores internos de la base de datos.
-
-## Errores
-
-Un fallo se señala con `throw new Error("...")`. El mensaje está en inglés y es siempre uno de los de esta lista. No hay códigos ni clases de error propias.
-
-En los pasos 1 y 2, si la entrada o una regla de negocio falla:
-
-- `Name is empty`
-- `Email is invalid`
-- `Email is already used`
-- `User not found`
-- `Invalid id`
-
-En el paso 3, si SQLite falla, ese error no sale de `logic/`. Se lanza uno de estos:
-
-- `Could not create the user`
-- `Could not update the user`
-- `Could not delete the user`
-- `Could not list the users`
-- `Could not find the user`
-
-En el paso 4, si todo va bien, la función devuelve el dato saneado. Si la operación no tiene datos, no devuelve nada.
-
-`Invalid id` is extra vs the class list: a missing or non-integer id must fail before querying SQLite.
-
-## Queries
-
-El SQL no vive dentro de la función que lo ejecuta cuando se añadan ficheros en `queries/queries/`. Hasta entonces, `queries/users.js` prepara y ejecuta el SQL con `db`. Las funciones de este fichero se pueden reutilizar desde `logic/`.
+1. Comprobar lo que entra.
+2. Comprobar las reglas (por ejemplo: el email ya existe, la persona no está).
+3. Hablar con queries dentro de try/catch.
+4. Devolver el valor de esa acción.
