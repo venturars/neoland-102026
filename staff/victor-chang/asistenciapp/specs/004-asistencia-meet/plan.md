@@ -1,6 +1,8 @@
 # Plan técnico 004 · Asistencia automática desde Google Meet
 
-> Estado: **Aprobado** (2026-10-21) · Spec: [spec.md](spec.md) v1.0 · Creado: 2026-10-21
+> Estado: **En revisión** (2026-10-23): se reescribirá sobre `ARCHITECTURE.md` cuando termine la spec 005 · Aprobado antes: 2026-10-21 · Spec: [spec.md](spec.md) v1.0 · Creado: 2026-10-21
+
+> **Pendiente de reescribir.** Este plan se escribió para la estructura de código anterior a `ARCHITECTURE.md`. Las decisiones del 2026-10-23 (§8, puntos 4 a 7) y la revisión frente a la arquitectura se aplicarán al reescribirlo. `tasks.md` queda sin aprobar hasta entonces.
 
 Este documento explica **cómo** construimos lo que pide la spec 004. Se apoya en todo lo que ya existe de la spec 001: misma app, misma base de datos, mismo panel. Solo se añade una **segunda forma de llenar la lista**.
 
@@ -229,3 +231,7 @@ asistenciapp/
 1. **Estado de la app en Google Cloud** (2026-10-21): **"En producción" sin verificar**. Hay un aviso de Google al iniciar sesión, pero el permiso no caduca cada semana (§2.2, CA-12).
 2. **Atajo `--meet`** (2026-10-21): **sí** (§1).
 3. **Spike primero** (2026-10-21): si la cuenta gratuita no puede leer participantes, se para y se revisa la spec (§0).
+4. **Orden** (2026-10-23): primero se adapta el código a `ARCHITECTURE.md` (spec 005) y después se reescribe este plan sobre la nueva estructura.
+5. **Errores de Meet** (2026-10-23): `422` para lo que el profesor puede arreglar (enlace mal escrito, reunión que no existe o no está en curso, cuenta sin acceso); `502` solo cuando falla Google o la red. Cada caso es una excepción con nombre (E3, E4).
+6. **Valores de `mode`** (2026-10-23): `code` y `automatic` (identificadores en inglés, S1). Las etiquetas del panel siguen en español ("código", "Meet").
+7. **Para revisar al reescribir** (propuesta, sin decidir): los invitados sin nombre no se distinguen entre sí; si uno sale y entra otro distinto, la segunda toma no lo añade (CA-08). Distinguirlos exigiría guardar el identificador de Google, que P4 prohíbe. Propuesta: aceptarlo como límite conocido y anotarlo en la spec.

@@ -127,6 +127,7 @@ Una funcionalidad está terminada cuando:
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): CA-01 a CA-26 verificados. Revisión de código (2026-10-21, fase H): 30 tareas, 102 tests | Check-in con código rotatorio, válido para cualquier plataforma |
 | `002-discord-bot` | Idea futura | Fuera del MVP |
 | `003-servidor-mcp` | Idea futura | Implementar MCP: que un asistente de IA (p. ej. Claude) pueda abrir y cerrar la asistencia, consultar listas y pedir informes por chat |
-| `004-asistencia-meet` | ⏸️ En pausa (2026-10-21) · 3 · Desglosar: plan aprobado; `tasks.md` pendiente de aprobación. Al retomar: aprobar tareas y empezar por T01 | Asistencia automática de todos los participantes de una reunión de Meet, sin que el alumno haga nada |
+| `004-asistencia-meet` | ⏸️ En pausa (2026-10-23) · 2 · Planificar: el plan se reescribe sobre `ARCHITECTURE.md` cuando termine la spec 005 (decisiones en plan §8). `tasks.md` sin aprobar | Asistencia automática de todos los participantes de una reunión de Meet, sin que el alumno haga nada |
+| `005-adaptar-arquitectura` | 1 · Especificar: borrador pendiente de aprobación (2026-10-23) | Adaptar el código a `ARCHITECTURE.md` sin cambiar el comportamiento |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
