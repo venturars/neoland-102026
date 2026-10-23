@@ -2,7 +2,7 @@
 
 Aplicación de gestión de usuarios. Permite crear, actualizar, eliminar, listar y buscar usuarios con `id`, `name` y `email`. No tiene pantalla ni servidor. La entrada es una llamada a una función de `logic`, o un archivo de `clients/terminal` ejecutado desde la terminal. La salida se guarda en SQLite.
 
-El `id` lo asigna la base de datos. El email se guarda en minúsculas y no se puede repetir.
+El `id` lo asigna la base de datos. El email se guarda en minúsculas y no se puede repetir. `package.json` incluye la dependencia `openai` `7.39.0`. pnpm escribe `pnpm-lock.yaml`.
 
 ## Estructura
 
@@ -37,6 +37,8 @@ first-app/
       list-users.sql
       find-user-by-id.sql
       find-user-by-email.sql
+  package.json
+  pnpm-lock.yaml
   docs/
     CONSTITUTIONS.MD
   AGENTS.MD

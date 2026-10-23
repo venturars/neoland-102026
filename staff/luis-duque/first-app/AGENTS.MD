@@ -54,6 +54,8 @@ En `logic/shared.js` llama a las validaciones `validateNombre`, `validateEmail` 
 
 Usa módulos de JavaScript: `import` y `export`. `package.json` ya tiene `"type": "module"`.
 
+La dependencia `openai` está en `package.json`, versión `7.39.0`. Se instala con pnpm desde `first-app`. `pnpm-lock.yaml` lo escribe pnpm. No lo edites a mano y no pases esa dependencia a npm.
+
 Deja la conexión solo en `db/connection.js`. Mantenla corta: exporta `database` directamente con `new DatabaseSync` sobre `users.sqlite`. No crees una función `openDatabase`. No leas ni ejecutes SQL ahí. No abras la base en ningún otro archivo.
 
 Haz que `queries/users.js` sea el único archivo que lee y ejecuta las consultas, incluida `create-table-users.sql`.

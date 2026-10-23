@@ -9,5 +9,8 @@
   "keywords": [],
   "author": "Luis Fernando Duque",
   "license": "MIT",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "openai": "7.39.0"
+  }
 }
