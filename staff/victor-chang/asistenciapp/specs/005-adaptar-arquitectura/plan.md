@@ -1,6 +1,6 @@
 # Plan técnico 005 · Adaptar el código a la arquitectura
 
-> Estado: **Borrador (pendiente de aprobación)** · Spec: [spec.md](spec.md) v1.0 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Creado: 2026-10-23
+> Estado: **Aprobado** (2026-10-23) · Spec: [spec.md](spec.md) v1.0 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Creado: 2026-10-23
 
 Este documento explica **cómo** se adapta el código de la spec 001 a `ARCHITECTURE.md` sin cambiar lo que hace la app (spec 005, CA-01). Las reglas se citan por su identificador (`C2`, `E4`…).
 
@@ -237,4 +237,4 @@ Mismas rutas, cuerpos y respuestas que la spec 001 (plan 001 §4), con dos difer
 2. **Cuerpos mal formados** (2026-10-23): se rechazan con `400` (spec P1).
 3. **Herramientas de desarrollo** (2026-10-23): ruff y mypy (spec P2).
 
-**Pendientes de aprobar en este plan:** el nuevo nombre del paquete (`attendance`, §2.1), los textos de los mensajes (§2.7) y las excepciones de §5.
+4. **Plan aprobado** (2026-10-23), incluidos el nuevo nombre del paquete (`attendance`, §2.1), los textos de los mensajes (§2.7) y las excepciones de §5.
