@@ -78,7 +78,7 @@ El código de reunión se acepta pegando el **enlace completo** (`https://meet.g
 ### 2.3 Del participante al nombre (CA-05, CA-08, CA-17)
 Cada participante llega como `signedinUser`, `anonymousUser` o `phoneUser`, todos con `displayName`.
 
-- Se toma **solo `displayName`**. Del resto (identificador de cuenta, número de teléfono parcial…) **no se guarda nada** (constitución P4 v2.2). El email no llega, porque no se pide.
+- Se toma **solo `displayName`**. Del resto (identificador de cuenta, número de teléfono parcial…) **no se guarda nada** (constitución P4 v3.0). El email no llega, porque no se pide.
 - Nombre vacío → **"Invitado sin nombre"** (CA-08).
   - Si en una misma toma hay varios, se numeran: "Invitado sin nombre", "Invitado sin nombre 2"…
   - Así no se pierden en la regla anti-duplicados, y al repetir la toma no se duplican.
@@ -208,7 +208,7 @@ asistenciapp/
 
 ---
 
-## 7. Comprobación de la constitución (v2.2)
+## 7. Comprobación de la constitución (v3.1)
 
 | Regla | ¿Cumple? | Cómo |
 | --- | --- | --- |

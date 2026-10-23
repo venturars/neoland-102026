@@ -97,7 +97,7 @@ Todas resueltas el 2026-10-21 con Victor.
 | P2 | ¿Cuenta solo quien está en la llamada en ese momento, o cualquiera que estuvo en algún momento? | **Quien está en ese momento.** Si después sale, **no se le quita**. |
 | P3 | ¿Se puede usar también el código en una clase automática? | **No a la vez.** Existen los dos modos, pero quien arranca la app **elige uno por clase** (HU-07). |
 | P4 | ¿Qué pasa con los invitados sin nombre? | Se registran como **"Invitado sin nombre"** y el profesor puede quitarlos. |
-| P5 | El nombre ya no lo escribe el alumno: ¿choca con la privacidad? | Sí con la redacción anterior: **constitución enmendada a v2.2 (P4)**. Solo nombre (y apellidos) y hora; prohibido guardar emails. |
+| P5 | El nombre ya no lo escribe el alumno: ¿choca con la privacidad? | Sí con la redacción anterior: **constitución enmendada a v3.0 (P4)**. Solo nombre (y apellidos) y hora; prohibido guardar emails. |
 | P6 | ¿Merece la pena, si Meet ya trae informes de asistencia? | **Sí**: esos informes solo existen en planes de pago y Neoland no tiene ninguno. |
 
 ---
