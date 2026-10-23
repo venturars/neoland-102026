@@ -125,9 +125,14 @@ Cómo leer esta lista:
     - `app.py` ya usa `load_config` y la nueva `create_app` (adelanta parte de T15). Ya usan la zona de `ASISTENCIA_TZ`: el título por defecto y el CSV.
     - No cambia ningún test de la spec 001: `test_api.py` solo comprobaba que hubiera un mensaje de error, y sigue en verde.
     - Prueba real: servidor arrancado con una copia de la BD en el puerto 8765; responde la página, la lista (5 clases), el `401` y el `404` con sus mensajes nuevos. Parado y puerto libre.
-- [ ] **T12** 🧪 · `validation.py` y `serializers.py` (una función por tipo, F2, D7).
+- [x] **T12** 🧪 · `validation.py` y `serializers.py` (una función por tipo, F2, D7).
   - Tests: los serializadores no sacan nunca el secreto de una clase; `json_object` y `optional_str` rechazan lo que no es objeto o texto sin convertirlo.
   - *Cubre:* CA-06.
+  - **Hecha (2026-10-23):** 202 tests en verde (los nuevos fallaron primero), en `test_web_serializers.py` y `test_web_validation.py` (un archivo por módulo, T6).
+    - Un serializador por respuesta: `checkin_json`, `check_in_result_json`, `public_session_json`, `created_session_json`, `session_summary_json`, `teacher_view_json`. Fijan **la forma exacta** del JSON de hoy, y un test comprueba que el secreto no sale en ninguno.
+    - Las rutas ya los usan: no queda ningún JSON montado a mano en ellas (F2). Las respuestas no cambian (siguen en verde los tests de la spec 001).
+    - `json_object`: sin cuerpo → objeto vacío (para abrir una clase sin título, spec 001 CA-02); un cuerpo que no es un objeto JSON, JSON roto o un formulario → `MalformedRequestError`. `optional_str`: campo ausente → `""`; presente y no texto (incluido `null`) → `MalformedRequestError`.
+    - Las rutas aún leen con el `json_body` antiguo: pasan a `json_object` y `optional_str` en T13 y T14, que es donde cambia el comportamiento.
 - [ ] **T13** 🧪 · `public.py`: rutas del alumno, sin `try/except` (E4). Sus tests pasan de `test_api.py` a `test_web_public.py`.
   - Tests nuevos (T3): `code` numérico, `name` lista, cuerpo que no es objeto → `400` y nada guardado; nombre con otros alfabetos y demasiado largo.
   - Cambia el test de entradas mal formadas: los casos de tipo equivocado pasan a esperar el mensaje de `MalformedRequestError`.
