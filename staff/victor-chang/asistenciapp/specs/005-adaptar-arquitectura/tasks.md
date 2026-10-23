@@ -53,8 +53,13 @@ Cómo leer esta lista:
     - `test_names.py`: se quita el test de nombres que no son texto, porque `clean_name` ya solo recibe `str` (lo comprueba `mypy`). El caso sigue cubierto en `test_api.py` y pasará a `MalformedRequestError` en T13.
     - Temporal hasta T13: `usecases/checkins.register` trata un nombre que no es texto como vacío, como hasta ahora.
     - Pendiente para T16: `alumno.js` escribe su propio aviso de clase cerrada con el texto antiguo.
-- [ ] **T05** 🧪 · `domain/sessions.py`: los tipos `Session`, `SessionSummary`, `Checkin`, `CheckinResult`, `TeacherView`, `ExportFile` (plan §2.2), y las funciones puras `is_open`, `to_iso(t)` y `default_title(t, tz)`.
+- [x] **T05** 🧪 · `domain/sessions.py`: los tipos `Session`, `SessionSummary`, `Checkin`, `CheckinResult`, `TeacherView`, `ExportFile` (plan §2.2), y las funciones puras `is_open`, `to_iso(t)` y `default_title(t, tz)`.
   - *Cubre:* base de CA-01 (spec 001 CA-02 y CA-13).
+  - **Hecha (2026-10-23):** 121 tests en verde; `domain/` pasa `ruff` y `mypy --strict` sin avisos.
+    - `is_open` es una propiedad de `Session`, no una función suelta.
+    - `TeacherView.checkins` es una tupla y no una lista, para que el tipo sea inmutable de verdad (`frozen`).
+    - Los tests van en `tests/test_domain_sessions.py`: `test_sessions.py` queda para los casos de uso (plan §2.11), porque los dos módulos se llaman `sessions`.
+    - `app.py` ya usa `to_iso` y `default_title` en lugar de calcular las fechas por su cuenta (el título sigue en la zona del sistema hasta T08).
 - [ ] **T06** 🧪 · `domain/codes.py`: `is_valid_code` recibe solo `str` y ya no convierte con `str()` (E1).
   - *Cubre:* base de CA-06.
 

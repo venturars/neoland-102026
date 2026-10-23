@@ -9,7 +9,6 @@ import os
 import sys
 import time
 from collections.abc import Callable
-from datetime import datetime, timezone
 from pathlib import Path
 
 from flask import Flask, Response, g, jsonify, request
@@ -24,6 +23,7 @@ from attendance.domain.errors import (
     SessionClosedError,
     SessionNotFoundError,
 )
+from attendance.domain.sessions import default_title, to_iso
 from attendance.infra import storage
 from attendance.infra.export import to_csv
 from attendance.infra.ports import port_in_use
@@ -93,7 +93,7 @@ def create_app(
             conn.close()
 
     def now_iso() -> str:
-        return datetime.fromtimestamp(now(), timezone.utc).isoformat(timespec="milliseconds")
+        return to_iso(now())
 
     def error(status: int, message: str):
         return jsonify(error=message), status
@@ -180,7 +180,7 @@ def create_app(
         title = json_body().get("title")
         title = title.strip() if isinstance(title, str) else ""
         if not title:
-            title = datetime.fromtimestamp(now()).strftime("%d/%m/%Y %H:%M")  # CA-02
+            title = default_title(now(), None)  # CA-02
         session = storage.create_session(get_db(), title, now_iso())
         return jsonify(id=session["id"], title=session["title"]), 201  # CA-01
 
