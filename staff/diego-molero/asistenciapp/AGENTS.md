@@ -1,6 +1,6 @@
-# AGENT.md — Manual de trabajo para agentes de IA
+# AGENTS.md — Manual de trabajo para agentes de IA
 
-Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [CONSTITUTION.md](CONSTITUTION.md) dice **qué reglas** se cumplen; este archivo dice **cómo se trabaja** día a día.
+Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [CONSTITUTION.md](docs/CONSTITUTION.md) dice **qué reglas** se cumplen; este archivo dice **cómo se trabaja** día a día.
 
 ---
 
@@ -8,10 +8,11 @@ Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en 
 
 Lee en este orden al empezar cualquier tarea:
 
-1. `CONSTITUTION.md`: las reglas no negociables.
-2. Este archivo (`AGENT.md`).
-3. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
-4. Su `plan.md` y su `tasks.md`, si ya existen.
+1. `docs/CONSTITUTION.md`: las reglas no negociables.
+2. `docs/ARCHITECTURE.md`: responsabilidades y dirección de las llamadas.
+3. Este archivo (`AGENTS.md`).
+4. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
+5. Su `plan.md` y su `tasks.md`, si ya existen.
 
 Si algo de lo que te piden contradice la constitución, **para y avisa** antes de escribir nada.
 
@@ -57,24 +58,27 @@ Al comenzar un pedido sin una spec aprobada que lo cubra, el único archivo que 
 
 ## 3. Estructura de carpetas
 
-```
+```text
 asistenciapp/
-├── CONSTITUTION.md        # reglas no negociables
-├── AGENT.md               # este archivo
-├── README.md              # cómo arrancar la app (para humanos)
-├── specs/
-│   └── NNN-nombre/
-│       ├── spec.md        # qué y por qué
-│       ├── plan.md        # cómo
-│       └── tasks.md       # pasos
-├── requirements.txt       # dependencias de Python (Flask, pytest)
-├── pytest.ini             # configuración de pytest
-├── app.py                 # aplicación Flask y punto de entrada
-├── asistencia/            # lógica del servidor (paquete de Python)
-├── static/                # HTML, CSS y JS del navegador
-├── tests/                 # tests (test_*.py)
-├── .venv/                 # entorno virtual de Python (no se sube a git)
-└── data/                  # base de datos SQLite (no se sube a git)
+├── docs/
+│   ├── CONSTITUTION.md    # reglas del proyecto
+│   └── ARCHITECTURE.md    # responsabilidades y dependencias
+├── AGENTS.md             # trabajo diario y escritura del código
+├── README.md             # instrucciones de uso
+├── specs/                # spec, plan y tareas de cada cambio
+├── app.py                # entrada HTTP y punto de arranque
+├── asistencia/
+│   ├── domain/           # decisiones sin HTTP ni base de datos
+│   ├── usecases/         # coordinación de las acciones
+│   ├── storage/          # persistencia SQLite
+│   ├── export.py         # formato CSV
+│   └── tunnel.py         # enlace público
+├── static/               # pantallas
+├── tests/                # comportamiento y fronteras
+├── requirements.txt      # Flask y pytest
+├── pytest.ini            # configuración de pruebas
+├── .venv/                # entorno local fuera de Git
+└── data/                 # datos locales fuera de Git
 ```
 
 Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-spec-antes-del-cambio`.
@@ -133,3 +137,13 @@ Un cambio está terminado cuando:
 | Bot de Discord | Idea futura, sin número | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
+
+---
+
+## 8. Cómo se escribe el código
+
+La [arquitectura](docs/ARCHITECTURE.md) fija las responsabilidades. Un módulo abre con una frase que explica qué hace; cada función realiza una tarea.
+
+Las funciones públicas nuevas o modificadas llevan tipos y un docstring con `:param nombre:`, `:return:` y `:rtype:`. Un ejemplo corto `Usage::` muestra cómo llamarlas. Las funciones internas tienen nombres claros y comentarios breves cuando explican una decisión o el cierre de recursos.
+
+Los errores y textos de uso siguen en español. Las funciones conservadas y no modificadas mantienen su documentación hasta que un cambio aprobado las afecte.
