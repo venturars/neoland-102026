@@ -7,7 +7,7 @@ set -uo pipefail
 URL=""
 SESION=""
 NOMBRE=""
-JOBS=32
+JOBS=50
 DESDE=0
 HASTA=9999
 
