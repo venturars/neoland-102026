@@ -1,4 +1,4 @@
-"""Comprueba las puertas SDD escritas y la integridad de la spec heredada."""
+"""Comprueba puertas SDD y base histórica anonimizada por la spec 004."""
 
 import hashlib
 from pathlib import Path
@@ -34,10 +34,10 @@ def test_constitution_amendment():
 
 
 @pytest.mark.parametrize("filename,expected", [
-    ("plan.md", "642B318B580BF3781D80AA224B95ED09D0434B46532D9AA330A583392F3887F3"),
-    ("spec.md", "F149E4998A47B1E1882A31128C64C0644E37456814843118546A0A5405F6471F"),
-    ("tasks.md", "0D7537F990018843048942D815ECF7F391ADD0A7E6E024593117FE870B4C26BA"),
+    ("plan.md", "40FD09DE5E88DB0F29DD3BF00E69BDF07D039C59B85D1BD3CD144C9FFE7DC186"),
+    ("spec.md", "FF35CC0FFBC9AB2049DFF64D2D104C3F24092E4DC098428E4F71B64933435C93"),
+    ("tasks.md", "CB15465A2BB7C957FF387338F9A1DF996DD8DD9153F1A96530A9E68D0F946FF8"),
 ])
-def test_inherited_spec_unchanged(filename, expected):
+def test_inherited_spec_anonymized_baseline(filename, expected):
     content = (ROOT / "specs" / "001-checkin-codigo" / filename).read_bytes()
     assert hashlib.sha256(content).hexdigest().upper() == expected
