@@ -17,10 +17,11 @@ from flask import Flask, Response, g, jsonify, request
 from werkzeug.exceptions import HTTPException, InternalServerError
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from asistencia import checkin, db
-from asistencia.codes import code_for, seconds_left
-from asistencia.export import to_csv
-from asistencia.tunnel import TunnelError, start_tunnel
+from attendance.domain.codes import code_for, seconds_left
+from attendance.infra import storage
+from attendance.infra.export import to_csv
+from attendance.infra.tunnel import TunnelError, start_tunnel
+from attendance.usecases import checkins
 
 BASE_DIR = Path(__file__).parent
 DEFAULT_DB = BASE_DIR / "data" / "asistencia.db"
@@ -72,9 +73,9 @@ def create_app(
     # Detrás del túnel, usar la dirección pública que nos indica (plan §2.10, CA-19).
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
-    conn = db.connect(db_path)
-    db.init_schema(conn)
-    app.config["TEACHER_TOKEN"] = token or db.get_or_create_teacher_token(conn)
+    conn = storage.connect(db_path)
+    storage.init_schema(conn)
+    app.config["TEACHER_TOKEN"] = token or storage.get_or_create_teacher_token(conn)
     conn.close()
 
     # ---------- utilidades ----------
@@ -82,7 +83,7 @@ def create_app(
     def get_db():
         # Una conexión por petición (plan §2.9).
         if "db" not in g:
-            g.db = db.connect(db_path)
+            g.db = storage.connect(db_path)
         return g.db
 
     @app.teardown_appcontext
@@ -103,7 +104,7 @@ def create_app(
         return body if isinstance(body, dict) else {}
 
     def session_or_404(session_id: str) -> dict:
-        session = db.get_session(get_db(), session_id)
+        session = storage.get_session(get_db(), session_id)
         if session is None:
             raise SessionNotFound
         return session
@@ -152,14 +153,14 @@ def create_app(
         session = session_or_404(session_id)
         body = json_body()
         try:
-            row, created = checkin.register(
+            row, created = checkins.register(
                 get_db(), session, body.get("name"), body.get("code"), now(), now_iso()
             )
-        except checkin.SessionClosed:
+        except checkins.SessionClosed:
             return error(409, CLOSED)  # CA-09
         except ValueError as exc:
             return error(400, str(exc))  # CA-08
-        except checkin.InvalidCode:
+        except checkins.InvalidCode:
             return error(422, INVALID_CODE)  # CA-06
         if not created:
             return jsonify(already=True, **checkin_json(row))  # CA-07
@@ -170,7 +171,7 @@ def create_app(
     @app.get("/api/sessions")
     def list_sessions():
         return jsonify([
-            {**session_json(s), "total": s["total"]} for s in db.list_sessions(get_db())
+            {**session_json(s), "total": s["total"]} for s in storage.list_sessions(get_db())
         ])  # CA-16
 
     @app.post("/api/sessions")
@@ -179,19 +180,19 @@ def create_app(
         title = title.strip() if isinstance(title, str) else ""
         if not title:
             title = datetime.fromtimestamp(now()).strftime("%d/%m/%Y %H:%M")  # CA-02
-        session = db.create_session(get_db(), title, now_iso())
+        session = storage.create_session(get_db(), title, now_iso())
         return jsonify(id=session["id"], title=session["title"]), 201  # CA-01
 
     @app.get("/api/sessions/<session_id>")
     def teacher_view(session_id):
         session = session_or_404(session_id)
-        checkins = db.list_checkins(get_db(), session_id)
+        session_checkins = storage.list_checkins(get_db(), session_id)
         data = {
             **session_json(session),
             "open": session["closed_at"] is None,
             "studentUrl": f"{request.host_url}alumno.html?s={session_id}",
-            "total": len(checkins),  # CA-11
-            "checkins": [checkin_json(c) for c in checkins],
+            "total": len(session_checkins),  # CA-11
+            "checkins": [checkin_json(c) for c in session_checkins],
         }
         if data["open"]:  # sin código si está cerrada (CA-13)
             data["code"] = code_for(session["secret"], now())
@@ -201,13 +202,13 @@ def create_app(
     @app.post("/api/sessions/<session_id>/close")
     def close_session(session_id):
         session_or_404(session_id)
-        db.close_session(get_db(), session_id, now_iso())  # CA-13
+        storage.close_session(get_db(), session_id, now_iso())  # CA-13
         return jsonify(ok=True)
 
     @app.delete("/api/sessions/<session_id>/checkins/<int:checkin_id>")
     def remove_checkin(session_id, checkin_id):
         session_or_404(session_id)
-        if not db.remove_checkin(get_db(), session_id, checkin_id):  # CA-24
+        if not storage.remove_checkin(get_db(), session_id, checkin_id):  # CA-24
             return error(404, "Ese registro no existe en esta clase.")
         return jsonify(ok=True)
 
@@ -216,7 +217,7 @@ def create_app(
         session = session_or_404(session_id)
         day = session["opened_at"][:10]
         return Response(
-            to_csv(db.list_checkins(get_db(), session_id)),  # CA-14
+            to_csv(storage.list_checkins(get_db(), session_id)),  # CA-14
             mimetype="text/csv",
             headers={
                 "Content-Disposition": f'attachment; filename="asistencia-{day}-{session_id}.csv"'

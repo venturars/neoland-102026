@@ -1,4 +1,4 @@
-"""Tests de asistencia/tunnel.py · CA-20.
+"""Tests de attendance/infra/tunnel.py · CA-20.
 
 Las líneas son copias reales de la salida de cloudflared 2026.10.1.
 """
@@ -8,8 +8,8 @@ import time
 
 import pytest
 
-from asistencia import tunnel
-from asistencia.tunnel import TunnelError, find_tunnel_url, start_tunnel
+from attendance.infra import tunnel
+from attendance.infra.tunnel import TunnelError, find_tunnel_url, start_tunnel
 
 URL_LINE = (
     "2026-10-20T08:33:25Z INF |  https://actual-academics-century-ratio.trycloudflare.com"

@@ -46,5 +46,4 @@ convention = "google"
 [tool.mypy]
 python_version = "3.13"
 strict = true
-# Cambia a "attendance" al mover el paquete (spec 005 · T02).
-files = ["app.py", "asistencia"]
+files = ["app.py", "attendance"]
