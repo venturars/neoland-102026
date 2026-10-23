@@ -17,13 +17,14 @@ from werkzeug.exceptions import HTTPException, InternalServerError
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from attendance.domain.errors import (
-    AppError,
     CheckinNotFoundError,
+    EmptyNameError,
     InvalidCodeError,
+    NameTooLongError,
     SessionClosedError,
     SessionNotFoundError,
 )
-from attendance.domain.sessions import Checkin, Session, SessionSummary, to_iso
+from attendance.domain.sessions import Checkin, Session, SessionSummary
 from attendance.infra import storage
 from attendance.infra.ports import port_in_use
 from attendance.infra.tunnel import TunnelError, start_tunnel
@@ -93,9 +94,6 @@ def create_app(
         if conn is not None:
             conn.close()
 
-    def now_iso() -> str:
-        return to_iso(now())
-
     def error(status: int, message: str):
         return jsonify(error=message), status
 
@@ -145,18 +143,15 @@ def create_app(
 
     @app.post("/api/s/<session_id>/checkin")
     def check_in(session_id):
-        session = sessions.find_session(get_db(), session_id)
         body = json_body()
         try:
-            # Temporal hasta spec 005 · T10: la transacción la abrirá el caso de uso (D3).
-            with get_db() as conn:
-                result = checkins.register(conn, session, body.get("name"), body.get("code"), now(), now_iso())
+            result = checkins.check_in(get_db(), session_id, body.get("name"), body.get("code"), now())
         # Temporal hasta spec 005 · T11, cuando la tabla de errores sustituya estos except.
         except SessionClosedError as exc:
             return error(409, exc.MESSAGE)  # CA-09
         except InvalidCodeError as exc:
             return error(422, exc.MESSAGE)  # CA-06
-        except AppError as exc:
+        except (EmptyNameError, NameTooLongError) as exc:
             return error(400, exc.MESSAGE)  # CA-08
         if not result.created:
             return jsonify(already=True, **checkin_json(result.checkin, with_id=False))  # CA-07
@@ -201,11 +196,11 @@ def create_app(
 
     @app.delete("/api/sessions/<session_id>/checkins/<int:checkin_id>")
     def remove_checkin(session_id, checkin_id):
-        sessions.find_session(get_db(), session_id)
-        with get_db() as conn:  # temporal hasta T10 (D3)
-            removed = storage.remove_checkin(conn, session_id, checkin_id)
-        if not removed:  # CA-24
-            return error(404, CheckinNotFoundError.MESSAGE)
+        try:
+            checkins.remove_checkin(get_db(), session_id, checkin_id)  # CA-24
+        # Temporal hasta spec 005 · T11, cuando la tabla de errores sustituya este except.
+        except CheckinNotFoundError as exc:
+            return error(404, exc.MESSAGE)
         return jsonify(ok=True)
 
     @app.get("/api/sessions/<session_id>/export")

@@ -101,9 +101,14 @@ Cómo leer esta lista:
     - Las rutas de abrir, cerrar, ver y exportar ya llaman a los casos de uso y no deciden nada. Desaparece `session_or_404`.
     - Temporal hasta T14: un título que no es texto se sigue tratando como vacío. Hasta T11: el título y el CSV usan la zona del sistema.
     - `test_storage.py` y `test_checkin.py` crean las clases con el id y el secreto nuevos.
-- [ ] **T10** 🧪 · `usecases/checkins.py`: `check_in` (todo en una transacción) y `remove_checkin` (`CheckinNotFoundError`).
+- [x] **T10** 🧪 · `usecases/checkins.py`: `check_in` (todo en una transacción) y `remove_checkin` (`CheckinNotFoundError`).
   - `test_checkin.py` pasa a `test_checkins.py`; se conserva el test del orden "cerrada → nombre → código".
   - *Cubre:* CA-01 (spec 001 CA-04 a CA-09, CA-24).
+  - **Hecha (2026-10-23):** 162 tests en verde (los nuevos fallaron primero).
+    - `check_in(conn, session_id, name, code, t)` busca la clase por su id (antes la ruta le pasaba la clase ya leída) y calcula la hora del registro con `to_iso(t)`.
+    - `register` pasa a llamarse `check_in`, como en el plan. `remove_checkin` lanza `CheckinNotFoundError`.
+    - Tests nuevos: el registro queda guardado (transacción confirmada), un registro rechazado no guarda nada, clase inexistente, quitar de otra clase, y volver a registrarse tras ser quitado (CA-26).
+    - `app.py` ya no abre ninguna transacción. Un test de la spec 001 (`test_unknown_session`) detectó que el `except AppError` temporal de la ruta convertía "clase inexistente" en `400`; se limitó a los dos errores de nombre.
 
 ## Fase F · Entrada web (plan §2.6, §2.7)
 
