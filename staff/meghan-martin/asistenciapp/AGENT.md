@@ -19,20 +19,23 @@ Si algo de lo que te piden contradice la constitución, **para y avisa** antes d
 
 ## 2. Flujo SDD paso a paso
 
-Cada funcionalidad recorre estas fases **en orden**. Al terminar cada una, el agente **se detiene** y pide la aprobación de Victor. No se avanza sin un "ok" explícito.
+Cualquier cambio de esta app pasa por estas fases, también si no es una función nueva. Al acabar una fase, el agente para y pide el sí a quien trabaja en esta carpeta. Sin ese sí no sigue.
+
+Hasta el sí del spec, el agente no crea el plan, ni las tasks, ni toca el fichero del cambio. Solo escribe el spec y lo enseña.
 
 | Fase | Archivo | Pregunta que responde | Puerta de salida |
 | --- | --- | --- | --- |
-| 1. Especificar | `spec.md` | ¿**Qué** hay que construir y **por qué**? | Sin `[NECESITA ACLARACIÓN]` pendientes + aprobación de Victor |
-| 2. Planificar | `plan.md` | ¿**Cómo** lo construimos? | Pasa la comprobación de la constitución + aprobación de Victor |
-| 3. Desglosar | `tasks.md` | ¿En qué **pasos pequeños** lo hacemos? | Cada tarea apunta a un criterio de aceptación + aprobación de Victor |
-| 4. Implementar | código + tests | Hacerlo, tarea a tarea | `pytest` en verde + criterios verificados |
+| 1. Especificar | `spec.md` | ¿**Qué** hay que cambiar y **por qué**? | Sin `[NECESITA ACLARACIÓN]` pendientes + el sí de quien trabaja en esta carpeta |
+| 2. Planificar | `plan.md` | ¿**Cómo** lo hacemos? | Pasa la comprobación de la constitución + ese mismo sí |
+| 3. Desglosar | `tasks.md` | ¿En qué **pasos pequeños** lo hacemos? | Cada tarea apunta a un criterio de aceptación + ese mismo sí |
+| 4. Implementar | el cambio que digan las tasks | Hacerlo, tarea a tarea. El README entra si una task lo dice | Criterios verificados |
 
 ### 2.1 Especificar (`spec.md`)
 - Habla del usuario y del problema. **Nunca** nombra tecnologías (nada de "SQLite", "endpoint", "fetch").
 - Estructura: Problema · Usuarios · Historias de usuario · Criterios de aceptación (Dado / Cuando / Entonces) · Fuera de alcance · Preguntas abiertas.
 - Cada criterio de aceptación lleva un identificador (`CA-01`, `CA-02`…) para poder enlazarlo desde tareas y tests.
 - Si falta información, escribe `[NECESITA ACLARACIÓN: pregunta concreta]`. **No inventes la respuesta.**
+- Si lo que piden no está en el spec abierto, no se mete en uno ya cerrado. Se abre `specs/NNN-nombre/spec.md`.
 
 ### 2.2 Planificar (`plan.md`)
 - Arquitectura, modelo de datos, rutas/API, archivos que se crearán.
@@ -46,7 +49,8 @@ Cada funcionalidad recorre estas fases **en orden**. Al terminar cada una, el ag
 
 ### 2.4 Implementar
 - Haz **una tarea cada vez**. Al acabarla, márcala `[x]` en `tasks.md`.
-- Si durante la implementación descubres que la spec o el plan están mal o incompletos, **para**, propón el cambio en el documento y espera aprobación. El código nunca se adelanta a los documentos.
+- El fichero del cambio espera al spec. Si el pedido no cabe en el spec abierto, **para**, escribe otro spec y espera el sí.
+- Si a mitad del cambio ves que el spec o el plan fallan, **para**, propone el arreglo en el documento y espera el sí. El fichero no se adelanta al documento.
 
 ---
 
@@ -72,13 +76,13 @@ asistenciapp/
 └── data/                  # base de datos SQLite (no se sube a git)
 ```
 
-Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-discord-bot`.
+Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-spec-antes-del-cambio`.
 
 ---
 
 ## 4. Comandos
 
-Ejecutar desde `staff/victor-chang/asistenciapp/`:
+Ejecutar desde `staff/meghan-martin/asistenciapp/`:
 
 | Acción | Comando |
 | --- | --- |
@@ -95,25 +99,25 @@ Las únicas dependencias son Flask y pytest (constitución P3).
 
 ## 5. Reglas de comportamiento
 
-- **Solo se edita dentro de `staff/victor-chang/asistenciapp/`.**
+- **Solo se edita dentro de `staff/meghan-martin/asistenciapp/`.**
 - **Pregunta antes de suponer.** Ante una ambigüedad, pregunta o márcala con `[NECESITA ACLARACIÓN]`.
-- **Explica lo que haces.** Victor está aprendiendo SDD: al cerrar cada fase, resume qué se ha hecho, por qué y qué tiene que revisar.
+- **Explica lo que haces.** Quien trabaja en esta carpeta está aprendiendo el proceso: al cerrar cada fase, di qué cambiaste, por qué, y qué tiene que leer.
 - **Cambios pequeños.** Mejor varias tareas cortas que una enorme.
-- **Nada de commits ni pushes** sin que Victor lo pida.
+- **Nada de commits ni pushes** sin que esa persona lo pida.
 - **Para todo lo que arranques.** Si levantas el servidor o `cloudflared` para probar, páralos al terminar y comprueba que el puerto queda libre: `lsof -nP -iTCP:8000 -sTCP:LISTEN` no debe mostrar nada. Ojo: en macOS el proceso aparece como `Python` (con mayúscula). (Incidencia del 2026-10-20 en T12.)
-- **No toques la constitución** salvo para proponer una enmienda, que solo Victor aprueba (constitución §8).
+- **No toques la constitución** salvo para proponer una enmienda. El sí lo da quien trabaja en esta carpeta (constitución §8).
 
 ---
 
 ## 6. Definición de "terminado"
 
-Una funcionalidad está terminada cuando:
+Un cambio está terminado cuando:
 
 - [ ] Todas las tareas de `tasks.md` están en `[x]`.
-- [ ] `pytest` pasa.
+- [ ] `pytest` pasa, cuando el cambio toca comportamiento de la app.
 - [ ] Cada `CA-xx` de la spec tiene su test o su verificación manual hecha.
-- [ ] El `README.md` explica cómo usar lo nuevo.
-- [ ] Victor la ha probado y la ha dado por buena.
+- [ ] El `README.md` explica cómo usar lo nuevo, cuando una task lo pide.
+- [ ] Quien trabaja en esta carpeta lo ha probado y ha dicho que está bien.
 
 ---
 
@@ -122,6 +126,9 @@ Una funcionalidad está terminada cuando:
 | Spec | Fase | Notas |
 | --- | --- | --- |
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
-| `002-discord-bot` | Idea futura | Fuera del MVP |
+| `002-spec-antes-del-cambio` | ✅ Implementada (2026-10-22) | Cualquier fichero espera un spec con el sí |
+| `003-activar-el-entorno` | ✅ Implementada (2026-10-22) | Activar el entorno y arrancar la app son dos títulos |
+| `004-quitar-referencias-personales` | ✅ Implementada (2026-10-22) | Las instrucciones usan `staff/<usuario>/asistenciapp` |
+| Bot de Discord | Idea futura | Sin número de spec |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
