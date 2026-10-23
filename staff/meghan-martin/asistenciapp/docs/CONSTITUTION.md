@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 2.2 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-22
+> Versión 2.3 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-23
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -89,6 +89,7 @@ Cambiar el stack requiere enmendar esta constitución.
 ## 7. Alcance y límites del repositorio
 
 - El proyecto vive entero en `staff/meghan-martin/asistenciapp/`. No se tocan archivos fuera de esta carpeta.
+- Las reglas viven en `asistencia/domain/`. Las acciones viven en `asistencia/usecases/`. El almacén vive en `asistencia/storage/`. La constitución y la arquitectura viven en `docs/`.
 
 ---
 
@@ -106,3 +107,4 @@ Cambiar el stack requiere enmendar esta constitución.
 | 2.0 | 2026-10-20 | §3: stack Node.js → Python (Flask + pytest). P3 pasa de "cero dependencias" a "dependencias mínimas" y permite Flask y pytest | Requisito nuevo: el proyecto debe hacerse en Python. Se elige Flask por ser simple y muy extendido, y pytest por su sintaxis sencilla |
 | 2.1 | 2026-10-20 | P4: distingue *almacenar* (solo en local) de *transitar* (puede pasar cifrado por un proveedor de túnel) | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08) |
 | 2.2 | 2026-10-22 | §4: cualquier fichero espera un spec con el sí, y la issue o la pull request no dan permiso para editar. §7: la carpeta es `staff/meghan-martin/asistenciapp/`. §8: el sí lo da quien trabaja aquí | La frase vieja solo paraba una función nueva, así que el README se podía cambiar sin spec. Las reglas seguían nombrando otra carpeta (spec 002) |
+| 2.3 | 2026-10-23 | §7: las reglas, las acciones y el almacén van en carpetas distintas. La constitución pasa a `docs/` | El código y los documentos estaban mezclados en la raíz (spec 005) |
