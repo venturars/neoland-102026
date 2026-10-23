@@ -1,6 +1,6 @@
 # Arquitectura de AsistenciApp
 
-> Versión 1.0 · Creada: 2026-10-23 · Se basa en la [CONSTITUTION.md](CONSTITUTION.md) v2.1 · Estado: **Aprobada por Victor (2026-10-23)**
+> Versión 1.1 · Creada: 2026-10-23 · Se basa en la [CONSTITUTION.md](CONSTITUTION.md) v2.2 · Estado: **Aprobada por Victor (2026-10-23)**
 
 Este documento es el **estándar de arquitectura, diseño y estilo** del proyecto. Se escribe como si todavía no existiera código: fija cómo se organiza y cómo se escribe **cualquier** feature, presente o futura. No describe ninguna implementación; si el código actual no lo cumple, el que se adapta es el código.
 
@@ -260,10 +260,7 @@ Patrones que el proyecto **no** usa de entrada (P2, P3), y la condición para ad
 
 **Nunca, salvo enmienda de la constitución:** registrar datos personales para depurar (P4) ni escribir documentación en otro idioma (P6).
 
-**Herramientas de desarrollo.** Las herramientas que solo se usan al desarrollar (p. ej. ruff para formato y estilo, mypy para tipos) **no cuentan como dependencias** a efectos de P3 y no necesitan justificarse en un `plan.md`, siempre que:
-- el código de la aplicación **no las importe** ni las necesite para arrancar;
-- se listen aparte de las dependencias de la app (`requirements-dev.txt`);
-- su configuración aplique las reglas de este documento (S1, S2, S5, S6), no otras.
+**Herramientas de desarrollo.** Según P3, las herramientas que solo se usan al desarrollar (p. ej. ruff para formato y estilo, mypy para tipos) no cuentan como dependencias ni necesitan justificarse en un `plan.md`. Si se adoptan, su configuración **debe** aplicar las reglas de este documento (S1, S2, S5, S6), no otras.
 
 ---
 
@@ -293,4 +290,5 @@ Patrones que el proyecto **no** usa de entrada (P2, P3), y la condición para ad
 
 | Versión | Fecha | Cambio | Motivo |
 | --- | --- | --- | --- |
-| 1.0 | 2026-10-23 | Versión inicial, aprobada por Victor. Incluye la decisión de que las herramientas de desarrollo no cuentan como dependencias (§12) | Fijar un estándar de arquitectura independiente de la implementación, como si se escribiera antes del código. Sustituye a un borrador no aprobado que estaba demasiado ligado al código actual. El código existente se adaptará en una feature aparte |
+| 1.0 | 2026-10-23 | Versión inicial, aprobada por Victor | Fijar un estándar de arquitectura independiente de la implementación, como si se escribiera antes del código. Sustituye a un borrador no aprobado que estaba demasiado ligado al código actual. El código existente se adaptará en una feature aparte |
+| 1.1 | 2026-10-23 | §12: la regla de las herramientas de desarrollo pasa a la constitución (P3, v2.2); aquí solo queda cómo se configuran | Que la regla viva donde se decide sobre dependencias y no haya contradicción entre documentos |
