@@ -10,8 +10,9 @@ Lee en este orden al empezar cualquier tarea:
 
 1. `CONSTITUTION.md`: las reglas no negociables.
 2. Este archivo (`AGENT.md`).
-3. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
-4. Su `plan.md` y su `tasks.md`, si ya existen.
+3. `ARCHITECTURE.md`: las reglas de arquitectura, diseño y estilo que sigue todo el código.
+4. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
+5. Su `plan.md` y su `tasks.md`, si ya existen.
 
 Si algo de lo que te piden contradice la constitución, **para y avisa** antes de escribir nada.
 
@@ -71,6 +72,8 @@ asistenciapp/
 ├── .venv/                 # entorno virtual de Python (no se sube a git)
 └── data/                  # base de datos SQLite (no se sube a git)
 ```
+
+Este árbol muestra cómo está el proyecto hoy. La estructura del código a la que hay que llegar es la de `ARCHITECTURE.md` (O1); el código se adaptará en una feature aparte.
 
 Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-discord-bot`.
 
