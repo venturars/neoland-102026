@@ -73,10 +73,8 @@ def _checkin(row: sqlite3.Row) -> Checkin:
     return Checkin(id=row["id"], name=row["name"], checked_at=row["checked_at"])
 
 
-def create_session(conn: sqlite3.Connection, title: str, opened_at: str) -> Session:
-    """Crea una clase abierta, con su id y su secreto."""
-    session_id = secrets.token_urlsafe(6)
-    secret = secrets.token_bytes(16)
+def create_session(conn: sqlite3.Connection, session_id: str, title: str, secret: bytes, opened_at: str) -> Session:
+    """Guarda una clase abierta nueva. El id y el secreto los genera el caso de uso."""
     conn.execute(
         "INSERT INTO sessions (id, title, secret, opened_at) VALUES (?, ?, ?, ?)",
         (session_id, title, secret.hex(), opened_at),

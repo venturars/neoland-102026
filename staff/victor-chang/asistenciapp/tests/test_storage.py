@@ -1,5 +1,6 @@
 """Tests de attendance/infra/storage.py · spec 005 CA-02; ARCHITECTURE D1–D5."""
 
+import secrets
 import sqlite3
 from contextlib import closing
 
@@ -26,6 +27,10 @@ CREATE TABLE checkins (
 """
 
 
+def new_session(conn, title="Clase"):
+    return storage.create_session(conn, secrets.token_urlsafe(6), title, secrets.token_bytes(16), AT)
+
+
 @pytest.fixture
 def db_path(tmp_path):
     path = tmp_path / "t.db"
@@ -42,7 +47,7 @@ def conn(db_path):
 
 def test_writes_are_not_saved_without_a_transaction(db_path):  # D3
     with closing(storage.connect(db_path)) as conn:
-        session = storage.create_session(conn, "Clase", AT)
+        session = new_session(conn, "Clase")
     with closing(storage.connect(db_path)) as conn:
         assert storage.get_session(conn, session.id) is None
 
@@ -50,13 +55,13 @@ def test_writes_are_not_saved_without_a_transaction(db_path):  # D3
 def test_writes_inside_a_transaction_are_saved(db_path):  # D3
     with closing(storage.connect(db_path)) as conn:
         with conn:
-            session = storage.create_session(conn, "Clase", AT)
+            session = new_session(conn, "Clase")
     with closing(storage.connect(db_path)) as conn:
         assert storage.get_session(conn, session.id) == session
 
 
 def test_returns_domain_types(conn):  # D1, M4
-    session = storage.create_session(conn, "Clase", AT)
+    session = new_session(conn, "Clase")
     assert isinstance(session, Session)
     result = storage.add_checkin(conn, session.id, "Ana", "ana", AT)
     assert result == CheckinResult(Checkin(result.checkin.id, "Ana", AT), created=True)
@@ -65,7 +70,7 @@ def test_returns_domain_types(conn):  # D1, M4
 
 
 def test_same_name_key_is_not_added_twice(conn):  # spec 001 CA-07
-    session = storage.create_session(conn, "Clase", AT)
+    session = new_session(conn, "Clase")
     first = storage.add_checkin(conn, session.id, "Ana García", "ana garcia", AT)
     again = storage.add_checkin(conn, session.id, "ana garcia", "ana garcia", "2027-01-15T08:05:00.000+00:00")
     assert not again.created
@@ -73,7 +78,7 @@ def test_same_name_key_is_not_added_twice(conn):  # spec 001 CA-07
 
 
 def test_database_enforces_its_rules(conn):  # D5
-    session = storage.create_session(conn, "Clase", AT)
+    session = new_session(conn, "Clase")
     insert = "INSERT INTO checkins (session_id, name, name_key, checked_at) VALUES (?, ?, ?, ?)"
     conn.execute(insert, (session.id, "Ana", "ana", AT))
     with pytest.raises(sqlite3.IntegrityError):  # UNIQUE (session_id, name_key)
@@ -90,7 +95,10 @@ def test_spec_001_database_still_works(tmp_path):  # spec 005 CA-02
         old.executescript(SPEC_001_SCHEMA)
         old.execute("INSERT INTO config VALUES ('teacher_token', 'token-antiguo')")
         old.execute("INSERT INTO sessions VALUES ('s1', 'Clase antigua', ?, ?, NULL)", ("ab" * 16, AT))
-        old.execute("INSERT INTO checkins (session_id, name, name_key, checked_at) VALUES ('s1', 'Ana', 'ana', ?)", (AT,))
+        old.execute(
+            "INSERT INTO checkins (session_id, name, name_key, checked_at) VALUES ('s1', 'Ana', 'ana', ?)",
+            (AT,),
+        )
         old.commit()
 
     with closing(storage.connect(path)) as conn:
@@ -102,8 +110,8 @@ def test_spec_001_database_still_works(tmp_path):  # spec 005 CA-02
 
 
 def test_remove_checkin_only_in_its_session(conn):  # spec 001 CA-24
-    one = storage.create_session(conn, "Una", AT)
-    other = storage.create_session(conn, "Otra", AT)
+    one = new_session(conn, "Una")
+    other = new_session(conn, "Otra")
     checkin = storage.add_checkin(conn, one.id, "Ana", "ana", AT).checkin
     assert not storage.remove_checkin(conn, other.id, checkin.id)
     assert storage.remove_checkin(conn, one.id, checkin.id)
