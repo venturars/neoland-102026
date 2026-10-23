@@ -1,40 +1,41 @@
-# IDEs
+# Dependencias y locks de npm (cualquier carpeta)
+node_modules/
+package-lock.json
+npm-shrinkwrap.json
+
+# Variables de entorno (cualquier carpeta)
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+!.env.*.example
+
+# Claude Code
+.claude/
+.mcp.json
+
+# Cursor
 .cursor/
 .cursorignore
+.cursorindexingignore
+
+# VS Code y Visual Studio
 .vscode/
-*.code-workspace
 .vs/
+*.code-workspace
 *.suo
 *.user
 *.userosscache
 *.sln.docstates
-.claude/
+
+# OpenCode
 .opencode/
-opencode.json
-opencode.jsonc
+
+# Codex
 .codex/
-.agents/
-.claude/skills/
-.cursor/skills/
-.agents/skills/
 
-# Dependencias y entornos, en cualquier carpeta
-node_modules/
-.env
-.env.*
-
-# Locks de npm
-package-lock.json
-npm-shrinkwrap.json
-
-# Temporales de Linux
-*~
-.fuse_hidden*
-.directory
-.Trash-*
-.nfs*
-
-# Temporales de macOS
+# macOS
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -46,17 +47,44 @@ npm-shrinkwrap.json
 .Trashes
 .VolumeIcon.icns
 .com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Temporary Items
 .apdisk
 
-# Temporales de Windows
-Thumbs.db
-Thumbs.db:encryptable
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# Windows
+[Tt]humbs.db
+[Tt]humbs.db:encryptable
 ehthumbs.db
 ehthumbs_vista.db
-Desktop.ini
+[Dd]esktop.ini
 $RECYCLE.BIN/
 *.stackdump
 *.tmp
+*.temp
 ~$*
-*.swp
-*.swo
+
+# Python (cualquier carpeta)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# SQLite generada en local (cualquier carpeta). *.sqlite se versiona en first-app,
+# salvo la base local de Esther, que no se sube.
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+staff/esther-patino/first-app/db/*.sqlite
+staff/esther-patino/first-app/db/*.sqlite-journal
+staff/esther-patino/first-app/db/*.sqlite-wal
+staff/esther-patino/first-app/db/*.sqlite-shm

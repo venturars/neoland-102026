@@ -1,16 +1,18 @@
-# MCP
+## Adaptación a tu entorno
 
-Servidores MCP compartidos del repositorio. El fichero irá sumando servidores.
+Esta sección es para las personas del equipo. Edita la configuración de tu IDE, no este fichero, salvo que el cambio sea un servidor para todo el repositorio.
 
-Cada persona los configura en su IDE. Esa configuración se queda en su máquina y no se sube al repositorio.
+Cada apartado de abajo es un servidor. El nombre del encabezado es el nombre que tiene que quedar en tu IDE. Los tokens y el inicio de sesión se quedan en tu máquina.
 
-## Playwright
+En cada apartado, el bloque de Cursor es la entrada que añades dentro de `mcpServers`. El comando de Claude Code instala ese servidor. Los pasos de dónde pegarlo están en el `README.md` de la raíz.
 
-Navegador para probar la interfaz. Es un servidor local. npx descarga `@playwright/mcp@latest` la primera vez, y también el navegador.
+## playwright
+
+Navegador para probar la interfaz. Es un servidor local. `npx` descarga `@playwright/mcp@latest` la primera vez, y también el navegador.
 
 Hace falta Node.js 18 o superior.
 
-Fuente: Playwright MCP.
+Fuente: [Playwright MCP](https://playwright.dev/docs/getting-started-mcp).
 
 ### Cursor
 
@@ -23,21 +25,19 @@ Fuente: Playwright MCP.
 
 A mano: Cursor Settings → MCP → Add new MCP Server. Nombre `playwright`, tipo command, comando `npx @playwright/mcp@latest`.
 
-La página se abre en el navegador del IDE, no en una aplicación externa.
-
 ### Claude Code
 
-```
+```bash
 claude mcp add --scope user playwright -- npx @playwright/mcp@latest
 ```
 
-## GitHub Copilot
+## github
 
-Servidor remoto de GitHub. No se instala en la máquina. La URL es `https://api.githubcopilot.com/mcp/`.
+Repositorios, issues y pull requests de GitHub. Es un servidor remoto en `https://api.githubcopilot.com/mcp/`.
 
-Hace falta un token personal de GitHub. El token se queda en tu configuración y no se escribe en este fichero.
+Pide un token personal. Créalo en [Fine-grained personal access tokens](https://github.com/settings/personal-access-tokens) con acceso a los repositorios en los que trabajas. En la configuración local sustituye `TU_GITHUB_PAT` por ese token. El token no entra en el repositorio.
 
-Fuente: GitHub MCP.
+Fuente: [GitHub MCP remoto](https://github.com/github/github-mcp-server/blob/main/docs/remote-server.md).
 
 ### Cursor
 
@@ -45,37 +45,44 @@ Fuente: GitHub MCP.
 "github": {
   "url": "https://api.githubcopilot.com/mcp/",
   "headers": {
-    "Authorization": "Bearer TU_TOKEN"
+    "Authorization": "Bearer TU_GITHUB_PAT"
   }
 }
 ```
 
-A mano: Cursor Settings → MCP → Add new MCP Server. Nombre `github`, tipo URL, dirección `https://api.githubcopilot.com/mcp/`. El token va en la cabecera `Authorization`.
+A mano: Cursor Settings → MCP → Add new MCP Server. Nombre `github`, tipo url, URL `https://api.githubcopilot.com/mcp/`. El header es `Authorization` con el valor `Bearer TU_GITHUB_PAT`.
 
 ### Claude Code
 
+```bash
+claude mcp add --scope user --transport http github https://api.githubcopilot.com/mcp/ --header "Authorization: Bearer TU_GITHUB_PAT"
 ```
-claude mcp add --scope user --transport http github https://api.githubcopilot.com/mcp/ --header "Authorization: Bearer TU_TOKEN"
-```
 
-## Socket
+Sustituye `TU_GITHUB_PAT` antes de ejecutar el comando.
 
-Servidor remoto de Socket. No se instala en la máquina. La URL es `https://mcp.socket.dev/`. La primera vez el IDE abre el navegador para iniciar sesión. No hay clave que copiar.
+## socket-mcp
 
-Fuente: Socket MCP.
+Puntuación de seguridad de dependencias. Es un servidor remoto en `https://mcp.socket.dev/`.
+
+La primera vez abre el navegador y pide iniciar sesión en Socket. No hace falta una API key.
+
+Fuente: [Socket MCP remoto](https://docs.socket.dev/docs/remote-socket-mcp).
 
 ### Cursor
 
 ```json
-"socket": {
+"socket-mcp": {
+  "type": "http",
   "url": "https://mcp.socket.dev/"
 }
 ```
 
-A mano: Cursor Settings → MCP → Add new MCP Server. Nombre `socket`, tipo URL, dirección `https://mcp.socket.dev/`.
+A mano: Cursor Settings → MCP → Add new MCP Server. Nombre `socket-mcp`, tipo http, URL `https://mcp.socket.dev/`.
 
 ### Claude Code
 
+```bash
+claude mcp add --scope user --transport http socket-mcp https://mcp.socket.dev/
 ```
-claude mcp add --scope user --transport http socket https://mcp.socket.dev/
-```
+
+En la sesión, `/mcp` inicia sesión en Socket.
