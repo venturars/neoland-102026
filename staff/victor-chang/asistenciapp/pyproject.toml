@@ -23,10 +23,6 @@ select = [
   "C90",          # complejidad (M2)
 ]
 
-# N818 pide el sufijo "Error" en las excepciones; el plan 005 (§2.7) las nombra por lo que pasa
-# (SessionClosed, InvalidCode), como ya hace el código.
-ignore = ["N818"]
-
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
 
