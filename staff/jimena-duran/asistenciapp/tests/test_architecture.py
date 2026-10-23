@@ -10,7 +10,7 @@ def imports(path):
     tree=ast.parse(path.read_text(encoding="utf-8"))
     return [node.module or "" for node in ast.walk(tree) if isinstance(node,ast.ImportFrom)] + [alias.name for node in ast.walk(tree) if isinstance(node,ast.Import) for alias in node.names]
 
-@pytest.mark.parametrize("name",["codes","names","session"])
+@pytest.mark.parametrize("name",["codes","names","session","attempts"])
 def test_domain_dependencies(name):
     modules=imports(ROOT/f"asistencia/domain/{name}.py")
     assert all(not m.startswith(("flask","sqlite3","asistencia.storage","asistencia.usecases")) for m in modules)
@@ -36,7 +36,7 @@ def test_writing_and_architecture():
     architecture=(ROOT/"docs/ARCHITECTURE.md").read_text(encoding="utf-8")
     for term in ["domain/","usecases/","storage/","PostgreSQL","SQLAlchemy","Alembic"]: assert term in architecture
     constitution=(ROOT/"docs/CONSTITUTION.md").read_text(encoding="utf-8")
-    assert "Versión 2.3" in constitution
+    assert constitution.splitlines()[2].startswith("> Versión 3.0 ·")
 
 def test_static_and_closed_specs_unchanged():
     # Referencia: bytes LF publicados en la base 180cd52 de la PR #246.

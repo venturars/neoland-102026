@@ -5,6 +5,7 @@ from asistencia.storage import sqlite as store
 from asistencia.domain.session import require_session, validate_checkin
 from asistencia.domain.names import name_key
 from asistencia.domain.codes import code_for, seconds_left
+from asistencia.domain.attempts import Banned, over_limit
 from asistencia.export import to_csv
 
 
@@ -54,21 +55,32 @@ def public_session(path: str | Path, session_id: str) -> dict:
     return dict(title=session["title"], open=session["closed_at"] is None)
 
 
-def check_in(path: str | Path, session_id: str, name: str, code: str, instant: float) -> tuple[dict, bool]:
-    """Valida y registra una asistencia.
+def check_in(path: str | Path, session_id: str, name: str, code: str, instant: float, ip: str) -> tuple[dict, bool]:
+    """Controla los intentos de la dirección y después valida la asistencia.
 
     :param path: ruta del archivo SQLite.
     :param session_id: identificador de sesión.
     :param name: nombre recibido.
     :param code: código recibido.
     :param instant: instante del reloj inyectado.
+    :param ip: dirección de la conexión recibida por el servidor.
     :return: resultado de la acción indicado por su firma.
     :rtype: tuple[dict, bool]
 
     Usage::
 
-      result = check_in(path, session_id, name, code, instant)
+      result = check_in(path, session_id, name, code, instant, ip)
     """
+    if store.is_ip_blocked(path, ip):
+        raise Banned()
+    store.add_registration_attempt(path, ip, instant)
+    store.prune_registration_attempts(path, instant - 60)
+    second = store.count_registration_attempts(path, ip, instant - 1)
+    minute = store.count_registration_attempts(path, ip, instant - 60)
+    if over_limit(second, minute):
+        blocked_at = datetime.fromtimestamp(instant, timezone.utc).isoformat(timespec="milliseconds")
+        store.block_ip(path, ip, blocked_at)
+        raise Banned()
     session = get_session(path, session_id)
     name = validate_checkin(session, name, code, instant)
     checked_at = datetime.fromtimestamp(instant, timezone.utc).isoformat(timespec="milliseconds")

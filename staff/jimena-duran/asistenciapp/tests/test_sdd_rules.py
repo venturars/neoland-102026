@@ -28,7 +28,7 @@ def test_personal_scope(document):
 
 def test_constitution_amendment():
     text = (ROOT / "docs/CONSTITUTION.md").read_text(encoding="utf-8-sig")
-    assert "Versión 2.3" in text
+    assert text.splitlines()[2].startswith("> Versión 3.0 ·")
     assert "| 2.2 | 2026-10-22 |" in text
     assert "solo Jimena Durán lo **aprueba**" in text
 

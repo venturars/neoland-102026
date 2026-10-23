@@ -141,6 +141,8 @@ Una funcionalidad está terminada cuando:
 
 | `005-reorganizar-arquitectura` | Implementada y verificada localmente | 108 tests pasan; aprobación humana final pendiente |
 
+| `006-limite-por-ip-publica` | Implementación aprobada el 2026-10-23; validación en curso | Límites por dirección de conexión y bloqueo persistente; sin commit, push ni PR |
+
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
 
 ## 8. Forma de escribir el código

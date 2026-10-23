@@ -29,6 +29,17 @@ CREATE TABLE IF NOT EXISTS checkins (
   checked_at  TEXT NOT NULL,
   UNIQUE (session_id, name_key)
 );
+
+CREATE TABLE IF NOT EXISTS registration_attempts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  ip TEXT NOT NULL,
+  attempted_at REAL NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS blocked_ips (
+  ip TEXT PRIMARY KEY,
+  blocked_at TEXT NOT NULL
+);
 """
 
 
@@ -265,6 +276,113 @@ def list_checkins(path: str | Path, session_id: str) -> list[dict]:
     conn = _connect(path)
     try:
         return _list_checkins(conn, session_id)
+    finally:
+        conn.close()
+
+
+def add_registration_attempt(path: str | Path, ip: str, instant: float) -> None:
+    """Conserva un intento sin datos de asistencia.
+
+    :param path: archivo SQLite preparado.
+    :param ip: dirección recibida por el servidor.
+    :param instant: instante Unix del intento.
+    :return: None.
+    :rtype: None
+
+    Usage::
+
+      add_registration_attempt(path, ip, instant)
+    """
+    conn = _connect(path)
+    try:
+        with conn:
+            conn.execute("INSERT INTO registration_attempts (ip, attempted_at) VALUES (?, ?)", (ip, instant))
+    finally:
+        conn.close()
+
+
+def count_registration_attempts(path: str | Path, ip: str, since: float) -> int:
+    """Consulta el recuento de una dirección incluyendo el instante inicial.
+
+    :param path: archivo SQLite preparado.
+    :param ip: dirección que se cuenta.
+    :param since: límite inferior Unix incluido.
+    :return: cantidad de intentos desde ese límite.
+    :rtype: int
+
+    Usage::
+
+      count = count_registration_attempts(path, ip, instant - 1)
+    """
+    conn = _connect(path)
+    try:
+        row = conn.execute(
+            "SELECT COUNT(*) FROM registration_attempts WHERE ip = ? AND attempted_at >= ?", (ip, since)
+        ).fetchone()
+        return int(row[0])
+    finally:
+        conn.close()
+
+
+def prune_registration_attempts(path: str | Path, before: float) -> None:
+    """Elimina intentos estrictamente anteriores al límite, conservando bloqueos.
+
+    :param path: archivo SQLite preparado.
+    :param before: instante Unix excluido de la eliminación.
+    :return: None.
+    :rtype: None
+
+    Usage::
+
+      prune_registration_attempts(path, instant - 60)
+    """
+    conn = _connect(path)
+    try:
+        with conn:
+            conn.execute("DELETE FROM registration_attempts WHERE attempted_at < ?", (before,))
+    finally:
+        conn.close()
+
+
+def is_ip_blocked(path: str | Path, ip: str) -> bool:
+    """Consulta la lista permanente por dirección.
+
+    :param path: archivo SQLite preparado.
+    :param ip: dirección que se consulta.
+    :return: si existe un bloqueo guardado.
+    :rtype: bool
+
+    Usage::
+
+      blocked = is_ip_blocked(path, ip)
+    """
+    conn = _connect(path)
+    try:
+        return conn.execute("SELECT ip FROM blocked_ips WHERE ip = ?", (ip,)).fetchone() is not None
+    finally:
+        conn.close()
+
+
+def block_ip(path: str | Path, ip: str, blocked_at: str) -> None:
+    """Añade un bloqueo sin reemplazar la fecha de uno existente.
+
+    :param path: archivo SQLite preparado.
+    :param ip: dirección que se bloquea.
+    :param blocked_at: instante ISO UTC del primer bloqueo.
+    :return: None.
+    :rtype: None
+
+    Usage::
+
+      block_ip(path, ip, blocked_at)
+    """
+    conn = _connect(path)
+    try:
+        with conn:
+            conn.execute(
+                "INSERT INTO blocked_ips (ip, blocked_at) VALUES (?, ?) ON CONFLICT(ip) DO NOTHING",
+                (ip, blocked_at),
+            )
     finally:
         conn.close()
 

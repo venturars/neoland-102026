@@ -17,6 +17,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 from asistencia.usecases import attendance
 from asistencia.domain.session import SessionNotFound, SessionClosed, InvalidCode
+from asistencia.domain.attempts import Banned
 from asistencia.tunnel import TunnelError, start_tunnel
 
 BASE_DIR = Path(__file__).parent
@@ -42,8 +43,9 @@ def create_app(db_path: str | Path = DEFAULT_DB, token: str | None = None, now=t
     """
     app = Flask(__name__, static_folder="static", static_url_path="")
     app.json.ensure_ascii = False
-    # Detrás del túnel, usar la dirección pública que nos indica (plan §2.10, CA-19).
-    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+    # El túnel aporta esquema y host; la identidad conserva la IP de conexión.
+    # Puede ser la del proxy, compartida por toda la clase (spec 006).
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=0, x_proto=1, x_host=1)
 
     app.config["TEACHER_TOKEN"] = attendance.prepare(db_path, token)
 
@@ -86,7 +88,11 @@ def create_app(db_path: str | Path = DEFAULT_DB, token: str | None = None, now=t
     def check_in(session_id):
         body = request.get_json(silent=True) or {}
         try:
-            row, created = attendance.check_in(db_path, session_id, body.get("name"), body.get("code", ""), now())
+            row, created = attendance.check_in(
+                db_path, session_id, body.get("name"), body.get("code", ""), now(), request.remote_addr or ""
+            )
+        except Banned as exc:
+            return error(429, str(exc))
         except SessionClosed as exc:
             return error(409, str(exc))
         except InvalidCode as exc:
