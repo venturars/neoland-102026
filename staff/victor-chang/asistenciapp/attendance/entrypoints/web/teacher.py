@@ -9,7 +9,7 @@ from flask.typing import ResponseReturnValue
 
 from attendance.entrypoints.web import context
 from attendance.entrypoints.web.serializers import created_session_json, session_summary_json, teacher_view_json
-from attendance.entrypoints.web.validation import json_body
+from attendance.entrypoints.web.validation import json_object, optional_str
 from attendance.infra import storage
 from attendance.usecases import checkins, sessions
 
@@ -25,10 +25,8 @@ def list_sessions() -> ResponseReturnValue:
 
 @blueprint.post("")
 def create_session() -> ResponseReturnValue:
-    """Abre una clase; sin título, se titula con la fecha (spec 001 · CA-01, CA-02)."""
-    title = json_body().get("title")
-    # Temporal hasta spec 005 · T14: un título que no es texto se sigue tratando como vacío.
-    title = title if isinstance(title, str) else ""
+    """Abre una clase; sin título, se titula con la fecha (spec 001 · CA-01, CA-02; spec 005 · CA-06, CA-08)."""
+    title = optional_str(json_object(), "title")
     session = sessions.create_session(context.db(), title, context.now(), context.current().config.timezone)
     return jsonify(created_session_json(session)), 201
 

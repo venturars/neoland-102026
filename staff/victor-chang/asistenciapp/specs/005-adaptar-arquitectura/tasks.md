@@ -143,10 +143,17 @@ Cómo leer esta lista:
     - Cambia el test de entradas mal formadas de la spec 001, como preveía el plan §2.6: nombre que no es texto, cuerpo que no es objeto y JSON roto → `400` con el mensaje de `MalformedRequestError`; se añaden código numérico, `null` y lista. Los dígitos de otros alfabetos y `12é4` siguen siendo `422` (código no válido).
     - Tests nuevos (T3): sin cuerpo → "Escribe tu nombre."; nombres en cirílico, chino, árabe y con tildes; el límite de 60 cuenta caracteres, no bytes; un cuerpo mal formado en una clase cerrada da `400` (la forma se comprueba primero).
     - El test de código numérico pasa del caso de uso a la ruta, que es donde ahora se rechaza; en el caso de uso ya no aplica porque recibe `str` (lo comprueba `mypy`).
-- [ ] **T14** 🧪 · `teacher.py`: rutas del profesor. Sus tests pasan de `test_api.py` a `test_web_teacher.py`, y se borra `test_api.py`.
+- [x] **T14** 🧪 · `teacher.py`: rutas del profesor. Sus tests pasan de `test_api.py` a `test_web_teacher.py`, y se borra `test_api.py`.
   - Cambia `test_create_session_with_malformed_body_uses_date`: ahora espera `400` (spec P1). Se conserva el caso "sin título → fecha" (spec 001 CA-02).
-  - Tests nuevos (T3) para `title`: vacío, tipo equivocado, demasiado largo.
-  - *Cubre:* CA-01, CA-06.
+  - Tests nuevos (T3) para `title`: vacío, tipo equivocado, otros alfabetos y demasiado largo.
+  - **Límite de 20 caracteres** (spec CA-08, añadido el 2026-10-23): `TitleTooLongError` en el dominio, `MAX_TITLE_LENGTH` en `domain/sessions.py`, y el campo de `profesor.html` con `maxlength="20"`.
+  - *Cubre:* CA-01, CA-06, CA-08.
+  - **Hecha (2026-10-23):** 229 tests en verde (los nuevos fallaron primero). Ya no queda ningún arreglo temporal en `attendance/`.
+    - `teacher.py` lee con `json_object` y `optional_str`; desaparece `json_body`.
+    - Límite del título (CA-08, nuevo en spec v1.1): `clean_title` y `MAX_TITLE_LENGTH = 20` en el dominio, `TitleTooLongError` (`400`) en la tabla de errores, y `maxlength="20"` en `profesor.html`. Las 5 clases guardadas miden 16 caracteres o menos (comprobado en solo lectura), y la fecha por defecto siempre mide 16.
+    - Los tests del profesor pasan **sin cambios** a `test_web_teacher.py`, y se borra `test_api.py`.
+    - Cambia `test_create_session_with_malformed_body_uses_date` (spec P1): ahora espera `400` con el mensaje de `MalformedRequestError` y que no se abra ninguna clase; se añaden `null`, JSON roto y un texto suelto. Se conserva "sin cuerpo o sin título → fecha".
+    - Dos tests de `test_api.py` no se mueven porque ya los cubre, con más comprobaciones, `test_web_errors.py`: `test_unknown_api_route_is_404_json` y `test_unexpected_error_is_json_500`.
 - [ ] **T15** 🧪 · `app.py` queda solo como arranque: argumentos, `load_config(os.environ)`, puerto, túnel, `create_app`, `run`.
   - Silencia el registro de accesos (plan §2.8). Test en `test_app.py`.
   - Los errores del túnel y de la configuración se imprimen con su mensaje y la app termina.

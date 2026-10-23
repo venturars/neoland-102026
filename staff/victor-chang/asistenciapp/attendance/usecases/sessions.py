@@ -10,21 +10,24 @@ from datetime import tzinfo
 
 from attendance.domain.codes import code_for, seconds_left
 from attendance.domain.errors import SessionNotFoundError
-from attendance.domain.sessions import ExportFile, Session, TeacherView, default_title, to_iso
+from attendance.domain.sessions import ExportFile, Session, TeacherView, clean_title, default_title, to_iso
 from attendance.infra import storage
 from attendance.infra.export import to_csv
 
 
 def create_session(conn: sqlite3.Connection, title: str, t: float, tz: tzinfo | None) -> Session:
-    """Abre una clase nueva; sin título, se titula con su fecha local (spec 001 · CA-01, CA-02).
+    """Abre una clase nueva; sin título, se titula con su fecha local (spec 001 · CA-01, CA-02; spec 005 · CA-08).
 
     Args:
         conn: conexión abierta a la base de datos.
         title: título escrito por el profesor; puede estar vacío.
         t: instante de apertura, en segundos Unix.
         tz: zona horaria del título por defecto; None usa la del sistema.
+
+    Raises:
+        TitleTooLongError: el título pasa de 20 caracteres.
     """
-    title = title.strip() or default_title(t, tz)
+    title = clean_title(title) or default_title(t, tz)
     with conn:
         return storage.create_session(conn, secrets.token_urlsafe(6), title, secrets.token_bytes(16), to_iso(t))
 

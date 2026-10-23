@@ -9,7 +9,7 @@ from datetime import UTC
 import pytest
 
 from attendance.domain.codes import WINDOW_SECONDS, code_for
-from attendance.domain.errors import SessionNotFoundError
+from attendance.domain.errors import SessionNotFoundError, TitleTooLongError
 from attendance.domain.sessions import default_title, to_iso
 from attendance.infra import storage
 from attendance.usecases import sessions
@@ -43,6 +43,12 @@ def test_create_session_is_saved(db_path):  # spec 001 CA-01
 @pytest.mark.parametrize("title", ["", "   "])
 def test_create_session_without_title_uses_the_date(conn, title):  # spec 001 CA-02
     assert sessions.create_session(conn, title, T, UTC).title == default_title(T, UTC)
+
+
+def test_title_over_the_limit_opens_nothing(conn):  # spec 005 CA-08
+    with pytest.raises(TitleTooLongError):
+        sessions.create_session(conn, "a" * 21, T, UTC)
+    assert storage.list_sessions(conn) == []
 
 
 def test_each_session_has_its_own_id_and_secret(conn):  # X1

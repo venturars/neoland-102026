@@ -1,6 +1,6 @@
 # Spec 005 · Adaptar el código a la arquitectura
 
-> Estado: **Aprobada** (2026-10-23) · Creada: 2026-10-23
+> Estado: **Aprobada** v1.1 (2026-10-23) · Creada: 2026-10-23
 
 ---
 
@@ -50,6 +50,9 @@ Formato: **Dado** (situación inicial) · **Cuando** (acción) · **Entonces** (
 - **CA-06**: **Dado** un alumno o un programa que envía algo **mal formado** (que no es un formulario con los campos esperados) o un dato con un **tipo equivocado** (p. ej. el código como número en vez de como texto, o el nombre como lista), **cuando** intenta registrarse o abrir una clase, **entonces** se rechaza con un mensaje claro y no se guarda nada.
 - **CA-07**: **Dado** el registro de lo que hace la app mientras funciona, **entonces** no aparece ningún nombre de alumno, dirección IP ni credencial.
 
+### Título de la clase (añadido en v1.1)
+- **CA-08**: **Dado** el profesor que abre una clase, **cuando** escribe un título de **más de 20 caracteres** (sin contar los espacios del principio y del final), **entonces** la clase no se abre y ve un mensaje que dice el límite y qué hacer. Con 20 o menos, o sin título, se abre como hasta ahora. Las clases ya guardadas conservan su título aunque sea más largo.
+
 ---
 
 ## 5. Requisitos no funcionales
@@ -61,7 +64,7 @@ Formato: **Dado** (situación inicial) · **Cuando** (acción) · **Entonces** (
 
 ## 6. Fuera de alcance
 
-- Cualquier funcionalidad nueva: Meet (spec 004), Discord (spec 002), servidor MCP (spec 003).
+- Cualquier funcionalidad nueva: Meet (spec 004), Discord (spec 002), servidor MCP (spec 003). La única regla nueva es el límite del título (CA-08), decidido por Victor durante la implementación.
 - Cambios de diseño en las pantallas, más allá del texto de los mensajes de error.
 - Cambiar qué datos se guardan o cómo se calcula el código de asistencia.
 
@@ -84,3 +87,4 @@ Todas resueltas el 2026-10-23 con Victor.
 | --- | --- | --- | --- |
 | 0.1 | 2026-10-23 | Borrador inicial | `ARCHITECTURE.md` v1.1 aprobada; Victor decide adaptar el código antes de construir la spec 004 |
 | 1.0 | 2026-10-23 | P1 y P2 resueltas; aprobada por Victor | — |
+| 1.1 | 2026-10-23 | CA-08: el título de una clase nueva tiene como máximo 20 caracteres | Decidido por Victor al revisar los tests de títulos (tarea T14). Las clases guardadas no pasan de 16 |

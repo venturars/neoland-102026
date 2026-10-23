@@ -38,9 +38,3 @@ def optional_str(body: dict[str, Any], key: str) -> str:
     if not isinstance(value, str):
         raise MalformedRequestError
     return value
-
-
-def json_body() -> dict[str, Any]:
-    """El cuerpo JSON si es un objeto. Temporal hasta T13 y T14: cualquier otra cosa cuenta como vacío."""
-    body = request.get_json(silent=True)
-    return body if isinstance(body, dict) else {}
