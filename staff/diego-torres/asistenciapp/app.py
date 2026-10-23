@@ -108,9 +108,11 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
 
     @app.post("/api/s/<session_id>/checkin")
     def check_in_route(session_id):
-        body = request.get_json(silent=True) or {}
-
         def action():
+            info = public_session(db_path, session_id)
+            if not info["open"]:
+                raise SessionClosed()
+            body = request.get_json(silent=True) or {}
             row, created = check_in(
                 db_path,
                 session_id,
