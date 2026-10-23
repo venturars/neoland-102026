@@ -57,23 +57,30 @@ Cada funcionalidad recorre estas fases **en orden**. Al terminar cada una, el ag
 asistenciapp/
 ├── CONSTITUTION.md        # reglas no negociables
 ├── AGENT.md               # este archivo
+├── ARCHITECTURE.md        # reglas de arquitectura, diseño y estilo del código
 ├── README.md              # cómo arrancar la app (para humanos)
 ├── specs/
 │   └── NNN-nombre/
 │       ├── spec.md        # qué y por qué
 │       ├── plan.md        # cómo
 │       └── tasks.md       # pasos
-├── requirements.txt       # dependencias de Python (Flask, pytest)
+├── requirements.txt       # Flask y las herramientas de desarrollo (pytest, ruff, mypy)
 ├── pytest.ini             # configuración de pytest
-├── app.py                 # aplicación Flask y punto de entrada
-├── asistencia/            # lógica del servidor (paquete de Python)
+├── pyproject.toml         # configuración de ruff y mypy (no es un paquete instalable)
+├── app.py                 # arranque: lee la configuración, monta las piezas y lanza (ARCHITECTURE C4)
+├── attendance/            # código de la app, por capas (ARCHITECTURE O1)
+│   ├── config.py          # Config y load_config: variables de entorno
+│   ├── domain/            # reglas y tipos, sin E/S: códigos, nombres, clases, errores
+│   ├── usecases/          # una acción de usuario por función: clases y registros
+│   ├── entrypoints/web/   # Flask: fábrica, rutas, credencial, errores, validación, JSON
+│   └── infra/             # SQLite, CSV, cloudflared, puertos
 ├── static/                # HTML, CSS y JS del navegador
-├── tests/                 # tests (test_*.py)
+├── tests/                 # tests: test_<módulo>.py, y test_web_<área>.py para la web
 ├── .venv/                 # entorno virtual de Python (no se sube a git)
 └── data/                  # base de datos SQLite (no se sube a git)
 ```
 
-Este árbol muestra cómo está el proyecto hoy. La estructura del código a la que hay que llegar es la de `ARCHITECTURE.md` (O1); el código se adaptará en una feature aparte.
+El código sigue `ARCHITECTURE.md` desde la spec 005. Antes de añadir un módulo, mira en qué capa va (O1).
 
 Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-discord-bot`.
 
@@ -81,18 +88,23 @@ Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codi
 
 ## 4. Comandos
 
-Ejecutar desde `staff/victor-chang/asistenciapp/`:
+Ejecutar desde `staff/victor-chang/asistenciapp/`, **con el entorno activado**. Sin él, `python` puede ser el Python 2 del sistema, que falla con `SyntaxError: Non-ASCII character` (incidencia del 2026-10-23 en la spec 005, T19).
 
 | Acción | Comando |
 | --- | --- |
 | Preparar el entorno (solo la primera vez) | `python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt` |
 | Activar el entorno (en cada terminal nueva) | `source .venv/bin/activate` |
+| Comprobar que es el Python del proyecto | `python --version` (debe decir `Python 3.13`) |
 | Instalar el túnel (solo la primera vez) | `brew install cloudflared` |
 | Arrancar para una clase online | `python app.py --tunel` (imprime el enlace público del panel) |
 | Arrancar solo en local (desarrollo) | `python app.py` (abre en `http://localhost:8000`) |
 | Ejecutar los tests | `pytest` |
+| Dar formato al código | `ruff format` |
+| Revisar estilo y errores habituales | `ruff check` |
+| Revisar los tipos | `mypy` |
+| Probar con otra BD, puerto o zona horaria | `ASISTENCIA_DB=/tmp/copia.db PORT=8001 ASISTENCIA_TZ=Europe/Madrid python app.py` |
 
-Las únicas dependencias son Flask y pytest (constitución P3).
+La única dependencia de la app es Flask. pytest, ruff y mypy son herramientas de desarrollo: no cuentan como dependencias (constitución P3 v3.1).
 
 ---
 
@@ -114,6 +126,8 @@ Una funcionalidad está terminada cuando:
 
 - [ ] Todas las tareas de `tasks.md` están en `[x]`.
 - [ ] `pytest` pasa.
+- [ ] `ruff format --check`, `ruff check` y `mypy` no dan ningún aviso.
+- [ ] La lista de comprobación de `ARCHITECTURE.md` (§13) se cumple, o cada excepción está justificada en el `plan.md`.
 - [ ] Cada `CA-xx` de la spec tiene su test o su verificación manual hecha.
 - [ ] El `README.md` explica cómo usar lo nuevo.
 - [ ] Victor la ha probado y la ha dado por buena.
@@ -127,7 +141,7 @@ Una funcionalidad está terminada cuando:
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): CA-01 a CA-26 verificados. Revisión de código (2026-10-21, fase H): 30 tareas, 102 tests | Check-in con código rotatorio, válido para cualquier plataforma |
 | `002-discord-bot` | Idea futura | Fuera del MVP |
 | `003-servidor-mcp` | Idea futura | Implementar MCP: que un asistente de IA (p. ej. Claude) pueda abrir y cerrar la asistencia, consultar listas y pedir informes por chat |
-| `004-asistencia-meet` | ⏸️ En pausa (2026-10-23) · 2 · Planificar: el plan se reescribe sobre `ARCHITECTURE.md` cuando termine la spec 005 (decisiones en plan §8). `tasks.md` sin aprobar | Asistencia automática de todos los participantes de una reunión de Meet, sin que el alumno haga nada |
-| `005-adaptar-arquitectura` | 4 · Implementar (2026-10-23): T01–T20 hechas; siguiente T21 (cierre) | Adaptar el código a `ARCHITECTURE.md` sin cambiar el comportamiento |
+| `004-asistencia-meet` | ⏸️ En pausa (2026-10-23) · 2 · Planificar: la spec 005 ya está terminada; siguiente paso, reescribir el plan sobre `ARCHITECTURE.md` (decisiones en plan §8). `tasks.md` sin aprobar | Asistencia automática de todos los participantes de una reunión de Meet, sin que el alumno haga nada |
+| `005-adaptar-arquitectura` | ✅ Terminada v1.1 (2026-10-23): 21 tareas, CA-01 a CA-08 verificados, 240 tests; `ruff` y `mypy --strict` sin avisos | Código adaptado a `ARCHITECTURE.md` sin cambiar el comportamiento, salvo errores más claros y el título de 20 caracteres como máximo |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
