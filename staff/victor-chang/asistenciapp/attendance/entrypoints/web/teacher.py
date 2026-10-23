@@ -8,7 +8,7 @@ from flask import Blueprint, Response, jsonify, request
 from flask.typing import ResponseReturnValue
 
 from attendance.entrypoints.web import context
-from attendance.entrypoints.web.serializers import checkin_json, session_json
+from attendance.entrypoints.web.serializers import created_session_json, session_summary_json, teacher_view_json
 from attendance.entrypoints.web.validation import json_body
 from attendance.infra import storage
 from attendance.usecases import checkins, sessions
@@ -20,7 +20,7 @@ blueprint = Blueprint("teacher", __name__, url_prefix="/api/sessions")
 def list_sessions() -> ResponseReturnValue:
     """Todas las clases con su total, de la más nueva a la más antigua (spec 001 · CA-16)."""
     summaries = storage.list_sessions(context.db())  # lectura sin reglas (C5)
-    return jsonify([{**session_json(s), "total": s.total} for s in summaries])
+    return jsonify([session_summary_json(s) for s in summaries])
 
 
 @blueprint.post("")
@@ -30,24 +30,14 @@ def create_session() -> ResponseReturnValue:
     # Temporal hasta spec 005 · T14: un título que no es texto se sigue tratando como vacío.
     title = title if isinstance(title, str) else ""
     session = sessions.create_session(context.db(), title, context.now(), context.current().config.timezone)
-    return jsonify(id=session.id, title=session.title), 201
+    return jsonify(created_session_json(session)), 201
 
 
 @blueprint.get("/<session_id>")
 def teacher_view(session_id: str) -> ResponseReturnValue:
     """La clase, sus registros y, si está abierta, el código y su cuenta atrás (spec 001 · CA-10 a CA-13)."""
     view = sessions.teacher_view(context.db(), session_id, context.now())
-    data = {
-        **session_json(view.session),
-        "open": view.session.is_open,
-        "studentUrl": f"{request.host_url}alumno.html?s={session_id}",
-        "total": len(view.checkins),
-        "checkins": [checkin_json(c) for c in view.checkins],
-    }
-    if view.code is not None:
-        data["code"] = view.code
-        data["secondsLeft"] = view.seconds_left
-    return jsonify(data)
+    return jsonify(teacher_view_json(view, f"{request.host_url}alumno.html?s={session_id}"))
 
 
 @blueprint.post("/<session_id>/close")
