@@ -1,6 +1,6 @@
 # Tareas 005 · Adaptar el código a la arquitectura
 
-> Estado: **Aprobado** (2026-10-23) · Plan: [plan.md](plan.md) · Creado: 2026-10-23
+> Estado: **Terminado** (2026-10-23): 21 de 21 tareas · Plan: [plan.md](plan.md) · Creado: 2026-10-23
 
 Cómo leer esta lista:
 - Se hacen **en orden**, una cada vez. Al terminar una se marca `[x]`.
@@ -225,10 +225,25 @@ Cómo leer esta lista:
     | `pytest` en verde | ✅ | 240 tests en verde; `ruff check`, `ruff format --check` y `mypy` sin avisos |
 
     - Excepciones a la arquitectura: solo las dos del plan §5 (los tests sin anotaciones ni docstrings; el reloj en segundos Unix).
-- [ ] **T21** · Cierre:
+- [x] **T21** · Cierre:
   - `AGENT.md`: estructura (§3), comandos de `ruff` y `mypy` (§4), definición de terminado con `ruff` y `mypy` en verde (§6) y estado (§7);
   - `README.md`: estructura, comandos nuevos y variables de entorno (`ASISTENCIA_DB`, `PORT`, `ASISTENCIA_TZ`);
   - plan 001 §5: nota de que los archivos cambiaron de sitio con la spec 005;
   - comprobar que `pytest`, `ruff check` y `mypy` pasan y que el puerto 8000 queda libre;
   - definición de terminado (`AGENT.md` §6).
   - *Cubre:* CA-03.
+  - **Hecha (2026-10-23):**
+    - `AGENT.md`: árbol nuevo (§3); comandos de `ruff`, `mypy`, las variables de entorno y la comprobación de `python --version` (§4); definición de terminado con `ruff`, `mypy` y la lista de `ARCHITECTURE.md` (§6); estado (§7).
+    - `README.md`: tabla de variables (`PORT`, `ASISTENCIA_DB`, `ASISTENCIA_TZ`), título de 20 caracteres como máximo, el error de Python 2 y los de configuración en "Problemas frecuentes", y los comandos de revisión del código.
+    - Plan 001 §5: nota de que los archivos cambiaron de sitio con esta spec.
+    - Comprobación final: 240 tests en verde; `ruff format --check`, `ruff check` y `mypy` sin avisos; puertos 8000 y 8765 libres.
+
+## Definición de terminado (AGENT.md §6)
+
+- [x] Todas las tareas están en `[x]`.
+- [x] `pytest` pasa (240 tests).
+- [x] `ruff format --check`, `ruff check` y `mypy` no dan ningún aviso.
+- [x] La lista de `ARCHITECTURE.md` §13 se cumple (T20); las únicas excepciones son las del plan §5.
+- [x] CA-01 a CA-08 verificados: CA-01 (T20), CA-02 (T07 y T19), CA-03 (T08, T15 y T19), CA-04 (T17, T18 y T20), CA-05 (T04 y T11), CA-06 (T06 y T12 a T14), CA-07 (T11, T15 y T19), CA-08 (T14).
+- [x] El `README.md` explica lo nuevo (T21).
+- [x] Victor la ha probado y la ha dado por buena (T19).
