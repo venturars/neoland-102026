@@ -1,6 +1,6 @@
 # Spec 004 · Asistencia automática desde Google Meet
 
-> Estado: **v1.2 pendiente de aprobación** (2026-10-23; la v1.1 estaba aprobada) · Creada: 2026-10-21
+> Estado: **Aprobada** v1.2 (2026-10-23) · Creada: 2026-10-21
 
 ---
 
@@ -58,7 +58,7 @@ Formato: **Dado** (situación inicial) · **Cuando** (acción) · **Entonces** (
 
 ### Permisos (HU-04, HU-06)
 - **CA-11**: **Dado** el primer uso, **cuando** el profesor lanza la toma de asistencia, **entonces** se le pide que **inicie sesión con su cuenta de Google y dé permiso**; tras aceptarlo, la toma de asistencia continúa sin repetir nada.
-- **CA-12**: **Dado** que el profesor ya dio permiso, **cuando** toma asistencia en otra clase, **entonces** **no** se le vuelve a pedir.
+- **CA-12** *(cambiado en v1.2, P7)*: **Dado** que el profesor ya dio permiso, **cuando** toma asistencia en otra clase **en los 7 días siguientes**, **entonces** **no** se le vuelve a pedir. Pasados 7 días, se le pide otra vez, como la primera vez (CA-11), sin perder nada. *(Paso futuro: al publicar la app de Google, el permiso deja de caducar y no se vuelve a pedir.)*
 - **CA-13** *(cambiado en v1.2)*: **Dado** una cuenta que **ni organiza ni ha estado** en la reunión, **cuando** intenta tomar asistencia, **entonces** ve el mensaje de CA-14 y no se registra a nadie. *(La plataforma no distingue este caso de una reunión que no existe.)*
 - **CA-14** *(cambiado en v1.2)*: **Dado** un enlace de reunión que no existe, una reunión que todavía no ha empezado, una que terminó hace más de 30 días o una que esta cuenta no puede ver, **cuando** se intenta tomar asistencia, **entonces** ve: "No hay ninguna reunión con ese enlace que esta cuenta pueda ver. Revisa el enlace, entra en la reunión con esta cuenta o pide al organizador que tome la asistencia." y no se registra a nadie. *(La plataforma responde lo mismo en los cuatro casos.)*
 - **CA-15** *(cambiado en v1.2, HU-06)*: **Dado** un participante de la reunión que no la organiza, con su propia cuenta, **cuando** toma asistencia, **entonces** funciona igual que para el organizador.
@@ -99,7 +99,7 @@ Formato: **Dado** (situación inicial) · **Cuando** (acción) · **Entonces** (
 
 ## 7. Preguntas abiertas
 
-P1 a P6 resueltas el 2026-10-21 con Victor; P1 y P2 revisadas el 2026-10-23 con lo aprendido en el spike (tarea T03). P7, pendiente.
+P1 a P6 resueltas el 2026-10-21 con Victor; P1 y P2 revisadas el 2026-10-23 con lo aprendido en el spike (tarea T03), y P7 resuelta ese mismo día.
 
 | # | Pregunta | Decisión |
 | --- | --- | --- |
@@ -109,7 +109,7 @@ P1 a P6 resueltas el 2026-10-21 con Victor; P1 y P2 revisadas el 2026-10-23 con 
 | P4 | ¿Qué pasa con los invitados sin nombre? | Se registran como **"Invitado sin nombre"** y el profesor puede quitarlos. |
 | P5 | El nombre ya no lo escribe el alumno: ¿choca con la privacidad? | Sí con la redacción anterior: **constitución enmendada a v3.0 (P4)**. Solo nombre (y apellidos) y hora; prohibido guardar emails. |
 | P6 | ¿Merece la pena, si Meet ya trae informes de asistencia? | **Sí**: esos informes solo existen en planes de pago y Neoland no tiene ninguno. |
-| P7 | Mientras la app de Google esté en modo de prueba, el permiso **caduca cada 7 días**; publicarla exige una página principal y una política de privacidad accesibles por internet. ¿Qué pasa con CA-12? | `[NECESITA ACLARACIÓN: (A) aceptar que se pida el permiso una vez por semana, cambiando CA-12; o (B) publicar dos páginas sencillas (p. ej. el README y una política de privacidad sacada de su §7) y pasar la app a producción. Hay que decidirlo antes de la tarea T09.]` |
+| P7 | Mientras la app de Google esté en modo de prueba, el permiso **caduca cada 7 días**; publicarla exige una página principal y una política de privacidad accesibles por internet. ¿Qué pasa con CA-12? | **(A) por ahora**: el permiso se vuelve a pedir una vez por semana (CA-12 cambia). **(B) como paso futuro**: publicar dos páginas sencillas (p. ej. el README y una política de privacidad sacada de su §7) y pasar la app a producción, con lo que el permiso deja de caducar. Decidido por Victor el 2026-10-23. |
 
 ---
 
@@ -120,4 +120,4 @@ P1 a P6 resueltas el 2026-10-21 con Victor; P1 y P2 revisadas el 2026-10-23 con 
 | 0.1 | 2026-10-21 | Borrador inicial con P1–P6 resueltas | Victor quiere pasar lista en Meet sin intervención de los alumnos |
 | 1.0 | 2026-10-21 | Aprobada por Victor | — |
 | 1.1 | 2026-10-23 | CA-08: se anota el límite de los invitados sin nombre | Decidido por Victor al reescribir el plan (plan §8.7) |
-| 1.2 | 2026-10-23 | Cualquier participante puede tomar asistencia (HU-06, CA-13, CA-15, P1); dos opciones de toma, "ahora" o "todos los que han estado", también al terminar (HU-08, CA-18, CA-19, CA-21, P2); qué reunión se usa si el enlace se repite (CA-20); un único mensaje para "no hay reunión que ver" (CA-14); límite de 30 días; P7 pendiente | Hallazgos del spike (tarea T03) |
+| 1.2 | 2026-10-23 | Cualquier participante puede tomar asistencia (HU-06, CA-13, CA-15, P1); dos opciones de toma, "ahora" o "todos los que han estado", también al terminar (HU-08, CA-18, CA-19, CA-21, P2); qué reunión se usa si el enlace se repite (CA-20); un único mensaje para "no hay reunión que ver" (CA-14); límite de 30 días; CA-12 con permiso semanal mientras la app de Google esté en prueba (P7: A ahora, B como paso futuro). Aprobada por Victor | Hallazgos del spike (tarea T03) |
