@@ -60,7 +60,7 @@ Cambiar el stack requiere enmendar esta constitución.
 
 ## 4. Desarrollo guiado por especificaciones (SDD)
 
-1. **No hay cambio sin especificación aprobada.** Eso incluye el código de una funcionalidad nueva, las instrucciones de uso, las comprobaciones y el resto de documentación de uso. Cada funcionalidad nace como `specs/NNN-nombre/spec.md` y Jose Miguel la aprueba antes de pasar al plan. La issue, la rama y la pull request del bootcamp dejan la tarea apuntada; no dicen qué hay que cumplir y no sustituyen a esta spec. Si no hay spec aprobada, no se escribe.
+1. **No hay cambio sin especificación aprobada.** Eso incluye el código de una funcionalidad nueva, las instrucciones de uso, las comprobaciones y el resto de documentación de uso. Cada funcionalidad nace como `specs/NNN-nombre/spec.md` y el usuario la aprueba antes de pasar al plan. La issue, la rama y la pull request del bootcamp dejan la tarea apuntada; no dicen qué hay que cumplir y no sustituyen a esta spec. Si no hay spec aprobada, no se escribe.
 2. El orden siempre es: **spec → plan → tasks → implementación**. No se salta ningún paso.
 3. La `spec.md` describe el **qué y el porqué**, nunca el cómo (no menciona tecnologías).
 4. El `plan.md` describe el **cómo** e incluye una sección que comprueba que cumple esta constitución.
@@ -87,13 +87,13 @@ Cambiar el stack requiere enmendar esta constitución.
 
 ## 7. Alcance y límites del repositorio
 
-- El proyecto vive entero en `staff/jose-miguel/asistenciapp/`. No se tocan archivos fuera de esta carpeta.
+- El proyecto vive entero en `staff/<usuario>/asistenciapp/`. No se tocan archivos fuera de esta carpeta.
 
 ---
 
 ## 8. Enmiendas
 
-- Cualquiera (persona o agente) puede **proponer** un cambio, pero solo Jose Miguel lo **aprueba**.
+- Cualquiera (persona o agente) puede **proponer** un cambio, pero solo el usuario lo **aprueba**.
 - Cada enmienda sube la versión (1.0 → 1.1 para añadidos, 2.0 si se elimina o contradice un principio) y se anota abajo con fecha y motivo.
 
 ### Historial de enmiendas
