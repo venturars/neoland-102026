@@ -1,6 +1,6 @@
-# AGENT.md — Manual de trabajo para agentes de IA
+# AGENTS.md — Manual de trabajo para agentes de IA
 
-Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [CONSTITUTION.md](CONSTITUTION.md) dice **qué reglas** se cumplen; este archivo dice **cómo se trabaja** día a día.
+Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [docs/CONSTITUTION.md](docs/CONSTITUTION.md) dice **qué reglas** se cumplen; este archivo dice **cómo se trabaja** día a día.
 
 ---
 
@@ -8,8 +8,8 @@ Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en 
 
 Lee en este orden al empezar cualquier tarea:
 
-1. `CONSTITUTION.md`: las reglas no negociables.
-2. Este archivo (`AGENT.md`).
+1. `docs/CONSTITUTION.md`: las reglas no negociables.
+2. Este archivo (`AGENTS.md`).
 3. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
 4. Su `plan.md` y su `tasks.md`, si ya existen.
 
@@ -54,24 +54,27 @@ Si el pedido no tiene una spec aprobada que lo cubra, solo se redacta y se muest
 
 ## 3. Estructura de carpetas
 
-```
+```text
 asistenciapp/
-├── CONSTITUTION.md        # reglas no negociables
-├── AGENT.md               # este archivo
-├── README.md              # cómo arrancar la app (para humanos)
-├── specs/
-│   └── NNN-nombre/
-│       ├── spec.md        # qué y por qué
-│       ├── plan.md        # cómo
-│       └── tasks.md       # pasos
-├── requirements.txt       # dependencias de Python (Flask, pytest)
-├── pytest.ini             # configuración de pytest
-├── app.py                 # aplicación Flask y punto de entrada
-├── asistencia/            # lógica del servidor (paquete de Python)
-├── static/                # HTML, CSS y JS del navegador
-├── tests/                 # tests (test_*.py)
-├── .venv/                 # entorno virtual de Python (no se sube a git)
-└── data/                  # base de datos SQLite (no se sube a git)
+├── AGENTS.md              # instrucciones y forma de escribir el código
+├── README.md              # uso de la app
+├── docs/
+│   ├── CONSTITUTION.md     # reglas no negociables
+│   └── ARCHITECTURE.md     # responsabilidades y dependencias
+├── specs/                 # spec, plan y tareas de cada cambio
+├── requirements.txt
+├── pytest.ini
+├── app.py                 # HTTP y arranque
+├── asistencia/
+│   ├── domain/            # reglas de asistencia
+│   ├── usecases/          # acciones que coordinan reglas y persistencia
+│   ├── storage/           # operaciones SQLite
+│   ├── export.py          # formato CSV
+│   └── tunnel.py          # publicación por túnel
+├── static/                # pantallas existentes
+├── tests/
+├── .venv/                 # entorno local
+└── data/                  # datos locales
 ```
 
 Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-spec-antes-del-cambio`.
@@ -126,6 +129,14 @@ Una funcionalidad está terminada cuando:
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
 | `002-spec-antes-del-cambio` | Implementada y verificada (2026-10-22); pendiente de revisión final de Miguel | Reglas SDD actualizadas; 77 tests pasan; evidencia en tasks.md |
 | `003-activar-el-entorno` | Terminada; revisión final aprobada por Miguel el 2026-10-22 | README separado en activación y arranque; 77 tests pasan; evidencia en tasks.md |
+| `004-quitar-referencias-personales` | Terminada; revisión final aprobada por Miguel el 2026-10-23 | Referencias heredadas retiradas; hechos conservados; 77 tests pasan; evidencia en tasks.md |
+| `005-reorganizar-arquitectura` | Terminada; revisión final aprobada por Miguel el 2026-10-23 | 112 pruebas aprobadas; comparación previa de 22 escenarios y regresión de precedencia corregida; evidencia en tasks.md |
 | Bot de Discord (sin número asignado) | Idea futura | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
+
+## 8. Forma de escribir el código
+
+Cada módulo explica su responsabilidad al principio. Las funciones creadas o modificadas incluyen tipos, describen sus parámetros con `:param` y su resultado con `:return` y `:rtype`, y muestran un ejemplo corto `Usage::`. Las funciones internas sin parámetros indican qué resultado producen. Una función se ocupa de una tarea; no se añaden capas ni herramientas sin una necesidad acordada.
+
+Las dependencias siguen [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Las specs cerradas 001–004 conservan sus rutas históricas: el antiguo AGENT.md corresponde a este AGENTS.md y la constitución que estaba en la raíz está ahora en docs/CONSTITUTION.md. No se reescriben esas evidencias al mover documentos.
