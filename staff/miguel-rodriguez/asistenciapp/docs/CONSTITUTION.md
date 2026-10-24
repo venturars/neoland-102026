@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 2.4 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-23
+> Versión 3.0 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-24
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -31,7 +31,8 @@ El registro de asistencia no depende de una plataforma concreta. Las integracion
 
 ### P4 · Privacidad mínima
 - Del alumno solo se guarda el **nombre que él mismo escribe** y la **hora del registro**.
-- **Prohibido** guardar emails, IPs, identificadores de dispositivo o cualquier dato no imprescindible.
+- **Prohibido** guardar emails, identificadores de dispositivo o cualquier dato no imprescindible.
+- Excepción de seguridad: se permite guardar por separado la dirección de conexión y el instante de los intentos de registro del último minuto, y únicamente la dirección para el bloqueo permanente. Se usan exclusivamente para limitar intentos y mantener la lista de bloqueo; no se asocian a nombres, clases ni registros de asistencia. Los intentos de sesenta segundos o más se eliminan globalmente al atender el siguiente intento. Sin tráfico no se exige limpieza en segundo plano.
 - Los datos se **almacenan** solo en local (SQLite). Ningún servicio de terceros los guarda.
 - Para que los alumnos lleguen a la app desde sus casas, el tráfico puede **pasar cifrado (HTTPS)** por un proveedor de túnel (p. ej. Cloudflare). Ese proveedor no los almacena, pero técnicamente podría verlos en tránsito; por eso solo se envía lo imprescindible (nombre y código).
 
@@ -83,7 +84,7 @@ Cambiar el stack requiere enmendar esta constitución.
 
 ## 6. Seguridad
 
-- Los códigos de asistencia **caducan** y no se pueden adivinar **a mano** antes de caducar. La protección contra ataques automatizados (scripts) no es un requisito.
+- Los códigos de asistencia **caducan** y mantienen cuatro cifras. La protección contra intentos automatizados es obligatoria: como máximo cinco intentos de registro por segundo móvil y veinte por minuto móvil por dirección, incluido el intento actual. Superar cualquiera bloquea permanentemente esa dirección para el registro, incluso tras reiniciar. Las demás operaciones no consumen intentos ni se bloquean por esta regla. Si no puede identificarse un origen fiable, se rechaza el registro sin atribuirlo a otra dirección.
 - Un mismo alumno no puede registrarse dos veces en la misma sesión.
 - Una sesión cerrada no acepta más registros.
 - Toda entrada del usuario se valida en el servidor y se escapa al mostrarla (sin HTML inyectado).
@@ -112,3 +113,4 @@ Cambiar el stack requiere enmendar esta constitución.
 | 2.2 | 2026-10-22 | §4: SDD para todo cambio y aprobaciones separadas; §7–§8: carpeta y aprobación de Miguel para esta copia | Spec 002 y enmienda aprobadas por Miguel; se conserva el historial anterior |
 | 2.3 | 2026-10-22 | §5: verificación documental con procedimiento y evidencia por criterio para cambios exclusivamente documentales o de instrucciones | Aclaración de 002 aprobada por Miguel; se mantienen las pruebas de comportamiento y la evidencia anterior |
 | 2.4 | 2026-10-23 | §3: documentos en docs/, manual AGENTS.md y responsabilidades domain/usecases/storage | Spec y plan 005 aprobados por Miguel; organización actualizada sin cambiar principios, stack ni reglas de asistencia |
+| 3.0 | 2026-10-24 | P4 y §6: excepción limitada para intentos recientes y direcciones bloqueadas; límites y bloqueo permanente | Spec 006 revisada y ejecución completa delegada por Miguel; se sustituye la prohibición absoluta de IPs sin ampliar los datos de asistencia |
