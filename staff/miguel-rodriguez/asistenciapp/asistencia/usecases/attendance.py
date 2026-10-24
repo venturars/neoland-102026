@@ -6,6 +6,7 @@ from pathlib import Path
 
 from ..domain.codes import code_for, seconds_left
 from ..domain.names import name_key
+from ..domain.registration import AddressBlocked, OriginUnavailable, exceeds_limits, normalize_address
 from ..domain.session import (
     InvalidCode, SessionClosed, SessionNotFound, require_session, validate_check_in,
 )
@@ -188,3 +189,37 @@ def export_session(db_path: str | Path, session_id: str) -> tuple[dict, list[dic
     with closing(storage.connect(db_path)) as conn:
         session = require_session(storage.get_session(conn, session_id))
         return session, storage.list_checkins(conn, session_id)
+
+
+def guard_registration(db_path: str | Path, address: str | None, now: float) -> None:
+    """Cuenta un intento o confirma el bloqueo antes de validar la asistencia.
+
+    :param db_path: archivo local de asistencia.
+    :param address: origen normalizado o ausencia de origen fiable.
+    :param now: instante Unix del intento.
+    :return: None si puede continuar; lanza el error después de confirmar cambios.
+    :rtype: None
+
+    Usage::
+
+        guard_registration(path, address, now)
+    """
+    address = normalize_address(address)
+    denied = False
+    with closing(storage.connect(db_path)) as conn:
+        with conn:
+            conn.execute("BEGIN IMMEDIATE")
+            storage.purge_registration_attempts(conn, now - 60)
+            if address is not None:
+                denied = storage.address_is_blocked(conn, address)
+                if not denied:
+                    previous = storage.registration_attempt_times(conn, address)
+                    denied = exceeds_limits(previous, now)
+                    if denied:
+                        storage.insert_blocked_address(conn, address)
+                    else:
+                        storage.insert_registration_attempt(conn, address, now)
+    if address is None:
+        raise OriginUnavailable("No se ha podido identificar el origen de conexión. No se registró la asistencia; contacta con el profesor.")
+    if denied:
+        raise AddressBlocked("Esta dirección está bloqueada permanentemente para registrar asistencia por superar los límites de intentos. Contacta con el profesor.")

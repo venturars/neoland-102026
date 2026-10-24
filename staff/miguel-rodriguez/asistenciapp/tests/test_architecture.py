@@ -65,4 +65,4 @@ def test_architecture_explains_layers_and_guide_explains_functions():
     guide = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
     for term in [":param", ":return", "Usage::"]:
         assert term in guide
-    assert "Versión 2.4" in (ROOT / "docs/CONSTITUTION.md").read_text(encoding="utf-8")
+    assert "Versión 3.0" in (ROOT / "docs/CONSTITUTION.md").read_text(encoding="utf-8")
