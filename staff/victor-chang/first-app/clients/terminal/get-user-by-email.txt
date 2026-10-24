@@ -1,0 +1,30 @@
+# Feature: getUserByEmail — logic/get-user-by-email.js
+# Paste this whole block into Git Bash, with first-app as the current folder.
+# It uses the real database, db/users.sqlite, and removes the practice user at the end.
+
+node --no-warnings --input-type=module -e '
+import { createUser } from "./logic/create-user.js";
+import { getUserByEmail } from "./logic/get-user-by-email.js";
+import { deleteUser } from "./logic/delete-user.js";
+
+const practice = createUser("Practice", `practice-${Date.now()}@x.com`);
+
+// 1. Get the user by email, in capitals and with spaces: prints it
+console.log(getUserByEmail(`  ${practice.email.toUpperCase()}  `));
+
+// 2. An email nobody has: prints "User not found"
+try {
+  getUserByEmail("nobody@x.com");
+} catch (error) {
+  console.log(error.message);
+}
+
+// 3. An email without @: prints "Email is invalid"
+try {
+  getUserByEmail("nobody.x.com");
+} catch (error) {
+  console.log(error.message);
+}
+
+deleteUser(practice.id);
+'
