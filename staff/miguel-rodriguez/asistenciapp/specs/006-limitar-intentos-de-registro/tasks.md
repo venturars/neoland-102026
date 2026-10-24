@@ -45,3 +45,10 @@ La decisión de frecuencia se toma dentro de BEGIN IMMEDIATE para impedir carrer
 Se mantiene explícita la frontera de confianza del conector local. Las pruebas de cabeceras y del arranque con --tunel son simuladas; no acreditan funcionamiento de un túnel real de Cloudflare. No se afirma que la IP sea estática ni que identifique a una persona. Las fuentes oficiales del plan respaldan el contrato de cabeceras, no sustituyen esa prueba real.
 
 La autorización completa de Miguel consta en el spec. Las aprobaciones de compañeros y la integración de 004/005 siguen pendientes; esta revisión interna no las sustituye.
+
+
+## Publicación y dependencias · 2026-10-24
+
+Implementación guardada y subida en la rama 300-feat-limit-automated-checkin-attempts, con commit inicial y tres commits de trabajo separados. La PR de 006 no se abre aún: primero deben integrarse #252 (004) y #284 (005), para que el diff de 006 contra staging no mezcle esos pasos ni obligue a renovar revisiones por sus merges. T11 conserva su casilla pendiente hasta abrir esa PR y solicitar las revisiones de Dietor878, ChangVictor y sergiocortessat. Sergio ya está solicitado en las PRs anteriores.
+
+Copias, bases ficticias y capturas de salida temporales eliminadas tras registrar los resultados. Se conserva únicamente la captura del mensaje de bloqueo y el repaso de estudio fuera del repositorio. El servidor temporal se detuvo y su puerto quedó cerrado.
