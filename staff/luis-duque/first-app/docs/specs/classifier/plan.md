@@ -42,9 +42,9 @@ FROM users;
 
 ## IA
 
-La llamada sale de `logic/users-gender.js` con la librería `openai` `7.39.0`. El cliente apunta a `http://127.0.0.1:11434/v1` y usa `apiKey` `ollama`: Ollama lo ignora, no es una clave de pago. Cada grupo llama a `chat.completions.create`. El nombre del modelo vive una sola vez, en la constante `MODEL`. Es un modelo que Ollama ya tiene en el equipo. La aplicación no lo descarga y no usa otro servicio.
+La llamada sale de `logic/users-gender.js` a `http://127.0.0.1:11434/v1/systemone`. `nimble-v3` no acepta chat. El nombre del modelo vive una sola vez, en la constante `MODEL`. Es un modelo que Ollama ya tiene en el equipo. La aplicación no lo descarga y no usa otro servicio.
 
-Los nombres se envían de seis en seis. El último grupo puede traer menos de seis. Cada grupo es una sola llamada, con la misma pregunta. La pregunta pide una línea por nombre, en el mismo orden, sin explicación. Cada línea es solo `women`, `man` o `undefined`. En la llamada solo van los nombres de ese grupo.
+Los nombres se envían de seis en seis. El último grupo puede traer menos de seis. Cada grupo es una sola llamada. En `state` solo van los nombres de ese grupo, uno por línea. Cada nombre es una pregunta `choice`, en el mismo orden, con las respuestas `women`, `man` y `undefined`. La respuesta se lee en `answers` y el valor elegido está en `choice`.
 
 Ejemplo de cinco nombres. No están guardados en la base.
 
@@ -64,17 +64,13 @@ Por cada nombre, en orden:
 - `man` suma 1 a `man`
 - `undefined`, u otra respuesta, suma 1 a `undefined`
 
-Después de sumar, la lógica escribe una línea. Con Javier, si se partía de cero, la línea es:
-
-`el nombre es javier {women 1, man 0, undefined 0}`
-
-El nombre de esa línea va en minúsculas. El objeto que devuelve la función no lleva esa frase: solo `{ women, man, undefined }`.
+La lógica no escribe una línea por nombre. El objeto que devuelve la función es solo `{ women, man, undefined }`, y es lo único que muestra la terminal.
 
 ## Errores
 
 | Fallo                                        | Error                                  |
 | -------------------------------------------- | -------------------------------------- |
-| La llamada a `openai` falla                  | `no se han podido clasificar usuarios` |
+| La llamada a Ollama falla                    | `no se han podido clasificar usuarios` |
 | SQLite falla al listar                       | `no se han podido clasificar usuarios` |
 | No hay mensaje                               | `undefined`                            |
 | No se ha podido leer el JSON                 | `undefined`                            |

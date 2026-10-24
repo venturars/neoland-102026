@@ -10,6 +10,7 @@
   "author": "Luis Fernando Duque",
   "license": "MIT",
   "type": "module",
+  "packageManager": "pnpm@12.15.0",
   "dependencies": {
     "openai": "7.39.0"
   }

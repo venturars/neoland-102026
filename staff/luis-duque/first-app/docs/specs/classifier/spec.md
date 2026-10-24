@@ -8,7 +8,7 @@ Si no hay nombres, el recuento queda en cero.
 
 Si hay nombres, se envían de seis en seis, en el orden en que están guardados. Si al final quedan menos de seis, se envían los que haya. No se salta ninguno.
 
-Si el nombre se usa de forma habitual para hombre, la respuesta es `man`. Si se usa para mujer, la respuesta es `women`. Si puede ser para cualquiera de los dos, o si Ollama contesta otra cosa, la respuesta es `undefined`. Cada respuesta se suma al recuento. En la terminal se ve así. Con Javier, si se partía de cero, sale: el nombre es javier {women 1, man 0, undefined 0}.
+Si el nombre se usa de forma habitual para hombre, la respuesta es `man`. Si se usa para mujer, la respuesta es `women`. Si puede ser para cualquiera de los dos, o si Ollama contesta otra cosa, la respuesta es `undefined`. Cada respuesta se suma al recuento. La terminal no muestra el contador de cada nombre. Muestra solo el recuento completo.
 
 Si Ollama no contesta, se detiene el recorrido y no se inventan géneros. En la terminal se indica que no se han podido clasificar usuarios.
 
