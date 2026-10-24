@@ -1,0 +1,4 @@
+# Pegar en la terminal con el directorio actual en first-app.
+
+# Clasifica 15 nombres en tandas de 6. Hace falta Ollama en marcha y llama3.2 descargado.
+node --input-type=module -e "import { usersGenderCount } from './logic/users-gender-count.js'; const names = ['Carmen', 'Lucia', 'Maria', 'Sofia', 'Elena', 'Laura', 'Javier', 'Pablo', 'Diego', 'Sergio', 'Andres', 'Hugo', 'Kim', 'Alex', 'Sasha']; try { console.log(await usersGenderCount(names)); } catch (error) { console.log(error.message); }"
