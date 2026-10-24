@@ -1,0 +1,1 @@
+"""Orquestación: dominio + repositorio."""

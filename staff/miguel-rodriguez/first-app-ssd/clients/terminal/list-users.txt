@@ -1,0 +1,19 @@
+# Run from staff/miguel-rodriguez/first-app-ssd using Node 24.12.0 (nvm use 24.12.0, if available).
+# First run the separate create-users-table.txt initialization example.
+# Creating contacts is optional: an empty initialized table prints [].
+# Listing reads contacts; it does not initialize or seed the database.
+node --input-type=module <<'EOF'
+let database;
+try {
+  const { db } = await import("./db/connection.js");
+  database = db;
+  const { listUsers } = await import("./logic/list-users.js");
+  const users = listUsers();
+  console.log(users);
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+} finally {
+  if (database) database.close();
+}
+EOF

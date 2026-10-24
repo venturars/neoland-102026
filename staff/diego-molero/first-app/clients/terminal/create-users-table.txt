@@ -1,0 +1,6 @@
+// Ejemplo manual. Ejecución: docs/CONSTITUTIONS.md.
+import { createUsersTable } from "./queries/users.js";
+import { db } from "./db/connection.js";
+
+createUsersTable();
+console.log(db.prepare("SELECT name FROM sqlite_master WHERE type = 'table'").all());

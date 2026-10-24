@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pomodoro</title>
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --fg: #e4e4e7;
+    --muted: #6b6b73;
+    --track: #1f1f24;
+    --work: #e5736b;
+    --rest: #6bc79a;
+    --accent: var(--work);
+  }
+  body[data-type="short"], body[data-type="long"] { --accent: var(--rest); }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    display: flex; align-items: center; justify-content: center;
+  }
+  main { display: flex; flex-direction: column; align-items: center; gap: 34px; padding: 16px; width: 100%; }
+
+  .dial { position: relative; width: min(300px, 80vw); aspect-ratio: 1; }
+  svg { width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
+  circle { fill: none; stroke-width: 3; }
+  .track { stroke: var(--track); }
+  .bar { stroke: var(--accent); stroke-linecap: round; }
+  .glow { transform-origin: center; }
+  body.running .glow { animation: breathe 5s ease-in-out infinite; }
+  @keyframes breathe {
+    0%, 100% { opacity: .35; transform: scale(1); }
+    50%      { opacity: 1;   transform: scale(1.012); }
+  }
+  .time {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 6px;
+  }
+  .time .t { font-size: clamp(48px, 16vw, 68px); font-weight: 200; letter-spacing: 2px; font-variant-numeric: tabular-nums; }
+  .time .label { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); }
+
+  .controls { display: flex; align-items: center; gap: 20px; }
+  .controls button {
+    background: none; border: 1px solid var(--track); color: var(--muted); font: inherit;
+    width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 16px;
+    transition: color .2s, border-color .2s;
+  }
+  .controls button:hover { color: var(--fg); border-color: var(--muted); }
+  .controls #toggle {
+    width: 64px; height: 64px; font-size: 14px; color: var(--bg);
+    background: var(--accent); border-color: var(--accent); transition: opacity .2s;
+  }
+  .controls #toggle:hover { color: var(--bg); opacity: .85; }
+
+  /* Línea de bloques */
+  .steps { display: flex; gap: 6px; width: min(360px, 90vw); }
+  .steps button {
+    min-width: 8px; height: 22px; padding: 0; border: 0; background: none; cursor: pointer;
+    display: flex; align-items: center;
+  }
+  .steps button i {
+    display: block; width: 100%; height: 3px; border-radius: 2px;
+    background: var(--track); transition: background .3s, height .3s, opacity .3s;
+  }
+  .steps button.done i { opacity: .35; background: var(--work); }
+  .steps button.done[data-type="short"] i, .steps button.done[data-type="long"] i { background: var(--rest); }
+  .steps button.current i { height: 6px; opacity: 1; background: var(--work); }
+  .steps button.current[data-type="short"] i, .steps button.current[data-type="long"] i { background: var(--rest); }
+  .steps button:hover:not(.current) i { background: var(--muted); }
+
+  .adjust { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 12px; }
+  .adjust button { background: none; border: 0; color: var(--muted); font-size: 16px; cursor: pointer; padding: 2px 8px; }
+  .adjust button:hover { color: var(--fg); }
+
+  @media (prefers-reduced-motion: reduce) { body.running .glow { animation: none; } }
+</style>
+</head>
+<body data-type="focus">
+<main>
+  <div class="dial">
+    <svg viewBox="0 0 100 100">
+      <circle class="track" cx="50" cy="50" r="46"/>
+      <g class="glow"><circle class="bar" id="bar" cx="50" cy="50" r="46"/></g>
+    </svg>
+    <div class="time"><div class="t" id="time">25:00</div><div class="label" id="label">Foco 1 de 4</div></div>
+  </div>
+
+  <div class="controls">
+    <button id="reset" title="Reiniciar bloque">↺</button>
+    <button id="toggle">Iniciar</button>
+    <button id="skip" title="Saltar bloque">»</button>
+  </div>
+
+  <div class="steps" id="steps"></div>
+
+  <div class="adjust">
+    <button id="minus" title="-1 min">−</button><span id="dur">25 min</span><button id="plus" title="+1 min">+</button>
+  </div>
+</main>
+
+<script>
+(() => {
+  const DEFAULTS = { focus: 25, short: 5, long: 15 };
+  const SEQ = [
+    { type: "focus", n: 1 }, { type: "short", n: 1 },
+    { type: "focus", n: 2 }, { type: "short", n: 2 },
+    { type: "focus", n: 3 }, { type: "short", n: 3 },
+    { type: "focus", n: 4 }, { type: "long" }
+  ];
+  const C = 2 * Math.PI * 46;
+
+  let mins = { ...DEFAULTS };
+  try { Object.assign(mins, JSON.parse(localStorage.getItem("pomo-mins") || "{}")); } catch {}
+
+  let idx = 0, running = false, timer = null, endAt = 0;
+  let remaining = mins[SEQ[0].type] * 60000;
+
+  const $ = id => document.getElementById(id);
+  const bar = $("bar");
+  bar.style.strokeDasharray = C;
+
+  const blockMs = () => mins[SEQ[idx].type] * 60000;
+  const labelOf = b =>
+    b.type === "focus" ? `Foco ${b.n} de 4` :
+    b.type === "short" ? `Descanso ${b.n} de 3` : "Descanso largo";
+  const kindName = b => b.type === "focus" ? "Foco" : b.type === "short" ? "Descanso" : "Descanso largo";
+
+  function fmt(ms) {
+    const s = Math.ceil(ms / 1000);
+    return String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0");
+  }
+
+  // Construir la línea de bloques
+  SEQ.forEach((b, i) => {
+    const btn = document.createElement("button");
+    btn.dataset.type = b.type;
+    btn.title = labelOf(b);
+    btn.innerHTML = "<i></i>";
+    btn.onclick = () => go(i, false);
+    $("steps").appendChild(btn);
+  });
+
+  function render() {
+    const b = SEQ[idx];
+    $("time").textContent = fmt(remaining);
+    $("label").textContent = labelOf(b);
+    $("dur").textContent = mins[b.type] + " min";
+    $("toggle").textContent = running ? "Pausa" : "Iniciar";
+    bar.style.strokeDashoffset = C * (1 - remaining / blockMs());
+    document.title = (running ? fmt(remaining) + " · " : "") + labelOf(b);
+    document.body.dataset.type = b.type;
+    document.body.classList.toggle("running", running);
+    [...$("steps").children].forEach((el, i) => {
+      el.classList.toggle("done", i < idx);
+      el.classList.toggle("current", i === idx);
+      el.style.flex = `${mins[SEQ[i].type]} 1 0`;
+    });
+  }
+
+  function tick() {
+    remaining = Math.max(0, endAt - Date.now());
+    if (remaining === 0) {
+      beep();
+      // siguiente bloque automáticamente; tras el descanso largo, vuelta a Foco 1 en pausa
+      idx === SEQ.length - 1 ? go(0, false) : go(idx + 1, true);
+      return;
+    }
+    render();
+  }
+
+  function start() {
+    if (running) return;
+    running = true; endAt = Date.now() + remaining;
+    timer = setInterval(tick, 250); render();
+  }
+  function pause() { running = false; clearInterval(timer); render(); }
+  function go(i, autostart) {
+    pause(); idx = i; remaining = blockMs(); render();
+    if (autostart) start();
+  }
+
+  function beep() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      [0, 0.25, 0.5].forEach(t => {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.frequency.value = 660; o.connect(g); g.connect(ctx.destination);
+        const s = ctx.currentTime + t;
+        g.gain.setValueAtTime(0.0001, s);
+        g.gain.exponentialRampToValueAtTime(0.15, s + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, s + 0.2);
+        o.start(s); o.stop(s + 0.22);
+      });
+    } catch {}
+  }
+
+  function adjust(d) {
+    const t = SEQ[idx].type;
+    mins[t] = Math.min(90, Math.max(1, Math.round(mins[t]) + d));
+    try { localStorage.setItem("pomo-mins", JSON.stringify(mins)); } catch {}
+    if (!running) remaining = blockMs();
+    render();
+  }
+
+  $("toggle").onclick = () => running ? pause() : start();
+  $("reset").onclick = () => go(idx, false);
+  $("skip").onclick = () => go((idx + 1) % SEQ.length, running);
+  $("minus").onclick = () => adjust(-1);
+  $("plus").onclick = () => adjust(1);
+
+  render();
+})();
+</script>
+</body>
+</html>
