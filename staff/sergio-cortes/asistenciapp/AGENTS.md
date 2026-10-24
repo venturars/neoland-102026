@@ -138,6 +138,7 @@ Una funcionalidad está terminada cuando:
 | `003-readme-entorno-y-arranque` | ✅ Implementada (2026-10-22) | README de entorno/arranque; constitución en `docs/CONSTITUTIONS.md`; manual `AGENTS.md` |
 | `004-sin-referencias-victor` | ✅ Implementada (2026-10-22) | Issue #245; documentación sin referencias personales ajenas ni rutas de otra copia bajo `staff/` |
 | `005-clean-architecture` | ✅ Implementada (2026-10-22) | Issue #239; `ARCHITECTURE.md`, capas domain/use_cases/ports/infra/web |
+| `006-limite-intentos-ip` | ✅ Implementada (2026-10-23); 93 tests pytest | Issue #318, PR #319; rate limit IP, block list, panel profesor, constitución v2.4 |
 | Bot de Discord | Idea futura, sin número | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.

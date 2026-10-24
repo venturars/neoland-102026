@@ -117,9 +117,11 @@ Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una 
 
 ---
 
-## 8. Privacidad
+## 8. Privacidad y bloqueos
 
-- Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails ni IPs.
+- Del alumno solo se guarda **el nombre que escribe** y **la hora** en la lista de asistencia. Nada de emails ni dirección de conexión en ese registro.
+- Si alguien prueba **muchos códigos incorrectos** seguidos, la app puede **bloquear la dirección de conexión** (la IP pública que ve el servidor, p. ej. la del operador o del WiFi del centro). El alumno verá un mensaje para hablar con el profesor.
+- En el **panel del profesor**, sección **Conexiones bloqueadas**: puedes **quitar** una dirección o **quitar todas**. Varios alumnos detrás de la **misma IP** comparten el contador de intentos inválidos.
 - El límite "un registro por navegador" se guarda **solo en el navegador del alumno**, no en el servidor.
 - Quitar un registro lo **borra de verdad** (no queda en ninguna papelera).
 - Los datos se guardan **solo en tu ordenador** (`data/`, que no se sube a git).

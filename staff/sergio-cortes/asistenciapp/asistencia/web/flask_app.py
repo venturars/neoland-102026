@@ -5,25 +5,38 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from flask import Flask, Response, abort, g, jsonify, request
-from werkzeug.exceptions import HTTPException
-from werkzeug.middleware.proxy_fix import ProxyFix
-
 from asistencia.domain.errors import (
     CheckinNotFound,
     InvalidCode,
     InvalidName,
+    IpBlocked,
     SessionClosed,
     SessionNotFound,
 )
 from asistencia.domain.export import to_csv
-from asistencia.infra.sqlite import SqliteAttendanceRepository, connect, init_schema
+from asistencia.infra.sqlite import (
+    SqliteAttendanceRepository,
+    SqliteRateLimitRepository,
+    connect,
+    init_schema,
+)
 from asistencia.use_cases import attendance as uc
+from asistencia.use_cases import rate_limit as rl_uc
+from asistencia.web.client_ip import client_ip
+from flask import Flask, Response, abort, g, jsonify, request
+from werkzeug.exceptions import HTTPException
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 APP_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DB = APP_ROOT / "data" / "asistencia.db"
 
-INVALID_CODE = "El código no es válido o ha caducado. Pide el código actual al profesor."
+INVALID_CODE = (
+    "El código no es válido o ha caducado. Pide el código actual al profesor."
+)
+BLOCKED = (
+    "Demasiados intentos incorrectos. Tu conexión quedó bloqueada. "
+    "Pide al profesor que te desbloquee."
+)
 CLOSED = "La asistencia de esta clase ya está cerrada."
 NOT_FOUND = "Esta clase no existe. Revisa el enlace."
 UNAUTHORIZED = "Acceso no autorizado. Abre el panel con tu enlace secreto de profesor."
@@ -37,7 +50,7 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
         static_url_path="",
     )
     app.json.ensure_ascii = False
-    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
     conn = connect(db_path)
     init_schema(conn)
@@ -50,6 +63,11 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
             g.repo = SqliteAttendanceRepository(g.db)
         return g.repo
 
+    def get_rate_repo() -> SqliteRateLimitRepository:
+        if "rate_repo" not in g:
+            g.rate_repo = SqliteRateLimitRepository(g.db)
+        return g.rate_repo
+
     @app.before_request
     def open_db():
         if "db" not in g:
@@ -61,9 +79,12 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
         if conn is not None:
             conn.close()
         g.pop("repo", None)
+        g.pop("rate_repo", None)
 
     def now_iso() -> str:
-        return datetime.fromtimestamp(now(), timezone.utc).isoformat(timespec="milliseconds")
+        return datetime.fromtimestamp(now(), timezone.utc).isoformat(
+            timespec="milliseconds"
+        )
 
     def error(status: int, message: str):
         return jsonify(error=message), status
@@ -76,9 +97,17 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
             return error(exc.code, GENERIC_ERRORS.get(exc.code, "Error inesperado."))
         return exc
 
+    def _teacher_api(path: str) -> bool:
+        return (
+            path == "/api/sessions"
+            or path.startswith("/api/sessions/")
+            or path == "/api/blocked-ips"
+            or path.startswith("/api/blocked-ips/")
+        )
+
     @app.before_request
     def require_teacher():
-        if request.path == "/api/sessions" or request.path.startswith("/api/sessions/"):
+        if _teacher_api(request.path):
             given = request.headers.get("X-Teacher-Token", "").encode()
             if not hmac.compare_digest(given, app.config["TEACHER_TOKEN"].encode()):
                 return error(401, UNAUTHORIZED)
@@ -98,6 +127,11 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
     @app.post("/api/s/<session_id>/checkin")
     def check_in(session_id):
         body = request.get_json(silent=True) or {}
+        ip = client_ip(request)
+        try:
+            rl_uc.assert_not_blocked(get_rate_repo(), ip)
+        except IpBlocked:
+            return error(429, BLOCKED)
         try:
             result = uc.check_in(
                 get_repo(),
@@ -114,12 +148,30 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
         except InvalidName as exc:
             return error(400, exc.message)
         except InvalidCode:
+            outcome = rl_uc.after_invalid_code(get_rate_repo(), ip, now, now_iso)
+            if outcome["blocked"]:
+                return error(429, BLOCKED)
             return error(422, INVALID_CODE)
         if not result["created"]:
             return jsonify(
                 already=True, name=result["name"], checkedAt=result["checkedAt"]
             )
         return jsonify(name=result["name"], checkedAt=result["checkedAt"]), 201
+
+    @app.get("/api/blocked-ips")
+    def list_blocked_ips():
+        return jsonify(rl_uc.list_blocked_ips(get_rate_repo()))
+
+    @app.delete("/api/blocked-ips")
+    def unblock_all_ips():
+        removed = rl_uc.unblock_all_ips(get_rate_repo())
+        return jsonify(ok=True, removed=removed)
+
+    @app.delete("/api/blocked-ips/<path:ip>")
+    def unblock_ip(ip):
+        if not rl_uc.unblock_ip(get_rate_repo(), ip):
+            return error(404, "Esa dirección no está bloqueada.")
+        return jsonify(ok=True)
 
     @app.get("/api/sessions")
     def list_sessions():

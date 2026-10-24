@@ -30,8 +30,9 @@ El registro de asistencia no depende de una plataforma concreta. Las integracion
 - Añadir cualquier otra requiere **justificarla por escrito** en el `plan.md` de la feature (qué problema resuelve y por qué no basta lo que ya hay).
 
 ### P4 · Privacidad mínima
-- Del alumno solo se guarda el **nombre que él mismo escribe** y la **hora del registro**.
-- **Prohibido** guardar emails, IPs, identificadores de dispositivo o cualquier dato no imprescindible.
+- Del alumno solo se guarda el **nombre que él mismo escribe** y la **hora del registro** (tablas de asistencia por sesión).
+- **Prohibido** guardar emails, identificadores de dispositivo o cualquier dato no imprescindible en el registro del alumno.
+- **Excepción (anti-abuso, spec 006):** se pueden guardar **direcciones de conexión** solo en tablas dedicadas (`blocked_ips`, `invalid_code_attempts`), **sin** vincularlas al nombre ni a la hora del check-in. Los intentos inválidos se purgan tras ~60 s; los bloqueos duran hasta que el profesor los quite.
 - Los datos se **almacenan** solo en local (SQLite). Ningún servicio de terceros los guarda.
 - Para que los alumnos lleguen a la app desde sus casas, el tráfico puede **pasar cifrado (HTTPS)** por un proveedor de túnel (p. ej. Cloudflare). Ese proveedor no los almacena, pero técnicamente podría verlos en tránsito; por eso solo se envía lo imprescindible (nombre y código).
 
@@ -83,7 +84,8 @@ Cambiar el stack requiere enmendar esta constitución.
 
 ## 6. Seguridad
 
-- Los códigos de asistencia **caducan** y no se pueden adivinar **a mano** antes de caducar. La protección contra ataques automatizados (scripts) no es un requisito.
+- Los códigos de asistencia **caducan** y no se pueden adivinar **a mano** antes de caducar.
+- La app **limita** intentos automatizados de códigos inválidos por dirección de conexión (spec 006): umbrales, lista de bloqueo y gestión desde el panel del profesor.
 - Un mismo alumno no puede registrarse dos veces en la misma sesión.
 - Una sesión cerrada no acepta más registros.
 - Toda entrada del usuario se valida en el servidor y se escapa al mostrarla (sin HTML inyectado).
@@ -111,3 +113,4 @@ Cambiar el stack requiere enmendar esta constitución.
 | 2.1 | 2026-10-20 | P4: distingue *almacenar* (solo en local) de *transitar* (puede pasar cifrado por un proveedor de túnel) | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08) |
 | 2.2 | 2026-10-22 | §4: ningún fichero de la app sin spec aprobado; issue, rama y pull request no sustituyen al spec. §7: carpeta `staff/sergio-cortes/asistenciapp/`. §8: aprueba quien trabaja en esa carpeta | El texto solo frenaba el código; README y tests podían cambiarse sin spec. Las reglas nombraban otra carpeta (spec 002, issue #228) |
 | 2.3 | 2026-10-22 | §3.1: organización en capas documentada en `docs/ARCHITECTURE.md` | Issue #239; alinear gobernanza y código sin cambiar el stack (spec 005) |
+| 2.4 | 2026-10-23 | P4: excepción acotada para IPs en anti-abuso; §6: límite de intentos inválidos por conexión | Issue #318 / spec 006; fuerza bruta de códigos sin mezclar IP con asistencia |

@@ -61,9 +61,12 @@ En tests: los de dominio no usan Flask; `tests/test_api.py` es el contrato HTTP.
 | Código de 4 dígitos / ventanas 30 s | Dominio | `domain/codes.py` |
 | Validar nombre / clave duplicado | Dominio | `domain/names.py` |
 | CSV con BOM y fórmulas Excel | Dominio | `domain/export.py` |
-| Sesión inexistente / cerrada / código inválido | Dominio | `domain/errors.py` |
+| Sesión inexistente / cerrada / código inválido / IP bloqueada | Dominio | `domain/errors.py` |
+| Umbrales intentos inválidos por IP | Dominio | `domain/rate_limit.py` |
 | Crear sesión, check-in, cerrar, exportar | Casos de uso | `use_cases/attendance.py` |
-| Contrato de persistencia | Port | `ports/repository.py` |
+| Bloqueos e intentos inválidos | Casos de uso | `use_cases/rate_limit.py` |
+| Contrato persistencia asistencia | Port | `ports/repository.py` |
+| Contrato anti-abuso IP | Port | `ports/rate_limit_repository.py` |
 | Tablas SQLite, INSERT/SELECT | Infra | `infra/sqlite/` |
 | Túnel Cloudflare | Infra | `infra/tunnel.py` |
 | Token `X-Teacher-Token`, rutas `/api/` | Web | `web/flask_app.py` |
@@ -85,8 +88,9 @@ Cada función en `use_cases/attendance.py` corresponde a un flujo ya existente e
 | `close_session` | Cierra asistencia. |
 | `remove_checkin` | Borra un registro (sesión abierta o cerrada según reglas actuales). |
 | `export_session_csv` | Filas para CSV. |
+| `assert_not_blocked`, `after_invalid_code`, listar/desbloquear IP | Anti-abuso spec 006 (`use_cases/rate_limit.py`) |
 
-Los casos de uso reciben un `AttendanceRepository` y, cuando hace falta, un callable `now` (segundos Unix) para códigos y fechas en tests.
+Los casos de uso reciben un `AttendanceRepository` y, cuando hace falta, un callable `now` (segundos Unix) para códigos y fechas en tests. El rate limit usa `RateLimitRepository` y la IP la resuelve `web/client_ip.py` (con `ProxyFix` y túnel).
 
 ---
 
