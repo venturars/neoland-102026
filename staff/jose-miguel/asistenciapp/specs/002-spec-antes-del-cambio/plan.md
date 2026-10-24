@@ -8,7 +8,7 @@ Este documento explica **cómo** queda lo que pide la spec. Cada decisión indic
 
 ## 1. Visión general
 
-La parada vive en las reglas de esta copia, no en código nuevo. Quien trabaja aquí es Jose Miguel y la carpeta es `staff/jose-miguel/asistenciapp/`.
+La parada vive en las reglas de esta copia, no en código nuevo. Quien trabaja aquí es el usuario y la carpeta es `staff/<usuario>/asistenciapp`.
 
 Si pide un cambio y no hay una spec aprobada por él, el agente no escribe. Eso vale para las instrucciones de uso, las comprobaciones, el resto de documentación de uso y el código de una funcionalidad nueva. La issue, la rama y la pull request del bootcamp dejan la tarea apuntada y no sustituyen a la spec de la app.
 
@@ -20,21 +20,21 @@ El historial de la spec 001 no se reescribe.
 
 ### 2.1 La constitución frena cualquier cambio (CA-01, CA-02, CA-03, CA-04, CA-05)
 
-En `CONSTITUTION.md`, versión 3.0, el §4 dice: no hay cambio sin especificación aprobada. Incluye el código de una funcionalidad nueva, las instrucciones de uso, las comprobaciones y el resto de documentación de uso. Jose Miguel aprueba la spec antes de pasar al plan. La issue, la rama y la pull request no sustituyen a esta spec. Si no hay spec aprobada, no se escribe.
+En `CONSTITUTION.md`, versión 3.0, el §4 dice: no hay cambio sin especificación aprobada. Incluye el código de una funcionalidad nueva, las instrucciones de uso, las comprobaciones y el resto de documentación de uso. El usuario aprueba la spec antes de pasar al plan. La issue, la rama y la pull request no sustituyen a esta spec. Si no hay spec aprobada, no se escribe.
 
 ### 2.2 Carpeta y quien aprueba (CA-06)
 
-- §7: el proyecto vive en `staff/jose-miguel/asistenciapp/`. No se tocan archivos fuera de esta carpeta.
-- §8: solo Jose Miguel aprueba una enmienda.
+- §7: el proyecto vive en `staff/<usuario>/asistenciapp`. No se tocan archivos fuera de esta carpeta.
+- §8: solo el usuario aprueba una enmienda.
 - La enmienda 3.0 queda en el historial, con fecha 2026-10-22.
 
 ### 2.3 El manual del agente repite la parada (CA-01 a CA-06)
 
-Al inicio del flujo de `AGENT.md` está la misma frase: nada se escribe sin una spec aprobada por Jose Miguel. El ok de cada fase se le pide a él. Los comandos y la edición se limitan a `staff/jose-miguel/asistenciapp/`. La tabla de estado marca esta spec como implementada.
+Al inicio del flujo de `AGENT.md` está la misma frase: nada se escribe sin una spec aprobada por el usuario. El ok de cada fase se le pide a él. Los comandos y la edición se limitan a `staff/<usuario>/asistenciapp/`. La tabla de estado marca esta spec como implementada.
 
 ### 2.4 Las instrucciones de arranque usan esta carpeta (CA-01)
 
-En `README.md`, los dos `cd` de preparar el entorno y de arrancar la app apuntan a `staff/jose-miguel/asistenciapp`.
+En `README.md`, los dos `cd` de preparar el entorno y de arrancar la app apuntan a `staff/<usuario>/asistenciapp`.
 
 ### 2.5 Cómo se comprueba
 
