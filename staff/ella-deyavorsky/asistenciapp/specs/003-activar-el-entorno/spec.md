@@ -64,6 +64,6 @@ Ninguna. El título del bloque y qué queda bajo «Arrancar la app» salen de la
 
 | Versión | Fecha | Cambio | Motivo |
 | --- | --- | --- | --- |
-| 0.1 | 2026-10-23 | Borrador inicial | La issue #301 pide corregir el título; la spec 002 dejó ese README fuera |
+| 0.1 | 2026-10-23 | Borrador inicial | La issue #301 pide corregir el título; la spec 002 dejó ese README fuera. El cambio del README se hizo antes de la spec 002; esta spec lo documenta. |
 | 1.0 | 2026-10-24 | Aprobada | Ok para pasar al plan |
 | 1.1 | 2026-10-24 | Implementada | Verificado en el README (CA-01…04) y 77 tests en verde |

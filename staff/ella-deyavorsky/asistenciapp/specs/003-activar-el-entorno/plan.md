@@ -66,7 +66,7 @@ En problemas frecuentes, la frase del puerto ocupado decía «ciérrala (secció
 
 ---
 
-## 4. Comprobación de la constitución (v2.1)
+## 4. Comprobación de la constitución (v2.2)
 
 | Regla | ¿Cumple? | Cómo |
 | --- | --- | --- |
@@ -76,8 +76,12 @@ En problemas frecuentes, la frase del puerto ocupado decía «ciérrala (secció
 | P4 Privacidad | Sí | No se guardan datos |
 | P5 Accesible y móvil | Sí | No se tocan pantallas |
 | P6 Español | Sí | Los títulos nuevos y este plan están en español |
+| §3 Stack | Sí | El stack no cambia |
+| §4 SDD | Sí | Esta spec existe porque el §4 exige un spec aprobado antes de tocar cualquier fichero de la app, también el README |
 | §5 Calidad | Sí | Cada criterio tiene un paso manual en §3 |
 | §6 Seguridad | Sí | No se tocan códigos, sesiones ni entradas del usuario |
+| §7 Alcance | Sí | Todo queda en `staff/ella-deyavorsky/asistenciapp/` |
+| §8 Enmiendas | Sí | No se enmienda la constitución |
 
 ---
 
