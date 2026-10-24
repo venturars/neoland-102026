@@ -88,3 +88,6 @@ staff/esther-patino/first-app/db/*.sqlite
 staff/esther-patino/first-app/db/*.sqlite-journal
 staff/esther-patino/first-app/db/*.sqlite-wal
 staff/esther-patino/first-app/db/*.sqlite-shm
+
+# AsistenciApp de Esther: data/ guarda nombres de alumnos y el token del profesor.
+staff/esther-patino/asistenciapp/data/
