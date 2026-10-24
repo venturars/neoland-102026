@@ -131,6 +131,7 @@ Una funcionalidad está terminada cuando:
 | `003-activar-el-entorno` | Terminada; revisión final aprobada por Miguel el 2026-10-22 | README separado en activación y arranque; 77 tests pasan; evidencia en tasks.md |
 | `004-quitar-referencias-personales` | Terminada; revisión final aprobada por Miguel el 2026-10-23 | Referencias heredadas retiradas; hechos conservados; 77 tests pasan; evidencia en tasks.md |
 | `005-reorganizar-arquitectura` | Terminada; revisión final aprobada por Miguel el 2026-10-23 | 112 pruebas aprobadas; comparación previa de 22 escenarios y regresión de precedencia corregida; evidencia en tasks.md |
+| `006-limitar-intentos-de-registro` | Implementada y verificada; ejecución completa delegada por Miguel el 2026-10-24 | 145 pruebas y comprobación de navegador; revisión de compañeros pendiente; evidencia en tasks.md |
 | Bot de Discord (sin número asignado) | Idea futura | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
