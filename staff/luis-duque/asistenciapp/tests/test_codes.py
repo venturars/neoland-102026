@@ -1,6 +1,6 @@
 """Tests de asistencia/codes.py · CA-03, CA-05, CA-06."""
 
-from asistencia.codes import WINDOW_SECONDS, code_for, is_valid_code, seconds_left
+from asistencia.reglas.codes import WINDOW_SECONDS, code_for, is_valid_code, seconds_left
 
 SECRET = b"secreto-de-prueba"
 T0 = 1_000_000 * WINDOW_SECONDS  # inicio exacto de una ventana
