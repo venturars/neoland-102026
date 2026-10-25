@@ -74,7 +74,7 @@ asistenciapp/
 └── data/                  # base de datos SQLite (no se sube a git)
 ```
 
-Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-spec-antes-del-cambio`.
+Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-spec-antes-del-cambio`, `003-activar-entorno-no-es-arrancar-app`.
 
 ---
 
@@ -125,6 +125,7 @@ Una funcionalidad está terminada cuando:
 | --- | --- | --- |
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
 | `002-spec-antes-del-cambio` | Implementada (2026-10-22) | La spec aprobada frena cualquier cambio. El ok es de el usuario, en esta carpeta |
+| `003-activar-entorno-no-es-arrancar-app` | Implementada (2026-10-25) | Activar el entorno y arrancar la app son dos pasos distintos en el README |
 | Discord | Idea futura | Fuera del MVP, sin número de spec |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
