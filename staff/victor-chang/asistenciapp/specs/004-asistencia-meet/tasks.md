@@ -89,8 +89,9 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
   - **Hecha (2026-10-25):** 300 tests en verde (los nuevos de modo fallaron primero); `ruff` y `mypy --strict` sin avisos.
     - La tabla nueva nace con las dos columnas y sus `CHECK`; `init_schema()` las añade a una BD antigua con `ALTER TABLE` (frases fijas en `SESSION_MIGRATIONS`, sin texto de fuera, D2). Se puede llamar varias veces.
     - Copia de la BD de Victor: 6 clases y 18 registros antes y después, todas en `code` y sin reunión, y el mismo token. El original no se abre (misma suma de comprobación antes y después).
-- [ ] **T07** 🧪 · `config.py`: `google_client_path` y `google_token_path` (`ASISTENCIA_GOOGLE_CLIENT`, `ASISTENCIA_GOOGLE_TOKEN`), con sus valores por defecto en `data/`.
+- [x] **T07** 🧪 · `config.py`: `google_client_path` y `google_token_path` (`ASISTENCIA_GOOGLE_CLIENT`, `ASISTENCIA_GOOGLE_TOKEN`), con sus valores por defecto en `data/`.
   - *Cubre:* CA-11, CA-12.
+  - **Hecha (2026-10-25):** 302 tests en verde (los nuevos fallaron primero); `ruff` y `mypy --strict` sin avisos. Las dos rutas tienen valor por defecto en `Config`, así que los `Config(...)` que ya existían (tests incluidos) siguen igual. Un valor vacío cuenta como no puesto, como el resto de variables.
 - [ ] **T08** 🧪 · `infra/google_meet.py`: `parse_meeting_code(text)`.
   - Tests en `test_google_meet.py`: acepta `abc-defg-hij` y el enlace completo (con o sin `?authuser=…`), con mayúsculas y espacios alrededor. Rechaza con `MeetingLinkInvalidError` textos vacíos, otros dominios, formatos incorrectos y letras de otros alfabetos.
   - *Cubre:* CA-14.
