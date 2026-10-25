@@ -1,4 +1,4 @@
-"""Tests de attendance/config.py · spec 005 CA-03; ARCHITECTURE F5."""
+"""Tests de attendance/config.py · spec 005 CA-03; spec 004 CA-11, CA-12; ARCHITECTURE F5."""
 
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -7,6 +7,8 @@ import pytest
 
 from attendance.config import (
     DEFAULT_DB,
+    DEFAULT_GOOGLE_CLIENT,
+    DEFAULT_GOOGLE_TOKEN,
     DEFAULT_PORT,
     Config,
     ConfigError,
@@ -23,8 +25,30 @@ def test_defaults_when_nothing_is_set():
     assert DEFAULT_PORT == 8000
 
 
+def test_google_files_default_to_the_data_folder():  # spec 004 · plan §2.4
+    config = load_config({})
+    assert (config.google_client_path, config.google_token_path) == (DEFAULT_GOOGLE_CLIENT, DEFAULT_GOOGLE_TOKEN)
+    assert DEFAULT_GOOGLE_CLIENT == DEFAULT_DB.parent / "google-client.json"
+    assert DEFAULT_GOOGLE_TOKEN == DEFAULT_DB.parent / "google-token.json"
+
+
+def test_google_files_from_the_environment():  # spec 004 · plan §2.4
+    config = load_config(
+        {"ASISTENCIA_GOOGLE_CLIENT": "llaves/cliente.json", "ASISTENCIA_GOOGLE_TOKEN": "llaves/permiso.json"}
+    )
+    assert config.google_client_path == Path("llaves/cliente.json")
+    assert config.google_token_path == Path("llaves/permiso.json")
+
+
 def test_empty_values_count_as_not_set():
-    assert load_config({"ASISTENCIA_DB": "", "PORT": "", "ASISTENCIA_TZ": ""}) == load_config({})
+    empty = {
+        "ASISTENCIA_DB": "",
+        "PORT": "",
+        "ASISTENCIA_TZ": "",
+        "ASISTENCIA_GOOGLE_CLIENT": "",
+        "ASISTENCIA_GOOGLE_TOKEN": "",
+    }
+    assert load_config(empty) == load_config({})
 
 
 def test_values_from_the_environment():

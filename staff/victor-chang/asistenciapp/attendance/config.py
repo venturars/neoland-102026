@@ -5,6 +5,9 @@ Variables (todas opcionales; vacía cuenta como no puesta):
 - `PORT`: puerto local en el que escucha la app. Por defecto, 8000.
 - `ASISTENCIA_TZ`: zona horaria para mostrar y exportar horas (p. ej. `Europe/Madrid`).
   Por defecto, la del sistema.
+- `ASISTENCIA_GOOGLE_CLIENT`: la llave de la app en Google Cloud (spec 004 · plan §2.4).
+  Por defecto, `data/google-client.json`.
+- `ASISTENCIA_GOOGLE_TOKEN`: dónde se guarda el permiso de Google. Por defecto, `data/google-token.json`.
 """
 
 import re
@@ -16,7 +19,10 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from attendance.domain.errors import AppError
 
-DEFAULT_DB = Path(__file__).resolve().parent.parent / "data" / "asistencia.db"
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+DEFAULT_DB = DATA_DIR / "asistencia.db"
+DEFAULT_GOOGLE_CLIENT = DATA_DIR / "google-client.json"
+DEFAULT_GOOGLE_TOKEN = DATA_DIR / "google-token.json"
 DEFAULT_PORT = 8000
 # [0-9] y no \d, que acepta cifras de otros alfabetos (ARCHITECTURE.md · E1).
 PORT_FORMAT = re.compile(r"[0-9]{1,5}")
@@ -50,6 +56,8 @@ class Config:
     db_path: Path
     port: int
     timezone: tzinfo | None
+    google_client_path: Path = DEFAULT_GOOGLE_CLIENT
+    google_token_path: Path = DEFAULT_GOOGLE_TOKEN
 
 
 def load_config(environ: Mapping[str, str]) -> Config:
@@ -62,12 +70,17 @@ def load_config(environ: Mapping[str, str]) -> Config:
         InvalidPortError: `PORT` no es un número entre 1 y 65535.
         InvalidTimezoneError: `ASISTENCIA_TZ` no es una zona horaria conocida.
     """
-    db = environ.get("ASISTENCIA_DB", "")
     return Config(
-        db_path=Path(db) if db else DEFAULT_DB,
+        db_path=_path(environ.get("ASISTENCIA_DB", ""), DEFAULT_DB),
         port=_port(environ.get("PORT", "")),
         timezone=_timezone(environ.get("ASISTENCIA_TZ", "")),
+        google_client_path=_path(environ.get("ASISTENCIA_GOOGLE_CLIENT", ""), DEFAULT_GOOGLE_CLIENT),
+        google_token_path=_path(environ.get("ASISTENCIA_GOOGLE_TOKEN", ""), DEFAULT_GOOGLE_TOKEN),
     )
+
+
+def _path(value: str, default: Path) -> Path:
+    return Path(value) if value else default
 
 
 def _port(value: str) -> int:
