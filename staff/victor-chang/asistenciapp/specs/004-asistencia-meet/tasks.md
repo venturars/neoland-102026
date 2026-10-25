@@ -1,6 +1,6 @@
 # Tareas 004 · Asistencia automática desde Google Meet
 
-> Versión 2.1 · Estado: **Borrador (pendiente de aprobación)** · La v2.0 se aprobó el 2026-10-23 · Plan: [plan.md](plan.md) v2.1 · Creado: 2026-10-21 · Reescrito: 2026-10-23
+> Versión 2.1 · Estado: **Aprobado** (2026-10-25) · Plan: [plan.md](plan.md) v2.1 · Creado: 2026-10-21 · Reescrito: 2026-10-23
 
 Cómo leer esta lista:
 - Se hacen **en orden**, una cada vez. Al terminar una se marca `[x]`.

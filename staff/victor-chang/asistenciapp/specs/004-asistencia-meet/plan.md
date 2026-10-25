@@ -1,6 +1,6 @@
 # Plan técnico 004 · Asistencia automática desde Google Meet
 
-> Versión 2.1 · Estado: **Borrador (pendiente de aprobación)** · La v2.0 se aprobó el 2026-10-23 · Spec: [spec.md](spec.md) v1.2 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Constitución v3.1 · Creado: 2026-10-21 · Reescrito: 2026-10-23
+> Versión 2.1 · Estado: **Aprobado** (2026-10-25) · Spec: [spec.md](spec.md) v1.2 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Constitución v3.1 · Creado: 2026-10-21 · Reescrito: 2026-10-23
 
 Este documento explica **cómo** construimos lo que pide la spec 004 sobre el código ya adaptado a `ARCHITECTURE.md` (spec 005). Meet es una **segunda forma de llenar la lista**: una entrada nueva que llama a casos de uso, y una pieza de infraestructura nueva que habla con Google (C3, P1). Las reglas se citan por su identificador (`C2`, `E4`…).
 
@@ -319,6 +319,7 @@ asistenciapp/
 9. **Quién toma la asistencia** (2026-10-23, tras el spike): quien arranca la app, si organiza la reunión o participa en ella (spec v1.2, HU-06).
 10. **Quién cuenta** (2026-10-23): las dos opciones, elegidas en cada toma: "Quién está ahora" o "Todos los que han estado" (spec CA-18).
 11. **Qué reunión** (2026-10-23): la en curso; si no hay, la última que terminó (spec CA-20).
+12. **Plan v2.1 aprobado** (2026-10-25).
 
 ---
 
