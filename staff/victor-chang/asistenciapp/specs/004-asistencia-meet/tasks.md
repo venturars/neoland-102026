@@ -177,7 +177,7 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
 
 ## Fase F · Interfaz (plan §4)
 
-- [ ] **T14** · `static/`:
+- [x] **T14** · `static/`:
   - `profesor.html/.js`:
     - grupo de `radio` **Código / Automático (Meet)**; el campo del enlace de Meet solo aparece con Automático;
     - en una clase automática, tarjeta con el código de la reunión y dos botones, **"Quién está ahora"** y **"Todos los que han estado"** (CA-18), que muestran el resultado y de qué reunión es (CA-20) en `role="status"` y se desactivan mientras esperan;
@@ -187,6 +187,12 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
   - `styles.css`: estilos del selector y de la etiqueta.
   - *Cubre:* CA-01, CA-02, CA-04, CA-10 (mensaje), CA-16, CA-18, CA-20.
   - *Hecha cuando:* revisada en el navegador a 400 px y con teclado (P5), y la clase de código sigue igual que antes.
+  - **Hecha (2026-10-25):** revisada en Chrome con una BD temporal y un Meet falso (sin Google ni datos reales); 435 tests, `ruff` y `mypy` sin avisos.
+    - Con teclado: Tab hasta el grupo de modo, flecha para "Automático", aparece el campo del enlace; Enter abre la clase. Un enlace mal escrito muestra el mensaje del servidor y devuelve el foco al campo.
+    - "Quién está ahora" en una reunión terminada muestra el aviso de CA-21; "Todos los que han estado" registra a 3 (uno como "Invitado sin nombre") con "Reunión del 23/10 a las 08:56 · …"; repetirla añade 0 (CA-06).
+    - Mientras espera, los dos botones se desactivan y se avisa de que la primera vez se abre el navegador para el permiso. **Arreglado durante la revisión:** al desactivarse, el botón perdía el foco; ahora se le devuelve.
+    - A 400 px: panel con etiquetas "código"/"Meet", clase automática, clase de código (igual que antes) y página del alumno (mensaje de clase automática, sin formulario); sin desplazamiento horizontal.
+    - Ahora el formulario de "Abrir asistencia" muestra los errores del servidor (antes un título demasiado largo no se avisaba en la interfaz).
 
 ## Fase G · Verificación y cierre
 
