@@ -92,9 +92,13 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
 - [x] **T07** 🧪 · `config.py`: `google_client_path` y `google_token_path` (`ASISTENCIA_GOOGLE_CLIENT`, `ASISTENCIA_GOOGLE_TOKEN`), con sus valores por defecto en `data/`.
   - *Cubre:* CA-11, CA-12.
   - **Hecha (2026-10-25):** 302 tests en verde (los nuevos fallaron primero); `ruff` y `mypy --strict` sin avisos. Las dos rutas tienen valor por defecto en `Config`, así que los `Config(...)` que ya existían (tests incluidos) siguen igual. Un valor vacío cuenta como no puesto, como el resto de variables.
-- [ ] **T08** 🧪 · `infra/google_meet.py`: `parse_meeting_code(text)`.
+- [x] **T08** 🧪 · `infra/google_meet.py`: `parse_meeting_code(text)`.
   - Tests en `test_google_meet.py`: acepta `abc-defg-hij` y el enlace completo (con o sin `?authuser=…`), con mayúsculas y espacios alrededor. Rechaza con `MeetingLinkInvalidError` textos vacíos, otros dominios, formatos incorrectos y letras de otros alfabetos.
   - *Cubre:* CA-14.
+  - **Hecha (2026-10-25):** 328 tests en verde (26 nuevos, que fallaron primero); `ruff` y `mypy --strict` sin avisos.
+    - Acepta también `http://`, el enlace sin esquema (`meet.google.com/…`) y una barra final.
+    - Rechaza dominios que se parecen (`meet.google.com.evil.com`, `evil.com/meet.google.com/…`), otras plataformas, `#…` y letras que parecen latinas pero no lo son.
+    - Comprueba que el texto es ASCII **antes** de pasarlo a minúsculas, porque `lower()` convierte algunos símbolos en letras ASCII (el signo Kelvin "K" pasa a "k").
 - [ ] **T09** 🧪 · `infra/google_meet.py`: `GoogleMeet.participants(meeting_code, who)`, con la sesión HTTP por parámetro (plan §2.3, v2.1).
   - Tests con una sesión HTTP falsa y los ejemplos de `tests/fixtures/meet/`:
     - pide `conferenceRecords` filtrado por el código; elige la reunión en curso y, si no hay, la más reciente (CA-20); 0 reuniones → `MeetingNotVisibleError` (CA-13, CA-14);
