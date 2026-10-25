@@ -132,7 +132,7 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
   - **Hecha (2026-10-25):** 371 tests en verde (los nuevos fallaron primero); `ruff` y `mypy --strict` sin avisos.
     - `create_session(..., mode=Mode.CODE, meeting="")`: los parámetros nuevos tienen valor por defecto, así que todo lo que ya abría clases de código sigue igual. En modo automático guarda el código limpio que da `parse_meeting_code` (p. ej. de un enlace con `?authuser=1`).
     - El orden de `check_in` queda: cerrada → modo → nombre → código, con un test para cada paso.
-- [ ] **T11** 🧪 · `usecases/attendance.py`: `sync_from_meeting(conn, fetch_participants, session_id, who, t)` → `added`, `found`, `total` y de qué reunión es (hora de inicio, si ya terminó).
+- [x] **T11** 🧪 · `usecases/attendance.py`: `sync_from_meeting(conn, fetch_participants, session_id, who, t)` → `added`, `found`, `total` y de qué reunión es (hora de inicio, si ya terminó).
   - Tests en `test_attendance.py`, con una función de participantes falsa:
     - primera toma (CA-05);
     - segunda toma con repetidos (otra tilde o mayúscula) y uno nuevo → `added = 1` (CA-06);
@@ -144,6 +144,10 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
     - si la función de participantes falla, no se guarda nada;
     - todo en una transacción, con la hora de la toma.
   - *Cubre:* CA-05, CA-06, CA-07, CA-10, CA-18, CA-19.
+  - **Hecha (2026-10-25):** 384 tests en verde (13 nuevos, que fallaron primero); `ruff` y `mypy --strict` sin avisos.
+    - Devuelve un `SyncResult` (en `domain/participants.py`): `added`, `found`, `total`, `meeting_started_at`, `meeting_ended`.
+    - Primero comprueba la clase (existe → abierta → automática) y luego pregunta a la plataforma. Así no se llama a Google por una clase cerrada o de código, y si Google falla no se ha escrito nada.
+    - Test de "todo o nada": si un registro falla a mitad de la toma, no queda ninguno (una sola transacción, D3).
 
 ## Fase E · Entradas (plan §2.9, §4)
 
