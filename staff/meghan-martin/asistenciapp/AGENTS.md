@@ -139,6 +139,7 @@ Un cambio está terminado cuando:
 | `004-quitar-referencias-personales` | ✅ Implementada (2026-10-22) | Las instrucciones usan `staff/<usuario>/asistenciapp` |
 | `005-reorganizar-arquitectura` | ✅ Implementada (2026-10-23) | Documentos en `docs/`, reglas, acciones y almacén separados |
 | `006-limite-de-intentos` | ✅ Implementada (2026-10-25) | 5 intentos por segundo, 20 por minuto, y el bloqueo se queda |
+| `007-quien-falta` | ✅ Implementada (2026-10-25) | La clase está en la lista. El alumno busca y elige. El profesor ve quién falta |
 | Bot de Discord | Idea futura | Sin número de spec |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.

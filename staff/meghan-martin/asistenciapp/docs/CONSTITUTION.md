@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 3.0 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-25
+> Versión 4.0 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-25
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -30,8 +30,8 @@ El registro de asistencia no depende de una plataforma concreta. Las integracion
 - Añadir cualquier otra requiere **justificarla por escrito** en el `plan.md` de la feature (qué problema resuelve y por qué no basta lo que ya hay).
 
 ### P4 · Privacidad mínima
-- Del alumno solo se guarda el **nombre que él mismo escribe** y la **hora del registro**.
-- **Prohibido** guardar emails, identificadores de dispositivo o cualquier dato no imprescindible. La dirección de la conexión se puede recordar solo para contar los intentos de pasar lista y para la lista de bloqueo. No forma parte del registro del alumno.
+- Del alumno se guarda el **nombre que elige en la lista de la clase** y la **hora del registro**. Esa lista puede estar en la app para ver quién falta.
+- **Prohibido** guardar emails, fotos, identificadores de dispositivo o cualquier dato no imprescindible. La dirección de la conexión se puede recordar solo para contar los intentos de pasar lista y para la lista de bloqueo. No forma parte del registro del alumno.
 - Los datos se **almacenan** solo en local (SQLite). Ningún servicio de terceros los guarda.
 - Para que los alumnos lleguen a la app desde sus casas, el tráfico puede **pasar cifrado (HTTPS)** por un proveedor de túnel (p. ej. Cloudflare). Ese proveedor no los almacena, pero técnicamente podría verlos en tránsito; por eso solo se envía lo imprescindible (nombre y código).
 
@@ -109,3 +109,4 @@ Cambiar el stack requiere enmendar esta constitución.
 | 2.2 | 2026-10-22 | §4: cualquier fichero espera un spec con el sí, y la issue o la pull request no dan permiso para editar. §7: la carpeta es `staff/meghan-martin/asistenciapp/`. §8: el sí lo da quien trabaja aquí | La frase vieja solo paraba una función nueva, así que el README se podía cambiar sin spec. Las reglas seguían nombrando otra carpeta (spec 002) |
 | 2.3 | 2026-10-23 | §7: las reglas, las acciones y el almacén van en carpetas distintas. La constitución pasa a `docs/` | El código y los documentos estaban mezclados en la raíz (spec 005) |
 | 3.0 | 2026-10-25 | P4: la dirección de la conexión se puede recordar solo para contar los intentos de pasar lista y para la lista de bloqueo. No se guarda con el nombre ni con la hora | El límite necesita recordar esa dirección. Contradice la prohibición de guardarla (spec 006) |
+| 4.0 | 2026-10-25 | P4: la lista de la clase puede estar en la app para ver quién falta. El registro sigue siendo el nombre elegido y la hora. Sin fotos ni emails | Sin esos nombres no se ve quién falta. Contradice que solo se guarde el nombre escrito (spec 007) |

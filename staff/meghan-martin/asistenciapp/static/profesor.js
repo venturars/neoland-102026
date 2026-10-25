@@ -184,17 +184,31 @@ function renderSession(data) {
 // Lista en vivo y total (CA-10, CA-11) con botón "Quitar" (CA-24).
 // Solo se repinta si algo cambió: así no se pierde el foco del teclado cada 2 s (P5)
 // y la confirmación pendiente sobrevive al polling.
+function renderMissing(names) {
+  $("s-missing-title").textContent = names.length === 1 ? "Falta 1" : `Faltan ${names.length}`;
+  $("s-none-missing").hidden = names.length !== 0;
+  $("s-missing").replaceChildren(...names.map((name) => {
+    const li = document.createElement("li");
+    const text = document.createElement("span");
+    text.className = "name";
+    text.textContent = name;
+    li.append(text);
+    return li;
+  }));
+}
+
 function renderList(data) {
   if (pendingRemoval !== null && !data.checkins.some((c) => c.id === pendingRemoval)) {
     pendingRemoval = null; // ya no existe (p. ej. se quitó en otra pestaña)
   }
-  const key = JSON.stringify([data.checkins, pendingRemoval]);
+  const key = JSON.stringify([data.checkins, data.missing, pendingRemoval]);
   if (key === renderedListKey) return;
   renderedListKey = key;
 
   $("s-total").textContent =
     data.total === 1 ? "1 alumno registrado" : `${data.total} alumnos registrados`;
   $("s-list").replaceChildren(...data.checkins.map(checkinRow));
+  renderMissing(data.missing || []);
 
   // Foco en la opción segura, como al cerrar la asistencia: dos Enter seguidos no borran a nadie.
   document.querySelector("#s-list [data-action='cancel']")?.focus();

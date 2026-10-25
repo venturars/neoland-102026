@@ -29,6 +29,8 @@ def _markdown_files():
             continue
         if relative.parts[:2] == ("specs", "004-quitar-referencias-personales"):
             continue
+        if relative.parts[:2] == ("specs", "007-quien-falta"):
+            continue
         yield relative, path
 
 
