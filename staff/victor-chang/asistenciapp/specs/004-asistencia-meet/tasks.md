@@ -81,11 +81,14 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
 
 ## Fase C · Infraestructura y configuración (plan §2.3 a §2.5, §3)
 
-- [ ] **T06** 🧪 · `infra/storage.py`: columnas `mode` y `meeting_code`, con sus `CHECK`.
+- [x] **T06** 🧪 · `infra/storage.py`: columnas `mode` y `meeting_code`, con sus `CHECK`.
   - `init_schema()` las añade a una BD antigua. Tests: una BD con el esquema de la spec 001 conserva sus clases con `mode = 'code'`; la BD rechaza un modo no válido y una clase automática sin reunión; `checkins` no tiene columnas nuevas (CA-17).
   - `create_session`, `get_session` y `list_sessions` guardan y devuelven el modo.
   - *Cubre:* CA-01, CA-03, CA-04, CA-17.
   - *Hecha cuando:* además, la migración funciona con **una copia** de `data/asistencia.db` de Victor.
+  - **Hecha (2026-10-25):** 300 tests en verde (los nuevos de modo fallaron primero); `ruff` y `mypy --strict` sin avisos.
+    - La tabla nueva nace con las dos columnas y sus `CHECK`; `init_schema()` las añade a una BD antigua con `ALTER TABLE` (frases fijas en `SESSION_MIGRATIONS`, sin texto de fuera, D2). Se puede llamar varias veces.
+    - Copia de la BD de Victor: 6 clases y 18 registros antes y después, todas en `code` y sin reunión, y el mismo token. El original no se abre (misma suma de comprobación antes y después).
 - [ ] **T07** 🧪 · `config.py`: `google_client_path` y `google_token_path` (`ASISTENCIA_GOOGLE_CLIENT`, `ASISTENCIA_GOOGLE_TOKEN`), con sus valores por defecto en `data/`.
   - *Cubre:* CA-11, CA-12.
 - [ ] **T08** 🧪 · `infra/google_meet.py`: `parse_meeting_code(text)`.

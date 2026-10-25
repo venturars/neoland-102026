@@ -1,4 +1,4 @@
-"""Acceso a la base de datos SQLite (spec 001 · plan §3; spec 005 · plan §2.5).
+"""Acceso a la base de datos SQLite (spec 001 · plan §3; spec 005 · plan §2.5; spec 004 · plan §3).
 
 Todo el SQL del proyecto vive aquí (ARCHITECTURE.md · D1) y sale convertido en tipos del
 dominio, nunca en filas (D7, M4). Las funciones reciben una conexión abierta y **no confirman**:
@@ -9,7 +9,7 @@ import secrets
 import sqlite3
 from pathlib import Path
 
-from attendance.domain.sessions import Checkin, CheckinResult, Session, SessionSummary
+from attendance.domain.sessions import Checkin, CheckinResult, Mode, Session, SessionSummary
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS config (
@@ -22,7 +22,9 @@ CREATE TABLE IF NOT EXISTS sessions (
   title      TEXT NOT NULL,
   secret     TEXT NOT NULL,
   opened_at  TEXT NOT NULL,
-  closed_at  TEXT
+  closed_at  TEXT,
+  mode         TEXT NOT NULL DEFAULT 'code' CHECK (mode IN ('code', 'automatic')),
+  meeting_code TEXT CHECK (mode = 'code' OR meeting_code IS NOT NULL)
 );
 
 CREATE TABLE IF NOT EXISTS checkins (
@@ -35,6 +37,15 @@ CREATE TABLE IF NOT EXISTS checkins (
 );
 """
 
+# Columnas que la spec 004 añade a sessions, para las BD creadas antes (plan §3; D5). Comprobado en
+# el spike con SQLite 3.49: ADD COLUMN acepta los CHECK y las clases antiguas quedan en 'code'.
+SESSION_MIGRATIONS = {
+    "mode": "ALTER TABLE sessions ADD COLUMN mode TEXT NOT NULL DEFAULT 'code' CHECK (mode IN ('code', 'automatic'))",
+    "meeting_code": (
+        "ALTER TABLE sessions ADD COLUMN meeting_code TEXT CHECK (mode = 'code' OR meeting_code IS NOT NULL)"
+    ),
+}
+
 
 def connect(path: str | Path) -> sqlite3.Connection:
     """Abre la base de datos con filas por nombre y claves ajenas activadas."""
@@ -45,8 +56,15 @@ def connect(path: str | Path) -> sqlite3.Connection:
 
 
 def init_schema(conn: sqlite3.Connection) -> None:
-    """Crea las tablas que falten. `executescript` confirma por su cuenta: solo se usa al arrancar."""
+    """Crea las tablas que falten y añade las columnas nuevas a una BD antigua. Solo se usa al arrancar.
+
+    `executescript` y `ALTER TABLE` se confirman por su cuenta. Se puede llamar varias veces.
+    """
     conn.executescript(SCHEMA)
+    existing = {row["name"] for row in conn.execute("PRAGMA table_info(sessions)")}
+    for column, statement in SESSION_MIGRATIONS.items():
+        if column not in existing:
+            conn.execute(statement)
 
 
 def get_or_create_teacher_token(conn: sqlite3.Connection) -> str:
@@ -66,6 +84,8 @@ def _session(row: sqlite3.Row) -> Session:
         secret=bytes.fromhex(row["secret"]),
         opened_at=row["opened_at"],
         closed_at=row["closed_at"],
+        mode=Mode(row["mode"]),
+        meeting_code=row["meeting_code"],
     )
 
 
@@ -73,13 +93,29 @@ def _checkin(row: sqlite3.Row) -> Checkin:
     return Checkin(id=row["id"], name=row["name"], checked_at=row["checked_at"])
 
 
-def create_session(conn: sqlite3.Connection, session_id: str, title: str, secret: bytes, opened_at: str) -> Session:
-    """Guarda una clase abierta nueva. El id y el secreto los genera el caso de uso."""
+def create_session(
+    conn: sqlite3.Connection,
+    session_id: str,
+    title: str,
+    secret: bytes,
+    opened_at: str,
+    mode: Mode = Mode.CODE,
+    meeting_code: str | None = None,
+) -> Session:
+    """Guarda una clase abierta nueva. El id, el secreto y el código de la reunión los decide el caso de uso."""
     conn.execute(
-        "INSERT INTO sessions (id, title, secret, opened_at) VALUES (?, ?, ?, ?)",
-        (session_id, title, secret.hex(), opened_at),
+        "INSERT INTO sessions (id, title, secret, opened_at, mode, meeting_code) VALUES (?, ?, ?, ?, ?, ?)",
+        (session_id, title, secret.hex(), opened_at, mode.value, meeting_code),
     )
-    return Session(id=session_id, title=title, secret=secret, opened_at=opened_at, closed_at=None)
+    return Session(
+        id=session_id,
+        title=title,
+        secret=secret,
+        opened_at=opened_at,
+        closed_at=None,
+        mode=mode,
+        meeting_code=meeting_code,
+    )
 
 
 def get_session(conn: sqlite3.Connection, session_id: str) -> Session | None:
@@ -92,7 +128,7 @@ def list_sessions(conn: sqlite3.Connection) -> list[SessionSummary]:
     """Todas las clases, de la más nueva a la más antigua, con su total (spec 001 · CA-16)."""
     rows = conn.execute(
         """
-        SELECT s.id, s.title, s.opened_at, s.closed_at, COUNT(c.id) AS total
+        SELECT s.id, s.title, s.opened_at, s.closed_at, s.mode, COUNT(c.id) AS total
         FROM sessions s LEFT JOIN checkins c ON c.session_id = s.id
         GROUP BY s.id
         ORDER BY s.opened_at DESC
@@ -105,6 +141,7 @@ def list_sessions(conn: sqlite3.Connection) -> list[SessionSummary]:
             opened_at=r["opened_at"],
             closed_at=r["closed_at"],
             total=r["total"],
+            mode=Mode(r["mode"]),
         )
         for r in rows
     ]
