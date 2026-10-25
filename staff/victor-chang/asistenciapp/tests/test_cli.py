@@ -39,7 +39,8 @@ def conn(tmp_path):
 
 
 def start(conn, meeting, link="https://meet.google.com/abc-defg-hij", who=Who.NOW):
-    return cli.start_meet_session(conn, meeting, link, who, T, UTC)
+    started = cli.start_meet_session(conn, meeting, link, who, T, UTC)
+    return started.session_id, started.message
 
 
 def test_creates_the_automatic_session_and_takes_attendance(conn):

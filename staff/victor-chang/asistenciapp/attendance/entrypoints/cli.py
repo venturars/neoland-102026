@@ -5,6 +5,7 @@ No imprime nada: devuelve el texto y lo imprime `app.py`, que es quien habla con
 """
 
 import sqlite3
+from dataclasses import dataclass
 from datetime import UTC, datetime, tzinfo
 
 from attendance.domain.errors import AppError
@@ -14,6 +15,19 @@ from attendance.usecases import attendance, sessions
 from attendance.usecases.attendance import FetchParticipants
 
 
+@dataclass(frozen=True)
+class MeetStart:
+    """Lo que deja el atajo `--meet` (ARCHITECTURE.md · M4).
+
+    Attributes:
+        session_id: la clase abierta, para enlazar el panel a ella.
+        message: el resultado de la primera toma, o por qué falló, listo para imprimir.
+    """
+
+    session_id: str
+    message: str
+
+
 def start_meet_session(
     conn: sqlite3.Connection,
     fetch_participants: FetchParticipants,
@@ -21,7 +35,7 @@ def start_meet_session(
     who: Who,
     t: float,
     tz: tzinfo | None,
-) -> tuple[str, str]:
+) -> MeetStart:
     """Abre una clase automática para la reunión y toma la asistencia una vez.
 
     Si la toma falla, la clase queda abierta y el texto lo explica, para reintentar desde el panel.
@@ -35,7 +49,7 @@ def start_meet_session(
         tz: zona horaria del título y de la hora de la reunión; None usa la del sistema.
 
     Returns:
-        El id de la clase y el resultado de la toma, listo para imprimir.
+        La clase abierta y el texto del resultado.
 
     Raises:
         MeetingLinkInvalidError: el enlace no es de Meet; no se crea ninguna clase (spec 004 · CA-14).
@@ -44,8 +58,10 @@ def start_meet_session(
     try:
         result = attendance.sync_from_meeting(conn, fetch_participants, session.id, who, t)
     except AppError as exc:
-        return session.id, f"No se pudo tomar la asistencia: {exc.MESSAGE} Puedes reintentarlo desde el panel."
-    return session.id, sync_message(result, who, tz)
+        return MeetStart(
+            session.id, f"No se pudo tomar la asistencia: {exc.MESSAGE} Puedes reintentarlo desde el panel."
+        )
+    return MeetStart(session.id, sync_message(result, who, tz))
 
 
 def sync_message(result: SyncResult, who: Who, tz: tzinfo | None) -> str:
