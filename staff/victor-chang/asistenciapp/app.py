@@ -107,11 +107,9 @@ def _start_meet_session(config: Config, meet: GoogleMeet, meeting: str, everyone
     print("  Tomando la asistencia de Meet (la primera vez se abre el navegador para dar permiso)...")
     who = Who.EVERYONE if everyone else Who.NOW
     with closing(storage.connect(config.db_path)) as conn:
-        session_id, message = cli.start_meet_session(
-            conn, meet.participants, meeting, who, time.time(), config.timezone
-        )
-    print(f"  {message}")
-    return session_id
+        started = cli.start_meet_session(conn, meet.participants, meeting, who, time.time(), config.timezone)
+    print(f"  {started.message}")
+    return started.session_id
 
 
 def _open_tunnel(port: int) -> tuple[subprocess.Popen[str], str]:

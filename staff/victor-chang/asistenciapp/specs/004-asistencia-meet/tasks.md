@@ -196,8 +196,29 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
 
 ## Fase G · Verificación y cierre
 
-- [ ] **T15** · Lista de comprobación de `ARCHITECTURE.md` §13, anotada aquí punto por punto, y `ruff` y `mypy` sin avisos.
+- [x] **T15** · Lista de comprobación de `ARCHITECTURE.md` §13, anotada aquí punto por punto, y `ruff` y `mypy` sin avisos.
   - *Cubre:* todos (revisión).
+  - **Hecha (2026-10-25):** 435 tests en verde; `ruff check`, `ruff format --check` y `mypy --strict` sin avisos. Revisión con un script (importaciones por capa, tamaños, SQL, registros) y leyendo el código nuevo de la spec 004:
+    - ✅ **Capas (C1, O1).** El dominio no importa nada de fuera de `domain/`; la infraestructura no importa casos de uso ni entradas. Las entradas solo usan `infra.storage` para la conexión y la lista de clases (C5); `app.py` monta las piezas (C4).
+    - ✅ **Dominio sin E/S (C1, M5).** `participants.py` solo tiene tipos y `names_from_platform`; la hora de la toma y los participantes llegan por parámetro.
+    - ✅ **Entradas finas (C2, C5)**, con dos matices justificados:
+      - `cli.start_meet_session` llama a **dos** casos de uso (abrir la clase y tomar asistencia): es lo que pide el atajo aprobado (plan §1, decisión §8.2). No decide nada del negocio; solo junta el texto.
+      - `meet-sync` responde `MeetNotConfiguredError` si la app se montó sin participantes: es una comprobación del montaje, no una regla del negocio.
+    - ✅ **Un único sitio de montaje (C4, F5).** `app.py` crea `GoogleMeet` con las rutas de `Config` y se lo pasa a `create_app` y al atajo.
+    - ✅ **Tamaños (M1, M2).** Ningún archivo pasa de 250 líneas. `sync_from_meeting` ocupa 45 líneas, pero 25 son su docstring; el código son unas 20. `start_tunnel` (37, de la spec 001) está dentro del límite.
+    - ✅ **Tipos con nombre (M4).** `MeetingAttendance`, `SyncResult`, `Who`, `Mode`. **Arreglado en esta revisión:** `cli.start_meet_session` devolvía una tupla a `app.py`; ahora devuelve `MeetStart(session_id, message)`.
+    - ✅ **SQL (D1–D4).** Solo en `infra/storage.py`, con parámetros; la migración usa frases fijas. La toma guarda todos los registros en una transacción abierta por el caso de uso; ninguna función de almacenamiento confirma por su cuenta.
+    - ✅ **Respuestas (D7, F2).** Cada respuesta tiene su función en `serializers.py` (`sync_result_json` nueva). El secreto de la clase no sale nunca (test); `studentUrl` solo en modo código.
+    - ✅ **Validación (E1).** `mode` y `who` con `validation.choice` (solo texto y solo valores del enum; `who` obligatorio); `meeting` con `optional_str` y su formato en `parse_meeting_code` (ASCII antes de minúsculas).
+    - ✅ **Errores (E3, E4).** Los nueve errores nuevos son `AppError` con su mensaje, en la tabla `STATUS` (un test comprueba que no falta ninguno). La CLI imprime el mismo mensaje.
+    - ✅ **JSON, español, qué hacer (F3, E5).** Todos los mensajes de plan §2.7 dicen qué hacer; los fallos de Google son `502` con "Inténtalo de nuevo en unos segundos".
+    - ✅ **Registros sin datos personales (E7).** `google_meet.py` registra solo el tipo de excepción o el código HTTP, nunca el cuerpo; `google_auth.py`, solo que el permiso caducó. Ni nombres, ni el `sub` de la cuenta, ni el token.
+    - ✅ **Navegador (U2, X4).** Sin `innerHTML` en `static/`; el código de reunión, el resultado y los mensajes del servidor se pintan con `textContent`.
+    - ✅ **Tipos y docstrings con rastro (S2, S3).** `mypy --strict` y las reglas `D` de ruff pasan; cada función nueva cita su spec, plan o regla.
+    - ✅ **Tests (T1, T3, T4).** Cada CA de la spec 004 tiene test, salvo los manuales del plan §6 (CA-15 en el spike; CA-09, CA-11, CA-12 se repiten en T16). Caminos de error: `meeting` vacío, numérico y de otra plataforma; `who` que falta, vacío, numérico o desconocido; letras de otros alfabetos en `parse_meeting_code`. Una matización de T4:
+      - `test_app.py` sustituye `GoogleMeet.participants`, que es la frontera con Google; su comportamiento se prueba aparte con una sesión HTTP falsa (`test_google_meet.py`). El resto de tests usan una función falsa de participantes, que es lo que `create_app` recibe.
+    - ✅ **Complejidad (§12).** `GoogleMeet` es una clase porque guarda estado (permiso y sesión HTTP), el caso permitido. Los participantes son un `Callable`, no un `Protocol`. La única dependencia nueva, `google-auth-oauthlib`, está justificada en plan §7.1.
+    - ✅ **`pytest` en verde:** 435 tests.
 - [ ] **T16** 👤 · Prueba real en Meet (Victor, con su cuenta y otro dispositivo):
   1. `python app.py --meet <código>` → abre Google la primera vez (CA-11) y registra a los presentes sin el profesor (CA-05, CA-09).
   2. Entra otra persona → "Quién está ahora" → se añade 1 (CA-06).
