@@ -106,6 +106,8 @@ form.addEventListener("submit", async (event) => {
     } else if (res.status === 409) { // CA-09
       form.hidden = true;
       showMessage("error", data.error);
+    } else if (res.status === 403) { // aviso de ban
+      showMessage("error", data.error);
     } else { // CA-06, CA-08
       showMessage("error", data.error);
       (res.status === 400 ? nameInput : codeInput).select();

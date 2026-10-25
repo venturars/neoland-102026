@@ -29,6 +29,11 @@ CREATE TABLE IF NOT EXISTS checkins (
   checked_at  TEXT NOT NULL,
   UNIQUE (session_id, name_key)
 );
+
+CREATE TABLE IF NOT EXISTS blacklist (
+  ip        TEXT PRIMARY KEY,
+  banned_at TEXT NOT NULL
+);
 """
 
 
@@ -174,6 +179,32 @@ def list_checkins(conn: sqlite3.Connection, session_id: str) -> list[dict]:
         (session_id,),
     ).fetchall()
     return [dict(r) for r in rows]
+
+
+def ban(conn: sqlite3.Connection, ip: str, banned_at: str) -> None:
+    """Guarda una IP en la blacklist. Si ya está, no cambia la fila.
+
+    :param conn: conexión abierta.
+    :param ip: IP pública estática.
+    :param banned_at: hora del bloqueo, en ISO UTC.
+    :return: None.
+    """
+    with conn:
+        conn.execute(
+            "INSERT INTO blacklist (ip, banned_at) VALUES (?, ?) ON CONFLICT (ip) DO NOTHING",
+            (ip, banned_at),
+        )
+
+
+def is_banned(conn: sqlite3.Connection, ip: str) -> bool:
+    """Dice si esa IP está en la blacklist.
+
+    :param conn: conexión abierta.
+    :param ip: IP pública estática.
+    :return: True si está bloqueada.
+    """
+    row = conn.execute("SELECT 1 FROM blacklist WHERE ip = ?", (ip,)).fetchone()
+    return row is not None
 
 
 def remove_checkin(conn: sqlite3.Connection, session_id: str, checkin_id: int) -> bool:
