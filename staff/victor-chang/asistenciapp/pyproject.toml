@@ -46,7 +46,7 @@ python_version = "3.13"
 strict = true
 files = ["app.py", "attendance"]
 
-# google-auth-oauthlib no publica tipos (spec 004 · T01). Solo para ese módulo; el resto sigue en strict.
+# google-auth-oauthlib y oauthlib no publican tipos (spec 004 · T01, T09). Solo para esos módulos; el resto sigue en strict.
 [[tool.mypy.overrides]]
-module = ["google_auth_oauthlib", "google_auth_oauthlib.*"]
+module = ["google_auth_oauthlib", "google_auth_oauthlib.*", "oauthlib", "oauthlib.*"]
 ignore_missing_imports = true

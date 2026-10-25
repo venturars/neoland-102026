@@ -99,7 +99,7 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
     - Acepta también `http://`, el enlace sin esquema (`meet.google.com/…`) y una barra final.
     - Rechaza dominios que se parecen (`meet.google.com.evil.com`, `evil.com/meet.google.com/…`), otras plataformas, `#…` y letras que parecen latinas pero no lo son.
     - Comprueba que el texto es ASCII **antes** de pasarlo a minúsculas, porque `lower()` convierte algunos símbolos en letras ASCII (el signo Kelvin "K" pasa a "k").
-- [ ] **T09** 🧪 · `infra/google_meet.py`: `GoogleMeet.participants(meeting_code, who)`, con la sesión HTTP por parámetro (plan §2.3, v2.1).
+- [x] **T09** 🧪 · `infra/google_meet.py`: `GoogleMeet.participants(meeting_code, who)`, con la sesión HTTP por parámetro (plan §2.3, v2.1).
   - Tests con una sesión HTTP falsa y los ejemplos de `tests/fixtures/meet/`:
     - pide `conferenceRecords` filtrado por el código; elige la reunión en curso y, si no hay, la más reciente (CA-20); 0 reuniones → `MeetingNotVisibleError` (CA-13, CA-14);
     - `now` → participantes con `latest_end_time IS NULL`; con la reunión ya terminada → `MeetingEndedError` sin pedirlos (CA-21); `everyone` → sin filtro (CA-18);
@@ -113,6 +113,12 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
     - nada de la respuesta de Google llega a los registros (`caplog`).
   - El flujo OAuth real (abrir Google, esperar como mucho 2 minutos → `MeetLoginNotCompletedError`) se verifica a mano en T16.
   - *Cubre:* CA-09, CA-11 a CA-14, CA-17, CA-18, CA-20, CA-21.
+  - **Hecha (2026-10-25):** 359 tests en verde (31 nuevos, que fallaron primero); `ruff` y `mypy --strict` sin avisos.
+    - `GoogleMeet` recibe por parámetro su sesión HTTP y la función que pide el permiso (`run_browser_login` por defecto); los tests simulan solo eso y las credenciales de Google (T4).
+    - `run_browser_login` traduce los fallos del navegador: 2 minutos sin aceptar (`WSGITimeoutError`) o "Cancelar" (`AccessDeniedError`) → `MeetLoginNotCompletedError`; aceptar sin la casilla de Meet (el `Warning` de oauthlib) → `MeetPermissionMissingError`.
+    - Errores de Google: el motivo del `403` decide entre API desactivada (`SERVICE_DISABLED`), permiso insuficiente (`ACCESS_TOKEN_SCOPE_INSUFFICIENT`) y "no se ve". Un `401` olvida el permiso guardado. En el registro solo queda el código HTTP.
+    - Tipos: `oauthlib` tampoco publica tipos (se añade a la excepción de `google_auth_oauthlib` en `pyproject.toml`), y tres métodos de `Credentials` de `google-auth` no están anotados: se marcan solo esas tres llamadas.
+    - Lo que no se puede probar sin Google (el inicio de sesión real, la caducidad semanal de verdad) queda para T16.
 
 ## Fase D · Casos de uso (plan §2.2, §2.9, §2.11)
 
