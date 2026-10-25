@@ -6,10 +6,18 @@ desde fuera, en segundos Unix (M5; excepción de spec 005 · plan §5).
 
 from dataclasses import dataclass
 from datetime import UTC, datetime, tzinfo
+from enum import StrEnum
 
 from attendance.domain.errors import TitleTooLongError
 
 MAX_TITLE_LENGTH = 20
+
+
+class Mode(StrEnum):
+    """Cómo se pasa lista en una clase (spec 004 · HU-07; valores en inglés, plan §8.6)."""
+
+    CODE = "code"
+    AUTOMATIC = "automatic"
 
 
 @dataclass(frozen=True)
@@ -21,6 +29,8 @@ class Session:
     secret: bytes
     opened_at: str
     closed_at: str | None
+    mode: Mode = Mode.CODE
+    meeting_code: str | None = None  # solo en modo automático (spec 004 · CA-01)
 
     @property
     def is_open(self) -> bool:
@@ -37,6 +47,7 @@ class SessionSummary:
     opened_at: str
     closed_at: str | None
     total: int
+    mode: Mode = Mode.CODE
 
 
 @dataclass(frozen=True)

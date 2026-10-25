@@ -15,7 +15,16 @@ from attendance.domain.errors import (
     CheckinNotFoundError,
     EmptyNameError,
     InvalidCodeError,
+    MeetingEndedError,
+    MeetingLinkInvalidError,
+    MeetingNotVisibleError,
+    MeetLoginNotCompletedError,
+    MeetNotConfiguredError,
+    MeetPermissionMissingError,
+    MeetServiceError,
     NameTooLongError,
+    NotAutomaticSessionError,
+    NotCodeSessionError,
     SessionClosedError,
     SessionNotFoundError,
     TitleTooLongError,
@@ -50,6 +59,16 @@ STATUS: dict[type[AppError], int] = {
     CheckinNotFoundError: 404,
     SessionClosedError: 409,
     InvalidCodeError: 422,
+    # Modo automático (spec 004 · plan §2.7; decisión §8.5): 422 lo que el profesor puede arreglar, 502 Google.
+    NotCodeSessionError: 409,
+    NotAutomaticSessionError: 409,
+    MeetingLinkInvalidError: 422,
+    MeetingNotVisibleError: 422,
+    MeetingEndedError: 422,
+    MeetPermissionMissingError: 422,
+    MeetLoginNotCompletedError: 422,
+    MeetNotConfiguredError: 422,
+    MeetServiceError: 502,
 }
 
 
