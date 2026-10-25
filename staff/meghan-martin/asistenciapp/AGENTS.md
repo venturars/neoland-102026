@@ -138,6 +138,7 @@ Un cambio está terminado cuando:
 | `003-activar-el-entorno` | ✅ Implementada (2026-10-22) | Activar el entorno y arrancar la app son dos títulos |
 | `004-quitar-referencias-personales` | ✅ Implementada (2026-10-22) | Las instrucciones usan `staff/<usuario>/asistenciapp` |
 | `005-reorganizar-arquitectura` | ✅ Implementada (2026-10-23) | Documentos en `docs/`, reglas, acciones y almacén separados |
+| `006-limite-de-intentos` | ✅ Implementada (2026-10-25) | 5 intentos por segundo, 20 por minuto, y el bloqueo se queda |
 | Bot de Discord | Idea futura | Sin número de spec |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.

@@ -1,12 +1,15 @@
 """Acciones de la asistencia: abrir, cerrar, anotar, listar, borrar y exportar.
 
 Cada acción pide las reglas y el almacén. No pinta la página.
-Ejemplo: check_in(ruta, id_clase, "Ana", "4821", ahora)
+Ejemplo: check_in(ruta, id_clase, "Ana", "4821", ahora, direccion)
 devuelve el registro y si era nuevo.
 """
 
 from datetime import datetime, timezone
 
+# Banned is the signal "this computer is blocked".
+# over_limit answers "is this count past 5 in a second, or past 20 in a minute?"
+from asistencia.domain.attempts import Banned, over_limit
 from asistencia.domain.codes import code_for, seconds_left
 from asistencia.domain.names import clean_name, name_key
 from asistencia.domain.session import ensure_code, ensure_open, require_session
@@ -37,13 +40,33 @@ def public_session(path, session_id: str) -> dict:
     return {"title": session["title"], "open": session["closed_at"] is None}
 
 
-def check_in(path, session_id: str, name: str, code: str, t: float) -> tuple[dict, bool]:
-    """Anota a la persona si la clase existe, está abierta y el código vale.
+def check_in(
+    path, session_id: str, name: str, code: str, t: float, address: str
+) -> tuple[dict, bool]:
+    """Anota a la persona si el ordenador no está bloqueado, la clase está abierta y el código vale.
 
-    Recibe la ruta, el id, el nombre, el código y el instante.
+    Recibe la ruta, el id, el nombre, el código, el instante y la dirección.
     Devuelve el registro y True si es la primera vez.
-    Ejemplo: check_in(ruta, id_clase, "Ana", "4821", ahora).
+    Ejemplo: check_in(ruta, id_clase, "Ana", "4821", ahora, direccion).
     """
+    # address is the computer that sent this try, not an address typed in the form.
+    # Stop here if that computer was already blocked. Do not mark anyone present.
+    if store.is_computer_blocked(path, address):
+        raise Banned()
+    # Remember this try, then forget tries older than one minute.
+    store.add_checkin_attempt(path, address, t)
+    store.prune_checkin_attempts(path, t - 60)
+    # Count this computer's tries in the last second and in the last minute.
+    # This try is already included in both counts.
+    in_the_second = store.count_checkin_attempts(path, address, t - 1)
+    in_the_minute = store.count_checkin_attempts(path, address, t - 60)
+    # 5 in a second and 20 in a minute are still allowed. One more blocks.
+    if over_limit(in_the_second, in_the_minute):
+        # Save the block so it is still there after the app is closed.
+        store.block_computer(path, address, _iso(t))
+        raise Banned()
+    # Under the limit, check-in continues as before:
+    # the class exists, it is open, the name is valid, and the code is valid.
     session = require_session(store.get_session(path, session_id))
     ensure_open(session)
     clean = clean_name(name)

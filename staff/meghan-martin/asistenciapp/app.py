@@ -16,6 +16,8 @@ from flask import Flask, Response, jsonify, request
 from werkzeug.exceptions import HTTPException
 from werkzeug.middleware.proxy_fix import ProxyFix
 
+# Banned means a computer tried to check in too many times.
+from asistencia.domain.attempts import Banned
 from asistencia.domain.session import InvalidCode, SessionClosed, SessionNotFound
 from asistencia.tunnel import TunnelError, start_tunnel
 from asistencia.usecases import attendance
@@ -30,8 +32,10 @@ GENERIC_ERRORS = {404: "No encontrado.", 405: "Método no permitido."}
 def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
     app = Flask(__name__, static_folder="static", static_url_path="")
     app.json.ensure_ascii = False
-    # Detrás del túnel, usar la dirección pública que nos indica (plan §2.10, CA-19).
-    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+    # Behind the public link, keep the public https address in the student link.
+    # x_for=0 means: do not trust an address sent in a header.
+    # The computer we count is the one that actually connected.
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=0, x_proto=1, x_host=1)
 
     stored = attendance.prepare(db_path)
     app.config["TEACHER_TOKEN"] = token or stored
@@ -48,6 +52,9 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
             return error(409, str(exc))
         except InvalidCode as exc:
             return error(422, str(exc))
+        except Banned as exc:
+            # 429 means "too many tries". The text is the Spanish block sentence.
+            return error(429, str(exc))
         except ValueError as exc:
             return error(400, str(exc))
 
@@ -82,7 +89,14 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
 
         def action():
             row, created = attendance.check_in(
-                db_path, session_id, body.get("name"), body.get("code", ""), now()
+                db_path,  # the attendance file on this computer
+                session_id,  # which class
+                body.get("name"),  # the name they typed
+                body.get("code", ""),  # the code they typed, or blank
+                now(),  # the time of this try
+                # The computer that connected. A typed address is not used.
+                # A missing address becomes blank, so those tries share one count.
+                request.remote_addr or "",
             )
             if not created:
                 return jsonify(already=True, name=row["name"], checkedAt=row["checked_at"])

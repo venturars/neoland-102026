@@ -56,6 +56,7 @@ asistenciapp/
 | `asistencia/domain/codes.py` | Reglas | Calcula el código de 4 cifras y dice si el que escribió el alumno vale |
 | `asistencia/domain/names.py` | Reglas | Acepta o rechaza el nombre |
 | `asistencia/domain/session.py` | Reglas | Dice si la clase existe, si sigue abierta y si el código vale ahora |
+| `asistencia/domain/attempts.py` | Reglas | Decide si los intentos de una dirección se han pasado. No abre el fichero ni dibuja la página |
 | `asistencia/usecases/attendance.py` | Acciones | Abre, cierra, anota, lista, borra y exporta. Pide la regla y el almacén |
 | `asistencia/storage/sqlite.py` | Almacén | Crea las tablas, guarda la clase y los registros, y los lee |
 | `asistencia/export.py` | CSV | Da formato a filas que ya están cargadas. No abre la base |

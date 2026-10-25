@@ -30,6 +30,22 @@ CREATE TABLE IF NOT EXISTS checkins (
   checked_at  TEXT NOT NULL,
   UNIQUE (session_id, name_key)
 );
+
+-- Recent check-in tries. One row is one try from one computer.
+-- These rows are only for counting. They are not the attendance list.
+-- Rows older than a minute get deleted. The block list below does not.
+CREATE TABLE IF NOT EXISTS checkin_attempts (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT, -- a number that grows by itself
+  address      TEXT NOT NULL,                    -- the computer that sent the try
+  attempted_at REAL NOT NULL                     -- when the try happened, in seconds
+);
+
+-- Computers that tried too many times. One row is one blocked computer.
+-- This list is never cleared. Closing the app does not remove it.
+CREATE TABLE IF NOT EXISTS blocked_computers (
+  address    TEXT PRIMARY KEY, -- the computer. It can appear only once.
+  blocked_at TEXT NOT NULL     -- when it was blocked
+);
 """
 
 
@@ -168,6 +184,99 @@ def list_checkins(path, session_id: str) -> list[dict]:
             (session_id,),
         ).fetchall()
         return [dict(r) for r in rows]
+
+
+def add_checkin_attempt(path, address: str, attempted_at: float) -> None:
+    """Anota un intento de pasar lista desde ese ordenador.
+
+    Recibe la ruta, la dirección y el instante en segundos.
+    No devuelve nada.
+    Ejemplo: add_checkin_attempt(ruta, direccion, ahora).
+    """
+    # Open the attendance file, write one try, then close the file.
+    # address is the computer. attempted_at is the time of this try.
+    with _open(path) as conn:
+        with conn:
+            conn.execute(
+                "INSERT INTO checkin_attempts (address, attempted_at) VALUES (?, ?)",
+                (address, attempted_at),
+            )
+
+
+def count_checkin_attempts(path, address: str, since: float) -> int:
+    """Cuenta los intentos de esa dirección desde un instante, incluido ese instante.
+
+    Recibe la ruta, la dirección y el instante desde el que se cuenta.
+    Devuelve cuántos intentos hay.
+    Ejemplo: count_checkin_attempts(ruta, direccion, ahora - 60).
+    """
+    # Count tries from this computer since a moment in time.
+    # >= means a try from exactly that moment still counts.
+    # The try that just happened is included, because it was saved first.
+    with _open(path) as conn:
+        row = conn.execute(
+            """
+            SELECT COUNT(*) AS total
+            FROM checkin_attempts
+            WHERE address = ? AND attempted_at >= ?
+            """,
+            (address, since),
+        ).fetchone()
+        return int(row["total"])
+
+
+def prune_checkin_attempts(path, older_than: float) -> None:
+    """Borra los intentos anteriores a un instante. No toca la lista de bloqueo.
+
+    Recibe la ruta y el instante. Se borran los intentos estrictamente anteriores.
+    No devuelve nada.
+    Ejemplo: prune_checkin_attempts(ruta, ahora - 60).
+    """
+    # Forget tries that are older than the moment we were given.
+    # A try from exactly that moment stays. The block list is not touched.
+    with _open(path) as conn:
+        with conn:
+            conn.execute(
+                "DELETE FROM checkin_attempts WHERE attempted_at < ?",
+                (older_than,),
+            )
+
+
+def is_computer_blocked(path, address: str) -> bool:
+    """Dice si esa dirección está en la lista de bloqueo.
+
+    Recibe la ruta y la dirección. Devuelve True si está bloqueada.
+    Ejemplo: is_computer_blocked(ruta, direccion).
+    """
+    # Look for this computer on the block list.
+    # A row means it is blocked. No row means it is not.
+    with _open(path) as conn:
+        row = conn.execute(
+            "SELECT 1 FROM blocked_computers WHERE address = ?",
+            (address,),
+        ).fetchone()
+        return row is not None
+
+
+def block_computer(path, address: str, blocked_at: str) -> None:
+    """Deja esa dirección en la lista de bloqueo. Si ya estaba, no cambia la hora.
+
+    Recibe la ruta, la dirección y la hora del bloqueo.
+    No devuelve nada.
+    Ejemplo: block_computer(ruta, direccion, hora).
+    """
+    # Write this computer on the block list, with the time it was blocked.
+    # OR IGNORE means: if it is already there, leave the old time and do nothing.
+    # Nothing in this file removes a computer from the list.
+    with _open(path) as conn:
+        with conn:
+            conn.execute(
+                """
+                INSERT OR IGNORE INTO blocked_computers (address, blocked_at)
+                VALUES (?, ?)
+                """,
+                (address, blocked_at),
+            )
 
 
 def remove_checkin(path, session_id: str, checkin_id: int) -> bool:
