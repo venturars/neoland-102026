@@ -9,8 +9,8 @@ from datetime import UTC
 import pytest
 
 from attendance.domain.codes import WINDOW_SECONDS, code_for
-from attendance.domain.errors import SessionNotFoundError, TitleTooLongError
-from attendance.domain.sessions import default_title, to_iso
+from attendance.domain.errors import MeetingLinkInvalidError, SessionNotFoundError, TitleTooLongError
+from attendance.domain.sessions import Mode, default_title, to_iso
 from attendance.infra import storage
 from attendance.usecases import sessions
 
@@ -111,3 +111,35 @@ def test_export_attendance(conn):  # spec 001 CA-14
 def test_export_unknown_session(conn):
     with pytest.raises(SessionNotFoundError):
         sessions.export_attendance(conn, "no-existe", UTC)
+
+
+# ---------- Modo automático (spec 004 · plan §2.9) ----------
+
+
+def test_automatic_session_keeps_the_meeting_code(db_path):  # spec 004 CA-01
+    with closing(storage.connect(db_path)) as conn:
+        session = sessions.create_session(
+            conn, "Clase", T, UTC, mode=Mode.AUTOMATIC, meeting="https://meet.google.com/ABC-defg-hij?authuser=1"
+        )
+    with closing(storage.connect(db_path)) as conn:
+        saved = sessions.find_session(conn, session.id)
+    assert (saved.mode, saved.meeting_code) == (Mode.AUTOMATIC, "abc-defg-hij")
+
+
+@pytest.mark.parametrize("meeting", ["", "   ", "https://zoom.us/j/123", "abc-defg"])
+def test_automatic_session_needs_a_valid_link(conn, meeting):  # spec 004 CA-01, CA-14
+    with pytest.raises(MeetingLinkInvalidError):
+        sessions.create_session(conn, "Clase", T, UTC, mode=Mode.AUTOMATIC, meeting=meeting)
+    assert storage.list_sessions(conn) == []
+
+
+def test_code_session_ignores_the_meeting(conn):  # spec 004 CA-03
+    session = sessions.create_session(conn, "Clase", T, UTC, mode=Mode.CODE, meeting="lo que sea")
+    assert (session.mode, session.meeting_code) == (Mode.CODE, None)
+
+
+def test_teacher_view_of_an_automatic_session_has_no_code(conn):  # spec 004 CA-02
+    session = sessions.create_session(conn, "Clase", T, UTC, mode=Mode.AUTOMATIC, meeting="abc-defg-hij")
+    view = sessions.teacher_view(conn, session.id, T + 10)
+    assert view.session.is_open
+    assert (view.code, view.seconds_left) == (None, None)

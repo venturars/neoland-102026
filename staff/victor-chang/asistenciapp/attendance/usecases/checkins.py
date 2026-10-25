@@ -8,9 +8,9 @@ que escribe abre su transacción con `with conn:` (D3).
 import sqlite3
 
 from attendance.domain.codes import is_valid_code
-from attendance.domain.errors import CheckinNotFoundError, InvalidCodeError, SessionClosedError
+from attendance.domain.errors import CheckinNotFoundError, InvalidCodeError, NotCodeSessionError, SessionClosedError
 from attendance.domain.names import clean_name, name_key
-from attendance.domain.sessions import CheckinResult, to_iso
+from attendance.domain.sessions import CheckinResult, Mode, to_iso
 from attendance.infra import storage
 from attendance.usecases.sessions import find_session
 
@@ -18,7 +18,7 @@ from attendance.usecases.sessions import find_session
 def check_in(conn: sqlite3.Connection, session_id: str, name: str, code: str, t: float) -> CheckinResult:
     """Registra al alumno en la clase; si ya estaba, devuelve su registro con created=False (CA-07).
 
-    Las comprobaciones van en este orden: clase cerrada, nombre, código.
+    Las comprobaciones van en este orden: clase cerrada, modo, nombre, código.
 
     Args:
         conn: conexión abierta a la base de datos.
@@ -30,12 +30,15 @@ def check_in(conn: sqlite3.Connection, session_id: str, name: str, code: str, t:
     Raises:
         SessionNotFoundError: no hay ninguna clase con ese id.
         SessionClosedError: la clase ya está cerrada (CA-09).
+        NotCodeSessionError: la clase es automática, sin código (spec 004 · CA-02).
         EmptyNameError, NameTooLongError: el nombre no es válido (CA-08).
         InvalidCodeError: el código es incorrecto o ha caducado (CA-06).
     """
     session = find_session(conn, session_id)
     if not session.is_open:
         raise SessionClosedError
+    if session.mode is not Mode.CODE:
+        raise NotCodeSessionError
     clean = clean_name(name)
     if not is_valid_code(session.secret, code, t):
         raise InvalidCodeError
