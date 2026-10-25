@@ -32,6 +32,8 @@ def check_in(client, sid, name, code):
         ("get", "/api/sessions/abc"),
         ("post", "/api/sessions/abc/close"),
         ("get", "/api/sessions/abc/export"),
+        ("get", "/api/blocked-ips"),
+        ("delete", "/api/blocked-ips"),
     ],
 )
 @pytest.mark.parametrize("headers", [{}, {"X-Teacher-Token": "token-falso"}])
