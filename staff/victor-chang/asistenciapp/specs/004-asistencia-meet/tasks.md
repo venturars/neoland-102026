@@ -163,12 +163,17 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
     - `meetingCode` sale siempre en `GET /api/sessions/<id>` (`null` en las clases de código); `studentUrl`, solo en modo código.
     - Si la app se monta sin `fetch_participants` (p. ej. en los tests de la spec 001), `meet-sync` responde `422` `MeetNotConfiguredError`.
     - Solo cambió un test de la spec 001 (`GET /api/s/<id>` compara el JSON entero); los de serializadores ganan `mode`.
-- [ ] **T13** 🧪 · Atajo `python app.py --meet <código>` (decisión §8.2): `entrypoints/cli.py` y `app.py`.
+- [x] **T13** 🧪 · Atajo `python app.py --meet <código>` (decisión §8.2): `entrypoints/cli.py` y `app.py`.
   - Valida el código antes de arrancar; crea la clase automática y hace la primera toma ("quién está ahora"; `--meet-todos` para "todos los que han estado") con los mismos casos de uso (C3); imprime cuántos se registraron y el enlace del panel **a esa clase** (`#t=…&s=…`).
   - Si la toma falla, imprime el mensaje del error y arranca igualmente, para poder reintentar desde el panel.
   - Combinable con `--tunel`. `app.py` monta `GoogleMeet` con las rutas de `Config` (C4).
   - Tests en `test_cli.py` y `test_app.py` (solo se simulan Google y `Flask.run`, T4).
   - *Cubre:* HU-01.
+  - **Hecha (2026-10-25):** 435 tests en verde (los nuevos fallaron primero, salvo el de `--meet-todos` sin `--meet`, que el arranque anterior ya rechazaba como opción desconocida); `ruff` y `mypy --strict` sin avisos.
+    - `cli.start_meet_session(conn, fetch_participants, meeting, who, t, tz)` devuelve el id de la clase y el texto del resultado; no imprime (lo hace `app.py`). La clase se titula con la fecha, como en la web sin título.
+    - El texto sigue el formato del panel (plan §4): "Reunión del 23/10 a las 06:56 · Añadidas 2 personas nuevas · 2 en la llamada ahora", en singular con 1 persona, y "No hay participantes en la reunión" con 0 (CA-10). La hora de la reunión se muestra en la zona de `ASISTENCIA_TZ`.
+    - `app.py` comprueba el enlace **antes** de anunciar la toma o abrir el navegador; si está mal, para con el mensaje de `MeetingLinkInvalidError` y no arranca. `--meet-todos` sin `--meet` es un error de uso.
+    - La toma va antes del túnel. Probado a mano: enlace mal escrito y `--meet-todos` solo. La toma real con Google queda para T16.
 
 ## Fase F · Interfaz (plan §4)
 
