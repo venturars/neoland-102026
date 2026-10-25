@@ -1,16 +1,13 @@
-"""Tests de attendance/infra/google_meet.py · spec 004 CA-14; plan §2.3."""
+"""Tests de attendance/infra/google_meet.py · spec 004 CA-05, CA-09, CA-13, CA-14, CA-17 a CA-21; plan §2.3, §2.7."""
 
 import copy
 import json
 import logging
-import stat
 from pathlib import Path
 
 import pytest
 import requests
-from google.auth.exceptions import RefreshError
-from google_auth_oauthlib.flow import WSGITimeoutError
-from oauthlib.oauth2.rfc6749.errors import AccessDeniedError
+from google_fakes import FakeCredentials
 
 from attendance.domain.errors import (
     MeetingEndedError,
@@ -22,8 +19,7 @@ from attendance.domain.errors import (
     MeetServiceError,
 )
 from attendance.domain.participants import Who
-from attendance.infra import google_meet
-from attendance.infra.google_meet import MEET_SCOPE, SCOPES, GoogleMeet, parse_meeting_code
+from attendance.infra.google_meet import GoogleMeet, parse_meeting_code
 
 # ---------- Enlace o código de la reunión (T08) ----------
 
@@ -129,24 +125,6 @@ class FakeHttp:
 
     def urls(self, ending):
         return [c for c in self.calls if c["url"].endswith(ending)]
-
-
-class FakeCredentials:
-    def __init__(self, scopes=SCOPES, valid=True, refresh_error=None):
-        self.token = "token-falso"
-        self.valid = valid
-        self.granted_scopes = list(scopes)
-        self.scopes = list(scopes)
-        self.refresh_error = refresh_error
-        self.refreshed = False
-
-    def refresh(self, _request):
-        if self.refresh_error:
-            raise self.refresh_error
-        self.refreshed, self.valid = True, True
-
-    def to_json(self):
-        return json.dumps({"falso": True})
 
 
 @pytest.fixture
@@ -310,96 +288,8 @@ def test_nothing_from_google_reaches_the_logs(make_meet, caplog):  # E7
     assert "texto de Google" not in caplog.text and "Persona" not in caplog.text
 
 
-def test_missing_client_file(tmp_path):  # plan §2.7
-    meet = GoogleMeet(tmp_path / "no-existe.json", tmp_path / "token.json", http=FakeHttp(), login=None)
-    with pytest.raises(MeetNotConfiguredError):
-        meet.participants("abc-defg-hij", Who.EVERYONE)
-
-
-def test_permission_without_meet_is_refused_and_not_saved(make_meet, tmp_path):  # plan §2.4
-    meet, _ = make_meet(credentials=FakeCredentials(scopes=["openid"]))
-    with pytest.raises(MeetPermissionMissingError):
-        meet.participants("abc-defg-hij", Who.EVERYONE)
-    assert not (tmp_path / "google-token.json").exists()
-
-
-def test_the_permission_is_saved_only_for_the_user(make_meet, tmp_path):  # CA-12, X
-    meet, logins = make_meet()
-    meet.participants("abc-defg-hij", Who.EVERYONE)
-    token = tmp_path / "google-token.json"
-    assert stat.S_IMODE(token.stat().st_mode) == 0o600
-    meet.participants("abc-defg-hij", Who.EVERYONE)
-    assert len(logins) == 1  # la segunda toma no vuelve a pedir permiso
-
-
-def test_a_saved_permission_is_reused(make_meet, tmp_path, monkeypatch):  # CA-12
-    (tmp_path / "google-token.json").write_text("{}")
-    saved = FakeCredentials(valid=False)  # caducado el acceso, pero se puede renovar
-    monkeypatch.setattr(google_meet.Credentials, "from_authorized_user_file", lambda *_a: saved)
-    meet, logins = make_meet()
-    meet.participants("abc-defg-hij", Who.EVERYONE)
-    assert saved.refreshed and logins == []
-
-
-def test_an_expired_permission_asks_again(make_meet, tmp_path, monkeypatch):  # CA-12, spec P7 (permiso semanal)
-    token = tmp_path / "google-token.json"
-    token.write_text("{}")
-    expired = FakeCredentials(valid=False, refresh_error=RefreshError("invalid_grant"))
-    monkeypatch.setattr(google_meet.Credentials, "from_authorized_user_file", lambda *_a: expired)
-    meet, logins = make_meet()
-    meet.participants("abc-defg-hij", Who.EVERYONE)
-    assert logins == [1]  # se vuelve a pedir, como la primera vez
-    assert token.exists()  # y se guarda el permiso nuevo
-
-
 def test_a_rejected_token_is_forgotten(make_meet, tmp_path):
     meet, _ = make_meet(FakeHttp(fail=("/userinfo", FakeResponse(401, {"error": {}}))))
     with pytest.raises(MeetLoginNotCompletedError):
         meet.participants("abc-defg-hij", Who.EVERYONE)
     assert not (tmp_path / "google-token.json").exists()
-
-
-class FakeFlow:
-    def __init__(self, error=None, credentials=None):
-        self.error = error
-        self.credentials = credentials
-        self.kwargs = {}
-
-    def run_local_server(self, **kwargs):
-        self.kwargs = kwargs
-        if self.error:
-            raise self.error
-        return self.credentials
-
-
-def scope_warning(granted):
-    warning = Warning("Scope has changed")
-    warning.new_scope = granted
-    return warning
-
-
-@pytest.mark.parametrize(
-    "error, expected",
-    [
-        (WSGITimeoutError("sin respuesta"), MeetLoginNotCompletedError),  # 2 minutos sin aceptar
-        (AccessDeniedError(), MeetLoginNotCompletedError),  # pulsó "Cancelar"
-        (scope_warning(["openid"]), MeetPermissionMissingError),  # sin la casilla de Meet
-    ],
-)
-def test_browser_login_failures(monkeypatch, client_file, error, expected):  # CA-11, plan §2.4
-    flow = FakeFlow(error=error)
-    monkeypatch.setattr(google_meet.InstalledAppFlow, "from_client_secrets_file", lambda *_a, **_k: flow)
-    with pytest.raises(expected):
-        google_meet.run_browser_login(client_file)
-
-
-def test_browser_login_waits_two_minutes_on_a_free_port(monkeypatch, client_file):  # F4
-    flow = FakeFlow(credentials=FakeCredentials())
-    monkeypatch.setattr(google_meet.InstalledAppFlow, "from_client_secrets_file", lambda *_a, **_k: flow)
-    google_meet.run_browser_login(client_file)
-    assert flow.kwargs["port"] == 0 and flow.kwargs["timeout_seconds"] == 120
-
-
-def test_scopes():
-    assert MEET_SCOPE == "https://www.googleapis.com/auth/meetings.space.readonly"
-    assert SCOPES == [MEET_SCOPE, "openid"]  # sin email (P4)

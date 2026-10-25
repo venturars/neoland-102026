@@ -119,6 +119,7 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
     - Errores de Google: el motivo del `403` decide entre API desactivada (`SERVICE_DISABLED`), permiso insuficiente (`ACCESS_TOKEN_SCOPE_INSUFFICIENT`) y "no se ve". Un `401` olvida el permiso guardado. En el registro solo queda el código HTTP.
     - Tipos: `oauthlib` tampoco publica tipos (se añade a la excepción de `google_auth_oauthlib` en `pyproject.toml`), y tres métodos de `Credentials` de `google-auth` no están anotados: se marcan solo esas tres llamadas.
     - Lo que no se puede probar sin Google (el inicio de sesión real, la caducidad semanal de verdad) queda para T16.
+    - **Después (2026-10-25, a petición de Victor):** `google_meet.py` llegaba a 290 líneas (M1: ~300). El permiso pasa a `infra/google_auth.py` (`run_browser_login` y `GooglePermission`), y `google_meet.py` queda con la API de Meet (193 líneas). Sus tests van a `tests/test_google_auth.py`; `FakeCredentials` se comparte en `tests/google_fakes.py`. 361 tests en verde.
 
 ## Fase D · Casos de uso (plan §2.2, §2.9, §2.11)
 
