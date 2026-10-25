@@ -1,6 +1,6 @@
 # Spec 004 · Quitar las referencias personales
 
-> Estado: **Borrador** (2026-10-24) · Creada: 2026-10-24 · Aprobada: Pendiente
+> Estado: **Implementada** (2026-10-25) · Creada: 2026-10-24 · Aprobada: 2026-10-25
 
 ---
 
@@ -73,3 +73,4 @@ Ninguna.
 | Versión | Fecha | Cambio | Motivo |
 | --- | --- | --- | --- |
 | 0.1 | 2026-10-24 | Borrador inicial | Eliminar referencias personales del usuario Jose Miguel |
+| 1.0 | 2026-10-25 | Aprobada e implementada | El usuario pidió cerrar la implementación |

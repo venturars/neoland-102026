@@ -1,6 +1,6 @@
 # Plan técnico 004 · Quitar las referencias personales
 
-> Estado: **Borrador** (2026-10-24) · Spec: [spec.md](spec.md) v0.1 · Creado: 2026-10-24
+> Estado: **Implementado** (2026-10-25) · Spec: [spec.md](spec.md) v1.0 · Creado: 2026-10-24
 
 Este documento explica **cómo** se cumple la spec. Cada decisión indica qué criterios de aceptación (`CA-xx`) cubre.
 
@@ -50,7 +50,7 @@ Se creará `tests/test_personal_references.py` que:
 
 ---
 
-## 4. Comprobación de la constitución (v2.1)
+## 4. Comprobación de la constitución (v3.0)
 
 | Regla | ¿Cumple? | Cómo |
 | --- | --- | --- |
