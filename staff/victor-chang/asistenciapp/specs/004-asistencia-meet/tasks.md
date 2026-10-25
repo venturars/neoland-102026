@@ -120,6 +120,7 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
     - Tipos: `oauthlib` tampoco publica tipos (se añade a la excepción de `google_auth_oauthlib` en `pyproject.toml`), y tres métodos de `Credentials` de `google-auth` no están anotados: se marcan solo esas tres llamadas.
     - Lo que no se puede probar sin Google (el inicio de sesión real, la caducidad semanal de verdad) queda para T16.
     - **Después (2026-10-25, a petición de Victor):** `google_meet.py` llegaba a 290 líneas (M1: ~300). El permiso pasa a `infra/google_auth.py` (`run_browser_login` y `GooglePermission`), y `google_meet.py` queda con la API de Meet (193 líneas). Sus tests van a `tests/test_google_auth.py`; `FakeCredentials` se comparte en `tests/google_fakes.py`. 361 tests en verde.
+    - **Prueba real con la cuenta de Victor (2026-10-25)**, con un script de prueba fuera del proyecto que solo muestra recuentos y fechas. Reunión de prueba del 23/10: con "todos" da 1 participante sin el profesor y la marca como terminada. La segunda vez **no** abre Google, porque reutiliza el permiso (CA-12). "Ahora" da `MeetingEndedError` (CA-21), y un código inventado `MeetingNotVisibleError` (CA-14). El permiso queda en `data/google-token.json` con `0600`, fuera de git.
 
 ## Fase D · Casos de uso (plan §2.2, §2.9, §2.11)
 
