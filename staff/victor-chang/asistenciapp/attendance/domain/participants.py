@@ -35,6 +35,25 @@ class MeetingAttendance:
     ended: bool
 
 
+@dataclass(frozen=True)
+class SyncResult:
+    """El resultado de una toma de asistencia automática (spec 004 · CA-05 a CA-07, CA-10, CA-20).
+
+    Attributes:
+        added: personas nuevas en la lista con esta toma.
+        found: personas que dio la plataforma (sin el profesor).
+        total: personas en la lista de la clase después de la toma.
+        meeting_started_at: inicio de la reunión de la que es la toma, en ISO 8601 UTC.
+        meeting_ended: si esa reunión ya había terminado.
+    """
+
+    added: int
+    found: int
+    total: int
+    meeting_started_at: str
+    meeting_ended: bool
+
+
 def names_from_platform(display_names: Iterable[str]) -> list[str]:
     """Convierte los nombres visibles de una plataforma en nombres para la lista (spec 004 · CA-08).
 
