@@ -16,6 +16,7 @@ const deleteUserSql = readQuery("delete-user.sql");
 const listUsersSql = readQuery("list-users.sql");
 const findUserByIdSql = readQuery("find-user-by-id.sql");
 const findUserByEmailSql = readQuery("find-user-by-email.sql");
+const findUserByNameSql = readQuery("find-user-by-name.sql");
 
 export function createTableUsers() {
   database.exec(createTableUsersSql);
@@ -75,4 +76,12 @@ export function findUserByEmail(email) {
     name: user.name,
     email: user.email,
   };
+}
+
+export function findUserByName(name) {
+  return database.prepare(findUserByNameSql).all(name).map((user) => ({
+    id: Number(user.id),
+    name: user.name,
+    email: user.email,
+  }));
 }
