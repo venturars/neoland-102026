@@ -1,6 +1,6 @@
 # Plan técnico 003 · Activar el entorno no es arrancar la app
 
-> Estado: **Borrador** (2026-10-22) · Spec: [spec.md](spec.md) v0.1 · Creado: 2026-10-22
+> Estado: **Implementado** (2026-10-25) · Spec: [spec.md](spec.md) v1.0 · Creado: 2026-10-22
 
 Este documento explica **cómo** se cumple la spec. Cada decisión indica qué criterios de aceptación (`CA-xx`) cubre. La comprobación es manual: el cambio es un título del README, no una pantalla ni un comportamiento de la app.
 
@@ -64,7 +64,7 @@ En problemas frecuentes, la frase del puerto ocupado dice «ciérrala (sección 
 
 ---
 
-## 4. Comprobación de la constitución (v2.1)
+## 4. Comprobación de la constitución (v3.0)
 
 | Regla | ¿Cumple? | Cómo |
 | --- | --- | --- |
