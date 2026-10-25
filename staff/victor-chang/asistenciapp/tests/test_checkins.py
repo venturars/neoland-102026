@@ -13,10 +13,11 @@ from attendance.domain.errors import (
     CheckinNotFoundError,
     EmptyNameError,
     InvalidCodeError,
+    NotCodeSessionError,
     SessionClosedError,
     SessionNotFoundError,
 )
-from attendance.domain.sessions import to_iso
+from attendance.domain.sessions import Mode, to_iso
 from attendance.infra import storage
 from attendance.usecases import sessions
 from attendance.usecases.checkins import check_in, remove_checkin
@@ -123,3 +124,23 @@ def test_remove_checkin_from_another_session(conn, session):  # CA-24
 def test_remove_checkin_from_unknown_session(conn):
     with pytest.raises(SessionNotFoundError):
         remove_checkin(conn, "no-existe", 1)
+
+
+def test_automatic_session_does_not_accept_codes(conn):  # spec 004 CA-02
+    session = sessions.create_session(conn, "Clase", T, UTC, mode=Mode.AUTOMATIC, meeting="abc-defg-hij")
+    with pytest.raises(NotCodeSessionError):
+        check_in(conn, session.id, "Ana", code_for(session.secret, T), T)
+    assert storage.list_checkins(conn, session.id) == []
+
+
+def test_closed_is_checked_before_the_mode(conn):  # orden: cerrada → modo → nombre → código
+    session = sessions.create_session(conn, "Clase", T, UTC, mode=Mode.AUTOMATIC, meeting="abc-defg-hij")
+    sessions.close_session(conn, session.id, T)
+    with pytest.raises(SessionClosedError):
+        check_in(conn, session.id, "", "", T)
+
+
+def test_mode_is_checked_before_the_name(conn):
+    session = sessions.create_session(conn, "Clase", T, UTC, mode=Mode.AUTOMATIC, meeting="abc-defg-hij")
+    with pytest.raises(NotCodeSessionError):
+        check_in(conn, session.id, "", "", T)

@@ -123,11 +123,14 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
 
 ## Fase D · Casos de uso (plan §2.2, §2.9, §2.11)
 
-- [ ] **T10** 🧪 · `usecases/sessions.py` y `usecases/checkins.py`:
+- [x] **T10** 🧪 · `usecases/sessions.py` y `usecases/checkins.py`:
   - `create_session` con modo: en `automatic`, el enlace es obligatorio y se guarda su código; en `code`, se ignora.
   - `teacher_view`: sin código ni cuenta atrás en modo automático (CA-02).
   - `check_in` en una clase automática → `NotCodeSessionError`, después de comprobar si está cerrada.
   - *Cubre:* CA-01, CA-02, CA-03.
+  - **Hecha (2026-10-25):** 371 tests en verde (los nuevos fallaron primero); `ruff` y `mypy --strict` sin avisos.
+    - `create_session(..., mode=Mode.CODE, meeting="")`: los parámetros nuevos tienen valor por defecto, así que todo lo que ya abría clases de código sigue igual. En modo automático guarda el código limpio que da `parse_meeting_code` (p. ej. de un enlace con `?authuser=1`).
+    - El orden de `check_in` queda: cerrada → modo → nombre → código, con un test para cada paso.
 - [ ] **T11** 🧪 · `usecases/attendance.py`: `sync_from_meeting(conn, fetch_participants, session_id, who, t)` → `added`, `found`, `total` y de qué reunión es (hora de inicio, si ya terminó).
   - Tests en `test_attendance.py`, con una función de participantes falsa:
     - primera toma (CA-05);
