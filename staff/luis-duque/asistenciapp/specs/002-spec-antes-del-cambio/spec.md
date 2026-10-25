@@ -1,6 +1,6 @@
 # Spec 002 · Spec antes del cambio
 
-Estado: propuesta, pendiente de aprobación.
+Estado: aprobada el 2026-10-25. Autorizados el plan y las tareas.
 Ámbito: esta aplicación. El manual que se sigue dentro de `asistencia/` vive en `asistencia/AGENTS.md`.
 
 ## 1. Problema
