@@ -64,10 +64,14 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
 
 ## Fase B · Dominio (plan §2.7 a §2.9)
 
-- [ ] **T04** 🧪 · `domain/sessions.py` y `domain/errors.py`:
+- [x] **T04** 🧪 · `domain/sessions.py` y `domain/errors.py`:
   - `Mode` (`code` / `automatic`); `Session` y `SessionSummary` ganan `mode` y `meeting_code`.
   - Los nueve errores de plan §2.7 (v2.1), con su mensaje (tests en `test_errors.py`).
   - *Cubre:* base de CA-01 a CA-04, CA-13, CA-14, CA-21.
+  - **Hecha (2026-10-25):** 285 tests en verde (los nuevos fallaron primero); `ruff` y `mypy --strict` sin avisos.
+    - `Mode` es un `StrEnum` (`code`, `automatic`). En `Session` y `SessionSummary`, `mode` vale `code` por defecto y `meeting_code` `None`: así todo lo que ya existe sigue siendo una clase de código hasta que `storage` guarde el modo (T06).
+    - Los nueve errores, con los mensajes de plan §2.7 copiados tal cual (un test los compara uno a uno).
+    - Adelantado de T12: los errores nuevos ya están en la tabla `STATUS` de la entrada web (409, 422, y 502 para Google), porque el test que comprueba que no falta ninguno lo exige.
 - [ ] **T05** 🧪 · `domain/participants.py`: `Who` (`now` / `everyone`), `MeetingAttendance` (nombres, hora de inicio de la reunión y si ya terminó) y `names_from_platform(display_names)`.
   - Tests en `test_participants.py`: quita espacios; vacío → "Invitado sin nombre"; varios → numerados (`2`, `3`…); más de 60 caracteres → recortado a 60; los demás nombres no cambian.
   - *Cubre:* CA-08.

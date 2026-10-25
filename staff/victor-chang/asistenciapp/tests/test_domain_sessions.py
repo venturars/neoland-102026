@@ -10,6 +10,7 @@ from attendance.domain.errors import TitleTooLongError
 from attendance.domain.sessions import (
     MAX_TITLE_LENGTH,
     Checkin,
+    Mode,
     Session,
     SessionSummary,
     clean_title,
@@ -64,3 +65,19 @@ def test_title_limit():  # spec 005 CA-08
 
 def test_default_title_fits_the_limit():  # spec 005 CA-08
     assert len(default_title(T, UTC)) <= MAX_TITLE_LENGTH
+
+
+def test_modes_have_english_values():  # spec 004 · plan §8.6
+    assert [m.value for m in Mode] == ["code", "automatic"]
+    assert Mode("automatic") is Mode.AUTOMATIC
+
+
+def test_sessions_are_code_mode_by_default():  # spec 004 CA-03: las clases de siempre siguen siendo de código
+    session = make_session()
+    assert (session.mode, session.meeting_code) == (Mode.CODE, None)
+    assert SessionSummary("abc", "Clase", to_iso(T), None, 0).mode is Mode.CODE
+
+
+def test_automatic_session_keeps_its_meeting():  # spec 004 CA-01
+    session = Session("abc", "Clase", b"s" * 16, to_iso(T), None, mode=Mode.AUTOMATIC, meeting_code="abc-defg-hij")
+    assert (session.mode, session.meeting_code) == (Mode.AUTOMATIC, "abc-defg-hij")
