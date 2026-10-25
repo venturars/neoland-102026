@@ -3,7 +3,7 @@
 Estado: propuesta, pendiente de aprobación.
 Spec: [spec.md](spec.md), aprobada el 2026-10-25.
 
-Este documento explica cómo se deja por escrito la regla de no cambiar `asistencia/` sin una spec aprobada. Cubre CA-01 a CA-07.
+Este documento explica cómo se deja por escrito la regla de no cambiar asistenciapp sin una spec aprobada. Cubre CA-01 a CA-07.
 
 ## 1. Qué se toca
 
@@ -11,7 +11,7 @@ Se crea un solo archivo: `asistencia/AGENTS.md`.
 
 Ese manual dice:
 
-- Sin una spec aprobada que cubra el cambio dentro de `asistencia/`, lo primero que se escribe es la spec y se espera el ok. No se modifica el cambio.
+- Sin una spec aprobada que cubra el cambio en asistenciapp, lo primero que se escribe es la spec y se espera el ok. No se modifica el cambio. La regla incluye los archivos que están fuera de `asistencia/`.
 - Después van el plan, las tareas y la implementación, cada uno con su ok.
 - Si la spec activa no cubre el pedido, se abre otra. La spec 001 no se reutiliza ni se reescribe.
 - Una issue, una rama o una pull request no autorizan el cambio si falta esa spec.
