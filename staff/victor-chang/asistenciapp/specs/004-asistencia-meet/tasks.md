@@ -72,9 +72,12 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
     - `Mode` es un `StrEnum` (`code`, `automatic`). En `Session` y `SessionSummary`, `mode` vale `code` por defecto y `meeting_code` `None`: así todo lo que ya existe sigue siendo una clase de código hasta que `storage` guarde el modo (T06).
     - Los nueve errores, con los mensajes de plan §2.7 copiados tal cual (un test los compara uno a uno).
     - Adelantado de T12: los errores nuevos ya están en la tabla `STATUS` de la entrada web (409, 422, y 502 para Google), porque el test que comprueba que no falta ninguno lo exige.
-- [ ] **T05** 🧪 · `domain/participants.py`: `Who` (`now` / `everyone`), `MeetingAttendance` (nombres, hora de inicio de la reunión y si ya terminó) y `names_from_platform(display_names)`.
+- [x] **T05** 🧪 · `domain/participants.py`: `Who` (`now` / `everyone`), `MeetingAttendance` (nombres, hora de inicio de la reunión y si ya terminó) y `names_from_platform(display_names)`.
   - Tests en `test_participants.py`: quita espacios; vacío → "Invitado sin nombre"; varios → numerados (`2`, `3`…); más de 60 caracteres → recortado a 60; los demás nombres no cambian.
   - *Cubre:* CA-08.
+  - **Hecha (2026-10-25):** 295 tests en verde (los nuevos fallaron primero); `ruff` y `mypy --strict` sin avisos.
+    - `MeetingAttendance.names` lleva los nombres **tal como los da la plataforma** (sin el profesor); los convierte `names_from_platform` en el caso de uso (T11).
+    - Si el recorte a 60 deja un espacio al final, se quita. Un test comprueba que todo lo que devuelve pasa `clean_name`, es decir, que se guarda con las reglas de la spec 001.
 
 ## Fase C · Infraestructura y configuración (plan §2.3 a §2.5, §3)
 
