@@ -1,7 +1,7 @@
 """Entrada web: la fábrica de la aplicación Flask (spec 005 · plan §2.4; ARCHITECTURE.md · C4).
 
 `create_app` recibe todo lo que necesita por parámetro, para que los tests puedan montarla con
-una base de datos temporal, un reloj falso y un token fijo.
+una base de datos temporal, un reloj falso, un token fijo y unos participantes de Meet falsos.
 """
 
 import time
@@ -16,6 +16,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from attendance.config import Config
 from attendance.entrypoints.web import auth, context, errors, public, teacher
 from attendance.infra import storage
+from attendance.usecases.attendance import FetchParticipants
 
 STATIC_DIR = Path(__file__).resolve().parents[3] / "static"
 
@@ -24,6 +25,7 @@ def create_app(
     config: Config,
     clock: Callable[[], float] = time.time,
     teacher_token: str | None = None,
+    fetch_participants: FetchParticipants | None = None,
 ) -> Flask:
     """Crea la aplicación con su base de datos ya preparada.
 
@@ -31,6 +33,8 @@ def create_app(
         config: configuración leída del entorno (o la de un test).
         clock: reloj en segundos Unix; los tests pasan uno falso.
         teacher_token: token del profesor. Si es None se lee de la BD (o se crea la primera vez).
+        fetch_participants: da los participantes de una reunión (en la app, `GoogleMeet.participants`).
+            Si es None, tomar asistencia de Meet responde que falta prepararlo (spec 004 · plan §2.2).
     """
     app = Flask(__name__, static_folder=STATIC_DIR, static_url_path="")
     json_provider = DefaultJSONProvider(app)
@@ -45,7 +49,7 @@ def create_app(
         with conn:
             token = teacher_token or storage.get_or_create_teacher_token(conn)
 
-    context.init_app(app, context.WebContext(config=config, clock=clock, teacher_token=token))
+    context.init_app(app, context.WebContext(config, clock, token, fetch_participants))
     auth.init_app(app)
     errors.init_app(app)
     app.register_blueprint(public.blueprint)

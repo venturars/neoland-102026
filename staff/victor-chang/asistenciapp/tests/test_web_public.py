@@ -17,7 +17,7 @@ def test_public_session_info_does_not_leak_the_list(client, teacher):
     sid = open_session(client, teacher)
     check_in(client, sid, "Ana", current_code(client, teacher, sid))
     data = client.get(f"/api/s/{sid}").get_json()
-    assert data == {"title": "Clase de prueba", "open": True}
+    assert data == {"title": "Clase de prueba", "open": True, "mode": "code"}  # mode: spec 004 · T12
 
 
 def test_check_in_with_current_code(client, teacher):  # CA-04

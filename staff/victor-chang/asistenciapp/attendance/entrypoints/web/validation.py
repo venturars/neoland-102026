@@ -5,6 +5,7 @@ un número no se acepta donde se espera texto. Las reglas del significado (un no
 código caducado) las decide el dominio (E2).
 """
 
+from enum import StrEnum
 from typing import Any
 
 from flask import request
@@ -38,3 +39,17 @@ def optional_str(body: dict[str, Any], key: str) -> str:
     if not isinstance(value, str):
         raise MalformedRequestError
     return value
+
+
+def choice[E: StrEnum](body: dict[str, Any], key: str, kind: type[E], default: E | None = None) -> E:
+    """El campo `key` como uno de los valores de `kind`; si no está, `default` (spec 004 · plan §4).
+
+    Raises:
+        MalformedRequestError: el campo no es uno de esos valores, o falta y no tiene valor por defecto.
+    """
+    if key not in body and default is not None:
+        return default
+    value = body.get(key)
+    if not isinstance(value, str) or value not in kind:
+        raise MalformedRequestError
+    return kind(value)

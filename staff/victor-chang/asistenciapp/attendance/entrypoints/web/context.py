@@ -1,4 +1,4 @@
-"""Lo que comparten las rutas de una app: configuración, reloj, token y conexión (ARCHITECTURE.md · C4, D4)."""
+"""Lo que comparten las rutas: configuración, reloj, token, participantes y conexión (ARCHITECTURE.md · C4, D4)."""
 
 import sqlite3
 from collections.abc import Callable
@@ -9,6 +9,7 @@ from flask import Flask, current_app, g
 
 from attendance.config import Config
 from attendance.infra import storage
+from attendance.usecases.attendance import FetchParticipants
 
 _KEY = "attendance"
 
@@ -20,6 +21,7 @@ class WebContext:
     config: Config
     clock: Callable[[], float]
     teacher_token: str
+    fetch_participants: FetchParticipants | None = None  # sin él, la app no toma asistencia de Meet (spec 004)
 
 
 def init_app(app: Flask, web_context: WebContext) -> None:
