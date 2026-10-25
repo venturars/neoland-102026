@@ -1,4 +1,4 @@
-// AsistenciApp · página del alumno (spec 001 · T16 · CA-04 a CA-09; spec 005 · T16)
+// AsistenciApp · página del alumno (spec 001 · T16 · CA-04 a CA-09; spec 005 · T16; spec 004 · T14)
 // Todo texto que viene del servidor o del usuario se pinta con textContent (CA-12; ARCHITECTURE U2).
 
 const NAME_KEY = "asistenciapp.nombre";
@@ -6,6 +6,8 @@ const NO_CONNECTION = "No se pudo conectar. Revisa tu conexión e inténtalo de 
 const UNEXPECTED = "Error inesperado. Inténtalo de nuevo en unos segundos.";
 // Mismo texto que SessionClosedError (attendance/domain/errors.py): aquí se usa al abrir la página.
 const CLOSED = "La asistencia de esta clase ya está cerrada. Si acabas de llegar, avisa al profesor.";
+// Mismo texto que NotCodeSessionError: una clase automática no tiene formulario (spec 004 · CA-02).
+const AUTOMATIC = "Esta clase no usa código: la asistencia se toma automáticamente desde Meet.";
 const sessionId = new URLSearchParams(location.search).get("s");
 
 const titleEl = document.getElementById("title");
@@ -84,6 +86,10 @@ async function loadSession() {
       return;
     }
     titleEl.textContent = data.title;
+    if (data.mode === "automatic") {
+      showMessage("ok", AUTOMATIC);
+      return;
+    }
     const reg = savedRegistration();
     if (reg?.name && reg?.checkedAt) {
       showAlreadyRegistered(reg); // CA-22
