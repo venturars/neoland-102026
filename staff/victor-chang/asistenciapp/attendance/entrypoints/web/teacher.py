@@ -1,4 +1,4 @@
-"""Rutas del profesor; todas exigen su token (spec 001 · plan §4 "Privada"; CA-01, CA-02, CA-10 a CA-17, CA-24).
+"""Rutas del profesor; todas exigen su token (spec 001 · plan §4 "Privada"; spec 004 · plan §4).
 
 Cada ruta lee lo que llega, llama a un caso de uso (o a una lectura sin reglas, C5) y responde
 (ARCHITECTURE.md · C2). Los errores los convierte `errors.py` (E4).
@@ -7,11 +7,19 @@ Cada ruta lee lo que llega, llama a un caso de uso (o a una lectura sin reglas, 
 from flask import Blueprint, Response, jsonify, request
 from flask.typing import ResponseReturnValue
 
+from attendance.domain.errors import MeetNotConfiguredError
+from attendance.domain.participants import Who
+from attendance.domain.sessions import Mode
 from attendance.entrypoints.web import context
-from attendance.entrypoints.web.serializers import created_session_json, session_summary_json, teacher_view_json
-from attendance.entrypoints.web.validation import json_object, optional_str
+from attendance.entrypoints.web.serializers import (
+    created_session_json,
+    session_summary_json,
+    sync_result_json,
+    teacher_view_json,
+)
+from attendance.entrypoints.web.validation import choice, json_object, optional_str
 from attendance.infra import storage
-from attendance.usecases import checkins, sessions
+from attendance.usecases import attendance, checkins, sessions
 
 blueprint = Blueprint("teacher", __name__, url_prefix="/api/sessions")
 
@@ -25,9 +33,15 @@ def list_sessions() -> ResponseReturnValue:
 
 @blueprint.post("")
 def create_session() -> ResponseReturnValue:
-    """Abre una clase; sin título, se titula con la fecha (spec 001 · CA-01, CA-02; spec 005 · CA-06, CA-08)."""
-    title = optional_str(json_object(), "title")
-    session = sessions.create_session(context.db(), title, context.now(), context.current().config.timezone)
+    """Abre una clase de código o automática (spec 001 · CA-01, CA-02; spec 004 · CA-01, CA-14; spec 005 · CA-08).
+
+    Sin título, se titula con la fecha; sin modo, es de código. Un modo desconocido es un 400 (E1).
+    """
+    body = json_object()
+    title, meeting = optional_str(body, "title"), optional_str(body, "meeting")
+    mode = choice(body, "mode", Mode, default=Mode.CODE)
+    timezone = context.current().config.timezone
+    session = sessions.create_session(context.db(), title, context.now(), timezone, mode, meeting)
     return jsonify(created_session_json(session)), 201
 
 
@@ -36,6 +50,20 @@ def teacher_view(session_id: str) -> ResponseReturnValue:
     """La clase, sus registros y, si está abierta, el código y su cuenta atrás (spec 001 · CA-10 a CA-13)."""
     view = sessions.teacher_view(context.db(), session_id, context.now())
     return jsonify(teacher_view_json(view, f"{request.host_url}alumno.html?s={session_id}"))
+
+
+@blueprint.post("/<session_id>/meet-sync")
+def meet_sync(session_id: str) -> ResponseReturnValue:
+    """Toma la asistencia de una clase automática desde su reunión (spec 004 · CA-05 a CA-07, CA-18, CA-20).
+
+    `who` es obligatorio: "now" (quién está ahora) o "everyone" (todos los que han estado).
+    """
+    who = choice(json_object(), "who", Who)
+    fetch_participants = context.current().fetch_participants
+    if fetch_participants is None:
+        raise MeetNotConfiguredError
+    result = attendance.sync_from_meeting(context.db(), fetch_participants, session_id, who, context.now())
+    return jsonify(sync_result_json(result))
 
 
 @blueprint.post("/<session_id>/close")

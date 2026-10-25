@@ -151,13 +151,18 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
 
 ## Fase E · Entradas (plan §2.9, §4)
 
-- [ ] **T12** 🧪 · Entrada web:
+- [x] **T12** 🧪 · Entrada web:
   - `create_app(..., fetch_participants=None)`; `POST /api/sessions` con `mode` y `meeting`; `mode` en `GET /api/sessions`, `GET /api/sessions/<id>` (con `meetingCode`, sin `code` ni `studentUrl` en modo automático) y `GET /api/s/<id>`.
   - Ruta `POST /api/sessions/<id>/meet-sync` con `{who: "now" | "everyone"}` → `{added, found, total, meetingStartedAt, meetingEnded}`.
   - Los errores de plan §2.7 en la tabla de `errors.py` (un test ya comprueba que no falta ninguno).
   - Tests nuevos en `test_web_meet.py`: crear en modo automático, `mode` desconocido → `400`, enlace mal escrito → `422`, `meet-sync` correcto en los dos modos, `who` que falta o desconocido → `400`, `409`, `422` y `502` con sus mensajes, `401` sin token, y quitar y exportar en una clase automática (CA-16).
   - Cambian los tests de la spec 001 que comparan el JSON completo, para incluir `mode`.
   - *Cubre:* CA-01, CA-02, CA-04, CA-13, CA-14, CA-16, CA-18, CA-20.
+  - **Hecha (2026-10-25):** 421 tests en verde (los 37 nuevos fallaron primero); `ruff` y `mypy --strict` sin avisos.
+    - `validation.choice(body, key, Enum, default)` lee `mode` y `who`: un valor que no es del enum (o que no es texto) → `400`. `who` no tiene valor por defecto.
+    - `meetingCode` sale siempre en `GET /api/sessions/<id>` (`null` en las clases de código); `studentUrl`, solo en modo código.
+    - Si la app se monta sin `fetch_participants` (p. ej. en los tests de la spec 001), `meet-sync` responde `422` `MeetNotConfiguredError`.
+    - Solo cambió un test de la spec 001 (`GET /api/s/<id>` compara el JSON entero); los de serializadores ganan `mode`.
 - [ ] **T13** 🧪 · Atajo `python app.py --meet <código>` (decisión §8.2): `entrypoints/cli.py` y `app.py`.
   - Valida el código antes de arrancar; crea la clase automática y hace la primera toma ("quién está ahora"; `--meet-todos` para "todos los que han estado") con los mismos casos de uso (C3); imprime cuántos se registraron y el enlace del panel **a esa clase** (`#t=…&s=…`).
   - Si la toma falla, imprime el mensaje del error y arranca igualmente, para poder reintentar desde el panel.
