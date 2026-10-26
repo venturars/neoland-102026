@@ -1,6 +1,6 @@
 # Specs
 
-One folder per feature. The structure of `spec.md`, `plan.md` and `tasks.md` is in [CONSTITUTION.md](../CONSTITUTION.md#specs).
+One folder per change. The structure of `spec.md`, `plan.md` and `tasks.md` is in [CONSTITUTION.md](../CONSTITUTION.md#specs).
 
 | Folder                                          | Status |
 | ----------------------------------------------- | ------ |
@@ -11,3 +11,4 @@ One folder per feature. The structure of `spec.md`, `plan.md` and `tasks.md` is 
 | [update-user](update-user/)                     | done   |
 | [delete-user](delete-user/)                     | done   |
 | [count-users-by-gender](count-users-by-gender/) | done   |
+| [jupyter-client](jupyter-client/)               | done   |
