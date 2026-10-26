@@ -40,7 +40,7 @@ def test_lobby_exclusive_release_and_shared_start(race_env):
     with pytest.raises(RaceError): races.start(db,sid,clock)
     token=join(race_env)
     with pytest.raises(RaceError) as e: join(race_env)
-    assert e.value.status==409
+    assert e.value.reason == 'state_conflict'
     races.release(db,sid,"jimena-duran",clock)
     with pytest.raises(RaceError): races.me(db,sid,token,clock)
     token=join(race_env)
@@ -56,15 +56,15 @@ def test_third_attempt_can_win_and_last_success_replays(race_env):
     db,sid,entry,clock=race_env; token=opened(race_env)
     for raw in (None, []):
         result=races.attempt(db,sid,token,{"operation_id":str(uuid4()),"code":raw},"127.0.0.1",clock)
-        assert result.status==422
+        assert result[1] == 'invalid_code'
     oid=str(uuid4()); fields={"operation_id":oid,"code":code(race_env)}
     result=races.attempt(db,sid,token,fields,"127.0.0.1",clock)
-    assert result.status==201 and result.body["remaining"]==0
+    assert result[1] == 'registered' and result[0]["remaining"]==0
     assert races.teacher_state(db,sid,clock)["phase"]=="closed"
     replay=races.attempt(db,sid,token,fields,"127.0.0.1",clock)
-    assert replay.status==200 and replay.body["result"]==result.body["result"]
+    assert replay[1] == 'already_registered' and replay[0]["result"]==result[0]["result"]
     with pytest.raises(RaceError) as e: races.attempt(db,sid,token,{**fields,"code":"different"},"127.0.0.1",clock)
-    assert e.value.status==409
+    assert e.value.reason == 'state_conflict'
 
 
 def test_budget_exhausted_never_checks_fourth(race_env,monkeypatch):
@@ -72,9 +72,9 @@ def test_budget_exhausted_never_checks_fourth(race_env,monkeypatch):
     calls=[]
     monkeypatch.setattr(races,"is_valid_code",lambda *args: calls.append(1) or False)
     for _ in range(3):
-        assert races.attempt(db,sid,token,{"operation_id":str(uuid4()),"code":"1234"},"127.0.0.1",clock).status==422
+        assert races.attempt(db,sid,token,{"operation_id":str(uuid4()),"code":"1234"},"127.0.0.1",clock)[1] == 'invalid_code'
     with pytest.raises(RaceError) as e: races.attempt(db,sid,token,{"operation_id":str(uuid4()),"code":"1234"},"127.0.0.1",clock)
-    assert e.value.status==429 and len(calls)==3
+    assert e.value.reason == 'attempts_exhausted' and len(calls)==3
 
 
 def test_durable_reservation_survives_result_rollback_and_restart(race_env,monkeypatch):
@@ -87,10 +87,10 @@ def test_durable_reservation_survives_result_rollback_and_restart(race_env,monke
         fields={"operation_id":str(uuid4()),"code":"1234"}
         with pytest.raises(RuntimeError): races.attempt(db,sid,token,fields,"127.0.0.1",clock)
         attendance.prepare(db,"teacher")
-        assert races.attempt(db,sid,token,fields,"127.0.0.1",clock).status==202
+        assert races.attempt(db,sid,token,fields,"127.0.0.1",clock)[1] == 'unconfirmed'
     monkeypatch.setattr(store,"complete_operation",original)
     with pytest.raises(RaceError) as e: races.attempt(db,sid,token,{"operation_id":str(uuid4()),"code":"1234"},"127.0.0.1",clock)
-    assert e.value.status==429 and len(calls)==3
+    assert e.value.reason == 'attempts_exhausted' and len(calls)==3
     with closing(store.connect(db)) as c: assert store.ranking(c,sid)==[]
 
 
@@ -99,14 +99,14 @@ def test_expiry_before_saved_success_and_removal(race_env):
     fields={"operation_id":str(uuid4()),"code":code(race_env)}
     result=races.attempt(db,sid,token,fields,"127.0.0.1",clock)
     clock.advance(7196)
-    assert races.me(db,sid,token,clock)["result"]==result.body["result"]
+    assert races.me(db,sid,token,clock)["result"]==result[0]["result"]
     clock.advance(1)
     with pytest.raises(RaceError) as e: races.me(db,sid,token,clock)
-    assert e.value.status==410
+    assert e.value.reason == 'access_expired'
     with closing(store.connect(db)) as c:
         assert store.operations(c,sid,"jimena-duran")==[]
         assert len(store.ranking(c,sid))==1
-    assert races.remove_checkin(db,sid,result.body["result"]["id"],clock)
+    assert races.remove_checkin(db,sid,result[0]["result"]["id"],clock)
     assert races.teacher_state(db,sid,clock)["checkins"]==[]
 
 
@@ -117,7 +117,7 @@ def test_unknown_origin_and_wrong_access_do_not_spend(race_env):
     assert races.me(db,sid,token,clock)["remaining"]==3
 
 
-@pytest.mark.parametrize("stage,after,expected_calls,expected_status",[("A",False,0,None),("A",True,0,202),("B",False,1,202),("B",True,1,200)])
+@pytest.mark.parametrize("stage,after,expected_calls,expected_status",[("A",False,0,None),("A",True,0,"unconfirmed"),("B",False,1,"unconfirmed"),("B",True,1,"already_registered")])
 def test_commit_uncertainty_is_not_execution_permission(race_env,monkeypatch,stage,after,expected_calls,expected_status):
     db,sid,entry,clock=race_env;token=opened(race_env)
     fields={"operation_id":str(uuid4()),"code":code(race_env)}
@@ -135,9 +135,9 @@ def test_commit_uncertainty_is_not_execution_permission(race_env,monkeypatch,sta
     monkeypatch.setattr(races,"_commit",original_commit)
     if expected_status is None:
         assert races.me(db,sid,token,clock)["remaining"]==3
-        assert races.attempt(db,sid,token,fields,"127.0.0.1",clock).status==201
+        assert races.attempt(db,sid,token,fields,"127.0.0.1",clock)[1] == 'registered'
     else:
-        assert races.attempt(db,sid,token,fields,"127.0.0.1",clock).status==expected_status
+        assert races.attempt(db,sid,token,fields,"127.0.0.1",clock)[1]==expected_status
         assert len(calls)==expected_calls
 
 
@@ -151,19 +151,19 @@ def test_process_dies_after_a_does_not_resume_on_retry(race_env,monkeypatch):
     monkeypatch.setattr(races,"_finalize",original)
     monkeypatch.setattr(races,"is_valid_code",lambda *args:calls.append(1) or True)
     attendance.prepare(db,"teacher")
-    assert races.attempt(db,sid,token,fields,"127.0.0.1",clock).status==202
+    assert races.attempt(db,sid,token,fields,"127.0.0.1",clock)[1] == 'unconfirmed'
     assert calls==[] and races.me(db,sid,token,clock)["remaining"]==2
     with pytest.raises(RaceError) as e:races.attempt(db,sid,token,{**fields,"code":"9999"},"127.0.0.1",clock)
-    assert e.value.status==409 and calls==[]
+    assert e.value.reason == 'state_conflict' and calls==[]
 
 
 def test_third_reserved_attempt_still_has_its_one_evaluation(race_env):
     db,sid,entry,clock=race_env;token=opened(race_env)
     fields=[{"operation_id":str(uuid4()),"code":code(race_env)} for _ in range(3)]
     tickets=[races._reserve(db,sid,token,f,clock) for f in fields]
-    result=races._finalize(db,sid,token,fields[2],tickets[2],clock)
-    assert result.status==201 and result.body["remaining"]==0
-    with pytest.raises(RuntimeError):races._finalize(db,sid,token,fields[2],tickets[2],clock)
+    result=tickets[2]()
+    assert result[1] == 'registered' and result[0]["remaining"]==0
+    with pytest.raises(RuntimeError):tickets[2]()
 
 
 def test_close_between_a_and_b_does_not_evaluate(race_env,monkeypatch):
@@ -172,7 +172,7 @@ def test_close_between_a_and_b_does_not_evaluate(race_env,monkeypatch):
     ticket=races._reserve(db,sid,token,fields,clock)
     before=races.close(db,sid,clock)["closedAt"]
     calls=[];monkeypatch.setattr(races,"is_valid_code",lambda *args:calls.append(1) or True)
-    assert races._finalize(db,sid,token,fields,ticket,clock).status==409
+    assert ticket()[1] == 'not_processed'
     clock.advance(1)
     assert races.close(db,sid,clock)["closedAt"]==before
     assert calls==[] and races.me(db,sid,token,clock)["remaining"]==2
@@ -196,12 +196,12 @@ def test_expiry_while_waiting_for_b_uses_clock_after_lock(race_env,monkeypatch):
     monkeypatch.setattr(races,"is_valid_code",lambda *args:calls.append(1) or True)
     try:
         with ThreadPoolExecutor(1) as pool:
-            future=pool.submit(races._finalize,db,sid,token,fields,ticket,clock)
+            future=pool.submit(ticket)
             assert waiting.wait(2)
             clock.advance(7200)
             blocker.rollback()
             with pytest.raises(RaceError) as e:future.result(timeout=2)
-            assert e.value.status==410
+            assert e.value.reason == 'access_expired'
     finally:blocker.close()
     assert calls==[]
 
@@ -212,16 +212,16 @@ def test_lock_before_a_and_after_a_have_different_consumption(race_env,monkeypat
     with closing(store.connect(db)) as blocker:
         blocker.execute("BEGIN IMMEDIATE")
         with pytest.raises(RaceError) as e:races.attempt(db,sid,token,fields,"127.0.0.1",clock)
-        assert e.value.status==503
+        assert e.value.reason == 'storage_busy'
         blocker.rollback()
     assert races.me(db,sid,token,clock)["remaining"]==3
     ticket=races._reserve(db,sid,token,fields,clock)
     calls=[];monkeypatch.setattr(races,"is_valid_code",lambda *args:calls.append(1) or True)
     with closing(store.connect(db)) as blocker:
         blocker.execute("BEGIN IMMEDIATE")
-        assert races._finalize(db,sid,token,fields,ticket,clock).status==202
+        assert ticket()[1] == 'unconfirmed'
         blocker.rollback()
-    assert races.attempt(db,sid,token,fields,"127.0.0.1",clock).status==202
+    assert races.attempt(db,sid,token,fields,"127.0.0.1",clock)[1] == 'unconfirmed'
     assert calls==[] and races.me(db,sid,token,clock)["remaining"]==2
 
 
@@ -234,8 +234,8 @@ def test_confirmation_order_is_not_reservation_order_or_timestamp(race_env):
     fields = [{"operation_id": str(uuid4()), "code": code(race_env)} for _ in range(2)]
     one = races._reserve(db, sid, first, fields[0], clock)
     two = races._reserve(db, sid, second, fields[1], clock)
-    races._finalize(db, sid, second, fields[1], two, clock)
-    races._finalize(db, sid, first, fields[0], one, clock)
+    two()
+    one()
     ranking = races.teacher_state(db, sid, clock)["checkins"]
     assert [row["name"] for row in ranking] == ["Meghan Martin", "Jimena Duran"]
     assert ranking[0]["checkedAt"] == ranking[1]["checkedAt"]
@@ -252,7 +252,7 @@ def test_rotation_restart_address_and_missing_cookie_do_not_reset_budget(race_en
     db, sid, entry, clock = race_env
     token = opened(race_env)
     for _ in range(2):
-        assert races.attempt(db, sid, token, {"operation_id": str(uuid4()), "code": []}, "127.0.0.1", clock).status == 422
+        assert races.attempt(db, sid, token, {"operation_id": str(uuid4()), "code": []}, "127.0.0.1", clock)[1] == 'invalid_code'
     clock.advance(60)
     create_app(db, token="teacher", now=clock)
     assert races.me(db, sid, token, clock)["remaining"] == 1
@@ -261,7 +261,7 @@ def test_rotation_restart_address_and_missing_cookie_do_not_reset_budget(race_en
     with pytest.raises(RaceError):
         races.join(db, sid, entry, "JIMENA DURÁN", None, clock)
     result = races.attempt(db, sid, token, {"operation_id": str(uuid4()), "code": code(race_env)}, "127.0.0.2", clock)
-    assert result.status == 201 and result.body["remaining"] == 0
+    assert result[1] == 'registered' and result[0]["remaining"] == 0
 
 
 @pytest.mark.parametrize("phase_name", ["lobby", "countdown", "open", "closed"])

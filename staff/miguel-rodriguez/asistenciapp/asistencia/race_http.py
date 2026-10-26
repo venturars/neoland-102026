@@ -13,7 +13,19 @@ from werkzeug.exceptions import HTTPException
 from .qr import generate_qr
 from .origin import registration_origin
 from .usecases import races
-from .usecases.races import RaceError, Outcome
+from .usecases.races import RaceError
+
+ERROR_STATUS = {
+    "invalid_input": 400, "access_denied": 403, "origin_unavailable": 403,
+    "race_missing": 404, "state_conflict": 409, "entry_closed": 410,
+    "access_expired": 410, "payload_too_large": 413, "unsupported_content": 415,
+    "attempts_exhausted": 429, "storage_busy": 503, "origin_not_configured": 503,
+}
+RESULT_STATUS = {
+    "registered": 201, "already_registered": 200, "removed": 200,
+    "unconfirmed": 202, "invalid_operation": 400, "invalid_code": 422,
+    "not_processed": 409,
+}
 
 def cookie_name(sid: str) -> str:
     """Nombre de permiso aislado para cada carrera.
@@ -106,7 +118,7 @@ def register_routes(app: Flask, db: str | Path, now: Callable[[], float], trust_
         """
         configured = canonical_origin(app.config.get('RACE_ORIGIN'), app.config.get('RACE_LOCAL_HTTP', False), trust_cloudflare)
         if configured is None:
-            raise RaceError(503, 'No está configurado el acceso de carrera. Consulta al profesor.')
+            raise RaceError("origin_not_configured", 'No está configurado el acceso de carrera. Consulta al profesor.')
         return configured
 
     def checked_browser() -> None:
@@ -122,14 +134,14 @@ def register_routes(app: Flask, db: str | Path, now: Callable[[], float], trust_
         configured = origin()
         given = request.headers.get('Origin')
         if request.headers.get('Sec-Fetch-Site') == 'cross-site' or (given is not None and given != configured):
-            raise RaceError(403, 'El envío debe hacerse desde la página de esta carrera.')
+            raise RaceError("access_denied", 'El envío debe hacerse desde la página de esta carrera.')
         if configured.startswith('http:'):
             try:
                 loopback = ip_address(request.remote_addr or '').is_loopback
             except ValueError:
                 loopback = False
             if not loopback:
-                raise RaceError(403, 'El acceso HTTP de desarrollo solo permite conexión local.')
+                raise RaceError("access_denied", 'El acceso HTTP de desarrollo solo permite conexión local.')
 
     def body() -> dict:
         """Limita el cuerpo nuevo y conserva el gasto de JSON inválido autorizado.
@@ -142,12 +154,12 @@ def register_routes(app: Flask, db: str | Path, now: Callable[[], float], trust_
             body()
         """
         if request.content_length is not None and request.content_length > 2048:
-            raise RaceError(413, 'El envío es demasiado grande. Envía solo los datos de carrera.')
+            raise RaceError("payload_too_large", 'El envío es demasiado grande. Envía solo los datos de carrera.')
         if request.mimetype != 'application/json':
-            raise RaceError(415, 'Envía los datos desde el formulario de carrera.')
+            raise RaceError("unsupported_content", 'Envía los datos desde el formulario de carrera.')
         raw = request.stream.read(2049)
         if len(raw) > 2048:
-            raise RaceError(413, 'El envío es demasiado grande. Envía solo los datos de carrera.')
+            raise RaceError("payload_too_large", 'El envío es demasiado grande. Envía solo los datos de carrera.')
         try:
             data = json.loads(raw)
         except (ValueError, UnicodeError, RecursionError):
@@ -155,10 +167,10 @@ def register_routes(app: Flask, db: str | Path, now: Callable[[], float], trust_
         if not isinstance(data, dict):
             if request.path.endswith('/attempt'):
                 return {}
-            raise RaceError(400, 'Los datos del envío no son válidos.')
+            raise RaceError("invalid_input", 'Los datos del envío no son válidos.')
         return data
 
-    def answer(result: dict | Outcome) -> tuple[Response, int]:
+    def answer(result: dict | tuple[dict, str]) -> tuple[Response, int]:
         """Traduce un resultado ya confirmado sin exponer secretos internos.
 
         :param result: datos autorizados o resultado del caso de uso.
@@ -169,8 +181,9 @@ def register_routes(app: Flask, db: str | Path, now: Callable[[], float], trust_
 
             answer(result)
         """
-        if isinstance(result, Outcome):
-            response, status = (jsonify(result.body), result.status)
+        if isinstance(result, tuple):
+            data, result_kind = result
+            response, status = (jsonify(data), RESULT_STATUS[result_kind])
         else:
             result = dict(result)
             entry = result.pop('entrySecret', None)
@@ -192,7 +205,7 @@ def register_routes(app: Flask, db: str | Path, now: Callable[[], float], trust_
         """
         checked_browser()
         if entry and request.headers.get('X-Race-Request') != '1':
-            raise RaceError(403, 'Abre el enlace de carrera para entrar.')
+            raise RaceError("access_denied", 'Abre el enlace de carrera para entrar.')
         return body()
 
     @app.before_request
@@ -239,10 +252,13 @@ def register_routes(app: Flask, db: str | Path, now: Callable[[], float], trust_
 
             business_error(error)
         """
+        status = ERROR_STATUS.get(exc.reason)
+        if status is None:
+            return unexpected(RuntimeError('Motivo interno de carrera desconocido'))
         response = jsonify(error=str(exc))
-        if exc.status == 503:
+        if status == 503:
             response.headers['Retry-After'] = '1'
-        return (response, exc.status)
+        return (response, status)
 
     @app.errorhandler(Exception)
     def unexpected(exc: Exception) -> Response | tuple[Response, int]:
@@ -310,7 +326,7 @@ def register_routes(app: Flask, db: str | Path, now: Callable[[], float], trust_
         state, _ = answer(races.teacher_state(db, sid, now))
         link = state.get_json().get('joinUrl')
         if link is None:
-            raise RaceError(410, 'La entrada ya está cerrada. Consulta el estado de la carrera.')
+            raise RaceError("entry_closed", 'La entrada ya está cerrada. Consulta el estado de la carrera.')
         response = Response(generate_qr(link), mimetype='image/svg+xml')
         response.headers['Cache-Control'] = 'no-store'
         return response
@@ -426,7 +442,7 @@ def register_routes(app: Flask, db: str | Path, now: Callable[[], float], trust_
         own = races.me(db, sid, token, now)
         given = request.headers.get('X-Race-CSRF', '')
         if not hmac.compare_digest(given.encode(), own['csrfToken'].encode()):
-            raise RaceError(403, 'El acceso del envío no es válido. Recarga tu página de carrera.')
+            raise RaceError("access_denied", 'El acceso del envío no es válido. Recarga tu página de carrera.')
         fields = body()
         address = registration_origin(request.remote_addr, request.headers.get('CF-Connecting-IP'), trust_cloudflare=trust_cloudflare)
         return answer(races.attempt(db, sid, token, fields, address, now))

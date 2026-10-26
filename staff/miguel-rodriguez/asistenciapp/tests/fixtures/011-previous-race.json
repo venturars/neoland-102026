@@ -1,0 +1,99 @@
+{
+  "session_id": "wFeCKY64",
+  "now": 1800000003.0,
+  "cases": [
+    {
+      "key": "jimena-duran",
+      "token": "iu878hCJUykbPKh_ooJ7r-dqsqShcefLQgQC8oAjdzA",
+      "fields": {
+        "operation_id": "00000000-0000-4000-8000-000000000001",
+        "code": "8607"
+      },
+      "body": {
+        "phase": "open",
+        "serverNow": 1800000003.0,
+        "startsAt": 1800000003.0,
+        "expiresAt": 1800007200.0,
+        "roster_key": "jimena-duran",
+        "name": "Jimena Duran",
+        "character": "ajolote",
+        "state": "registrado",
+        "remaining": 2,
+        "operations": [
+          {
+            "operation_id": "00000000-0000-4000-8000-000000000001",
+            "state": "completed"
+          }
+        ],
+        "result": {
+          "id": 1,
+          "name": "Jimena Duran",
+          "checkedAt": "2027-01-15T08:00:03.000+00:00",
+          "position": 1
+        },
+        "csrfToken": "e00c73ce3f78748b2630d21bddca0dc0d13ec38a77fd5d54e3d17f90c0c1f0ad",
+        "already": true
+      },
+      "status": 200
+    },
+    {
+      "key": "meghan-martin",
+      "token": "tLM-1-NmrdTcOf_1yBEXgH-5WmAHYNNvknXzaJQYAvg",
+      "fields": {
+        "operation_id": "00000000-0000-4000-8000-000000000002",
+        "code": "0000"
+      },
+      "body": {
+        "phase": "open",
+        "serverNow": 1800000003.0,
+        "startsAt": 1800000003.0,
+        "expiresAt": 1800007200.0,
+        "roster_key": "meghan-martin",
+        "name": "Meghan Martin",
+        "character": "fantasma",
+        "state": "listo",
+        "remaining": 2,
+        "operations": [
+          {
+            "operation_id": "00000000-0000-4000-8000-000000000002",
+            "state": "completed"
+          }
+        ],
+        "result": null,
+        "csrfToken": "f994a405a2592b896fe8189c56b6f74009ac81cc06089584047f66f0c4e4d57b",
+        "error": "El código no es válido o ha caducado. Pide el código actual al profesor."
+      },
+      "status": 422
+    },
+    {
+      "key": "miguel-rodriguez",
+      "token": "4KoGMtQxVIk4FU98DcboyYGli2zKlC3uGZ85CyZ46sk",
+      "fields": {
+        "operation_id": "00000000-0000-4000-8000-000000000003",
+        "code": "8607"
+      },
+      "body": {
+        "phase": "open",
+        "serverNow": 1800000003.0,
+        "startsAt": 1800000003.0,
+        "expiresAt": 1800007200.0,
+        "roster_key": "miguel-rodriguez",
+        "name": "Miguel Rodriguez",
+        "character": "yomi",
+        "state": "listo",
+        "remaining": 2,
+        "operations": [
+          {
+            "operation_id": "00000000-0000-4000-8000-000000000003",
+            "state": "reserved"
+          }
+        ],
+        "result": null,
+        "csrfToken": "9a0a0a27f1bb211d93b57be87769240b6a42ad2e745e51dd4815cf341f0659a9",
+        "operationState": "unconfirmed",
+        "message": "Este envío aún no tiene resultado confirmado. El intento sigue gastado. Consulta tu estado."
+      },
+      "status": 202
+    }
+  ]
+}

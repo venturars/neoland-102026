@@ -1,5 +1,4 @@
 """Fases y resultados de carrera, sin HTTP, SQL ni reloj global."""
-from dataclasses import dataclass
 from uuid import UUID
 
 MAX_ATTEMPTS = 3
@@ -8,29 +7,22 @@ LIFETIME_SECONDS = 7200
 
 
 class RaceError(Exception):
-    """Rechazo de negocio con estado traducido por el borde HTTP."""
+    """Identifica un rechazo de negocio sin decidir la respuesta HTTP."""
 
-    def __init__(self, status: int, message: str) -> None:
-        """Conserva un rechazo sin datos secretos.
+    def __init__(self, reason: str, message: str) -> None:
+        """Conserva el motivo y la explicación visible, sin datos secretos.
 
-        :param status: estado HTTP de traducción.
+        :param reason: motivo de negocio que traducirá el adaptador.
         :param message: explicación visible en español.
         :return: None.
         :rtype: None
 
         Usage::
 
-            RaceError(403, "Acceso de carrera no válido.")
+            RaceError("access_denied", "Acceso de carrera no válido.")
         """
         super().__init__(message)
-        self.status = status
-
-
-@dataclass(frozen=True)
-class Outcome:
-    """Datos y estado de una operación; no contiene derecho a ejecutar B."""
-    body: dict
-    status: int = 200
+        self.reason = reason
 
 
 def phase(starts_at: float | None, closed_at: str | None, expires_at: float, now: float) -> str:
