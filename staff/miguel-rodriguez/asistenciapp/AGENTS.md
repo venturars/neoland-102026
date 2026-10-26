@@ -9,9 +9,10 @@ Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en 
 Lee en este orden al empezar cualquier tarea:
 
 1. `docs/CONSTITUTION.md`: las reglas no negociables.
-2. Este archivo (`AGENTS.md`).
-3. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
-4. Su `plan.md` y su `tasks.md`, si ya existen.
+2. `docs/ARCHITECTURE.md`: estructura, responsabilidades y dependencias.
+3. Este archivo (`AGENTS.md`).
+4. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
+5. Su `plan.md` y su `tasks.md`, si ya existen.
 
 Si algo de lo que te piden contradice la constitución, **para y avisa** antes de escribir nada.
 
@@ -54,28 +55,7 @@ Si el pedido no tiene una spec aprobada que lo cubra, solo se redacta y se muest
 
 ## 3. Estructura de carpetas
 
-```text
-asistenciapp/
-├── AGENTS.md              # instrucciones y forma de escribir el código
-├── README.md              # uso de la app
-├── docs/
-│   ├── CONSTITUTION.md     # reglas no negociables
-│   └── ARCHITECTURE.md     # responsabilidades y dependencias
-├── specs/                 # spec, plan y tareas de cada cambio
-├── requirements.txt
-├── pytest.ini
-├── app.py                 # HTTP y arranque
-├── asistencia/
-│   ├── domain/            # reglas de asistencia
-│   ├── usecases/          # acciones que coordinan reglas y persistencia
-│   ├── storage/           # operaciones SQLite
-│   ├── export.py          # formato CSV
-│   └── tunnel.py          # publicación por túnel
-├── static/                # pantallas existentes
-├── tests/
-├── .venv/                 # entorno local
-└── data/                  # datos locales
-```
+El árbol de carpetas y las responsabilidades están en [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-spec-antes-del-cambio`.
 
@@ -141,13 +121,64 @@ Una funcionalidad está terminada cuando:
 | `007-carrera-de-asistencia` | Implementada, verificada localmente y probada por Miguel el 2026-10-25; publicación pendiente | QR local, quince SVG, lobby, salida, registro, llegada y podio; 226 pruebas de app; evidencia en specs/007-carrera-de-asistencia/evidence.md; recorrido básico y QR móvil probados por Miguel; publicación pendiente |
 | `008-proteger-el-registro-de-carrera` | Implementada, verificada y resultado local aprobado por Miguel el 2026-10-25; publicación pendiente | Issue #328; R1/R2 corregidos; 218 pruebas de app y dos reproducciones originales pasan; evidencia y comandos en tasks.md; sin PR 008 publicada ni aprobación de peers atribuida |
 | `009-refinar-presentacion-de-carrera` | Implementada y verificada localmente; pendiente de probar por Miguel y publicar | Tema, SVG simplificados y celebración 2+3+8; 226 tests Python y 15 Node; evidencia en specs/009-refinar-presentacion-de-carrera/evidence.md; sin PR ni prueba del resultado nuevo atribuida a Miguel |
+| `010-consistencia-y-legibilidad` | Terminada; revisión final aprobada por Miguel el 2026-10-26 | Reglas de estilo y árbol único; nueve criterios y seis casos revisados; 226 pruebas pasan; evidencia en specs/010-consistencia-y-legibilidad/tasks.md; sin refactorización de código |
 | Bot de Discord (sin número asignado) | Idea futura | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
 
 ## 8. Forma de escribir el código
 
-Cada módulo explica su responsabilidad al principio. Las funciones creadas o modificadas incluyen tipos, describen sus parámetros con `:param` y su resultado con `:return` y `:rtype`, y muestran un ejemplo corto `Usage::`. Las funciones internas sin parámetros indican qué resultado producen. Una función se ocupa de una tarea; no se añaden capas ni herramientas sin una necesidad acordada.
+### Funciones y pasos claros
+
+- Cada módulo abre con una frase que explica su responsabilidad. Las funciones nuevas o modificadas tienen tipos, nombres descriptivos y una responsabilidad reconocible.
+- Dominio y casos de uso se escriben con funciones que reciben datos explícitos y devuelven resultados. El dominio calcula reglas; los casos de uso coordinan sus efectos y el almacenamiento. No se crean clases propias para entidades, resultados, servicios o permisos internos de ejecución, ni estado global mutable para coordinar operaciones.
+- Se permiten clases que únicamente identifican errores de negocio, sin lógica adicional ni códigos HTTP. El adaptador HTTP traduce esos errores. No se reescriben clases de bibliotecas externas para cumplir esta convención.
+- Separa los pasos cuando una expresión mezcla obtener datos, transformarlos y construir la respuesta. Usa nombres como `session_id`, `connection` o `checkins` en vez de abreviaturas ambiguas. Conserva las expresiones breves que se entiendan sin explicación.
+- Una función no necesita un helper por cada línea ni un límite arbitrario de longitud. No obligues al lector a recorrer varios archivos para entender una operación sencilla.
+
+### Documentación de funciones
+
+Una función pública está destinada a usarse desde otro módulo. Describe sus parámetros con `:param`, su resultado con `:return` y `:rtype`, e incluye un ejemplo breve `Usage::`. Ejemplo ilustrativo:
+
+```python
+def count_checkins(checkins: list[dict]) -> int:
+    """Cuenta las asistencias recibidas.
+
+    :param checkins: registros de asistencia.
+    :return: número de registros recibidos.
+    :rtype: int
+
+    Usage::
+
+        count_checkins([{"name": "Ada"}])
+    """
+    return len(checkins)
+```
+
+Las funciones internas conservan tipos y una explicación breve del propósito y de las restricciones no evidentes; no necesitan repetir toda la plantilla pública. El prefijo `_` señala uso interno al módulo por convención, no impide acceder a la función.
+
+Los comentarios explican decisiones, efectos o restricciones en español claro. Evita plantillas que no describen el resultado real y comentarios que solo repiten la instrucción.
+
+### Simplicidad y almacenamiento
+
+Usa funciones concretas para la base SQLite de esta app. No crees repositorios genéricos, proveedores intercambiables, fábricas para distintos motores ni capas para usos hipotéticos. Recibir `db_path` para probar con datos temporales no implica soportar otros motores.
+
+Conserva o introduce un helper solo si reduce repetición o errores reales y deja claro quién abre, confirma, revierte y cierra la operación. Un context manager puede servir para ello: no se elimina por su nombre ni se sustituye por más código sin una mejora concreta. Justifica cada abstracción nueva en el plan con la necesidad actual y el recorrido de la operación que resuelve.
+
+Este segundo ejemplo ilustra pasos legibles; no implementa una consulta ni una API nueva:
+
+```python
+# query contiene el SQL leído de su archivo; connection ya está abierta.
+rows = connection.execute(query, (session_id,)).fetchall()
+checkins = [dict(row) for row in rows]
+return checkins
+```
+
+El reparto entre reglas, datos concretos, consultas y adaptadores se define en [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Estas pautas se aplican al alcance aprobado de cada cambio; no autorizan reescribir módulos ajenos a la tarea.
+
+### Seguridad al simplificar
+
+Conserva datos, resultados visibles y las garantías de [la constitución, §6](docs/CONSTITUTION.md#6-seguridad). No devuelvas intentos gastados, reevalúes un mismo envío, confirmes asistencias sin resultado válido, compartas el presupuesto de una carrera entre alumnos ni prolongues accesos caducados. Sustituir una clase o un helper nunca permite quitar la garantía que protegía. Las transacciones, validaciones y controles necesarios permanecen; la reserva y confirmación actuales se explican en [arquitectura](docs/ARCHITECTURE.md#reserva-a-y-resultado-b).
 
 Las dependencias siguen [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Las specs cerradas 001–004 conservan sus rutas históricas: el antiguo AGENT.md corresponde a este AGENTS.md y la constitución que estaba en la raíz está ahora en docs/CONSTITUTION.md. No se reescriben esas evidencias al mover documentos.
 
