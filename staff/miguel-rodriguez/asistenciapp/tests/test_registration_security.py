@@ -269,9 +269,10 @@ def test_006_privacy_and_layer_boundaries():
     from pathlib import Path
     root = Path(__file__).resolve().parents[1]
     constitution = (root / "docs/CONSTITUTION.md").read_text()
-    assert "Versión 3.0" in constitution
+    assert "Versión 4.0" in constitution
     assert "no se asocian a nombres, clases ni registros" in constitution
-    assert "bloquea permanentemente" in constitution
+    assert "Las clases normales conservan los límites de cinco intentos" in constitution
+    assert "con bloqueo permanente de 006" in constitution
     tree = ast.parse((root / "asistencia/domain/registration.py").read_text())
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):

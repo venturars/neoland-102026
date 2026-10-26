@@ -25,22 +25,25 @@ def imports(path):
     return modules
 
 
-@pytest.mark.parametrize("name", ["codes", "names", "session"])
+@pytest.mark.parametrize("name", ["codes", "names", "session", "registration", "race", "roster"])
 def test_domain_has_no_outer_dependencies(name):
     modules = imports(ROOT / f"asistencia/domain/{name}.py")
     assert not any(m.startswith(("flask", "sqlite3", "asistencia.storage", "asistencia.usecases")) for m in modules)
 
 
-def test_storage_has_no_business_or_http_dependencies():
-    assert not any(m.startswith(("flask", "asistencia.domain", "asistencia.usecases")) for m in imports(ROOT / "asistencia/storage/sqlite.py"))
+@pytest.mark.parametrize("name", ["sqlite", "races"])
+def test_storage_has_no_business_or_http_dependencies(name):
+    assert not any(m.startswith(("flask", "asistencia.domain", "asistencia.usecases")) for m in imports(ROOT / f"asistencia/storage/{name}.py"))
 
 
-def test_usecases_have_no_http_dependency():
-    assert not any(m.startswith("flask") for m in imports(ROOT / "asistencia/usecases/attendance.py"))
+@pytest.mark.parametrize("name", ["attendance", "races"])
+def test_usecases_have_no_http_dependency(name):
+    assert not any(m.startswith("flask") for m in imports(ROOT / f"asistencia/usecases/{name}.py"))
 
 
-def test_http_does_not_access_storage_or_rules_directly():
-    modules = imports(ROOT / "app.py")
+@pytest.mark.parametrize("name", ["app.py", "asistencia/race_http.py"])
+def test_http_does_not_access_storage_or_rules_directly(name):
+    modules = imports(ROOT / name)
     assert not any(m.startswith(("sqlite3", "asistencia.storage", "asistencia.domain")) for m in modules)
     assert "asistencia.db" not in modules
     assert any(m.startswith("asistencia.usecases") for m in modules)
@@ -65,4 +68,4 @@ def test_architecture_explains_layers_and_guide_explains_functions():
     guide = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
     for term in [":param", ":return", "Usage::"]:
         assert term in guide
-    assert "Versión 3.0" in (ROOT / "docs/CONSTITUTION.md").read_text(encoding="utf-8")
+    assert "Versión 4.0" in (ROOT / "docs/CONSTITUTION.md").read_text(encoding="utf-8")
