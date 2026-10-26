@@ -1,0 +1,35 @@
+# Run from staff/miguel-rodriguez/first-app-ssd after the separate initialization example.
+# This writes 10 new random contacts to the working database on EVERY run.
+node --input-type=module <<'EOF'
+let database;
+try {
+  const { db } = await import("./db/connection.js");
+  database = db;
+  const { randomInt } = await import("node:crypto");
+  const { createUser } = await import("./logic/create-user.js");
+  const { listUsers } = await import("./logic/list-users.js");
+  const usedEmails = new Set(listUsers().map((user) => user.email));
+  const firstNames = ["Ana", "Leo", "Maya", "Hugo", "Nora", "Luca", "Iris", "Omar", "Zoe", "Alex"];
+  const lastNames = ["Lopez", "Martin", "Silva", "Costa", "Reed", "Chen", "Garcia", "Patel"];
+  const users = [];
+  for (let i = 0; i < 10; i++) {
+    const name = `${firstNames[randomInt(firstNames.length)]} ${lastNames[randomInt(lastNames.length)]}`;
+    const username = name.toLowerCase().replaceAll(" ", ".");
+    let email = `${username}@example.com`;
+    let suffix = 2;
+    while (usedEmails.has(email)) {
+      email = `${username}${suffix}@example.com`;
+      suffix++;
+    }
+    usedEmails.add(email);
+    users.push(createUser(name, email));
+  }
+  console.table(users);
+  console.log(`Created ${users.length} demo users.`);
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+} finally {
+  if (database) database.close();
+}
+EOF

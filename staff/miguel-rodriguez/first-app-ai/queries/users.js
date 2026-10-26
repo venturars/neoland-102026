@@ -7,6 +7,7 @@ const directory = dirname(fileURLToPath(import.meta.url));
 
 const createUsersTableSql = readFileSync(join(directory, 'queries', 'create-users-table.sql'), 'utf8');
 const findByEmailSql = readFileSync(join(directory, 'queries', 'find-by-email.sql'), 'utf8');
+const findByNameSql = readFileSync(join(directory, 'queries', 'find-by-name.sql'), 'utf8');
 const insertSql = readFileSync(join(directory, 'queries', 'insert.sql'), 'utf8');
 const findAllSql = readFileSync(join(directory, 'queries', 'find-all.sql'), 'utf8');
 const findByIdSql = readFileSync(join(directory, 'queries', 'find-by-id.sql'), 'utf8');
@@ -39,4 +40,8 @@ export function update({ id, name, email }) {
 
 export function remove(id) {
   return db.prepare(removeSql).run({ id });
+}
+
+export function findByName(name) {
+  return db.prepare(findByNameSql).all({ name });
 }

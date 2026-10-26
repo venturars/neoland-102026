@@ -1,0 +1,22 @@
+# Run from staff/miguel-rodriguez/first-app-ssd using Node 24.12.0 (nvm use 24.12.0, if available).
+# Run the separate initialization and create-user examples first.
+# Replace userId with the generated ID of a disposable contact.
+# This PERMANENTLY deletes that contact from the working db/users.sqlite.
+# Success prints undefined: the operation intentionally returns no data.
+# Repeating without a new insertion reports User not found.
+node --input-type=module <<'EOF'
+const userId = 0; // Replace 0 with your created user's numeric ID.
+let database;
+try {
+  const { db } = await import("./db/connection.js");
+  database = db;
+  const { deleteUser } = await import("./logic/delete-user.js");
+  const result = deleteUser(userId);
+  console.log(result);
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+} finally {
+  if (database) database.close();
+}
+EOF

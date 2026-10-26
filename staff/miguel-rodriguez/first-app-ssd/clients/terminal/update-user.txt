@@ -1,0 +1,20 @@
+# Run from staff/miguel-rodriguez/first-app-ssd with Node 24.12.0 (nvm use 24.12.0, if available).
+# Run the separate initialization and create-user examples first.
+# Replace userId below with the ID printed by create-user; no ID is assumed.
+# This changes the working db/users.sqlite database. Repeating it is allowed.
+node --input-type=module <<'EOF'
+const userId = 0; // Replace 0 with your created user's numeric ID.
+let database;
+try {
+  const { db } = await import("./db/connection.js");
+  database = db;
+  const { updateUser } = await import("./logic/update-user.js");
+  const user = updateUser(userId, { name: "  Ada Byron  " });
+  console.log(user);
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+} finally {
+  if (database) database.close();
+}
+EOF

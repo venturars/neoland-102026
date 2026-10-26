@@ -1,16 +1,23 @@
 import { findById } from "../queries/users.js";
-import { parseId, toUser } from "./user-fields.js";
 
 export function findUserById(id) {
-  const userId = parseId(id);
+  if (typeof id !== "number" || !Number.isInteger(id) || id < 1) {
+    throw new Error("Invalid id");
+  }
   let user;
   try {
-    user = findById(userId);
+    user = findById(id);
   } catch {
     throw new Error("Could not find the user");
   }
   if (!user) {
     throw new Error("User not found");
   }
-  return toUser(user);
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  };
 }
