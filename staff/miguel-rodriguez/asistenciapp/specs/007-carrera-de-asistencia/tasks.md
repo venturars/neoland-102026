@@ -1,6 +1,6 @@
 # Tareas 007 · Carrera de asistencia de Halloween
 
-Estado: spec, plan y tareas aprobados por Miguel el 2026-10-24; implementación local autorizada el 2026-10-25 tras aprobar el resultado de 008. Interfaz implementada y verificada por el agente; Miguel probó el recorrido en ordenador y mediante QR en su móvil el 2026-10-25. Publicación pendiente. Issue [#325](https://github.com/venturars/neoland-102026/issues/325); backend [#328](https://github.com/venturars/neoland-102026/issues/328), sin PR publicada. La excepción autorizada permite implementar en copia separada y publicar después con diff exclusivo a staging. Véanse [evidencia](evidence.md) y [revisión](review.md).
+Estado: spec, plan y tareas aprobados por Miguel el 2026-10-24; implementación local autorizada el 2026-10-25 tras aprobar el resultado de 008. Interfaz implementada y verificada por el agente; Miguel probó el recorrido en ordenador y mediante QR en su móvil el 2026-10-25. Publicada en PR [#355](https://github.com/venturars/neoland-102026/pull/355), pendiente de revisión e integración después de [#354](https://github.com/venturars/neoland-102026/pull/354). Issue [#325](https://github.com/venturars/neoland-102026/issues/325); backend [#328](https://github.com/venturars/neoland-102026/issues/328). Véanse [evidencia](evidence.md) y [revisión](review.md).
 
 ## Reglas de ejecución y propiedad
 
@@ -190,3 +190,10 @@ Se abrió la copia ficticia mediante un túnel HTTPS temporal. El panel respondi
 ## Publicación autorizada · 2026-10-26
 
 Miguel ordenó «sube todas las prssss omggg». Esta instrucción sustituye la espera de publicación condicionada a las predecesoras: se publica esta tarea ahora con base fija staging y sus dependencias pendientes explícitas. La PR es [#355](https://github.com/venturars/neoland-102026/pull/355), asignada a mglnglxx. No se autoriza merge sin las revisiones requeridas. Las aprobaciones y pruebas anteriores no se atribuyen a compañeros. Se conservan commits separados por tarea; los cambios acumulados de la base se explican en la descripción y se ofrece comparación exclusiva del paso.
+
+
+## Preparación final para revisión · 2026-10-26
+
+Se incorporó la rama actualizada de 008, que contiene el staging posterior a #252 y #284. El código de 007 permanece idéntico al publicado anteriormente; su comparación exclusiva contra 008 contiene 47 archivos y no modifica reglas, acciones ni almacenamiento del backend. La PR conserva destino staging y debe fusionarse después de #354.
+
+Nueva ejecución en copia desechable con datos ficticios y el entorno existente: `PYTHONDONTWRITEBYTECODE=1 python -m pytest -q -p no:cacheprovider`, **226 pruebas aprobadas en 5,24 s**. La copia temporal se eliminó al terminar y no se dejaron servicios de esta comprobación activos. La prueba de Miguel en ordenador y móvil es la del 25 de octubre registrada arriba; no se presenta esta suite como una nueva prueba suya. Las notas históricas de publicación pendiente quedan sustituidas por la entrega de #355.
