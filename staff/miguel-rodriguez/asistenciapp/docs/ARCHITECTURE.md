@@ -2,6 +2,38 @@
 
 La aplicación conserva sus pantallas y comportamiento; cada parte tiene una responsabilidad.
 
+## Estructura de carpetas
+
+```text
+asistenciapp/
+├── AGENTS.md              # proceso y estilo de código
+├── README.md              # uso de la app
+├── docs/
+│   ├── CONSTITUTION.md     # principios y seguridad
+│   └── ARCHITECTURE.md     # estructura y responsabilidades
+├── specs/                 # spec, plan, tareas y evidencia
+├── requirements.txt
+├── pytest.ini
+├── app.py                 # HTTP y arranque
+├── asistencia/
+│   ├── domain/            # reglas de negocio
+│   ├── usecases/          # coordinación de operaciones
+│   ├── storage/           # conexiones y operaciones SQLite
+│   ├── origin.py          # origen fiable de la conexión
+│   ├── race_http.py       # adaptador HTTP de carrera
+│   ├── qr.py              # generación local del QR
+│   ├── export.py          # formato CSV
+│   └── tunnel.py          # acceso mediante túnel
+├── static/                # pantallas y activos
+├── tests/
+├── .venv/                 # entorno local, fuera de Git
+└── data/                  # datos locales, fuera de Git
+```
+
+El árbol muestra las partes relevantes. `.venv/` y `data/` se crean al preparar o ejecutar la app; no tienen que existir en una copia nueva del código.
+
+## Responsabilidades
+
 | Parte | Responsabilidad | Dependencias |
 | --- | --- | --- |
 | `asistencia/domain/` | Códigos, nombres y validez de una sesión o registro. | Biblioteca estándar; nunca almacenamiento, Flask ni casos de uso. |
@@ -15,6 +47,12 @@ Un registro entra por app.py: la acción obtiene la sesión, aplica las reglas d
 El archivo `data/asistencia.db` conserva sus tablas de asistencia, secretos, token y registros. 006 añade tablas de seguridad separadas, sin convertir ni modificar los datos anteriores. `asistencia/export.py` conserva el formato CSV; `asistencia/tunnel.py` conserva la publicación del servicio. No se añaden repositorios genéricos ni otras persistencias. 007 añade únicamente qrcode==8.2 para generar QR SVG localmente.
 
 Las reglas vigentes están en [CONSTITUTION.md](CONSTITUTION.md); el proceso y la escritura de funciones, en [AGENTS.md](../AGENTS.md). Las specs 001–004 conservan los nombres que tenían sus documentos: AGENT.md pasó a AGENTS.md y CONSTITUTION.md pasó de la raíz a docs/. Los enlaces actuales se mantienen en el README y el manual.
+
+## Correcciones pendientes del código
+
+Los límites anteriores son la referencia para los próximos cambios. El código actual todavía contiene datos concretos del alumnado en `domain/roster.py`, consultas SQL dentro de las funciones de almacenamiento y un código HTTP en `domain/race.py:RaceError.status`.
+
+Las siguientes refactorizaciones deberán mover los datos del alumnado al almacenamiento, guardar el texto de las consultas en archivos separados y dejar la traducción de errores a HTTP en el adaptador. Los casos de uso coordinan dominio y almacenamiento; no construyen respuestas del navegador. No se añaden proveedores intercambiables ni una capa genérica de consultas. La spec 010 documenta estos límites; no modifica todavía esas implementaciones.
 
 
 ## Protección 006
