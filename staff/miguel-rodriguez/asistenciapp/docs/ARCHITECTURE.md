@@ -12,7 +12,7 @@ La aplicación conserva sus pantallas y comportamiento; cada parte tiene una res
 
 Un registro entra por app.py: la acción obtiene la sesión, aplica las reglas de dominio y pide al almacén guardar el resultado. La entrada HTTP traduce los datos y errores a las mismas respuestas de antes. La autenticación se mantiene en el borde HTTP. Las acciones abren una conexión por operación y la cierran también ante errores; las escrituras conservan sus transacciones.
 
-El archivo `data/asistencia.db` conserva sus tablas de asistencia, secretos, token y registros. 006 añade tablas de seguridad separadas, sin convertir ni modificar los datos anteriores. `asistencia/export.py` conserva el formato CSV; `asistencia/tunnel.py` conserva la publicación del servicio. No se añaden dependencias, repositorios genéricos ni otras persistencias.
+El archivo `data/asistencia.db` conserva sus tablas de asistencia, secretos, token y registros. 006 añade tablas de seguridad separadas, sin convertir ni modificar los datos anteriores. `asistencia/export.py` conserva el formato CSV; `asistencia/tunnel.py` conserva la publicación del servicio. No se añaden repositorios genéricos ni otras persistencias. 007 añade únicamente qrcode==8.2 para generar QR SVG localmente.
 
 Las reglas vigentes están en [CONSTITUTION.md](CONSTITUTION.md); el proceso y la escritura de funciones, en [AGENTS.md](../AGENTS.md). Las specs 001–004 conservan los nombres que tenían sus documentos: AGENT.md pasó a AGENTS.md y CONSTITUTION.md pasó de la raíz a docs/. Los enlaces actuales se mantienen en el README y el manual.
 
@@ -47,7 +47,7 @@ Si B falla, su rollback conserva A. No hay reanudación, devolución de oportuni
 
 Un bloqueo antes de reservar devuelve 503 sin consumo. Después de reservar, un bloqueo impidiendo B devuelve 202 con consumo; un fallo técnico devuelve 500 y pide consultar el estado. Una operación distinta solo se crea por un nuevo envío intencional del participante.
 
-### Contrato que consumirá 007
+### Contrato que consume 007
 
 | Ruta | Acceso y datos |
 | --- | --- |
@@ -81,3 +81,20 @@ La entrada compartida no verifica quién elige cada nombre: alguien puede ocupar
 Las lecturas privadas de plaza y lobby comprueban el reloj después de cargar los metadatos y otra vez después de cargar el resultado. No devuelven información temporal con un instante capturado antes de una espera. Ante caducidad se revierte la lectura antes de limpiar.
 
 La apertura de conexión y las consultas previas reconocen los códigos SQLite BUSY/LOCKED como contención temporal: 503 antes de una reserva nueva. Las conexiones fallidas durante configuración se cierran. Un bloqueo al entrar en B se traduce a 202 con la reserva de A gastada. Los fallos de escritura/commit posteriores no se reclasifican como intentos libres: mantienen el error técnico y la recuperación sin reevaluación. Los errores de E/S tampoco se etiquetan como un simple bloqueo.
+
+
+## Presentación de carrera 007
+
+[Issue #325](https://github.com/venturars/neoland-102026/issues/325). Implementada en copia local sobre el backend 008 aprobado por Miguel; publicación pendiente. La enmienda 4.1 permite qrcode==8.2 sin extras; colorama es transitiva en Windows.
+
+- `asistencia/qr.py` recibe un enlace autorizado y produce SVG negro sobre blanco con margen de cuatro módulos. No consulta datos, registra secretos ni llama a servicios externos.
+- GET `/api/sessions/<id>/race/qr.svg` pertenece al adaptador `race_http.py`: exige profesor, obtiene el enlace de entrada del caso de uso y solo devuelve imagen durante el lobby. Lleva no-store también en errores; después de Go/cierre/caducidad devuelve 410. Esta es la única ruta que añade 007.
+- `profesor.html` y `profesor.js` permiten elegir una carrera nueva y abrir la presentación. Las clases normales usan sus operaciones anteriores.
+- `race-display.html/js` consultan el estado privado del profesor, cargan el QR mediante cabecera y un blob local revocable, ofrecen Go/cierre/retirada/CSV y dibujan los resultados confirmados. El código solo se muestra en fase abierta. Dos ventanas usan el mismo startsAt del servidor.
+- `race.html/js` retiran el fragmento de la barra, conservan temporalmente la entrada en sessionStorage y la borran al ocupar plaza o cerrar las altas. El permiso emitido por 008 permanece en cookie HttpOnly. El script no puede leerlo ni añadirlo a un enlace.
+- Un envío guarda temporalmente su UUID y código antes del POST. Un reintento explícito conserva ambos. 202 o fallo técnico llevan a consultar el estado sin crear otra operación automática; los datos pendientes se eliminan al resolverla, cerrar o caducar. El presupuesto y las transacciones A/B siguen siendo propiedad exclusiva de 008.
+- Cada pantalla mantiene una sola petición API activa, con espera de acciones del usuario, pausa al ocultarse, timeout de ocho segundos y backoff de uno a ocho segundos. La cuenta atrás local es visual: no abre permisos. Volver de la caché reinicia la consulta y el reloj visual.
+- `race-renderer.js` recibe el roster y las asistencias del servidor. Usa textContent, un conjunto de slugs de activos permitidos y nodos estables; no mantiene otra lista ejecutable de nombres. La llegada anima transformaciones, sin calcular ganadores. El podio deriva de las asistencias actuales y se recalcula tras retirar una.
+- `race.css` adapta parrilla, controles, formulario y podio a móvil y escritorio; prefers-reduced-motion omite la llegada animada. Los quince SVG locales no contienen scripts, eventos ni recursos remotos. Referencias en [RACE-ASSETS.md](RACE-ASSETS.md).
+
+007 no modifica las tablas ni los casos de uso de 008. Continúan vigentes el bloqueo de rutas normales para una carrera, las tres reservas por plaza, la caducidad previa a recuperar resultados y la limpieza del backend. Pruebas y límites reales: [evidencia de 007](../specs/007-carrera-de-asistencia/evidence.md).
