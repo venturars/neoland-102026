@@ -13,18 +13,19 @@ asistenciapp/
     ├── domain/                 # reglas puras, sin Flask ni SQLite
     │   ├── codes.py            # código rotatorio de 4 cifras
     │   ├── names.py            # validar y normalizar nombres
+    │   ├── rate_limit.py       # límite de intentos por IP y su error
     │   └── session.py          # decisiones de sesión y sus errores
     ├── usecases/
     │   └── attendance.py       # acciones: crear, consultar, registrar, cerrar, borrar, listar para exportar
     ├── storage/
-    │   └── sqlite.py           # acceso a SQLite
+    │   └── sqlite.py           # acceso a SQLite (sesiones, registros, contadores y lista negra por IP)
     ├── export.py               # CSV de la lista
     └── tunnel.py               # túnel público con cloudflared
 ```
 
 | Parte | Qué contiene | Qué NO contiene |
 | --- | --- | --- |
-| `domain/` | Las reglas de negocio: calcular y validar el código, limpiar nombres y decidir «la sesión no existe», «la sesión está cerrada», «el código no es válido» (con sus errores). | Flask, SQL, ficheros, red. |
+| `domain/` | Las reglas de negocio: calcular y validar el código, limpiar nombres, decidir «la sesión no existe», «la sesión está cerrada», «el código no es válido» y «esta IP se ha pasado de los límites» (con sus errores). | Flask, SQL, ficheros, red. |
 | `usecases/` | Las acciones que hace la app. Reciben la ruta de la base de datos y el reloj, usan el dominio y el almacenamiento, y devuelven diccionarios. Son las únicas que usan `storage`; incluyen `prepare`, que crea la base al arrancar y devuelve el token del profesor. | Rutas, JSON de Flask, SQL. |
 | `storage/` | SQL y esquema. Cada función recibe la ruta de la base de datos, abre y cierra su propia conexión y solo guarda y lee lo que la acción ya decidió. | Reglas de negocio: no comprueba si la sesión está cerrada ni si el código vale; no importa Flask, `codes`, `names` ni `session`. |
 | `app.py` | Rutas Flask, token del profesor, `ProxyFix`, traducción de errores del dominio a estados HTTP (404, 409, 422, 400), `main` y `port_in_use`. | Decisiones de negocio. |
@@ -53,9 +54,11 @@ Las dependencias van siempre hacia el dominio. Lo que no está en la tabla está
 | --- | --- |
 | Calcula el código rotatorio y comprueba si vale | `domain/codes.py` |
 | Valida y normaliza nombres | `domain/names.py` |
+| Decide si una IP se ha pasado de 5 intentos por segundo o 20 por minuto, y rechaza la bloqueada | `domain/rate_limit.py` |
 | Decide «sesión no existe», «sesión cerrada», «código no válido» y «registro no existe» | `domain/session.py` |
-| Crea, consulta, cierra sesiones; registra y borra asistentes | `usecases/attendance.py` |
-| Guarda y lee de SQLite | `storage/sqlite.py` |
+| Crea, consulta, cierra sesiones; registra y borra asistentes; en `check_in` coordina el límite por IP (pregunta al almacenamiento, aplica la regla del dominio y bloquea) | `usecases/attendance.py` |
+| Guarda y lee de SQLite, incluidas las tablas `ip_attempts` (contadores) y `blocked_ips` (lista negra), sin relación con nombres ni sesiones | `storage/sqlite.py` |
+| Averigua la IP de la conexión (`request.remote_addr`, nunca una cabecera) y traduce el bloqueo a 429 | `app.py` |
 | Exporta la lista a CSV | `export.py` |
 | Abre el túnel público | `tunnel.py` |
 | Atiende las rutas, comprueba el token, devuelve JSON y estados HTTP, arranca el servidor | `app.py` |

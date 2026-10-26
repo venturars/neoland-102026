@@ -18,6 +18,7 @@ from flask import Flask, Response, jsonify, request
 from werkzeug.exceptions import HTTPException
 from werkzeug.middleware.proxy_fix import ProxyFix
 
+from asistencia.domain.rate_limit import IpBanned
 from asistencia.domain.session import (
     CheckinNotFound,
     InvalidCode,
@@ -40,6 +41,7 @@ DOMAIN_ERRORS = {
     CheckinNotFound: 404,
     SessionClosed: 409,
     InvalidCode: 422,
+    IpBanned: 429,
 }
 
 
@@ -60,7 +62,8 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
     app = Flask(__name__, static_folder="static", static_url_path="")
     app.json.ensure_ascii = False
     # Detrás del túnel, usar la dirección pública que nos indica (plan §2.10, CA-19).
-    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+    # x_for=0: la IP que se cuenta es la de la conexión, no una cabecera que escribe el usuario (spec 006, CA-11).
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=0, x_proto=1, x_host=1)
 
     teacher_token = attendance.prepare(db_path)
     app.config["TEACHER_TOKEN"] = token or teacher_token
@@ -104,7 +107,7 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
         body = request.get_json(silent=True) or {}
         try:
             result, created = attendance.check_in(
-                db_path, session_id, body.get("name"), body.get("code", ""), now
+                db_path, session_id, body.get("name"), body.get("code", ""), request.remote_addr, now
             )
         except ValueError as exc:
             return error(400, str(exc))  # CA-08

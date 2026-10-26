@@ -11,6 +11,7 @@ from typing import Callable
 
 from asistencia.domain.codes import code_for, seconds_left
 from asistencia.domain.names import clean_name, name_key
+from asistencia.domain.rate_limit import BAN_MESSAGE, IpBanned, ensure_not_blocked, is_over_limit
 from asistencia.domain.session import (
     CHECKIN_NOT_FOUND,
     CheckinNotFound,
@@ -68,16 +69,29 @@ def public_session(db_path: DbPath, session_id: str) -> dict:
     return {"title": session["title"], "open": session["closed_at"] is None}
 
 
-def check_in(db_path: DbPath, session_id: str, name: str | None, code: str, now: Clock) -> tuple[dict, bool]:
+def _enforce_ip_limit(db_path: DbPath, ip: str, now: Clock) -> None:
+    """Rechaza la IP bloqueada y bloquea la que se pasa de los límites (CA-02, CA-04, CA-06)."""
+    ensure_not_blocked(storage.is_ip_blocked(db_path, ip))
+    in_second, in_minute = storage.record_ip_attempt(db_path, ip, now())
+    if is_over_limit(in_second, in_minute):
+        storage.block_ip(db_path, ip, _now_iso(now))
+        raise IpBanned(BAN_MESSAGE)
+
+
+def check_in(
+    db_path: DbPath, session_id: str, name: str | None, code: str, ip: str, now: Clock
+) -> tuple[dict, bool]:
     """Registra a un alumno (CA-04, CA-06, CA-07, CA-08, CA-09).
 
     :param db_path: ruta de la base de datos.
     :param session_id: identificador de la sesión.
     :param name: nombre que escribió el alumno.
     :param code: código que escribió el alumno.
+    :param ip: IP de la conexión; solo sirve para limitar los intentos, no se guarda con el nombre.
     :param now: reloj que devuelve segundos Unix.
     :return: el registro (``name``, ``checkedAt``) y si se ha creado ahora.
     :rtype: tuple[dict, bool]
+    :raises IpBanned: si la IP está bloqueada o se pasa de los límites.
     :raises SessionNotFound: si la sesión no existe.
     :raises SessionClosed: si la sesión está cerrada.
     :raises ValueError: si el nombre no es válido.
@@ -85,9 +99,10 @@ def check_in(db_path: DbPath, session_id: str, name: str | None, code: str, now:
 
     Usage::
 
-        >>> check_in(db_path, "abc", "Ana", "1234", time.time)  # doctest: +SKIP
+        >>> check_in(db_path, "abc", "Ana", "1234", "203.0.113.7", time.time)  # doctest: +SKIP
         ({'name': 'Ana', 'checkedAt': '2026-10-26T10:00:00.000+00:00'}, True)
     """
+    _enforce_ip_limit(db_path, ip, now)
     session = _session(db_path, session_id)
     ensure_open(session)
     clean = clean_name(name)
