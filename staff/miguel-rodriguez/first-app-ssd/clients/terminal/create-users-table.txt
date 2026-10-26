@@ -1,0 +1,19 @@
+# Run from staff/miguel-rodriguez/first-app-ssd. This creates the local db/users.sqlite file/table.
+# Repeated runs preserve records. No contacts are inserted.
+# Compatibility allows spacing/case changes, but rejects quoted identifiers,
+# comments, reordered constraints, and alternate SQL expressions. No migration.
+node --input-type=module <<'EOF'
+let database;
+try {
+  const { db } = await import("./db/connection.js");
+  database = db;
+  const { createUsersTable } = await import("./queries/users.js");
+  createUsersTable();
+  console.log("Users table is ready");
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+} finally {
+  if (database) database.close();
+}
+EOF

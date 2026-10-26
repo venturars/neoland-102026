@@ -1,5 +1,4 @@
 import { findAll } from "../queries/users.js";
-import { toUser } from "./user-fields.js";
 
 export function listUsers() {
   let users;
@@ -8,5 +7,11 @@ export function listUsers() {
   } catch {
     throw new Error("Could not list the users");
   }
-  return users.map(toUser);
+  return users.map((user) => ({
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  }));
 }
