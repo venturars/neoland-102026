@@ -1,13 +1,15 @@
 {
-  "session_id": "wFeCKY64",
+  "source_commit": "93c320005f18fb4a9f7ba7c940a0d4c43a435f40",
+  "test_credentials": "Synthetic deterministic placeholders; no real access.",
+  "session_id": "fixture1",
   "now": 1800000003.0,
   "cases": [
     {
       "key": "jimena-duran",
-      "token": "iu878hCJUykbPKh_ooJ7r-dqsqShcefLQgQC8oAjdzA",
+      "token": "test_fixture_jimena_00000000000000000000000",
       "fields": {
         "operation_id": "00000000-0000-4000-8000-000000000001",
-        "code": "8607"
+        "code": "6892"
       },
       "body": {
         "phase": "open",
@@ -31,14 +33,14 @@
           "checkedAt": "2027-01-15T08:00:03.000+00:00",
           "position": 1
         },
-        "csrfToken": "e00c73ce3f78748b2630d21bddca0dc0d13ec38a77fd5d54e3d17f90c0c1f0ad",
+        "csrfToken": "839dba98f2c5cc60193cb4cdc1fa1bb5a2c240ef3a0ae71c8cf04f4752fd8983",
         "already": true
       },
       "status": 200
     },
     {
       "key": "meghan-martin",
-      "token": "tLM-1-NmrdTcOf_1yBEXgH-5WmAHYNNvknXzaJQYAvg",
+      "token": "test_fixture_meghan_00000000000000000000000",
       "fields": {
         "operation_id": "00000000-0000-4000-8000-000000000002",
         "code": "0000"
@@ -60,17 +62,17 @@
           }
         ],
         "result": null,
-        "csrfToken": "f994a405a2592b896fe8189c56b6f74009ac81cc06089584047f66f0c4e4d57b",
+        "csrfToken": "3986ed3cdca39065879be097fd516ee5f5c9f3fe115cbb6ee3c422e54d449d09",
         "error": "El código no es válido o ha caducado. Pide el código actual al profesor."
       },
       "status": 422
     },
     {
       "key": "miguel-rodriguez",
-      "token": "4KoGMtQxVIk4FU98DcboyYGli2zKlC3uGZ85CyZ46sk",
+      "token": "test_fixture_miguel_00000000000000000000000",
       "fields": {
         "operation_id": "00000000-0000-4000-8000-000000000003",
-        "code": "8607"
+        "code": "6892"
       },
       "body": {
         "phase": "open",
@@ -89,7 +91,7 @@
           }
         ],
         "result": null,
-        "csrfToken": "9a0a0a27f1bb211d93b57be87769240b6a42ad2e745e51dd4815cf341f0659a9",
+        "csrfToken": "bc51f65d8516cc9bafb56fef1c70ae2919dc8a40a57cb4138557f85d6052cd63",
         "operationState": "unconfirmed",
         "message": "Este envío aún no tiene resultado confirmado. El intento sigue gastado. Consulta tu estado."
       },

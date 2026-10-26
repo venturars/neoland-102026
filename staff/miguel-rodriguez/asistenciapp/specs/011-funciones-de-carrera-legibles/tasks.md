@@ -47,3 +47,12 @@ Una segunda lectura encontró un fallo real en el tratamiento de un motivo de er
 La rama de 011 se sincronizó por merge normal con la base actualizada de 010, `57a7fb20398c5f773fadfabca80898ee08d1a2de`, que ya incorpora staging después de #284. No se cambió el destino de ninguna PR ni se publicó directamente en staging.
 
 Verificación final después de esa sincronización y de la corrección del handler: **250 pruebas pasan en 5,59 s** con el mismo comando. El diff exclusivo contra esa base contiene 16 archivos de esta app, todos de 011; no incluye cambios en specs anteriores, pantallas, requisitos o esquema. La comprobación `git diff --check` de ese diff no encuentra incidencias. El whitespace heredado de archivos de otros alumnos no forma parte del cambio y no se modifica.
+
+
+## Datos sintéticos del fixture · revisión de GitGuardian
+
+GitGuardian señaló las tres credenciales aleatorias del fixture inicial como Generic High Entropy Secret. Esas cadenas se generaron durante T01 con las operaciones de 010 en una base nueva `old.sqlite` de un TemporaryDirectory `011-before-`; nunca procedieron de una base, servicio o acceso real. La base usó el token de profesor `fixture-teacher`, reloj fijo y las tres operaciones de prueba documentadas.
+
+Para evitar cadenas ambiguas en las nuevas versiones se regeneraron ambos fixtures ejecutando el código archivado de 010 (`93c3200`), sustituyendo únicamente su fuente de aleatoriedad por valores sintéticos deterministas: identificador `fixture1`, credenciales de 43 caracteres con prefijo `test_fixture_` y relleno de ceros, y secreto de prueba de dieciséis bytes cero. El propio código anterior volvió a producir los hashes, CSRF, huellas y respuestas esperadas. No se alteraron validadores ni garantías de producción, aserciones, presupuestos o respuestas; los tres casos conservan 200/422/202.
+
+Verificación posterior: **250 pruebas pasan en 7,81 s**, con el mismo comando y entorno. `git diff --check` sin incidencias. El commit de corrección es normal y conserva el historial; la clasificación de las tres alertas históricas como credenciales de prueba se gestiona en GitGuardian, sin desactivar reglas ni añadir exclusiones generales.

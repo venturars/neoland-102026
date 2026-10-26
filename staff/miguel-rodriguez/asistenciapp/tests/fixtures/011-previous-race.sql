@@ -1,4 +1,4 @@
--- Datos ficticios generados con 010 (93c3200), antes de refactorizar 011.
+-- Datos ficticios generados con 010 (93c3200). Secretos deterministas solo de prueba.
 BEGIN TRANSACTION;
 CREATE TABLE blocked_addresses (
   address TEXT PRIMARY KEY
@@ -11,7 +11,7 @@ CREATE TABLE checkins (
   checked_at  TEXT NOT NULL,
   UNIQUE (session_id, name_key)
 );
-INSERT INTO "checkins" VALUES(1,'wFeCKY64','Jimena Duran','jimena duran','2027-01-15T08:00:03.000+00:00');
+INSERT INTO "checkins" VALUES(1,'fixture1','Jimena Duran','jimena duran','2027-01-15T08:00:03.000+00:00');
 CREATE TABLE config (
   key   TEXT PRIMARY KEY,
   value TEXT NOT NULL
@@ -23,9 +23,9 @@ CREATE TABLE race_access (
   PRIMARY KEY(session_id,roster_key),
   FOREIGN KEY(session_id,roster_key) REFERENCES race_slots(session_id,roster_key)
 );
-INSERT INTO "race_access" VALUES('wFeCKY64','jimena-duran','eec639469d39e1968c0865f80d44338993fcb821cdbf1d181b56a3a53b5436c7');
-INSERT INTO "race_access" VALUES('wFeCKY64','meghan-martin','36e5763a9b75eeb6cbd7d238f38678177d615cb92a5d5d18a9f434778a0d521a');
-INSERT INTO "race_access" VALUES('wFeCKY64','miguel-rodriguez','aa1d0f3554285d02eb6b014063e6716750bb16589f17e82bbae075d5b122f4e5');
+INSERT INTO "race_access" VALUES('fixture1','jimena-duran','4d995759617334ff007efd8fdcc8c958f2826e91d5e4157dcb1999e26d6da567');
+INSERT INTO "race_access" VALUES('fixture1','meghan-martin','aafe65570be78edefd6a0a7d694df74699a324888a07c5877ac61d4de3577fad');
+INSERT INTO "race_access" VALUES('fixture1','miguel-rodriguez','b8bfea9a19a324f2dff480a81926201bbee117b3a679b77eb2e093cca65247f5');
 CREATE TABLE race_operations (
   session_id TEXT NOT NULL,
   roster_key TEXT NOT NULL,
@@ -42,9 +42,9 @@ CREATE TABLE race_operations (
   CHECK((state='reserved' AND result_kind IS NULL AND result_status IS NULL AND checkin_id IS NULL)
      OR (state='completed' AND result_kind IS NOT NULL AND result_status IS NOT NULL))
 );
-INSERT INTO "race_operations" VALUES('wFeCKY64','jimena-duran','00000000-0000-4000-8000-000000000001',1,'e4f83473fa991f488c35b6d705b09f7b40f3f5e9c1230193618e61fb35419c46','completed','success',201,1);
-INSERT INTO "race_operations" VALUES('wFeCKY64','meghan-martin','00000000-0000-4000-8000-000000000002',1,'c794c68c78be91a9ba1f5b961efb684485302ae15369c15896a6badeb4d80a74','completed','invalid_code',422,NULL);
-INSERT INTO "race_operations" VALUES('wFeCKY64','miguel-rodriguez','00000000-0000-4000-8000-000000000003',1,'a6419d3c0e3b57dd98b22f31f54f432d72cb5e0192cd8b24f28a2345b28cb8b1','reserved',NULL,NULL,NULL);
+INSERT INTO "race_operations" VALUES('fixture1','jimena-duran','00000000-0000-4000-8000-000000000001',1,'3102cc084bd7917163eb9c51581ff4ea237a8a6c6fd610c345f619c429d92f88','completed','success',201,1);
+INSERT INTO "race_operations" VALUES('fixture1','meghan-martin','00000000-0000-4000-8000-000000000002',1,'ef75b4e8a4909d2a5dc7759c3807ea1cb370dc7f1fb60bf1990b1f528449eca4','completed','invalid_code',422,NULL);
+INSERT INTO "race_operations" VALUES('fixture1','miguel-rodriguez','00000000-0000-4000-8000-000000000003',1,'67076300d98dafbea434b640c36c6f8e2bee8b92cda04a57830fcd8f30863b8e','reserved',NULL,NULL,NULL);
 CREATE TABLE race_slots (
   session_id TEXT NOT NULL REFERENCES races(session_id),
   roster_key TEXT NOT NULL,
@@ -55,21 +55,21 @@ CREATE TABLE race_slots (
   checkin_id INTEGER REFERENCES checkins(id) ON DELETE SET NULL,
   PRIMARY KEY(session_id,roster_key)
 );
-INSERT INTO "race_slots" VALUES('wFeCKY64','diego-molero','Diego Molero','node-jack',0,'pendiente',NULL);
-INSERT INTO "race_slots" VALUES('wFeCKY64','diego-torres','Diego Torres','espantatorres',0,'pendiente',NULL);
-INSERT INTO "race_slots" VALUES('wFeCKY64','ella-deyavorsky','Ella Deyavorsky','mr-wobble',0,'pendiente',NULL);
-INSERT INTO "race_slots" VALUES('wFeCKY64','esther-patino','Esther Patino','hombre-lobo-esther',0,'pendiente',NULL);
-INSERT INTO "race_slots" VALUES('wFeCKY64','jimena-duran','Jimena Duran','ajolote',1,'registrado',1);
-INSERT INTO "race_slots" VALUES('wFeCKY64','jose-miguel','Jose Miguel','jack',0,'pendiente',NULL);
-INSERT INTO "race_slots" VALUES('wFeCKY64','luis-duque','Luis Duque','vampire-king-leo',0,'pendiente',NULL);
-INSERT INTO "race_slots" VALUES('wFeCKY64','manuel-diaz','Manuel Diaz','fantasmiko',0,'pendiente',NULL);
-INSERT INTO "race_slots" VALUES('wFeCKY64','maria-osipuk','Maria Osipuk','mimo',0,'pendiente',NULL);
-INSERT INTO "race_slots" VALUES('wFeCKY64','meghan-martin','Meghan Martin','fantasma',1,'listo',NULL);
-INSERT INTO "race_slots" VALUES('wFeCKY64','miguel-rodriguez','Miguel Rodriguez','yomi',1,'listo',NULL);
-INSERT INTO "race_slots" VALUES('wFeCKY64','raul-santamaria','Raul Santamaria','calabaza-aterradora',0,'pendiente',NULL);
-INSERT INTO "race_slots" VALUES('wFeCKY64','sergio-cortes','Sergio Cortes','harry-universe',0,'pendiente',NULL);
-INSERT INTO "race_slots" VALUES('wFeCKY64','sergio-moras','Sergio Moras','edgar-allan-poe',0,'pendiente',NULL);
-INSERT INTO "race_slots" VALUES('wFeCKY64','victor-chang','Victor Chang','vicwolf',0,'pendiente',NULL);
+INSERT INTO "race_slots" VALUES('fixture1','diego-molero','Diego Molero','node-jack',0,'pendiente',NULL);
+INSERT INTO "race_slots" VALUES('fixture1','diego-torres','Diego Torres','espantatorres',0,'pendiente',NULL);
+INSERT INTO "race_slots" VALUES('fixture1','ella-deyavorsky','Ella Deyavorsky','mr-wobble',0,'pendiente',NULL);
+INSERT INTO "race_slots" VALUES('fixture1','esther-patino','Esther Patino','hombre-lobo-esther',0,'pendiente',NULL);
+INSERT INTO "race_slots" VALUES('fixture1','jimena-duran','Jimena Duran','ajolote',1,'registrado',1);
+INSERT INTO "race_slots" VALUES('fixture1','jose-miguel','Jose Miguel','jack',0,'pendiente',NULL);
+INSERT INTO "race_slots" VALUES('fixture1','luis-duque','Luis Duque','vampire-king-leo',0,'pendiente',NULL);
+INSERT INTO "race_slots" VALUES('fixture1','manuel-diaz','Manuel Diaz','fantasmiko',0,'pendiente',NULL);
+INSERT INTO "race_slots" VALUES('fixture1','maria-osipuk','Maria Osipuk','mimo',0,'pendiente',NULL);
+INSERT INTO "race_slots" VALUES('fixture1','meghan-martin','Meghan Martin','fantasma',1,'listo',NULL);
+INSERT INTO "race_slots" VALUES('fixture1','miguel-rodriguez','Miguel Rodriguez','yomi',1,'listo',NULL);
+INSERT INTO "race_slots" VALUES('fixture1','raul-santamaria','Raul Santamaria','calabaza-aterradora',0,'pendiente',NULL);
+INSERT INTO "race_slots" VALUES('fixture1','sergio-cortes','Sergio Cortes','harry-universe',0,'pendiente',NULL);
+INSERT INTO "race_slots" VALUES('fixture1','sergio-moras','Sergio Moras','edgar-allan-poe',0,'pendiente',NULL);
+INSERT INTO "race_slots" VALUES('fixture1','victor-chang','Victor Chang','vicwolf',0,'pendiente',NULL);
 CREATE TABLE races (
   session_id TEXT PRIMARY KEY REFERENCES sessions(id),
   prepared_at REAL NOT NULL,
@@ -77,7 +77,7 @@ CREATE TABLE races (
   expires_at REAL NOT NULL,
   join_secret TEXT
 );
-INSERT INTO "races" VALUES('wFeCKY64',1800000000.0,1800000003.0,1800007200.0,NULL);
+INSERT INTO "races" VALUES('fixture1',1800000000.0,1800000003.0,1800007200.0,NULL);
 CREATE TABLE registration_attempts (
   address TEXT NOT NULL,
   attempted_at REAL NOT NULL
@@ -89,7 +89,7 @@ CREATE TABLE sessions (
   opened_at  TEXT NOT NULL,
   closed_at  TEXT
 );
-INSERT INTO "sessions" VALUES('wFeCKY64','Compatibilidad 011','563a50e5218f1fecabbd776af6009011','2027-01-15T08:00:00.000+00:00',NULL);
+INSERT INTO "sessions" VALUES('fixture1','Compatibilidad 011','00000000000000000000000000000000','2027-01-15T08:00:00.000+00:00',NULL);
 CREATE INDEX registration_attempts_address_time
 ON registration_attempts(address, attempted_at);
 CREATE INDEX races_expiry ON races(expires_at);
