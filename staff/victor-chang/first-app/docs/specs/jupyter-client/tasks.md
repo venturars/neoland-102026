@@ -25,3 +25,5 @@
 13. [x] Run `npx prettier --check .`. In `docs/specs/README.md`, set `jupyter-client` to `done`.
 14. [x] Create `.prettierignore` with `.venv/` and `pnpm-lock.yaml`.
         Run `npx prettier --check .`: every file passes.
+15. [x] In `.gitignore`, add `.ipynb_checkpoints/`.
+        Open a notebook with `pnpm jupyter`: `git status` does not show `clients/jupyter/.ipynb_checkpoints/`.
