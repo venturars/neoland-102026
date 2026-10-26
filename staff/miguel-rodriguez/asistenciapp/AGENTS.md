@@ -132,6 +132,8 @@ Una funcionalidad está terminada cuando:
 | `004-quitar-referencias-personales` | Terminada; revisión final aprobada por Miguel el 2026-10-23 | Referencias heredadas retiradas; hechos conservados; 77 tests pasan; evidencia en tasks.md |
 | `005-reorganizar-arquitectura` | Terminada; revisión final aprobada por Miguel el 2026-10-23 | 112 pruebas aprobadas; comparación previa de 22 escenarios y regresión de precedencia corregida; evidencia en tasks.md |
 | `006-limitar-intentos-de-registro` | Implementada y verificada; ejecución completa delegada por Miguel el 2026-10-24 | 145 pruebas y comprobación de navegador; revisión de compañeros pendiente; evidencia en tasks.md |
+| `007-carrera-de-asistencia` | Spec, plan y tareas aprobados; implementación visual pendiente | Consumirá el contrato 008; no hay juego o QR nuevo implementado |
+| `008-proteger-el-registro-de-carrera` | Implementada, verificada y resultado local aprobado por Miguel el 2026-10-25; publicación pendiente | Issue #328; R1/R2 corregidos; 218 pruebas de app y dos reproducciones originales pasan; evidencia y comandos en tasks.md; sin PR 008 publicada ni aprobación de peers atribuida |
 | Bot de Discord (sin número asignado) | Idea futura | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
@@ -142,5 +144,11 @@ Cada módulo explica su responsabilidad al principio. Las funciones creadas o mo
 
 Las dependencias siguen [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Las specs cerradas 001–004 conservan sus rutas históricas: el antiguo AGENT.md corresponde a este AGENTS.md y la constitución que estaba en la raíz está ahora en docs/CONSTITUTION.md. No se reescriben esas evidencias al mover documentos.
 
+## Ejecución local autorizada de 008
 
-Publicación 2026-10-26: PR [353](https://github.com/venturars/neoland-102026/pull/353) de la tarea 006, base staging, creada por instrucción expresa de Miguel aunque haya dependencias pendientes. Los estados anteriores describen la ejecución local y sus fechas; la PR actual es la referencia de publicación.
+Miguel autorizó implementar y probar en una copia separada mientras se integran las predecesoras. T02 sigue pendiente en su parte de publicación: la futura PR será exclusiva de 008 y tendrá base staging. No se cambian bases para encadenar PRs ni se publica el trabajo sobre la rama 300. La enmienda 4.0 aprobada se aplica solo en esta copia. No se han usado bases reales ni cambiado dependencias. La interfaz 007 continúa pendiente.
+
+Verificación del backend: `python -m pytest -q`; ensayo HTTP propio y acotado: `python -m pytest -q tests/test_race_live_http.py`. Las pruebas detienen sus propios servidores. La demostración y revisión de Miguel no se dan por realizadas al pasar pytest. Véase [evidencia 008](specs/008-proteger-el-registro-de-carrera/evidence.md).
+
+
+Publicación 2026-10-26: PR [354](https://github.com/venturars/neoland-102026/pull/354) de la tarea 008, base staging, creada por instrucción expresa de Miguel aunque haya dependencias pendientes. Los estados anteriores describen la ejecución local y sus fechas; la PR actual es la referencia de publicación.

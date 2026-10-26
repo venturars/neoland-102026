@@ -3,6 +3,9 @@
 from contextlib import closing
 from datetime import datetime, timezone
 from pathlib import Path
+import time
+from . import races
+from ..domain.race import RaceError
 
 from ..domain.codes import code_for, seconds_left
 from ..domain.names import name_key
@@ -30,11 +33,12 @@ def prepare(db_path: str | Path, token: str | None = None) -> str:
         return token or storage.get_or_create_teacher_token(conn)
 
 
-def public_session(db_path: str | Path, session_id: str) -> dict:
+def public_session(db_path: str | Path, session_id: str, now: float | None = None) -> dict:
     """Obtiene únicamente los datos públicos de una clase.
 
     :param db_path: archivo local de asistencia.
     :param session_id: identificador de la clase.
+    :param now: reloj Unix opcional; None usa el reloj del servidor.
     :return: título y estado abierto, sin datos privados.
     :rtype: dict
 
@@ -43,6 +47,9 @@ def public_session(db_path: str | Path, session_id: str) -> dict:
         public_session(path, session_id)
     """
     with closing(storage.connect(db_path)) as conn:
+        if storage.is_race(conn,session_id):
+            data=races.teacher_state(db_path,session_id,lambda: time.time() if now is None else now)
+            return {"title":data["title"],"open":data["open"]}
         session = require_session(storage.get_session(conn, session_id))
         return {"title": session["title"], "open": session["closed_at"] is None}
 
@@ -80,6 +87,8 @@ def teacher_view(db_path: str | Path, session_id: str, now: float) -> dict:
         teacher_view(path, session_id, 1800000000.0)
     """
     with closing(storage.connect(db_path)) as conn:
+        if storage.is_race(conn,session_id):
+            return races.teacher_state(db_path,session_id,lambda:now)
         session = require_session(storage.get_session(conn, session_id))
         checkins = storage.list_checkins(conn, session_id)
         data = {
@@ -131,6 +140,8 @@ def check_in(db_path: str | Path, session_id: str, fields: dict, now: float) -> 
         check_in(path, session_id, {"name": "Ana", "code": code}, 1800000000.0)
     """
     with closing(storage.connect(db_path)) as conn:
+        if storage.is_race(conn,session_id):
+            raise RaceError(403,"Esta clase usa carrera. Abre tu acceso de carrera.")
         session = storage.get_session(conn, session_id)
         name = validate_check_in(session, fields, now)
         checked_at = datetime.fromtimestamp(now, timezone.utc).isoformat(timespec="milliseconds")
@@ -151,17 +162,21 @@ def close_session(db_path: str | Path, session_id: str, now: float) -> None:
         close_session(path, session_id, 1800000000.0)
     """
     with closing(storage.connect(db_path)) as conn:
+        if storage.is_race(conn,session_id):
+            races.close(db_path,session_id,lambda:now)
+            return
         require_session(storage.get_session(conn, session_id))
         closed_at = datetime.fromtimestamp(now, timezone.utc).isoformat(timespec="milliseconds")
         storage.close_session(conn, session_id, closed_at)
 
 
-def remove_checkin(db_path: str | Path, session_id: str, checkin_id: int) -> bool:
+def remove_checkin(db_path: str | Path, session_id: str, checkin_id: int, now: float | None = None) -> bool:
     """Elimina un registro de una clase existente.
 
     :param db_path: archivo local de asistencia.
     :param session_id: identificador de la clase.
     :param checkin_id: identificador del registro.
+    :param now: reloj Unix opcional para la caducidad de carrera.
     :return: si existía y se eliminó ese registro en la clase.
     :rtype: bool
 
@@ -170,6 +185,8 @@ def remove_checkin(db_path: str | Path, session_id: str, checkin_id: int) -> boo
         remove_checkin(path, session_id, 1)
     """
     with closing(storage.connect(db_path)) as conn:
+        if storage.is_race(conn,session_id):
+            return races.remove_checkin(db_path,session_id,checkin_id,lambda:time.time() if now is None else now)
         require_session(storage.get_session(conn, session_id))
         return storage.remove_checkin(conn, session_id, checkin_id)
 
@@ -187,6 +204,8 @@ def export_session(db_path: str | Path, session_id: str) -> tuple[dict, list[dic
         export_session(path, session_id)
     """
     with closing(storage.connect(db_path)) as conn:
+        if storage.is_race(conn,session_id):
+            return races.export_checkins(db_path,session_id)
         session = require_session(storage.get_session(conn, session_id))
         return session, storage.list_checkins(conn, session_id)
 
@@ -223,3 +242,19 @@ def guard_registration(db_path: str | Path, address: str | None, now: float) -> 
         raise OriginUnavailable("No se ha podido identificar el origen de conexión. No se registró la asistencia; contacta con el profesor.")
     if denied:
         raise AddressBlocked("Esta dirección está bloqueada permanentemente para registrar asistencia por superar los límites de intentos. Contacta con el profesor.")
+
+
+def is_race(db_path: str | Path, session_id: str) -> bool:
+    """Consulta el modo real sin aceptar un modo elegido por el cliente.
+
+    :param db_path: archivo local de asistencia.
+    :param session_id: clase consultada.
+    :return: si la clase guardada tiene modo carrera.
+    :rtype: bool
+
+    Usage::
+
+        is_race(path, session_id)
+    """
+    with closing(storage.connect(db_path)) as conn:
+        return storage.is_race(conn,session_id)

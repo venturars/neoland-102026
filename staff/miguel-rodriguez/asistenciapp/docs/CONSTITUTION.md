@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 3.0 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-24
+> Versión 4.0 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-24
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -35,6 +35,8 @@ El registro de asistencia no depende de una plataforma concreta. Las integracion
 - Excepción de seguridad: se permite guardar por separado la dirección de conexión y el instante de los intentos de registro del último minuto, y únicamente la dirección para el bloqueo permanente. Se usan exclusivamente para limitar intentos y mantener la lista de bloqueo; no se asocian a nombres, clases ni registros de asistencia. Los intentos de sesenta segundos o más se eliminan globalmente al atender el siguiente intento. Sin tráfico no se exige limpieza en segundo plano.
 - Los datos se **almacenan** solo en local (SQLite). Ningún servicio de terceros los guarda.
 - Para que los alumnos lleguen a la app desde sus casas, el tráfico puede **pasar cifrado (HTTPS)** por un proveedor de túnel (p. ej. Cloudflare). Ese proveedor no los almacena, pero técnicamente podría verlos en tránsito; por eso solo se envía lo imprescindible (nombre y código).
+
+Se permite una lista local de nombres y personajes de clase como referencia previa, sin atribuir presencia. En modo carrera se acepta el nombre seleccionado y se guardan temporalmente plazas, permisos y operaciones necesarias para limitar sus intentos. No identifican dispositivos entre clases ni se vinculan a direcciones de seguridad. Los secretos de entrada se revocan al cerrar las altas; los permisos de registro al cerrar o cancelar la carrera. La lectura privada del propio resultado y los datos temporales caducan como máximo dos horas después de preparar la carrera y se eliminan en la siguiente petición o inicialización antes de aceptar operaciones. Se conservan asistencias y metadatos no secretos necesarios para consultar el grupo y resultado. Los enlaces de entrada y permisos solo transitan hacia los navegadores de la clase; no se registran en logs ni se envían a servicios externos.
 
 ### P5 · Accesible y usable en móvil
 - Todas las pantallas funcionan en un móvil (~400 px de ancho).
@@ -84,7 +86,7 @@ Cambiar el stack requiere enmendar esta constitución.
 
 ## 6. Seguridad
 
-- Los códigos de asistencia **caducan** y mantienen cuatro cifras. La protección contra intentos automatizados es obligatoria: como máximo cinco intentos de registro por segundo móvil y veinte por minuto móvil por dirección, incluido el intento actual. Superar cualquiera bloquea permanentemente esa dirección para el registro, incluso tras reiniciar. Las demás operaciones no consumen intentos ni se bloquean por esta regla. Si no puede identificarse un origen fiable, se rechaza el registro sin atribuirlo a otra dirección.
+- Las clases normales conservan los límites de cinco intentos por segundo móvil y veinte por minuto móvil por dirección, con bloqueo permanente de 006. En clases de carrera se usa un QR vigente para ocupar una única plaza por nombre del roster mientras el lobby esté abierto; Go fija el grupo y cierra nuevas ocupaciones y reemplazos. Cada plaza tiene tres comprobaciones totales, incluida la correcta, con reserva atómica previa a evaluar el código. Cambiar navegador, dirección, nombre o rotación del código no repone oportunidades; la ausencia de acceso válido impide comprobar. Las repeticiones de una misma operación no añaden comprobaciones y no permiten probar contenido distinto. El agotamiento afecta solo a esa plaza; no se aplican a las plazas de carrera bloqueos colectivos por IP. Se valida el origen fiable en ambos modos. La entrada automática no identifica a una persona ni impide que alguien ocupe nombres ajenos; se acepta esa limitación para el juego de clase. Los códigos mantienen cuatro cifras y caducidad.
 - Un mismo alumno no puede registrarse dos veces en la misma sesión.
 - Una sesión cerrada no acepta más registros.
 - Toda entrada del usuario se valida en el servidor y se escapa al mostrarla (sin HTML inyectado).
@@ -114,3 +116,4 @@ Cambiar el stack requiere enmendar esta constitución.
 | 2.3 | 2026-10-22 | §5: verificación documental con procedimiento y evidencia por criterio para cambios exclusivamente documentales o de instrucciones | Aclaración de 002 aprobada por Miguel; se mantienen las pruebas de comportamiento y la evidencia anterior |
 | 2.4 | 2026-10-23 | §3: documentos en docs/, manual AGENTS.md y responsabilidades domain/usecases/storage | Spec y plan 005 aprobados por Miguel; organización actualizada sin cambiar principios, stack ni reglas de asistencia |
 | 3.0 | 2026-10-24 | P4 y §6: excepción limitada para intentos recientes y direcciones bloqueadas; límites y bloqueo permanente | Spec 006 revisada y ejecución completa delegada por Miguel; se sustituye la prohibición absoluta de IPs sin ampliar los datos de asistencia |
+| 4.0 | 2026-10-24 | P4 y §6: plazas, reserva duradera y accesos temporales de carrera; 006 se conserva en clases normales | Texto del plan 008 aprobado por Miguel y ejecución de sus tareas autorizada; aplicación solo en copia local |

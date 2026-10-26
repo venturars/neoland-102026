@@ -14,6 +14,7 @@ from werkzeug.exceptions import HTTPException
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from asistencia.usecases import attendance
+from asistencia.race_http import register_routes
 from asistencia.origin import registration_origin
 from asistencia.export import to_csv
 from asistencia.tunnel import TunnelError, start_tunnel
@@ -26,13 +27,15 @@ UNAUTHORIZED = "Acceso no autorizado. Abre el panel con tu enlace secreto de pro
 GENERIC_ERRORS = {404: "No encontrado.", 405: "Método no permitido."}
 
 
-def create_app(db_path: str | Path = DEFAULT_DB, token: str | None = None, now: Callable[[], float] = time.time, *, trust_cloudflare: bool = False) -> Flask:
+def create_app(db_path: str | Path = DEFAULT_DB, token: str | None = None, now: Callable[[], float] = time.time, *, trust_cloudflare: bool = False, race_origin: str | None = None, race_local_http: bool = False) -> Flask:
     """Construye la entrada HTTP con archivo, token y reloj configurables.
 
     :param db_path: archivo local de asistencia.
     :param token: token explícito opcional del profesor.
     :param now: reloj que devuelve segundos Unix.
     :param trust_cloudflare: confiar solo en el conector Cloudflare local explícito.
+    :param race_origin: origen real configurado para carreras, sin cabeceras del visitante.
+    :param race_local_http: permitir HTTP solo en desarrollo loopback.
     :return: aplicación configurada, sin iniciar un servidor.
     :rtype: Flask
 
@@ -44,6 +47,8 @@ def create_app(db_path: str | Path = DEFAULT_DB, token: str | None = None, now: 
     app.json.ensure_ascii = False
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=0, x_proto=1, x_host=1)
     app.config["TEACHER_TOKEN"] = attendance.prepare(db_path, token)
+    app.config.update(RACE_ORIGIN=race_origin,RACE_LOCAL_HTTP=race_local_http)
+    register_routes(app,db_path,now,trust_cloudflare)
 
     def error(status: int, message: str) -> tuple[Response, int]:
         """Construye un error JSON.
@@ -132,7 +137,7 @@ def create_app(db_path: str | Path = DEFAULT_DB, token: str | None = None, now: 
 
             public_session(session_id)
         """
-        return jsonify(attendance.public_session(db_path, session_id))
+        return jsonify(attendance.public_session(db_path, session_id, now()))
 
     @app.post("/api/s/<session_id>/checkin")
     def check_in(session_id: str) -> Response | tuple[Response, int]:
@@ -146,6 +151,8 @@ def create_app(db_path: str | Path = DEFAULT_DB, token: str | None = None, now: 
 
             check_in(session_id)
         """
+        if attendance.is_race(db_path, session_id):
+            return error(403,"Esta clase usa carrera. Abre tu acceso de carrera.")
         address = registration_origin(request.remote_addr, request.headers.get("CF-Connecting-IP"), trust_cloudflare=trust_cloudflare)
         try:
             attendance.guard_registration(db_path, address, now())
@@ -207,7 +214,10 @@ def create_app(db_path: str | Path = DEFAULT_DB, token: str | None = None, now: 
             teacher_view(session_id)
         """
         data = attendance.teacher_view(db_path, session_id, now())
-        data["studentUrl"] = f"{request.host_url}alumno.html?s={session_id}"
+        if data.get("mode")=="race":
+            data.pop("entrySecret",None)
+        else:
+            data["studentUrl"] = f"{request.host_url}alumno.html?s={session_id}"
         return jsonify(data)
 
     @app.post("/api/sessions/<session_id>/close")
@@ -238,7 +248,7 @@ def create_app(db_path: str | Path = DEFAULT_DB, token: str | None = None, now: 
 
             remove_checkin(session_id, checkin_id)
         """
-        if not attendance.remove_checkin(db_path, session_id, checkin_id):
+        if not attendance.remove_checkin(db_path, session_id, checkin_id, now()):
             return error(404, "Ese registro no existe en esta clase.")
         return jsonify(ok=True)
 
@@ -305,6 +315,8 @@ def main() -> None:
             tunnel, base_url = start_tunnel(port)
         except TunnelError as exc:
             sys.exit(f"  Error: {exc}")
+
+    app.config.update(RACE_ORIGIN=base_url,RACE_LOCAL_HTTP=not args.tunel)
 
     print(f"\n  Panel del profesor: {base_url}/profesor.html#t={app.config['TEACHER_TOKEN']}\n")
     if args.tunel:
