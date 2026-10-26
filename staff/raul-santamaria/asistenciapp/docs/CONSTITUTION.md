@@ -1,6 +1,10 @@
 # Constitución de AsistenciApp
 
+<<<<<<< Updated upstream
 > Versión 2.2 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-22
+=======
+> Versión 3.0 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-26
+>>>>>>> Stashed changes
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -35,7 +39,7 @@ El registro de asistencia no depende de una plataforma concreta. Las integracion
 ### P4 · Privacidad mínima
 
 - Del alumno solo se guarda el **nombre que él mismo escribe** y la **hora del registro**.
-- **Prohibido** guardar emails, IPs, identificadores de dispositivo o cualquier dato no imprescindible.
+- **Prohibido** guardar emails, identificadores de dispositivo o cualquier dato no imprescindible. La IP pública estática es la excepción: se recuerda solo para contar los intentos de registrarse y para la lista de bloqueo. No forma parte del registro del alumno.
 - Los datos se **almacenan** solo en local (SQLite). Ningún servicio de terceros los guarda.
 - Para que los alumnos lleguen a la app desde sus casas, el tráfico puede **pasar cifrado (HTTPS)** por un proveedor de túnel (p. ej. Cloudflare). Ese proveedor no los almacena, pero técnicamente podría verlos en tránsito; por eso solo se envía lo imprescindible (nombre y código).
 
@@ -56,13 +60,14 @@ Interfaz, mensajes de error, documentación y especificaciones se escriben en es
 | --- | --- |
 | Runtime | Python 3.13+, en un entorno virtual `.venv/` (no se sube a git) |
 | Servidor | Flask, entrada en `app.py` |
-| Lógica | paquete `asistencia/` |
-| Guardado | `sqlite3`, archivo en `data/` (no se sube a git) |
-| Documentos | `docs/` (esta constitución) |
+| Reglas | `asistencia/domain/` |
+| Acciones | `asistencia/usecases/` |
+| Almacén | `asistencia/storage/`, con `sqlite3` y archivo en `data/` (no se sube a git) |
+| Documentos | `docs/` (esta constitución y `ARCHITECTURE.md`) |
 | Frontend | HTML + CSS + JavaScript sin frameworks, servidos desde `static/` |
 | Tests | `pytest` |
 
-Cambiar el stack requiere enmendar esta constitución.
+El detalle de carpetas y dependencias entre partes está en [ARCHITECTURE.md](ARCHITECTURE.md). Cambiar el stack requiere enmendar esta constitución.
 
 ---
 
@@ -95,7 +100,7 @@ Cambiar el stack requiere enmendar esta constitución.
 
 ## 7. Alcance y límites del repositorio
 
-- El proyecto vive entero en `staff/raul-santamaria/asistenciapp/`. No se tocan archivos fuera de esta carpeta.
+- El proyecto vive entero en `staff/<usuario>/asistenciapp/`. No se tocan archivos fuera de esta carpeta.
 
 ---
 
@@ -112,4 +117,11 @@ Cambiar el stack requiere enmendar esta constitución.
 | 1.1 | 2026-10-19 | §6: los códigos no deben poder adivinarse *a mano*; la protección contra scripts deja de ser obligatoria | En una clase el riesgo real es un alumno ausente, no un ataque automatizado. Evita añadir límites de intentos que no aportan al MVP (P2) |
 | 2.0 | 2026-10-20 | §3: stack Node.js → Python (Flask + pytest). P3 pasa de "cero dependencias" a "dependencias mínimas" y permite Flask y pytest | Requisito nuevo: el proyecto debe hacerse en Python. Se elige Flask por ser simple y muy extendido, y pytest por su sintaxis sencilla |
 | 2.1 | 2026-10-20 | P4: distingue *almacenar* (solo en local) de *transitar* (puede pasar cifrado por un proveedor de túnel) | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08) |
+<<<<<<< Updated upstream
 | 2.2 | 2026-10-22 | §3: la constitución vive en `docs/`. §4: ningún fichero de la app se modifica sin spec aprobado. §7–§8: carpeta `staff/raul-santamaria/asistenciapp/` y aprueba la persona que trabaja en esta carpeta | Alinear el documento con la carpeta real, endurecer el SDD y quitar referencias a otra persona |
+=======
+| 2.2 | 2026-10-22 | §3: la constitución vive en `docs/`. §4: ningún fichero de la app se modifica sin spec aprobado. §7–§8: carpeta `staff/<usuario>/asistenciapp/` y aprueba la persona que trabaja en esta carpeta | Alinear el documento con la carpeta real, endurecer el SDD y quitar referencias a otra persona |
+| 2.3 | 2026-10-23 | §4: una issue, una rama o una pull request no sustituyen al spec ni autorizan cambios sin spec aprobado | Spec 002, CA-05 |
+| 2.4 | 2026-10-26 | §3: nombra `asistencia/domain/`, `asistencia/usecases/`, `asistencia/storage/` y apunta a `ARCHITECTURE.md` | Spec 005: la constitución describe la organización nueva |
+| 3.0 | 2026-10-26 | P4: la IP pública estática se recuerda solo para contar intentos de registrarse y para la lista de bloqueo | Spec 006: contradice la prohibición total de guardar IPs |
+>>>>>>> Stashed changes
