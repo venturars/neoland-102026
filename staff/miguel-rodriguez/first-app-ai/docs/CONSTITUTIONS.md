@@ -34,7 +34,7 @@ first-app-ai/
 │   ├── find-user-by-id.js
 │   └── users-gender-count.js
 ├── clients/
-│   └── terminal/
+│   ├── terminal/
 │       ├── create-users-table.txt
 │       ├── create-user.txt
 │       ├── list-users.txt
@@ -44,6 +44,14 @@ first-app-ai/
 │       ├── find-user-by-email.txt
 │       ├── find-user-by-id.txt
 │       └── users-gender-count.txt
+│   └── jupyter/
+│       ├── 01-create-users-table.ipynb … 09-users-gender-count.ipynb
+│       ├── client.py
+│       └── run-operation.js
+├── scripts/
+│   └── jupyter.js
+├── requirements-jupyter.txt
+├── README.md
 └── docs/
     ├── CONSTITUTIONS.md
     └── specs/
@@ -51,7 +59,11 @@ first-app-ai/
         │   ├── spec.md
         │   ├── plan.md
         │   └── tasks.md
-        └── classifier/
+        ├── classifier/
+        │   ├── spec.md
+        │   ├── plan.md
+        │   └── tasks.md
+        └── jupyter-client/
             ├── spec.md
             ├── plan.md
             └── tasks.md
@@ -61,8 +73,8 @@ first-app-ai/
 - `queries/queries/*.sql` contain only SQL statements.
 - `queries/users.js` reads each SQL file once at module load with `readFileSync`, UTF-8 encoding, and paths built with `dirname(fileURLToPath(import.meta.url))` and `join()`. It executes concrete queries, using named parameters where values are supplied.
 - `logic/` contains one public business operation per file. It validates inputs, checks business conditions, calls queries, and constructs ordinary returned data. It does not manage the connection or print results.
-- `clients/terminal/` contains copyable `node --input-type=module` heredocs. Only clients print results.
-- `docs/` contains this constitution and, when approved work begins, feature documents. `AGENTS.md` defines agent working practices. `package.json` contains minimal metadata and `"type": "module"`, with no scripts.
+- `clients/terminal/` contains copyable `node --input-type=module` heredocs. `clients/jupyter/` adds nine independent notebooks, a JSON-to-Node client adapter and an explicit operation runner. Only clients print results; business functions remain unchanged.
+- `docs/` contains this constitution and feature documents. `AGENTS.md` defines agent working practices. `package.json` keeps minimal metadata and `"type": "module"`; the approved Jupyter client adds only the `jupyter` startup script and its presentation dependency.
 
 ## Storage and queries
 
@@ -149,7 +161,7 @@ Fixed application configuration values use uppercase constant names, such as `MO
 
 ## Dependencies and package management
 
-The application uses Node built-ins and the exact external dependency `openai@7.39.0`. pnpm generated `pnpm-lock.yaml`; it is maintained with `package.json`.
+The application uses Node built-ins and the exact external dependency `openai@7.39.0`. The Jupyter client additionally uses the exact development dependency `cli-table3@0.6.5` for colored table headers. Its project-local Python environment uses `notebook==7.6.3` from `requirements-jupyter.txt`. These client dependencies do not change the business operations or classifier. pnpm generates `pnpm-lock.yaml`; it is maintained with `package.json`.
 
 - Use pnpm. Do not mix package managers or introduce `package-lock.json` or `yarn.lock`.
 - Add dependencies only when required by an approved implementation plan.
