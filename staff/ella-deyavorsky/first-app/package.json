@@ -10,5 +10,8 @@
   "license": "ISC",
   "description": "Small user management app — logic first",
   "type": "module",
-  "packageManager": "pnpm@12.14.0"
+  "packageManager": "pnpm@12.14.0",
+  "dependencies": {
+    "openai": "^7.43.0"
+  }
 }

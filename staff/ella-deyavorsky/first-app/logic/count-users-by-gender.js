@@ -1,9 +1,15 @@
+import OpenAI from "openai";
 import { findAll } from "../queries/users.js";
 
 // Ollama's OpenAI-style endpoint. Only this one accepts `strict: true`.
-const ollamaChatUrl = "http://127.0.0.1:11434/v1/chat/completions";
+// Ollama ignores the API key, but the library needs one.
+const client = new OpenAI({
+  baseURL: "http://127.0.0.1:11434/v1",
+  apiKey: "ollama",
+  timeout: 30000,
+  maxRetries: 0,
+});
 const modelTag = "llama3.2:latest";
-const classifierTimeoutMs = 30000;
 
 // How many names go in one request.
 const batchSize = 6;
@@ -40,61 +46,41 @@ async function askGenders(names) {
     .map((name, index) => `${index + 1}. ${name}`)
     .join("\n");
 
-  let response;
+  let completion;
 
   try {
-    response = await fetch(ollamaChatUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      signal: AbortSignal.timeout(classifierTimeoutMs),
-      body: JSON.stringify({
-        model: modelTag,
-        stream: false,
-        temperature: 0,
-        messages: [{ role: "user", content: classifyPrompt + nameList }],
-        response_format: {
-          type: "json_schema",
-          json_schema: {
-            name: "gender_list",
-            strict: true,
-            schema: genderSchema,
-          },
+    completion = await client.chat.completions.create({
+      model: modelTag,
+      temperature: 0,
+      messages: [{ role: "user", content: classifyPrompt + nameList }],
+      response_format: {
+        type: "json_schema",
+        json_schema: {
+          name: "gender_list",
+          strict: true,
+          schema: genderSchema,
         },
-      }),
+      },
     });
   } catch {
     throw new Error("The classifier failed.");
   }
 
-  if (!response.ok) {
-    throw new Error("The classifier failed.");
-  }
+  // From here on, Ollama did answer. A bad answer returns null:
+  // the caller counts that group as undefined and goes on.
+  const content = completion.choices[0]?.message?.content;
 
-  let body;
-
-  try {
-    body = await response.json();
-  } catch {
-    throw new Error("The classifier failed.");
-  }
-
-  if (
-    !body.choices ||
-    !body.choices[0] ||
-    !body.choices[0].message ||
-    typeof body.choices[0].message.content !== "string" ||
-    body.choices[0].message.content.trim() === ""
-  ) {
-    throw new Error("The classifier failed.");
+  if (typeof content !== "string" || content.trim() === "") {
+    return null;
   }
 
   // The answer is JSON text, so we turn it into an object.
   let answer;
 
   try {
-    answer = JSON.parse(body.choices[0].message.content);
+    answer = JSON.parse(content);
   } catch {
-    throw new Error("The classifier failed.");
+    return null;
   }
 
   // One label per name. Anything else would give a wrong count.
@@ -102,7 +88,7 @@ async function askGenders(names) {
     !Array.isArray(answer.genders) ||
     answer.genders.length !== names.length
   ) {
-    throw new Error("The classifier failed.");
+    return null;
   }
 
   return answer.genders;
@@ -130,6 +116,12 @@ export async function countUsersByGender() {
       .map((user) => user.name);
 
     const labels = await askGenders(names);
+
+    // A bad answer: every name of this group counts as undefined.
+    if (labels === null) {
+      counts.undefined += names.length;
+      continue;
+    }
 
     for (const label of labels) {
       if (label === "male" || label === "female") {
