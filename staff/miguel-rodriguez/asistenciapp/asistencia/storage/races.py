@@ -256,24 +256,34 @@ def insert_operation(c: sqlite3.Connection, sid: str, key: str, oid: str, number
     """
     c.execute('INSERT INTO race_operations(session_id,roster_key,operation_id,attempt_no,payload_fingerprint) VALUES (?,?,?,?,?)', (sid, key, oid, number, fingerprint))
 
-def complete_operation(c: sqlite3.Connection, sid: str, key: str, oid: str, kind: str, status: int, checkin: int | None=None) -> None:
-    """Completa resultado dentro de la transacción B.
+def complete_operation(connection: sqlite3.Connection, session_id: str, roster_key: str,
+                       operation_id: str, result_kind: str, checkin_id: int | None = None) -> None:
+    """Completa la operación sin confirmar la transacción del llamante.
 
-    :param c: conexión de la transacción actual, sin commit implícito.
-    :param sid: identificador de la carrera guardada.
-    :param key: clave canónica de la plaza del roster.
-    :param oid: UUID de la operación propia.
-    :param kind: tipo de resultado que queda confirmado.
-    :param status: estado HTTP del resultado.
-    :param checkin: asistencia confirmada o ausencia de ella.
-    :return: None; los cambios permanecen bajo la transacción del llamante.
+    :param connection: conexión de la transacción actual.
+    :param session_id: identificador de la carrera.
+    :param roster_key: clave canónica de la plaza.
+    :param operation_id: identificador de la operación reservada.
+    :param result_kind: resultado que queda confirmado.
+    :param checkin_id: asistencia confirmada o ausencia de ella.
+    :return: None; el llamante conserva la responsabilidad del commit.
     :rtype: None
 
     Usage::
 
-        complete_operation(conn, session_id, "jimena-duran", operation_id, "invalid_code", 422, None)
+        complete_operation(connection, session_id, "jimena-duran", operation_id, "invalid_code")
     """
-    c.execute("UPDATE race_operations SET state='completed',result_kind=?,result_status=?,checkin_id=? WHERE session_id=? AND roster_key=? AND operation_id=? AND state='reserved'", (kind, status, checkin, sid, key, oid))
+    # Conserva el formato guardado por 008; el adaptador decide la respuesta HTTP.
+    legacy_status = {
+        "success": 201, "already": 200, "invalid_operation": 400,
+        "invalid_code": 422, "not_processed": 409,
+    }[result_kind]
+    query = (
+        "UPDATE race_operations SET state='completed',result_kind=?,result_status=?,checkin_id=? "
+        "WHERE session_id=? AND roster_key=? AND operation_id=? AND state='reserved'"
+    )
+    connection.execute(query, (result_kind, legacy_status, checkin_id,
+                               session_id, roster_key, operation_id))
 
 def add_checkin(c: sqlite3.Connection, sid: str, key: str, name: str, normalized: str, instant: str) -> int:
     """Inserta asistencia y enlaza su plaza, sin commit interno.

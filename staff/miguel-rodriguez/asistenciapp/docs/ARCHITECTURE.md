@@ -50,9 +50,9 @@ Las reglas vigentes están en [CONSTITUTION.md](CONSTITUTION.md); el proceso y l
 
 ## Correcciones pendientes del código
 
-Los límites anteriores son la referencia para los próximos cambios. El código actual todavía contiene datos concretos del alumnado en `domain/roster.py`, consultas SQL dentro de las funciones de almacenamiento y un código HTTP en `domain/race.py:RaceError.status`.
+Los límites anteriores son la referencia para los próximos cambios. El código actual todavía contiene datos concretos del alumnado en `domain/roster.py` y consultas SQL dentro de las funciones de almacenamiento.
 
-Las siguientes refactorizaciones deberán mover los datos del alumnado al almacenamiento, guardar el texto de las consultas en archivos separados y dejar la traducción de errores a HTTP en el adaptador. Los casos de uso coordinan dominio y almacenamiento; no construyen respuestas del navegador. No se añaden proveedores intercambiables ni una capa genérica de consultas. La spec 010 documenta estos límites; no modifica todavía esas implementaciones.
+Las siguientes refactorizaciones deberán mover los datos del alumnado al almacenamiento y guardar el texto de las consultas en archivos separados. Los casos de uso coordinan dominio y almacenamiento; no construyen respuestas del navegador. No se añaden proveedores intercambiables ni una capa genérica de consultas. La spec 010 documenta estos límites; no modifica todavía esas implementaciones.
 
 
 ## Protección 006
@@ -79,11 +79,17 @@ La frontera Cloudflare presupone el conector local controlado por quien ejecuta 
 
 A obtiene BEGIN IMMEDIATE, valida acceso/fase/presupuesto y confirma una fila reserved antes de llamar al validador. Las reservas cuentan dentro de las tres oportunidades. Una operación existente devuelve su resultado completed o 202/unconfirmed, pero nunca obtiene permiso para ejecutar B. Repetir su UUID con otro código devuelve 409.
 
-Solo la invocación que creó y confirmó A recibe un derecho local para llamar una vez a B. B toma otro bloqueo, vuelve a leer reloj/acceso/fase y evalúa una vez. Resultado, asistencia, puesto y posible cierre se confirman juntos. Los puestos se derivan del ID de las asistencias, aunque sus fechas sean iguales.
+Solo la invocación que creó y confirmó A recibe una función local de un uso para llamar a B. Captura los datos validados en el servidor y no admite datos nuevos al ejecutarse. Una marca privada protegida con Lock se consume antes de B y no se restablece ante fallos. No se entrega la función si el commit A falla o es incierto; no se reconstruye al repetir una operación. B toma otro bloqueo, vuelve a leer reloj/acceso/fase y evalúa una vez. Resultado, asistencia, puesto y posible cierre se confirman juntos. Los puestos se derivan del ID de las asistencias, aunque sus fechas sean iguales.
 
 Si B falla, su rollback conserva A. No hay reanudación, devolución de oportunidades ni reintento automático. Si el resultado se confirmó y se perdió la respuesta, repetir recupera la asistencia real. Un commit incierto de A nunca habilita B. La tercera reserva válida puede ganar aunque ya queden cero oportunidades libres.
 
 Un bloqueo antes de reservar devuelve 503 sin consumo. Después de reservar, un bloqueo impidiendo B devuelve 202 con consumo; un fallo técnico devuelve 500 y pide consultar el estado. Una operación distinta solo se crea por un nuevo envío intencional del participante.
+
+### Resultados internos de 011
+
+El dominio expresa rechazos mediante `RaceError.reason`, sin códigos de respuesta. Los intentos devuelven `(data, result_kind)`; las consultas conservan sus diccionarios. `race_http.py` traduce motivos y resultados a los estados y cabeceras HTTP anteriores, sin un estado de éxito por defecto para valores desconocidos.
+
+`storage/races.py:complete_operation` conserva la codificación antigua de `result_status` para no migrar el esquema. Los casos de uso recuperan `result_kind`, sin usar ese número. Un éxito guardado conserva su 201 antiguo, pero recuperarlo devuelve 200; una fila reserved sigue sin resultado y devuelve 202. Los datos anteriores se comprueban en los fixtures generados con 010 y en tests/test_race_refactor.py.
 
 ### Contrato que consume 007
 

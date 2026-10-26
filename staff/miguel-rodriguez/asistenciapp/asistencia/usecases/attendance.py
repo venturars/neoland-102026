@@ -141,7 +141,7 @@ def check_in(db_path: str | Path, session_id: str, fields: dict, now: float) -> 
     """
     with closing(storage.connect(db_path)) as conn:
         if storage.is_race(conn,session_id):
-            raise RaceError(403,"Esta clase usa carrera. Abre tu acceso de carrera.")
+            raise RaceError("access_denied","Esta clase usa carrera. Abre tu acceso de carrera.")
         session = storage.get_session(conn, session_id)
         name = validate_check_in(session, fields, now)
         checked_at = datetime.fromtimestamp(now, timezone.utc).isoformat(timespec="milliseconds")

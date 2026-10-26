@@ -71,7 +71,7 @@ def test_private_result_rechecks_expiry_after_waiting_for_read(race, monkeypatch
                 blocker.rollback()
             with pytest.raises(RaceError) as rejected:
                 future.result(timeout=3)
-            assert rejected.value.status == 410
+            assert rejected.value.reason == 'access_expired'
 
 
 def test_exclusive_lock_before_reservation_is_retryable_503(race):
@@ -108,7 +108,7 @@ def test_private_read_rechecks_expiry_after_loading_payload(race, monkeypatch, k
             races.me(db, sid, credential, clock)
         else:
             races.lobby(db, sid, entry, clock)
-    assert rejected.value.status == 410
+    assert rejected.value.reason == 'access_expired'
     with closing(store.connect(db)) as conn:
         assert store.get_race(conn, sid)["closed_at"] is not None
         assert not conn.execute("SELECT 1 FROM race_access WHERE session_id=?", (sid,)).fetchall()
@@ -123,13 +123,13 @@ def test_exclusive_lock_during_b_connection_keeps_reservation_unconfirmed(race, 
     with closing(sqlite3.connect(db, isolation_level=None)) as blocker:
         blocker.execute("BEGIN EXCLUSIVE")
         try:
-            result = races._finalize(db, sid, credential, fields, execution, clock)
+            result = execution()
         finally:
             blocker.rollback()
-    assert result.status == 202
-    assert result.body["operationState"] == "unconfirmed"
+    assert result[1] == 'unconfirmed'
+    assert result[0]["operationState"] == "unconfirmed"
     assert races.me(db, sid, credential, clock)["remaining"] == 2
-    assert races.attempt(db, sid, credential, fields, "127.0.0.1", clock).status == 202
+    assert races.attempt(db, sid, credential, fields, "127.0.0.1", clock)[1] == 'unconfirmed'
     assert calls == []
 
 
@@ -151,7 +151,7 @@ def test_commit_lock_after_evaluation_is_not_an_unspent_retry(race, monkeypatch)
         finally:
             reader.rollback()
     assert races.me(db, sid, credential, clock)["remaining"] == 2
-    assert races.attempt(db, sid, credential, fields, "127.0.0.1", clock).status == 202
+    assert races.attempt(db, sid, credential, fields, "127.0.0.1", clock)[1] == 'unconfirmed'
     assert calls == [1]
     assert races.teacher_state(db, sid, clock)["total"] == 0
 
@@ -171,7 +171,7 @@ def test_busy_during_read_query_is_retryable_without_spending(race, monkeypatch,
                 races.cleanup(db, clock)
             else:
                 races.me(db, sid, credential, clock)
-        assert rejected.value.status == 503
+        assert rejected.value.reason == 'storage_busy'
     assert races.me(db, sid, credential, clock)["remaining"] == 3
 
 

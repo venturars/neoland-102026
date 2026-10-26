@@ -15,17 +15,17 @@ def test_join_collision_and_parallel_attempts(tmp_path,clock,monkeypatch):
     def joining(_):
         barrier.wait()
         try: return races.join(db,sid,entry,"jimena-duran",None,clock)[1]
-        except RaceError as e: return e.status
+        except RaceError as e: return e.reason
     with ThreadPoolExecutor(2) as pool: results=list(pool.map(joining,range(2)))
-    assert results.count(409)==1
-    token=next(r for r in results if isinstance(r,str))
+    assert results.count('state_conflict')==1
+    token=next(r for r in results if r != 'state_conflict')
     races.start(db,sid,clock);clock.advance(3)
     calls=[]; monkeypatch.setattr(races,"is_valid_code",lambda *args: calls.append(1) or False)
     def sending(_):
-        try: return races.attempt(db,sid,token,{"operation_id":str(uuid4()),"code":"1234"},"127.0.0.1",clock).status
-        except RaceError as e: return e.status
+        try: return races.attempt(db,sid,token,{"operation_id":str(uuid4()),"code":"1234"},"127.0.0.1",clock)[1]
+        except RaceError as e: return e.reason
     with ThreadPoolExecutor(8) as pool: statuses=list(pool.map(sending,range(50)))
-    assert len(calls)==3 and statuses.count(422)==3 and statuses.count(429)==47
+    assert len(calls)==3 and statuses.count('invalid_code')==3 and statuses.count('attempts_exhausted')==47
 
 
 def test_fifteen_clients_share_a_blocked_ip_without_losing_normal_policy(tmp_path,clock):
@@ -77,13 +77,13 @@ def test_owned_slot_attack_does_not_spend_other_fourteen_budgets(tmp_path,clock,
     jobs.extend([(tokens[0],bad,True)]*(50-14))
     def sending(job):
         token,value,hostile=job
-        try:status=races.attempt(db,sid,token,{"operation_id":str(uuid4()),"code":value},"127.0.0.1",clock).status
-        except RaceError as e:status=e.status
+        try:status=races.attempt(db,sid,token,{"operation_id":str(uuid4()),"code":value},"127.0.0.1",clock)[1]
+        except RaceError as e:status=e.reason
         return hostile,status
     with ThreadPoolExecutor(5) as pool:results=list(pool.map(sending,jobs))
-    assert [status for hostile,status in results if not hostile]==[201]*14
-    assert sum(status==422 for hostile,status in results if hostile)==3
-    assert sum(status==429 for hostile,status in results if hostile)==47
+    assert [status for hostile,status in results if not hostile]==['registered']*14
+    assert sum(status=='invalid_code' for hostile,status in results if hostile)==3
+    assert sum(status=='attempts_exhausted' for hostile,status in results if hostile)==47
     assert len(calls)==17
     assert races.teacher_state(db,sid,clock)["total"]==14
 
@@ -96,9 +96,9 @@ def test_all_fifteen_claimed_slots_still_have_only_forty_five_evaluations(tmp_pa
     races.start(db,sid,clock);clock.advance(3);calls=[]
     monkeypatch.setattr(races,"is_valid_code",lambda *args:calls.append(1) or False)
     for token in tokens:
-        for _ in range(3):assert races.attempt(db,sid,token,{"operation_id":str(uuid4()),"code":"1234"},"127.0.0.1",clock).status==422
+        for _ in range(3):assert races.attempt(db,sid,token,{"operation_id":str(uuid4()),"code":"1234"},"127.0.0.1",clock)[1] == 'invalid_code'
         with pytest.raises(RaceError) as e:races.attempt(db,sid,token,{"operation_id":str(uuid4()),"code":"1234"},"127.0.0.1",clock)
-        assert e.value.status==429
+        assert e.value.reason == 'attempts_exhausted'
     assert len(calls)==45 and races.teacher_state(db,sid,clock)["total"]==0
 
 
@@ -118,14 +118,14 @@ def test_same_operation_concurrent_retries_evaluate_only_once(tmp_path, clock, m
     barrier = Barrier(2)
     def sending(_):
         barrier.wait()
-        return races.attempt(db, sid, token, fields, "127.0.0.1", clock).status
+        return races.attempt(db, sid, token, fields, "127.0.0.1", clock)[1]
     with ThreadPoolExecutor(2) as pool:
         statuses = list(pool.map(sending, range(2)))
-    assert statuses.count(201) == 1
-    assert all(status in (200, 201, 202) for status in statuses)
+    assert statuses.count('registered') == 1
+    assert all(status in ('already_registered', 'registered', 'unconfirmed') for status in statuses)
     assert len(calls) == 1
     replay = races.attempt(db, sid, token, fields, "127.0.0.1", clock)
-    assert replay.status == 200 and replay.body["remaining"] == 2
+    assert replay[1] == 'already_registered' and replay[0]["remaining"] == 2
     with closing(store.connect(db)) as conn:
         assert store.count_operations(conn, sid, "jimena-duran") == 1
         assert len(store.ranking(conn, sid)) == 1
@@ -143,7 +143,7 @@ def test_join_racing_start_is_included_or_rejected_without_late_arrival(tmp_path
         try:
             return races.join(db, sid, entry, "meghan-martin", None, clock)[1]
         except RaceError as exc:
-            assert exc.status == 410
+            assert exc.reason == 'entry_closed'
             return None
     def starting():
         barrier.wait()

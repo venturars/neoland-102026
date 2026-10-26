@@ -1,6 +1,5 @@
 """Acciones de carrera: reserva duradera A y confirmación B, sin HTTP."""
 from contextlib import closing, contextmanager
-from dataclasses import dataclass
 from datetime import datetime, timezone
 from hashlib import sha256
 import hmac
@@ -8,10 +7,11 @@ import json
 import re
 import secrets
 from pathlib import Path
+from threading import Lock
 from typing import Callable, Iterator
 from uuid import uuid4
 import sqlite3
-from ..domain.race import RaceError, Outcome, phase, valid_operation_id, MAX_ATTEMPTS, COUNTDOWN_SECONDS, LIFETIME_SECONDS
+from ..domain.race import RaceError, phase, valid_operation_id, MAX_ATTEMPTS, COUNTDOWN_SECONDS, LIFETIME_SECONDS
 from ..domain.roster import ROSTER, resolve_slot
 from ..domain.names import name_key
 from ..domain.codes import code_for, seconds_left, is_valid_code
@@ -47,7 +47,7 @@ def _connect(db: str | Path) -> sqlite3.Connection:
         return store.connect(db)
     except sqlite3.OperationalError as exc:
         if _is_busy(exc):
-            raise RaceError(503, 'El servicio está ocupado. Repite el mismo envío sin crear otro.') from None
+            raise RaceError("storage_busy", 'El servicio está ocupado. Repite el mismo envío sin crear otro.') from None
         raise
 
 @contextmanager
@@ -67,7 +67,7 @@ def _reading_connection(db: str | Path) -> Iterator[sqlite3.Connection]:
             yield c
         except sqlite3.OperationalError as exc:
             if _is_busy(exc):
-                raise RaceError(503, 'El servicio está ocupado. Repite el mismo envío sin crear otro.') from None
+                raise RaceError("storage_busy", 'El servicio está ocupado. Repite el mismo envío sin crear otro.') from None
             raise
 
 def _iso(now: float) -> str:
@@ -133,12 +133,12 @@ def _write(db: str | Path, clock: Clock, stage: str='action') -> Iterator[sqlite
             c.execute('BEGIN IMMEDIATE')
         except sqlite3.OperationalError as exc:
             if _is_busy(exc):
-                raise RaceError(503, 'El servicio está ocupado. Repite el mismo envío sin crear otro.') from None
+                raise RaceError("storage_busy", 'El servicio está ocupado. Repite el mismo envío sin crear otro.') from None
             raise
         yield c
         _commit(c, stage)
     except RaceError as exc:
-        if exc.status == 410:
+        if exc.reason in ('access_expired', 'entry_closed'):
             _purge_expired(c, clock())
             _commit(c, 'expiry')
         else:
@@ -188,7 +188,7 @@ def _read(db: str | Path, clock: Clock) -> Iterator[sqlite3.Connection]:
             yield c
         except RaceError as exc:
             c.rollback()
-            if exc.status == 410:
+            if exc.reason in ('access_expired', 'entry_closed'):
                 cleanup(db, clock)
             raise
         finally:
@@ -199,7 +199,7 @@ def _require_unexpired(r: dict, now: float) -> None:
 
     :param r: metadatos de la carrera consultada.
     :param now: instante Unix recién leído del servidor.
-    :return: None si el acceso no ha caducado; de lo contrario lanza 410.
+    :return: None si el acceso sigue vigente; si no, rechaza su caducidad.
     :rtype: None
 
     Usage::
@@ -207,7 +207,7 @@ def _require_unexpired(r: dict, now: float) -> None:
         _require_unexpired(race, clock())
     """
     if now >= r['expires_at']:
-        raise RaceError(410, 'Tu acceso a esta carrera ha caducado. Consulta al profesor.')
+        raise RaceError("access_expired", 'Tu acceso a esta carrera ha caducado. Consulta al profesor.')
 
 def _race(c: sqlite3.Connection, sid: str, now: float, temporal: bool=False) -> dict:
     """Exige carrera real y, para permisos temporales, caducidad no alcanzada.
@@ -225,7 +225,7 @@ def _race(c: sqlite3.Connection, sid: str, now: float, temporal: bool=False) -> 
     """
     r = store.get_race(c, sid)
     if r is None:
-        raise RaceError(404, 'Esta carrera no existe. Revisa el enlace.')
+        raise RaceError("race_missing", 'Esta carrera no existe. Revisa el enlace.')
     if temporal:
         _require_unexpired(r, now)
     return r
@@ -273,11 +273,11 @@ def _access(c: sqlite3.Connection, r: dict, token: object) -> dict:
         _access(conn, race, credential)
     """
     if not isinstance(token, str) or re.fullmatch('[A-Za-z0-9_-]{43}', token) is None:
-        raise RaceError(403, 'Acceso de carrera no válido. Abre tu acceso original.')
+        raise RaceError("access_denied", 'Acceso de carrera no válido. Abre tu acceso original.')
     digest = sha256(token.encode()).hexdigest()
     slot = store.access_slot(c, r['session_id'], digest)
     if slot is None or not hmac.compare_digest(digest, slot['credential_hash']):
-        raise RaceError(403, 'Acceso de carrera no válido. No se repone después de la salida.')
+        raise RaceError("access_denied", 'Acceso de carrera no válido. No se repone después de la salida.')
     return slot
 
 def _times(r: dict, now: float) -> dict:
@@ -389,9 +389,9 @@ def _entry(r: dict, entry: object, now: float) -> None:
         _entry(race, entry_secret, 1800000000.0)
     """
     if _phase(r, now) != 'lobby':
-        raise RaceError(410, 'La entrada a esta carrera ya está cerrada.')
+        raise RaceError("entry_closed", 'La entrada a esta carrera ya está cerrada.')
     if not isinstance(entry, str) or re.fullmatch('[A-Za-z0-9_-]{43}', entry) is None or (not hmac.compare_digest(entry, r['join_secret'] or '')):
-        raise RaceError(403, 'El enlace de entrada no es válido. Pide el enlace actual al profesor.')
+        raise RaceError("access_denied", 'El enlace de entrada no es válido. Pide el enlace actual al profesor.')
 
 def lobby(db: str | Path, sid: str, entry: object, clock: Clock) -> dict:
     """Lista disponibilidad con entrada vigente, sin códigos o permisos ajenos.
@@ -446,10 +446,10 @@ def join(db: str | Path, sid: str, entry: object, key: object, existing: object,
                 return (_own(c, r, owned, now, existing), None)
         ref = resolve_slot(key)
         if ref is None:
-            raise RaceError(400, 'Elige un nombre de la lista.')
+            raise RaceError("invalid_input", 'Elige un nombre de la lista.')
         s = store.slot(c, sid, ref['key'])
         if s['state'] != 'pendiente':
-            raise RaceError(409, 'Ese nombre ya está ocupado. Revisa tu selección con el profesor.')
+            raise RaceError("state_conflict", 'Ese nombre ya está ocupado. Revisa tu selección con el profesor.')
         token = secrets.token_urlsafe(32)
         store.occupy(c, sid, ref['key'], sha256(token.encode()).hexdigest())
         return (_own(c, r, store.slot(c, sid, ref['key']), now, token), token)
@@ -472,10 +472,10 @@ def release(db: str | Path, sid: str, key: object, clock: Clock) -> dict:
         now = clock()
         r = _race(c, sid, now, True)
         if _phase(r, now) != 'lobby':
-            raise RaceError(409, 'No se pueden liberar plazas después de la salida.')
+            raise RaceError("state_conflict", 'No se pueden liberar plazas después de la salida.')
         ref = resolve_slot(key)
         if ref is None:
-            raise RaceError(400, 'Elige un nombre de la lista.')
+            raise RaceError("invalid_input", 'Elige un nombre de la lista.')
         store.release(c, sid, ref['key'])
         return _teacher(c, r, now)
 
@@ -496,11 +496,11 @@ def start(db: str | Path, sid: str, clock: Clock) -> dict:
         now = clock()
         r = _race(c, sid, now, True)
         if r['closed_at'] is not None:
-            raise RaceError(409, 'Esta carrera ya está cerrada.')
+            raise RaceError("state_conflict", 'Esta carrera ya está cerrada.')
         if r['starts_at'] is not None:
             return _teacher(c, r, now)
         if not any((s['state'] == 'listo' for s in store.slots(c, sid))):
-            raise RaceError(409, 'Debe entrar al menos un participante para empezar.')
+            raise RaceError("state_conflict", 'Debe entrar al menos un participante para empezar.')
         store.start(c, sid, now + COUNTDOWN_SECONDS)
         return _teacher(c, _race(c, sid, now), now)
 
@@ -583,178 +583,164 @@ def export_checkins(db: str | Path, sid: str) -> tuple[dict, list[dict]]:
     with _reading_connection(db) as c:
         session = store.get_session(c, sid)
         if session is None:
-            raise RaceError(404, 'Esta carrera no existe.')
+            raise RaceError("race_missing", 'Esta carrera no existe.')
         return (session, store.ranking(c, sid))
 
-@dataclass
-class _Execution:
-    """Derecho local no serializado del creador de A; una llamada a B."""
-    key: str
-    oid: str
-    used: bool = False
-
-def _fingerprint(r: dict, key: str, fields: dict) -> str:
-    """Huella de contenido normalizado sin persistir códigos.
-
-    :param r: fila de carrera con sus metadatos internos.
-    :param key: clave canónica de la plaza del roster.
-    :param fields: objeto recibido; solo sus campos del contrato tienen autoridad.
-    :return: texto derivado sin publicar secretos adicionales.
-    :rtype: str
-
-    Usage::
-
-        _fingerprint(race, "jimena-duran", fields)
-    """
+def _fingerprint(race: dict, roster_key: str, fields: dict) -> str:
+    """Resume el contenido normalizado sin guardar el código enviado."""
     if 'code' not in fields:
         payload = ['missing']
     elif isinstance(fields['code'], str):
         payload = ['string', fields['code'].strip()]
     else:
         payload = ['other', fields['code']]
-    content = json.dumps(['race-operation-v1', r['session_id'], key, payload], ensure_ascii=True, separators=(',', ':'), sort_keys=True)
-    return hmac.new(r['secret'], content.encode(), sha256).hexdigest()
+    content = json.dumps(
+        ['race-operation-v1', race['session_id'], roster_key, payload],
+        ensure_ascii=True, separators=(',', ':'), sort_keys=True,
+    )
+    return hmac.new(race['secret'], content.encode(), sha256).hexdigest()
 
-def _operation_result(c: sqlite3.Connection, r: dict, slot: dict, op: dict, now: float, token: str) -> Outcome:
-    """Reconstruye resultado propio sin reproducir éxitos retirados.
 
-    :param c: conexión de la transacción actual, sin commit implícito.
-    :param r: fila de carrera con sus metadatos internos.
-    :param slot: plaza propia obtenida del almacén.
-    :param op: operación reservada o completada de la plaza.
-    :param now: instante Unix leído del servidor.
-    :param token: permiso propio recibido; nunca una identidad basada en IP.
-    :return: datos y estado del resultado propio.
-    :rtype: Outcome
-
-    Usage::
-
-        _operation_result(conn, race, own_slot, operation, 1800000000.0, credential)
-    """
-    body = _own(c, r, slot, now, token)
+def _operation_result(connection: sqlite3.Connection, race: dict, slot: dict,
+                      operation: dict, now: float, token: str) -> tuple[dict, str]:
+    """Recupera el resultado confirmado; una reserva no vuelve a evaluarse."""
+    data = _own(connection, race, slot, now, token)
     if slot['state'] == 'retirado':
-        return Outcome({**body, 'message': 'El profesor retiró tu asistencia.'})
-    if op['state'] == 'reserved':
-        return Outcome({**body, 'operationState': 'unconfirmed', 'message': 'Este envío aún no tiene resultado confirmado. El intento sigue gastado. Consulta tu estado.'}, 202)
-    kind = op['result_kind']
-    if kind in ('success', 'already'):
-        return Outcome({**body, 'already': True})
-    messages = {'invalid_code': 'El código no es válido o ha caducado. Pide el código actual al profesor.', 'invalid_operation': 'El envío no tiene un identificador válido. El intento se ha gastado.', 'not_processed': 'El registro no está disponible. Consulta el estado de la carrera.'}
-    return Outcome({**body, 'error': messages[kind]}, op['result_status'])
+        return {**data, 'message': 'El profesor retiró tu asistencia.'}, 'removed'
+    if operation['state'] == 'reserved':
+        return {
+            **data, 'operationState': 'unconfirmed',
+            'message': 'Este envío aún no tiene resultado confirmado. El intento sigue gastado. Consulta tu estado.',
+        }, 'unconfirmed'
+    result_kind = operation['result_kind']
+    if result_kind in ('success', 'already'):
+        return {**data, 'already': True}, 'already_registered'
+    messages = {
+        'invalid_code': 'El código no es válido o ha caducado. Pide el código actual al profesor.',
+        'invalid_operation': 'El envío no tiene un identificador válido. El intento se ha gastado.',
+        'not_processed': 'El registro no está disponible. Consulta el estado de la carrera.',
+    }
+    return {**data, 'error': messages[result_kind]}, result_kind
 
-def _reserve(db: str | Path, sid: str, token: str, fields: dict, clock: Clock) -> Outcome | _Execution:
-    """A confirma consumo; solo una reserva nueva devuelve ejecución local.
 
-    :param db: archivo local de la copia de asistencia.
-    :param sid: identificador de la carrera guardada.
-    :param token: permiso propio recibido; nunca una identidad basada en IP.
-    :param fields: objeto recibido; solo sus campos del contrato tienen autoridad.
-    :param clock: reloj del servidor que devuelve segundos Unix.
-    :return: resultado recuperado o derecho local nuevo para ejecutar B una sola vez.
-    :rtype: Outcome | _Execution
-
-    Usage::
-
-        _reserve(path, session_id, credential, fields, clock)
-    """
-    with _write(db, clock, 'A') as c:
+def _reserve(db: str | Path, session_id: str, token: str, fields: dict,
+             clock: Clock) -> tuple[dict, str] | Callable[[], tuple[dict, str]]:
+    """Confirma A antes de entregar una función local de un solo uso para B."""
+    with _write(db, clock, 'A') as connection:
         now = clock()
-        r = _race(c, sid, now, True)
-        slot = _access(c, r, token)
-        key = slot['roster_key']
+        race = _race(connection, session_id, now, True)
+        slot = _access(connection, race, token)
+        roster_key = slot['roster_key']
         if not slot['included_at_start']:
-            raise RaceError(409, 'Espera la salida del profesor.')
+            raise RaceError('state_conflict', 'Espera la salida del profesor.')
         if slot['state'] == 'retirado':
-            return Outcome({**_own(c, r, slot, now, token), 'message': 'El profesor retiró tu asistencia.'})
-        oid = fields.get('operation_id')
-        valid_id = valid_operation_id(oid)
-        fp = _fingerprint(r, key, fields)
-        previous = store.operation(c, sid, key, oid) if valid_id else None
+            data = _own(connection, race, slot, now, token)
+            return {**data, 'message': 'El profesor retiró tu asistencia.'}, 'removed'
+        operation_id = fields.get('operation_id')
+        valid_id = valid_operation_id(operation_id)
+        fingerprint = _fingerprint(race, roster_key, fields)
+        previous = store.operation(connection, session_id, roster_key, operation_id) if valid_id else None
         if previous is not None:
-            if not hmac.compare_digest(fp, previous['payload_fingerprint']):
-                raise RaceError(409, 'Ese envío ya se usó con otro contenido. Consulta tu estado.')
-            return _operation_result(c, r, slot, previous, now, token)
+            if not hmac.compare_digest(fingerprint, previous['payload_fingerprint']):
+                raise RaceError('state_conflict', 'Ese envío ya se usó con otro contenido. Consulta tu estado.')
+            return _operation_result(connection, race, slot, previous, now, token)
         if slot['checkin_id'] is not None:
-            return Outcome({**_own(c, r, slot, now, token), 'already': True})
-        if _phase(r, now) != 'open':
-            raise RaceError(409, 'El registro de carrera no está abierto. Consulta al profesor.')
-        used = store.count_operations(c, sid, key)
-        if used >= MAX_ATTEMPTS:
-            raise RaceError(429, 'No te quedan intentos en esta carrera.')
+            data = _own(connection, race, slot, now, token)
+            return {**data, 'already': True}, 'already_registered'
+        if _phase(race, now) != 'open':
+            raise RaceError('state_conflict', 'El registro de carrera no está abierto. Consulta al profesor.')
+        used_attempts = store.count_operations(connection, session_id, roster_key)
+        if used_attempts >= MAX_ATTEMPTS:
+            raise RaceError('attempts_exhausted', 'No te quedan intentos en esta carrera.')
         if not valid_id:
-            oid = str(uuid4())
-        store.insert_operation(c, sid, key, oid, used + 1, fp)
-        raw = fields.get('code')
-        if not valid_id or not isinstance(raw, str) or re.fullmatch('[0-9]{4}', raw.strip()) is None:
-            kind, status = ('invalid_operation', 400) if not valid_id else ('invalid_code', 422)
-            store.complete_operation(c, sid, key, oid, kind, status)
-            return _operation_result(c, r, slot, store.operation(c, sid, key, oid), now, token)
-        return _Execution(key, oid)
+            operation_id = str(uuid4())
+        store.insert_operation(connection, session_id, roster_key, operation_id,
+                               used_attempts + 1, fingerprint)
+        raw_code = fields.get('code')
+        if not valid_id or not isinstance(raw_code, str) or re.fullmatch('[0-9]{4}', raw_code.strip()) is None:
+            result_kind = 'invalid_operation' if not valid_id else 'invalid_code'
+            store.complete_operation(connection, session_id, roster_key, operation_id, result_kind)
+            operation = store.operation(connection, session_id, roster_key, operation_id)
+            return _operation_result(connection, race, slot, operation, now, token)
+        code = raw_code.strip()
 
-def _finalize(db: str | Path, sid: str, token: str, fields: dict, ticket: _Execution, clock: Clock) -> Outcome:
-    """B se ejecuta una vez; su rollback no borra A ni permite reanudar.
+    # Este punto solo se alcanza si el commit A terminó sin error ni incertidumbre.
+    used = False
+    claim_lock = Lock()
 
-    :param db: archivo local de la copia de asistencia.
-    :param sid: identificador de la carrera guardada.
-    :param token: permiso propio recibido; nunca una identidad basada en IP.
-    :param fields: objeto recibido; solo sus campos del contrato tienen autoridad.
-    :param ticket: derecho local de ejecución, creado por A y no recuperable del cliente.
-    :param clock: reloj del servidor que devuelve segundos Unix.
-    :return: datos y estado del resultado propio.
-    :rtype: Outcome
+    def execute_once() -> tuple[dict, str]:
+        """Consume el permiso antes de B; un fallo posterior nunca lo repone."""
+        nonlocal used
+        with claim_lock:
+            if used:
+                raise RuntimeError('La ejecución local de esta reserva ya se utilizó')
+            used = True
+        return _finalize(db, session_id, token, roster_key, operation_id, code, clock)
 
-    Usage::
+    return execute_once
 
-        _finalize(path, session_id, credential, fields, execution, clock)
-    """
-    if ticket.used:
-        raise RuntimeError('La ejecución local de esta reserva ya se utilizó')
-    ticket.used = True
+
+def _finalize(db: str | Path, session_id: str, token: str, roster_key: str,
+              operation_id: str, code: str, clock: Clock) -> tuple[dict, str]:
+    """Confirma B para los datos capturados por la única ejecución local de A."""
     try:
-        with _write(db, clock, 'B') as c:
+        with _write(db, clock, 'B') as connection:
             now = clock()
-            r = _race(c, sid, now, True)
-            slot = _access(c, r, token)
-            op = store.operation(c, sid, ticket.key, ticket.oid)
-            if slot['roster_key'] != ticket.key or op is None or op['state'] != 'reserved':
-                raise RaceError(409, 'Este envío ya no puede procesarse. Consulta tu estado.')
-            if not slot['included_at_start'] or slot['state'] == 'retirado' or slot['checkin_id'] is not None or (_phase(r, now) != 'open'):
-                kind, status = ('already', 200) if slot['checkin_id'] is not None else ('not_processed', 409)
-                store.complete_operation(c, sid, ticket.key, ticket.oid, kind, status, slot['checkin_id'])
-                return _operation_result(c, r, slot, store.operation(c, sid, ticket.key, ticket.oid), now, token)
-            correct = is_valid_code(r['secret'], fields['code'].strip(), now)
-            if not correct:
-                store.complete_operation(c, sid, ticket.key, ticket.oid, 'invalid_code', 422)
-                return _operation_result(c, r, slot, store.operation(c, sid, ticket.key, ticket.oid), now, token)
-            cid = store.add_checkin(c, sid, ticket.key, slot['display_name'], name_key(slot['display_name']), _iso(now))
-            store.complete_operation(c, sid, ticket.key, ticket.oid, 'success', 201, cid)
-            if store.all_registered(c, sid):
-                store.close(c, sid, _iso(now))
-            return Outcome(_own(c, _race(c, sid, now), store.slot(c, sid, ticket.key), now, token), 201)
+            race = _race(connection, session_id, now, True)
+            slot = _access(connection, race, token)
+            operation = store.operation(connection, session_id, roster_key, operation_id)
+            if slot['roster_key'] != roster_key or operation is None or operation['state'] != 'reserved':
+                raise RaceError('state_conflict', 'Este envío ya no puede procesarse. Consulta tu estado.')
+            if (not slot['included_at_start'] or slot['state'] == 'retirado'
+                    or slot['checkin_id'] is not None or _phase(race, now) != 'open'):
+                result_kind = 'already' if slot['checkin_id'] is not None else 'not_processed'
+                store.complete_operation(connection, session_id, roster_key, operation_id,
+                                         result_kind, slot['checkin_id'])
+                operation = store.operation(connection, session_id, roster_key, operation_id)
+                return _operation_result(connection, race, slot, operation, now, token)
+            if not is_valid_code(race['secret'], code, now):
+                store.complete_operation(connection, session_id, roster_key, operation_id, 'invalid_code')
+                operation = store.operation(connection, session_id, roster_key, operation_id)
+                return _operation_result(connection, race, slot, operation, now, token)
+            checkin_id = store.add_checkin(
+                connection, session_id, roster_key, slot['display_name'],
+                name_key(slot['display_name']), _iso(now),
+            )
+            store.complete_operation(connection, session_id, roster_key, operation_id, 'success', checkin_id)
+            if store.all_registered(connection, session_id):
+                store.close(connection, session_id, _iso(now))
+            race = _race(connection, session_id, now)
+            slot = store.slot(connection, session_id, roster_key)
+            return _own(connection, race, slot, now, token), 'registered'
     except RaceError as exc:
-        if exc.status != 503:
+        if exc.reason != 'storage_busy':
             raise
-        return Outcome({'operationState': 'unconfirmed', 'message': 'No se pudo confirmar este envío. El intento sigue gastado. Consulta tu estado.'}, 202)
+        return {
+            'operationState': 'unconfirmed',
+            'message': 'No se pudo confirmar este envío. El intento sigue gastado. Consulta tu estado.',
+        }, 'unconfirmed'
 
-def attempt(db: str | Path, sid: str, token: object, fields: dict, address: str | None, clock: Clock) -> Outcome:
-    """Coordina A y B sin repetir una evaluación ante pérdida o error.
 
-    :param db: archivo local de la copia de asistencia.
-    :param sid: identificador de la carrera guardada.
-    :param token: permiso propio recibido; nunca una identidad basada en IP.
-    :param fields: objeto recibido; solo sus campos del contrato tienen autoridad.
+def attempt(db: str | Path, sid: str, token: object, fields: dict,
+            address: str | None, clock: Clock) -> tuple[dict, str]:
+    """Coordina la reserva y su resultado sin repetir una evaluación.
+
+    :param db: archivo local de asistencia.
+    :param sid: identificador de la carrera.
+    :param token: permiso propio del participante.
+    :param fields: contenido del envío autorizado.
     :param address: dirección fiable de conexión; no identifica a la plaza.
-    :param clock: reloj del servidor que devuelve segundos Unix.
-    :return: datos y estado del resultado propio.
-    :rtype: Outcome
+    :param clock: reloj del servidor en segundos Unix.
+    :return: datos visibles y significado del resultado; el adaptador decide HTTP.
+    :rtype: tuple[dict, str]
 
     Usage::
 
         attempt(path, session_id, credential, fields, "127.0.0.1", clock)
     """
     if normalize_address(address) is None:
-        raise RaceError(403, 'No se ha podido identificar el origen de conexión. Consulta al profesor.')
+        raise RaceError('origin_unavailable', 'No se ha podido identificar el origen de conexión. Consulta al profesor.')
     reserved = _reserve(db, sid, token, fields, clock)
-    if isinstance(reserved, Outcome):
-        return reserved
-    return _finalize(db, sid, token, fields, reserved, clock)
+    if callable(reserved):
+        return reserved()
+    return reserved
