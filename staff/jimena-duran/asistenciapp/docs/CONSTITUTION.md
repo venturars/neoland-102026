@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 2.3 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-22
+> Versión 3.0 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-23
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -31,7 +31,7 @@ El registro de asistencia no depende de una plataforma concreta. Las integracion
 
 ### P4 · Privacidad mínima
 - Del alumno solo se guarda el **nombre que él mismo escribe** y la **hora del registro**.
-- **Prohibido** guardar emails, IPs, identificadores de dispositivo o cualquier dato no imprescindible.
+- **Prohibido** guardar emails, identificadores de dispositivo o cualquier dato no imprescindible. Como única excepción para este control de seguridad, se permite guardar la IP solo para contar intentos de registro y conservar la lista de bloqueo, separada del nombre y de la hora de asistencia.
 - Los datos se **almacenan** solo en local (SQLite). Ningún servicio de terceros los guarda.
 - Para que los alumnos lleguen a la app desde sus casas, el tráfico puede **pasar cifrado (HTTPS)** por un proveedor de túnel (p. ej. Cloudflare). Ese proveedor no los almacena, pero técnicamente podría verlos en tránsito; por eso solo se envía lo imprescindible (nombre y código).
 
@@ -116,3 +116,5 @@ La spec describe qué y por qué, sin tecnologías; el plan explica cómo y comp
 | 2.2 | 2026-10-22 | §4: spec aprobada para todo cambio y puertas explícitas; §7: carpeta personal; §8: aprueba Jimena Durán | Aprobación de spec, plan y tareas de la 002 por Jimena Durán; no confundir Git con aprobación SDD |
 
 | 2.3 | 2026-10-22 | §3: documentos y separación domain/usecases/storage; guía AGENTS.md | Reorganización 005 autorizada por Jimena Durán, sin cambios de producto |
+
+| 3.0 | 2026-10-23 | P4: excepción limitada para IPs de recuento y bloqueo, separadas de la asistencia | Enmienda de privacidad de la spec 006 aprobada por Jimena Durán |
