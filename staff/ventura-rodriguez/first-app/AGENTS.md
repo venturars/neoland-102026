@@ -41,9 +41,11 @@ Queda fuera comprobar paquetes que no son de Node, comprobar un paquete cuya ver
 
 - Ejecutar: no hay comando de ejecución todavía.
 - Tests: no hay tests. El script `test` de `package.json` es el placeholder de pnpm.
-- Lint/formato: Prettier, formato estándar. No hay script de lint ni de formato.
+- Lint/formato: `pnpm format` lanza Prettier. El formato es el estándar, sin configuración propia. `pnpm lint` lanza ESLint.
 
 ## Al terminar una tarea
 
 - Al crear una funcionalidad se crea su primer cliente en `clients/terminal/`, un `.txt` que se pega en la terminal con el directorio actual en `first-app`. Ese cliente importa la función de `logic/` y hace `console.log` del resultado. Es el test manual básico.
 - Comprueba que el desarrollo nuevo funciona antes de dar la tarea por terminada. La comprobación es ejecutar ese fragmento de `clients/terminal/`.
+- Lanza el formato antes de dar la tarea por terminada. El comando es `pnpm format`.
+- Lanza el lint antes de dar la tarea por terminada. El comando es `pnpm lint`.
