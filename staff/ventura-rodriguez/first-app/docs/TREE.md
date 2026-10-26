@@ -1,6 +1,7 @@
 # Árbol
 
 first-app/
+  eslint.config.js
   db/
     connection.js
     users.sqlite

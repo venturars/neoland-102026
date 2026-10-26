@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "jupyter": "sh scripts/jupyter.sh",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write \"db/**/*.js\" \"queries/**/*.js\" \"logic/**/*.js\"",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "Ventura Rodriguez",
@@ -15,5 +17,10 @@
     "@colors/colors": "1.6.1",
     "cli-table3": "0.6.5",
     "openai": "7.39.0"
+  },
+  "devDependencies": {
+    "prettier": "3.9.10",
+    "eslint": "10.13.0",
+    "@eslint/js": "10.0.1"
   }
 }
