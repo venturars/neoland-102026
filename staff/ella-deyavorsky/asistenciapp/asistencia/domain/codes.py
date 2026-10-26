@@ -22,12 +22,35 @@ def _code_for_window(secret: bytes, window: int) -> str:
 
 
 def code_for(secret: bytes, t: float) -> str:
-    """Código vigente en el instante t (segundos Unix)."""
+    """Código vigente en el instante t (segundos Unix).
+
+    :param secret: secreto de la sesión.
+    :param t: instante en segundos Unix.
+    :return: el código de 4 cifras.
+    :rtype: str
+
+    Usage::
+
+        >>> code_for(b"secreto", 1_800_000_000.0)  # doctest: +SKIP
+        '0420'
+    """
     return _code_for_window(secret, _window(t))
 
 
 def is_valid_code(secret: bytes, code: str, t: float) -> bool:
-    """Acepta el código de la ventana actual y el de la anterior (CA-05)."""
+    """Acepta el código de la ventana actual y el de la anterior (CA-05).
+
+    :param secret: secreto de la sesión.
+    :param code: código que escribió el alumno.
+    :param t: instante en segundos Unix.
+    :return: ``True`` si el código vale en ese instante.
+    :rtype: bool
+
+    Usage::
+
+        >>> is_valid_code(b"secreto", "0000", 1_800_000_000.0)  # doctest: +SKIP
+        False
+    """
     code = str(code).strip()
     current = _window(t)
     return any(
@@ -37,5 +60,15 @@ def is_valid_code(secret: bytes, code: str, t: float) -> bool:
 
 
 def seconds_left(t: float) -> int:
-    """Segundos (redondeados hacia arriba) hasta que cambie el código."""
+    """Segundos (redondeados hacia arriba) hasta que cambie el código.
+
+    :param t: instante en segundos Unix.
+    :return: segundos que faltan para el siguiente código.
+    :rtype: int
+
+    Usage::
+
+        >>> seconds_left(30.0)
+        30
+    """
     return math.ceil(WINDOW_SECONDS - (t % WINDOW_SECONDS))

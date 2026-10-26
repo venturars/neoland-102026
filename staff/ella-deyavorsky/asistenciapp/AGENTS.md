@@ -1,6 +1,6 @@
-# AGENT.md — Manual de trabajo para agentes de IA
+# AGENTS.md — Manual de trabajo para agentes de IA
 
-Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [CONSTITUTION.md](CONSTITUTION.md) dice **qué reglas** se cumplen; este archivo dice **cómo se trabaja** día a día.
+Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [constitución](docs/CONSTITUTION.md) dice **qué reglas** se cumplen; [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) dice **dónde va cada pieza de código**; este archivo dice **cómo se trabaja** día a día.
 
 ---
 
@@ -8,10 +8,11 @@ Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en 
 
 Lee en este orden al empezar cualquier tarea:
 
-1. `CONSTITUTION.md`: las reglas no negociables.
-2. Este archivo (`AGENT.md`).
-3. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
-4. Su `plan.md` y su `tasks.md`, si ya existen.
+1. `docs/CONSTITUTION.md`: las reglas no negociables.
+2. Este archivo (`AGENTS.md`).
+3. `docs/ARCHITECTURE.md`: las partes del código y qué puede importar cada una.
+4. La spec activa: `specs/NNN-nombre/spec.md` (ver §8 "Estado actual").
+5. Su `plan.md` y su `tasks.md`, si ya existen.
 
 Si algo de lo que te piden contradice la constitución, **para y avisa** antes de escribir nada.
 
@@ -57,9 +58,11 @@ Al empezar el cambio, el único fichero nuevo permitido es el `spec.md`. El agen
 
 ```
 asistenciapp/
-├── CONSTITUTION.md        # reglas no negociables
-├── AGENT.md               # este archivo
+├── AGENTS.md              # este archivo
 ├── README.md              # cómo arrancar la app (para humanos)
+├── docs/
+│   ├── CONSTITUTION.md    # reglas no negociables
+│   └── ARCHITECTURE.md    # partes del código y dependencias permitidas
 ├── specs/
 │   └── NNN-nombre/
 │       ├── spec.md        # qué y por qué
@@ -67,8 +70,13 @@ asistenciapp/
 │       └── tasks.md       # pasos
 ├── requirements.txt       # dependencias de Python (Flask, pytest)
 ├── pytest.ini             # configuración de pytest
-├── app.py                 # aplicación Flask y punto de entrada
+├── app.py                 # borde HTTP (Flask) y punto de entrada
 ├── asistencia/            # lógica del servidor (paquete de Python)
+│   ├── domain/            # reglas: códigos, nombres, decisiones de sesión
+│   ├── usecases/          # acciones de la app
+│   ├── storage/           # SQLite
+│   ├── export.py          # CSV
+│   └── tunnel.py          # túnel cloudflared
 ├── static/                # HTML, CSS y JS del navegador
 ├── tests/                 # tests (test_*.py)
 ├── .venv/                 # entorno virtual de Python (no se sube a git)
@@ -108,7 +116,42 @@ Las únicas dependencias son Flask y pytest (constitución P3).
 
 ---
 
-## 6. Definición de "terminado"
+## 6. Normas de escritura del código
+
+Al estilo de la API pública de `requests`. Las partes y lo que puede importar cada una están en [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md); `tests/test_architecture.py` lo vigila.
+
+- **Módulo:** empieza con una docstring de una frase que dice para qué sirve.
+- **Función pública:** docstring con `:param nombre:` por cada parámetro, `:return:` y `:rtype:`; si lanza errores, `:raises Error:`.
+- **Ejemplo:** un bloque `Usage::` con un uso corto.
+- **Tipos** en los parámetros y en el resultado de toda función pública.
+- Funciones pequeñas con una sola tarea; sin lógica de negocio en las rutas.
+- Los errores de negocio son excepciones del dominio con un mensaje claro en español (constitución §5).
+- Nombres en inglés; mensajes y docstrings en español.
+- Comentarios solo para el porqué; referencia al `CA-xx` cuando una función implementa un criterio.
+- Sin código muerto ni abstracciones «por si acaso» (constitución P2).
+
+Ejemplo:
+
+```python
+def ensure_open(session: dict) -> None:
+    """Comprueba que la sesión admite registros (CA-09).
+
+    :param session: la sesión, con su campo ``closed_at``.
+    :return: nada si está abierta.
+    :rtype: None
+    :raises SessionClosed: si la sesión ya está cerrada.
+
+    Usage::
+
+        >>> ensure_open({"closed_at": None})
+    """
+    if session["closed_at"] is not None:
+        raise SessionClosed(CLOSED)
+```
+
+---
+
+## 7. Definición de "terminado"
 
 Una funcionalidad está terminada cuando:
 
@@ -120,7 +163,7 @@ Una funcionalidad está terminada cuando:
 
 ---
 
-## 7. Estado actual
+## 8. Estado actual
 
 | Spec | Fase | Notas |
 | --- | --- | --- |
@@ -128,6 +171,7 @@ Una funcionalidad está terminada cuando:
 | `002-spec-antes-del-cambio` | ✅ Implementada (2026-10-23) | Ningún fichero de la app se toca sin un spec aprobado |
 | `003-activar-el-entorno` | ✅ Implementada (2026-10-24): T01–T04, 77 tests | El README separa activar el entorno y arrancar la app |
 | `004-quitar-referencias-personales` | ✅ Implementada (2026-10-26) | Ninguna referencia personal a otro usuario en la documentación; la ruta del README es la de esta carpeta |
+| `005-arquitectura-por-capas` | ✅ Implementada v1.3 (2026-10-26) | Documentación en `docs/`, `AGENTS.md` con normas de escritura y código en `domain`, `usecases` y `storage` |
 | Bot de Discord | Idea futura, sin número | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
