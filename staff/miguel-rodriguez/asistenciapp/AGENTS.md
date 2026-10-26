@@ -110,6 +110,12 @@ Las dependencias son Flask, pytest y qrcode==8.2 sin extras de imágenes (consti
 
 ---
 
+
+### Escritura y decisiones de diseño
+
+- Elimina eslóganes, ayudas y etiquetas secundarias redundantes. Si una pantalla depende de ellos para entenderse, corrige su disposición. Conserva las etiquetas accesibles, los estados y los errores que ayudan a actuar.
+- Elige la solución que mejore conjuntamente la experiencia de usuario (UX), de desarrollo (DX) y de trabajo de agentes (AX), sin romper el comportamiento existente. Esto no permite saltarse las aprobaciones ni ampliar el alcance.
+
 ## 6. Definición de "terminado"
 
 Una funcionalidad está terminada cuando:
@@ -134,6 +140,7 @@ Una funcionalidad está terminada cuando:
 | `006-limitar-intentos-de-registro` | Implementada y verificada; ejecución completa delegada por Miguel el 2026-10-24 | 145 pruebas y comprobación de navegador; revisión de compañeros pendiente; evidencia en tasks.md |
 | `007-carrera-de-asistencia` | Implementada, verificada localmente y probada por Miguel el 2026-10-25; publicación pendiente | QR local, quince SVG, lobby, salida, registro, llegada y podio; 226 pruebas de app; evidencia en specs/007-carrera-de-asistencia/evidence.md; recorrido básico y QR móvil probados por Miguel; publicación pendiente |
 | `008-proteger-el-registro-de-carrera` | Implementada, verificada y resultado local aprobado por Miguel el 2026-10-25; publicación pendiente | Issue #328; R1/R2 corregidos; 218 pruebas de app y dos reproducciones originales pasan; evidencia y comandos en tasks.md; sin PR 008 publicada ni aprobación de peers atribuida |
+| `009-refinar-presentacion-de-carrera` | Implementada y verificada localmente; pendiente de probar por Miguel y publicar | Tema, SVG simplificados y celebración 2+3+8; 226 tests Python y 15 Node; evidencia en specs/009-refinar-presentacion-de-carrera/evidence.md; sin PR ni prueba del resultado nuevo atribuida a Miguel |
 | Bot de Discord (sin número asignado) | Idea futura | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
@@ -158,4 +165,4 @@ Miguel aprobó el resultado local de 008 el 2026-10-25 y ordenó implementar 007
 Miguel confirmó después el recorrido en ordenador y con cámara de móvil por HTTPS; T43 está completa. T49 conserva pendiente la limpieza definitiva del código local tras su publicación. Conservar la copia hasta esa prueba; no dejar servidores propios activos entre ensayos. [Evidencia](specs/007-carrera-de-asistencia/evidence.md), [revisión](specs/007-carrera-de-asistencia/review.md).
 
 
-Publicación 2026-10-26: PR [355](https://github.com/venturars/neoland-102026/pull/355) de la tarea 007, base staging, creada por instrucción expresa de Miguel aunque haya dependencias pendientes. Los estados anteriores describen la ejecución local y sus fechas; la PR actual es la referencia de publicación.
+Publicación 2026-10-26: PR [356](https://github.com/venturars/neoland-102026/pull/356) de la tarea 009, base staging, creada por instrucción expresa de Miguel aunque haya dependencias pendientes. Los estados anteriores describen la ejecución local y sus fechas; la PR actual es la referencia de publicación.
