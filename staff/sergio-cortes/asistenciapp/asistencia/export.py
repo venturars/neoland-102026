@@ -1,6 +1,6 @@
 """Exportación de la lista de asistencia a CSV (plan §2.6, CA-14).
 
-Módulo `export` y no `csv` para no tapar el módulo `csv` estándar.
+Se llama export.py y no csv.py para no tapar el módulo `csv` estándar.
 """
 
 import csv

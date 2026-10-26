@@ -9,7 +9,7 @@ import socket
 import sys
 from pathlib import Path
 
-from asistencia.infra.tunnel import TunnelError, start_tunnel
+from asistencia.tunnel import TunnelError, start_tunnel
 from asistencia.web.flask_app import create_app
 
 BASE_DIR = Path(__file__).parent
