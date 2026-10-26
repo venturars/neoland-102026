@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 2.2 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-23
+> Versión 3.0 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-26
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -32,6 +32,7 @@ El registro de asistencia no depende de una plataforma concreta. Las integracion
 ### P4 · Privacidad mínima
 - Del alumno solo se guarda el **nombre que él mismo escribe** y la **hora del registro**.
 - **Prohibido** guardar emails, IPs, identificadores de dispositivo o cualquier dato no imprescindible.
+- Excepción de la spec 006: la dirección de red puede guardarse solo para contar los intentos de registro y para la lista de bloqueo de este control. No forma parte del registro de asistencia. No se guarda para ningún otro fin.
 - Los datos se **almacenan** solo en local (SQLite). Ningún servicio de terceros los guarda.
 - Para que los alumnos lleguen a la app desde sus casas, el tráfico puede **pasar cifrado (HTTPS)** por un proveedor de túnel (p. ej. Cloudflare). Ese proveedor no los almacena, pero técnicamente podría verlos en tránsito; por eso solo se envía lo imprescindible (nombre y código).
 
@@ -105,3 +106,4 @@ Cambiar el stack requiere enmendar esta constitución.
 | 2.0 | 2026-10-20 | §3: stack Node.js → Python (Flask + pytest). P3 pasa de "cero dependencias" a "dependencias mínimas" y permite Flask y pytest | Requisito nuevo: el proyecto debe hacerse en Python. Se elige Flask por ser simple y muy extendido, y pytest por su sintaxis sencilla |
 | 2.1 | 2026-10-20 | P4: distingue *almacenar* (solo en local) de *transitar* (puede pasar cifrado por un proveedor de túnel) | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08) |
 | 2.2 | 2026-10-23 | §4: ningún fichero de esta app sin spec local aprobado; issue, rama y pull request no sustituyen al spec; las specs de compañeros no autorizan. §7: carpeta `staff/maria-osipuk/asistenciapp/`. §8: aprueba quien trabaja en esa carpeta | El texto solo frenaba el código; README y tests podían cambiarse sin spec. Las reglas nombraban otra carpeta (spec 002, issue #287) |
+| 3.0 | 2026-10-26 | P4: excepción para guardar la dirección de red solo al contar intentos de registro y en la lista de bloqueo | La issue #400 pide ese tope y una lista que sobreviva al reinicio. La enmienda 1.1 no lo prohibía; este tope es un requisito nuevo, no una protección general contra scripts |

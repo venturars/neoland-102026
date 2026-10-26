@@ -76,7 +76,8 @@ asistenciapp/
 │   ├── domain/
 │   │   ├── codes.py       # códigos
 │   │   ├── names.py       # nombres
-│   │   └── session.py     # la clase existe, está abierta y el código vale
+│   │   ├── session.py     # la clase existe, está abierta y el código vale
+│   │   └── attempts.py    # tope de intentos y error de bloqueo
 │   ├── usecases/
 │   │   └── attendance.py  # acciones de profesor y alumno
 │   ├── storage/
@@ -143,6 +144,7 @@ Una funcionalidad está terminada cuando:
 | `003-aclarar-instrucciones-arranque` | ✅ Implementada (2026-10-23) | T01–T03 hechas en el README, sin cambio de requisitos |
 | `004-quitar-referencias-personales` | ✅ Implementada (2026-10-23) | Referencias personales quitadas de la documentación. Instrucciones con un usuario genérico |
 | `005-reorganizar-documentos-y-arquitectura` | ✅ Implementada (2026-10-23) | Dominio, acciones, almacenamiento y entrada HTTP. Correcciones de pruebas, tipos y tabla de estado. Tres fallos de validación quedan para otra spec |
+| `006-limitar-intentos-por-ip` | ✅ Implementada (2026-10-26) | Tope de 5 intentos por segundo y 20 por minuto. Con el túnel, la dirección es `CF-Connecting-IP` si la conexión es la de este ordenador. Falta la prueba de quien trabaja en esta carpeta |
 | Bot de Discord | Idea futura, sin número | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.

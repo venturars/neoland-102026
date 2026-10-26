@@ -119,7 +119,11 @@ Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una 
 
 ## 8. Privacidad
 
-- Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails ni IPs.
+- Del alumno, en la asistencia, solo se guarda **el nombre que escribe** y **la hora**.
+- Para el tope de intentos también se guarda la **dirección de red**, solo para contar esos intentos y para la lista de bloqueo. No va junto al nombre ni a la hora.
+- Sin túnel, esa dirección es la de la conexión a este ordenador. Quien se registra aquí comparte el contador.
+- Con `--tunel`, la conexión sigue siendo la de este ordenador. Si Cloudflare envía una sola dirección de visitante (`CF-Connecting-IP`), esa es la que cuenta. Si falta o no es una sola dirección, cuenta la conexión local. Una conexión que no sea la de este ordenador no usa esa cabecera.
+- Varios alumnos pueden compartir una dirección pública: el bloqueo es de ese grupo, no de toda la clase por usar el túnel. Un programa en este ordenador puede presentar otra dirección. La aplicación no identifica para siempre a una persona ni comprueba si la dirección es fija.
 - El límite "un registro por navegador" se guarda **solo en el navegador del alumno**, no en el servidor.
 - Quitar un registro lo **borra de verdad** (no queda en ninguna papelera).
 - Los datos se guardan **solo en tu ordenador** (`data/`, que no se sube a git).
