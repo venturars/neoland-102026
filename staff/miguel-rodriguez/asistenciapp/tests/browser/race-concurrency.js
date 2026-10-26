@@ -1,9 +1,9 @@
 // Segundo ensayo: salida en dos ventanas, teclado, presupuesto real y cierre con un ausente.
 async (page) => {
- const base='http://127.0.0.1:8767', headers={'X-Teacher-Token':'007-local-test'}, browser=page.context().browser();
+ const base='http://127.0.0.1:8769', headers={'X-Teacher-Token':'009-local-test'}, browser=page.context().browser();
  const contexts=[],checks=[];const check=(v,label)=>{if(!v)throw new Error(label);checks.push(label);};
  const created=await(await page.request.post(base+'/api/sessions/races',{headers,data:{title:'Convivencia de pilotos'}})).json();
- await page.goto(base+`/race-display.html?r=${created.id}#t=007-local-test`);await page.emulateMedia({reducedMotion:'reduce'});await page.locator('#race-content').waitFor({state:'visible'});
+ await page.goto(base+`/race-display.html?r=${created.id}#t=009-local-test`);await page.emulateMedia({reducedMotion:'reduce'});await page.locator('#race-content').waitFor({state:'visible'});
  const link=await page.locator('#join-link').getAttribute('href');
  try {
   const students=[];
@@ -14,7 +14,7 @@ async (page) => {
    await p.locator('#own-view').waitFor({state:'visible'});students.push(p);
   }
   const keyboardName=await students[0].locator('#own-name').innerText();check(Boolean(keyboardName),'Tabulación y envío con Enter');
-  const ctx=await browser.newContext();contexts.push(ctx);const secondTeacher=await ctx.newPage();await secondTeacher.goto(base+`/race-display.html?r=${created.id}#t=007-local-test`);await secondTeacher.locator('#go').waitFor({state:'visible'});
+  const ctx=await browser.newContext();contexts.push(ctx);const secondTeacher=await ctx.newPage();await secondTeacher.goto(base+`/race-display.html?r=${created.id}#t=009-local-test`);await secondTeacher.locator('#go').waitFor({state:'visible'});
   await page.locator('#go').focus();await page.keyboard.press('Enter');await page.waitForFunction(()=>document.querySelector('#lobby-controls').hidden);
   const started=await(await page.request.get(base+`/api/sessions/${created.id}/race`,{headers})).json();
   await page.reload();await page.locator('#race-content').waitFor({state:'visible'});

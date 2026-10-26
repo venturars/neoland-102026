@@ -1,6 +1,6 @@
 # Pilotos de Halloween
 
-Quince adaptaciones SVG originales realizadas para esta app tras consultar cada imagen final y los prompts de exercises/halloween/ el 2026-10-25. No se copian fotos, audios ni los archivos originales. Se adapta el personaje ficticio, no la apariencia física de sus autores. Cart y estilo de trazos compartidos, accesorios y siluetas propios.
+Quince adaptaciones SVG originales realizadas para esta app tras consultar cada imagen final y los prompts de exercises/halloween/ el 2026-10-25. No se copian fotos, audios ni los archivos originales. Se adapta el personaje ficticio, no la apariencia física de sus autores. Kart y estilo de trazos compartidos, accesorios y siluetas propios.
 
 Las correspondencias de alumnos se reciben del roster de 008; este archivo acredita los dibujos y no crea otra lista ejecutable. La carpeta de referencia tiene el mismo slug salvo Ajolote y Vampire-king-Leo, que conservan esas mayúsculas en exercises/. Fantasmiko se revisó por su imagen final, al no tener prompt.txt.
 
@@ -23,3 +23,8 @@ Las correspondencias de alumnos se reciben del roster de 008; este archivo acred
 | Victor Chang | vicwolf | exercises/halloween/vicwolf/ | orejas de lobo, pelaje castaño y sudadera gris | #5889a6 |
 
 Los SVG nuevos no contienen scripts, eventos, enlaces externos ni fuentes remotas. No se reutilizó código o arte de Spell UI: solo se consultó su composición del QR como referencia. La autoría de los ejercicios originales corresponde a sus autores en el repositorio de clase.
+
+
+## Simplificación 009 · 2026-10-26
+
+Se conservaron los quince slugs y las correspondencias anteriores. Los dibujos usan un encuadre 120 × 80, carrocería de pocas formas y dos ruedas; se quitaron alerones, reflejos, escapes y piezas menores del kart. Se mantienen los rasgos grandes de la tabla. Los pilotos se revisaron juntos en 150 × 100 y 54 × 36, también en escala de grises. Galería: [pilotos](../specs/009-refinar-presentacion-de-carrera/evidence/pilotos.png). Los 43 archivos originales de Halloween conservan sus hashes.

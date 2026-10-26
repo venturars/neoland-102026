@@ -139,11 +139,11 @@ Con `python app.py` se cuenta la dirección de la conexión directa y se ignoran
 ## Carrera de Halloween
 
 1. En el panel, marca **Carrera de Halloween** antes de abrir la clase. La presentación muestra los quince nombres y sus personajes del ejercicio de Halloween sobre karts distintos.
-2. Comparte esa pantalla. Los alumnos escanean el QR o abren **Abrir entrada sin cámara**, eligen un nombre libre y pulsan **Entrar a la parrilla**. Aparecer como «Listo» todavía no registra asistencia ni da un puesto.
-3. Cuando estén los participantes previstos, pulsa **Empezar carrera**. No hace falta esperar a los quince. Se cierra la entrada, se fija el grupo y comienza una única cuenta atrás de tres segundos.
+2. Comparte esa pantalla. Los alumnos escanean el QR o abren **Abrir entrada**, eligen un nombre libre y pulsan **Entrar**. Aparecer como «Listo» todavía no registra asistencia ni da un puesto.
+3. Cuando estén los participantes previstos, pulsa **Empezar**. No hace falta esperar a los quince. Se cierra la entrada, se fija el grupo y comienza una única cuenta atrás de tres segundos.
 4. Al terminar la cuenta atrás aparece el código de cuatro cifras en la presentación. Cada alumno lo escribe en su teléfono: gana quien confirma primero, no quien escaneó primero. Cada plaza tiene **tres envíos totales, incluido el correcto**. Los códigos rotan cada treinta segundos.
 5. El alumno recibe su confirmación y puesto enseguida. Cuando todos los participantes fijados registran asistencia, se cierra la carrera. Si alguien falta, se desconecta o agota sus intentos, pulsa **Terminar carrera** y confirma el cierre.
-6. Los pilotos que registraron asistencia recorren la pista en una llegada de unos ocho segundos, en el orden guardado. Después aparecen el podio y la clasificación. Con movimiento reducido o al recargar una carrera cerrada, el resultado se muestra directamente. Con uno o dos finalistas se conceden solo esas medallas; sin registros no hay ganadores.
+6. Se muestra al ganador dos segundos y después la cuenta 3–2–1: cinco segundos de anticipación en total, con los karts quietos en la salida. Luego los pilotos registrados recorren la pista durante unos ocho segundos, en el orden guardado, y aparecen el podio y la clasificación. La confirmación y el puesto del alumno llegan inmediatamente; no esperan esta secuencia. Con movimiento reducido o al recargar una carrera cerrada, el resultado se muestra directamente. Con uno o dos finalistas se conceden solo esas medallas; sin registros no hay ganadores.
 
 **Descargar asistencia** conserva el CSV de asistencia. **Quitar** retira una asistencia y recalcula los puestos, pero no devuelve intentos ni vuelve a abrir la plaza. El nombre **neoland / kart** de la cabecera vuelve al panel para consultar otras clases; **Pantalla completa** amplía la presentación.
 
@@ -171,3 +171,12 @@ python -m pytest -q tests/test_race_qr.py tests/test_race_live_http.py
 ```
 
 Los ensayos de navegador, capturas y sus resultados están en [la evidencia de 007](specs/007-carrera-de-asistencia/evidence.md). El backend y sus límites están documentados en [008](specs/008-proteger-el-registro-de-carrera/evidence.md).
+
+
+## Presentación 009
+
+La presentación mantiene los karts en la salida mientras se registran los alumnos; sus puestos se actualizan como texto. El recorrido ocurre una sola vez después del cierre y la anticipación. La escena final muestra hasta quince finalistas en una pantalla de 1366 × 768 sin desplazamiento manual. La clasificación completa sigue debajo del podio.
+
+Recargar una carrera cerrada muestra directamente el resultado. Con movimiento reducido tampoco hay espera de cinco segundos ni recorrido animado. Si el profesor retira una asistencia durante la celebración, esta se interrumpe y se muestra la clasificación corregida. La cuenta atrás inicial para abrir el registro y la cuenta final de la animación son independientes.
+
+Evidencia del diseño, secuencia y regresión: [009](specs/009-refinar-presentacion-de-carrera/evidence.md). El servidor continúa ejecutándose en el ordenador del profesor; `python app.py --tunel` permite que los alumnos entren por HTTPS mientras está encendido.

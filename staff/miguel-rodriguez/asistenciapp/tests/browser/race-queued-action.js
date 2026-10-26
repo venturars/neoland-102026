@@ -1,6 +1,6 @@
 // Una acción explícita espera la consulta en curso, sin perder clics ni superponer fetch.
 async(page)=>{
- const base='http://127.0.0.1:8767',headers={'X-Teacher-Token':'007-local-test'};
+ const base='http://127.0.0.1:8769',headers={'X-Teacher-Token':'009-local-test'};
  const race=await(await page.request.post(base+'/api/sessions/races',{headers,data:{title:'Acción durante consulta'}})).json();
  const state=await(await page.request.get(base+`/api/sessions/${race.id}/race`,{headers})).json();
  const ctx=await page.context().browser().newContext();let release;

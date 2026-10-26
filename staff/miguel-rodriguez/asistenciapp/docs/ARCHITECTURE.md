@@ -98,3 +98,16 @@ La apertura de conexión y las consultas previas reconocen los códigos SQLite B
 - `race.css` adapta parrilla, controles, formulario y podio a móvil y escritorio; prefers-reduced-motion omite la llegada animada. Los quince SVG locales no contienen scripts, eventos ni recursos remotos. Referencias en [RACE-ASSETS.md](RACE-ASSETS.md).
 
 007 no modifica las tablas ni los casos de uso de 008. Continúan vigentes el bloqueo de rutas normales para una carrera, las tres reservas por plaza, la caducidad previa a recuperar resultados y la limpieza del backend. Pruebas y límites reales: [evidencia de 007](../specs/007-carrera-de-asistencia/evidence.md).
+
+
+## Presentación 009
+
+`race-theme.css`, acotado a `body.race-ui`, comparte paleta y controles entre panel y pantallas de carrera. `race.css` conserva la disposición. La entrada normal del alumno sigue con sus estilos anteriores. No se añaden dependencias, rutas, tablas o estados de negocio.
+
+`race-finale.js` calcula tramos decorativos con tiempo recibido: ganador 0–2000 ms; 3/2/1 entre 2000 y 5000; llegada hasta 13000; podio después. Calcula la duración creciente de cada puesto confirmado, sin ordenar resultados. Sus pruebas se ejecutan con `node --test tests/browser/test-race-finale.mjs`.
+
+`race-display.js` mantiene una ejecución local por cierre observado, con instante monotónico y firma de checkins. El polling no repone el reloj. El temporizador visual existente dibuja el tramo; animationend y promesas de animaciones no deciden el final. La primera consulta ya cerrada muestra directamente resultados. La ocultación pausa movimientos y, al volver, una consulta fresca valida el resultado antes de representar el progreso real. Retirada, pérdida de autorización, movimiento reducido y salida de página cancelan la ejecución anterior.
+
+`race-renderer.js` asocia resultados y nodos por clave de plaza del roster y anima desde el origen hacia la meta. Registrar solo actualiza el estado y puesto; CSS no desplaza el kart. Las medidas se recalculan tras resize manteniendo progreso y duraciones. La escena final usa el mismo roster, oculta los no registrados durante el recorrido y conserva la clasificación completa y las acciones del profesor. El podio se dibuja solo con las asistencias vigentes.
+
+El reloj final es local a la presentación, distinto del startsAt compartido del registro. No identifica personas ni concede permisos de comprobar códigos. Evidencia: [009](../specs/009-refinar-presentacion-de-carrera/evidence.md).
