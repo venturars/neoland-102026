@@ -51,8 +51,8 @@ Se hacen en orden. Primero el test de esa tarea, después el código. `static/` 
   - *Cubre:* CA-01, CA-02, CA-04, CA-05.
   - *Hecha cuando:* la acción pide la dirección y los tests anteriores a T05 siguen en verde.
 
-- [x] **T07** · En `app.py`, pasar `request.remote_addr` a `check_in` y responder 429 cuando salta `Banned`.
-  - `ProxyFix` sigue sin fiarse de `X-Forwarded-For`. No se lee la dirección del cuerpo ni de una cabecera. `app.py` no abre el fichero.
+- [x] **T07** · En `app.py`, pasar la dirección contada a `check_in` y responder 429 cuando salta `Banned`.
+  - `ProxyFix` sigue sin fiarse de `X-Forwarded-For`. No se lee la dirección del cuerpo. `CF-Connecting-IP` solo cuenta con `--tunel`. `app.py` no abre el fichero.
   - *Cubre:* CA-01, CA-03, CA-04, CA-05, CA-06, CA-07.
   - *Hecha cuando:* `pytest tests/test_rate_limit.py` pasa.
 

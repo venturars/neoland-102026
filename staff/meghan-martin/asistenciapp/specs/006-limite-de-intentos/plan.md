@@ -10,7 +10,9 @@ Este plan dice cómo se cumple la spec. Cada decisión nombra el criterio (`CA-x
 
 El alumno se apunta como hasta ahora. Antes, la app mira la dirección del ordenador que envió el intento.
 
-Esa dirección es la de la conexión (`request.remote_addr`). No se lee del formulario ni de una cabecera. Quien escribe otra dirección no cambia la que se cuenta (CA-07). `ProxyFix` sigue sin fiarse de `X-Forwarded-For`.
+Esa dirección es la de la conexión (`request.remote_addr`). No se lee del formulario. Quien escribe otra dirección no cambia la que se cuenta (CA-07). `ProxyFix` sigue sin fiarse de `X-Forwarded-For`.
+
+Con `--tunel`, la conexión directa es este ordenador, porque el túnel entra por ahí. Entonces se cuenta `CF-Connecting-IP`, si es una sola dirección pública. Sin `--tunel` esa cabecera se ignora. Así, varios alumnos por el enlace público no comparten el bloqueo (CA-10).
 
 Si ese ordenador ya está bloqueado, el intento no apunta a nadie y responde con el aviso. Si no lo está, el intento se anota. Con más de 5 en el último segundo, o más de 20 en el último minuto, el ordenador entra en la lista de bloqueo y la respuesta es el mismo aviso. Con 5 y con 20 todavía se puede apuntar (CA-01, CA-02, CA-04, CA-05).
 
