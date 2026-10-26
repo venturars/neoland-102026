@@ -134,3 +134,28 @@ Una dirección puede intentar registrarse como máximo cinco veces en un segundo
 El formulario muestra el motivo del rechazo. Las páginas, consultas y operaciones del profesor siguen disponibles. Personas que comparten una dirección pública comparten los límites: se distingue la conexión, no la identidad de cada alumno.
 
 Con `python app.py` se cuenta la dirección de la conexión directa y se ignoran las cabeceras que intenten sustituirla. Con `python app.py --tunel`, el registro exige la dirección de visitante comunicada por el conector Cloudflare local; si falta o no es válida se rechaza con un aviso, sin inventar una dirección. En ese modo el registro directo por localhost sin el origen del túnel se rechaza, aunque las consultas locales siguen funcionando. La aplicación continúa escuchando únicamente en 127.0.0.1.
+
+
+## Backend de carrera (008)
+
+El contrato de seguridad de [008](specs/008-proteger-el-registro-de-carrera/spec.md) permite preparar una carrera, ocupar plazas, dar la salida y registrar asistencia desde la API. La pantalla de karts y el QR de 007 todavía no están implementados. Contrato completo: [arquitectura](docs/ARCHITECTURE.md#registro-de-carrera-008).
+
+La lista local incluye los quince nombres y personajes. El profesor prepara la carrera y comparte su entrada durante el lobby. Cada alumno elige un nombre libre; Go fija el grupo y abre el registro tres segundos después. Gana quien confirma primero el código, no quien entró primero al lobby. El profesor puede cerrar aunque falten participantes.
+
+Cada plaza tiene tres oportunidades totales, incluida la correcta; las quince plazas suman como máximo cuarenta y cinco evaluaciones. Cambiar dirección o navegador, girar el código o reiniciar no repone oportunidades. Si se pierde el acceso después de Go, no se entrega otro. Esta entrada sencilla permite elegir nombres ajenos: no verifica identidad.
+
+Los participantes de una carrera pueden compartir Wi-Fi sin gastar el presupuesto de otros ni activar un bloqueo colectivo. Las clases normales conservan sus límites de cinco intentos por segundo y veinte por minuto con bloqueo permanente por dirección.
+
+Si la base está ocupada antes de reservar, la API devuelve 503 con Retry-After: 1: se puede repetir el mismo envío, sin generar otro identificador. Una reserva confirmada queda gastada aunque el resultado falle. Ante 202/unconfirmed o un error técnico, se consulta /me o se repite el mismo operation_id con el mismo contenido; eso no vuelve a evaluar el código. Si sigue abierto y queda presupuesto, el alumno puede decidir hacer otro envío con un UUID nuevo. Después de un éxito, el resultado se recupera hasta dos horas desde la preparación; ni cerrar ni reiniciar prolonga ese plazo.
+
+Para comprobar el backend, con el entorno activado y desde la carpeta del proyecto:
+
+```bash
+python -m pytest -q tests/test_race_domain.py tests/test_race_storage.py tests/test_race_usecases.py tests/test_race_concurrency.py tests/test_race_api.py
+python -m pytest -q tests/test_race_live_http.py
+python -m pytest -q
+```
+
+La segunda comprobación levanta un servidor solo en loopback sobre un puerto libre, usa quince clientes y cincuenta envíos adversarios con datos ficticios, lo detiene y comprueba que el puerto queda libre. No necesita un túnel. Las pruebas usan bases temporales; no añaden asistencias a data/asistencia.db.
+
+La API requiere un origen real configurado para carreras. El arranque lo obtiene de su URL local o túnel; una factoría de desarrollo puede recibir race_origin y race_local_http=True únicamente para loopback. La entrada del profesor sigue protegida con X-Teacher-Token. No publiques una instancia HTTP de desarrollo en la red de clase.
