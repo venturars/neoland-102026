@@ -1,6 +1,6 @@
 # Tareas 008 · Proteger el registro de carrera
 
-Estado: spec, plan y tareas aprobados expresamente por Miguel el 2026-10-24; ejecución local autorizada. Implementada y verificada en copia local autorizada el 2026-10-24; 218 pruebas de aplicación pasan; también pasan las dos reproducciones originales del review. Resultado local aprobado por Miguel el 2026-10-25; publicación pendiente. Enmienda 4.0 aplicada solo en esta copia; la constitución de la copia original sigue intacta. [Evidencia por criterio](evidence.md).
+Estado: spec, plan y tareas aprobados expresamente por Miguel el 2026-10-24; ejecución local autorizada. Implementada y verificada en copia local autorizada el 2026-10-24; 218 pruebas de aplicación pasan; también pasan las dos reproducciones originales del review. Resultado local aprobado por Miguel el 2026-10-25; publicada en PR #354 el 2026-10-26, pendiente de revisión e integración. Enmienda 4.0 aplicada en esta rama; la constitución del checkout original no se modificó durante la implementación local. [Evidencia por criterio](evidence.md).
 
 ## Reglas de ejecución
 
@@ -212,3 +212,9 @@ La revisión posterior no encontró otros defectos que bloqueen la aprobación d
 ## Publicación autorizada · 2026-10-26
 
 Miguel ordenó «sube todas las prssss omggg». Esta instrucción sustituye la espera de publicación condicionada a las predecesoras: se publica esta tarea ahora con base fija staging y sus dependencias pendientes explícitas. La PR es [#354](https://github.com/venturars/neoland-102026/pull/354), asignada a mglnglxx. No se autoriza merge sin las revisiones requeridas. Las aprobaciones y pruebas anteriores no se atribuyen a compañeros. Se conservan commits separados por tarea; los cambios acumulados de la base se explican en la descripción y se ofrece comparación exclusiva del paso.
+
+## Preparación final para revisión · 2026-10-26
+
+Miguel autorizó terminar y publicar el trabajo pendiente. Se incorporó la rama actualizada de 006, que ya contiene el staging posterior a #252 y #284. La aplicación de 008 conserva su código anterior; la comparación exclusiva contra 006 contiene 27 archivos de este paso. La PR sigue apuntando a staging y debe fusionarse después de #353.
+
+Nueva ejecución en una copia desechable, con datos ficticios y el entorno existente: `PYTHONDONTWRITEBYTECODE=1 python -m pytest -q -p no:cacheprovider`, **218 pruebas aprobadas en 5,23 s**. La copia se retiró al terminar; no se iniciaron servicios persistentes. La aprobación del backend por Miguel consta arriba; no equivale a afirmar que probó manualmente cada escenario ni a una aprobación de compañeros. Las notas anteriores de ausencia de PR describen el estado del 24 de octubre y quedan sustituidas por la publicación de #354.

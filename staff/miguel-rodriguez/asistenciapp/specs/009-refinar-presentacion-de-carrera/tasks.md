@@ -1,6 +1,6 @@
 # Tareas 009 · Presentación de carrera y celebración final
 
-Estado: revisadas y aprobadas bajo autorización expresa de Miguel el 2026-10-26. Implementación local realizada; comprobaciones y revisión documentadas; demo de Miguel y publicación pendientes. [Spec aprobada](spec.md), [plan aprobado](plan.md), [issue #332](https://github.com/venturars/neoland-102026/issues/332). Las casillas reflejan ejecución local; T41–T44 conservan sus pendientes humanos/servicios/publicación.
+Estado: revisadas y aprobadas bajo autorización expresa de Miguel el 2026-10-26. Implementación local realizada; comprobaciones y revisión documentadas; publicada en PR #356; aceptación visual de Miguel y revisión de compañeros pendientes. [Spec aprobada](spec.md), [plan aprobado](plan.md), [issue #332](https://github.com/venturars/neoland-102026/issues/332). Las casillas reflejan ejecución local; T41 y T44 conservan las revisiones humanas pendientes; T42 y T43 se completaron según el cierre del 26 de octubre.
 
 ## Reglas de ejecución
 
@@ -91,9 +91,9 @@ Para cada activo, contrastar la imagen de referencia y los rasgos acreditados en
 
 - [ ] T41 · **Demostración real en navegador.** Abrir la app implementada de 009 con datos ficticios para Miguel y permitirle comprobar diseño, karts y final; no abrir la spec como sustituto de la demo. Mostrar qué versión está sirviendo. Registrar su respuesta real y corregir fallos antes de dar el resultado por aceptado. Si prueba el QR en móvil, usar el modo HTTPS/origen ya existente, no debilitar acceso para facilitarlo. Cubre CA-01–CA-14.
 
-- [ ] T42 · **Cerrar servicios y conservar trabajo.** Al terminar los ensayos, detener únicamente servidores y túneles propios, comprobar sus puertos libres y borrar bases/credenciales temporales de prueba. Conservar el código de 009 hasta que esté guardado y publicado: no borrar la única implementación. Si Miguel pide mantener la demo abierta mientras prueba, registrar ese estado y cerrarla al acabar. Cubre CA-09, CA-13.
+- [x] T42 · **Cerrar servicios y conservar trabajo.** Al terminar los ensayos, detener únicamente servidores y túneles propios, comprobar sus puertos libres y borrar bases/credenciales temporales de prueba. Conservar el código de 009 hasta que esté guardado y publicado: no borrar la única implementación. Si Miguel pide mantener la demo abierta mientras prueba, registrar ese estado y cerrarla al acabar. Cubre CA-09, CA-13.
 
-- [ ] T43 · **Publicar cuando exista base exclusiva.** Repetir T02 contra staging actual. Con el momento Git autorizado, usar la rama/PR existente si ya existe; si no, seguir el proceso de apertura draft del repositorio. Guardar cambios en commits pequeños por documentos, tema/vistas, celebración, activos y verificación. Título de #332, assignee mglnglxx, Closes #332 y Development comprobados; diff exclusivo de 009, sin datos de ensayo. No publicar acumulando 007/008 ni cambiar base para recortarlo después. Si falta la base o la autorización, mantener pendiente esta tarea e informar. Cubre CA-01–CA-14.
+- [x] T43 · **Publicar cuando exista base exclusiva.** Repetir T02 contra staging actual. Con el momento Git autorizado, usar la rama/PR existente si ya existe; si no, seguir el proceso de apertura draft del repositorio. Guardar cambios en commits pequeños por documentos, tema/vistas, celebración, activos y verificación. Título de #332, assignee mglnglxx, Closes #332 y Development comprobados; diff exclusivo de 009, sin datos de ensayo. No publicar acumulando 007/008 ni cambiar base para recortarlo después. Si falta la base o la autorización, mantener pendiente esta tarea e informar. Cubre CA-01–CA-14.
 
 - [ ] T44 · **Revisión de compañeros e integración.** Aplicar la autorización vigente de Miguel para solicitar revisión; comprobar revisores con acceso —incluidos los solicitados Meghan, Jimena y Sergio— y usar su lista vigente, sin pedir otra vez un permiso ya concedido. Pasar de draft según el flujo autorizado. No mergear sin dos aprobaciones posteriores al último push y autorización del momento; destino staging mediante merge commit. Comprobar el estado de #332 después de integrar; no asumir cierre automático por Closes si staging no es la rama por defecto. Tramitar su cierre según la autorización vigente y registrar el resultado real. Cubre CA-13.
 
@@ -150,3 +150,12 @@ T41 iniciada: app real de 009 abierta en navegador con tres participantes simula
 ## Publicación autorizada · 2026-10-26
 
 Miguel ordenó «sube todas las prssss omggg». Esta instrucción sustituye la espera de publicación condicionada a las predecesoras: se publica esta tarea ahora con base fija staging y sus dependencias pendientes explícitas. La PR es [#356](https://github.com/venturars/neoland-102026/pull/356), asignada a mglnglxx. No se autoriza merge sin las revisiones requeridas. Las aprobaciones y pruebas anteriores no se atribuyen a compañeros. Se conservan commits separados por tarea; los cambios acumulados de la base se explican en la descripción y se ofrece comparación exclusiva del paso.
+
+
+## Preparación final para revisión · 2026-10-26
+
+Se incorporó la rama actualizada de 007, que contiene el staging posterior a #252 y #284. El código de 009 permanece idéntico al publicado anteriormente; su comparación exclusiva contra 007 contiene 57 archivos y no cambia Python, reglas de seguridad, esquema o dependencias. La PR #356 conserva destino staging y se fusiona después de #355. La autorización de publicación acumulada del 26 de octubre sustituye la espera original de T43.
+
+Nueva ejecución en copia desechable con datos ficticios y el entorno existente: `PYTHONDONTWRITEBYTECODE=1 python -m pytest -q -p no:cacheprovider`, **226 pruebas aprobadas en 5,25 s**. Se eliminó esa copia; los puertos de las demos 8769, 8770 y 8771 no tienen procesos escuchando. Se retiraron sus tres archivos temporales de acceso y metadatos y los directorios ficticios identificados bajo /private/tmp. Se conservaron código, entorno y datos de trabajo. T42 queda completada.
+
+T41 sigue siendo aceptación visual de Miguel: no se inventa una respuesta posterior a la demo. T44 conserva la revisión de compañeros y el merge pendientes. Estas revisiones humanas no se atribuyen a las pruebas automatizadas.

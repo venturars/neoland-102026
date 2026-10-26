@@ -23,6 +23,7 @@ first-app/
     users-gender-count.js
   clients/
     terminal/           Primer cliente. Sirve de test manual
+    jupyter/            Cliente que se abre con el Jupyter de la app
   docs/
     CONSTITUTIONS.md    Esta base
     specs/
