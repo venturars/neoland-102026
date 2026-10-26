@@ -25,8 +25,9 @@ Each notebook has two cells, nothing else:
 1. Markdown: `# <title>`, then `## What it does`, `## What happens to the saved users`, `## Feature it uses`, `## Failures it can show`.
 2. Code (Python): walks up from the current folder to the one with `logic/`, and if there is none it stops with `Cannot find first-app.`; runs `node --no-warnings --input-type=module -e <program>` there with `FORCE_COLOR=1`; prints its stdout, and its stderr only if node fails.
 
-The Node program imports the `logic/` functions and `cli-table3`, and:
+The Node program imports the `logic/` functions and `cli-table3` with `await import(...)` inside its outer `try/catch`, so a package or file that does not load also prints only `error.message`, and:
 
+- runs the steps after the practice user is created inside `try { ... } finally { deleteUser(...) }`, so the practice user is deleted even if a step fails unexpectedly;
 - prints a user as a table with the columns `id`, `name`, `email`, `createdAt`, `updatedAt`;
 - prints a list as one row per user; with no users, only the header;
 - prints the count with the columns `women`, `men`, `genderUndefined`;

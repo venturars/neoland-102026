@@ -27,3 +27,9 @@
         Run `npx prettier --check .`: every file passes.
 15. [x] In `.gitignore`, add `.ipynb_checkpoints/`.
         Open a notebook with `pnpm jupyter`: `git status` does not show `clients/jupyter/.ipynb_checkpoints/`.
+16. [x] In each notebook, move the `import` lines inside the outer `try` as `await import(...)`.
+        Run a copy with `cli-table3` misspelled: it prints only `Cannot find package …`, no stack trace.
+17. [x] In `create-user`, `get-user`, `get-user-by-email` and `update-user`, wrap the steps after the practice user is created in `try/finally` and call `deleteUser` in the `finally`.
+        Run a copy that throws after creating it: `listUsers()` has the same number of users before and after.
+18. [x] Run every notebook again, with Ollama running, so the saved output is what really came out.
+        `list-users.ipynb` shows the same rows as in step 4.
