@@ -4,5 +4,11 @@
   "type": "module",
   "dependencies": {
     "openai": "7.39.0"
+  },
+  "scripts": {
+    "jupyter": "node scripts/jupyter.js"
+  },
+  "devDependencies": {
+    "cli-table3": "0.6.5"
   }
 }

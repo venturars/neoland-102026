@@ -4,7 +4,7 @@ from datetime import timezone
 
 import pytest
 
-from asistencia.domain.export import to_csv
+from asistencia.export import to_csv
 
 
 def rows(*pairs):

@@ -31,6 +31,58 @@ CREATE TABLE IF NOT EXISTS checkins (
   checked_at  TEXT NOT NULL,
   UNIQUE (session_id, name_key)
 );
+
+CREATE TABLE IF NOT EXISTS registration_attempts (
+  address TEXT NOT NULL,
+  attempted_at REAL NOT NULL
+);
+CREATE INDEX IF NOT EXISTS registration_attempts_address_time
+ON registration_attempts(address, attempted_at);
+CREATE TABLE IF NOT EXISTS blocked_addresses (
+  address TEXT PRIMARY KEY
+);
+CREATE TABLE IF NOT EXISTS races (
+  session_id TEXT PRIMARY KEY REFERENCES sessions(id),
+  prepared_at REAL NOT NULL,
+  starts_at REAL,
+  expires_at REAL NOT NULL,
+  join_secret TEXT
+);
+CREATE INDEX IF NOT EXISTS races_expiry ON races(expires_at);
+CREATE TABLE IF NOT EXISTS race_slots (
+  session_id TEXT NOT NULL REFERENCES races(session_id),
+  roster_key TEXT NOT NULL,
+  display_name TEXT NOT NULL,
+  character_slug TEXT NOT NULL,
+  included_at_start INTEGER NOT NULL DEFAULT 0 CHECK(included_at_start IN (0,1)),
+  state TEXT NOT NULL DEFAULT 'pendiente' CHECK(state IN ('pendiente','listo','registrado','retirado')),
+  checkin_id INTEGER REFERENCES checkins(id) ON DELETE SET NULL,
+  PRIMARY KEY(session_id,roster_key)
+);
+CREATE TABLE IF NOT EXISTS race_access (
+  session_id TEXT NOT NULL,
+  roster_key TEXT NOT NULL,
+  credential_hash TEXT NOT NULL UNIQUE,
+  PRIMARY KEY(session_id,roster_key),
+  FOREIGN KEY(session_id,roster_key) REFERENCES race_slots(session_id,roster_key)
+);
+CREATE TABLE IF NOT EXISTS race_operations (
+  session_id TEXT NOT NULL,
+  roster_key TEXT NOT NULL,
+  operation_id TEXT NOT NULL,
+  attempt_no INTEGER NOT NULL CHECK(attempt_no BETWEEN 1 AND 3),
+  payload_fingerprint TEXT NOT NULL,
+  state TEXT NOT NULL DEFAULT 'reserved' CHECK(state IN ('reserved','completed')),
+  result_kind TEXT,
+  result_status INTEGER,
+  checkin_id INTEGER REFERENCES checkins(id) ON DELETE SET NULL,
+  PRIMARY KEY(session_id,roster_key,operation_id),
+  UNIQUE(session_id,roster_key,attempt_no),
+  FOREIGN KEY(session_id,roster_key) REFERENCES race_slots(session_id,roster_key),
+  CHECK((state='reserved' AND result_kind IS NULL AND result_status IS NULL AND checkin_id IS NULL)
+     OR (state='completed' AND result_kind IS NOT NULL AND result_status IS NOT NULL))
+);
+
 """
 
 
@@ -251,3 +303,97 @@ def remove_checkin(conn: sqlite3.Connection, session_id: str, checkin_id: int) -
             "DELETE FROM checkins WHERE id = ? AND session_id = ?", (checkin_id, session_id)
         )
     return cursor.rowcount == 1
+
+
+def purge_registration_attempts(conn: sqlite3.Connection, cutoff: float) -> None:
+    """Elimina globalmente intentos caducados dentro de la transacción llamante.
+
+    :param conn: conexión con transacción abierta.
+    :param cutoff: instante máximo que se elimina, inclusive.
+    :return: None.
+    :rtype: None
+
+    Usage::
+
+        purge_registration_attempts(conn, now - 60)
+    """
+    conn.execute("DELETE FROM registration_attempts WHERE attempted_at <= ?", (cutoff,))
+
+
+def address_is_blocked(conn: sqlite3.Connection, address: str) -> bool:
+    """Consulta si una dirección está en la lista persistente.
+
+    :param conn: conexión abierta.
+    :param address: dirección canónica.
+    :return: si existe su fila de bloqueo.
+    :rtype: bool
+
+    Usage::
+
+        address_is_blocked(conn, address)
+    """
+    return conn.execute("SELECT 1 FROM blocked_addresses WHERE address = ?", (address,)).fetchone() is not None
+
+
+def registration_attempt_times(conn: sqlite3.Connection, address: str) -> list[float]:
+    """Consulta tiempos de intentos sin interpretar límites.
+
+    :param conn: conexión abierta.
+    :param address: dirección canónica.
+    :return: tiempos guardados de esa dirección.
+    :rtype: list[float]
+
+    Usage::
+
+        registration_attempt_times(conn, address)
+    """
+    return [r[0] for r in conn.execute("SELECT attempted_at FROM registration_attempts WHERE address = ?", (address,))]
+
+
+def insert_registration_attempt(conn: sqlite3.Connection, address: str, instant: float) -> None:
+    """Añade un intento dentro de la transacción llamante.
+
+    :param conn: conexión abierta.
+    :param address: dirección canónica.
+    :param instant: instante Unix del intento.
+    :return: None.
+    :rtype: None
+
+    Usage::
+
+        insert_registration_attempt(conn, address, now)
+    """
+    conn.execute("INSERT INTO registration_attempts VALUES (?, ?)", (address, instant))
+
+
+def insert_blocked_address(conn: sqlite3.Connection, address: str) -> None:
+    """Guarda solo la dirección del bloqueo, sin datos de asistencia.
+
+    :param conn: conexión abierta.
+    :param address: dirección canónica.
+    :return: None.
+    :rtype: None
+
+    Usage::
+
+        insert_blocked_address(conn, address)
+    """
+    conn.execute("INSERT OR IGNORE INTO blocked_addresses VALUES (?)", (address,))
+
+
+def is_race(conn: sqlite3.Connection, session_id: str) -> bool:
+    """Consulta modo sin exigir que una base anterior ya esté inicializada.
+
+    :param conn: conexión de la acción existente.
+    :param session_id: clase consultada.
+    :return: si existe su fila de carrera; las bases anteriores son normales.
+    :rtype: bool
+
+    Usage::
+
+        is_race(conn, "clase")
+    """
+    exists = conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='races'").fetchone()
+    if exists is None:
+        return False
+    return conn.execute("SELECT 1 FROM races WHERE session_id=?", (session_id,)).fetchone() is not None

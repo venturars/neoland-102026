@@ -11,12 +11,13 @@ How to write code in this app. [CONSTITUTION.md](docs/CONSTITUTION.md) defines t
 Run from `staff/victor-chang/first-app`:
 
 ```
-pnpm install             # install the npm dependencies (openai)
+pnpm install             # install the npm dependencies
+pnpm jupyter             # open the Jupyter client (the first run creates .venv)
 npx prettier --write .   # format every file
 npx prettier --check .   # check formatting without changing files
 ```
 
-To try a feature, open its `clients/terminal/<name>.txt`, copy the whole block and paste it into Git Bash from `first-app`.
+To try a feature, open its `clients/terminal/<name>.txt`, copy the whole block and paste it into Git Bash from `first-app`, or run its notebook in `clients/jupyter/`.
 
 ## Naming
 
@@ -47,10 +48,12 @@ The messages, classes and codes are listed in the constitution. When writing cod
 
 ## Workflow
 
+Every change follows these steps, not only a new feature.
+
 1. Write `docs/specs/<name>/spec.md`.
 2. Write `plan.md`. If it has an open question, stop and ask.
 3. Write `tasks.md`, then follow it step by step, ticking each step.
 4. Write the code.
-5. Write the feature's `clients/terminal/<name>.txt` and paste it in Git Bash: the output matches its comments.
+5. For a new feature, write its `clients/terminal/<name>.txt` and paste it in Git Bash: the output matches its comments.
 6. Only touch files inside `staff/victor-chang/first-app/`.
 7. Commit on the personal branch. Push only when asked.

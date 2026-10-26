@@ -102,11 +102,7 @@ El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `findUserById
 
 Si la función usa varios datos, como `name`, `email` e `id`, recibe un solo `input` y lee ahí cada valor. Si el dato es uno solo, como `id`, `email` o `name`, el argumento es ese valor. No se mete en un objeto.
 
-`createUser(input)` lee `name` y `email`. `updateUser(input)` lee `id`, `name` y `email`. `deleteUser(id)` y `findUserById(id)` reciben el `id`. `findUserByEmail(email)` recibe el `email`. `findUserByName(name)` recibe el `name`. `listUsers()` no recibe argumentos. `usersGenderCount()` no recibe argumentos. Es async. Devuelve `{ woman, man, genderUndefined }`.
-
-Cada funcionalidad nueva añade su firma aquí y en el árbol, en el mismo desarrollo que crea su `logic/`, según el `plan.md`.
-
-Ningún fichero de `logic/` abre la base. Llaman a `queries/user.js`. Donde hay una fila, devuelven `id`, `name`, `email`, `createdAt` y `updatedAt`. `usersGenderCount()` no devuelve una fila: devuelve el conteo.
+Ningún fichero de `logic/` abre la base. Llaman a `queries/user.js`. Donde hay una fila, devuelven `id`, `name`, `email`, `createdAt` y `updatedAt`.
 
 El cuerpo sigue este orden, y no se mezcla:
 

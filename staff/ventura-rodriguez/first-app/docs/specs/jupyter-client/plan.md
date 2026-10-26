@@ -6,7 +6,9 @@ Cada documento llama al mismo sitio que su fichero de `clients/terminal/`. El te
 
 El Jupyter de la app es un `.venv` en `first-app`. No se versiona: el `.gitignore` de la raíz ya ignora `.venv/`. No es el Jupyter de Homebrew. Dentro va `notebook` `7.6.3`. El dibujo no se hace en Python.
 
-`package.json` tiene el script `jupyter`. Se lanza con `pnpm jupyter` desde `first-app`. Si no existe `.venv/bin/jupyter-notebook`, el script crea el `.venv` con `python3 -m venv .venv` si falta, e instala `notebook==7.6.3`. Si ese ejecutable ya está, no reinstala. Después arranca `.venv/bin/jupyter notebook clients/jupyter`. El navegador se abre en la interfaz de notebooks y la lista son los documentos de esa carpeta. No arranca `jupyter lab`. El kernel es el `python3` de ese `.venv`.
+`package.json` tiene el script `jupyter`. Se lanza con `pnpm jupyter` desde `first-app` y ejecuta `node scripts/start-jupyter.js`, compatible con Linux y Windows según `docs/specs/jupyter-cross-platform/plan.md`.
+
+El lanzador usa `.venv/bin/python` en Linux y `.venv/Scripts/python.exe` en Windows. Si ese Python no existe, busca Python 3 y crea el entorno. Comprueba que el entorno tenga `notebook==7.6.3` y lo instala solo si hace falta, preparando pip con `ensurepip` si no está disponible. Arranca el Python del entorno con `-m notebook clients/jupyter`. El navegador se abre en la interfaz de notebooks y la lista son los documentos de esa carpeta. El kernel es el Python de ese `.venv`.
 
 El dibujo lo hace `cli-table3` `0.6.5`. El encabezado en color sale solo si también está `@colors/colors` `1.6.1`. Esas dos dependencias ya están en `package.json` y se quedan.
 
@@ -34,7 +36,7 @@ Se tocan:
 
 En el árbol, la línea de `jupyter/` dice que se abre con el Jupyter de la app.
 
-El script llegó a arrancar `jupyter lab` con `jupyterlab` `4.6.4`. Ahora arranca `jupyter notebook` con `notebook` `7.6.3`. El `.venv` ya existe; falta `notebook` porque `.venv/bin/jupyter-notebook` no está. Los documentos y el árbol no se vuelven a cambiar.
+El script llegó a arrancar `jupyter lab` con `jupyterlab` `4.6.4`. Ahora arranca Notebook `7.6.3` con el Python del entorno local. Los documentos y el árbol no se vuelven a cambiar.
 
 ## Documentos
 
