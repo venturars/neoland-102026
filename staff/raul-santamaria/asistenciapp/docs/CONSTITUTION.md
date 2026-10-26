@@ -1,10 +1,6 @@
 # Constitución de AsistenciApp
 
-<<<<<<< Updated upstream
-> Versión 2.2 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-22
-=======
 > Versión 3.0 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-26
->>>>>>> Stashed changes
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -117,11 +113,7 @@ El detalle de carpetas y dependencias entre partes está en [ARCHITECTURE.md](AR
 | 1.1 | 2026-10-19 | §6: los códigos no deben poder adivinarse *a mano*; la protección contra scripts deja de ser obligatoria | En una clase el riesgo real es un alumno ausente, no un ataque automatizado. Evita añadir límites de intentos que no aportan al MVP (P2) |
 | 2.0 | 2026-10-20 | §3: stack Node.js → Python (Flask + pytest). P3 pasa de "cero dependencias" a "dependencias mínimas" y permite Flask y pytest | Requisito nuevo: el proyecto debe hacerse en Python. Se elige Flask por ser simple y muy extendido, y pytest por su sintaxis sencilla |
 | 2.1 | 2026-10-20 | P4: distingue *almacenar* (solo en local) de *transitar* (puede pasar cifrado por un proveedor de túnel) | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08) |
-<<<<<<< Updated upstream
-| 2.2 | 2026-10-22 | §3: la constitución vive en `docs/`. §4: ningún fichero de la app se modifica sin spec aprobado. §7–§8: carpeta `staff/raul-santamaria/asistenciapp/` y aprueba la persona que trabaja en esta carpeta | Alinear el documento con la carpeta real, endurecer el SDD y quitar referencias a otra persona |
-=======
 | 2.2 | 2026-10-22 | §3: la constitución vive en `docs/`. §4: ningún fichero de la app se modifica sin spec aprobado. §7–§8: carpeta `staff/<usuario>/asistenciapp/` y aprueba la persona que trabaja en esta carpeta | Alinear el documento con la carpeta real, endurecer el SDD y quitar referencias a otra persona |
 | 2.3 | 2026-10-23 | §4: una issue, una rama o una pull request no sustituyen al spec ni autorizan cambios sin spec aprobado | Spec 002, CA-05 |
 | 2.4 | 2026-10-26 | §3: nombra `asistencia/domain/`, `asistencia/usecases/`, `asistencia/storage/` y apunta a `ARCHITECTURE.md` | Spec 005: la constitución describe la organización nueva |
 | 3.0 | 2026-10-26 | P4: la IP pública estática se recuerda solo para contar intentos de registrarse y para la lista de bloqueo | Spec 006: contradice la prohibición total de guardar IPs |
->>>>>>> Stashed changes
