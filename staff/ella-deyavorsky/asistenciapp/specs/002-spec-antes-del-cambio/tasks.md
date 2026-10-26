@@ -18,7 +18,7 @@ Cómo leer esta lista:
   - Una issue, una rama o una pull request no sustituyen al spec.
   - Si el cambio no cabe en la spec activa, se abre otra.
   - *Cubre:* CA-01, CA-02, CA-03, CA-04, CA-05.
-  - *Hecha cuando:* el §4 dice esas cuatro cosas y no nombra a Victor.
+  - *Hecha cuando:* el §4 dice esas cuatro cosas y no nombra a ninguna persona.
 
 - [x] **T02** · Enmendar `CONSTITUTION.md` §7, §8 y el historial, y subir la versión a 2.2.
   - §7 nombra `staff/ella-deyavorsky/asistenciapp/`.
@@ -53,7 +53,7 @@ Cómo leer esta lista:
 ## Fase D · Cierre
 
 - [x] **T06** · Repasar la tabla de comprobación manual del plan §3, criterio por criterio.
-  - Ejecutar `grep -n -i "victor" CONSTITUTION.md AGENT.md`: no debe encontrar nada.
+  - Buscar el nombre de una persona en `CONSTITUTION.md` y `AGENT.md`: no debe encontrarse ninguno.
   - Ejecutar `pytest` una vez: debe pasar.
   - Marcar la spec como **Implementada** (estado arriba + una fila 1.1 en su historial), y el plan y este fichero como terminados.
   - *Cubre:* CA-01 a CA-07.
