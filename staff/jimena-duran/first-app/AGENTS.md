@@ -1,24 +1,14 @@
-﻿# AGENTS.md — first-app
+# AGENTS.md — first-app
 
-## Contexto del proyecto
+## Guías del proyecto
 
-La aplicación usa Node.js con módulos ES (`"type": "module"`) y una base SQLite gestionada por `node:sqlite`. La base está en `db/users.sqlite`; las reglas generales se encuentran en `docs/CONSTITUTIONS.md`.
+Las reglas generales y los enlaces a las guías por tema están en [CONSTITUTIONS.md](docs/CONSTITUTIONS.md). Para escribir código, sigue [STYLE.md](docs/STYLE.md).
 
 ## Comandos disponibles
 
 - Ejecución: todavía no existe un comando de ejecución.
 - Pruebas: aún no hay tests automatizados; el script `test` de `package.json` es solo el marcador de pnpm.
-- Formato: se sigue Prettier con su configuración predeterminada. No hay scripts propios de lint o formato.
-
-## Convenciones de código
-
-El código fuente se redacta en inglés. Los comentarios de los clientes de terminal pueden estar en español para facilitar el aprendizaje de alumnos hispanohablantes.
-
-Usa nombres de fichero en kebab-case, variables y funciones en camelCase, exportaciones con nombre e imports ESM que incluyan `.js`. Las consultas SQL reciben parámetros nombrados como `:id`, `:name` y `:email`. Las interfaces de `logic/` y los errores válidos están definidos en `docs/CONSTITUTIONS.md`.
-
-El flujo debe poder leerse de principio a fin. Prefiere condicionales claros y nombres descriptivos. No añadas envoltorios de resultados, jerarquías de errores, helpers genéricos ni abstracciones que oculten los pasos que un principiante necesita ver.
-
-Aplica el formato estándar de Prettier: comillas dobles, punto y coma, coma final, dos espacios de indentación y líneas de hasta 80 columnas.
+- Formato: no hay scripts propios de lint o formato; las reglas están en [STYLE.md](docs/STYLE.md).
 
 ## Reglas de trabajo
 
