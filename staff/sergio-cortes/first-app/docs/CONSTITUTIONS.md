@@ -29,6 +29,7 @@ first-app/
     find-user-by-email.js
     find-user-by-name.js
     list-users.js
+    user-gender-count.js
   clients/
     terminal/
       create-user-table.txt   Crea la tabla vía queries
@@ -39,6 +40,17 @@ first-app/
       find-user-by-email.txt
       find-user-by-name.txt
       list-users.txt
+      user-gender-count.txt
+    jupyter/
+      create-user-table.ipynb
+      create-user.ipynb
+      update-user.ipynb
+      delete-user.ipynb
+      find-user-by-id.ipynb
+      find-user-by-email.ipynb
+      find-user-by-name.ipynb
+      list-users.ipynb
+      user-gender-count.ipynb
 ```
 
 - `docs/specs/<nombre>/` es donde empieza un desarrollo. `<nombre>` es la funcionalidad, en kebab-case.
@@ -46,6 +58,7 @@ first-app/
 - `queries/queries/` guarda el SQL en ficheros `.sql`. `queries/user.js` los lee y los ejecuta. No hay reglas de negocio aquí.
 - `logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
 - `clients/terminal/` llama a `logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
+- `clients/jupyter/` es el cuaderno, uno por cada `.txt` de `clients/terminal/`. El bloque muestra ese texto: arranca `node --input-type=module` y, dentro, los `import` y la llamada quedan igual. El `console.log` se sustituye por la tabla. `cli-table3` y `@colors/colors` pintan esa tabla con colores y encabezados. Si la función falla, se ve ese mensaje. En esa carpeta no hay ficheros `.py` ni `requirements.txt`. Se abre con `pnpm jupyter` desde `first-app`.
 
 ## Specs
 
@@ -85,7 +98,7 @@ Los ficheros de `logic/` no son un adaptador ni una capa intercambiable. No se s
 
 Un fichero, una función. El nombre, la entrada y la salida los define la firma. No hay un comentario de contrato encima de la función.
 
-El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `findUserById`, `findUserByEmail`, `findUserByName`, `listUsers`).
+El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `findUserById`, `findUserByEmail`, `findUserByName`, `listUsers`, `usersGenderCount`).
 
 Si la función usa varios datos, como `name`, `email` e `id`, recibe un solo `input` y lee ahí cada valor. Si el dato es uno solo, como `id`, `email` o `name`, el argumento es ese valor. No se mete en un objeto.
 
@@ -113,7 +126,7 @@ Los errores de entrada y de negocio salen de `logic/errors.js`. Ese fichero no e
 - `ValidationError`: el dato de entrada no vale. Mensajes: `"Id is invalid"`, `"Name is empty"`, `"Email is invalid"`.
 - `NotFoundError`: no hay fila. Mensaje: `"User not found"`.
 - `ConflictError`: el email ya existe. Mensaje: `"Email is already used"`.
-- `DatabaseError`: SQLite lanzó y ese error no sale de `logic/`. Mensajes: `"Could not create the user"`, `"Could not update the user"`, `"Could not delete the user"`, `"Could not list the users"`, `"Could not find the user"`. `"Could not classify the users"` queda reservado para una función futura. Ninguna función lo lanza todavía.
+- `DatabaseError`: SQLite lanzó y ese error no sale de `logic/`. Mensajes: `"Could not create the user"`, `"Could not update the user"`, `"Could not delete the user"`, `"Could not list the users"`, `"Could not find the user"`, `"Could not classify the users"`. Este último lo lanza `usersGenderCount`.
 
 Una entrada o una regla de negocio que no llama a una query se comprueba con `if` y lanza esa clase con el mensaje. No va dentro de `try/catch`.
 
