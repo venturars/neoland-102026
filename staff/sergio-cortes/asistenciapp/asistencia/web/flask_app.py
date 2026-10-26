@@ -28,7 +28,6 @@ from asistencia.usecases.attendance import (
     unblock_all,
     unblock_one,
 )
-from asistencia.web.client_ip import client_ip
 
 APP_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DB = APP_ROOT / "data" / "asistencia.db"
@@ -131,7 +130,7 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
                 body.get("name"),
                 body.get("code", ""),
                 now,
-                client_ip(request),
+                request.remote_addr or "",
             )
             payload = {"name": row["name"], "checkedAt": row["checked_at"]}
             if not created:

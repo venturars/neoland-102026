@@ -36,8 +36,7 @@ asistencia/
   export.py                    # CSV
   tunnel.py                    # cloudflared
   web/
-    flask_app.py               # create_app: HTTP → usecases
-    client_ip.py               # IP del cliente (túnel)
+    flask_app.py               # create_app: HTTP → usecases; IP check-in: request.remote_addr + ProxyFix
 docs/ARCHITECTURE.md
 ```
 

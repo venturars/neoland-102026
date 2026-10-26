@@ -59,7 +59,7 @@ Cambiar el stack requiere enmendar esta constitución.
 
 ### 3.1 Organización del código del servidor
 
-- El código Python del servidor sigue `docs/ARCHITECTURE.md` (v1.2): reglas en `domain/`, acciones en `usecases/`, almacén en `storage/sqlite.py`, HTTP en `web/flask_app.py`.
+- El código Python del servidor sigue `docs/ARCHITECTURE.md` (v1.3): reglas en `domain/`, acciones en `usecases/`, almacén en `storage/sqlite.py`, HTTP en `web/flask_app.py`.
 - El DDL compartido está en `infra/sqlite/schema.py`; `connection.py` define `connect` e `init_schema(conn)`.
 
 ---

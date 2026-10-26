@@ -11,7 +11,7 @@ Este documento explica **cómo** cumplimos la spec 006 sin cambiar el comportami
 ### 1.1 Flujo en `POST /api/s/<session_id>/checkin`
 
 ```
-web: client_ip(request) → run(action)
+web: request.remote_addr (tras ProxyFix) → run(action)
   → attendance.check_in(path, session_id, name, code, now, ip)
        → storage.is_ip_blocked → raise Banned → 429 (CA-05)
        → código inválido → _after_invalid_code (purga, insert, cuenta ventanas)
@@ -119,15 +119,15 @@ La ruta Flask solo obtiene IP, parsea JSON y llama a `check_in` dentro de **`run
 
 ### 6.1 IP del cliente
 
-- Función `client_ip(request) -> str` en `web/flask_app.py` (o `web/client_ip.py` si crece).
-- Ampliar `ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)` para túnel Cloudflare (cabecera `X-Forwarded-For`).
+- `ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)` para túnel Cloudflare: Flask rellena `request.remote_addr` desde `X-Forwarded-For`.
+- En check-in se pasa `request.remote_addr or ""` a `check_in` (sin módulo aparte).
 - Tests: fijar IP con `environ_overrides` / `REMOTE_ADDR` en cliente de prueba.
 
 ### 6.2 Check-in
 
 En `check_in` route:
 
-1. `ip = client_ip(request)`
+1. IP = `request.remote_addr or ""`
 2. `check_in(app.config["DB_PATH"], session_id, …, now, ip)` dentro de `run(action)`
 3. **`Banned`** → **429** + texto de `BAN_MESSAGE` (`domain/attempts.py`, CA-03)
 4. **`InvalidCode`** → **422** + mensaje spec 001
@@ -218,7 +218,7 @@ Añadir breve apartado: bloqueo por intentos, mensaje al alumno, panel profesor 
 
 ## 13. Alineación con arquitectura 005 (2026-10-26)
 
-Tras la spec **005** v1.2 (plan §11), la feature 006 **no** usa módulos aparte `rate_limit_db.py` ni `use_cases/rate_limit.py`. Toda la persistencia anti-abuso está en **`storage/sqlite.py`**; la orquestación en **`usecases/attendance.py`**; reglas puras en **`domain/attempts.py`**. Ver también `specs/005-clean-architecture/plan.md` §11 y `docs/ARCHITECTURE.md` v1.2.
+Con la arquitectura **005**, la feature 006 **no** usa módulos aparte `rate_limit_db.py` ni `use_cases/rate_limit.py`. Toda la persistencia anti-abuso está en **`storage/sqlite.py`**; la orquestación en **`usecases/attendance.py`**; reglas puras en **`domain/attempts.py`**. IP del check-in: **`request.remote_addr`** tras `ProxyFix` en `web/flask_app.py`. Ver `specs/005-clean-architecture/plan.md` §1.2 y `docs/ARCHITECTURE.md` v1.3.
 
 ---
 
@@ -227,4 +227,5 @@ Tras la spec **005** v1.2 (plan §11), la feature 006 **no** usa módulos aparte
 | Fecha | Cambio |
 | --- | --- |
 | 2026-10-23 | Borrador inicial tras aprobación de spec. |
-| 2026-10-26 | §1–§6 y §10 actualizados a `attempts` + `storage` + `usecases`; §13 enlace 005 v1.2. |
+| 2026-10-26 | §1–§6 y §10 actualizados a `attempts` + `storage` + `usecases`; §13 enlace 005. |
+| 2026-10-26 | §6.1: IP vía `request.remote_addr` (eliminado `client_ip.py`). |

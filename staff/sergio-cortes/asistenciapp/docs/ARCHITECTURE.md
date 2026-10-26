@@ -1,6 +1,6 @@
 # Arquitectura de AsistenciApp
 
-> Versión 1.2 · 2026-10-26 · Alineada con `staff/ventura-rodriguez/asistenciapp`
+> Versión 1.3 · 2026-10-26
 
 Este documento dice **cómo se organiza el código**. La [constitución](CONSTITUTIONS.md) fija reglas de producto; aquí van las capas.
 
@@ -34,7 +34,7 @@ asistenciapp/
 │   ├── infra/sqlite/      # schema.py, connection.py
 │   ├── export.py
 │   ├── tunnel.py
-│   └── web/               # flask_app.py, client_ip.py
+│   └── web/               # flask_app.py
 ├── static/
 └── tests/
 ```
@@ -52,7 +52,7 @@ asistenciapp/
 | `storage/sqlite.py` | Almacén | Abre `data/asistencia.db`, guarda y lee |
 | `infra/sqlite/schema.py` | DDL | Tablas (compartido con el almacén) |
 | `export.py` | Utilidad | CSV de filas ya cargadas |
-| `web/flask_app.py` | HTTP | Factory Flask, rutas JSON |
+| `web/flask_app.py` | HTTP | Factory Flask, rutas JSON, `ProxyFix`, IP del check-in vía `request.remote_addr` |
 
 ---
 
@@ -62,4 +62,5 @@ asistenciapp/
 | --- | --- | --- |
 | 1.0 | 2026-10-22 | Spec 005 inicial. |
 | 1.1 | 2026-10-26 | Estilo funcional sin repositorios OOP. |
-| 1.2 | 2026-10-26 | Misma forma que Ventura: `usecases/`, `storage/sqlite.py`; DDL en `infra/sqlite/`. |
+| 1.2 | 2026-10-26 | `usecases/`, `storage/sqlite.py`; DDL en `infra/sqlite/`. |
+| 1.3 | 2026-10-26 | IP del cliente en check-in: `request.remote_addr` (sin `client_ip.py`; `ProxyFix` con `x_for=1`). |

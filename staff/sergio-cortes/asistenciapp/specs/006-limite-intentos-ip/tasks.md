@@ -24,7 +24,7 @@
 
 ## Fase C · Web y API
 
-- [x] **T07** · `client_ip`, `ProxyFix(x_for=1)`, integración en ruta check-in (429/422).
+- [x] **T07** · `ProxyFix(x_for=1)` y `request.remote_addr` en ruta check-in (429/422).
   - *Cubre:* CA-01–CA-05.
 - [x] **T08** · Rutas profesor `GET/DELETE /api/blocked-ips` + token.
   - *Cubre:* CA-10–CA-12.

@@ -47,7 +47,7 @@ Cómo leer esta lista:
 
 ## Fase E · Capa web
 
-- [x] **T08** · Extraer Flask a `asistencia/web/` (`flask_app.py` con `create_app`, `run(action)`, token, `client_ip`); dejar `app.py` como entrada (`main`, `--tunel`, `port_in_use`).
+- [x] **T08** · Extraer Flask a `asistencia/web/` (`flask_app.py` con `create_app`, `run(action)`, token, `ProxyFix`); dejar `app.py` como entrada (`main`, `--tunel`, `port_in_use`).
   - *Cubre:* CA-04, CA-09.
   - *Hecha cuando:* `pytest tests/test_api.py` pasa sin cambiar expectativas de JSON ni códigos HTTP.
 
