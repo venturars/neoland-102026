@@ -32,11 +32,11 @@ if (!existsSync(python)) {
   run(windows ? 'py' : 'python3', [...(windows ? ['-3'] : []), '-m', 'venv', environment]);
 }
 
-const notebook = spawnSync(python, [
+const jupyter = spawnSync(python, [
   '-c',
-  'from importlib.metadata import version; assert version("notebook") == "7.6.3"',
+  'import ipykernel; from importlib.metadata import version; assert version("notebook") == "7.6.3" and version("ipykernel") == "7.1.0"',
 ], { stdio: 'ignore' });
-if (notebook.status !== 0) {
+if (jupyter.status !== 0) {
   run(python, ['-m', 'pip', 'install', '-r', join(app, 'requirements-jupyter.txt')]);
 }
 

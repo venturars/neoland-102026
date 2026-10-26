@@ -16,11 +16,13 @@ La ruta de la aplicación deriva de `client.py`, no de una búsqueda por carpeta
 
 ## Arranque local
 
-`pnpm jupyter` ejecuta `scripts/jupyter.js`. Prepara `node_modules` si falta el cliente, crea `.venv/` con Python del equipo, instala `notebook==7.6.3` desde `requirements-jupyter.txt` cuando no coincide la versión, registra un kernel `first-app-ai` dentro de ese entorno y arranca `python -m notebook` con raíz `clients/jupyter/`. Las siguientes ejecuciones reutilizan el entorno. El kernel local se registra de nuevo para que su ruta corresponda a esta copia.
+`pnpm jupyter` ejecuta `scripts/jupyter.js`. Prepara `node_modules` si falta el cliente, crea `.venv/` con Python del equipo, instala `notebook==7.6.3` e `ipykernel==7.1.0` desde `requirements-jupyter.txt` cuando falta el kernel o no coinciden sus versiones, registra un kernel `first-app-ai` dentro de ese entorno y arranca `python -m notebook` con raíz `clients/jupyter/`. Las siguientes ejecuciones reutilizan el entorno. El kernel local se registra de nuevo para que su ruta corresponda a esta copia.
 
 Python se ejecuta sin shell: `python3` en macOS/Linux y `py -3` en Windows; el ejecutable del entorno usa `bin/python` o `Scripts/python.exe`. El servidor escucha en `127.0.0.1`, conserva la autenticación normal de Jupyter y abre el navegador. Se detiene con Ctrl+C. No se instalan paquetes globales ni se arranca Ollama.
 
 Notebook 7.6.3 es un lanzamiento estable de [PyPI](https://pypi.org/project/notebook/7.6.3/); su kernel Python permite ejecutar el adaptador sin introducir un kernel JavaScript adicional. La ejecución desde navegador y las opciones del servidor siguen la [documentación de Notebook](https://jupyter-notebook.readthedocs.io/en/stable/running.html). El cliente utiliza [subprocess.run](https://docs.python.org/3/library/subprocess.html#subprocess.run) con una lista de argumentos, `shell=False` y JSON por stdin.
+
+La revisión de #371 hace explícita la dependencia `ipykernel==7.1.0`, invocada para registrar el kernel y compatible con Python 3.10. Se comprueban ambas versiones y la importación del kernel antes de reutilizar el entorno; si falta, se reinstalan los requisitos. Notebook también puede traer ipykernel indirectamente a través de JupyterLab, pero el arranque no depende de esa relación. [Versión de ipykernel en PyPI](https://pypi.org/project/ipykernel/7.1.0/).
 
 ## Documentos
 

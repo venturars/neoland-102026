@@ -32,3 +32,14 @@ Verificación realizada el 2026-10-26 en una copia desechable sin base de trabaj
 El servidor de las dos ejecuciones de prueba se detuvo con `POST /api/shutdown` autenticado y ambos procesos de arranque terminaron. No se inició un túnel ni se modificó el servidor Jupyter ajeno que Miguel ya tuviera abierto. Windows se ha contemplado en rutas, selección de Python, ejecución sin shell y UTF-8; no se afirma una ejecución real en Windows.
 
 Revisión final del código, plan, spec y nueve documentos realizada por otro agente: sin hallazgos pendientes.
+
+## Corrección de revisión · 2026-10-26
+
+El comentario de Meghan en #371 identifica que el arranque invoca ipykernel sin declararlo directamente. Los metadatos de PyPI muestran que Notebook 7.6.3 depende de JupyterLab 4.6.4, que a su vez exige ipykernel: no se reprodujo la afirmación de que una instalación limpia siempre carece del kernel. Aun así, el cliente debe declarar lo que utiliza y reparar entornos incompletos.
+
+- Se añade `ipykernel==7.1.0`, compatible con el mínimo documentado Python 3.10; no se amplía el mínimo a Python 3.11 que requiere la versión 7.4.0 consultada. Notebook permanece en 7.6.3.
+- El arranque comprueba la importación del kernel y las dos versiones antes de reutilizar `.venv`; reinstala los requisitos si falta el kernel, aunque Notebook ya esté instalado.
+- Verificación real con Node 24.12.0, pnpm 10.20.0 y Python 3.14.8: `python3 /tmp/verify-371-kernel-fix.py`, en una copia desechable inicialmente sin `.venv` ni `node_modules`. Instalación, nueve documentos por HTTP autenticado y kernel dentro del entorno local correctos. Los notebooks de preparación y listado se ejecutaron cada uno en un kernel nuevo.
+- Después de detener el servidor, se desinstaló únicamente ipykernel de esa copia temporal. El mismo comando de arranque lo reinstaló en 7.1.0 y volvió a mostrar los nueve documentos sin recrear el entorno. Ambos servidores propios se detuvieron y la copia temporal se eliminó.
+- `node --check scripts/jupyter.js` y `git diff --check` pasan. La prueba inicial detectó una comparación literal entre `/var` y su alias `/private/var`; se corrigió la normalización del comprobador y las pruebas anteriores pasaron. No fue un fallo del lanzador.
+- No se modifican lógica de contactos, consultas, notebooks, datos de trabajo ni cliente de terminal. La verificación original de las nueve operaciones permanece registrada arriba; esta corrección comprueba específicamente instalación y reparación.

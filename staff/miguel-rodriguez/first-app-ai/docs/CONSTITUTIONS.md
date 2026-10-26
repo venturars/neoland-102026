@@ -161,7 +161,7 @@ Fixed application configuration values use uppercase constant names, such as `MO
 
 ## Dependencies and package management
 
-The application uses Node built-ins and the exact external dependency `openai@7.39.0`. The Jupyter client additionally uses the exact development dependency `cli-table3@0.6.5` for colored table headers. Its project-local Python environment uses `notebook==7.6.3` from `requirements-jupyter.txt`. These client dependencies do not change the business operations or classifier. pnpm generates `pnpm-lock.yaml`; it is maintained with `package.json`.
+The application uses Node built-ins and the exact external dependency `openai@7.39.0`. The Jupyter client additionally uses the exact development dependency `cli-table3@0.6.5` for colored table headers. Its project-local Python environment uses `notebook==7.6.3` and the directly invoked `ipykernel==7.1.0` from `requirements-jupyter.txt`. These client dependencies do not change the business operations or classifier. pnpm generates `pnpm-lock.yaml`; it is maintained with `package.json`.
 
 - Use pnpm. Do not mix package managers or introduce `package-lock.json` or `yarn.lock`.
 - Add dependencies only when required by an approved implementation plan.
