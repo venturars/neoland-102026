@@ -11,62 +11,66 @@ Cómo leer esta lista:
 
 ## Fase A · Documentación de arquitectura
 
-- [x] **T01** · Redactar `docs/ARCHITECTURE.md` según plan §2 (capas, dependencias, tabla “dónde va cada cosa”, casos de uso, fuera de alcance).
+- [x] **T01** · Redactar `docs/ARCHITECTURE.md` según plan §2 (capas, dependencias, tabla «dónde va cada cosa», casos de uso, fuera de alcance).
   - *Cubre:* CA-01, CA-02.
-  - *Hecha cuando:* el fichero existe, está en español y un revisor puede mapear cada módulo actual a una capa.
+  - *Hecha cuando:* el fichero existe, está en español y un revisor puede mapear cada módulo a una capa.
 
-## Fase B · Dominio y ports
+## Fase B · Dominio
 
-- [x] **T02** · Crear `asistencia/domain/` (`errors.py`, `session.py`) y mover `codes.py`, `names.py`, `export.py` desde la raíz del paquete (mismo comportamiento).
+- [x] **T02** · Crear `asistencia/domain/` (`session.py`, `codes.py`, `names.py`) con las reglas puras que antes vivían en la raíz del paquete (mismo comportamiento).
   - *Cubre:* CA-03.
-  - *Hecha cuando:* `pytest` pasa en tests de `test_codes.py`, `test_names.py`, `test_export.py` tras actualizar imports.
+  - *Hecha cuando:* `pytest` pasa en tests de códigos, nombres y export tras actualizar imports.
 
-- [x] **T03** · Definir `asistencia/ports/repository.py` (`AttendanceRepository`) y opcional `Clock` según plan §3.2.
+- [x] **T03** · Dejar `export.py` y `tunnel.py` en la raíz de `asistencia/` como utilidades de exportación y túnel (sin Flask ni SQL).
   - *Cubre:* CA-03.
-  - *Hecha cuando:* el protocolo expone las operaciones que hoy usa `app.py` vía `db.py`.
+  - *Hecha cuando:* export CSV y `--tunel` siguen funcionando con los mismos imports documentados.
 
-## Fase C · Infraestructura
+## Fase C · Infraestructura SQLite y almacén
 
-- [x] **T04** · Reorganizar SQLite en `asistencia/infra/sqlite/` (schema, conexión, `AttendanceRepository`); mover `tunnel.py` a `asistencia/infra/`.
+- [x] **T04** · Crear `infra/sqlite/schema.py` (DDL) y `connection.py` (`connect`, `init_schema`).
   - *Cubre:* CA-03, CA-05.
-  - *Hecha cuando:* no queda lógica SQL en `web` ni en `use_cases`; BD y datos mínimos igual que antes.
+  - *Hecha cuando:* el esquema crea las mismas tablas que antes en `db.py`.
 
-- [x] **T05** · Eliminar módulos obsoletos en raíz de `asistencia/` (`db.py`, etc.) o dejar shims mínimos solo si algún test lo exige temporalmente.
+- [x] **T05** · Implementar `storage/sqlite.py`: funciones con `path` que abren SQLite, leen/escriben asistencia y delegan DDL/conexión en `infra/sqlite/`.
+  - *Cubre:* CA-03, CA-05.
+  - *Hecha cuando:* no queda lógica SQL en `web` ni en `usecases`; datos mínimos igual que antes.
+
+- [x] **T06** · Eliminar `asistencia/db.py` y actualizar imports en tests y app.
   - *Cubre:* CA-03.
-  - *Hecha cuando:* `rg 'from asistencia import db'` y `from asistencia.db` no apuntan a código vivo salvo shims documentados.
+  - *Hecha cuando:* no hay referencias vivas a `asistencia.db`.
 
 ## Fase D · Casos de uso
 
-- [x] **T06** · Implementar casos de uso en `asistencia/use_cases/` (crear/listar sesión, vista profesor, pública, check-in, cerrar, borrar check-in, export CSV) usando domain + ports.
+- [x] **T07** · Implementar `usecases/attendance.py` (`prepare`, `check_in`, sesiones, vistas profesor/alumno, export, etc.) orquestando `domain` + `storage`.
   - *Cubre:* CA-03, CA-04.
-  - *Hecha cuando:* cada flujo de `tests/test_api.py` puede describirse como “ruta → use case → repo” sin reglas de negocio en Flask.
+  - *Hecha cuando:* cada flujo de `tests/test_api.py` se describe como «ruta → use case → storage» sin reglas de negocio en Flask.
 
 ## Fase E · Capa web
 
-- [x] **T07** · Extraer Flask a `asistencia/web/` (factory, middleware token/BD, handlers); dejar `app.py` como entrada (`main`, `--tunel`, `port_in_use`).
+- [x] **T08** · Extraer Flask a `asistencia/web/` (`flask_app.py` con `create_app`, `run(action)`, token, `client_ip`); dejar `app.py` como entrada (`main`, `--tunel`, `port_in_use`).
   - *Cubre:* CA-04, CA-09.
   - *Hecha cuando:* `pytest tests/test_api.py` pasa sin cambiar expectativas de JSON ni códigos HTTP.
 
-- [x] **T08** · Ejecutar `pytest` completo y corregir imports rotos en `tests/`.
+- [x] **T09** · Ejecutar `pytest` completo y corregir imports rotos en `tests/`.
   - *Cubre:* CA-08.
   - *Hecha cuando:* la suite entera pasa en local.
 
 ## Fase F · Gobernanza
 
-- [x] **T09** · Actualizar `AGENTS.md` (§1 lectura de `ARCHITECTURE.md`, §3 árbol de carpetas, §7 fila `005-clean-architecture`).
+- [x] **T10** · Actualizar `AGENTS.md` (§1 lectura de `ARCHITECTURE.md`, §3 árbol de carpetas, §7 fila `005-clean-architecture`).
   - *Cubre:* CA-06, CA-10.
   - *Hecha cuando:* el manual describe la estructura real post-refactor.
 
-- [x] **T10** · Enmienda constitución **2.3** en `docs/CONSTITUTIONS.md` (referencia a `ARCHITECTURE.md`, historial §8).
+- [x] **T11** · Enmienda constitución **2.3** en `docs/CONSTITUTIONS.md` (referencia a `ARCHITECTURE.md`, historial §8).
   - *Cubre:* CA-07.
   - *Hecha cuando:* no hay contradicción entre constitución, ARCHITECTURE y código.
 
 ## Fase G · Cierre
 
-- [x] **T11** · Revisión manual rápida: arrancar `python app.py`, abrir panel y alumno; confirmar mismos flujos que antes del refactor.
+- [x] **T12** · Revisión manual rápida: arrancar `python app.py`, abrir panel y alumno; confirmar mismos flujos que antes del refactor.
   - *Cubre:* CA-09.
   - *Hecha cuando:* check-in y listado funcionan en local sin sorpresas.
 
-- [x] **T12** · Marcar spec `005` como implementada en `spec.md`, `plan.md` y tabla §7 de `AGENTS.md`.
+- [x] **T13** · Marcar spec `005` como implementada en `spec.md`, `plan.md` y tabla §7 de `AGENTS.md`.
   - *Cubre:* CA-10.
   - *Hecha cuando:* documentos de spec reflejan fase terminada e issue #239 comprobable según su «Cómo probarlo».
