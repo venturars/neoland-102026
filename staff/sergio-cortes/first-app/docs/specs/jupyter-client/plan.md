@@ -4,7 +4,7 @@ No es una funcionalidad nueva. No hay fichero nuevo en `logic/`. El cliente de t
 
 En `clients/jupyter/` solo hay cuadernos. No hay ficheros `.py` ni `requirements.txt`. El bloque de cada cuaderno es JavaScript. La tabla la pintan `cli-table3` `0.6.5` y `@colors/colors` `1.6.1`, instaladas en `package.json`. El encabezado usa `style.head` `["cyan", "bold"]`.
 
-Se abre con `pnpm jupyter` desde `first-app`. El script crea `.venv` si falta. Si no está `.venv/bin/jupyter-notebook`, instala `notebook==7.6.3`. `.venv/` no se versiona. Después arranca `jupyter notebook` en `clients/jupyter`.
+Se abre con `pnpm jupyter` desde `first-app`. El script crea `.venv` si falta. Si no está `.venv/bin/jupyter-notebook`, instala `notebook==7.6.3`. `.venv/` no se versiona. Después arranca `jupyter notebook` en `clients/jupyter`. El bloque se ejecuta con el directorio actual en `first-app`, el mismo que ya pide el cliente de terminal. Lo deja así ese script. No hay un fichero `.py` que busque la carpeta.
 
 ## Ficheros
 
@@ -25,12 +25,12 @@ Se quitan `clients/jupyter/bridge.py` y `clients/jupyter/requirements.txt`.
 
 Se tocan:
 
-- `package.json` y `pnpm-lock.yaml`: entran `cli-table3` y `@colors/colors`. El script `jupyter` crea `.venv` y abre los cuadernos.
-- `docs/CONSTITUTIONS.md`: el árbol y el cliente Jupyter dejan de citar Python, `bridge.py`, `requirements.txt` y `rich`.
+- `package.json` y `pnpm-lock.yaml`: entran `cli-table3` y `@colors/colors`. El script `jupyter` crea `.venv`, abre los cuadernos y deja el directorio actual del bloque en `first-app`.
+- `docs/CONSTITUTIONS.md`: la línea de `clients/jupyter/` dice que el bloque copia el interior del `.txt` de `clients/terminal/`, que el `console.log` pasa a ser la tabla y que `pnpm jupyter` ejecuta ese bloque con el directorio actual en `first-app`.
 
 ## Parecido
 
-Cada `.txt` de `clients/terminal/` llama a una función y muestra el resultado, sin capturar el error. El cuaderno hace esa misma llamada en JavaScript y pinta el resultado con `cli-table3`.
+Cada `.txt` de `clients/terminal/` se pega con el directorio actual en `first-app`. El cuaderno copia las líneas de dentro de ese `.txt`, carácter por carácter: los `import` y la llamada. No copia el comentario ni la línea `node --input-type=module`. El `console.log` se sustituye por la tabla de `cli-table3`.
 
 ## Firma
 
@@ -53,10 +53,10 @@ Cada cuaderno, en este orden:
 3. Qué pasa en la base de datos
 4. Qué funciones del dominio usa
 5. Anotaciones
-6. Bloque JavaScript
+6. Bloque copiado del `.txt`
 7. Respuesta ya ejecutada, en la tabla de colores
 
-La llamada es la del `.txt` de terminal.
+El bloque es el interior del `.txt` del mismo nombre.
 
 - `create-user-table` usa `createUsersTable(db)`. No usa `logic/`. La tabla tiene `lastInsertRowid` y `changes`. Anotación: no borra filas.
 - `create-user` usa `createUser({ name: "Ada", email: "ada@example.com" })`. Inserta una fila, el id lo pone la base y las dos fechas son el alta. Anotaciones: `Name is empty`, `Email is invalid`, `Email is already used`, `Could not create the user`.

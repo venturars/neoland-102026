@@ -10,7 +10,7 @@ Cada documento tiene, en este orden:
 
 1. Título
 2. Descripción de la funcionalidad, con estas partes: qué hace, qué pasa en la base de datos, qué funciones del dominio usa y qué anotaciones existen
-3. El bloque copia, sin cambiar una palabra, las líneas de dentro del .txt de esa funcionalidad: los import y la llamada. Solo se sustituye el console.log por la tabla con colores. El CEO no redacta ese texto.
+3. El bloque copia, sin cambiar una palabra, las líneas de dentro del `.txt` de esa funcionalidad: los `import` y la llamada. Solo se sustituye el `console.log` por la tabla con colores. El CEO no redacta ese texto.
 4. Respuesta de la ejecución, en una tabla con colores y encabezados
 
 ## Quién lo usa
@@ -19,7 +19,7 @@ Un CEO que no programa.
 
 ## Entrada
 
-La misma entrada que esa funcionalidad ya tiene. El documento trae el ejemplo escrito. El CEO lo ejecuta; no lo redacta.
+La misma entrada que esa funcionalidad ya tiene. El documento trae el ejemplo escrito, con ese mismo texto. El CEO lo ejecuta; no lo redacta.
 
 ## Salida
 
