@@ -25,7 +25,7 @@ tests/                            # pytest (API + unidades)
 Misma lógica de negocio que antes del refactor, reorganizada en capas **funcionales** (funciones y módulos planos; sin ORM ni capas presenter de más).
 
 ```
-app.py                         # main(), --tunel, puerto
+app.py                         # create_app, rutas HTTP, main(), --tunel
 asistencia/
   domain/                      # codes, names, session, attempts (006)
   usecases/attendance.py       # acciones: prepare, check_in, list_sessions, …
@@ -35,15 +35,14 @@ asistencia/
     connection.py              # connect(path), init_schema(conn)
   export.py                    # CSV
   tunnel.py                    # cloudflared
-  web/
-    flask_app.py               # create_app: HTTP → usecases; IP check-in: request.remote_addr + ProxyFix
 docs/ARCHITECTURE.md
+static/
 ```
 
 Flujo de una petición:
 
 ```
-HTTP (web/flask_app) → usecases/attendance → domain (reglas)
+HTTP (app.py) → usecases/attendance → domain (reglas)
                               ↓
                          storage/sqlite (path)
                               ↓
@@ -61,9 +60,9 @@ Contenido mínimo del documento (en español):
 | Sección | Contenido |
 | --- | --- |
 | Propósito | Por qué hay capas en una app pequeña (P2: solo la separación que paga el alquiler). |
-| Capas | `domain`, `usecases`, `storage`, `infra/sqlite`, `web` — una frase cada una. |
-| Regla de dependencias | Diagrama como §1.2; prohibido importar `web` o `storage` desde `domain`. |
-| Dónde va cada cosa | Tabla: código rotatorio → `domain/codes.py`; INSERT check-in → `storage/sqlite.py`; 401 sin token → `web`. |
+| Capas | `domain`, `usecases`, `storage`, `infra/sqlite`, borde (`app.py`, `static/`) — una frase cada una. |
+| Regla de dependencias | Diagrama como §1.2; prohibido importar `app.py` ni `storage` desde `domain`. |
+| Dónde va cada cosa | Tabla: código rotatorio → `domain/codes.py`; INSERT check-in → `storage/sqlite.py`; 401 sin token → `app.py`. |
 | Casos de uso listados | Crear sesión, listar, vista profesor, check-in, cerrar, borrar check-in, exportar, info pública. |
 | Testing | Tests de dominio sin Flask; tests API existentes como contrato (CA-08). |
 | Fuera de alcance explícito | ORM, migraciones, microservicios, colas, capa presenter JSON. |
@@ -77,7 +76,7 @@ Referencia al repo ejemplo solo como **inspiración**, con tabla “En el ejempl
 ### 3.1 Dominio
 
 - **`domain/codes.py`**, **`domain/names.py`**: reglas puras (código rotatorio, normalización de nombre).
-- **`domain/session.py`**: `require_session`, `ensure_open`, excepciones de negocio (`InvalidCode`, sesión cerrada, etc.) que `web` traduce a HTTP.
+- **`domain/session.py`**: `require_session`, `ensure_open`, excepciones de negocio (`InvalidCode`, sesión cerrada, etc.) que `app.py` traduce a HTTP.
 - **`domain/attempts.py`** (spec 006): umbrales y `over_limit`; `Banned` con mensaje al alumno.
 - **`export.py`** en raíz de `asistencia/` (CSV), no en `domain/`.
 
@@ -104,11 +103,11 @@ Un módulo con funciones planas (`prepare`, `check_in`, `list_sessions`, vista p
 - **`infra/sqlite/connection.py`**: `connect(path)`, `init_schema(conn)`.
 - **`tunnel.py`**: raíz de `asistencia/` (sin cambio de comportamiento).
 
-### 3.5 Web (Flask)
+### 3.5 Borde HTTP (`app.py`)
 
-- **`web/flask_app.py`**: `create_app(db_path, token, now)` — ProxyFix, `config["DB_PATH"]`, helper `run(action)` que captura excepciones de `domain/session` y `Banned`.
+- **`app.py`**: `create_app(db_path, token, now)` — ProxyFix, rutas Flask, helper `run(action)` que captura excepciones de `domain/session` y `Banned`; `main()`, `--tunel`, `port_in_use`.
 - Rutas delgadas: JSON → `usecases.attendance` → respuesta con **mismos nombres de campo** (`checkedAt`, `studentUrl`, …) para CA-09.
-- **`app.py`**: `main()`, `--tunel`, import de `create_app` y `tunnel`.
+- **`static/`**: HTML, CSS y JS (sin cambios funcionales en spec 005).
 
 ---
 
@@ -145,7 +144,7 @@ Comportamiento de túnel, token, CSV (BOM, fórmulas) permanece en dominio/infra
 | Acción | Ficheros |
 | --- | --- |
 | Crear | `docs/ARCHITECTURE.md` |
-| Crear / mantener | `domain/*`, `usecases/attendance.py`, `storage/sqlite.py`, `infra/sqlite/schema.py` + `connection.py`, `export.py`, `tunnel.py`, `web/*` |
+| Crear / mantener | `domain/*`, `usecases/attendance.py`, `storage/sqlite.py`, `infra/sqlite/schema.py` + `connection.py`, `export.py`, `tunnel.py`, `app.py` (HTTP) |
 | Modificar | `app.py`, `AGENTS.md`, `docs/CONSTITUTIONS.md`, imports en `tests/` |
 | Eliminar | `asistencia/db.py` monolítico tras mover lógica a `storage/` |
 | Sin tocar | `static/*`, `requirements.txt`, `pytest.ini` (salvo `pythonpath` si hiciera falta) |

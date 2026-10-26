@@ -30,10 +30,10 @@ La comprobación de bloqueo va **antes** de validar código válido (CA-05). Sol
 | Umbrales 5/1 s, 20/60 s, `over_limit`, `Banned` | Dominio | `domain/attempts.py` |
 | Orquestación check-in + intento inválido | Casos de uso | `usecases/attendance.py` (`check_in`, `_after_invalid_code`, `list_blocked`, …) |
 | SQL asistencia + bloqueos/intentos | Almacén | `storage/sqlite.py` (funciones con `path`); DDL en `infra/sqlite/schema.py` |
-| IP cliente, rutas JSON, HTTP 429/422 | Web | `web/flask_app.py` (`run(action)` captura `Banned` e `InvalidCode`) |
+| IP cliente, rutas JSON, HTTP 429/422 | Borde | `app.py` (`run(action)` captura `Banned` e `InvalidCode`) |
 | Lista / quitar bloqueos | Web + static | API profesor + `profesor.html` / `profesor.js` |
 | Enmienda P4 + §6 | Docs | `docs/CONSTITUTIONS.md` §8 (v2.4) |
-| Dónde va la lógica | Docs | `docs/ARCHITECTURE.md` v1.2 |
+| Dónde va la lógica | Docs | `docs/ARCHITECTURE.md` v1.5 |
 
 ---
 
@@ -218,7 +218,7 @@ Añadir breve apartado: bloqueo por intentos, mensaje al alumno, panel profesor 
 
 ## 13. Alineación con arquitectura 005 (2026-10-26)
 
-Con la arquitectura **005**, la feature 006 **no** usa módulos aparte `rate_limit_db.py` ni `use_cases/rate_limit.py`. Toda la persistencia anti-abuso está en **`storage/sqlite.py`**; la orquestación en **`usecases/attendance.py`**; reglas puras en **`domain/attempts.py`**. IP del check-in: **`request.remote_addr`** tras `ProxyFix` en `web/flask_app.py`. Ver `specs/005-clean-architecture/plan.md` §1.2 y `docs/ARCHITECTURE.md` v1.3.
+Con la arquitectura **005**, la feature 006 **no** usa módulos aparte `rate_limit_db.py` ni `use_cases/rate_limit.py`. Toda la persistencia anti-abuso está en **`storage/sqlite.py`**; la orquestación en **`usecases/attendance.py`**; reglas puras en **`domain/attempts.py`**. IP del check-in: **`request.remote_addr`** tras `ProxyFix` en **`app.py`**. Ver `specs/005-clean-architecture/plan.md` §1.2 y `docs/ARCHITECTURE.md` v1.5.
 
 ---
 
