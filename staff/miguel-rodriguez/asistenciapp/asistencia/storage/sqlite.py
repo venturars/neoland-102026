@@ -31,6 +31,16 @@ CREATE TABLE IF NOT EXISTS checkins (
   checked_at  TEXT NOT NULL,
   UNIQUE (session_id, name_key)
 );
+
+CREATE TABLE IF NOT EXISTS registration_attempts (
+  address TEXT NOT NULL,
+  attempted_at REAL NOT NULL
+);
+CREATE INDEX IF NOT EXISTS registration_attempts_address_time
+ON registration_attempts(address, attempted_at);
+CREATE TABLE IF NOT EXISTS blocked_addresses (
+  address TEXT PRIMARY KEY
+);
 """
 
 
@@ -251,3 +261,79 @@ def remove_checkin(conn: sqlite3.Connection, session_id: str, checkin_id: int) -
             "DELETE FROM checkins WHERE id = ? AND session_id = ?", (checkin_id, session_id)
         )
     return cursor.rowcount == 1
+
+
+def purge_registration_attempts(conn: sqlite3.Connection, cutoff: float) -> None:
+    """Elimina globalmente intentos caducados dentro de la transacción llamante.
+
+    :param conn: conexión con transacción abierta.
+    :param cutoff: instante máximo que se elimina, inclusive.
+    :return: None.
+    :rtype: None
+
+    Usage::
+
+        purge_registration_attempts(conn, now - 60)
+    """
+    conn.execute("DELETE FROM registration_attempts WHERE attempted_at <= ?", (cutoff,))
+
+
+def address_is_blocked(conn: sqlite3.Connection, address: str) -> bool:
+    """Consulta si una dirección está en la lista persistente.
+
+    :param conn: conexión abierta.
+    :param address: dirección canónica.
+    :return: si existe su fila de bloqueo.
+    :rtype: bool
+
+    Usage::
+
+        address_is_blocked(conn, address)
+    """
+    return conn.execute("SELECT 1 FROM blocked_addresses WHERE address = ?", (address,)).fetchone() is not None
+
+
+def registration_attempt_times(conn: sqlite3.Connection, address: str) -> list[float]:
+    """Consulta tiempos de intentos sin interpretar límites.
+
+    :param conn: conexión abierta.
+    :param address: dirección canónica.
+    :return: tiempos guardados de esa dirección.
+    :rtype: list[float]
+
+    Usage::
+
+        registration_attempt_times(conn, address)
+    """
+    return [r[0] for r in conn.execute("SELECT attempted_at FROM registration_attempts WHERE address = ?", (address,))]
+
+
+def insert_registration_attempt(conn: sqlite3.Connection, address: str, instant: float) -> None:
+    """Añade un intento dentro de la transacción llamante.
+
+    :param conn: conexión abierta.
+    :param address: dirección canónica.
+    :param instant: instante Unix del intento.
+    :return: None.
+    :rtype: None
+
+    Usage::
+
+        insert_registration_attempt(conn, address, now)
+    """
+    conn.execute("INSERT INTO registration_attempts VALUES (?, ?)", (address, instant))
+
+
+def insert_blocked_address(conn: sqlite3.Connection, address: str) -> None:
+    """Guarda solo la dirección del bloqueo, sin datos de asistencia.
+
+    :param conn: conexión abierta.
+    :param address: dirección canónica.
+    :return: None.
+    :rtype: None
+
+    Usage::
+
+        insert_blocked_address(conn, address)
+    """
+    conn.execute("INSERT OR IGNORE INTO blocked_addresses VALUES (?)", (address,))

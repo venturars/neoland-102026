@@ -131,6 +131,7 @@ Una funcionalidad está terminada cuando:
 | `003-activar-el-entorno` | Terminada; revisión final aprobada por Miguel el 2026-10-22 | README separado en activación y arranque; 77 tests pasan; evidencia en tasks.md |
 | `004-quitar-referencias-personales` | Terminada; revisión final aprobada por Miguel el 2026-10-23 | Referencias heredadas retiradas; hechos conservados; 77 tests pasan; evidencia en tasks.md |
 | `005-reorganizar-arquitectura` | Terminada; revisión final aprobada por Miguel el 2026-10-23 | 112 pruebas aprobadas; comparación previa de 22 escenarios y regresión de precedencia corregida; evidencia en tasks.md |
+| `006-limitar-intentos-de-registro` | Implementada y verificada; ejecución completa delegada por Miguel el 2026-10-24 | 145 pruebas y comprobación de navegador; revisión de compañeros pendiente; evidencia en tasks.md |
 | Bot de Discord (sin número asignado) | Idea futura | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
@@ -140,3 +141,6 @@ Una funcionalidad está terminada cuando:
 Cada módulo explica su responsabilidad al principio. Las funciones creadas o modificadas incluyen tipos, describen sus parámetros con `:param` y su resultado con `:return` y `:rtype`, y muestran un ejemplo corto `Usage::`. Las funciones internas sin parámetros indican qué resultado producen. Una función se ocupa de una tarea; no se añaden capas ni herramientas sin una necesidad acordada.
 
 Las dependencias siguen [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Las specs cerradas 001–004 conservan sus rutas históricas: el antiguo AGENT.md corresponde a este AGENTS.md y la constitución que estaba en la raíz está ahora en docs/CONSTITUTION.md. No se reescriben esas evidencias al mover documentos.
+
+
+Publicación 2026-10-26: PR [353](https://github.com/venturars/neoland-102026/pull/353) de la tarea 006, base staging, creada por instrucción expresa de Miguel aunque haya dependencias pendientes. Los estados anteriores describen la ejecución local y sus fechas; la PR actual es la referencia de publicación.

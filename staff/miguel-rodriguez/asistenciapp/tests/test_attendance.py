@@ -80,14 +80,18 @@ def test_action_closes_connection_on_storage_error(legacy_database, connections,
         connections[0].execute("SELECT 1")
 
 
-def test_previous_database_is_read_without_migration(legacy_database):
+def test_previous_database_keeps_original_tables_and_data(legacy_database):
     from asistencia.usecases import attendance
     with sqlite3.connect(legacy_database) as conn:
-        before = list(conn.iterdump())
+        tables = ("config", "sessions", "checkins", "sqlite_sequence")
+        before = {table: (conn.execute("SELECT sql FROM sqlite_master WHERE name = ?", (table,)).fetchone(), conn.execute(f"SELECT * FROM {table}").fetchall()) for table in tables}
     assert attendance.prepare(legacy_database) == "previous-token"
     assert attendance.public_session(legacy_database, "previous-session") == {"title": "Clase anterior", "open": True}
     view = attendance.teacher_view(legacy_database, "previous-session", NOW)
     assert view["checkins"] == [{"id": 1, "name": "Ana", "checkedAt": "2026-10-20T10:01:00.000+00:00"}]
     assert view["openedAt"] == "2026-10-20T10:00:00.000+00:00"
     with sqlite3.connect(legacy_database) as conn:
-        assert list(conn.iterdump()) == before
+        after = {table: (conn.execute("SELECT sql FROM sqlite_master WHERE name = ?", (table,)).fetchone(), conn.execute(f"SELECT * FROM {table}").fetchall()) for table in tables}
+        assert after == before
+        assert conn.execute("SELECT * FROM registration_attempts").fetchall() == []
+        assert conn.execute("SELECT * FROM blocked_addresses").fetchall() == []

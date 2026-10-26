@@ -119,8 +119,18 @@ Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una 
 
 ## 8. Privacidad
 
-- Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails ni IPs.
+- En la lista de asistencia solo se guarda **el nombre que escribe** y **la hora**. No se añaden emails ni IPs a esa lista.
+- Para proteger el registro se guardan por separado la dirección de conexión y los intentos del último minuto. Al siguiente intento se eliminan los temporales de 60 segundos o más de todas las direcciones. Las direcciones bloqueadas se guardan permanentemente en local, sin asociarlas a nombres ni clases.
 - El límite "un registro por navegador" se guarda **solo en el navegador del alumno**, no en el servidor.
 - Quitar un registro lo **borra de verdad** (no queda en ninguna papelera).
 - Los datos se guardan **solo en tu ordenador** (`data/`, que no se sube a git).
 - Con `--tunel`, el tráfico pasa **cifrado** por Cloudflare, que no lo almacena (constitución P4, v2.1).
+
+
+## Protección de los registros
+
+Una dirección puede intentar registrarse como máximo cinco veces en un segundo y veinte en un minuto, contando también los intentos incorrectos y repetidos. Superar cualquiera de los máximos bloquea permanentemente esa dirección para registrar asistencia, incluso tras reiniciar la aplicación. Esperar no elimina el bloqueo; no hay función de desbloqueo en esta versión.
+
+El formulario muestra el motivo del rechazo. Las páginas, consultas y operaciones del profesor siguen disponibles. Personas que comparten una dirección pública comparten los límites: se distingue la conexión, no la identidad de cada alumno.
+
+Con `python app.py` se cuenta la dirección de la conexión directa y se ignoran las cabeceras que intenten sustituirla. Con `python app.py --tunel`, el registro exige la dirección de visitante comunicada por el conector Cloudflare local; si falta o no es válida se rechaza con un aviso, sin inventar una dirección. En ese modo el registro directo por localhost sin el origen del túnel se rechaza, aunque las consultas locales siguen funcionando. La aplicación continúa escuchando únicamente en 127.0.0.1.
