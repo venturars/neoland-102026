@@ -13,7 +13,7 @@ El profesor abre una sesión y comparte en la llamada un **código de 4 cifras**
 Necesitas **Python 3.13+** y, para clases online, **Homebrew** (macOS).
 
 ```bash
-cd staff/victor-chang/asistenciapp
+cd staff/ella-deyavorsky/asistenciapp
 python3 -m venv .venv                # crea el entorno virtual del proyecto
 source .venv/bin/activate            # lo activa (verás "(.venv)" en el prompt)
 pip install -r requirements.txt      # instala Flask y pytest
@@ -27,7 +27,7 @@ brew install cloudflared             # el túnel para que los alumnos entren des
 En cada terminal nueva, primero activa el entorno:
 
 ```bash
-cd staff/victor-chang/asistenciapp
+cd staff/ella-deyavorsky/asistenciapp
 source .venv/bin/activate
 ```
 
