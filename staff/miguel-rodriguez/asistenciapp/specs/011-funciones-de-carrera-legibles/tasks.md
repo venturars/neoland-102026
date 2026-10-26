@@ -40,3 +40,10 @@ Las revisiones de compañeros y el merge siguen pendientes. La aplicación conse
 ## Revisión independiente de 011
 
 Una segunda lectura encontró un fallo real en el tratamiento de un motivo de error desconocido: el acceso directo al diccionario de estados lanzaba KeyError dentro del propio handler, por lo que Flask podía registrar el mensaje original. Se sustituyó por una consulta explícita y la respuesta técnica ya sanitizada; el test comprueba también que ni el motivo ni el mensaje aparecen en los logs. Las 24 pruebas específicas pasan después de esta corrección. Las reglas A/B y la recuperación anterior se revisaron de nuevo; esta revisión técnica no se atribuye a un compañero del curso.
+
+
+## Sincronización final de la entrega
+
+La rama de 011 se sincronizó por merge normal con la base actualizada de 010, `57a7fb20398c5f773fadfabca80898ee08d1a2de`, que ya incorpora staging después de #284. No se cambió el destino de ninguna PR ni se publicó directamente en staging.
+
+Verificación final después de esa sincronización y de la corrección del handler: **250 pruebas pasan en 5,59 s** con el mismo comando. El diff exclusivo contra esa base contiene 16 archivos de esta app, todos de 011; no incluye cambios en specs anteriores, pantallas, requisitos o esquema. La comprobación `git diff --check` de ese diff no encuentra incidencias. El whitespace heredado de archivos de otros alumnos no forma parte del cambio y no se modifica.
