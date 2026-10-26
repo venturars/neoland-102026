@@ -87,7 +87,12 @@ try {
   const server = spawnSync(
     ENV_PYTHON,
     ["-m", "notebook", "clients/jupyter"],
-    { cwd: APP_ROOT, stdio: "inherit" },
+    {
+      cwd: APP_ROOT,
+      stdio: "inherit",
+      // Los kernels heredan UTF-8 para leer la salida de Node también en Windows.
+      env: { ...process.env, PYTHONUTF8: "1" },
+    },
   );
   if (server.error) throw server.error;
   process.exit(server.status ?? 1);

@@ -13,6 +13,7 @@
 
 4. Añadir el arranque de Notebook con el Python del entorno local.
    Conectar la entrada y la salida a la terminal y propagar el código de salida.
+   Pasar `PYTHONUTF8=1` para que los kernels lean las tablas de Node en UTF-8.
 
 5. Cambiar `scripts.jupyter` de `package.json` al lanzador Node.
    Actualizar el arranque en el plan y las tareas 2, 13 y 14 de `jupyter-client`.
@@ -40,3 +41,12 @@
 - Linux real queda pendiente: WSL no está instalado en este equipo.
 - Jupyter emite un aviso interno de Yarn al arrancar desde este proyecto ESM;
   el servidor continúa y la API devuelve los nueve notebooks.
+- Prueba completa en Windows: la ejecución del notebook reveló que Python
+  intentaba decodificar las tablas de Node como CP1252 y fallaba.
+- Con `PYTHONUTF8=1` en el lanzador, el kernel creado por el propio servidor
+  confirma modo UTF-8 y usa el Python local de `.venv`.
+- El código original de `list-users.ipynb` se ejecuta por el canal del kernel:
+  devuelve la tabla con los bordes UTF-8 correctos. El hash de la base de datos
+  permanece igual y las salidas no se guardan en el notebook original.
+- La interfaz devuelve HTTP 200 y la API enumera nueve notebooks. Las once
+  comprobaciones simuladas pasan también con la herencia de UTF-8.

@@ -30,6 +30,9 @@ Si ya está esa versión, no instala nada.
 Arranca ese mismo Python con `-m notebook clients/jupyter`, desde la raíz de
 la app y con entrada y salida conectadas a la terminal. Conserva la apertura
 del navegador y la interfaz Notebook. Propaga los fallos de los procesos.
+El proceso recibe `PYTHONUTF8=1`, que heredan sus kernels: así pueden leer
+las tablas UTF-8 que devuelve Node en Windows, sin intentar decodificarlas
+como CP1252.
 
 El código y los textos se guardan en UTF-8. Un comentario corto explica la
 selección de rutas por sistema operativo.
