@@ -1,3 +1,4 @@
+import { finishDuration } from './race-finale.js';
 // Dibujo del contrato de carrera: el servidor decide estados y puestos.
 const ASSETS = new Set(['node-jack','espantatorres','mr-wobble','hombre-lobo-esther','ajolote','jack','vampire-king-leo','fantasmiko','mimo','fantasma','yomi','calabaza-aterradora','harry-universe','edgar-allan-poe','vicwolf']);
 export const PHASES = { lobby:'Sala de espera', countdown:'A punto de salir', open:'En carrera', closed:'Carrera terminada', expired:'Acceso caducado' };
@@ -45,15 +46,18 @@ export function renderPodium(container, state) {
   if (!state.checkins.length) container.append(element('p','Sin registros: hoy no hay medallas.'));
 }
 
-/** Anima ocho segundos sin decidir el resultado. :param container: parrilla. :param checkins: orden confirmado. :return: animaciones cancelables. :rtype: Animation[]. Usage:: finishRace(grid,state.checkins) */
-export function finishRace(container, checkins) {
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return [];
-  return checkins.map((result,index) => {
-    const row = [...container.children].find(node => node.querySelector('.racer-status')?.textContent === `Puesto ${result.position}`);
+/** Anima ocho segundos sin decidir el resultado. :param container: parrilla. :param checkins: orden confirmado. :param roster: plazas autorizadas. :param elapsed: progreso de recorrido en ms. :return: animaciones cancelables. :rtype: Animation[]. Usage:: finishRace(grid,state.checkins,state.roster) */
+export function finishRace(container, checkins, roster, elapsed=0) {
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return [];
+  return checkins.map(result=>{
+    const slot=roster.find(item=>item.position===result.position);
+    const row=[...container.children].find(node=>node.dataset.key===slot?.key);
     const kart=row?.querySelector('.kart');if(!kart)return null;
-    const distance=Math.max(0,row.querySelector('.lane').clientWidth-kart.clientWidth-16);
-    const duration=checkins.length===1?8000:5800+(index/(checkins.length-1))*2200;
-    return kart.animate([{transform:`translateX(-${distance}px)`},{transform:'translateX(0)'}],{duration,easing:'cubic-bezier(.35,.05,.65,.95)',fill:'forwards'});
+    const distance=Math.max(0,row.querySelector('.lane').clientWidth-kart.clientWidth-12);
+    const duration=finishDuration(result.position,checkins.length);
+    const animation=kart.animate([{transform:'translateX(0)'},{transform:`translateX(${distance}px)`}],{duration,easing:'cubic-bezier(.35,.05,.65,.95)',fill:'forwards'});
+    animation.currentTime=Math.min(elapsed,duration);
+    return animation;
   }).filter(Boolean);
 }
 
