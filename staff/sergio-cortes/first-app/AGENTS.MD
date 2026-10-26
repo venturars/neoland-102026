@@ -87,9 +87,6 @@ validación.
 - Tests: no hay. El script `test` de `package.json` termina en error. No se añaden tests ni se cambia ese script.
 - Lint/formato: Prettier por defecto. No hay `.prettierrc` ni script de formato.
 
-## Estilo y convenciones
-
-La forma de cada línea y las convenciones están en `docs/STYLE.md`.
 
 ## Al terminar una tarea
 
