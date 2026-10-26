@@ -1,0 +1,30 @@
+# Feature: updateUser — logic/update-user.js
+# Paste this whole block into Git Bash, with first-app as the current folder.
+# It uses the real database, db/users.sqlite, and removes the practice user at the end.
+
+node --no-warnings --input-type=module -e '
+import { createUser } from "./logic/create-user.js";
+import { updateUser } from "./logic/update-user.js";
+import { deleteUser } from "./logic/delete-user.js";
+
+const practice = createUser("Practice", `practice-${Date.now()}@x.com`);
+
+// 1. Change the name: prints the user with the new name and a new updatedAt
+console.log(updateUser(practice.id, "Practice B", practice.email));
+
+// 2. An id nobody has: prints "User not found"
+try {
+  updateUser(999999, "Nobody", "nobody@x.com");
+} catch (error) {
+  console.log(error.message);
+}
+
+// 3. An empty name: prints "Name is empty"
+try {
+  updateUser(practice.id, "", practice.email);
+} catch (error) {
+  console.log(error.message);
+}
+
+deleteUser(practice.id);
+'

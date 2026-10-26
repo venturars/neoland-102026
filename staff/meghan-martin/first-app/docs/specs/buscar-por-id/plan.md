@@ -3,8 +3,9 @@
 Cumple `docs/specs/buscar-por-id/spec.md`. Aquí el encaje en first-app.
 
 ## Reutilizar
-- `parseId` y `toUser` en `logic/user-fields.js`.
 - `findById` en `queries/users.js` (update y delete ya lo usan).
+- La comprobación del id y los cinco campos devueltos, como en
+  `logic/find-user-by-email.js`.
 
 ## Nuevo
 - `findUserById(id)` en `logic/find-user-by-id.js` (fichero nuevo).
@@ -13,7 +14,6 @@ Cumple `docs/specs/buscar-por-id/spec.md`. Aquí el encaje en first-app.
 - Cambiar email por id: `parseEmail`/`findByEmail` → `parseId`/`findById`.
 - `clients/terminal/find-user-by-id.txt` (copia el de email, llama
   `findUserById(1)`).
-- Tests en `tests/users.test.js`.
 
 ## Errores (inglés, como el resto de la app)
 - `Invalid id` — antes de SQLite

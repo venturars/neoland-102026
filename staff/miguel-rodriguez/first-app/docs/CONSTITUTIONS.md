@@ -12,7 +12,6 @@ classroom app, separate from the later exercises/crud-ssd project.
 - queries/users.js contains SQL and concrete query functions.
 - logic/ has one public operation per file and imports those query functions.
 - clients/terminal/ has copyable .txt examples that call logic, print, and close db.
-- test/ verifies behavior using temporary project copies.
 
 Ventura's constitution describes separate SQL files, but his actual query module
 still embeds SQL. This project deliberately follows the actual module layout.
@@ -47,6 +46,6 @@ enforce length in SQLite; the business function does. IDs can be reused.
 
 Initialize explicitly using createUsersTable(), separately from CRUD clients.
 The connection opens on import; top-level clients close db in finally. Restart
-Node to obtain a new session after closing it. Generated SQLite files are ignored
-by Git, unlike the reference's committed database. Historical user timestamps
+Node to obtain a new session after closing it. Generated SQLite files are local data; stage source files explicitly to avoid
+including personal contacts. Historical user timestamps
 from the old app are preserved as stored; future writes follow reference localtime.

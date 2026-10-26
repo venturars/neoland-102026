@@ -1,0 +1,20 @@
+# Run from staff/miguel-rodriguez/first-app-ssd using Node 24.12.0 (nvm use 24.12.0, if available).
+# Run the separate initialization example first; create-user creates sample Ada.
+# If Ada was deleted or her email changed, User not found is expected.
+# Edit the sample email to a current contact, or create the sample separately.
+# This only reads contacts. It does not initialize or seed the database.
+node --input-type=module <<'EOF'
+let database;
+try {
+  const { db } = await import("./db/connection.js");
+  database = db;
+  const { findUserByEmail } = await import("./logic/find-user-by-email.js");
+  const user = findUserByEmail(" ADA@EXAMPLE.COM ");
+  console.log(user);
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+} finally {
+  if (database) database.close();
+}
+EOF

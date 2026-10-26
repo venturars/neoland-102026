@@ -1,0 +1,3 @@
+# .\staff\esther-patino-141020261\first-app
+Set-Location .\staff\esther-patino-141020261\first-app
+node --input-type=module -e "import { findAll } from './logic/list-users.js'; console.log(findAll());"

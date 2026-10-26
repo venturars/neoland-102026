@@ -5,11 +5,12 @@ No dibuja pantallas. Pide las reglas a ``domain`` y el guardado a ``storage``.
 Usage::
 
   token = prepare(path)
-  row, created = check_in(path, session_id, raw_name, code, now)
+  row, created = check_in(path, session_id, raw_name, code, now, ip)
 """
 
 from datetime import datetime, timezone
 
+from asistencia.domain.attempts import Banned, over_limit
 from asistencia.domain.codes import code_for, seconds_left
 from asistencia.domain.names import clean_name, name_key
 from asistencia.domain.session import ensure_code, ensure_open, require_session
@@ -52,21 +53,33 @@ def public_session(path, session_id: str) -> dict:
     return {"title": loaded["title"], "open": loaded["closed_at"] is None}
 
 
-def check_in(path, session_id: str, raw_name, code, now) -> tuple[dict, bool]:
-    """Registra a un alumno si la clase está abierta y el código vale.
+def check_in(path, session_id: str, raw_name, code, now, ip: str) -> tuple[dict, bool]:
+    """Registra a un alumno si la IP no está bloqueada, la clase está abierta y el código vale.
 
     :param path: ruta del archivo.
     :param session_id: id de la clase.
     :param raw_name: nombre tal como lo escribió el alumno.
     :param code: código de 4 cifras.
     :param now: función que devuelve el instante Unix actual.
+    :param ip: IP pública estática del intento.
     :return: el registro y True si se acaba de crear.
     :rtype: tuple[dict, bool]
+    :raises Banned: si la IP ya está bloqueada o este intento se pasa del máximo.
 
     Usage::
 
-      row, created = check_in(path, session_id, raw_name, code, now)
+      row, created = check_in(path, session_id, raw_name, code, now, ip)
     """
+    if storage.is_ip_blocked(path, ip):
+        raise Banned()
+    instant = now()
+    storage.add_registration_attempt(path, ip, instant)
+    storage.prune_registration_attempts(path, instant - 60)
+    in_last_second = storage.count_registration_attempts(path, ip, instant - 1)
+    in_last_minute = storage.count_registration_attempts(path, ip, instant - 60)
+    if over_limit(in_last_second, in_last_minute):
+        storage.block_ip(path, ip, _iso(lambda: instant))
+        raise Banned()
     loaded = require_session(storage.get_session(path, session_id))
     ensure_open(loaded)
     name = clean_name(raw_name)
