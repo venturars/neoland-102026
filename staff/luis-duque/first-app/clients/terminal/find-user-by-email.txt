@@ -1,0 +1,1 @@
+node --input-type=module -e "import { findUserByEmail } from './staff/luis-duque/first-app/logic/find-user-by-email.js'; console.log(await findUserByEmail(process.argv[1]))" user1@example.com

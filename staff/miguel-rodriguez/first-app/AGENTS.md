@@ -12,6 +12,5 @@ the actual reference. Clients call logic and own output/connection cleanup.
 Do not add a repository factory, application wrapper, CLI parser, custom error
 classes, result wrappers, or dependencies without a concrete requested need.
 
-Run npm test before reporting changes complete. Tests use temporary copies,
-never the working database. Do not commit generated database files. Do not
+Verify the terminal examples in a temporary project copy before reporting changes complete. Do not commit generated database files. Do not
 create branches, commit, push, or open PRs without Miguel's instruction.

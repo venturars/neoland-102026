@@ -1,0 +1,21 @@
+# Feature: deleteUser — logic/delete-user.js
+# Paste this whole block into Git Bash, with first-app as the current folder.
+# It uses the real database, db/users.sqlite: it creates a practice user and deletes it.
+
+node --no-warnings --input-type=module -e '
+import { createUser } from "./logic/create-user.js";
+import { deleteUser } from "./logic/delete-user.js";
+
+const practice = createUser("Practice", `practice-${Date.now()}@x.com`);
+
+// 1. Delete the user: prints "Deleted" and its id
+deleteUser(practice.id);
+console.log("Deleted", practice.id);
+
+// 2. Delete it again: prints "User not found"
+try {
+  deleteUser(practice.id);
+} catch (error) {
+  console.log(error.message);
+}
+'

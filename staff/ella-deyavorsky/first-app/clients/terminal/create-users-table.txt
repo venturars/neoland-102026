@@ -1,0 +1,13 @@
+# Paste this in the terminal, with first-app as the current folder
+node --input-type=module <<'EOF'
+import { db } from "./db/connection.js";
+import { createUsersTable } from "./queries/users.js";
+
+createUsersTable();
+
+const result = db
+  .prepare("SELECT name FROM sqlite_master WHERE type = :type")
+  .all({ type: "table" });
+
+console.log(result);
+EOF

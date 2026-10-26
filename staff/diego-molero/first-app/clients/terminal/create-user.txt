@@ -1,0 +1,6 @@
+// Ejemplo manual. Ejecución: docs/CONSTITUTIONS.md.
+import { createUser } from "./logic/create-user.js";
+
+const result = createUser({ name: "  Ada  ", email: "  ADA@example.com  " });
+
+console.log(result);
