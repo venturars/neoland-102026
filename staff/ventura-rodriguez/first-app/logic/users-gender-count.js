@@ -26,7 +26,8 @@ export async function usersGenderCount() {
 
   for (let start = 0; start < users.length; start += 6) {
     const batch = users.slice(start, start + 6);
-    const names = batch.map((user) => user.name).join("\n");
+    const nameList = batch.map((user) => user.name);
+    const names = nameList.join("\n");
 
     let completion;
     try {
@@ -74,27 +75,54 @@ export async function usersGenderCount() {
 
     const choice = completion.choices[0];
 
-    if (!choice || !choice.message) {
+    let missingMessage = false;
+    if (!choice) {
+      missingMessage = true;
+    }
+    if (choice) {
+      if (!choice.message) {
+        missingMessage = true;
+      }
+    }
+    if (missingMessage) {
       genderUndefined += batch.length;
       continue;
     }
 
     const text = choice.message.content;
 
-    if (typeof text !== "string" || text.trim() === "") {
+    let emptyText = false;
+    if (typeof text !== "string") {
+      emptyText = true;
+    }
+    if (typeof text === "string") {
+      const trimmedText = text.trim();
+      if (trimmedText === "") {
+        emptyText = true;
+      }
+    }
+    if (emptyText) {
       genderUndefined += batch.length;
       continue;
     }
 
     let genders;
     try {
-      genders = JSON.parse(text).genders;
+      const parsed = JSON.parse(text);
+      genders = parsed.genders;
     } catch {
       genderUndefined += batch.length;
       continue;
     }
 
-    if (!Array.isArray(genders) || genders.length !== batch.length) {
+    const gendersIsArray = Array.isArray(genders);
+    let sameCount = false;
+    if (gendersIsArray) {
+      const genderCount = genders.length;
+      const batchCount = batch.length;
+      sameCount = genderCount === batchCount;
+    }
+    if (!sameCount) {
       genderUndefined += batch.length;
       continue;
     }

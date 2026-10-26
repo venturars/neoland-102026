@@ -44,7 +44,7 @@ Cada funcionalidad es un fichero. Un fichero de `logic/` ya creado no se reempla
 
 Un fichero, una función. El nombre, la entrada y la salida los define la firma. No hay un comentario de contrato encima de la función.
 
-El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `listUsers`). Los parámetros van en la firma, con su nombre (`name`, `email`, `id`). No se agrupa la entrada en un único objeto si los datos ya se conocen.
+El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `listUsers`). Los parámetros van en la firma, con su nombre (`name`, `email`, `id`). `createUser` recibe un objeto con `name` y `email`. `updateUser` recibe el `id` y un objeto con los cambios. Un campo `undefined` de ese objeto conserva el valor guardado.
 
 El cuerpo sigue este orden, y no se mezcla:
 
