@@ -78,6 +78,9 @@ __pycache__/
 venv/
 .pytest_cache/
 
+# Jupyter: checkpoints locales junto a los notebooks
+.ipynb_checkpoints/
+
 # SQLite generada en local (cualquier carpeta). *.sqlite se versiona en first-app,
 # salvo la base local de Esther, que no se sube.
 *.db
