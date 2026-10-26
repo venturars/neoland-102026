@@ -17,7 +17,7 @@ from werkzeug.exceptions import HTTPException
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 # Banned means a computer tried to check in too many times.
-from asistencia.domain.attempts import Banned
+from asistencia.domain.attempts import Banned, counted_address
 from asistencia.domain.session import InvalidCode, SessionClosed, SessionNotFound
 from asistencia.tunnel import TunnelError, start_tunnel
 from asistencia.usecases import attendance
@@ -29,13 +29,14 @@ UNAUTHORIZED = "Acceso no autorizado. Abre el panel con tu enlace secreto de pro
 GENERIC_ERRORS = {404: "No encontrado.", 405: "Método no permitido."}
 
 
-def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
+def create_app(db_path=DEFAULT_DB, token=None, now=time.time, trust_tunnel=False):
     app = Flask(__name__, static_folder="static", static_url_path="")
     app.json.ensure_ascii = False
     # Behind the public link, keep the public https address in the student link.
-    # x_for=0 means: do not trust an address sent in a header.
-    # The computer we count is the one that actually connected.
+    # x_for=0 means: do not trust X-Forwarded-For.
+    # trust_tunnel is only on for `python app.py --tunel`.
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=0, x_proto=1, x_host=1)
+    app.config["TRUST_TUNNEL"] = trust_tunnel
 
     stored = attendance.prepare(db_path)
     app.config["TEACHER_TOKEN"] = token or stored
@@ -95,8 +96,12 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
                 body.get("code", ""),  # the code they typed, or blank
                 now(),  # the time of this try
                 # The computer that connected. A typed address is not used.
-                # A missing address becomes blank, so those tries share one count.
-                request.remote_addr or "",
+                # With the public link, each student is the address Cloudflare sends.
+                counted_address(
+                    request.remote_addr,
+                    request.headers.get("CF-Connecting-IP"),
+                    app.config["TRUST_TUNNEL"],
+                ),
             )
             if not created:
                 return jsonify(already=True, name=row["name"], checkedAt=row["checked_at"])
@@ -194,7 +199,7 @@ def main():
             f"  Ciérrala con Ctrl+C, o arranca en otro puerto: PORT={port + 1} python app.py"
         )
     DEFAULT_DB.parent.mkdir(exist_ok=True)
-    app = create_app()
+    app = create_app(trust_tunnel=args.tunel)
 
     tunnel, base_url = None, f"http://localhost:{port}"
     if args.tunel:

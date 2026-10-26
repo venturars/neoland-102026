@@ -124,7 +124,7 @@ Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una 
 ## 8. Privacidad
 
 - Del alumno se guarda **el nombre que elige en la lista de la clase** y **la hora**. La lista de la clase está en la app para ver quién falta. Nada de emails ni fotos.
-- La dirección desde la que intenta pasar lista se recuerda **solo** para contar esos intentos y para el bloqueo, en el mismo fichero local. No se guarda junto al nombre ni a la hora.
+- La dirección desde la que intenta pasar lista se recuerda **solo** para contar esos intentos y para el bloqueo, en el mismo fichero local. No se guarda junto al nombre ni a la hora. Por el enlace público, cada alumno cuenta como su propia dirección.
 - El límite "un registro por navegador" se guarda **solo en el navegador del alumno**, no en el servidor.
 - Quitar un registro lo **borra de verdad** (no queda en ninguna papelera).
 - Los datos se guardan **solo en tu ordenador** (`data/`, que no se sube a git).

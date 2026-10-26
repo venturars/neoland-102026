@@ -178,3 +178,52 @@ def test_a_typed_address_does_not_change_the_block(tmp_path, clock, teacher):
     finally:
         conn.close()
     assert blocked == [real]
+
+
+def test_the_public_link_counts_each_student(tmp_path, clock, teacher):
+    # Through the tunnel, every request arrives from this computer.
+    # Each student still has their own address, so one person does not block the class.
+    app = create_app(tmp_path / "asistencia.db", token=TOKEN, now=clock, trust_tunnel=True)
+    client = app.test_client()
+    sid = open_session(client, teacher)
+    code = current_code(client, teacher, sid)
+    students = [
+        ("Ella Deyavorsky", "1.1.1.1"),
+        ("Meghan Martin", "8.8.8.8"),
+        ("Esther Patino", "9.9.9.9"),
+        ("Miguel Rodriguez", "1.0.0.1"),
+        ("Sergio Cortes", "8.8.4.4"),
+        ("Sergio Moras", "208.67.222.222"),
+        ("Luis Duque", "149.112.112.112"),
+    ]
+    for name, address in students:
+        res = attempt(
+            client,
+            sid,
+            name,
+            code,
+            "127.0.0.1",
+            headers={"CF-Connecting-IP": address},
+        )
+        assert res.status_code == 201
+
+    for _ in range(6):
+        blocked = attempt(
+            client,
+            sid,
+            "Ana",
+            "abcd",
+            "127.0.0.1",
+            headers={"CF-Connecting-IP": "1.1.1.1", "X-Forwarded-For": "9.9.9.9"},
+        )
+    assert blocked.status_code == 429
+
+    still_open = attempt(
+        client,
+        sid,
+        "Diego Molero",
+        code,
+        "127.0.0.1",
+        headers={"CF-Connecting-IP": "8.8.8.8", "X-Forwarded-For": "1.1.1.1"},
+    )
+    assert still_open.status_code == 201

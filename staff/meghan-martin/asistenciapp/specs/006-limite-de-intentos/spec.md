@@ -12,6 +12,8 @@ Quiero un freno: 5 intentos por segundo y 20 por minuto. El siguiente intento bl
 
 La dirección que se cuenta es la del ordenador que envía el intento. Otra dirección escrita en el formulario no cambia la cuenta. El bloqueo no se guarda junto al nombre ni a la hora.
 
+Por el enlace público, el túnel llega desde este ordenador. Ahí la dirección contada es la que Cloudflare envía de cada alumno (`CF-Connecting-IP`), y solo si la app se arrancó con `--tunel`. Sin el túnel, esa cabecera no se usa. `X-Forwarded-For` no se usa nunca. Un alumno no bloquea a los demás.
+
 Quien escribe el código bien una sola vez no llega al tope. Mirar la lista o abrir la página no cuenta.
 
 La constitución no deja guardar esa dirección. Hace falta una enmienda: se puede recordar solo para contar los intentos y para el bloqueo. El registro de asistencia sigue siendo el nombre y la hora. El 5, el 20, el aviso y que el bloqueo no caduca se quedan en esta spec. La enmienda sube a la versión 3.0 porque contradice la prohibición de guardar esa dirección.
@@ -54,6 +56,7 @@ El código de 4 cifras no se alarga ni cambia de otra forma.
 - **CA-07**: **Dado** un intento que trae otra dirección escrita, **cuando** se cuenta o se bloquea, **entonces** se usa la dirección del ordenador que envió el intento. Otro ordenador, con otra dirección de verdad, todavía puede pasar lista.
 - **CA-08**: **Dado** este freno, **cuando** miro el código de 4 cifras, **entonces** no es más largo y sigue cambiando como hasta ahora.
 - **CA-09**: **Dado** la constitución enmendada, **cuando** leo la privacidad, **entonces** deja recordar la dirección solo para contar los intentos y para el bloqueo, no junto al nombre ni a la hora. La versión es 3.0 y la enmienda está en el historial. El 5, el 20, el aviso y que el bloqueo no caduca no se escriben en la constitución.
+- **CA-10**: **Dado** la app arrancada con el enlace público, **cuando** varios alumnos pasan lista casi a la vez, **entonces** cada uno es su propia dirección y los intentos de uno no bloquean a los demás. Sin `--tunel`, la cabecera del túnel no cambia la cuenta. `X-Forwarded-For` tampoco.
 
 ---
 
@@ -84,3 +87,4 @@ Ninguna.
 | 0.2 | 2026-10-25 | El borrador pasó a inglés | Quien trabaja en esta carpeta lo pidió. El aviso que ve el alumno sigue en español. |
 | 1.0 | 2026-10-25 | Aprobada, otra vez en español | El sí fue a este texto. |
 | 1.1 | 2026-10-25 | Implementada | T01–T11 hechas. 100 tests en verde. |
+| 1.2 | 2026-10-26 | Por el enlace público, cada alumno es su dirección | El túnel hacía que toda la clase contara como este ordenador. El sexto intento bloqueaba a todos. |
