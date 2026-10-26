@@ -1,0 +1,3 @@
+# .\staff\esther-patino-141020261\first-app
+Set-Location .\staff\esther-patino-141020261\first-app
+node --input-type=module -e "import { removeUser } from './logic/delete-user.js'; console.log(removeUser(1));"
