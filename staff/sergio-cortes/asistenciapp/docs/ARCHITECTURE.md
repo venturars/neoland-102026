@@ -1,8 +1,8 @@
 # Arquitectura de AsistenciApp
 
-> Versión 1.3 · 2026-10-26
+> Versión 1.4 · 2026-10-26
 
-Este documento dice **cómo se organiza el código**. La [constitución](CONSTITUTIONS.md) fija reglas de producto; aquí van las capas.
+Este documento dice **cómo se organiza el código** y **dónde vive cada cosa** en el repo de la app. La [constitución](CONSTITUTIONS.md) fija reglas de producto; aquí van las capas y la estructura de carpetas.
 
 ---
 
@@ -18,30 +18,55 @@ Las flechas solo van hacia dentro:
 
 ---
 
-## 2. Estructura de carpetas
+## 2. Estructura del repositorio
+
+Raíz de trabajo: `staff/sergio-cortes/asistenciapp/` (en el diagrama, `asistenciapp/`).
 
 ```
 asistenciapp/
 ├── docs/
-│   ├── CONSTITUTIONS.md
-│   └── ARCHITECTURE.md
-├── AGENTS.md
-├── app.py                 # main() y --tunel
-├── asistencia/
-│   ├── domain/            # codes, names, session, attempts
-│   ├── usecases/          # attendance.py
-│   ├── storage/           # sqlite.py (asistencia + rate limit)
-│   ├── infra/sqlite/      # schema.py, connection.py
-│   ├── export.py
-│   ├── tunnel.py
-│   └── web/               # flask_app.py
-├── static/
-└── tests/
+│   ├── CONSTITUTIONS.md   # reglas no negociables
+│   └── ARCHITECTURE.md    # este documento
+├── AGENTS.md              # manual de trabajo para agentes de IA
+├── README.md              # arranque y uso (humanos)
+├── specs/
+│   └── NNN-nombre/
+│       ├── spec.md        # qué y por qué (SDD)
+│       ├── plan.md        # cómo
+│       └── tasks.md       # pasos
+├── requirements.txt       # dependencias Python (Flask, pytest)
+├── pytest.ini             # configuración de pytest
+├── app.py                 # arranque (`main`, --tunel, puerto)
+├── asistencia/            # paquete del servidor (capas §1)
+│   ├── domain/            # reglas (codes, names, session, attempts)
+│   ├── usecases/          # acciones (`attendance.py`)
+│   ├── storage/           # almacén SQLite (`sqlite.py`)
+│   ├── infra/sqlite/      # schema.py y connection.py
+│   ├── export.py          # CSV
+│   ├── tunnel.py          # cloudflared
+│   └── web/               # flask_app.py (HTTP)
+├── static/                # HTML, CSS y JS del navegador
+├── tests/                 # tests (`test_*.py`)
+├── .venv/                 # entorno virtual (no se sube a git)
+└── data/                  # base SQLite local (no se sube a git)
 ```
+
+### 2.1 Carpetas que no son capas de runtime
+
+| Carpeta / fichero | Rol |
+| --- | --- |
+| `docs/`, `specs/`, `AGENTS.md` | Gobernanza y SDD; no se importan en tiempo de ejecución. |
+| `README.md` | Instrucciones para personas; el agente usa `AGENTS.md` y la constitución. |
+| `requirements.txt`, `pytest.ini` | Herramientas de desarrollo (constitución P3). |
+| `static/` | Front estático; el servidor lo sirve desde Flask, no contiene reglas de negocio Python. |
+| `tests/` | Contrato automatizado; validan capas sin sustituir la documentación. |
+| `.venv/`, `data/` | Artefactos locales; fuera de git. |
 
 ---
 
 ## 3. Qué archivo vive en cada parte
+
+Rutas relativas a `asistencia/` salvo donde se indique.
 
 | Archivo | Parte | Qué hace |
 | --- | --- | --- |
@@ -51,8 +76,11 @@ asistenciapp/
 | `usecases/attendance.py` | Acciones | Orquesta reglas + `storage` |
 | `storage/sqlite.py` | Almacén | Abre `data/asistencia.db`, guarda y lee |
 | `infra/sqlite/schema.py` | DDL | Tablas (compartido con el almacén) |
+| `infra/sqlite/connection.py` | Infra SQLite | `connect`, `init_schema(conn)` |
 | `export.py` | Utilidad | CSV de filas ya cargadas |
+| `tunnel.py` | Adaptador | Túnel cloudflared (arrancado desde `app.py`) |
 | `web/flask_app.py` | HTTP | Factory Flask, rutas JSON, `ProxyFix`, IP del check-in vía `request.remote_addr` |
+| `app.py` (raíz) | Entrada | Composition root: CLI, puerto, `--tunel`, `create_app()` |
 
 ---
 
@@ -64,3 +92,4 @@ asistenciapp/
 | 1.1 | 2026-10-26 | Estilo funcional sin repositorios OOP. |
 | 1.2 | 2026-10-26 | `usecases/`, `storage/sqlite.py`; DDL en `infra/sqlite/`. |
 | 1.3 | 2026-10-26 | IP del cliente en check-in: `request.remote_addr` (sin `client_ip.py`; `ProxyFix` con `x_for=1`). |
+| 1.4 | 2026-10-26 | Árbol completo del repo y §2.1; fuente única de estructura (sin duplicar en `AGENTS.md`). |

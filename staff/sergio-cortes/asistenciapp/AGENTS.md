@@ -9,7 +9,7 @@ Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en 
 Lee en este orden al empezar cualquier tarea:
 
 1. `docs/CONSTITUTIONS.md`: las reglas no negociables.
-2. `docs/ARCHITECTURE.md`: capas del servidor y reglas de dependencias.
+2. `docs/ARCHITECTURE.md`: capas, árbol de carpetas (§2) y dónde va cada fichero (§3).
 3. Este archivo (`AGENTS.md`).
 4. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
 5. Su `plan.md` y su `tasks.md`, si ya existen.
@@ -37,6 +37,7 @@ Al empezar el cambio, el único fichero nuevo permitido es el `spec.md`. El agen
 - Cada criterio de aceptación lleva un identificador (`CA-01`, `CA-02`…) para poder enlazarlo desde tareas y tests.
 - Si falta información, escribe `[NECESITA ACLARACIÓN: pregunta concreta]`. **No inventes la respuesta.**
 - Si la spec activa no describe lo pedido, no se reutiliza: se abre `specs/NNN-nombre/spec.md`.
+- Cada spec vive en `specs/NNN-nombre/` con tres dígitos y nombre en kebab-case (p. ej. `001-checkin-codigo`, `002-spec-antes-del-cambio`).
 
 ### 2.2 Planificar (`plan.md`)
 - Arquitectura, modelo de datos, rutas/API, archivos que se crearán.
@@ -55,38 +56,9 @@ Al empezar el cambio, el único fichero nuevo permitido es el `spec.md`. El agen
 
 ---
 
-## 3. Estructura de carpetas
+## 3. Estructura del repositorio
 
-```
-asistenciapp/
-├── docs/
-│   ├── CONSTITUTIONS.md   # reglas no negociables
-│   └── ARCHITECTURE.md    # capas y dependencias del servidor
-├── AGENTS.md              # este archivo
-├── README.md              # cómo arrancar la app (para humanos)
-├── specs/
-│   └── NNN-nombre/
-│       ├── spec.md        # qué y por qué
-│       ├── plan.md        # cómo
-│       └── tasks.md       # pasos
-├── requirements.txt       # dependencias de Python (Flask, pytest)
-├── pytest.ini             # configuración de pytest
-├── app.py                 # arranque (`main`, --tunel, puerto)
-├── asistencia/
-│   ├── domain/            # reglas (codes, names, session, attempts)
-│   ├── usecases/          # acciones (`attendance.py`)
-│   ├── storage/           # almacén SQLite (`sqlite.py`)
-│   ├── infra/sqlite/      # schema.py y connection.py
-│   ├── export.py          # CSV
-│   ├── tunnel.py          # cloudflared
-│   └── web/               # flask_app.py (HTTP)
-├── static/                # HTML, CSS y JS del navegador
-├── tests/                 # tests (test_*.py)
-├── .venv/                 # entorno virtual de Python (no se sube a git)
-└── data/                  # base de datos SQLite (no se sube a git)
-```
-
-Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-spec-antes-del-cambio`.
+La **estructura de carpetas**, las **capas del servidor** y la tabla **qué archivo vive dónde** están solo en [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) (§1–§3). No copies el árbol aquí: actualízalo allí si cambia el layout.
 
 ---
 
