@@ -14,7 +14,7 @@ El flujo es `terminal → logic → queries → db/connection.js`.
 *Motivo:* cada capa se entiende y se prueba por separado, y el SQL queda en un único sitio.
 
 ### 2. Estructura fija
-- Una operación = un archivo en `logic/` + un `.txt` en `terminal/`.
+- Una operación = un archivo en `logic/` + un `.txt` en `clients/terminal/`.
 - Una tabla = un archivo en `queries/`.
 - Cada archivo de `logic/` exporta su función y puede ejecutarse desde la terminal con el bloque `isRunFromTerminal`.
 - No se crean, mueven ni borran archivos o carpetas sin que el usuario lo pida.

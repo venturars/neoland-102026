@@ -8,7 +8,7 @@ Proyecto didáctico: base de datos de usuarios en SQLite, con `node:sqlite`. Las
 
 ## Estructura
 ```
-terminal/   .txt con los comandos que el usuario ejecuta a mano
+clients/terminal/   .txt con los comandos que el usuario ejecuta a mano
 logic/      una función por operación: valida datos y llama a queries
 queries/    todo el SQL (users.js); no valida nada
 db/         connection.js (conexión y creación de la tabla) y users.sqlite
