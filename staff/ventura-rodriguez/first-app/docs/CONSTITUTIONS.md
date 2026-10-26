@@ -59,6 +59,10 @@ Si el desarrollo no es una funcionalidad nueva, los pasos siguen teniendo el mis
 
 Estos ficehros deben contener la información d forma escueta, concreta y determinista. Tratando de no agregar complejidad a la lectura de los ficheros.
 
+## Paquetes
+
+Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket.
+
 ## Base de datos
 
 Hay una sola base de datos: `db/users.sqlite`. Hay una sola conexión: el `db` que exporta `db/connection.js`. No se abre otra base de datos ni otra conexión.
