@@ -94,7 +94,7 @@ Ejecutar desde `staff/miguel-rodriguez/asistenciapp/`:
 | Arrancar solo en local (desarrollo) | `python app.py` (abre en `http://localhost:8000`) |
 | Ejecutar los tests | `pytest` |
 
-Las únicas dependencias son Flask y pytest (constitución P3).
+Las dependencias son Flask, pytest y qrcode==8.2 sin extras de imágenes (constitución P3/4.1). qrcode declara colorama en Windows. No se instala Pillow para generar SVG.
 
 ---
 
@@ -132,7 +132,7 @@ Una funcionalidad está terminada cuando:
 | `004-quitar-referencias-personales` | Terminada; revisión final aprobada por Miguel el 2026-10-23 | Referencias heredadas retiradas; hechos conservados; 77 tests pasan; evidencia en tasks.md |
 | `005-reorganizar-arquitectura` | Terminada; revisión final aprobada por Miguel el 2026-10-23 | 112 pruebas aprobadas; comparación previa de 22 escenarios y regresión de precedencia corregida; evidencia en tasks.md |
 | `006-limitar-intentos-de-registro` | Implementada y verificada; ejecución completa delegada por Miguel el 2026-10-24 | 145 pruebas y comprobación de navegador; revisión de compañeros pendiente; evidencia en tasks.md |
-| `007-carrera-de-asistencia` | Spec, plan y tareas aprobados; implementación visual pendiente | Consumirá el contrato 008; no hay juego o QR nuevo implementado |
+| `007-carrera-de-asistencia` | Implementada, verificada localmente y probada por Miguel el 2026-10-25; publicación pendiente | QR local, quince SVG, lobby, salida, registro, llegada y podio; 226 pruebas de app; evidencia en specs/007-carrera-de-asistencia/evidence.md; recorrido básico y QR móvil probados por Miguel; publicación pendiente |
 | `008-proteger-el-registro-de-carrera` | Implementada, verificada y resultado local aprobado por Miguel el 2026-10-25; publicación pendiente | Issue #328; R1/R2 corregidos; 218 pruebas de app y dos reproducciones originales pasan; evidencia y comandos en tasks.md; sin PR 008 publicada ni aprobación de peers atribuida |
 | Bot de Discord (sin número asignado) | Idea futura | Fuera del MVP |
 
@@ -146,9 +146,16 @@ Las dependencias siguen [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Las specs 
 
 ## Ejecución local autorizada de 008
 
-Miguel autorizó implementar y probar en una copia separada mientras se integran las predecesoras. T02 sigue pendiente en su parte de publicación: la futura PR será exclusiva de 008 y tendrá base staging. No se cambian bases para encadenar PRs ni se publica el trabajo sobre la rama 300. La enmienda 4.0 aprobada se aplica solo en esta copia. No se han usado bases reales ni cambiado dependencias. La interfaz 007 continúa pendiente.
+Miguel autorizó implementar y probar en una copia separada mientras se integran las predecesoras. T02 sigue pendiente en su parte de publicación: la futura PR será exclusiva de 008 y tendrá base staging. No se cambian bases para encadenar PRs ni se publica el trabajo sobre la rama 300. La enmienda 4.0 aprobada se aplica solo en esta copia. No se han usado bases reales ni cambiado dependencias. La interfaz 007 se implementó después en otra copia local autorizada, sin modificar esta base de referencia de 008.
 
 Verificación del backend: `python -m pytest -q`; ensayo HTTP propio y acotado: `python -m pytest -q tests/test_race_live_http.py`. Las pruebas detienen sus propios servidores. La demostración y revisión de Miguel no se dan por realizadas al pasar pytest. Véase [evidencia 008](specs/008-proteger-el-registro-de-carrera/evidence.md).
 
 
-Publicación 2026-10-26: PR [354](https://github.com/venturars/neoland-102026/pull/354) de la tarea 008, base staging, creada por instrucción expresa de Miguel aunque haya dependencias pendientes. Los estados anteriores describen la ejecución local y sus fechas; la PR actual es la referencia de publicación.
+## Ejecución local autorizada de 007
+
+Miguel aprobó el resultado local de 008 el 2026-10-25 y ordenó implementar 007 siguiendo sus tareas. Se trabaja en `007-local-implementation/asistenciapp`, copia nueva sobre 008 sin datos reales. La enmienda exacta 4.1 y qrcode==8.2 estaban incluidos en el plan aprobado. T02 y T50 mantienen pendiente el momento Git hasta disponer de un diff exclusivo a staging; no se crean bases encadenadas. No hay PR de 007 publicada.
+
+Miguel confirmó después el recorrido en ordenador y con cámara de móvil por HTTPS; T43 está completa. T49 conserva pendiente la limpieza definitiva del código local tras su publicación. Conservar la copia hasta esa prueba; no dejar servidores propios activos entre ensayos. [Evidencia](specs/007-carrera-de-asistencia/evidence.md), [revisión](specs/007-carrera-de-asistencia/review.md).
+
+
+Publicación 2026-10-26: PR [355](https://github.com/venturars/neoland-102026/pull/355) de la tarea 007, base staging, creada por instrucción expresa de Miguel aunque haya dependencias pendientes. Los estados anteriores describen la ejecución local y sus fechas; la PR actual es la referencia de publicación.

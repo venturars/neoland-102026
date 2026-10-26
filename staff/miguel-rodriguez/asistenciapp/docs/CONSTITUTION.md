@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 4.0 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-24
+> Versión 4.1 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-25
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -28,6 +28,8 @@ El registro de asistencia no depende de una plataforma concreta. Las integracion
 - Se usa la biblioteca estándar de Python (`sqlite3`, `hmac`, `secrets`, `csv`, `unicodedata`…) y el navegador (HTML, CSS y JavaScript sin frameworks).
 - Las únicas dependencias externas permitidas de serie son **Flask** (servidor web) y **pytest** (tests), listadas en `requirements.txt`.
 - Añadir cualquier otra requiere **justificarla por escrito** en el `plan.md` de la feature (qué problema resuelve y por qué no basta lo que ya hay).
+
+Para las carreras de asistencia se permite qrcode==8.2 para generar QR SVG localmente, sin extras de imágenes. Se documentan sus dependencias transitivas de plataforma. No se envían datos a un generador externo.
 
 ### P4 · Privacidad mínima
 - Del alumno solo se guarda el **nombre que él mismo escribe** y la **hora del registro**.
@@ -117,3 +119,5 @@ Cambiar el stack requiere enmendar esta constitución.
 | 2.4 | 2026-10-23 | §3: documentos en docs/, manual AGENTS.md y responsabilidades domain/usecases/storage | Spec y plan 005 aprobados por Miguel; organización actualizada sin cambiar principios, stack ni reglas de asistencia |
 | 3.0 | 2026-10-24 | P4 y §6: excepción limitada para intentos recientes y direcciones bloqueadas; límites y bloqueo permanente | Spec 006 revisada y ejecución completa delegada por Miguel; se sustituye la prohibición absoluta de IPs sin ampliar los datos de asistencia |
 | 4.0 | 2026-10-24 | P4 y §6: plazas, reserva duradera y accesos temporales de carrera; 006 se conserva en clases normales | Texto del plan 008 aprobado por Miguel y ejecución de sus tareas autorizada; aplicación solo en copia local |
+
+| 4.1 | 2026-10-25 | P3: qrcode==8.2 sin extras de imágenes para QR SVG local | Texto exacto del plan 007 aprobado y ejecución de sus tareas autorizada por Miguel |

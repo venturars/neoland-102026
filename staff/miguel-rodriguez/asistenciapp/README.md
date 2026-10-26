@@ -16,7 +16,7 @@ Necesitas **Python 3.13+** y, para clases online, **Homebrew** (macOS).
 cd staff/<usuario>/asistenciapp
 python3 -m venv .venv                # crea el entorno virtual del proyecto
 source .venv/bin/activate            # lo activa (verás "(.venv)" en el prompt)
-pip install -r requirements.txt      # instala Flask y pytest
+pip install -r requirements.txt      # instala las dependencias del proyecto
 brew install cloudflared             # el túnel para que los alumnos entren desde casa
 ```
 
@@ -121,7 +121,7 @@ Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una 
 
 - En la lista de asistencia solo se guarda **el nombre que escribe** y **la hora**. No se añaden emails ni IPs a esa lista.
 - Para proteger el registro se guardan por separado la dirección de conexión y los intentos del último minuto. Al siguiente intento se eliminan los temporales de 60 segundos o más de todas las direcciones. Las direcciones bloqueadas se guardan permanentemente en local, sin asociarlas a nombres ni clases.
-- El límite "un registro por navegador" se guarda **solo en el navegador del alumno**, no en el servidor.
+- En las clases normales, el recordatorio "un registro por navegador" se guarda **solo en el navegador del alumno**. En carrera se guardan plazas y permisos temporales separados, con caducidad máxima de dos horas; la cookie propia no identifica dispositivos entre clases.
 - Quitar un registro lo **borra de verdad** (no queda en ninguna papelera).
 - Los datos se guardan **solo en tu ordenador** (`data/`, que no se sube a git).
 - Con `--tunel`, el tráfico pasa **cifrado** por Cloudflare, que no lo almacena (constitución P4, v2.1).
@@ -136,26 +136,38 @@ El formulario muestra el motivo del rechazo. Las páginas, consultas y operacion
 Con `python app.py` se cuenta la dirección de la conexión directa y se ignoran las cabeceras que intenten sustituirla. Con `python app.py --tunel`, el registro exige la dirección de visitante comunicada por el conector Cloudflare local; si falta o no es válida se rechaza con un aviso, sin inventar una dirección. En ese modo el registro directo por localhost sin el origen del túnel se rechaza, aunque las consultas locales siguen funcionando. La aplicación continúa escuchando únicamente en 127.0.0.1.
 
 
-## Backend de carrera (008)
+## Carrera de Halloween
 
-El contrato de seguridad de [008](specs/008-proteger-el-registro-de-carrera/spec.md) permite preparar una carrera, ocupar plazas, dar la salida y registrar asistencia desde la API. La pantalla de karts y el QR de 007 todavía no están implementados. Contrato completo: [arquitectura](docs/ARCHITECTURE.md#registro-de-carrera-008).
+1. En el panel, marca **Carrera de Halloween** antes de abrir la clase. La presentación muestra los quince nombres y sus personajes del ejercicio de Halloween sobre karts distintos.
+2. Comparte esa pantalla. Los alumnos escanean el QR o abren **Abrir entrada sin cámara**, eligen un nombre libre y pulsan **Entrar a la parrilla**. Aparecer como «Listo» todavía no registra asistencia ni da un puesto.
+3. Cuando estén los participantes previstos, pulsa **Empezar carrera**. No hace falta esperar a los quince. Se cierra la entrada, se fija el grupo y comienza una única cuenta atrás de tres segundos.
+4. Al terminar la cuenta atrás aparece el código de cuatro cifras en la presentación. Cada alumno lo escribe en su teléfono: gana quien confirma primero, no quien escaneó primero. Cada plaza tiene **tres envíos totales, incluido el correcto**. Los códigos rotan cada treinta segundos.
+5. El alumno recibe su confirmación y puesto enseguida. Cuando todos los participantes fijados registran asistencia, se cierra la carrera. Si alguien falta, se desconecta o agota sus intentos, pulsa **Terminar carrera** y confirma el cierre.
+6. Los pilotos que registraron asistencia recorren la pista en una llegada de unos ocho segundos, en el orden guardado. Después aparecen el podio y la clasificación. Con movimiento reducido o al recargar una carrera cerrada, el resultado se muestra directamente. Con uno o dos finalistas se conceden solo esas medallas; sin registros no hay ganadores.
 
-La lista local incluye los quince nombres y personajes. El profesor prepara la carrera y comparte su entrada durante el lobby. Cada alumno elige un nombre libre; Go fija el grupo y abre el registro tres segundos después. Gana quien confirma primero el código, no quien entró primero al lobby. El profesor puede cerrar aunque falten participantes.
+**Descargar asistencia** conserva el CSV de asistencia. **Quitar** retira una asistencia y recalcula los puestos, pero no devuelve intentos ni vuelve a abrir la plaza. El nombre **neoland / kart** de la cabecera vuelve al panel para consultar otras clases; **Pantalla completa** amplía la presentación.
 
-Cada plaza tiene tres oportunidades totales, incluida la correcta; las quince plazas suman como máximo cuarenta y cinco evaluaciones. Cambiar dirección o navegador, girar el código o reiniciar no repone oportunidades. Si se pierde el acceso después de Go, no se entrega otro. Esta entrada sencilla permite elegir nombres ajenos: no verifica identidad.
+### Acceso e intentos
 
-Los participantes de una carrera pueden compartir Wi-Fi sin gastar el presupuesto de otros ni activar un bloqueo colectivo. Las clases normales conservan sus límites de cinco intentos por segundo y veinte por minuto con bloqueo permanente por dirección.
+La entrada compartida no comprueba identidad: alguien puede ocupar nombres ajenos, incluso todos antes de empezar. El profesor puede retirar una ocupación equivocada mientras el lobby está abierto. Después de la salida no se admiten nuevas plazas ni accesos de reemplazo: hay que conservar el mismo navegador y sus cookies. Perder ese acceso impide continuar en esa carrera.
 
-Si la base está ocupada antes de reservar, la API devuelve 503 con Retry-After: 1: se puede repetir el mismo envío, sin generar otro identificador. Una reserva confirmada queda gastada aunque el resultado falle. Ante 202/unconfirmed o un error técnico, se consulta /me o se repite el mismo operation_id con el mismo contenido; eso no vuelve a evaluar el código. Si sigue abierto y queda presupuesto, el alumno puede decidir hacer otro envío con un UUID nuevo. Después de un éxito, el resultado se recupera hasta dos horas desde la preparación; ni cerrar ni reiniciar prolonga ese plazo.
+En carrera, compartir Wi-Fi no mezcla los presupuestos: cada plaza tiene tres comprobaciones y las quince suman como máximo cuarenta y cinco. Las clases normales mantienen los límites por dirección descritos arriba. Cambiar de dispositivo, dirección o código no repone oportunidades de la carrera.
 
-Para comprobar el backend, con el entorno activado y desde la carpeta del proyecto:
+Ante una respuesta perdida, la pantalla consulta el resultado. Si ofrece **Reintentar el mismo envío**, conserva su identificador y código; repetirlo no obtiene otra comprobación. Si un envío quedó sin resultado confirmado, su oportunidad permanece gastada y nunca se muestra como éxito. Otro envío requiere una nueva acción del alumno. El acceso privado al propio resultado caduca como máximo dos horas después de preparar la carrera.
+
+### QR y dibujos
+
+El QR se genera en el servidor con **qrcode==8.2**, sin extras de imágenes ni servicio externo. En Windows el paquete declara **colorama** como dependencia de plataforma; no se necesita Pillow. Los quince SVG son adaptaciones originales de los ejercicios: [personajes y referencias](docs/RACE-ASSETS.md).
+
+En la verificación local se decodificó el QR con Apple Vision y se probó su enlace en navegadores independientes. Miguel comprobó después el escaneo con la cámara de su móvil y el recorrido de registro mediante un túnel HTTPS temporal el 2026-10-25.
+
+### Comprobar la carrera
+
+Desde la carpeta del proyecto, con el entorno activado:
 
 ```bash
-python -m pytest -q tests/test_race_domain.py tests/test_race_storage.py tests/test_race_usecases.py tests/test_race_concurrency.py tests/test_race_api.py
-python -m pytest -q tests/test_race_live_http.py
 python -m pytest -q
+python -m pytest -q tests/test_race_qr.py tests/test_race_live_http.py
 ```
 
-La segunda comprobación levanta un servidor solo en loopback sobre un puerto libre, usa quince clientes y cincuenta envíos adversarios con datos ficticios, lo detiene y comprueba que el puerto queda libre. No necesita un túnel. Las pruebas usan bases temporales; no añaden asistencias a data/asistencia.db.
-
-La API requiere un origen real configurado para carreras. El arranque lo obtiene de su URL local o túnel; una factoría de desarrollo puede recibir race_origin y race_local_http=True únicamente para loopback. La entrada del profesor sigue protegida con X-Teacher-Token. No publiques una instancia HTTP de desarrollo en la red de clase.
+Los ensayos de navegador, capturas y sus resultados están en [la evidencia de 007](specs/007-carrera-de-asistencia/evidence.md). El backend y sus límites están documentados en [008](specs/008-proteger-el-registro-de-carrera/evidence.md).
