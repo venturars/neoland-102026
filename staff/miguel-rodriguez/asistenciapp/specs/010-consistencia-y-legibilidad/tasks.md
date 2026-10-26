@@ -66,3 +66,9 @@ Después de aprobar el resultado documental, Miguel autorizó crear la issue #36
 - PR: [#362](https://github.com/venturars/neoland-102026/pull/362), destino staging, creada en draft. Depende de #356; la descripción explica el diff acumulado y enlaza la comparación exclusiva de 010 desde ca8684e.
 - La aprobación local de Miguel no se presenta como aprobación de compañeros. No se fusionan PRs ni se modifican sus bases.
 - La nota de T07 sin commits o pushes describe el estado al terminar la verificación local, anterior a esta publicación autorizada.
+
+## Preparación final para revisión · 2026-10-26
+
+Miguel autorizó completar y publicar todo el trabajo pendiente. Se incorporó la rama actualizada de 009, que contiene el staging posterior a #252 y #284. La comparación exclusiva de 010 conserva únicamente sus cinco documentos; no cambia código, pruebas, datos, constitución o dependencias. La PR #362 está lista para revisión y mantiene destino staging; se fusiona después de #356.
+
+Nueva ejecución en una copia desechable con datos ficticios y el entorno existente: `PYTHONDONTWRITEBYTECODE=1 python -m pytest -q -p no:cacheprovider`, **226 pruebas aprobadas en 5,51 s**. Se eliminó la copia temporal; no se dejaron servidores propios activos. La revisión de compañeros y el merge siguen pendientes, sin contar aprobaciones descartadas.
