@@ -172,6 +172,7 @@ Una funcionalidad está terminada cuando:
 | `003-activar-el-entorno` | ✅ Implementada (2026-10-24): T01–T04, 77 tests | El README separa activar el entorno y arrancar la app |
 | `004-quitar-referencias-personales` | ✅ Implementada (2026-10-26) | Ninguna referencia personal a otro usuario en la documentación; la ruta del README es la de esta carpeta |
 | `005-arquitectura-por-capas` | ✅ Implementada v1.3 (2026-10-26) | Documentación en `docs/`, `AGENTS.md` con normas de escritura y código en `domain`, `usecases` y `storage` |
+| `006-limite-por-ip` | 🚧 En implementación (2026-10-26) | Límite de 5 intentos por segundo y 20 por minuto por IP; bloqueo permanente en la base; constitución 3.0 |
 | Bot de Discord | Idea futura, sin número | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.

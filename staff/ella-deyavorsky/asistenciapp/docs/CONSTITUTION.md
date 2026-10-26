@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 2.2 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-23
+> Versión 3.0 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-26
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -31,7 +31,8 @@ El registro de asistencia no depende de una plataforma concreta. Las integracion
 
 ### P4 · Privacidad mínima
 - Del alumno solo se guarda el **nombre que él mismo escribe** y la **hora del registro**.
-- **Prohibido** guardar emails, IPs, identificadores de dispositivo o cualquier dato no imprescindible.
+- **Prohibido** guardar emails, identificadores de dispositivo o cualquier dato no imprescindible.
+- La **IP** solo puede guardarse en la lista negra y en los contadores de intentos del registro, nunca junto a nombres, sesiones o registros de asistencia ni en el CSV.
 - Los datos se **almacenan** solo en local (SQLite). Ningún servicio de terceros los guarda.
 - Para que los alumnos lleguen a la app desde sus casas, el tráfico puede **pasar cifrado (HTTPS)** por un proveedor de túnel (p. ej. Cloudflare). Ese proveedor no los almacena, pero técnicamente podría verlos en tránsito; por eso solo se envía lo imprescindible (nombre y código).
 
@@ -80,7 +81,7 @@ Cambiar el stack requiere enmendar esta constitución.
 
 ## 6. Seguridad
 
-- Los códigos de asistencia **caducan** y no se pueden adivinar **a mano** antes de caducar. La protección contra ataques automatizados (scripts) no es un requisito.
+- Los códigos de asistencia **caducan** y no se pueden adivinar **a mano** antes de caducar. El registro limita los intentos por IP para frenar los ataques automatizados (scripts).
 - Un mismo alumno no puede registrarse dos veces en la misma sesión.
 - Una sesión cerrada no acepta más registros.
 - Toda entrada del usuario se valida en el servidor y se escapa al mostrarla (sin HTML inyectado).
@@ -107,3 +108,4 @@ Cambiar el stack requiere enmendar esta constitución.
 | 2.0 | 2026-10-20 | §3: stack Node.js → Python (Flask + pytest). P3 pasa de "cero dependencias" a "dependencias mínimas" y permite Flask y pytest | Requisito nuevo: el proyecto debe hacerse en Python. Se elige Flask por ser simple y muy extendido, y pytest por su sintaxis sencilla |
 | 2.1 | 2026-10-20 | P4: distingue *almacenar* (solo en local) de *transitar* (puede pasar cifrado por un proveedor de túnel) | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08) |
 | 2.2 | 2026-10-23 | §4: ningún fichero de la app (código, tests, README, documentación de uso) se toca sin un spec aprobado; una issue, una rama o una pull request no sustituyen al spec; si el cambio no cabe en la spec activa, se abre otra. §7 y §8: la carpeta y quien aprueba pasan a `staff/ella-deyavorsky/asistenciapp/` y a la persona que trabaja en ella | La puerta solo frenaba el código de una funcionalidad, así que un cambio del README u otra documentación se colaba sin spec; además las reglas nombraban otra carpeta y a otra persona |
+| 3.0 | 2026-10-26 | P4: la IP puede guardarse, pero solo en la lista negra y en los contadores de intentos, nunca con nombres ni en el CSV. §6: el registro limita los intentos por IP; la protección contra scripts deja de ser opcional | Spec 006 (issue #395): sin freno, alguien ausente puede probar códigos hasta acertar. Versión mayor porque contradice P4 y la enmienda 1.1 de §6 |

@@ -32,6 +32,18 @@ CREATE TABLE IF NOT EXISTS checkins (
   checked_at  TEXT NOT NULL,
   UNIQUE (session_id, name_key)
 );
+
+-- Contadores y lista negra por IP (spec 006). Sin relación con nombres ni sesiones.
+CREATE TABLE IF NOT EXISTS ip_attempts (
+  ip           TEXT NOT NULL,
+  attempted_at REAL NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_ip_attempts_ip ON ip_attempts (ip, attempted_at);
+
+CREATE TABLE IF NOT EXISTS blocked_ips (
+  ip         TEXT PRIMARY KEY,
+  blocked_at TEXT NOT NULL
+);
 """
 
 
@@ -283,3 +295,77 @@ def remove_checkin(db_path: str | os.PathLike[str], session_id: str, checkin_id:
                 "DELETE FROM checkins WHERE id = ? AND session_id = ?", (checkin_id, session_id)
             )
     return cursor.rowcount == 1
+
+
+def record_ip_attempt(db_path: str | os.PathLike[str], ip: str, at: float) -> tuple[int, int]:
+    """Apunta un intento de registro de una IP y cuenta los recientes (CA-02, CA-04).
+
+    Borra antes los intentos de esa IP de hace 60 s o más, para que la tabla no crezca.
+
+    :param db_path: ruta de la base de datos, con el esquema creado.
+    :param ip: IP que intenta registrarse.
+    :param at: instante del intento, en segundos Unix.
+    :return: intentos de la IP en el último segundo y en el último minuto, contando este.
+    :rtype: tuple[int, int]
+
+    Usage::
+
+        >>> import os, tempfile
+        >>> path = os.path.join(tempfile.mkdtemp(), "ejemplo.db")
+        >>> init_schema(path)
+        >>> record_ip_attempt(path, "203.0.113.7", 1_800_000_000.0)
+        (1, 1)
+    """
+    with _connection(db_path) as conn:
+        with conn:
+            conn.execute("DELETE FROM ip_attempts WHERE ip = ? AND attempted_at <= ?", (ip, at - 60))
+            conn.execute("INSERT INTO ip_attempts (ip, attempted_at) VALUES (?, ?)", (ip, at))
+        row = conn.execute(
+            "SELECT COALESCE(SUM(attempted_at > ?), 0), COUNT(*) FROM ip_attempts WHERE ip = ?",
+            (at - 1, ip),
+        ).fetchone()
+    return row[0], row[1]
+
+
+def is_ip_blocked(db_path: str | os.PathLike[str], ip: str) -> bool:
+    """Dice si una IP está en la lista negra (CA-06).
+
+    :param db_path: ruta de la base de datos, con el esquema creado.
+    :param ip: IP que se consulta.
+    :return: ``True`` si está bloqueada.
+    :rtype: bool
+
+    Usage::
+
+        >>> import os, tempfile
+        >>> path = os.path.join(tempfile.mkdtemp(), "ejemplo.db")
+        >>> init_schema(path)
+        >>> is_ip_blocked(path, "203.0.113.7")
+        False
+    """
+    with _connection(db_path) as conn:
+        row = conn.execute("SELECT 1 FROM blocked_ips WHERE ip = ?", (ip,)).fetchone()
+    return row is not None
+
+
+def block_ip(db_path: str | os.PathLike[str], ip: str, blocked_at: str) -> None:
+    """Mete una IP en la lista negra para siempre; si ya estaba, no hace nada (CA-08).
+
+    :param db_path: ruta de la base de datos, con el esquema creado.
+    :param ip: IP que se bloquea.
+    :param blocked_at: hora del bloqueo, en ISO 8601 UTC.
+    :return: nada.
+    :rtype: None
+
+    Usage::
+
+        >>> import os, tempfile
+        >>> path = os.path.join(tempfile.mkdtemp(), "ejemplo.db")
+        >>> init_schema(path)
+        >>> block_ip(path, "203.0.113.7", "2026-10-26T10:00:00.000+00:00")
+        >>> is_ip_blocked(path, "203.0.113.7")
+        True
+    """
+    with _connection(db_path) as conn:
+        with conn:
+            conn.execute("INSERT OR IGNORE INTO blocked_ips (ip, blocked_at) VALUES (?, ?)", (ip, blocked_at))
