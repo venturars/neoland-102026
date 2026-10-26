@@ -72,12 +72,14 @@ asistenciapp/
 ├── requirements.txt       # dependencias de Python (Flask, pytest)
 ├── pytest.ini             # configuración de pytest
 ├── app.py                 # arranque (`main`, --tunel, puerto)
-├── asistencia/            # paquete del servidor
-│   ├── domain/            # reglas puras (códigos, nombres, CSV, errores)
-│   ├── use_cases/         # orquestación (check-in, sesiones, export)
-│   ├── ports/             # contratos (repositorio)
-│   ├── infra/             # SQLite, túnel cloudflared
-│   └── web/               # Flask (factory y rutas)
+├── asistencia/
+│   ├── domain/            # reglas (codes, names, session, attempts)
+│   ├── usecases/          # acciones (`attendance.py`)
+│   ├── storage/           # almacén SQLite (`sqlite.py`)
+│   ├── infra/sqlite/      # schema.py y connection.py
+│   ├── export.py          # CSV
+│   ├── tunnel.py          # cloudflared
+│   └── web/               # flask_app.py (HTTP), client_ip.py
 ├── static/                # HTML, CSS y JS del navegador
 ├── tests/                 # tests (test_*.py)
 ├── .venv/                 # entorno virtual de Python (no se sube a git)
@@ -137,7 +139,7 @@ Una funcionalidad está terminada cuando:
 | `002-spec-antes-del-cambio` | ✅ Implementada (2026-10-22) | Ningún fichero de la app se toca sin un spec aprobado |
 | `003-readme-entorno-y-arranque` | ✅ Implementada (2026-10-22) | README de entorno/arranque; constitución en `docs/CONSTITUTIONS.md`; manual `AGENTS.md` |
 | `004-sin-referencias-victor` | ✅ Implementada (2026-10-22) | Issue #245; documentación sin referencias personales ajenas ni rutas de otra copia bajo `staff/` |
-| `005-clean-architecture` | ✅ Implementada (2026-10-22) | Issue #239; `ARCHITECTURE.md`, capas domain/use_cases/ports/infra/web |
+| `005-clean-architecture` | ✅ Implementada (2026-10-22); corregida funcional (2026-10-26) | Issue #239; capas sin OOP; lógica 001 = ejercicio en `web/` + `infra/sqlite/db.py` |
 | `006-limite-intentos-ip` | ✅ Implementada (2026-10-23); 93 tests pytest | Issue #318, PR #319; rate limit IP, block list, panel profesor, constitución v2.4 |
 | Bot de Discord | Idea futura, sin número | Fuera del MVP |
 

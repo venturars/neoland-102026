@@ -1,142 +1,65 @@
 # Arquitectura de AsistenciApp
 
-> Versión 1.0 · 2026-10-22 · Spec `005-clean-architecture`, issue #239
+> Versión 1.2 · 2026-10-26 · Alineada con `staff/ventura-rodriguez/asistenciapp`
 
-Este documento fija **cómo organizamos el código del servidor**. La [constitución](CONSTITUTIONS.md) dice qué reglas de producto y stack son obligatorias; aquí se describe **dónde va cada pieza** y **qué puede importar qué**.
-
-Inspiración: [python-clean-architecture-example](https://github.com/claudiosw/python-clean-architecture-example) (capas domain → interactor → infra → app). **No** copiamos SQLAlchemy, PostgreSQL, Alembic, presenters duplicados ni apps CLI alternativas: solo la separación que esta app necesita hoy (constitución P2).
+Este documento dice **cómo se organiza el código**. La [constitución](CONSTITUTIONS.md) fija reglas de producto; aquí van las capas.
 
 ---
 
-## 1. Por qué capas en un proyecto pequeño
+## 1. Tres partes
 
-- Las **reglas de asistencia** (códigos, nombres, sesiones cerradas) deben poder probarse sin levantar Flask ni tocar SQLite.
-- El **almacenamiento** puede cambiar de forma interna sin mezclar SQL en las rutas HTTP.
-- Las **rutas** solo traducen HTTP ↔ casos de uso (códigos de estado, JSON, cabeceras).
+Las flechas solo van hacia dentro:
 
-Si una capa nueva no aporta una de esas ventajas, **no se añade**.
+1. **Reglas** (`asistencia/domain/`): deciden si un registro vale. No dibujan pantallas ni abren la base.
+2. **Acciones** (`asistencia/usecases/`): abrir, cerrar, listar, exportar, quitar y registrarse (incluye rate limit spec 006).
+3. **Borde**: `asistencia/web/flask_app.py` y `static/` hablan HTTP y llaman a las acciones. `asistencia/storage/` es el almacén. `asistencia/infra/sqlite/` guarda solo el DDL (`schema.py`) y `connect`/`init_schema` (`connection.py`).
 
----
-
-## 2. Capas
-
-| Capa | Paquete | Responsabilidad |
-| --- | --- | --- |
-| **Dominio** | `asistencia/domain/` | Reglas puras: códigos rotatorios, validación de nombres, CSV, errores de negocio. Sin Flask, sin SQLite. |
-| **Casos de uso** | `asistencia/use_cases/` | Orquesta dominio + repositorio para un flujo (check-in, crear sesión, exportar…). |
-| **Ports** | `asistencia/ports/` | Contratos (`Protocol`): p. ej. `AttendanceRepository`. El dominio y los casos de uso dependen de abstracciones, no de SQLite. |
-| **Infraestructura** | `asistencia/infra/` | Implementaciones concretas: SQLite, túnel cloudflared. |
-| **Web** | `asistencia/web/` | Flask: factory, middleware (token profesor, BD por petición), rutas JSON y estáticos. |
-| **Entrada** | `app.py` | Punto de arranque humano: `main()`, `--tunel`, comprobación de puerto. |
-
-El front (`static/`) no forma parte de estas capas: es HTML/JS servido por Flask.
+`flask_app.py` no ejecuta SQL directo. El almacén no decide reglas.
 
 ---
 
-## 3. Regla de dependencias
-
-Solo se importa **hacia dentro** (hacia dominio y ports):
+## 2. Estructura de carpetas
 
 ```
-  app.py  →  web  →  use_cases  →  domain
-                      ↓              ↑
-                    ports            │
-                      ↓              │
-                    infra  ──────────┘ (infra NO importa web ni use_cases)
+asistenciapp/
+├── docs/
+│   ├── CONSTITUTIONS.md
+│   └── ARCHITECTURE.md
+├── AGENTS.md
+├── app.py                 # main() y --tunel
+├── asistencia/
+│   ├── domain/            # codes, names, session, attempts
+│   ├── usecases/          # attendance.py
+│   ├── storage/           # sqlite.py (asistencia + rate limit)
+│   ├── infra/sqlite/      # schema.py, connection.py
+│   ├── export.py
+│   ├── tunnel.py
+│   └── web/               # flask_app.py, client_ip.py
+├── static/
+└── tests/
 ```
 
-- **`domain`** no importa nada de `asistencia` fuera de sí mismo.
-- **`use_cases`** importa `domain` y `ports`; no importa Flask ni `infra` concreta.
-- **`infra`** implementa `ports` y puede usar `sqlite3`, subprocess, etc.
-- **`web`** importa `use_cases`, `infra` (solo para cableado: conexión BD, arranque) y Flask.
-
-En tests: los de dominio no usan Flask; `tests/test_api.py` es el contrato HTTP.
-
 ---
 
-## 4. Dónde va cada cosa
+## 3. Qué archivo vive en cada parte
 
-| Tema | Capa | Ubicación |
+| Archivo | Parte | Qué hace |
 | --- | --- | --- |
-| Código de 4 dígitos / ventanas 30 s | Dominio | `domain/codes.py` |
-| Validar nombre / clave duplicado | Dominio | `domain/names.py` |
-| CSV con BOM y fórmulas Excel | Dominio | `domain/export.py` |
-| Sesión inexistente / cerrada / código inválido / IP bloqueada | Dominio | `domain/errors.py` |
-| Umbrales intentos inválidos por IP | Dominio | `domain/rate_limit.py` |
-| Crear sesión, check-in, cerrar, exportar | Casos de uso | `use_cases/attendance.py` |
-| Bloqueos e intentos inválidos | Casos de uso | `use_cases/rate_limit.py` |
-| Contrato persistencia asistencia | Port | `ports/repository.py` |
-| Contrato anti-abuso IP | Port | `ports/rate_limit_repository.py` |
-| Tablas SQLite, INSERT/SELECT | Infra | `infra/sqlite/` |
-| Túnel Cloudflare | Infra | `infra/tunnel.py` |
-| Token `X-Teacher-Token`, rutas `/api/` | Web | `web/flask_app.py` |
-| Páginas estáticas | Web | Flask `static/` (sin cambio) |
+| `domain/codes.py`, `names.py` | Reglas | Códigos y nombres |
+| `domain/session.py` | Reglas | Clase existe, abierta, código válido |
+| `domain/attempts.py` | Reglas | Umbrales IP (spec 006) |
+| `usecases/attendance.py` | Acciones | Orquesta reglas + `storage` |
+| `storage/sqlite.py` | Almacén | Abre `data/asistencia.db`, guarda y lee |
+| `infra/sqlite/schema.py` | DDL | Tablas (compartido con el almacén) |
+| `export.py` | Utilidad | CSV de filas ya cargadas |
+| `web/flask_app.py` | HTTP | Factory Flask, rutas JSON |
 
 ---
 
-## 5. Casos de uso (lista)
-
-Cada función en `use_cases/attendance.py` corresponde a un flujo ya existente en la spec `001-checkin-codigo`:
-
-| Caso de uso | Descripción breve |
-| --- | --- |
-| `create_session` | Nueva clase; título por defecto con fecha si falta. |
-| `list_sessions` | Listado del profesor con totales. |
-| `get_public_session` | Info mínima para el alumno (sin lista ni secreto). |
-| `teacher_session_view` | Panel en vivo: código si abierta, check-ins, total. |
-| `check_in` | Registro con nombre + código; duplicados y errores de dominio. |
-| `close_session` | Cierra asistencia. |
-| `remove_checkin` | Borra un registro (sesión abierta o cerrada según reglas actuales). |
-| `export_session_csv` | Filas para CSV. |
-| `assert_not_blocked`, `after_invalid_code`, listar/desbloquear IP | Anti-abuso spec 006 (`use_cases/rate_limit.py`) |
-
-Los casos de uso reciben un `AttendanceRepository` y, cuando hace falta, un callable `now` (segundos Unix) para códigos y fechas en tests. El rate limit usa `RateLimitRepository` y la IP la resuelve `web/client_ip.py` (con `ProxyFix` y túnel).
-
----
-
-## 6. Cableado en tiempo de ejecución
-
-1. Al arrancar: conectar SQLite, aplicar schema, leer o crear token de profesor (una vez).
-2. Por petición HTTP: abrir conexión en `g`, instanciar `SqliteAttendanceRepository(conn)`, pasarlo al caso de uso.
-3. El caso de uso devuelve datos o lanza excepciones de `domain.errors`; **web** las convierte en JSON y códigos HTTP (401, 404, 409, 422…).
-
----
-
-## 7. Tests
-
-| Tipo | Qué prueba |
-| --- | --- |
-| `test_codes.py`, `test_names.py`, `test_export.py` | Dominio aislado. |
-| `test_api.py` | Contrato HTTP completo (no cambiar campos JSON sin spec). |
-| `test_tunnel.py`, `test_port.py` | Infra y arranque. |
-
-`pytest` debe pasar antes de dar por cerrada una tarea de refactor.
-
----
-
-## 8. Fuera de alcance (explícito)
-
-- ORM, migraciones automáticas, repositorios en memoria duplicados “por ejemplo”.
-- Capa presenter/view JSON aparte de las rutas Flask (una traducción HTTP es suficiente).
-- Microservicios, colas, contenedores, capas de logging genéricas.
-- Cambiar el stack de la constitución §3 (Flask, sqlite3, static, pytest).
-
----
-
-## 9. Comparación rápida con el repo ejemplo
-
-| En el ejemplo | En AsistenciApp |
-| --- | --- |
-| `src/domain/entities` | `asistencia/domain/` (reglas + tipos ligeros) |
-| `src/interactor/` | `asistencia/use_cases/` |
-| `src/infra/repositories` + SQLAlchemy | `asistencia/infra/sqlite/` con `sqlite3` stdlib |
-| `src/app/flask_*/controllers/presenters/views` | `asistencia/web/` (rutas + jsonify) |
-| Varios entrypoints (CLI, Flask memoria, Flask PG) | Un solo `app.py` + Flask |
-
----
-
-## 10. Historial
+## 4. Historial
 
 | Versión | Fecha | Cambio |
 | --- | --- | --- |
-| 1.0 | 2026-10-22 | Versión inicial (spec 005). |
+| 1.0 | 2026-10-22 | Spec 005 inicial. |
+| 1.1 | 2026-10-26 | Estilo funcional sin repositorios OOP. |
+| 1.2 | 2026-10-26 | Misma forma que Ventura: `usecases/`, `storage/sqlite.py`; DDL en `infra/sqlite/`. |
