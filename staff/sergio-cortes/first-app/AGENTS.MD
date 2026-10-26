@@ -4,7 +4,7 @@
 
 first-app es la primera app del curso de IA Engineer para alumnos junior. Sirve para construirla con IA siguiendo el sistema SDD.
 
-Está en Node, con módulos ESM (`"type": "module"`) y SQLite (`node:sqlite`, fichero `db/users.sqlite`) y pnpm como gestor de paquetes. La arquitectura y las reglas de base están en `docs/CONSTITUTIONS.md`.
+Está en Node, con módulos ESM (`"type": "module"`) y SQLite (`node:sqlite`, fichero `db/users.sqlite`) y pnpm como gestor de paquetes. Las reglas de base están en `docs/CONSTITUTIONS.md`. Esa guía enlaza a la arquitectura, el árbol, la base de datos, los errores y el estilo.
 
 ## Orden
 
@@ -25,7 +25,8 @@ El camino issue, rama y pull request del bootcamp está en `docs/GIT-WORKFLOW.md
 - Añadir código, dependencias, scripts, tests, SQL o clientes solo cuando el usuario lo pida en esa tarea.
 - Temperatura próxima a 0. No inventes: cíñete al plan y a la spec activa.
 - Usar pnpm como gestor de paquetes.
-- En cada tarea: investiga antes de escribir, compara si la tarea tiene parentesco con otra ya resuelta, y sigue las convenciones y el estilo del código actual.
+- En cada tarea: investiga antes de escribir y compara si la tarea tiene parentesco con otra ya resuelta. El código que ya existe sirve para ver a qué fichero se parece una función nueva. La forma de cada línea se copia de `docs/STYLE.md`. Un spec nuevo no se para porque el código ya escrito no tenga esa forma.
+- Si un desarrollo añade o quita un fichero, su plan también actualiza `docs/TREE.md` y `docs/ARCHITECTURE.md`.
 - Si aparecen dos fuentes de verdad o dos procedimientos que se contradicen (la constitución, el código actual, una spec o esta guía), no se elige uno. En el plan se pregunta qué camino seguir y si hay que modificar la documentación antes de empezar la spec nueva. No se escribe código hasta tener esa respuesta.
 - No propongas código que no se haya comprobado.
 
@@ -88,14 +89,7 @@ validación.
 
 ## Estilo y convenciones
 
-El código se escribe en inglés y está pensado para alumnos hispanohablantes.
-
-- Ficheros en kebab-case.
-- Funciones en camelCase. El nombre es la acción. Una función, un propósito.
-- Constante de fichero en mayúsculas con guion bajo (`const MODEL`).
-- El código tiene que leerse de arriba a abajo, con `if` y con nombres que digan qué hacen. Se evita el código que un programador sin IA no escribiría: envoltorios de resultado, helpers genéricos y abstracciones que oculten los pasos.
-- Las clases de error se describen en `docs/CONSTITUTIONS.md`.
-- El formato es el estándar de Prettier, sin configuración propia: comillas dobles, punto y coma, coma final, indentación de 2 espacios y ancho de 80.
+La forma de cada línea y las convenciones están en `docs/STYLE.md`.
 
 ## Al terminar una tarea
 
