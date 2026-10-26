@@ -1,10 +1,10 @@
 # Plan — cliente Jupyter
 
-No es una funcionalidad nueva. No hay fichero nuevo en `logic/`. El cliente de terminal se queda. No hay cuaderno del conteo por género.
+No es una funcionalidad nueva. No hay fichero nuevo en `logic/`. El cliente de terminal se queda.
 
-En `clients/jupyter/` solo hay cuadernos. No hay ficheros `.py` ni `requirements.txt`. El bloque de cada cuaderno es JavaScript. La tabla la pintan `cli-table3` `0.6.5` y `@colors/colors` `1.6.1`, instaladas en `package.json`. El encabezado usa `style.head` `["cyan", "bold"]`.
+En `clients/jupyter/` solo hay cuadernos. No hay ficheros `.py` ni `requirements.txt`. La celda es Python. Busca la carpeta de la app y arranca `node --input-type=module` con el directorio actual en `first-app`. El programa de Node es el interior del `.txt`: los `import` y la llamada, carácter por carácter. El `console.log` se sustituye por la tabla. La tabla la pintan `cli-table3` `0.6.5` y `@colors/colors` `1.6.1`, instaladas en `package.json`. El encabezado usa `style.head` `["cyan", "bold"]`.
 
-Se abre con `pnpm jupyter` desde `first-app`. El script crea `.venv` si falta. Si no está `.venv/bin/jupyter-notebook`, instala `notebook==7.6.3`. `.venv/` no se versiona. Después arranca `jupyter notebook` en `clients/jupyter`. El bloque se ejecuta con el directorio actual en `first-app`, el mismo que ya pide el cliente de terminal. Lo deja así ese script. No hay un fichero `.py` que busque la carpeta.
+Se abre con `pnpm jupyter` desde `first-app`. El script es una línea: si no está `.venv/bin/jupyter-notebook`, crea `.venv` si falta e instala `notebook==7.6.3`. Después arranca `jupyter notebook` en `clients/jupyter`. `.venv/` no se versiona.
 
 ## Ficheros
 
@@ -20,17 +20,18 @@ Se quedan estos cuadernos:
 - `clients/jupyter/find-user-by-email.ipynb`
 - `clients/jupyter/find-user-by-name.ipynb`
 - `clients/jupyter/list-users.ipynb`
+- `clients/jupyter/user-gender-count.ipynb`
 
 Se quitan `clients/jupyter/bridge.py` y `clients/jupyter/requirements.txt`.
 
 Se tocan:
 
-- `package.json` y `pnpm-lock.yaml`: entran `cli-table3` y `@colors/colors`. El script `jupyter` crea `.venv`, abre los cuadernos y deja el directorio actual del bloque en `first-app`.
-- `docs/CONSTITUTIONS.md`: la línea de `clients/jupyter/` dice que el bloque copia el interior del `.txt` de `clients/terminal/`, que el `console.log` pasa a ser la tabla y que `pnpm jupyter` ejecuta ese bloque con el directorio actual en `first-app`.
+- `package.json` y `pnpm-lock.yaml`: entran `cli-table3` y `@colors/colors`. El script `jupyter` es la línea que crea `.venv` si falta, instala `notebook==7.6.3` si no está `jupyter-notebook` y abre los cuadernos.
+- `docs/CONSTITUTIONS.md`: la línea de `clients/jupyter/` dice que hay un cuaderno por cada `.txt`, que el bloque arranca `node --input-type=module` con el interior de ese `.txt` y que el `console.log` pasa a ser la tabla.
 
 ## Parecido
 
-Cada `.txt` de `clients/terminal/` se pega con el directorio actual en `first-app`. El cuaderno copia las líneas de dentro de ese `.txt`, carácter por carácter: los `import` y la llamada. No copia el comentario ni la línea `node --input-type=module`. El `console.log` se sustituye por la tabla de `cli-table3`.
+Cada `.txt` de `clients/terminal/` se pega con el directorio actual en `first-app` y arranca `node --input-type=module`. El cuaderno hace eso mismo. El programa de Node es el interior de ese `.txt`, carácter por carácter: los `import` y la llamada. El `console.log` se sustituye por la tabla de `cli-table3`.
 
 ## Firma
 
@@ -53,10 +54,10 @@ Cada cuaderno, en este orden:
 3. Qué pasa en la base de datos
 4. Qué funciones del dominio usa
 5. Anotaciones
-6. Bloque copiado del `.txt`
+6. Bloque con el texto del `.txt` y `node --input-type=module`
 7. Respuesta ya ejecutada, en la tabla de colores
 
-El bloque es el interior del `.txt` del mismo nombre.
+El bloque es el interior del `.txt` del mismo nombre, lanzado con `node --input-type=module`.
 
 - `create-user-table` usa `createUsersTable(db)`. No usa `logic/`. La tabla tiene `lastInsertRowid` y `changes`. Anotación: no borra filas.
 - `create-user` usa `createUser({ name: "Ada", email: "ada@example.com" })`. Inserta una fila, el id lo pone la base y las dos fechas son el alta. Anotaciones: `Name is empty`, `Email is invalid`, `Email is already used`, `Could not create the user`.
@@ -66,5 +67,6 @@ El bloque es el interior del `.txt` del mismo nombre.
 - `find-user-by-email` usa `findUserByEmail("ada@example.com")`. Solo lee. Anotaciones: `Email is invalid`, `User not found`, `Could not find the user`.
 - `find-user-by-name` usa `findUserByName("Grace")`. Solo lee, ordenado por id. Si no hay nadie, la tabla no tiene filas y no sale `User not found`. Anotaciones: `Name is empty`, `Could not find the user`.
 - `list-users` usa `listUsers()`. Solo lee, de menor a mayor id. Si no hay nadie, la tabla no tiene filas. Anotación: `Could not list the users`.
+- `user-gender-count` usa `await usersGenderCount()`. Solo lee los nombres. La tabla tiene `woman`, `man` y `genderUndefined`. Si no hay nadie, los tres son 0. Anotación: `Could not classify the users`.
 
 Columnas de una persona, en este orden: `id`, `name`, `email`, `createdAt`, `updatedAt`. Una lista es una fila por elemento.

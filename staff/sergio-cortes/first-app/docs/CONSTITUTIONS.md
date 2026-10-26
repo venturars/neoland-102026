@@ -50,6 +50,7 @@ first-app/
       find-user-by-email.ipynb
       find-user-by-name.ipynb
       list-users.ipynb
+      user-gender-count.ipynb
 ```
 
 - `docs/specs/<nombre>/` es donde empieza un desarrollo. `<nombre>` es la funcionalidad, en kebab-case.
@@ -57,7 +58,7 @@ first-app/
 - `queries/queries/` guarda el SQL en ficheros `.sql`. `queries/user.js` los lee y los ejecuta. No hay reglas de negocio aquí.
 - `logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
 - `clients/terminal/` llama a `logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
-- `clients/jupyter/` es el cuaderno, uno por funcionalidad de la terminal salvo el conteo por género. El bloque es JavaScript. `cli-table3` y `@colors/colors` pintan la tabla con colores y encabezados. Si la función falla, se ve ese mensaje. En esa carpeta no hay ficheros `.py` ni `requirements.txt`. Se abre con `pnpm jupyter` desde `first-app`: crea `.venv` si falta y arranca Jupyter.
+- `clients/jupyter/` es el cuaderno, uno por cada `.txt` de `clients/terminal/`. El bloque muestra ese texto: arranca `node --input-type=module` y, dentro, los `import` y la llamada quedan igual. El `console.log` se sustituye por la tabla. `cli-table3` y `@colors/colors` pintan esa tabla con colores y encabezados. Si la función falla, se ve ese mensaje. En esa carpeta no hay ficheros `.py` ni `requirements.txt`. Se abre con `pnpm jupyter` desde `first-app`.
 
 ## Specs
 
