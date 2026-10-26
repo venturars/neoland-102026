@@ -92,3 +92,5 @@ Ninguna por ahora. Las decisiones de la issue #318 (umbrales, solo código invá
 | --- | --- |
 | 2026-10-23 | Borrador inicial para issue #318. |
 | 2026-10-23 | Aprobada por quien trabaja en esta carpeta. |
+| 2026-10-26 | Plan alineado con arquitectura 005: `domain/attempts.py`, `storage/sqlite.py`, `usecases/attendance.py`. |
+| 2026-10-26 | IP en check-in documentada como `request.remote_addr` + `ProxyFix` en `app.py`. |

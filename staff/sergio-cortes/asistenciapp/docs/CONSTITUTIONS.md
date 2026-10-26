@@ -59,8 +59,8 @@ Cambiar el stack requiere enmendar esta constitución.
 
 ### 3.1 Organización del código del servidor
 
-- El código Python del servidor sigue las capas y la regla de dependencias descritas en `docs/ARCHITECTURE.md`.
-- La lógica de negocio vive en dominio y casos de uso; Flask y SQLite son adaptadores, no el núcleo (P2: no añadir capas vacías).
+- El código Python del servidor sigue `docs/ARCHITECTURE.md` (v1.5): reglas en `domain/`, acciones en `usecases/`, almacén en `storage/sqlite.py`, HTTP en `app.py`. El árbol del repo y la ubicación de cada fichero están en ARCHITECTURE §2–§3.
+- El DDL compartido está en `infra/sqlite/schema.py`; `connection.py` define `connect` e `init_schema(conn)`.
 
 ---
 

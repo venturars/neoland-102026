@@ -44,6 +44,7 @@ El código se escribe en inglés y está pensado para alumnos hispanohablantes.
 - Constante de fichero en mayúsculas con guion bajo (`const MODEL`).
 - El código tiene que leerse de arriba a abajo, con `if` y con nombres que digan qué hacen. Se evita el código que un programador sin IA no escribiría: envoltorios de resultado, helpers genéricos y abstracciones que oculten los pasos.
 - Las clases de error se describen en `docs/CONSTITUTIONS.md`.
+- El formato es el estándar de Prettier, sin configuración propia: comillas dobles, punto y coma, coma final, indentación de 2 espacios y ancho de 80.
 
 ## Al terminar una tarea
 

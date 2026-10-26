@@ -2,6 +2,8 @@
 node_modules/
 package-lock.json
 npm-shrinkwrap.json
+next-env.d.ts
+.next/
 
 # Variables de entorno (cualquier carpeta)
 .env
