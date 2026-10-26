@@ -8,7 +8,7 @@ Each document explains the feature and has one block that runs it. The result is
 
 ## Who
 
-Whoever checks that the app works and does not code (the CEO). They open a document, run its block and read the result.
+Whoever checks that the app works and does not code (Any C level exec). They open a document, run its block and read the result.
 
 ## Input
 
