@@ -1,0 +1,1 @@
+node --input-type=module -e "import { deleteUser } from './staff/luis-duque/first-app/logic/delete-user.js'; await deleteUser(process.argv[1])" 1

@@ -1,0 +1,37 @@
+SCHEMA = """
+CREATE TABLE IF NOT EXISTS config (
+  key   TEXT PRIMARY KEY,
+  value TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS sessions (
+  id         TEXT PRIMARY KEY,
+  title      TEXT NOT NULL,
+  secret     TEXT NOT NULL,
+  opened_at  TEXT NOT NULL,
+  closed_at  TEXT
+);
+
+CREATE TABLE IF NOT EXISTS checkins (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  session_id  TEXT NOT NULL REFERENCES sessions(id),
+  name        TEXT NOT NULL,
+  name_key    TEXT NOT NULL,
+  checked_at  TEXT NOT NULL,
+  UNIQUE (session_id, name_key)
+);
+
+CREATE TABLE IF NOT EXISTS blocked_ips (
+  ip         TEXT PRIMARY KEY,
+  blocked_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS invalid_code_attempts (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  ip            TEXT NOT NULL,
+  attempted_at  TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_attempts_ip_time
+  ON invalid_code_attempts (ip, attempted_at);
+"""
