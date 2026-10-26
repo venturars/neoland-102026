@@ -7,7 +7,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "jupyter": "test -d .venv || python3 -m venv .venv; test -x .venv/bin/jupyter-notebook || .venv/bin/pip install notebook==7.6.3; .venv/bin/jupyter notebook clients/jupyter",
+    "jupyter": "test -x .venv/bin/jupyter-notebook || (test -d .venv || python3 -m venv .venv && .venv/bin/pip install notebook==7.6.3) && .venv/bin/jupyter notebook clients/jupyter",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
