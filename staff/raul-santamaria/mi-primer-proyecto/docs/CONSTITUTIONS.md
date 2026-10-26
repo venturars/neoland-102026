@@ -6,16 +6,18 @@ Base de la app. login con IA para alumnos junior de AI Engineering, en español,
 
 ```text
 mi-primer-proyecto/
-  package.json                 El único paquete es openai. El gestor es pnpm.
+  package.json                 Paquetes: openai, cli-table3 y @colors/colors. El gestor es pnpm.
   pnpm-lock.yaml               Lockfile de pnpm.
   .gitignore                   Ignora node_modules/.
   AGENTS.md                    Reglas para quien modifica el proyecto.
-  clients/terminal/            Primer cliente de cada funcionalidad. Ficheros .txt para pegar en la terminal.
-    create-user.txt
-    list-users.txt
-    update-user.txt
-    delete-user.txt
-    users-gender-count.txt
+  clients/
+    terminal/                  Primer cliente de cada funcionalidad. Ficheros .txt para pegar en la terminal.
+      create-user.txt
+      list-users.txt
+      update-user.txt
+      delete-user.txt
+      users-gender-count.txt
+    jupyter/                   Cliente que se abre con el Jupyter de la app.
   db/connection.js             Abre una vez el único fichero SQLite y deja la conexión abierta. No contiene SQL.
   db/users.sqlite              La base. Se crea al abrir la conexión. No hay otra.
   docs/CONSTITUTIONS.md        Este documento.
@@ -34,7 +36,7 @@ mi-primer-proyecto/
 
 ## Paquetes
 
-El único paquete es `openai`. Se instala con pnpm. No se usa npm.
+Los paquetes son `openai`, `cli-table3` `0.6.5` y `@colors/colors` `1.6.1`. Se instalan con pnpm. No se usa npm.
 
 ### Constantes
 
