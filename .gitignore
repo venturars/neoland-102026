@@ -71,5 +71,15 @@ $RECYCLE.BIN/
 *.temp
 ~$*
 
-   # Bases de datos locales
-   *.sqlite
+# Python (cualquier carpeta)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# SQLite generada en local (cualquier carpeta). *.sqlite se versiona en first-app.
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
