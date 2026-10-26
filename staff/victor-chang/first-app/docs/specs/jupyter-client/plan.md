@@ -3,6 +3,7 @@
 ## Files
 
 - Touch: `package.json` (add the `jupyter` script and the dependencies `cli-table3` `0.6.5` and `@colors/colors` `1.6.1`; pin `openai` to `7.42.0`), `pnpm-lock.yaml` (through `pnpm add`), `docs/specs/README.md` (status `done` at the end).
+- Create: `.prettierignore` with `.venv/` and `pnpm-lock.yaml`, so `npx prettier --check .` does not read the installed Python packages or the lockfile pnpm writes.
 - Create, in `clients/jupyter/`, one notebook per `clients/terminal/<name>.txt`, with the same name: `create-user.ipynb`, `get-user.ipynb`, `get-user-by-email.ipynb`, `list-users.ipynb`, `update-user.ipynb`, `delete-user.ipynb`, `count-users-by-gender.ipynb`.
 - Not touched: `logic/`, `queries/`, `db/`. `.venv/` is created on the first run and is already git-ignored by the root `.gitignore`.
 

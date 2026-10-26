@@ -40,6 +40,7 @@ first-app/
   package.json          The npm dependencies, installed with pnpm
   pnpm-lock.yaml        The exact installed versions
   .venv/                The Python of the Jupyter client (git-ignored)
+  .prettierignore       What Prettier does not format
 ```
 
 - `db/` opens the database. No business rules.
@@ -55,7 +56,7 @@ first-app/
 - Node built-ins: `node:sqlite`, `node:fs`, `node:url`.
 - npm dependencies: `openai`, to call the local AI (Ollama); `cli-table3` and `@colors/colors`, to draw the tables of the Jupyter client. Exact versions. Packages are installed with pnpm (`pnpm install`); `node_modules/` is git-ignored, `pnpm-lock.yaml` is committed.
 - Python 3, only for the Jupyter client: an app-local `.venv` with `notebook` at an exact version, created by `pnpm jupyter`. The Jupyter installed on the computer is not used.
-- Tooling: Prettier, run through `npx`, default config, no config file.
+- Tooling: Prettier, run through `npx`, default config, no config file. `.prettierignore` only lists `.venv/` (installed Python packages) and `pnpm-lock.yaml` (written by pnpm in its own format).
 
 A new dependency is added here before any plan uses it.
 

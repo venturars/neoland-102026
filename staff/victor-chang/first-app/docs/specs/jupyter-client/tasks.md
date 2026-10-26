@@ -23,3 +23,5 @@
 12. [x] Copy `list-users.ipynb` to a folder outside the repo and run it there: it prints `Cannot find first-app.`
         Delete the copy.
 13. [x] Run `npx prettier --check .`. In `docs/specs/README.md`, set `jupyter-client` to `done`.
+14. [x] Create `.prettierignore` with `.venv/` and `pnpm-lock.yaml`.
+        Run `npx prettier --check .`: every file passes.
