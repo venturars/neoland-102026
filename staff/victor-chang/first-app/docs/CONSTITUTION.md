@@ -165,6 +165,8 @@ Step 4: if everything works, the function returns the shaped data. If the operat
 
 A new message is added to this list before any spec uses it.
 
+This list is for `logic/`. A client throws nothing and prints the message `logic/` threw. The only message of a client's own is `Cannot find first-app.`, printed by a Jupyter notebook that does not find the app folder.
+
 ## Queries
 
 The SQL does not live inside the function that runs it.

@@ -1,0 +1,25 @@
+# Tasks — Jupyter client
+
+1. [ ] Run `pnpm add cli-table3@0.6.5 @colors/colors@1.6.1 openai@7.42.0 --save-exact`.
+       `package.json` lists the three with exact versions; `pnpm-lock.yaml` has them.
+2. [ ] In `package.json`, add the `jupyter` script from the plan.
+3. [ ] Run `pnpm jupyter`. The first run creates `.venv` and installs `notebook` `7.6.3`.
+       The browser shows the notebook interface on an empty `clients/jupyter/`. `git status` does not show `.venv/`.
+4. [ ] Create `clients/jupyter/list-users.ipynb` with the two cells of the plan.
+       Run it: a table with one row per user, ordered by id.
+5. [ ] Create `clients/jupyter/get-user.ipynb`, with the steps of `clients/terminal/get-user.txt`.
+       Run it: the practice user as a table, then `User not found`.
+6. [ ] Create `clients/jupyter/get-user-by-email.ipynb`, with the steps of its terminal client.
+       Run it: the practice user as a table, then `User not found` and `Email is invalid`.
+7. [ ] Create `clients/jupyter/create-user.ipynb`, with the steps of its terminal client.
+       Run it: the new user as a table, then `Email is already used`, `Name is empty` and `Email is invalid`.
+8. [ ] Create `clients/jupyter/update-user.ipynb`, with the steps of its terminal client.
+       Run it: the user with the new name as a table, then `User not found` and `Name is empty`.
+9. [ ] Create `clients/jupyter/delete-user.ipynb`, with the steps of its terminal client.
+       Run it: the `Returns no data.` table, then `User not found`.
+10. [ ] Create `clients/jupyter/count-users-by-gender.ipynb`, with the steps of its terminal client.
+        Run it with Ollama running: a table with `women`, `men` and `genderUndefined`.
+11. [ ] Run `list-users.ipynb` again: the same rows as in step 4, so no practice user was left behind.
+12. [ ] Copy `list-users.ipynb` to a folder outside the repo and run it there: it prints `Cannot find first-app.`
+        Delete the copy.
+13. [ ] Run `npx prettier --check .`. In `docs/specs/README.md`, set `jupyter-client` to `done`.

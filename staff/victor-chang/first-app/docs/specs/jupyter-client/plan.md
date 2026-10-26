@@ -2,7 +2,7 @@
 
 ## Files
 
-- Touch: `package.json` (add the `jupyter` script and the dependencies `cli-table3` `0.6.5` and `@colors/colors` `1.6.1`), `pnpm-lock.yaml` (through `pnpm add`), `docs/specs/README.md` (status `done` at the end).
+- Touch: `package.json` (add the `jupyter` script and the dependencies `cli-table3` `0.6.5` and `@colors/colors` `1.6.1`; pin `openai` to `7.42.0`), `pnpm-lock.yaml` (through `pnpm add`), `docs/specs/README.md` (status `done` at the end).
 - Create, in `clients/jupyter/`, one notebook per `clients/terminal/<name>.txt`, with the same name: `create-user.ipynb`, `get-user.ipynb`, `get-user-by-email.ipynb`, `list-users.ipynb`, `update-user.ipynb`, `delete-user.ipynb`, `count-users-by-gender.ipynb`.
 - Not touched: `logic/`, `queries/`, `db/`. `.venv/` is created on the first run and is already git-ignored by the root `.gitignore`.
 
@@ -21,7 +21,7 @@ Each notebook does the same steps as its `clients/terminal/<name>.txt`, with the
 Each notebook has two cells, nothing else:
 
 1. Markdown: `# <title>`, then `## What it does`, `## What happens to the saved users`, `## Feature it uses`, `## Failures it can show`.
-2. Code (Python): walks up from the current folder to the one with `logic/`; runs `node --no-warnings --input-type=module -e <program>` there with `FORCE_COLOR=1`; prints its stdout, and its stderr only if node fails.
+2. Code (Python): walks up from the current folder to the one with `logic/`, and if there is none it stops with `Cannot find first-app.`; runs `node --no-warnings --input-type=module -e <program>` there with `FORCE_COLOR=1`; prints its stdout, and its stderr only if node fails.
 
 The Node program imports the `logic/` functions and `cli-table3`, and:
 
@@ -30,6 +30,7 @@ The Node program imports the `logic/` functions and `cli-table3`, and:
 - prints the count with the columns `women`, `men`, `genderUndefined`;
 - prints, for delete, a table with the column `result` and the row `Returns no data.`;
 - wraps each failure step in `try/catch` and prints only `error.message`;
+- wraps the whole program in one more `try/catch` that prints only `error.message`, so an unexpected failure shows no stack trace;
 - the header style is `["cyan", "bold"]`.
 
 ## Signature
@@ -58,5 +59,7 @@ The `Could not … the user(s)` messages are not shown on purpose; if SQLite fai
 
 ## Open questions
 
-1. **The app folder is not found.** The code cell walks up to the folder with `logic/`. If it does not find it, it has to stop with some text. That text is not a `logic/` error, so it is not in the **Errors** list, which says the message is always one from the list. Proposal: the client prints `Cannot find first-app.` and the **Errors** section says that the list is for `logic/`, and a client may print this one message of its own.
-2. **`openai` is not an exact version.** The constitution now says the npm dependencies have exact versions, but `package.json` has `"openai": "^7.42.0"`. Proposal: pin it to `7.42.0`, the version already in `pnpm-lock.yaml`, in this same change.
+None. Answered:
+
+1. The app folder is not found → the notebook prints `Cannot find first-app.` The **Errors** section of the constitution now allows this one client message.
+2. `openai` is pinned to `7.42.0`, the version already in `pnpm-lock.yaml`.
