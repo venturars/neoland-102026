@@ -12,20 +12,40 @@ export function updateUser(id, changes) {
     throw new Error("User not found");
   }
 
-  const name = changes.name === undefined ? current.name : changes.name.trim();
+  let name = current.name;
+  if (changes.name !== undefined) {
+    const rawName = changes.name;
+    name = rawName.trim();
+  }
   if (name === "") {
     throw new Error("Name is empty");
   }
 
-  const email =
-    changes.email === undefined
-      ? current.email
-      : changes.email.trim().toLowerCase();
+  let email = current.email;
+  if (changes.email !== undefined) {
+    const rawEmail = changes.email;
+    const trimmedEmail = rawEmail.trim();
+    email = trimmedEmail.toLowerCase();
+  }
   const parts = email.split("@");
-  const hasSingleAt =
-    parts.length === 2 && parts[0].length > 0 && parts[1].length > 0;
-
-  if (!hasSingleAt || email.length > 64) {
+  const hasTwoParts = parts.length === 2;
+  let hasSingleAt = false;
+  if (hasTwoParts) {
+    const localPart = parts[0];
+    const domainPart = parts[1];
+    const hasLocalPart = localPart.length > 0;
+    const hasDomainPart = domainPart.length > 0;
+    if (hasLocalPart) {
+      if (hasDomainPart) {
+        hasSingleAt = true;
+      }
+    }
+  }
+  const emailIsTooLong = email.length > 64;
+  if (!hasSingleAt) {
+    throw new Error("Email is invalid");
+  }
+  if (emailIsTooLong) {
     throw new Error("Email is invalid");
   }
 
@@ -36,7 +56,14 @@ export function updateUser(id, changes) {
     throw new Error("Could not update the user");
   }
 
-  if (owner && owner.id !== current.id) {
+  let emailUsedByAnother = false;
+  if (owner) {
+    const sameUser = owner.id === current.id;
+    if (!sameUser) {
+      emailUsedByAnother = true;
+    }
+  }
+  if (emailUsedByAnother) {
     throw new Error("Email is already used");
   }
 
