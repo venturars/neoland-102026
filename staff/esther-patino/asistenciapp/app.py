@@ -17,6 +17,7 @@ from werkzeug.exceptions import HTTPException
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from asistencia.actions.attendance import (
+    BANNED,
     CLOSED,
     INVALID_CODE,
     MISSING_CHECKIN,
@@ -29,6 +30,7 @@ from asistencia.actions.attendance import (
     public_session,
     register,
     remove_checkin,
+    screen_caller,
     teacher_view,
 )
 from asistencia.infra import db
@@ -39,7 +41,7 @@ DEFAULT_DB = BASE_DIR / "data" / "asistencia.db"
 
 UNAUTHORIZED = "Acceso no autorizado. Abre el panel con tu enlace secreto de profesor."
 GENERIC_ERRORS = {404: "No encontrado.", 405: "Método no permitido."}
-STATUS = {CLOSED: 409, INVALID_CODE: 422, NOT_FOUND: 404, MISSING_CHECKIN: 404}
+STATUS = {CLOSED: 409, INVALID_CODE: 422, NOT_FOUND: 404, MISSING_CHECKIN: 404, BANNED: 403}
 
 
 def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
@@ -52,12 +54,15 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
     """
     app = Flask(__name__, static_folder="static", static_url_path="")
     app.json.ensure_ascii = False
-    # Detrás del túnel, usar la dirección pública que nos indica.
-    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+    # Detrás del túnel, usar el protocolo y el host públicos.
+    # x_for queda en 0: la IP de la conexión no se toma de una cabecera.
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=0, x_proto=1, x_host=1)
 
     conn = db.connect(db_path)
     db.init_schema(conn)
     app.config["TEACHER_TOKEN"] = token or db.get_or_create_teacher_token(conn)
+    app.config["DB_PATH"] = db_path
+    app.config["CALLS"] = {}
     conn.close()
 
     def get_db():
@@ -112,6 +117,13 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
     def check_in(session_id):
         body = request.get_json(silent=True) or {}
         try:
+            screen_caller(
+                get_db(),
+                app.config["CALLS"],
+                request.remote_addr or "",
+                now(),
+                now_iso(),
+            )
             result = register(
                 get_db(), session_id, body.get("name"), body.get("code", ""), now(), now_iso()
             )

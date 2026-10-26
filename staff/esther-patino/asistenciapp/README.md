@@ -69,9 +69,11 @@ Cuando un alumno se registra, su navegador lo recuerda **para esa clase**: si vu
 
 Es un límite **disuasorio**, no una prueba de identidad: se salta con otro navegador, una ventana privada u otro dispositivo. Para lo que se cuele, está el botón **Quitar**. Si quitas a alguien, su navegador sigue mostrando "ya te registraste": tendría que usar otro navegador para registrarse de nuevo.
 
-Las **sesiones anteriores** aparecen en el panel con su número de asistentes, y puedes volver a verlas o descargarlas cuando quieras.
+### Límite por IP
 
----
+Una misma IP solo puede intentar pasar lista **5 veces por segundo** y **20 veces por minuto**. Si pasa de ahí, ve *«No puedes pasar lista: tu acceso está bloqueado.»* y esa IP entra en una blacklist que se guarda siempre. Nadie puede quitarla ni cambiarla.
+
+Las **sesiones anteriores** aparecen en el panel con su número de asistentes, y puedes volver a verlas o descargarlas cuando quieras.
 
 ## 4. Cerrar la app
 
@@ -86,8 +88,6 @@ lsof -nP -iTCP:8000 -sTCP:LISTEN     # muestra el proceso "Python" y su número 
 kill <PID>                           # lo para
 pkill cloudflared                    # para el túnel, si lo usabas
 ```
-
----
 
 ## 5. Problemas frecuentes
 
@@ -110,8 +110,6 @@ pytest            # o "pytest -v" para ver cada test
 ```
 
 Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una verificación manual; la tabla está en [plan.md §6](specs/001-checkin-codigo/plan.md).
-
----
 
 ## 7. Privacidad
 

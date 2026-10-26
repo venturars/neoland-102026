@@ -6,6 +6,7 @@ No conoce el navegador.
 
 from datetime import datetime
 
+from asistencia.domain.access import MINUTE, is_attack
 from asistencia.domain.codes import code_for, is_valid_code, seconds_left
 from asistencia.domain.names import clean_name, name_key
 from asistencia.infra import db
@@ -15,6 +16,7 @@ CLOSED = "La asistencia de esta clase ya está cerrada."
 INVALID_CODE = "El código no es válido o ha caducado. Pide el código actual al profesor."
 NOT_FOUND = "Esta clase no existe. Revisa el enlace."
 MISSING_CHECKIN = "Ese registro no existe en esta clase."
+BANNED = "No puedes pasar lista: tu acceso está bloqueado."
 
 
 class ActionError(Exception):
@@ -47,6 +49,27 @@ def public_session(conn, session_id: str) -> dict:
     """
     session = _require_session(conn, session_id)
     return {"title": session["title"], "open": session["closed_at"] is None}
+
+
+def screen_caller(conn, calls: dict, ip: str, now: float, banned_at: str) -> None:
+    """Cuenta la llamada y bloquea si la IP ataca o ya está en la blacklist.
+
+    :param conn: conexión abierta.
+    :param calls: horas de llamada en memoria, por IP.
+    :param ip: IP pública estática de la conexión.
+    :param now: instante actual, en segundos.
+    :param banned_at: hora del bloqueo, en ISO UTC.
+    :return: None.
+    :raises ActionError: si la IP está bloqueada o esta llamada supera el límite.
+    """
+    if db.is_banned(conn, ip):
+        raise ActionError(BANNED)
+    recent = [stamp for stamp in calls.get(ip, []) if now - stamp < MINUTE]
+    recent.append(now)
+    calls[ip] = recent
+    if is_attack(recent, now):
+        db.ban(conn, ip, banned_at)
+        raise ActionError(BANNED)
 
 
 def register(conn, session_id: str, raw_name, code, now: float, checked_at: str) -> dict:

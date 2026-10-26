@@ -27,7 +27,7 @@ def _imports(relative: str) -> list[str]:
 
 def test_constitution_lives_in_docs():  # CA-01
     text = _text("docs/CONSTITUTION.md")
-    assert "Versión 2.3" in text
+    assert "Versión 3.0" in text
     assert not (APP_ROOT / "CONSTITUTION.md").exists()
 
 

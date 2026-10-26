@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 2.3 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-23
+> Versión 3.0 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-24
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -31,7 +31,8 @@ El registro de asistencia no depende de una plataforma concreta. Las integracion
 
 ### P4 · Privacidad mínima
 - Del alumno solo se guarda el **nombre que él mismo escribe** y la **hora del registro**.
-- **Prohibido** guardar emails, IPs, identificadores de dispositivo o cualquier dato no imprescindible.
+- **Prohibido** guardar emails, identificadores de dispositivo o cualquier dato no imprescindible.
+- La **IP pública estática** de quien llama se puede guardar solo para la **blacklist**. No forma parte de la lista de asistencia.
 - Los datos se **almacenan** solo en local (SQLite). Ningún servicio de terceros los guarda.
 - Para que los alumnos lleguen a la app desde sus casas, el tráfico puede **pasar cifrado (HTTPS)** por un proveedor de túnel (p. ej. Cloudflare). Ese proveedor no los almacena, pero técnicamente podría verlos en tránsito; por eso solo se envía lo imprescindible (nombre y código).
 
@@ -78,7 +79,8 @@ Cambiar el stack requiere enmendar esta constitución.
 
 ## 6. Seguridad
 
-- Los códigos de asistencia **caducan** y no se pueden adivinar **a mano** antes de caducar. La protección contra ataques automatizados (scripts) no es un requisito.
+- Los códigos de asistencia **caducan** y no se pueden adivinar **a mano** antes de caducar. El código no se complica: sigue igual.
+- Quien hace un ataque entra en una **blacklist**, identificado por su **IP pública estática**.
 - Un mismo alumno no puede registrarse dos veces en la misma sesión.
 - Una sesión cerrada no acepta más registros.
 - Toda entrada del usuario se valida en el servidor y se escapa al mostrarla (sin HTML inyectado).
@@ -106,3 +108,4 @@ Cambiar el stack requiere enmendar esta constitución.
 | 2.1 | 2026-10-20 | P4: distingue *almacenar* (solo en local) de *transitar* (puede pasar cifrado por un proveedor de túnel) | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08) |
 | 2.2 | 2026-10-23 | §4: el apartado 4 cierra cualquier fichero de la app y deja claro que una issue, una rama o una pull request no sustituyen al spec | La regla solo hablaba del código nuevo. Una issue, una rama o una pull request podían tomarse como permiso para editar (spec 002) |
 | 2.3 | 2026-10-23 | §4, §7 y §8 dejan de nombrar a una persona | Quien trabaja en el proyecto puede aprobar y seguir las reglas (spec 004) |
+| 3.0 | 2026-10-24 | P4 permite guardar la IP pública estática solo para la blacklist. §6 exige esa blacklist y que el código no se complique | Hay que recordar esa IP para la blacklist y el puzzle sigue igual |
