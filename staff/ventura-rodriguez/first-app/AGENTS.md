@@ -24,6 +24,18 @@ Una persona lee lo escrito. El proceso de implementación empieza cuando esa per
 - Si aparecen dos fuentes de verdad o dos procedimientos que se contradicen (la constitución, el código actual, una spec o esta guía), no se elige uno. En el plan se pregunta qué camino seguir y si hay que modificar la documentación antes de empezar la spec nueva. No se escribe código hasta tener esa respuesta.
 - No propongas código que no se haya comprobado.
 
+## Paquetes
+
+Al añadir un paquete de Node o cambiar su versión, se comprueba con Socket antes de aceptar el plan.
+
+Entra el paquete y la versión. También entran las dependencias de ese paquete, hasta 3 capas.
+
+El resumen entra en el plan antes de aceptarlo. Para el paquete y para cada dependencia, el resumen dice si esa versión está en una campaña, si tiene una alerta y si alguna stat está por debajo de 50 puntos.
+
+Las alertas se comentan. Quien acepta el plan decide si las acepta.
+
+Queda fuera comprobar paquetes que no son de Node, comprobar un paquete cuya versión no cambia, mirar más de 3 capas y decidir las alertas por la persona.
+
 ## Comandos
 
 - Ejecutar: no hay comando de ejecución todavía.
