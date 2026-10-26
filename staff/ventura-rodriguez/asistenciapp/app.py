@@ -18,6 +18,7 @@ from flask import Flask, Response, jsonify, request
 from werkzeug.exceptions import HTTPException
 from werkzeug.middleware.proxy_fix import ProxyFix
 
+from asistencia.domain.attempts import Banned
 from asistencia.domain.session import InvalidCode, SessionClosed, SessionNotFound
 from asistencia.tunnel import TunnelError, start_tunnel
 from asistencia.usecases.attendance import (
@@ -56,8 +57,9 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
     """
     app = Flask(__name__, static_folder="static", static_url_path="")
     app.json.ensure_ascii = False
-    # Detrás del túnel, usar la dirección pública que nos indica.
-    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+    # Detrás del túnel, usar el esquema y el host públicos.
+    # x_for=0: la IP de la conexión no se sustituye por X-Forwarded-For.
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=0, x_proto=1, x_host=1)
     app.config["DB_PATH"] = db_path
     app.config["NOW"] = now
     teacher_token = prepare(db_path)
@@ -75,6 +77,8 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
             return error(409, str(exc))
         except InvalidCode as exc:
             return error(422, str(exc))
+        except Banned as exc:
+            return error(429, str(exc))
         except ValueError as exc:
             return error(400, str(exc))
 
@@ -112,7 +116,12 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
 
         def action():
             row, created = check_in(
-                db_path, session_id, body.get("name"), body.get("code", ""), now
+                db_path,
+                session_id,
+                body.get("name"),
+                body.get("code", ""),
+                now,
+                request.remote_addr or "",
             )
             payload = {"name": row["name"], "checkedAt": row["checked_at"]}
             if not created:

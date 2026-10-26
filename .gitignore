@@ -78,8 +78,16 @@ __pycache__/
 venv/
 .pytest_cache/
 
-# SQLite generada en local (cualquier carpeta). *.sqlite se versiona en first-app.
+# SQLite generada en local (cualquier carpeta). *.sqlite se versiona en first-app,
+# salvo la base local de Esther, que no se sube.
 *.db
 *.db-journal
 *.db-wal
 *.db-shm
+staff/esther-patino/first-app/db/*.sqlite
+staff/esther-patino/first-app/db/*.sqlite-journal
+staff/esther-patino/first-app/db/*.sqlite-wal
+staff/esther-patino/first-app/db/*.sqlite-shm
+
+# AsistenciApp de Esther: data/ guarda nombres de alumnos y el token del profesor.
+staff/esther-patino/asistenciapp/data/
