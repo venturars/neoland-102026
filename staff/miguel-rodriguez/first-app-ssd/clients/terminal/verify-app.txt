@@ -1,0 +1,49 @@
+# Run from staff/miguel-rodriguez/first-app-ssd after initialization. Uses one temporary contact.
+# Existing contacts, including demo users, are left alone.
+node --input-type=module <<'EOF'
+let database;
+let temporaryId;
+let deleteContact;
+try {
+  const { db } = await import("./db/connection.js");
+  database = db;
+  const { default: assert } = await import("node:assert/strict");
+  const { randomUUID } = await import("node:crypto");
+  const { createUser } = await import("./logic/create-user.js");
+  const { listUsers } = await import("./logic/list-users.js");
+  const { updateUser } = await import("./logic/update-user.js");
+  const { findUserByEmail } = await import("./logic/find-user-by-email.js");
+  const { deleteUser } = await import("./logic/delete-user.js");
+  deleteContact = deleteUser;
+  const before = listUsers();
+  const email = `check.${randomUUID()}@example.com`;
+  const created = createUser("  Terminal Check  ", ` ${email.toUpperCase()} `);
+  temporaryId = created.id;
+  assert.equal(created.name, "Terminal Check");
+  assert.equal(created.email, email);
+  assert.equal(listUsers().length, before.length + 1);
+  assert.deepEqual(findUserByEmail(email.toUpperCase()), created);
+  const updated = updateUser(created.id, { name: "Terminal Verified" });
+  assert.equal(updated.name, "Terminal Verified");
+  assert.equal(updated.email, email);
+  assert.equal(updated.createdAt, created.createdAt);
+  assert.throws(() => createUser("Duplicate", email), { message: "Email is already used" });
+  assert.throws(() => createUser("", "invalid"), { message: "Name is empty" });
+  assert.equal(deleteUser(created.id), undefined);
+  temporaryId = undefined;
+  assert.throws(() => findUserByEmail(email), { message: "User not found" });
+  assert.throws(() => deleteUser(created.id), { message: "User not found" });
+  assert.deepEqual(listUsers(), before);
+  console.log("PASS: create, list, update, lookup, duplicate rejection, validation, delete, and missing-user errors.");
+  console.log(`Existing ${before.length} users preserved.`);
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+} finally {
+  try {
+    if (temporaryId !== undefined && deleteContact) deleteContact(temporaryId);
+  } finally {
+    if (database) database.close();
+  }
+}
+EOF

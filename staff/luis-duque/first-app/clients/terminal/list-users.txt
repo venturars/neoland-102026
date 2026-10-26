@@ -1,0 +1,1 @@
+node --input-type=module -e "import { listUsers } from './staff/luis-duque/first-app/logic/list-users.js'; console.log(await listUsers())"

@@ -1,4 +1,5 @@
 node_modules/
+.mcp.json
 *.sqlite
 *.sqlite-journal
 *.sqlite-wal
