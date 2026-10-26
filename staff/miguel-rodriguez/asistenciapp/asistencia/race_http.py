@@ -10,6 +10,7 @@ from typing import Callable
 from urllib.parse import urlsplit
 from flask import Flask, Response, jsonify, request
 from werkzeug.exceptions import HTTPException
+from .qr import generate_qr
 from .origin import registration_origin
 from .usecases import races
 from .usecases.races import RaceError, Outcome
@@ -293,6 +294,26 @@ def register_routes(app: Flask, db: str | Path, now: Callable[[], float], trust_
         """
         origin()
         return answer(races.teacher_state(db, sid, now))
+
+    @app.get('/api/sessions/<sid>/race/qr.svg')
+    def qr(sid: str) -> Response:
+        """Entrega el QR solo al profesor y durante el lobby.
+
+        :param sid: carrera cuya entrada se representa.
+        :return: SVG local sin caché, o rechazo si no queda entrada vigente.
+        :rtype: Response
+
+        Usage::
+
+            qr(session_id)
+        """
+        state, _ = answer(races.teacher_state(db, sid, now))
+        link = state.get_json().get('joinUrl')
+        if link is None:
+            raise RaceError(410, 'La entrada ya está cerrada. Consulta el estado de la carrera.')
+        response = Response(generate_qr(link), mimetype='image/svg+xml')
+        response.headers['Cache-Control'] = 'no-store'
+        return response
 
     @app.post('/api/sessions/<sid>/race/start')
     def start(sid: str) -> tuple[Response, int]:
