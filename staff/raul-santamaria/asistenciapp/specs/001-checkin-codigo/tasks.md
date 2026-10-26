@@ -91,7 +91,7 @@ Tests en `tests/test_api.py` con fixtures de `conftest.py` (BD temporal, token f
 
 ## Fase F · Cierre
 
-- [ ] **T19** · `README.md`: entorno, túnel, arranque, pasar lista, tests. Rutas `staff/raul-santamaria/asistenciapp/`.
+- [ ] **T19** · `README.md`: entorno, túnel, arranque, pasar lista, tests. Rutas `staff/<usuario>/asistenciapp/`.
 - [ ] **T20** · Verificación manual (dos navegadores o navegador + móvil):
   - [ ] CA-03 · el código rota cada 30 s.
   - [ ] CA-10 · alumno en lista ≤ 5 s.

@@ -1,6 +1,6 @@
-# AGENT.md — Manual de trabajo para agentes de IA
+# AGENTS.md — Manual de trabajo para agentes de IA
 
-Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [constitución](docs/CONSTITUTION.md) dice **qué reglas** se cumplen. Este archivo dice **cómo se trabaja** día a día y **cómo se escribe** cada función.
+Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [constitución](docs/CONSTITUTION.md) dice **qué reglas** se cumplen. La [arquitectura](docs/ARCHITECTURE.md) dice **cómo se organiza** el código. Este archivo dice **cómo se trabaja** día a día y **cómo se escribe** cada función.
 
 ---
 
@@ -9,9 +9,10 @@ Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en 
 Lee en este orden al empezar cualquier tarea:
 
 1. `docs/CONSTITUTION.md`: las reglas no negociables.
-2. Este archivo (`AGENT.md`).
-3. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
-4. Su `plan.md` y su `tasks.md`, si ya existen.
+2. `docs/ARCHITECTURE.md`: cómo se organiza el código.
+3. Este archivo (`AGENTS.md`).
+4. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
+5. Su `plan.md` y su `tasks.md`, si ya existen.
 
 Si algo de lo que te piden contradice la constitución, **para y avisa** antes de escribir nada.
 
@@ -54,32 +55,14 @@ Al empezar el cambio, el único fichero nuevo permitido es el `spec.md`. El agen
 
 - Haz **una tarea cada vez**. Al acabarla, márcala `[x]` en `tasks.md`.
 - Ningún fichero de la app se adelanta al spec. Si la spec activa no cubre el pedido, **para**, escribe el spec y espera aprobación.
+- Una issue, una rama o una pull request **no sustituyen** al spec y **no autorizan** a modificar la app sin un spec aprobado.
 - Si durante la implementación descubres que la spec o el plan están mal o incompletos, **para**, propón el cambio en el documento y espera aprobación.
 
 ---
 
 ## 3. Estructura de carpetas
 
-```
-asistenciapp/
-├── AGENT.md               # este archivo
-├── README.md              # cómo arrancar la app (para humanos)
-├── docs/
-│   └── CONSTITUTION.md    # reglas no negociables
-├── specs/
-│   └── NNN-nombre/
-│       ├── spec.md        # qué y por qué
-│       ├── plan.md        # cómo
-│       └── tasks.md       # pasos
-├── requirements.txt       # dependencias de Python (Flask, pytest)
-├── pytest.ini             # configuración de pytest
-├── app.py                 # aplicación Flask y punto de entrada
-├── asistencia/            # lógica del servidor (paquete de Python)
-├── static/                # HTML, CSS y JS del navegador
-├── tests/                 # tests (test_*.py)
-├── .venv/                 # entorno virtual de Python (no se sube a git)
-└── data/                  # base de datos SQLite (no se sube a git)
-```
+El árbol de carpetas está en [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-discord-bot`.
 
@@ -87,7 +70,7 @@ Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codi
 
 ## 4. Comandos
 
-Ejecutar desde `staff/raul-santamaria/asistenciapp/`:
+Ejecutar desde `staff/<usuario>/asistenciapp/`:
 
 | Acción | Comando |
 | --- | --- |
@@ -106,7 +89,7 @@ Las únicas dependencias son Flask y pytest (constitución P3).
 
 ## 5. Reglas de comportamiento
 
-- **Solo se edita dentro de `staff/raul-santamaria/asistenciapp/`.**
+- **Solo se edita dentro de `staff/<usuario>/asistenciapp/`.**
 - **Pregunta antes de suponer.** Ante una ambigüedad, pregunta o márcala con `[NECESITA ACLARACIÓN]`.
 - **Explica lo que haces.** Al cerrar cada fase, resume qué se ha hecho, por qué y qué tiene que revisar la persona que trabaja en esta carpeta.
 - **Cambios pequeños.** Mejor varias tareas cortas que una enorme.
@@ -133,6 +116,11 @@ Una funcionalidad está terminada cuando:
 | Spec | Fase | Notas |
 | --- | --- | --- |
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
+| `002-spec-antes-del-cambio` | ✅ Implementada (2026-10-23) | Ningún fichero de la app se toca sin un spec aprobado; issue/rama/PR no sustituyen al spec |
+| `003-activar-el-entorno` | ✅ Implementada (2026-10-26): T01–T04 | El README separa activar el entorno y arrancar la app |
+| `004-quitar-referencias-personales` | ✅ Implementada (2026-10-26): T01–T10 | Documentación con usuario genérico; sin carpeta personal |
+| `005-reorganizar-arquitectura` | ✅ Implementada (2026-10-26): T01–T12, 87 tests | Documentos en `docs/`; código en reglas, acciones y borde |
+| `006-limite-por-ip-publica` | ✅ Implementada (2026-10-26): T01–T11, 102 tests | Límite de intentos de registro por IP y lista de bloqueo |
 | Bot de Discord | Idea futura, sin número | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
@@ -148,7 +136,7 @@ La forma es la de una función que se lee sola: se ve qué recibe, qué devuelve
 
 Usage::
 
-  >>> from asistencia.codes import code_for
+  >>> from asistencia.domain.codes import code_for
   >>> code_for(secret, now)
 """
 ```
