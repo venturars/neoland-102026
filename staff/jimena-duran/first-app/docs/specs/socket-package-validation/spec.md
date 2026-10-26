@@ -22,4 +22,3 @@ cuya versión no cambie y las dependencias más allá de la tercera capa.
   los criterios, las tres capas y el resumen previo a aprobar el plan.
 - Las instrucciones recogen las exclusiones y la decisión humana sobre
   las alertas.
-
