@@ -1,0 +1,10 @@
+# Feature: listUsers — logic/list-users.js
+# Paste this whole block into Git Bash, with first-app as the current folder.
+# It only reads the real database, db/users.sqlite.
+
+node --no-warnings --input-type=module -e '
+import { listUsers } from "./logic/list-users.js";
+
+// 1. List every user: prints them ordered by id
+console.log(listUsers());
+'

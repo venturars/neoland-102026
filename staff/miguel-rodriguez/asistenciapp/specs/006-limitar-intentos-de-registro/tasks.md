@@ -12,7 +12,7 @@ Estado: preparadas y revisadas internamente el 2026-10-24 bajo autorización exp
 - [x] T08 · Resolver origen de conexión y activar la protección solo en checkin; conectar el modo de túnel explícito. CA-04, CA-05, CA-07, CA-10, CA-12.
 - [x] T09 · Actualizar README, arquitectura y manual con las reglas actuales y la privacidad. CA-07, CA-11.
 - [x] T10 · Ejecutar suite completa y revisar compatibilidad, conservación, concurrencia y origen; corregir las causas de cualquier fallo. CA-01–CA-12.
-- [ ] T11 · Registrar evidencia y límites reales, eliminar copias temporales y publicar commits/PR con Sergio añadido como revisor. CA-01–CA-12.
+- [x] T11 · Registrar evidencia y límites reales, eliminar copias temporales y publicar commits/PR con Sergio añadido como revisor. CA-01–CA-12.
 
 ## Resultados
 
@@ -75,3 +75,9 @@ T11 sigue pendiente por la publicación de la PR; las revisiones e integración 
 ## Publicación autorizada · 2026-10-26
 
 Miguel ordenó «sube todas las prssss omggg». Esta instrucción sustituye la espera de publicación condicionada a las predecesoras: se publica esta tarea ahora con base fija staging y sus dependencias pendientes explícitas. La PR es [#353](https://github.com/venturars/neoland-102026/pull/353), asignada a mglnglxx. No se autoriza merge sin las revisiones requeridas. Las aprobaciones y pruebas anteriores no se atribuyen a compañeros. Se conservan commits separados por tarea; los cambios acumulados de la base se explican en la descripción y se ofrece comparación exclusiva del paso.
+
+## Preparación final para revisión · 2026-10-26
+
+Miguel autorizó terminar y publicar todo el trabajo pendiente. Las PRs #252 y #284 ya están fusionadas en staging. Se incorporó ese staging a esta rama mediante un merge normal, sin cambiar el contenido de la aplicación ni reescribir commits. La comparación contiene únicamente 006: 15 archivos dentro de esta app, sin cambios en specs 001–005.
+
+Verificación nueva en una copia desechable exportada de esta rama, con datos ficticios y el entorno existente: `PYTHONDONTWRITEBYTECODE=1 python -m pytest -q -p no:cacheprovider`, **145 pruebas aprobadas en 0,57 s**. La copia temporal se eliminó. T11 queda completada: la PR está publicada y Sergio ya recibió su solicitud de revisión. La revisión de compañeros continúa pendiente; ninguna aprobación descartada se cuenta para el merge.
