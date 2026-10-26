@@ -28,6 +28,20 @@ Aplica el formato estándar de Prettier: comillas dobles, punto y coma, coma fin
 - Si la constitución, el código, una spec o esta guía ofrecen instrucciones incompatibles, detén la implementación. Registra la duda en el plan y solicita decidir qué fuente debe prevalecer, incluyendo si hace falta actualizar la documentación.
 - No presentes una solución que no haya sido comprobada.
 
+## Paquetes
+
+Antes de aprobar un plan que añada un paquete de Node o cambie su versión,
+valida con el MCP de Socket la versión propuesta y sus dependencias hasta
+tres capas. Aplica los mismos criterios a todos los paquetes revisados.
+
+Incluye en el plan un resumen por paquete y versión que indique si aparece
+en campañas, si presenta alertas y si alguna puntuación es inferior a 50.
+Comenta las alertas con quien aprueba el plan: esa persona decide si las
+acepta. El agente no decide en su lugar.
+
+Quedan fuera los paquetes que no sean de Node, los paquetes existentes cuya
+versión no cambie y las dependencias más allá de la tercera capa.
+
 ## Cierre de una tarea
 
 - Cada funcionalidad nueva debe incluir su primer cliente en `clients/terminal/`. Es un archivo `.txt` que se ejecuta desde la carpeta `first-app`, importa la función de `logic/` y muestra su resultado con `console.log`.

@@ -32,6 +32,11 @@ Una funcionalidad nueva ocupa un archivo nuevo. Si las reglas, el código y la s
 
 La documentación debe ser breve, concreta y determinista; no se añade complejidad que dificulte leerla.
 
+## Paquetes
+
+Es obligatorio validar con Socket cada paquete de Node que se incorpore
+y cada cambio de versión.
+
 ## Persistencia
 
 La aplicación utiliza únicamente `db/users.sqlite` y la conexión exportada por `db/connection.js`. No se crean bases ni conexiones alternativas.
