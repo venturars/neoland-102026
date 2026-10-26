@@ -1,0 +1,3 @@
+node --no-warnings logic/updateUser.js 3 "Pedro Garcia" "pedro@gmail.com"
+node --no-warnings logic/updateUser.js 3 "Pedro Garcia" ""
+node --no-warnings logic/updateUser.js 3 "" "pedro.garcia@gmail.com"

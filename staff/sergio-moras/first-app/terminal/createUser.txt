@@ -1,0 +1,1 @@
+node --no-warnings logic/createUser.js "Pedro" "pedro@gmail.com"
