@@ -7,8 +7,8 @@
 
 2. Abre `package.json`.
    En `dependencies` quedan `cli-table3` `0.6.5` y `@colors/colors` `1.6.1`, versiones fijas.
-   El script `jupyter` crea `.venv` e instala `jupyterlab==4.6.4` solo si no existe `.venv/bin/jupyter`.
-   Después arranca `.venv/bin/jupyter lab clients/jupyter`.
+   El script `jupyter` ejecuta `node scripts/start-jupyter.js`.
+   El lanzador prepara y arranca Notebook `7.6.3` en Linux y Windows.
 
 3. Abre `clients/jupyter/create-users-table.ipynb`.
    El markdown lleva título, qué hace, qué pasa en la base de datos, qué acción usa y las anotaciones del plan.
@@ -58,14 +58,14 @@
 12. Ejecuta el bloque de cada documento con el directorio en `clients/jupyter`.
     La salida que queda guardada es la tabla, la línea `No hay filas.`, o el mensaje de error que haya salido.
     No se reescribe esa salida a mano.
-    El proceso que abre la lista es `.venv/bin/jupyter`.
+    El proceso que abre la lista usa el Python del entorno local.
 
 13. Abre `package.json`.
-    El script `jupyter` instala `notebook==7.6.3` si no existe `.venv/bin/jupyter-notebook`.
-    Crea el `.venv` solo si falta.
-    Después arranca `.venv/bin/jupyter notebook clients/jupyter`.
+    El lanzador instala `notebook==7.6.3` si el entorno no tiene esa versión.
+    Crea `.venv` si falta su Python y prepara pip si no está disponible.
+    Después arranca ese Python con `-m notebook clients/jupyter`.
 
 14. Lanza `pnpm jupyter` desde `first-app`.
     El navegador muestra la lista de los nueve documentos, en la interfaz de notebooks.
-    El proceso es `.venv/bin/jupyter notebook`.
+    El proceso usa `.venv/bin/python` en Linux o `.venv/Scripts/python.exe` en Windows.
     No se abre Lab.
