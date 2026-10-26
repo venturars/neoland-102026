@@ -52,3 +52,26 @@ La autorización completa de Miguel consta en el spec. Las aprobaciones de compa
 Implementación guardada y subida en la rama 300-feat-limit-automated-checkin-attempts, con commit inicial y tres commits de trabajo separados. La PR de 006 no se abre aún: primero deben integrarse #252 (004) y #284 (005), para que el diff de 006 contra staging no mezcle esos pasos ni obligue a renovar revisiones por sus merges. T11 conserva su casilla pendiente hasta abrir esa PR y solicitar las revisiones de Dietor878, ChangVictor y sergiocortessat. Sergio ya está solicitado en las PRs anteriores.
 
 Copias, bases ficticias y capturas de salida temporales eliminadas tras registrar los resultados. Se conserva únicamente la captura del mensaje de bloqueo y el repaso de estudio fuera del repositorio. El servidor temporal se detuvo y su puerto quedó cerrado.
+
+## Verificación adicional con túnel real · 2026-10-24
+
+Miguel autorizó después de la verificación inicial probar un túnel real y el script de clase antes de empezar la mejora propia. Se amplía únicamente la verificación, sin cambiar el comportamiento ni los criterios de aceptación.
+
+- Copia desechable de la app, base nueva con nombres ficticios y token efímero. No se usaron datos ni servicios de clase existentes.
+- cloudflared 2026.10.3 oficial, descargado temporalmente y verificado contra su SHA-256 publicado. Túnel real conectado a Cloudflare. La resolución local del nombre temporal falló; se utilizó DNS-over-HTTPS de Cloudflare solo en los procesos de prueba, sin modificar el DNS del equipo. Cliente fijado a IPv4 para conservar el mismo origen entre peticiones.
+- Registro previo con código válido: 201. Una asistencia ficticia guardada.
+- Script original asistencia/hack-etico.sh, sin modificaciones, limitado a 32 códigos incorrectos y 8 peticiones en paralelo: 5 respuestas 422 y 27 respuestas 429 observadas en el servidor. Salida 1, sin código encontrado. Se excluyeron del rango los códigos válidos de las ventanas próximas para probar el bloqueo, no la probabilidad de acertar antes del límite.
+- Comprobación de la base: una asistencia previa conservada, cero registros del nombre utilizado por el script y una dirección bloqueada.
+- Código válido después del bloqueo: 429 con mensaje español de bloqueo permanente. Tras reiniciar la aplicación sobre la misma base: 429 otra vez.
+- Petición con CF-Connecting-IP, X-Forwarded-For y X-Real-IP inventados: 403 no JSON recibido antes de la app; no se guardó ninguna dirección inventada ni otra asistencia. Esta respuesta del servicio previo no demuestra por sí misma el rechazo de cabeceras dentro de Flask; esa parte permanece cubierta por las pruebas automatizadas.
+- Consultar la clase tras el bloqueo: 200. Consultar las sesiones privadas sin token: 401; con token: 200.
+- Servidor y túnel detenidos; puerto confirmado cerrado. Copia, binario temporal y base ficticia eliminados. Resultado sin IPs, token ni URL del túnel conservado fuera del repositorio en 006-live-security-results.json.
+
+La primera ejecución encontró un error en la decodificación del secreto en el arnés externo de prueba; se corrigió allí, sin modificar código de la app. La ejecución final completó todas las comprobaciones anteriores. No se presenta este barrido acotado como una auditoría general ni como prueba de imposibilidad de acertar un código antes del límite. Los bordes exactos de las ventanas y el máximo de veinte por minuto siguen verificados en la suite automatizada anterior de 145 pruebas. No se cambió código de producto.
+
+T11 sigue pendiente por la publicación de la PR; las revisiones e integración mantienen sus condiciones anteriores.
+
+
+## Publicación autorizada · 2026-10-26
+
+Miguel ordenó «sube todas las prssss omggg». Esta instrucción sustituye la espera de publicación condicionada a las predecesoras: se publica esta tarea ahora con base fija staging y sus dependencias pendientes explícitas. La PR es [#353](https://github.com/venturars/neoland-102026/pull/353), asignada a mglnglxx. No se autoriza merge sin las revisiones requeridas. Las aprobaciones y pruebas anteriores no se atribuyen a compañeros. Se conservan commits separados por tarea; los cambios acumulados de la base se explican en la descripción y se ofrece comparación exclusiva del paso.

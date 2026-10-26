@@ -49,3 +49,7 @@ Ejecutar en copia desechable con .venv existente y datos ficticios; registrar re
 P1 sin dependencia de plataforma; P2 funciones y tablas concretas sin abstracciones extra; P3 biblioteca estándar y dependencias existentes; P4 enmienda limitada anterior a código; P5 pantallas conservadas; P6 mensajes/documentos en español; §3 sin cambiar stack; §4 autorización posterior expresa de ejecución completa; §5 pruebas por criterio y evidencia; §6 protección añadida sin quitar reglas; §7 solo nuestra app; §8 enmienda mayor trazable.
 
 Revisión interna: la ventana incluye el intento actual; la limpieza no depende de que vuelva la misma IP; el bloqueo se confirma antes de lanzar error; bloqueo y contadores se consultan dentro de una transacción serializada; no se confía en cabeceras públicas sin modo explícito. No se afirma que el origen local sea público ni que no pueda cambiar una IP.
+
+## Ampliación de verificación autorizada · 2026-10-24
+
+Tras el plan original, Miguel pidió comprobar el túnel real y el script de clase antes de empezar la mejora propia. Se permite ese ensayo únicamente sobre copia y datos desechables, con barrido acotado y parada y eliminación al terminar. No cambia el contrato de la funcionalidad ni autoriza tráfico contra otras apps. Los resultados y los límites de la prueba constan en tasks.md. Esta autorización posterior sustituye para este ensayo la indicación anterior de no ejecutar el script.

@@ -141,3 +141,6 @@ Una funcionalidad está terminada cuando:
 Cada módulo explica su responsabilidad al principio. Las funciones creadas o modificadas incluyen tipos, describen sus parámetros con `:param` y su resultado con `:return` y `:rtype`, y muestran un ejemplo corto `Usage::`. Las funciones internas sin parámetros indican qué resultado producen. Una función se ocupa de una tarea; no se añaden capas ni herramientas sin una necesidad acordada.
 
 Las dependencias siguen [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Las specs cerradas 001–004 conservan sus rutas históricas: el antiguo AGENT.md corresponde a este AGENTS.md y la constitución que estaba en la raíz está ahora en docs/CONSTITUTION.md. No se reescriben esas evidencias al mover documentos.
+
+
+Publicación 2026-10-26: PR [353](https://github.com/venturars/neoland-102026/pull/353) de la tarea 006, base staging, creada por instrucción expresa de Miguel aunque haya dependencias pendientes. Los estados anteriores describen la ejecución local y sus fechas; la PR actual es la referencia de publicación.
