@@ -63,15 +63,15 @@ function renderOwn(data) {
   $('result').hidden=!data.result||data.state==='retirado';
   if(data.state==='retirado') $('own-message').textContent='El profesor retiró tu asistencia. Tu plaza no vuelve a abrirse.';
   else if(data.result) {
-    $('own-message').textContent='¡Asistencia guardada! Tu puesto ya está confirmado.';
+    $('own-message').textContent='Asistencia confirmada.';
     $('position').textContent=`${data.result.position}.º`;
     $('result-time').textContent=new Date(data.result.checkedAt).toLocaleTimeString('es-ES');
-    message('¡Has cruzado la meta!');if(oldResult!==data.result.id){$('position').tabIndex=-1;$('position').focus();}
+    message('Asistencia confirmada.');if(oldResult!==data.result.id){$('position').tabIndex=-1;$('position').focus();}
   } else if(data.phase==='closed') $('own-message').textContent='La carrera terminó. No se ha registrado tu asistencia.';
   else if(data.remaining===0) $('own-message').textContent='Sin intentos. El resto de la parrilla puede continuar.';
-  else if(data.phase==='lobby') $('own-message').textContent='¡Estás en la parrilla! Espera la salida del profesor.';
-  else if(data.phase==='countdown') $('own-message').textContent='Prepárate. El código aparecerá en la pantalla del profesor.';
-  else $('own-message').textContent='¡Ya! Mira el código del profesor y confirma tu llegada.';
+  else if(data.phase==='lobby') $('own-message').textContent='Espera la salida.';
+  else if(data.phase==='countdown') $('own-message').textContent='Prepárate.';
+  else $('own-message').textContent='Introduce el código del profesor.';
   if(!oldPhase&&!data.result){$('own-name').tabIndex=-1;$('own-name').focus();}
   if(oldPhase && oldPhase!==data.phase && data.phase==='open'&&!terminal) $('code').focus();
   if(terminal) uncertain=false;
@@ -117,7 +117,7 @@ $('join-form').addEventListener('submit',async event=>{
   event.preventDefault();if(!entry||!await beginAction())return;$('join-button').disabled=true;
   try {
     const {response,data}=await request('/join',{join_secret:entry,roster_key:$('name').value},{'X-Race-Request':'1'});
-    if(response.ok){message('¡Piloto listo!');renderOwn(data);}else message(data.error||'No se pudo ocupar la plaza.',true);
+    if(response.ok){message('Listo.');renderOwn(data);}else message(data.error||'No se pudo ocupar la plaza.',true);
   }catch { message('No se recibió la respuesta. Consultaremos si este navegador conserva su plaza.',true); }
   finally {$('join-button').disabled=false;endAction();}
 });
