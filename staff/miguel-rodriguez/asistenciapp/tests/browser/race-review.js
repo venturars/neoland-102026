@@ -1,13 +1,13 @@
 // Ejecutar con browser_run_code_unsafe sobre una copia ficticia en loopback; no añade dependencias al producto.
 async (page) => {
-  const base='http://127.0.0.1:8767';
-  const header={'X-Teacher-Token':'007-local-test'};
+  const base='http://127.0.0.1:8769';
+  const header={'X-Teacher-Token':'009-local-test'};
   const browser=page.context().browser();const contexts=[];const results=[];
   const check=(condition,label)=>{if(!condition)throw new Error(label);results.push(label);};
   async function setup(keys){
     const created=await (await page.request.post(base+'/api/sessions/races',{headers:header,data:{title:'Ensayo <img src=x onerror=alert(1)>'}})).json();
     const teacherState=await (await page.request.get(base+`/api/sessions/${created.id}/race`,{headers:header})).json();
-    await page.goto(base+`/race-display.html?r=${created.id}#t=007-local-test`);await page.locator('#race-content').waitFor({state:'visible'});
+    await page.goto(base+`/race-display.html?r=${created.id}#t=009-local-test`);await page.locator('#race-content').waitFor({state:'visible'});
     const students=[];
     for(const key of keys){const ctx=await browser.newContext({viewport:{width:400,height:850}});contexts.push(ctx);const student=await ctx.newPage();await student.goto(teacherState.joinUrl);await student.locator('#join-view').waitFor({state:'visible'});await student.locator('#name').selectOption(key);await student.locator('#join-button').click();await student.locator('#own-view').waitFor({state:'visible'});students.push(student);}
     return {sid:created.id,students,entry:teacherState.joinUrl};
