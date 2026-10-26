@@ -1,6 +1,6 @@
-# AGENT.md — Manual de trabajo para agentes de IA
+# AGENTS.md — Manual de trabajo para agentes de IA
 
-Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [CONSTITUTION.md](CONSTITUTION.md) dice **qué reglas** se cumplen; este archivo dice **cómo se trabaja** día a día.
+Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [CONSTITUTION.md](docs/CONSTITUTION.md) dice **qué reglas** se cumplen; este archivo dice **cómo se trabaja** día a día.
 
 ---
 
@@ -8,8 +8,8 @@ Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en 
 
 Lee en este orden al empezar cualquier tarea:
 
-1. `CONSTITUTION.md`: las reglas no negociables.
-2. Este archivo (`AGENT.md`).
+1. `docs/CONSTITUTION.md`: las reglas no negociables.
+2. Este archivo (`AGENTS.md`).
 3. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
 4. Su `plan.md` y su `tasks.md`, si ya existen.
 
@@ -54,8 +54,10 @@ Cada funcionalidad recorre estas fases **en orden**. Al terminar cada una, el ag
 
 ```
 asistenciapp/
-├── CONSTITUTION.md        # reglas no negociables
-├── AGENT.md               # este archivo
+├── docs/
+│   ├── CONSTITUTION.md    # reglas no negociables
+│   └── ARCHITECTURE.md    # cómo se parte el código
+├── AGENTS.md              # este archivo
 ├── README.md              # cómo arrancar la app (para humanos)
 ├── specs/
 │   └── NNN-nombre/
@@ -64,8 +66,13 @@ asistenciapp/
 │       └── tasks.md       # pasos
 ├── requirements.txt       # dependencias de Python (Flask, pytest)
 ├── pytest.ini             # configuración de pytest
-├── app.py                 # aplicación Flask y punto de entrada
-├── asistencia/            # lógica del servidor (paquete de Python)
+├── app.py                 # borde web y punto de entrada
+├── asistencia/
+│   ├── reglas/            # reglas de código y de nombre
+│   ├── acciones.py        # acciones de pasar lista
+│   ├── db.py              # guardado
+│   ├── export.py          # CSV
+│   └── tunnel.py          # túnel
 ├── static/                # HTML, CSS y JS del navegador
 ├── tests/                 # tests (test_*.py)
 ├── .venv/                 # entorno virtual de Python (no se sube a git)
