@@ -1,0 +1,1 @@
+node --no-warnings logic/deleteUser.js 3
