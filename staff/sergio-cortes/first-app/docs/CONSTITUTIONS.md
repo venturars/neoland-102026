@@ -45,8 +45,6 @@ El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `findUserById
 
 Esos nombres son solo ejemplos; no hay que ampliar la lista en cada funcionalidad nueva.
 
-La forma de cada línea está en `docs/STYLE.md`. Los errores están en `docs/ERRORS.md`.
-
 Si la función usa varios datos, como `name`, `email` e `id`, recibe un solo `input` y lee ahí cada valor. Si el dato es uno solo, como `id`, `email` o `name`, el argumento es ese valor. No se mete en un objeto.
 
 Ningún fichero de `logic/` abre la base. Llaman a `queries/user.js`. Donde hay una fila, devuelven `id`, `name`, `email`, `createdAt` y `updatedAt`.
