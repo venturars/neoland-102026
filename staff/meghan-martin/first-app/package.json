@@ -3,8 +3,15 @@
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
+  "scripts": {
+    "jupyter": "test -x .venv/bin/jupyter-notebook || (test -d .venv || python3 -m venv .venv && .venv/bin/pip install notebook==7.6.3) && .venv/bin/jupyter notebook clients/jupyter"
+  },
   "keywords": [],
   "author": "Meghan Martin",
   "license": "MIT",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@colors/colors": "1.6.1",
+    "cli-table3": "0.6.5"
+  }
 }

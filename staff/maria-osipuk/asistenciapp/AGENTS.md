@@ -1,5 +1,25 @@
 # AGENTS.md — Manual de trabajo para agentes de IA
 
+## Qué va primero
+
+Cualquier tarea nueva sigue `docs/GIT-WORKFLOW.md` en la raíz de `neoland-102026`, aunque el mensaje no nombre ese fichero ni diga «issue». Esta sección va antes que el resto de este manual.
+
+Una tarea es una issue, una rama desde `staging` y una pull request en draft hacia `staging`.
+
+El momento es dejar la tarea escrita cuando el mensaje cuenta qué hay que hacer. También lo es si:
+
+- trae los títulos «Qué hay que hacer» y «Cómo probarlo»;
+- nombra una carpeta o un fichero de esta app y dice qué debe quedar escrito ahí;
+- pide una forma de trabajar, una spec o un cambio en `AGENTS.md` o en la constitución.
+
+En ese momento se abre solo `neoland-102026/docs/skills/create-issue/SKILL.md`, más `.github/issue_template.md` y `scripts/new-issue.sh`. No hace falta que la skill esté en la lista de skills de la sesión: se abre por esta ruta. No se abre `SKILL.md` ni `MCP.md`. No se usa el resto de este manual para decidir el momento ni para completar la issue.
+
+Se enseña la persona asignada y el título, y se espera el sí. No se enseña la descripción. Con el sí, `scripts/new-issue.sh` crea la issue.
+
+Nombrar el fichero de destino no autoriza a editarlo. Un mensaje que a la vez describe la tarea y pide escribir ficheros cabe en dos momentos: se pregunta cuál es y se espera. No se elige editar.
+
+El resto de este manual se usa cuando el momento ya es hacer el cambio en la rama de esa issue. La issue no sustituye al spec de la app. El spec de la app no sustituye a la issue. El orden es: issue, después la rama, y en esa rama este manual.
+
 Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [constitución](docs/CONSTITUTION.md) dice **qué reglas** se cumplen. La [arquitectura](docs/ARCHITECTURE.md) dice **qué hace cada parte**. Este archivo dice **cómo se trabaja** día a día.
 
 ---

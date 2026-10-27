@@ -2,45 +2,19 @@
 
 Base de la app. login con IA para alumnos junior de AI Engineering, en español, con el código en inglés. Node y una sola base SQLite. Sigue SDD.
 
-## Árbol
+## Guías
 
-```text
-mi-primer-proyecto/
-  package.json                 Paquetes: openai, cli-table3 y @colors/colors. El gestor es pnpm.
-  pnpm-lock.yaml               Lockfile de pnpm.
-  .gitignore                   Ignora node_modules/.
-  AGENTS.md                    Reglas para quien modifica el proyecto.
-  clients/
-    terminal/                  Primer cliente de cada funcionalidad. Ficheros .txt para pegar en la terminal.
-      create-user.txt
-      list-users.txt
-      update-user.txt
-      delete-user.txt
-      users-gender-count.txt
-    jupyter/                   Cliente que se abre con el Jupyter de la app.
-  db/connection.js             Abre una vez el único fichero SQLite y deja la conexión abierta. No contiene SQL.
-  db/users.sqlite              La base. Se crea al abrir la conexión. No hay otra.
-  docs/CONSTITUTIONS.md        Este documento.
-  docs/specs/<nombre>/         Una funcionalidad nueva. spec.md, plan.md y tasks.md, en ese orden.
-  logic/                       Reglas de negocio. Una funcionalidad, un fichero. Esta capa no se reemplaza.
-    create-user.js
-    list-users.js
-    update-user.js
-    delete-user.js
-    users-gender-count.js
-  queries/users.js             Almacén de usuarios. Importa las queries. No escribe el SQL.
-  queries/queries/             Una query por fichero. SQL reutilizable.
-```
-
-`logic/` no importa la base de datos. Recibe el almacén. Cuando una funcionalidad de `logic/` existe, no se mueve a otra carpeta ni se sustituye por otra implementación. Pueden cambiar el cliente y el SQL. Las reglas no.
+- `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada fichero.
+- `docs/TREE.md` es el árbol.
+- `docs/DATABASE.md` es la base de datos y las queries.
+- `docs/ERRORS.md` es la lista de errores.
+- `docs/STYLE.md` es la forma de cada línea y las convenciones.
 
 ## Paquetes
 
 Los paquetes son `openai`, `cli-table3` `0.6.5` y `@colors/colors` `1.6.1`. Se instalan con pnpm. No se usa npm.
 
-### Constantes
-
-Un dato que no cambia va en mayúsculas, como `MODEL`. Una variable sigue en camelCase.
+Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket.
 
 ## SDD
 
@@ -64,28 +38,11 @@ Un paso nombra un solo fichero o una sola comprobación, empieza por un verbo (C
 - [ ] 3. Abrir logic/create-user.js y escribir la validación del email. Un email vacío lanza "Email is invalid".
 ```
 
-## Base de datos
+## Un fichero de logic
 
-Hay una sola base: `db/users.sqlite`.
+`logic/` no importa la base de datos. Recibe el almacén. Cuando una funcionalidad de `logic/` existe, no se mueve a otra carpeta ni se sustituye por otra implementación. Pueden cambiar el cliente y el SQL. Las reglas no.
 
-- `id`: `INTEGER PRIMARY KEY AUTOINCREMENT`.
-- `email`: `VARCHAR(64) NOT NULL UNIQUE`.
-- `name`: `VARCHAR(64) NOT NULL`.
-- `created_at`: fecha de alta. `TEXT` en ISO-8601 (`YYYY-MM-DD`).
-- `updated_at`: fecha de última actualización. `TEXT` en ISO-8601 (`YYYY-MM-DD`).
-- Una fecha se guarda como `TEXT` en ISO-8601 (`YYYY-MM-DD`). SQLite no valida un tipo `DATE`.
-
-La conexión se abre al cargar `db/connection.js` y se queda abierta. Las queries no la abren ni la cierran.
-
-El SQLite de Node ejecuta cada sentencia en el momento. Las funciones de `queries/users.js` son síncronas.
-
-El `CREATE TABLE` vive en una query de `queries/queries/`. `queries/users.js` la lee y la ejecuta al cargar el módulo.
-
-## Código para un junior
-
-El código lo tiene que poder leer y escribir un junior sin experiencia y sin ayuda de IA. Prettier con su configuración por defecto: comillas dobles, punto y coma, dos espacios.
-
-Una funcionalidad de `logic/` es un fichero. El fichero define el nombre, los parámetros de entrada, el cuerpo y la salida.
+Una funcionalidad de `logic/` es un fichero. El fichero define el nombre, los parámetros de entrada, el cuerpo y la salida. La forma de cada línea está en `docs/STYLE.md`.
 
 Orden del cuerpo:
 
@@ -94,7 +51,7 @@ Orden del cuerpo:
 3. Aplicar la logica de negocio.
 4. Montar la salida y dejar solo los datos que salen de la función.
 
-El error no se devuelve como objeto. Se lanza con `throw new Error("mensaje en inglés")` dentro de `try/catch`.
+El error no se devuelve como objeto. Se lanza con `throw new Error("mensaje en inglés")` dentro de `try/catch`. Los mensajes están en `docs/ERRORS.md`.
 
 ## Funciones de logic
 
@@ -117,10 +74,6 @@ Salida: ninguna. No devuelve un objeto.
 `usersGenderCount()`  
 Entrada: ninguna.  
 Salida: `women`, `men` y `genderUndefined`.
-
-## Queries
-
-Cada sentencia SQL es un fichero `.sql` en `queries/queries/`. Solo contiene SQL. `queries/users.js` lee esos ficheros y los ejecuta.
 
 ## Cliente
 
