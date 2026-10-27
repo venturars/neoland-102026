@@ -123,6 +123,7 @@ Una funcionalidad está terminada cuando:
 | `009-refinar-presentacion-de-carrera` | Implementada y verificada localmente; pendiente de probar por Miguel y publicar | Tema, SVG simplificados y celebración 2+3+8; 226 tests Python y 15 Node; evidencia en specs/009-refinar-presentacion-de-carrera/evidence.md; sin PR ni prueba del resultado nuevo atribuida a Miguel |
 | `010-consistencia-y-legibilidad` | Terminada; revisión final aprobada por Miguel el 2026-10-26 | Reglas de estilo y árbol único; nueve criterios y seis casos revisados; 226 pruebas pasan; evidencia en specs/010-consistencia-y-legibilidad/tasks.md; sin refactorización de código |
 | `011-funciones-de-carrera-legibles` | Implementada y verificada; preparación completa autorizada por Miguel el 2026-10-26; revisión de compañeros pendiente | Resultados semánticos, permiso local de un uso y compatibilidad con 010; evidencia en specs/011-funciones-de-carrera-legibles/tasks.md |
+| `012-alumnos-y-personajes-en-almacenamiento` | Implementada y verificada; resultado aprobado por Miguel el 2026-10-27 | Issue #524, PR #525 en draft con base staging; 304 pruebas Python y 29 JavaScript; recorrido local verificado; evidencia en tasks.md; publicación autorizada, revisión de compañeros pendiente |
 | Bot de Discord (sin número asignado) | Idea futura | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
