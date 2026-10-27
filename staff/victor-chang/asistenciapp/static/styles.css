@@ -38,6 +38,36 @@
   }
 }
 
+/* ---------- letras (spec 006 · CA-02, CA-08): servidas por la app, sin pedir nada fuera ---------- */
+
+@font-face {
+  font-family: "Montserrat";
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/montserrat-latin-700-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Montserrat";
+  font-weight: 800;
+  font-display: swap;
+  src: url("fonts/montserrat-latin-800-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/roboto-latin-400-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/roboto-latin-700-normal.woff2") format("woff2");
+}
+
 * { box-sizing: border-box; }
 
 /* Sin esto, `display: inline-flex` de los botones ganaría al atributo hidden. */
@@ -47,7 +77,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font: 1rem/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font: 1rem/1.5 "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 main {
@@ -56,8 +86,11 @@ main {
   padding: 1.5rem 1rem 3rem;
 }
 
-h1 { font-size: 1.6rem; line-height: 1.2; margin: 0 0 1rem; }
-h2 { font-size: 1.2rem; margin: 2rem 0 0.75rem; }
+/* Títulos, código y total con la letra de títulos; si aún no ha llegado, la del sistema. */
+h1, h2, .code, .total, .wordmark { font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif; }
+
+h1 { font-size: 1.6rem; font-weight: 800; line-height: 1.2; margin: 0 0 1rem; }
+h2 { font-size: 1.2rem; font-weight: 700; margin: 2rem 0 0.75rem; }
 p { margin: 0 0 1rem; }
 a { color: var(--accent); }
 
@@ -74,7 +107,7 @@ a { color: var(--accent); }
 
 /* ---------- formularios ---------- */
 
-label { display: block; font-weight: 600; margin-bottom: 0.25rem; }
+label { display: block; font-weight: 700; margin-bottom: 0.25rem; }
 
 input {
   width: 100%;
@@ -102,7 +135,7 @@ button, .button {
   min-height: 44px;
   padding: 0.6rem 1.1rem;
   font: inherit;
-  font-weight: 600;
+  font-weight: 700;
   border-radius: 8px;
   border: 1px solid var(--accent);
   background: var(--accent);
@@ -135,7 +168,7 @@ button:disabled { opacity: 0.6; cursor: wait; }
 /* ---------- modo de la clase (spec 004 · CA-01) ---------- */
 
 fieldset.modes { border: 0; margin: 0 0 1rem; padding: 0; }
-fieldset.modes legend { font-weight: 600; margin-bottom: 0.25rem; padding: 0; }
+fieldset.modes legend { font-weight: 700; margin-bottom: 0.25rem; padding: 0; }
 
 label.choice {
   display: flex;
