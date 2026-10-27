@@ -173,6 +173,7 @@ Una funcionalidad está terminada cuando:
 | `004-quitar-referencias-personales` | ✅ Implementada (2026-10-26) | Ninguna referencia personal a otro usuario en la documentación; la ruta del README es la de esta carpeta |
 | `005-arquitectura-por-capas` | ✅ Implementada v1.3 (2026-10-26) | Documentación en `docs/`, `AGENTS.md` con normas de escritura y código en `domain`, `usecases` y `storage` |
 | `006-limite-por-ip` | 🚧 En implementación (2026-10-26) | Límite de 5 intentos por segundo y 20 por minuto por IP; bloqueo permanente en la base; constitución 3.0 |
+| `007-lista-de-alumnos` | 📝 Spec aprobada v1.0 (2026-10-27) | Listas de grupo: el alumno elige su nombre, ausentes y nuevos en la descarga; propone la enmienda 4.0 de P4 (issue #539) |
 | Bot de Discord | Idea futura, sin número | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
