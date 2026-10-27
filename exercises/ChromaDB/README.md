@@ -101,6 +101,22 @@ Después abre `chromadash/index.html` en el navegador y conecta a `http://localh
 
 No arranques el servidor mientras un script escribe en `chroma_db/`. Cuando termines, páralo con `Ctrl+C`.
 
+## CRUD de usuarios con Jupyter
+
+`src/` tiene un CRUD de usuarios (nombre, email, edad y género) sobre SQLite. Es aparte del RAG: no usa ChromaDB ni Ollama. Las capas se explican en `docs/CONSTITUTION.md`.
+
+Desde `exercises/ChromaDB`, con el entorno virtual activo:
+
+```bash
+jupyter notebook src/clients/jupyter
+```
+
+Hay un notebook por acción: `create_user`, `read_users`, `update_user` y `delete_user`. Cada uno tiene pasos numerados: primero se ejecuta la celda «1. Prepara el notebook» y después, en la celda de la acción, se cambian los datos y se ejecuta. `gender` admite `male`, `female` y `undefined`.
+
+La base de datos se crea sola la primera vez, en `src/db/users.sqlite`. No va a git. Para empezar de cero, borra ese fichero.
+
+Cuando termines, para Jupyter con `Ctrl+C` en la terminal.
+
 ## Regenerar el Markdown
 
 Solo hace falta cuando sale una versión nueva de la documentación. Lo hace una persona y sube el resultado.

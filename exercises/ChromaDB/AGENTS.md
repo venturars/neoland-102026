@@ -26,6 +26,7 @@ Desde `exercises/ChromaDB/`, en PowerShell:
 - Revisar el troceado: `python scripts/count_chunks.py`
 - Construir el índice: `python scripts/build_index.py`
 - Consultar: `python scripts/search.py "pregunta"` y `python scripts/get_doc.py nombre.exacto`
+- CRUD de usuarios: `jupyter notebook src/clients/jupyter`
 - Tests: no hay.
 - Formato y lint: no hay.
 

@@ -38,6 +38,16 @@ Un fichero contiene una función. Su nombre es la acción (`split_doc`, `embed_t
 
 Los ficheros de código van en `scripts/`. La excepción es `scripts/settings.py`: solo guarda las constantes que comparten los scripts y no tiene funciones.
 
+El CRUD de usuarios es aparte y vive en `src/`. Guarda los usuarios en SQLite (`src/db/users.sqlite`, que no va a git) y no usa ChromaDB ni Ollama. Cada capa solo llama a la de debajo:
+
+- `clients/jupyter/`: un notebook por acción. Solo usa `sdk`.
+- `sdk/`: la API que usan los clientes (`import sdk`). Adapta lo que llega del cliente y llama a `core`.
+- `core/`: la lógica de negocio. Valida los datos, aplica las reglas y llama a `storage`.
+- `storage/`: lee y escribe en la base de datos. El SQL va en `storage/queries/`, un fichero `.sql` por consulta.
+- `db/`: la conexión, el esquema (`schema.sql`) y la ruta del fichero.
+
+Los `settings.py` de `src/` siguen la misma regla que `scripts/settings.py`.
+
 El cuerpo sigue este orden, sin mezclarlo:
 
 1. Validar los parámetros de entrada.
