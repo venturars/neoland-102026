@@ -1,13 +1,8 @@
 export {
-  InvalidData,
-  DuplicateEmail,
-  UserNotFound,
-} from "./errors.js";
-export {
   validateChanges,
   validateEmail,
   validateNewUser,
-} from "./user.js";
+} from "./shared.js";
 export { updateUser } from "./update-user.js";
 export { findUserByEmail } from "./find-user-by-email.js";
 export { findUserByName } from "./find-user-by-name.js";

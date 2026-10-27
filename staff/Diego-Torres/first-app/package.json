@@ -5,7 +5,7 @@
   "scripts": {
     "test": "node --test",
     "ejemplo": "node ejemplo.js",
-    "jupyter": "node scripts/jupyter.js"
+    "jupyter": ".venv\\Scripts\\jupyter.exe notebook clients/jupyter"
   },
   "dependencies": {
     "@colors/colors": "1.6.1",

@@ -1,4 +1,4 @@
-import { validateEmail } from "./user.js";
+import { validateEmail } from "./shared.js";
 
 export async function findUserByEmail(store, email) {
   const normalized = validateEmail(email);

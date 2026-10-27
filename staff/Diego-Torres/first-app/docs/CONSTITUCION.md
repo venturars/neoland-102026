@@ -6,9 +6,8 @@ Si una tarea y esta constitución chocan, gana la constitución.
 
 | Carpeta o fichero | Qué sabe |
 | --- | --- |
-| `logic/user.js` | Qué es un nombre y un email válidos |
+| `logic/shared.js` | Qué es un nombre y un email válidos |
 | `logic/create-user.js` y el resto, un fichero por operación | Crear, actualizar, eliminar y las tres lecturas |
-| `logic/errors.js` | Los tres errores |
 | `logic/index.js` | Reexporta la lógica. No exporta SQLite |
 | `queries/queries/*.sql` | Las frases SQL, una por fichero. `create-users-table.sql` es la tabla `users` |
 | `queries/users.js` | El almacén de verdad |
@@ -82,17 +81,17 @@ El orden interno es siempre el mismo: primero lo que se decide con los datos en 
 
 ## Errores
 
-Solo estas tres clases. No se añaden clases ni mensajes.
+Un fallo es `throw new Error`. No hay clases propias. No se añaden mensajes.
 
-- `InvalidData`: `Name is required`
-- `InvalidData`: `Email is invalid`
-- `InvalidData`: `A name or an email is required`
-- `DuplicateEmail`: `Email <email> is already registered`
-- `UserNotFound`: `There is no user with id <id>`
+- `Name is required`
+- `Email is invalid`
+- `A name or an email is required`
+- `Email <email> is already registered`
+- `There is no user with id <id>`
 
-`InvalidData` lo lanza `logic/user.js`. `DuplicateEmail` y `UserNotFound` los lanzan las operaciones.
+Los tres primeros los lanza `logic/shared.js`. Los dos últimos los lanzan las operaciones.
 
-`No se han podido clasificar los usuarios` lo lanza `logic/users-gender-count.js` si el almacén no se puede leer o la llamada a la IA falla. No es una de las tres clases.
+`No se han podido clasificar los usuarios` lo lanza `logic/users-gender-count.js` si el almacén no se puede leer o la llamada a la IA falla. No es uno de los mensajes de arriba.
 
 ## Qué no entra
 

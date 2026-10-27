@@ -3,11 +3,6 @@ import { DatabaseSync } from "node:sqlite";
 import { describe, it } from "node:test";
 import { createSqliteStore } from "../queries/users.js";
 import {
-  InvalidData,
-  DuplicateEmail,
-  UserNotFound,
-} from "../logic/errors.js";
-import {
   updateUser,
   findUserByEmail,
   findUserByName,
@@ -40,7 +35,7 @@ describe("usuarios en memoria", () => {
     await assert.rejects(
       () => createUser(almacen, { nombre: "  ", email: "ana@ejemplo.com" }),
       (error) => {
-        assert.ok(error instanceof InvalidData);
+        assert.ok(error instanceof Error);
         assert.equal(error.message, "Name is required");
         return true;
       },
@@ -49,7 +44,7 @@ describe("usuarios en memoria", () => {
     await assert.rejects(
       () => createUser(almacen, { nombre: "Ana", email: "ana" }),
       (error) => {
-        assert.ok(error instanceof InvalidData);
+        assert.ok(error instanceof Error);
         assert.equal(error.message, "Email is invalid");
         return true;
       },
@@ -64,7 +59,7 @@ describe("usuarios en memoria", () => {
       () =>
         createUser(almacen, { nombre: "Otra", email: "ANA@ejemplo.com" }),
       (error) => {
-        assert.ok(error instanceof DuplicateEmail);
+        assert.ok(error instanceof Error);
         assert.equal(
           error.message,
           "Email ana@ejemplo.com is already registered",
@@ -103,7 +98,7 @@ describe("usuarios en memoria", () => {
     await assert.rejects(
       () => updateUser(almacen, "1", {}),
       (error) => {
-        assert.ok(error instanceof InvalidData);
+        assert.ok(error instanceof Error);
         assert.equal(error.message, "A name or an email is required");
         return true;
       },
@@ -112,7 +107,7 @@ describe("usuarios en memoria", () => {
     await assert.rejects(
       () => updateUser(almacen, "9", { nombre: "Ana" }),
       (error) => {
-        assert.ok(error instanceof UserNotFound);
+        assert.ok(error instanceof Error);
         assert.equal(error.message, "There is no user with id 9");
         return true;
       },
@@ -121,7 +116,7 @@ describe("usuarios en memoria", () => {
     await assert.rejects(
       () => deleteUser(almacen, "9"),
       (error) => {
-        assert.ok(error instanceof UserNotFound);
+        assert.ok(error instanceof Error);
         assert.equal(error.message, "There is no user with id 9");
         return true;
       },

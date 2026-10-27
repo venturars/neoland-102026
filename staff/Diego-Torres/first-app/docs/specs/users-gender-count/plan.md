@@ -71,7 +71,7 @@ Si no hay mensaje, el JSON no se puede leer, o `genders` no trae un valor por no
 
 ## Errores
 
-El mensaje nuevo es `No se han podido clasificar los usuarios`. Lo lanza `logic/users-gender-count.js`. No es una de las tres clases de `logic/errors.js`.
+El mensaje nuevo es `No se han podido clasificar los usuarios`. Es `throw new Error`. No es uno de los mensajes de `logic/shared.js`.
 
 | Fallo de la spec | Mensaje |
 | --- | --- |
@@ -92,5 +92,5 @@ La prueba va en `test/users.test.js`. Para verlo a mano, `ejemplo.js` importa `u
 
 Hoy la constitución y `AGENTS.md` no admiten esta funcionalidad. Al implementar hay que ampliarlos, y solo entonces escribir el código:
 
-- En `docs/CONSTITUCION.md`, la tabla de quién sabe qué incluye `logic/users-gender-count.js`. La operación `usersGenderCount(store)` queda aparte de las seis operaciones, una por fichero. El mensaje `No se han podido clasificar los usuarios` queda escrito, y se dice que lo lanza `logic/users-gender-count.js`, no las tres clases actuales.
+- En `docs/CONSTITUCION.md`, la tabla de quién sabe qué incluye `logic/users-gender-count.js`. La operación `usersGenderCount(store)` queda aparte de las seis operaciones, una por fichero. El mensaje `No se han podido clasificar los usuarios` queda escrito, y se dice que lo lanza `logic/users-gender-count.js` con `throw new Error`.
 - En `AGENTS.md`, los scripts siguen con pnpm. Se admite la dependencia `openai`.
