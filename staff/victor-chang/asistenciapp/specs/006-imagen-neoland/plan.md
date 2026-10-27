@@ -68,7 +68,7 @@ Contrastes medidos (WCAG), todos ≥ 4,5:1 en texto y ≥ 3:1 en bordes de contr
 
 - **Montserrat** 700 y 800 para títulos, el código de asistencia y el total; **Roboto** 400 y 700 para el resto. Roboto no tiene un 600 de serie: lo que hoy es 600 (etiquetas, botones) pasa a 700.
 - Cuatro archivos `.woff2`, solo caracteres latinos (incluye ñ, tildes, ü, ¿, ¡, ·, …), ~20–35 KB cada uno, ~110 KB en total (< 300 KB).
-- Origen: los paquetes de **Fontsource** (`@fontsource/montserrat`, `@fontsource/roboto`), que publican esos archivos ya recortados y con su licencia. Se descargan **una vez** al implementar (con permiso de Victor) y se guardan en el repositorio; la app nunca los pide fuera.
+- Origen: los paquetes de **Fontsource** (`@fontsource/montserrat`, `@fontsource/roboto`), que publican esos archivos ya recortados y con su licencia. Se descargan **una vez** al implementar (con permiso previo) y se guardan en el repositorio; la app nunca los pide fuera.
 - Licencia: SIL Open Font License 1.1 para las dos; se guardan `static/fonts/OFL-Montserrat.txt` y `static/fonts/OFL-Roboto.txt`.
 - `@font-face` con `font-display: swap`: si la letra aún no ha llegado, se ve la del sistema (CA-02). La pila de respaldo es la actual (`system-ui, -apple-system, "Segoe UI", …`).
 
@@ -139,7 +139,7 @@ Sin cambios.
 | CA-07 | **Manual:** Chrome a 400 px, sin desplazamiento horizontal, en las tres páginas y en los dos modos de clase |
 | CA-08 | **Test:** ningún `<link>`, `<script>`, `url(...)` ni `@import` de `static/` apunta a otra dirección; las letras pesan < 300 KB. **Manual:** pestaña Red de Chrome, solo peticiones a la app |
 
-La revisión manual sigue la de la spec 004 (T14): servidor de prueba con una función de Meet falsa en la carpeta temporal, capturas antes/después para Victor, y el puerto libre al terminar. Sin Playwright (spec §6).
+La revisión manual sigue la de la spec 004 (T14): servidor de prueba con una función de Meet falsa en la carpeta temporal, capturas antes/después para la revisión, y el puerto libre al terminar. Sin Playwright (spec §6).
 
 ---
 

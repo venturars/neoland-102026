@@ -6,7 +6,7 @@
 
 ## 1. Problema
 
-AsistenciApp es un proyecto del Bootcamp de AI Engineering de Neoland, pero sus pantallas usan un estilo neutro (azul y gris, letra del sistema) que no se parece en nada a Neoland. Victor quiere que la app **se reconozca como parte del bootcamp**, con un aspecto parecido al de [neoland.es](https://neoland.es/).
+AsistenciApp es un proyecto del Bootcamp de AI Engineering de Neoland, pero sus pantallas usan un estilo neutro (azul y gris, letra del sistema) que no se parece en nada a Neoland. Se busca que la app tenga un aspecto más parecido al de [neoland.es](https://neoland.es/), para que **se reconozca como parte del bootcamp**.
 
 Lo que se ve en neoland.es (medido el 2026-10-27):
 
@@ -29,14 +29,14 @@ Es **solo inspiración**: no se copian el logotipo, las imágenes ni ningún otr
 
 | Usuario | Qué quiere |
 | --- | --- |
-| **Victor** y la clase | Que la app se vea como una herramienta del bootcamp de Neoland. |
+| **Quien mantiene la app** y la clase | Que la app se vea como una herramienta del bootcamp de Neoland. |
 | **Profesor** y **alumno** | Que todo siga funcionando **igual**, se lea bien en el móvil y con el modo oscuro, y que se pueda usar con el teclado. |
 
 ---
 
 ## 3. Historias de usuario
 
-- **HU-01**: Como Victor, quiero que **las pantallas tengan los colores, la letra y la forma de los botones de Neoland**, para que la app se reconozca como parte del bootcamp.
+- **HU-01**: Como quien mantiene la app, quiero que **las pantallas tengan los colores, la letra y la forma de los botones de Neoland**, para que la app se reconozca como parte del bootcamp.
 - **HU-02**: Como profesor y como alumno, quiero que **la app funcione y se lea igual de bien que antes**, en el móvil, con el modo oscuro y con el teclado.
 - **HU-03**: Como alumno, quiero que **abrir la página no avise a nadie de fuera** de la app, ni siquiera para cargar la letra.
 
@@ -73,16 +73,16 @@ Formato: **Dado** (situación inicial) · **Cuando** (acción) · **Entonces** (
 ## 6. Fuera de alcance
 
 - Cambiar textos, pasos o funcionalidades de las pantallas.
-- Herramientas de pruebas de navegador (Playwright): la revisión visual se hace a mano en Chrome, como en la spec 004 (T14). Decidido por Victor el 2026-10-27.
+- Herramientas de pruebas de navegador (Playwright): la revisión visual se hace a mano en Chrome, como en la spec 004 (T14). Decidido el 2026-10-27.
 - Los puntos pendientes de la spec 004 (cerrar la asistencia de reuniones terminadas, excluir al profesor por nombre).
 
 ---
 
 ## 7. Preguntas abiertas
 
-Todas resueltas el 2026-10-27 con Victor.
+Todas resueltas el 2026-10-27.
 
 | # | Pregunta | Decisión |
 | --- | --- | --- |
-| P1 | El rojo exacto de Neoland (`#E6284E`) con texto blanco tiene un contraste de **4,4:1**, justo por debajo del 4,5:1 de CA-06. ¿Qué rojo se usa? | **`#D01F45`** (5,3:1), casi igual a la vista, para botones y enlaces. Aprobado por Victor el 2026-10-27 con la spec. `#E6284E` se puede usar en detalles que no son texto. En modo oscuro, un rojo más claro (`#FF5C7A`, 5,5:1 sobre el fondo oscuro). |
-| P2 | ¿Cómo se cargan las letras? | **Desde la propia app** (archivos en `static/fonts/`), no desde Google Fonts. Decidido por Victor el 2026-10-27. |
+| P1 | El rojo exacto de Neoland (`#E6284E`) con texto blanco tiene un contraste de **4,4:1**, justo por debajo del 4,5:1 de CA-06. ¿Qué rojo se usa? | **`#D01F45`** (5,3:1), casi igual a la vista, para botones y enlaces. Aprobado el 2026-10-27 con la spec. `#E6284E` se puede usar en detalles que no son texto. En modo oscuro, un rojo más claro (`#FF5C7A`, 5,5:1 sobre el fondo oscuro). |
+| P2 | ¿Cómo se cargan las letras? | **Desde la propia app** (archivos en `static/fonts/`), no desde Google Fonts. Decidido el 2026-10-27. |
