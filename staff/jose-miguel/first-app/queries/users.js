@@ -9,10 +9,7 @@ const createUsersTableSql = readFileSync(
   "utf8",
 );
 
-const findUserByIdSql = readFileSync(
-  join(directory, "find-by-id.sql"),
-  "utf8",
-);
+const findUserByIdSql = readFileSync(join(directory, "find-by-id.sql"), "utf8");
 
 const findUserByEmailSql = readFileSync(
   join(directory, "find-by-email.sql"),

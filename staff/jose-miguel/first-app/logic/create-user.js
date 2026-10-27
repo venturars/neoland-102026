@@ -1,7 +1,4 @@
-import {
-  findUserByEmail,
-  insertUser,
-} from "../queries/users.js";
+import { findUserByEmail, insertUser } from "../queries/users.js";
 
 export function createUser(input) {
   const name = input[0];

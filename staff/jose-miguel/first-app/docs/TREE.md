@@ -4,6 +4,7 @@
 first-app/
   .gitignore
   package.json
+  eslint.config.js
   scripts/
     jupyter.sh
   db/
