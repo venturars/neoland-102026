@@ -16,6 +16,8 @@ Read [the constitution](docs/CONSTITUTIONS.md) and any active feature's document
   [TREE.md](docs/TREE.md) and the affected responsibilities in
   [ARCHITECTURE.md](docs/ARCHITECTURE.md) in that development's specification and work.
 - Execute the terminal example before claiming the operation works.
+- Before declaring a task finished, run `pnpm format`, then `pnpm lint`.
+  Both must succeed; report and resolve failures before claiming completion.
 - Verify executable changes in disposable project copies. Preserve working data, remove temporary files, and report the commands executed and actual results.
 - If instructions, documents, and code conflict, explain the conflict and stop the affected work for a decision. Do not silently choose one version.
 - Leave all Git and publishing actions to Miguel; do not run Git commands or publish.

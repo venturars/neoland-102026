@@ -56,7 +56,7 @@ public business operation.
   folder as its root.
 - `requirements-jupyter.txt` lists the Python requirements for that client.
 - `package.json` holds minimal application metadata, ES module mode, the Jupyter
-  startup command, and dependency declarations. `pnpm-lock.yaml` records the
+  startup and development-check commands, and dependency declarations. `pnpm-lock.yaml` records the
   resolved packages. Version and package rules remain in the
   [constitution](CONSTITUTIONS.md#dependencies-and-package-management).
 - `.gitignore` excludes generated local artifacts. `db/users.sqlite`, `.venv/`,
@@ -65,6 +65,18 @@ public business operation.
 
 Results are presented by clients rather than printed by business operations.
 Startup may report environment preparation; it does not introduce business logic.
+
+## Development tools
+
+`eslint.config.js` applies the official recommended JavaScript checks, recognizes
+this app's Node globals, and excludes installed dependencies, Python environments
+and generated caches. Its default export is the interface required by ESLint.
+
+The `format` command in `package.json` runs standard Prettier on the app's own
+JavaScript, including the Jupyter runner, startup script and lint configuration.
+The `lint` command checks JavaScript with ESLint without rewriting it. Neither
+command starts the app or accesses its database. Required use at task completion
+is defined in [AGENTS.md](../AGENTS.md).
 
 ## Documentation
 
@@ -80,5 +92,5 @@ Startup may report environment preparation; it does not introduce business logic
 
 `docs/specs/<feature-name>/` contains each development's `spec.md`, `plan.md`, and
 `tasks.md`. The current folders cover the classifier, name lookup, Jupyter client,
-Socket package validation, and this guide separation. Their individual documents
+Socket package validation, guide separation, and formatting/lint checks. Their individual documents
 record the request, approved approach, tasks, decisions, and verification.

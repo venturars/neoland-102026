@@ -50,6 +50,10 @@ first-app-ai/
 │       │   ├── plan.md
 │       │   ├── spec.md
 │       │   └── tasks.md
+│       ├── prettier-and-eslint/
+│       │   ├── plan.md
+│       │   ├── spec.md
+│       │   └── tasks.md
 │       ├── socket-package-validation/
 │       │   ├── plan.md
 │       │   ├── spec.md
@@ -58,6 +62,7 @@ first-app-ai/
 │           ├── plan.md
 │           ├── spec.md
 │           └── tasks.md
+├── eslint.config.js
 ├── logic/
 │   ├── create-user.js
 │   ├── delete-user.js
