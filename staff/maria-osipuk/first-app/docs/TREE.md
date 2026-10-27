@@ -4,6 +4,8 @@
 first-app/
 ├── AGENTS.md
 ├── .gitignore
+├── .prettierignore
+├── eslint.config.js
 ├── package.json
 ├── pnpm-lock.yaml
 │
@@ -77,6 +79,10 @@ first-app/
         │   ├── plan.md
         │   └── tasks.md
         ├── jupyter-script/
+        │   ├── spec.md
+        │   ├── plan.md
+        │   └── tasks.md
+        ├── prettier-and-eslint/
         │   ├── spec.md
         │   ├── plan.md
         │   └── tasks.md
