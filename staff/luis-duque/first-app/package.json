@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "jupyter": "(if not exist .venv\\Scripts\\python.exe py -3 -m venv .venv) & (if not exist .venv\\Scripts\\jupyter-notebook.exe .venv\\Scripts\\python.exe -m pip install notebook==7.6.3) & (if not exist .venv\\Scripts\\jupyter-notebook.exe .venv\\Scripts\\python.exe -m pip install --force-reinstall --no-deps notebook==7.6.3) & .venv\\Scripts\\jupyter-notebook.exe clients\\jupyter --ip=127.0.0.1"
   },
   "keywords": [],
   "author": "Luis Fernando Duque",
@@ -12,6 +13,8 @@
   "type": "module",
   "packageManager": "pnpm@12.15.0",
   "dependencies": {
+    "@colors/colors": "1.6.1",
+    "cli-table3": "0.6.5",
     "openai": "7.39.0"
   }
 }

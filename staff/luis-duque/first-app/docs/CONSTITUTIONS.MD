@@ -1,6 +1,6 @@
 # first-app
 
-Aplicación de gestión de usuarios. Permite crear, actualizar, eliminar, listar y buscar usuarios con `id`, `name` y `email`. También cuenta el género de los nombres ya guardados, sin pedir nombres nuevos y sin modificar los datos. No tiene pantalla ni servidor. La entrada es una llamada a una función de `logic`, o un archivo de `clients/terminal` ejecutado desde la terminal. La salida de crear, actualizar y eliminar se guarda en SQLite. El recuento de género solo se muestra.
+Aplicación de gestión de usuarios. Permite crear, actualizar, eliminar, listar y buscar usuarios con `id`, `name` y `email`. También cuenta el género de los nombres ya guardados, sin pedir nombres nuevos y sin modificar los datos. No tiene pantalla propia ni servidor propio. La entrada es una llamada a una función de `logic`, un archivo de `clients/terminal` ejecutado desde la terminal, o un documento de `clients/jupyter`. La salida de crear, actualizar y eliminar se guarda en SQLite. El recuento de género solo se muestra.
 
 El `id` lo asigna la base de datos. El email se guarda en minúsculas y no se puede repetir. `package.json` incluye la dependencia `openai` `7.39.0` y declara pnpm `12.15.0` como gestor de paquetes. pnpm escribe `pnpm-lock.yaml`.
 
@@ -47,6 +47,15 @@ first-app/
       find-user-by-email.txt
       find-user-by-name.txt
       users-gender.txt
+    jupyter/
+      create-user.ipynb
+      update-user.ipynb
+      delete-user.ipynb
+      list-users.ipynb
+      find-user-by-id.ipynb
+      find-user-by-email.ipynb
+      find-user-by-name.ipynb
+      users-gender.ipynb
   queries/
     users.js
     queries/
@@ -77,6 +86,8 @@ first-app/
 **Lógica.** Recibe lo que se quiere hacer, comprueba que el `id`, el nombre y el email sean válidos, y elige crear, actualizar, eliminar, listar o buscar. Buscar por nombre usa el nombre ya guardado: si hay uno, devuelve ese usuario; si hay varios, devuelve la lista; si no hay ninguno, lanza `User ${name} was not found`. Si los datos no valen, se detiene y no toca la base. Listar no recibe datos. También puede contar el género de los nombres ya guardados: lee esos usuarios, pregunta a Ollama de seis en seis con `nimble-v3` y devuelve cuántos son `women`, cuántos son `man` y cuántos son `undefined`. No modifica los usuarios. No escribe una línea por nombre: la terminal muestra solo el recuento completo. Si Ollama no contesta, o la lectura falla, se detiene y lanza un `Error` con el texto `no se han podido clasificar usuarios`.
 
 **Cliente de terminal.** Es otra forma de pedir la misma operación, sin pantalla. Cada archivo guarda una línea: el comando de cmd que llama a la lógica. Esa línea se tira desde cmd, en la raíz del repositorio. Crear lleva el nombre y el email. Actualizar lleva el id y los cambios `name=` y `email=`, uno o los dos. Eliminar lleva el id. Listar no lleva argumentos. Buscar lleva el id, el email o el nombre. Buscar por nombre llama a `findUserByName` desde `find-user-by-name.txt` y muestra el resultado. Contar el género no lleva argumentos: la línea llama a `usersGender` y muestra el recuento. No comprueba los datos y no toca la base.
+
+**Cliente de Jupyter.** Es otra forma de pedir la misma operación, en el navegador: un documento por operación y el resultado en una tabla con el encabezado en color. Se abre con el Jupyter de la app, el `.venv` de `first-app` con `notebook` `7.6.3`, mediante `pnpm jupyter` desde `first-app`. No usa el Jupyter instalado en el equipo. No comprueba los datos y no abre la base.
 
 **Consultas.** Ejecuta todo el SQL, también el que crea la tabla si no existe, y el de la operación que pidió la lógica. No revisa los datos: inserta, modifica, borra o lee.
 
