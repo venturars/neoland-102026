@@ -38,6 +38,8 @@ mi-primer-proyecto/
 
 Los paquetes son `openai`, `cli-table3` `0.6.5` y `@colors/colors` `1.6.1`. Se instalan con pnpm. No se usa npm.
 
+Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket.
+
 ### Constantes
 
 Un dato que no cambia va en mayúsculas, como `MODEL`. Una variable sigue en camelCase.
