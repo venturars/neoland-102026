@@ -5,6 +5,7 @@
   "type": "module",
   "main": "logic/create-user.js",
   "scripts": {
+    "jupyter": "sh scripts/jupyter.sh",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

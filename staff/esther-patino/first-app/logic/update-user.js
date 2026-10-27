@@ -34,11 +34,21 @@ export function updateUser(id, changes = {}) {
     return toUser(current);
   }
 
-  return toUser(
-    saveUser({
-      id: userId,
-      name: next.name ?? current.name,
-      email: next.email ?? current.email,
-    }),
-  );
+  let name = current.name;
+  if (next.name !== undefined) {
+    name = next.name;
+  }
+
+  let email = current.email;
+  if (next.email !== undefined) {
+    email = next.email;
+  }
+
+  const saved = saveUser({
+    id: userId,
+    name,
+    email,
+  });
+
+  return toUser(saved);
 }

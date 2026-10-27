@@ -25,6 +25,7 @@ from asistencia.usecases.attendance import (
     check_in,
     close_session,
     create_session,
+    enable_discord,
     export_csv,
     list_sessions,
     prepare,
@@ -159,6 +160,7 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
                 "open": detail["open"],
                 "openedAt": detail["opened_at"],
                 "closedAt": detail["closed_at"],
+                "discordEnabled": detail["discord_enabled"],
                 "studentUrl": f"{request.host_url}alumno.html?s={session_id}",
                 "total": detail["total"],
                 "checkins": [
@@ -170,6 +172,14 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
                 data["code"] = detail["code"]
                 data["secondsLeft"] = detail["seconds_left"]
             return jsonify(data)
+
+        return run(action)
+
+    @app.post("/api/sessions/<session_id>/discord")
+    def enable_discord_route(session_id):
+        def action():
+            enable_discord(db_path, session_id, now)
+            return jsonify(ok=True)
 
         return run(action)
 

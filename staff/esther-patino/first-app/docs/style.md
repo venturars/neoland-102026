@@ -1,8 +1,8 @@
 ## Comandos
 
-- Ejecutar: no hay comando de arranque. `package.json` no tiene scripts.
+- Ejecutar: no hay comando de arranque.
 - Tests: los `.txt` de `clients/terminal/`. Se pegan en PowerShell desde la raíz del repositorio. El fragmento entra en `first-app` y no captura errores. No hay `npm test`.
-- Lint/formato: Prettier, formato estándar. No hay script de lint ni de formato, ni fichero de configuración.
+- Lint/formato: `format` lanza Prettier, sin fichero de configuración. `lint` lanza ESLint con `eslint.config.js`.
 
 ## Estilo y convenciones
 
