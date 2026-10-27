@@ -4,7 +4,7 @@
 
 first-app es la primera app del curso de IA Engineer creada por una alumna junior. Creada a través de interacción con IA. No es una web. Se usa desde la terminal.
 
-Está en Node, con módulos ES (`"type": "module"`) y SQLite (`node:sqlite`, fichero `db/users.sqlite`). La arquitectura, los campos del usuario, los nombres de las funciones y los mensajes de error están en `docs/CONSTITUTIONS.md`. Ese documento manda sobre el comportamiento de la app.
+Está en Node, con módulos ES (`"type": "module"`) y SQLite (`node:sqlite`, fichero `db/users.sqlite`). Los campos del usuario están en `docs/CONSTITUTIONS.md`. Ese documento manda sobre el comportamiento de la app. La arquitectura está en `docs/ARCHITECTURE.md`. Los mensajes de error están en `docs/errors.md`. Los nombres de las funciones están en `docs/style.md`.
 
 ## Orden
 
@@ -22,7 +22,7 @@ Una persona lee lo escrito. El proceso de implementación empieza cuando esa per
 
 - Un cambio del proyecto empieza por `docs/specs/<nombre>/`. El primer proceso crea `spec.md` y `plan.md`. Si no hay contradicción, crea también `tasks.md`. No toca ningún otro fichero. Ahí se para.
 - El proceso de implementación empieza cuando una persona ha leído esos ficheros y lo pide. Ese proceso solo ejecuta `tasks.md`.
-- Lee `docs/CONSTITUTIONS.md` y la spec activa antes de tocar código. Si no hay spec para ese cambio, se crea y se para.
+- Lee `docs/CONSTITUTIONS.md`, `docs/style.md`, `docs/ARCHITECTURE.md`, `docs/database.md`, `docs/errors.md`, `docs/tree.md` y la spec activa antes de tocar código. Si no hay spec para ese cambio, se crea y se para.
 - No hay loop. Si la constitución, el código actual y la spec no dicen lo mismo, la pregunta queda al final del plan. No se escriben `tasks.md` ni código.
 - Temperatura próxima a 0. No inventes: cíñete al plan y a la spec activa.
 - En cada tarea: investiga antes de escribir, compara si la tarea tiene parentesco con otra ya resuelta, y sigue las convenciones y el estilo del código actual.
@@ -46,21 +46,11 @@ Queda fuera comprobar paquetes que no son de Node, comprobar un paquete cuya ver
 
 ## Comandos
 
-- Ejecutar: no hay comando de arranque. `package.json` no tiene scripts.
-- Tests: los `.txt` de `clients/terminal/`. Se pegan en PowerShell desde la raíz del repositorio. El fragmento entra en `first-app` y no captura errores. No hay `npm test`.
-- Lint/formato: Prettier, formato estándar. No hay script de lint ni de formato, ni fichero de configuración.
+Los comandos están en `docs/style.md`.
 
 ## Estilo y convenciones
 
-El código se escribe en inglés. El proyecto es para personas hispanohablantes: los comentarios pueden ir en español.
-
-Ficheros en kebab-case, funciones y variables en camelCase, exportaciones con nombre e imports ESM con extensión `.js`. El SQL usa parámetros con nombre (`:id`, `:name`, `:email`). El contrato de `logic/` y el manejo de errores están en `docs/CONSTITUTIONS.md`.
-
-El orden del cuerpo es el de la constitución. En una acción que guarda o borra: comprobar lo que llega, llamar a la consulta que busca, lanzar el error si no se puede seguir y llamar a la consulta que guarda o borra. Si guarda, devuelve el usuario plano. Borrar termina en `removeUser` y no devuelve el usuario. `listUsers` no guarda ni borra: lee con `findAll` y devuelve la lista. Si la tabla está vacía, devuelve `[]`. La lógica no abre los `.sql` y no inventa el `id` ni la hora.
-
-El código tiene que leerse de arriba a abajo, con `if` y con nombres que digan qué hacen. Se evita el código que un programador sin IA no escribiría: envoltorios de resultado, clases de error, helpers genéricos y abstracciones que oculten los pasos.
-
-El formato es el estándar de Prettier, sin configuración propia: comillas dobles, punto y coma, coma final, indentación de 2 espacios y ancho de 80.
+El estilo está en `docs/style.md`.
 
 ## Al terminar una tarea
 
