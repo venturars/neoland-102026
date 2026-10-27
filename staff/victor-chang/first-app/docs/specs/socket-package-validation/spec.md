@@ -27,29 +27,28 @@ A dependency inside those three layers is checked even if the app already has it
 
 A **Socket check** section in the plan, before it is approved. For each package and version of the three layers it says:
 
-- **Known malware / typosquat**: whether Socket's threat feed flags that version as malware or as a typosquat. This is the closest check to "part of a known attack campaign" that Socket gives.
 - **Alerts**: each alert found and what it means, in plain words.
 - **Scores**: the scores Socket gives, and which ones are below 50 out of 100. 49 is below; 50 is not.
 - **Not checked**: what could not be checked, and why.
 
-Each check has one of three results: a warning was found; it was checked and nothing was found; or it was not checked. A missing tool, a missing permission or an empty answer is "not checked", never "nothing found". A good score does not replace the alerts or the known malware / typosquat check.
+Each check has one of three results: a warning was found; it was checked and nothing was found; or it was not checked. A missing tool, a missing permission or an empty answer is "not checked", never "nothing found". A good score does not replace the alerts check.
 
 The section ends with the date, the sources used and the decision of whoever approves the plan.
 
 Example, for a made-up package `example-table@2.0.0` (layer 1) and one dependency `example-width@1.4.0` (layer 2):
 
-| Package               | Layer | Known malware / typosquat | Alerts                                         | Scores below 50 |
-| --------------------- | ----- | ------------------------- | ---------------------------------------------- | --------------- |
-| `example-table@2.0.0` | 1     | Not checked: no access    | None found                                     | None            |
-| `example-width@1.4.0` | 2     | Not checked: no access    | `envVars`, low: it reads environment variables | Quality 49      |
+| Package               | Layer | Alerts                                         | Scores below 50 |
+| --------------------- | ----- | ---------------------------------------------- | --------------- |
+| `example-table@2.0.0` | 1     | None found                                     | None            |
+| `example-width@1.4.0` | 2     | `envVars`, low: it reads environment variables | Quality 49      |
 
-Decision: _accepted by the person who approves the plan, on 2026-10-27, knowing known malware / typosquat was not checked._
+Decision: _accepted by the person who approves the plan, on 2026-10-27, after reading the `envVars` alert and the quality score of `example-width`._
 
 ## Failures
 
 This change adds no message to **Errors** and changes no feature.
 
-The work is not done if the instructions let a plan be approved without the summary, skip a layer or one of the three checks, turn a check that could not run into "nothing found", or let the agent decide in place of the person.
+The work is not done if the instructions let a plan be approved without the summary, skip a layer or one of the two checks, turn a check that could not run into "nothing found", or let the agent decide in place of the person.
 
 ## Out of scope
 

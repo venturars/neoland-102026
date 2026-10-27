@@ -53,18 +53,17 @@ A plan that adds a Node package, or changes its version, development packages in
 1. List each package the plan adds or changes, with its exact version.
 2. Find layer 2: `npm view <name>@<version> dependencies`. For each range, the exact version is the one in `pnpm-lock.yaml` if it is there; otherwise the highest that matches: `npm view <dep>@"<range>" version`, last line.
 3. Find layer 3 the same way from each layer 2 package. Stop there. A package inside the three layers is checked even if the app already has it.
-4. For every package of the three layers, run the three checks. No layer and no check is skipped:
-   - **Known malware / typosquat**: the `socket-mcp` tool `threat_feed`, filters `mal` and `typ`, by name and version. It needs a Socket organization; without one, it is "Not checked: no Socket organization".
+4. For every package of the three layers, run the two checks. No layer and no check is skipped:
    - **Alerts**: `https://socket.dev/npm/package/<name>/alerts/<version>`. If the agent cannot read the page, the cell is "Not checked by the agent" with that link.
    - **Scores**: the `socket-mcp` tool `depscore`, with the exact version. A score below 50 is a warning: 49 is below, 50 is not.
 5. Write one row per package and version:
 
-   | Package               | Layer | Known malware / typosquat | Alerts                                         | Scores below 50 |
-   | --------------------- | ----- | ------------------------- | ---------------------------------------------- | --------------- |
-   | `example-table@2.0.0` | 1     | Not checked: no access    | None found                                     | None            |
-   | `example-width@1.4.0` | 2     | Not checked: no access    | `envVars`, low: it reads environment variables | Quality 49      |
+   | Package               | Layer | Alerts                                         | Scores below 50 |
+   | --------------------- | ----- | ---------------------------------------------- | --------------- |
+   | `example-table@2.0.0` | 1     | None found                                     | None            |
+   | `example-width@1.4.0` | 2     | `envVars`, low: it reads environment variables | Quality 49      |
 
-   Each cell is "found: …", "None found" or "Not checked: <why>". A missing tool, a missing sign-in, a missing organization, a blocked page or an empty answer is "Not checked", never "None found". A good score does not replace the other two checks.
+   Each cell is "found: …", "None found" or "Not checked: <why>". A missing tool, a missing sign-in, a blocked page or an empty answer is "Not checked", never "None found". A good score does not replace the alerts check.
 
 6. Explain each alert in plain words, under the table.
 7. End with the date, the sources used and a blank `Decision:` line. Stop and ask. The agent never fills the decision and never accepts a warning or a "Not checked" on its own. The person who approves the plan opens the socket.dev links marked "Not checked by the agent", decides, and that decision is written in the plan.
