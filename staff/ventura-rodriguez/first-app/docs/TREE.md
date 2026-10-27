@@ -1,0 +1,34 @@
+# Árbol
+
+first-app/
+  eslint.config.js
+  db/
+    connection.js
+    users.sqlite
+  queries/
+    queries/
+    users.js
+  logic/
+    create-user.js
+    update-user.js
+    delete-user.js
+    list-users.js
+    find-user-by-email.js
+    find-user-by-id.js
+    find-user-by-name.js
+    users-gender-count.js
+  clients/
+    terminal/
+    jupyter/
+  docs/
+    ARCHITECTURE.md
+    TREE.md
+    DATABASE.md
+    ERRORS.md
+    STYLE.md
+    CONSTITUTIONS.md
+    specs/
+      <nombre>/
+        spec.md
+        plan.md
+        tasks.md

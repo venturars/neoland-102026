@@ -1,0 +1,3 @@
+# .\staff\esther-patino-141020261\first-app
+Set-Location .\staff\esther-patino-141020261\first-app
+node --input-type=module -e "import { findById } from './logic/find-user-by-id.js'; console.log(findById(1));"

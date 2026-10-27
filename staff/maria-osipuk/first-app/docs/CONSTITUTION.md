@@ -177,6 +177,7 @@ En una base creada con el script actual, `created_at` y `updated_at` usan `DEFAU
 - El cliente actual es la terminal.
 - Ninguna funcionalidad se añade sin una tarea concreta.
 - Cada pedido tiene su carpeta `docs/specs/<nombre>/` con `spec.md`, `plan.md` y `tasks.md`.
+- Hay que usar Socket para validar los paquetes de Node antes de aceptar el plan que los añade o les cambia la versión.
 
 ## Specs
 
@@ -229,3 +230,4 @@ pnpm 10 no ejecuta los scripts de instalación de las dependencias hasta que se 
 - El archivo de bloqueo que se conserva es `pnpm-lock.yaml`. No se genera `package-lock.json`.
 - `package.json` declara `packageManager` con `pnpm@10.34.7`. El script `preinstall` termina con error si el instalador no es pnpm, así que `npm install` no llega a instalar.
 - Revisar las dependencias y los scripts de instalación antes de autorizar su ejecución. Usar pnpm no sustituye esta revisión.
+- Hay que usar Socket para validar los paquetes. Al añadir un paquete de Node o cambiar su versión, esa validación se hace antes de aceptar el plan. El procedimiento está en `AGENTS.md`.

@@ -1,5 +1,25 @@
 # Instrucciones para el agente
 
+## Qué va primero
+
+Cualquier tarea nueva sigue `docs/GIT-WORKFLOW.md` en la raíz de `neoland-102026`, aunque el mensaje no nombre ese fichero ni diga «issue». Esta sección va antes que el resto de este manual.
+
+Una tarea es una issue, una rama desde `staging` y una pull request en draft hacia `staging`.
+
+El momento es dejar la tarea escrita cuando el mensaje cuenta qué hay que hacer. También lo es si:
+
+- trae los títulos «Qué hay que hacer» y «Cómo probarlo»;
+- nombra una carpeta o un fichero de esta app y dice qué debe quedar escrito ahí;
+- pide una forma de trabajar, una spec o un cambio en `AGENTS.md` o en la constitución.
+
+En ese momento se abre solo `neoland-102026/docs/skills/create-issue/SKILL.md`, más `.github/issue_template.md` y `scripts/new-issue.sh`. No hace falta que la skill esté en la lista de skills de la sesión: se abre por esta ruta. No se abre `SKILL.md` ni `MCP.md`. No se usa el resto de este manual para decidir el momento ni para completar la issue.
+
+Se enseña la persona asignada y el título, y se espera el sí. No se enseña la descripción. Con el sí, `scripts/new-issue.sh` crea la issue.
+
+Nombrar el fichero de destino no autoriza a editarlo. Un mensaje que a la vez describe la tarea y pide escribir ficheros cabe en dos momentos: se pregunta cuál es y se espera. No se elige editar.
+
+El resto de este manual se usa cuando el momento ya es hacer el cambio en la rama de esa issue. La issue no sustituye a la spec de la app. La spec de la app no sustituye a la issue. El orden es: issue, después la rama, y en esa rama este manual.
+
 ## Fuente de verdad
 
 Lee completamente `docs/CONSTITUTION.md` antes de modificar código.
@@ -28,11 +48,27 @@ Cuando la revisión esté hecha, implementa solo ese pedido:
 - No refactorices archivos no relacionados.
 - No cambies contratos existentes silenciosamente.
 - No añadas dependencias sin explicar su necesidad.
+- Antes de aceptar un plan que añade un paquete de Node o cambia su versión, valida ese paquete con Socket, como indica la sección «Validación de paquetes con Socket».
 - No hagas `commit`, `push`, merge ni pull request sin autorización.
 - Si hay varias soluciones razonables, presenta primero las opciones.
 
 Las reglas de este documento se aplican al código nuevo y a las partes que se modifiquen dentro de una tarea autorizada. No refactorices una funcionalidad antigua únicamente para adaptarla a una convención añadida después de su creación.
 
+## Validación de paquetes con Socket
+
+Al añadir un paquete de Node o cambiar su versión, comprueba ese paquete y esa versión con el MCP de Socket antes de aceptar el plan. El servidor es `socket-mcp`, el de `MCP.md` en la raíz del repositorio.
+
+Comprueba si ese paquete y esa versión:
+
+- están afectados por una campaña;
+- tienen alguna alerta;
+- tienen alguna de sus stats por debajo de 50 puntos.
+
+Las alertas se comentan en el plan. Las decide quien acepta el plan.
+
+Revisa también las dependencias de ese paquete, hasta 3 capas, con los mismos criterios: campaña, alerta y stats por debajo de 50. Las alertas de esas dependencias también se comentan para que las decida quien acepta el plan.
+
+Incluye un resumen de esa revisión en el plan, antes de aceptarlo. El resumen nombra el paquete, la versión, lo encontrado en cada capa y las alertas que quedan por decidir. Sin ese resumen, el plan no se acepta.
 
 ## Nivel del código
 

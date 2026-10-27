@@ -4,7 +4,7 @@ Pasa lista en una clase online (Discord, Google Meet o cualquier otra plataforma
 
 El profesor abre una sesión y comparte en la llamada un **código de 4 cifras** que cambia cada 30 segundos. Los alumnos abren un enlace, escriben su nombre y el código, y aparecen al momento en la lista del profesor. Al final de la clase, la lista se descarga para Excel o Google Sheets.
 
-> Proyecto hecho con *Spec-Driven Development*. Las reglas están en [CONSTITUTION.md](CONSTITUTION.md), el manual para agentes de IA en [AGENT.md](AGENT.md) y la especificación en [specs/001-checkin-codigo/](specs/001-checkin-codigo/spec.md).
+> Proyecto hecho con *Spec-Driven Development*. Las reglas están en [CONSTITUTION.md](docs/CONSTITUTION.md), el manual para agentes de IA en [AGENTS.md](AGENTS.md) y la especificación en [specs/001-checkin-codigo/](specs/001-checkin-codigo/spec.md).
 
 ---
 
@@ -13,7 +13,7 @@ El profesor abre una sesión y comparte en la llamada un **código de 4 cifras**
 Necesitas **Python 3.13+** y, para clases online, **Homebrew** (macOS).
 
 ```bash
-cd staff/victor-chang/asistenciapp
+cd staff/<usuario>/asistenciapp
 python3 -m venv .venv                # crea el entorno virtual del proyecto
 source .venv/bin/activate            # lo activa (verás "(.venv)" en el prompt)
 pip install -r requirements.txt      # instala Flask y pytest
@@ -22,14 +22,16 @@ brew install cloudflared             # el túnel para que los alumnos entren des
 
 ---
 
-## 2. Arrancar la app
+## 2. Activar el entorno
 
 En cada terminal nueva, primero activa el entorno:
 
 ```bash
-cd staff/victor-chang/asistenciapp
+cd staff/<usuario>/asistenciapp
 source .venv/bin/activate
 ```
+
+### Arrancar la app
 
 | Para… | Comando |
 | --- | --- |
@@ -68,6 +70,14 @@ Ese enlace es **tu panel privado**: no lo compartas, porque quien lo tenga puede
 Cuando un alumno se registra, su navegador lo recuerda **para esa clase**: si vuelve a abrir el enlace, ve *"Ya te registraste en esta clase como Ana García a las 11:07"* y no puede apuntar a otra persona. En la clase siguiente puede registrarse con normalidad.
 
 Es un límite **disuasorio**, no una prueba de identidad: se salta con otro navegador, una ventana privada u otro dispositivo. Para lo que se cuele, está el botón **Quitar**. Si quitas a alguien, su navegador sigue mostrando "ya te registraste": tendría que usar otro navegador para registrarse de nuevo.
+
+### Límite de intentos de registro
+
+Una misma dirección puede realizar **5 intentos por segundo** y **20 por minuto**, contando también los fallidos y compartiendo los máximos entre clases. Abrir páginas y consultar el panel no cuenta.
+
+Superar cualquiera de los límites devuelve HTTP **429** con el aviso «Esta dirección queda bloqueada por haber superado los intentos permitidos.». El bloqueo es **permanente**, persiste al reiniciar y esta versión está **sin desbloqueo**. El intento que supera el límite no registra asistencia. El código de cuatro cifras conserva su funcionamiento.
+
+La dirección es la de la conexión recibida por el servidor (`request.remote_addr`); no se acepta otra IP del formulario ni de cabeceras enviadas por el cliente. Detrás de **Cloudflare Tunnel** puede ser la del proxy, normalmente `127.0.0.1`, en lugar de la IP pública individual. En ese caso los límites son compartidos y el bloqueo puede afectar a **toda la clase**. Mejorar esta identificación queda para otra especificación.
 
 Las **sesiones anteriores** aparecen en el panel con su número de asistentes, y puedes volver a verlas o descargarlas cuando quieras.
 
@@ -115,7 +125,8 @@ Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una 
 
 ## 7. Privacidad
 
-- Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails ni IPs.
+- Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails.
+- La IP se guarda solo para contar intentos de registro y conservar la lista de bloqueo, en el mismo archivo local y separada de la asistencia. Los intentos anteriores al último minuto se eliminan al procesar nuevos intentos de direcciones no bloqueadas; la blacklist no caduca.
 - El límite "un registro por navegador" se guarda **solo en el navegador del alumno**, no en el servidor.
 - Quitar un registro lo **borra de verdad** (no queda en ninguna papelera).
 - Los datos se guardan **solo en tu ordenador** (`data/`, que no se sube a git).
