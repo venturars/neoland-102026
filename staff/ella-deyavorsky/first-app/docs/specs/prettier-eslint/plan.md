@@ -65,14 +65,80 @@ at its exact version.
 - The three packages (license / maintenance / quality / supply chain /
   vulnerability): `prettier` 100/97/96/98/100, `eslint` 100/95/100/97/100,
   `@eslint/js` 100/86/100/100/100.
-- Campaigns and alerts: not checked. Without signing in, `depscore`
-  returns only scores. The `alerts` and `threat_feed` tools need an
-  organization, and this account has none.
 
-Decision of the person who accepts the plan: accepted on 2026-10-27
-with `prettier` `3.9.10`, `eslint` `10.13.0` and `@eslint/js` `10.0.1`.
-Campaigns and alerts stay unchecked. Node `23.7.0` stays, with the
-`EBADENGINE` warning.
+### Campaigns and alerts
+
+The `alerts` and `threat_feed` tools of the Socket MCP need an
+organization, and this account has none. So campaigns and alerts were
+checked by hand on the public Alerts page of each package on socket.dev
+(tabs "Package Alerts" and "Dependency Alerts"), on 2026-10-27.
+
+| Package | Exact version | Campaign | Alerts |
+| ------- | ------------- | -------- | ------ |
+| `prettier` | `3.9.10` | none seen | 6, all low (grey): Debug access, Environment variable access, Filesystem access, URL strings, Minified code, AI-detected potential code anomaly |
+| `eslint` | `10.13.0` | none seen | 4, all low (grey): Debug access, Environment variable access, Filesystem access, URL strings |
+| `@eslint/js` | `10.0.1` | none seen | No alerts |
+
+Comments on the alerts (the person who accepts the plan decides):
+
+- Debug access, Environment variable access, Filesystem access and URL
+  strings appear in both `prettier` and `eslint`. They are expected for
+  developer tools: they read and write the project files, read their
+  config from the environment, load rules and plugins dynamically, and
+  contain links to their documentation.
+- Minified code (`prettier`): Prettier ships its code bundled. It is
+  harder to read, but it is the published package.
+- AI-detected potential code anomaly (`prettier`), in
+  `internal/experimental-cli-worker.mjs`. Socket's AI analysis, detected
+  2026-10-10: confidence 0.6, impact 0.55, risk medium. It found no
+  malware, no `eval`, no credential theft and no data sent out. Its
+  concern is that Prettier loads formatter plugins named in the config,
+  reads and writes the files it is given, and uses temporary JSON files.
+  In this app there is no Prettier config and no plugin, and Prettier
+  only runs on our own `.js` files, on the developer's machine.
+
+Dependencies of `eslint` `10.13.0` ("Dependency Alerts" tab).
+`prettier` and `@eslint/js` have no dependencies. The "Dependency
+Alerts" tab of `prettier` `3.9.10` shows none.
+
+| Alert | Level | Where |
+| ----- | ----- | ----- |
+| Shell access | medium (yellow) | `cross-spawn` `7.0.6`, `index.js` (module `child_process`) |
+| Uses eval | medium (yellow) | `ajv` `6.15.0`, `lib/compile/index.js` (`Function`) |
+| Debug access | low | 2 packages |
+| Environment variable access | low | 8 packages |
+| Filesystem access | low | 8 packages |
+| URL strings | low | not counted on the page |
+| Unmaintained | low | 24 packages |
+| AI-detected potential code anomaly | low | 7 instances in 5 packages |
+| Minified code | low | 2 packages |
+| High entropy strings | low | not counted on the page |
+
+Comments on the dependency alerts (the person who accepts the plan
+decides):
+
+- Shell access (medium), `cross-spawn`: its only job is to start other
+  programs in the same way on Mac, Linux and Windows. It uses Node's
+  `child_process` module. Expected for this package.
+- Uses eval (medium), `ajv`: a JSON schema validator. It turns each
+  schema into a JavaScript function with `Function`, to validate faster.
+  ESLint uses it to check the options of its rules. Expected for this
+  package.
+- Unmaintained (24 packages): not updated in more than 5 years. Many
+  small helper packages are finished and do not change. The risk is that
+  a bug found later may not be fixed.
+- AI-detected potential code anomaly (7 instances in 5 packages): each
+  analysis was read on socket.dev. None shows evidence of malware. The
+  concerns are of the same kind as the one in `prettier`.
+- The other alerts are the same kinds as in the packages above.
+
+Decision of the person who accepts the plan (2026-10-27): `prettier`
+`3.9.10`, `eslint` `10.13.0` and `@eslint/js` `10.0.1` are accepted. All
+stats are 68 or above. No campaign was seen. Every alert was read and
+commented above: each one matches what the package is meant to do,
+including the two medium alerts (`cross-spawn` starts processes, `ajv`
+compiles schemas), and no AI analysis shows evidence of malware. Node
+`23.7.0` stays, with the `EBADENGINE` warning.
 
 ## Scripts
 
