@@ -63,7 +63,11 @@ first-app-ai/
         │   ├── spec.md
         │   ├── plan.md
         │   └── tasks.md
-        └── jupyter-client/
+        ├── jupyter-client/
+        │   ├── spec.md
+        │   ├── plan.md
+        │   └── tasks.md
+        └── socket-package-validation/
             ├── spec.md
             ├── plan.md
             └── tasks.md
@@ -165,6 +169,7 @@ The application uses Node built-ins and the exact external dependency `openai@7.
 
 - Use pnpm. Do not mix package managers or introduce `package-lock.json` or `yarn.lock`.
 - Add dependencies only when required by an approved implementation plan.
+- A new Node package, or a change to its version, must be checked with Socket before the implementation plan is approved. Follow the procedure in [AGENTS.md](../AGENTS.md).
 - Pin direct dependencies to exact versions: no `^`, `~`, `*`, or `latest`.
 - When installation is authorized, use `pnpm add --save-exact <package>@<approved-version>`.
 - Let pnpm generate and maintain `pnpm-lock.yaml`; do not edit it manually. Keep it consistent with `package.json`.
