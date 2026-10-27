@@ -5,6 +5,7 @@ import sqlite3
 import pytest
 
 PASS_EXPIRED = "Ha pasado el tiempo: escribe el código que ves ahora en la pantalla del profesor."
+PASS_USED = "Este pase ya se ha usado: escribe el código otra vez."
 
 
 @pytest.fixture
@@ -78,8 +79,9 @@ def test_register_from_list_marks_the_name(client, teacher, group_session, clock
     assert res.get_json()["name"] == "Ana García"
     roster = client.post(f"/api/s/{group_session}/roster", json={"pass": p}).get_json()["roster"]
     assert {"name": "Ana García", "registered": True} in roster
-    again = register(client, group_session, p, "ana garcia")
+    again = register(client, group_session, pass_for(client, teacher, group_session), "ana garcia")
     assert again.status_code == 409
+    assert again.get_json()["error"].startswith("Este nombre ya está registrado")
 
 
 def test_name_not_in_list_is_rejected(client, teacher, group_session):
@@ -114,9 +116,9 @@ def test_new_name_equal_to_list_is_rejected(client, teacher, group_session):
 
 
 def test_second_identical_new_name_is_rejected(client, teacher, group_session, clock):  # CA-15
-    p = pass_for(client, teacher, group_session)
-    register(client, group_session, p, "Ella G.", is_new=True, confirm=True)
-    res = register(client, group_session, p, "ella g.", is_new=True, confirm=True)
+    register(client, group_session, pass_for(client, teacher, group_session), "Ella G.", is_new=True, confirm=True)
+    clock.advance(1)
+    res = register(client, group_session, pass_for(client, teacher, group_session), "ella g.", is_new=True, confirm=True)
     assert res.status_code == 409
     assert "suggestion" not in res.get_json()
 
@@ -177,9 +179,63 @@ def test_released_name_frees_the_browser(client, teacher, group_session, clock):
     client.delete(f"/api/sessions/{group_session}/checkins/{data['id']}", headers=teacher)
     assert registration(client, group_session, data["id"], data["receipt"]).get_json() == {"exists": False}
     clock.advance(5)
-    assert register(client, group_session, p, "Ana García").status_code == 201
+    # El pase anterior ya está usado: el alumno escribe el código otra vez (spec v1.2, CA-21).
+    assert register(client, group_session, p, "Ana García").status_code == 409
+    assert register(client, group_session, pass_for(client, teacher, group_session), "Ana García").status_code == 201
 
 
 def test_fake_receipt_is_404(client, teacher, group_session):  # CA-14
     data = register(client, group_session, pass_for(client, teacher, group_session), "Ana García").get_json()
     assert registration(client, group_session, data["id"], "falso").status_code == 404
+
+
+# ---------- un pase, un registro (spec v1.2, CA-21) ----------
+
+def listed_names(client, teacher, sid):
+    view = client.get(f"/api/sessions/{sid}", headers=teacher).get_json()
+    return [c["name"] for c in view["checkins"]]
+
+
+def test_used_pass_is_rejected_for_another_name(client, teacher, group_session, clock):  # CA-21
+    p = pass_for(client, teacher, group_session)
+    assert register(client, group_session, p, "Ana García").status_code == 201
+    clock.advance(5)
+    res = register(client, group_session, p, "Luis Pérez")
+    assert res.status_code == 409
+    assert res.get_json()["error"] == PASS_USED
+    assert res.get_json()["needCode"] is True
+    assert listed_names(client, teacher, group_session) == ["Ana García"]
+
+
+def test_used_pass_is_rejected_for_a_new_name(client, teacher, group_session):  # CA-21
+    p = pass_for(client, teacher, group_session)
+    assert register(client, group_session, p, "Ana García").status_code == 201
+    res = register(client, group_session, p, "Persona Nueva", is_new=True, confirm=True)
+    assert res.status_code == 409 and res.get_json()["error"] == PASS_USED
+    assert listed_names(client, teacher, group_session) == ["Ana García"]
+
+
+def test_thirty_names_with_one_pass_register_only_one(client, teacher, clock):  # CA-21
+    names = [f"Alumno {i:02d}" for i in range(30)]
+    group = client.post("/api/groups", json={"name": "Grande", "students": names}, headers=teacher).get_json()
+    sid = client.post("/api/sessions", json={"groupId": group["id"]}, headers=teacher).get_json()["id"]
+    p = pass_for(client, teacher, sid)
+    statuses = [register(client, sid, p, n).status_code for n in names]
+    assert statuses.count(201) == 1
+    assert len(listed_names(client, teacher, sid)) == 1
+
+
+def test_failed_check_in_does_not_use_the_pass(client, teacher, group_session, clock):  # CA-21, RF-11
+    register(client, group_session, pass_for(client, teacher, group_session), "Ana García")
+    clock.advance(1)
+    p = pass_for(client, teacher, group_session)
+    assert register(client, group_session, p, "Ana García").status_code == 409  # ya registrado
+    assert register(client, group_session, p, "Ella G.", is_new=True).status_code == 409  # parecido
+    assert register(client, group_session, p, "Pedro").status_code == 422  # no está en la lista
+    assert register(client, group_session, p, "Luis Pérez").status_code == 201
+
+
+def test_roster_still_works_with_a_used_pass(client, teacher, group_session):
+    p = pass_for(client, teacher, group_session)
+    register(client, group_session, p, "Ana García")
+    assert client.post(f"/api/s/{group_session}/roster", json={"pass": p}).status_code == 200

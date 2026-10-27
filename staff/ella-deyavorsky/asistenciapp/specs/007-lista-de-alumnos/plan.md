@@ -1,6 +1,6 @@
 # Plan técnico 007 · Listas de grupo para pasar lista
 
-> Estado: **Aprobado v1.2 (2026-10-27)** · Spec: [spec.md](spec.md) v1.1 · Creado: 2026-10-27
+> Estado: **Aprobado v1.3 (2026-10-27)** · Spec: [spec.md](spec.md) v1.2 · Creado: 2026-10-27
 
 Este documento explica **cómo** se cumple la spec. Cada decisión indica qué requisitos (`RF-n`) y criterios de aceptación (`CA-xx`) cubre.
 
@@ -12,7 +12,7 @@ Los grupos y sus alumnos se guardan en dos tablas nuevas de SQLite. Al abrir una
 
 Las sesiones rápidas no cambian: mismo formulario, mismas rutas, mismo CSV. La única excepción es la de RF-22: quitar un registro libera también ese navegador.
 
-En las sesiones con grupo, el alumno primero valida el código. La app le devuelve la lista y un **pase** firmado que vale 2 minutos; con él se registra sin volver a escribir el código ni gastar otro intento. El pase y el «recibo» que libera el navegador se firman con el secreto de la sesión: **no se guarda nada nuevo** para ellos.
+En las sesiones con grupo, el alumno primero valida el código. La app le devuelve la lista y un **pase** firmado que vale 2 minutos; con él se registra sin volver a escribir el código ni gastar otro intento. El pase y el «recibo» que libera el navegador se firman con el secreto de la sesión. **Un pase sirve para un solo registro** (spec RF-11, CA-21): al registrarse, el pase usado se apunta en la tabla `used_passes`, que no tiene ningún dato del alumno. Del recibo no se guarda nada.
 
 No se añade ninguna dependencia.
 
@@ -47,6 +47,13 @@ CREATE TABLE IF NOT EXISTS group_students (
   UNIQUE (group_id, name_key)
 );
 
+-- Pases ya usados: un pase, un registro (spec RF-11, CA-21). Sin datos del alumno (P4).
+CREATE TABLE IF NOT EXISTS used_passes (
+  session_id TEXT NOT NULL REFERENCES sessions(id),
+  pass       TEXT NOT NULL,
+  UNIQUE (session_id, pass)
+);
+
 -- Copia fija de la lista al abrir la sesión (RF-9, RF-23)
 CREATE TABLE IF NOT EXISTS session_roster (
   session_id TEXT NOT NULL REFERENCES sessions(id),
@@ -68,7 +75,7 @@ Columnas nuevas en tablas que ya existen. `CREATE TABLE IF NOT EXISTS` no añade
 - **Una sesión es «con grupo» si `group_name` no es `NULL`**, aunque el grupo ya esté borrado (`group_id` a `NULL`). Así RF-20 sabe que no puede ofrecer «Añadir al grupo».
 - Las sesiones y registros existentes quedan con `NULL`/`0`: siguen siendo sesiones rápidas (CA-10).
 - Nada nuevo guarda IP, emails ni identificadores de navegador (P4).
-- Funciones nuevas, cada una con su conexión y sin reglas de negocio: `create_group`, `get_group`, `list_groups`, `rename_group`, `set_group_archived`, `delete_group`, `list_group_students`, `add_group_students`, `rename_group_student`, `remove_group_student`, `count_open_sessions_of_group`, `create_session` (con grupo y copia en una sola transacción), `list_session_roster`, `add_to_session_roster`, `set_checkin_kind`, `set_checkin_decided`.
+- Funciones nuevas, cada una con su conexión y sin reglas de negocio: `create_group`, `get_group`, `list_groups`, `rename_group`, `set_group_archived`, `delete_group`, `list_group_students`, `add_group_students`, `rename_group_student`, `remove_group_student`, `count_open_sessions_of_group`, `create_session` (con grupo y copia en una sola transacción), `list_session_roster`, `add_to_session_roster`, `set_checkin_kind`, `set_checkin_decided`, y `add_checkin_with_pass` (apunta el pase usado e inserta el registro en una sola transacción; devuelve si el pase ya estaba usado, si el nombre ya estaba registrado o el registro nuevo).
 
 ### 2.2 Reglas nuevas en `domain/` (RF-1, RF-2, RF-7, RF-8b, RF-14)
 
@@ -89,11 +96,12 @@ Solo biblioteca estándar, como pide `docs/ARCHITECTURE.md`.
 - Errores del dominio con mensaje en español: `DuplicateName` («Ya hay un alumno que se llama así. Diferéncialo, por ejemplo con la inicial del apellido.»), `SimilarName` (lleva el nombre parecido para «¿Quisiste decir…?»), `NotInRoster`, `NameTaken` («Este nombre ya está registrado.»), `EmptyGroup` («Este grupo todavía no tiene alumnos.»), `GroupFull` («Este grupo ya tiene 200 alumnos», spec §5.1 y RF-20, CA-20), `GroupHasOpenSession`, `GroupArchived`, `GroupGone`.
 - `MAX_STUDENTS = 200` y `ensure_room(student_count, adding=1)`: lanza `GroupFull` si el grupo pasaría de 200. La usan la revisión de la lista y «Añadir al grupo».
 
-**`domain/passes.py`** (nuevo): pase de 2 minutos y recibo del registro, firmados con HMAC y el secreto de la sesión, como `codes.py`. No se guardan.
+**`domain/passes.py`** (nuevo): pase de 2 minutos y recibo del registro, firmados con HMAC y el secreto de la sesión, como `codes.py`. El dominio no guarda nada: decide si la firma y la hora valen. Que un pase ya se usó lo sabe el almacenamiento (`used_passes`, §2.1 y §2.3).
 - `PASS_SECONDS = 120`.
 - `issue_pass(secret, t) -> str` y `pass_is_valid(secret, token, t) -> bool`: el pase lleva la hora en que se emitió y su firma (RF-11, CA-11).
 - `receipt_for(secret, checkin_id) -> str` y `receipt_is_valid(...)`: el navegador lo guarda al registrarse y con él pregunta si su registro sigue existiendo (RF-17, CA-14).
 - `PassExpired` con el mensaje «Ha pasado el tiempo: escribe el código que ves ahora en la pantalla del profesor.» (CA-16).
+- `PassUsed` con el mensaje «Este pase ya se ha usado: escribe el código otra vez.» (CA-21).
 
 **`domain/session.py`** (se amplía): `ensure_can_open(group, student_count)` (archivado → `GroupArchived`; 0 alumnos → `EmptyGroup`, RF-8b, CA-19), `ensure_can_delete(open_sessions)` (RF-6, CA-09).
 
@@ -118,7 +126,10 @@ Solo biblioteca estándar, como pide `docs/ARCHITECTURE.md`.
   2. Sesión abierta y pase vigente; si no, `PassExpired` (CA-16).
   3. De la lista (`is_new` falso): el nombre tiene que estar en la copia (`NotInRoster`) y no registrado (`NameTaken`) (RF-13, CA-04).
   4. Nuevo: igual a uno de la copia o a otro nuevo de la sesión → `DuplicateName`; parecido y sin `confirm_similar` → `SimilarName` con la sugerencia (RF-14, CA-05, CA-15).
-  5. Guarda con `kind` `'listed'` o `'new'` y devuelve el registro con su `id` y su recibo.
+  5. Guarda con `kind` `'listed'` o `'new'` con `storage.add_checkin_with_pass`, que en **una sola transacción** apunta el pase en `used_passes` e inserta el registro. Si el pase ya estaba (la restricción `UNIQUE (session_id, pass)` decide, también con dos peticiones a la vez), la transacción se deshace, no se registra nada y se lanza `PassUsed` (CA-21). Si el nombre ya estaba registrado, también se deshace y el pase **no** queda usado.
+  6. Devuelve el registro con su `id` y su recibo.
+  - Si el registro falla en los pasos 2 a 4 (nombre no válido, no está en la lista, ya registrado, igual o parecido a otro), el pase no se toca y sigue valiendo (spec RF-11).
+  - `roster_for_pass` acepta también un pase ya usado: solo devuelve la lista, no registra nada.
 - `registration_exists(db_path, session_id, checkin_id, receipt)` (nuevo): con un recibo válido, dice si el registro sigue ahí. Sirve en sesiones rápidas y con grupo (RF-17, RF-22, CA-14).
 - `check_in` (sesión rápida) añade `id` y `receipt` a la respuesta **solo cuando crea un registro nuevo** (estado 201). La respuesta «ya estabas registrado» (`already`, estado 200) se queda **exactamente como hoy**, sin campos nuevos, porque `tests/test_api.py` la compara con `==` (`test_duplicate_name_is_not_added_twice`). Si llega un registro sin pase a una sesión con grupo, se rechaza.
 - `teacher_view` añade, si hay grupo: `group`, `rosterSize`, `present`, `new`, `absent` y el contador (RF-18, CA-07). Las sesiones rápidas devuelven lo de hoy.
@@ -157,7 +168,7 @@ Profesor: todo lo que cuelga de `/api/groups` pasa por el mismo `require_teacher
 | `POST /api/sessions` | acepta `groupId` opcional |
 | `POST /api/sessions/<id>/checkins/<cid>/decision` | `decide_new` |
 
-`DOMAIN_ERRORS` añade: `DuplicateName` 409, `SimilarName` 409 (con el campo `suggestion`), `NameTaken` 409, `NotInRoster` 422, `PassExpired` 401, `EmptyGroup` 409, `GroupFull` 409, `GroupHasOpenSession` 409, `GroupArchived` 409, `GroupGone` 410. El manejador genérico se amplía para que `SimilarName` lleve también la sugerencia.
+`DOMAIN_ERRORS` añade: `DuplicateName` 409, `SimilarName` 409 (con el campo `suggestion`), `NameTaken` 409, `NotInRoster` 422, `PassExpired` 401, `PassUsed` 409 (con el campo `needCode: true`, para que la página del alumno sepa que tiene que volver al código), `EmptyGroup` 409, `GroupFull` 409, `GroupHasOpenSession` 409, `GroupArchived` 409, `GroupGone` 410. El manejador genérico se amplía para que `SimilarName` lleve también la sugerencia.
 
 ### 2.5 Descarga: `asistencia/export.py` (RF-21, CA-07, CA-18)
 
@@ -180,7 +191,7 @@ Profesor: todo lo que cuelga de `/api/groups` pasa por el mismo `require_teacher
   1. **Código.** Validado → se guarda el pase en memoria (no en `localStorage`) y empieza la cuenta de 2 minutos.
   2. **Elegir nombre.** Un `<input type="search">` con `<label>` que filtra al escribir (sin acentos ni mayúsculas, con la misma normalización que `name_key`), y debajo una lista de botones. Los ya registrados van atenuados, con `disabled` y el texto «ya registrado» (RF-13). Un botón «No estoy en la lista» abre un campo para escribir el nombre. Si el servidor responde `SimilarName`: «¿Quisiste decir Ella García?», con «Sí, soy Ella García» y «No, seguir como nuevo» (CA-05). Si responde `DuplicateName` o `NameTaken`, se vuelve a pedir la lista y se enseña el mensaje.
   3. **Confirmación:** «✓ Estás dentro, {nombre} – {hora}» (RF-16).
-- **Tiempo agotado (CA-16):** a los 2 minutos, o si el servidor responde `PassExpired`, se vuelve al paso 1 con el mensaje del dominio, y el nombre elegido o escrito se guarda en memoria y se recupera al validar el código otra vez.
+- **Tiempo agotado o pase usado (CA-16, CA-21):** a los 2 minutos, o si el servidor responde `PassExpired` (401) o `PassUsed` (409 con `needCode`), se vuelve al paso 1 con el mensaje del servidor, y el nombre elegido o escrito se guarda en memoria y se recupera al validar el código otra vez. Tras un registro correcto, el pase se borra de la memoria de la página.
 - **Liberar el navegador (RF-17, RF-22, CA-14):** la marca de `localStorage` guarda también `id` y `receipt`. Al abrir el enlace con una marca, se pregunta a `GET …/checkins/<id>?r=`; si el registro ya no existe, se borra la marca y se enseña el formulario. Las marcas antiguas, sin recibo, se quedan como hoy. Vale para sesiones rápidas y con grupo.
 - Móvil a ~400 px, navegable con teclado, con `aria-live` en los mensajes (P5).
 
@@ -252,9 +263,10 @@ Cambios pequeños descubiertos al escribir el código. Ninguno cambia lo que pid
 | CA-11 | `test_group_checkin_api.py`: con reloj de prueba, `unlock` y `checkin` a los 60 s solo apuntan un intento en `ip_attempts` |
 | CA-12 | `test_groups_api.py`: cerrar con un nuevo sin decidir; después `add`, `keep` y `discard` funcionan con la sesión cerrada |
 | CA-13 | `test_groups_api.py`: listar dos grupos; añadir, renombrar y quitar alumnos y renombrar el grupo |
-| CA-14 | `test_group_checkin_api.py`: `registration_exists` pasa de `true` a `false` al liberar; un recibo falso da 404; verificación manual en el navegador |
+| CA-14 | `test_group_checkin_api.py`: `registration_exists` pasa de `true` a `false` al liberar; tras liberar, el alumno escribe el código otra vez, recibe un pase nuevo y se registra (el pase anterior ya está usado); un recibo falso da 404; verificación manual en el navegador |
 | CA-15 | `test_group_checkin_api.py`: un segundo nuevo «ella g.» da `DuplicateName` |
 | CA-16 | `test_passes.py`: el pase caduca a los 120 s; API: `PassExpired` con el mensaje; verificación manual de que el nombre se conserva |
+| CA-21 | `test_group_checkin_api.py`: un segundo registro con el mismo pase da 409 «Este pase ya se ha usado: escribe el código otra vez» y el segundo nombre no queda registrado; 30 nombres con un pase → solo 1 registrado; un registro que falla (nombre ya registrado, parecido) no gasta el pase. `test_group_storage.py`: `add_checkin_with_pass` con un pase repetido no inserta nada. Verificación manual de que la página vuelve al código y conserva el nombre |
 | CA-17 | `test_groups_api.py`: `add` con grupo archivado funciona, con grupo borrado da 410, y con nombre ya en el grupo une el registro a ese alumno y lo añade a la copia si faltaba; renombrar o añadir alumnos al grupo no cambia la copia |
 | CA-18 | `test_roster.py`: CSV con `,`, con `;` y con BOM; `test_group_export.py`: «=SUMA(1)» sale como `'=SUMA(1)` |
 | CA-19 | `test_session_rules.py`: `ensure_can_open` con grupo archivado, con 0 alumnos y con un grupo válido; `test_groups_api.py`: abrir sesión con un grupo de 0 alumnos da 409 con el mensaje |
@@ -271,15 +283,15 @@ Verificación manual al final: `python app.py`, crear un grupo subiendo un CSV d
 | Regla | Cómo la cumple el plan |
 | --- | --- |
 | P1 · Independiente de la plataforma | Los grupos son de la app, no de Discord ni de Meet. |
-| P2 · Simplicidad | Sin clases ni ORM; diccionarios, funciones y tres tablas. El pase y el recibo son firmas, sin tablas ni caducidades que limpiar. El alumno se registra en menos de 30 s: código, tres letras y un toque. |
+| P2 · Simplicidad | Sin clases ni ORM; diccionarios, funciones y cuatro tablas. El pase y el recibo son firmas; del pase solo se apunta que se usó, y la restricción `UNIQUE` de la base decide las carreras sin bloqueos propios. El alumno se registra en menos de 30 s: código, tres letras y un toque. |
 | P3 · Dependencias mínimas | Solo biblioteca estándar (`csv`, `difflib`, `hmac`) y el navegador (`FileReader`). Nada nuevo en `requirements.txt`. |
-| P4 · Privacidad mínima | **Requiere la enmienda 4.0 (§2.8).** De cada alumno solo se guarda el nombre y, por sesión, la hora y el estado. No se guardan otras columnas del CSV. El pase y el recibo no se guardan. La lista no sale sin código válido (CA-03). Las reglas de IP no cambian. |
+| P4 · Privacidad mínima | **Requiere la enmienda 4.0 (§2.8).** De cada alumno solo se guarda el nombre y, por sesión, la hora y el estado. No se guardan otras columnas del CSV. `used_passes` guarda solo la sesión y el pase usado, sin nombre ni IP; el recibo no se guarda. La lista no sale sin código válido (CA-03). Las reglas de IP no cambian. |
 | P5 · Accesible y móvil | Buscador con `<label>`, botones navegables con teclado, nombres atenuados con `disabled`, mensajes con `aria-live`, pantallas probadas a ~400 px. |
 | P6 · Todo en español | Mensajes, pantallas y README en español; código en inglés. |
 | §3 Stack | Sin cambios: Flask, SQLite, HTML, CSS y JS sin frameworks. |
 | §4 SDD | Spec 007 aprobada; este plan, luego tasks, luego código. |
 | §5 Calidad | Cada CA tiene test o verificación manual (§4); los errores dicen qué hacer. |
-| §6 Seguridad | Validar el código cuenta como intento (límite por IP intacto). El pase y el recibo van firmados con el secreto de la sesión y no se pueden inventar. Un alumno no puede registrar dos veces el mismo nombre. Una sesión cerrada no acepta registros. Toda entrada se valida en el servidor y se pinta como texto. |
+| §6 Seguridad | Validar el código cuenta como intento (límite por IP intacto). El pase y el recibo van firmados con el secreto de la sesión y no se pueden inventar. **Un pase, un registro** (CA-21): un código validado no sirve para apuntar a varias personas sin gastar intentos. Un alumno no puede registrar dos veces el mismo nombre. Una sesión cerrada no acepta registros. Toda entrada se valida en el servidor y se pinta como texto. |
 | §7 Alcance | Todo dentro de `staff/ella-deyavorsky/asistenciapp/`. |
 | `docs/ARCHITECTURE.md` | `domain` solo biblioteca estándar; `storage` no importa nada del proyecto; `usecases/groups.py` y `attendance.py` usan `domain` y `storage`; `app.py` no importa `storage` ni `sqlite3`. `test_architecture.py` lo vigila. |
 
@@ -289,7 +301,8 @@ Verificación manual al final: `python app.py`, crear un grupo subiendo un CSV d
 
 - **Cambio grande.** Toca casi todos los archivos de la app. Las tasks lo parten en pasos pequeños, cada uno con su test, y las sesiones rápidas se comprueban en cada paso con los tests de hoy.
 - **Migración de la base.** Una base ya usada gana columnas al arrancar. Antes del primer arranque con el cambio, conviene copiar `data/asistencia.db`; el README lo dirá.
-- **Límite por IP con el túnel.** Sigue el riesgo aceptado en la spec 006: toda la clase comparte IP. Con el pase, cada alumno gasta un intento, como hoy, pero pedir la lista otra vez tras un `NameTaken` no cuenta.
+- **Límite por IP con el túnel.** Sigue el riesgo aceptado en la spec 006: toda la clase comparte IP. Con el pase, cada alumno gasta un intento, como hoy, pero pedir la lista otra vez tras un `NameTaken` no cuenta. Un alumno al que le liberan el nombre gasta otro intento al escribir el código de nuevo.
+- **`used_passes` crece** una fila por registro con grupo. Son filas pequeñas y sin datos personales; no se borran (como los registros).
 - **El recibo se queda en el navegador.** Si alguien copia la marca de `localStorage` de otro navegador, solo puede preguntar si ese registro existe; no puede registrar ni borrar nada.
 - **«¿Quisiste decir…?»** es una heurística: puede no avisar en algún caso raro, o avisar de más. Nunca bloquea; solo pregunta.
 
@@ -304,3 +317,4 @@ Verificación manual al final: `python app.py`, crear un grupo subiendo un CSV d
 | 1.0 | 2026-10-27 | Aprobado | Ok de la persona que trabaja en esta carpeta |
 | 1.1 | 2026-10-27 | `tests/test_session_rules.py` en la tabla de archivos (§3) y en las pruebas de CA-09 y CA-19 (§4) | Las tareas separan el test de las reglas de sesión (tasks v0.2, T08) |
 | 1.2 | 2026-10-27 | §2.10: ajustes al implementar (`hasGroup` solo con grupo, separador del CSV, sin nombres de nuevos en la lista, errores añadidos); `test_group_storage.py` en §3 | Implementación de las tasks |
+| 1.3 | 2026-10-27 | Un pase, un registro: tabla `used_passes` (§2.1), `PassUsed` 409 con `needCode` (§2.2, §2.4), pase apuntado en la misma transacción que el registro y sin gastarse si el registro falla (§2.3), la página del alumno trata `PassUsed` como `PassExpired` (§2.7), CA-21 y nota de CA-14 (§4), frases sobre «no se guarda nada» corregidas (§1, §5, §6) | Spec 007 v1.2: con un pase se podían registrar muchos nombres |

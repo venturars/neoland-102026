@@ -1,6 +1,6 @@
 # Tareas 007 · Listas de grupo para pasar lista
 
-> Estado: **Aprobado v1.0 (2026-10-27)** · Plan: [plan.md](plan.md) v1.1 · Spec: [spec.md](spec.md) v1.1 · Creado: 2026-10-27
+> Estado: **Aprobado v1.1 (2026-10-27)** · Plan: [plan.md](plan.md) v1.3 · Spec: [spec.md](spec.md) v1.2 · Creado: 2026-10-27
 
 Cómo leer esta lista:
 
@@ -182,6 +182,21 @@ Cómo leer esta lista:
   - *Hecha cuando:* `pytest` completo en verde y la tabla está al día.
 - **Checkpoint:** `pytest` completo en verde; luego se propone un commit solo de esta fase (mensaje en inglés y lista de archivos) y se espera tu sí. Nunca `git add .` y nunca archivos de base de datos.
 
+## Fase J · Un pase, un registro (spec v1.2, plan v1.3)
+
+- [x] **T33** · Tests primero:
+  - En `tests/test_group_checkin_api.py`: un segundo registro con el mismo pase da 409 «Este pase ya se ha usado: escribe el código otra vez» y el segundo nombre no queda registrado; 30 nombres con un pase → solo 1 registrado; un registro que falla (nombre ya registrado, parecido sin confirmar) no gasta el pase.
+  - En los tests de la spec 007 que reutilizaban un pase (`test_register_from_list_marks_the_name`, `test_second_identical_new_name_is_rejected`, `test_released_name_frees_the_browser`), el segundo intento pide un pase nuevo escribiendo el código otra vez. Los tests de antes de la spec 007 no se tocan.
+  - En `tests/test_group_storage.py`: `add_checkin_with_pass` inserta y apunta el pase; con el pase repetido no inserta nada; con el nombre ya registrado no apunta el pase.
+  - En `tests/test_passes.py`: el mensaje de `PassUsed`.
+  - *Cubre:* CA-14, CA-21.
+  - *Hecha cuando:* los casos nuevos fallan y se para a esperar tu ok.
+- [x] **T34** · Código (plan v1.3): tabla `used_passes` y `add_checkin_with_pass` en `storage/sqlite.py`; `PassUsed` y `PASS_USED` en `domain/passes.py`; `check_in_group` usa `add_checkin_with_pass`; `PassUsed` 409 con `needCode` en `app.py`; `alumno.js` vuelve al código con `PassUsed` como con `PassExpired`, conservando el nombre, y olvida el pase tras registrarse. README: «un pase, un registro» en la sección de grupos.
+  - *Cubre:* CA-14, CA-21.
+  - *Hecha cuando:* `pytest` completo en verde.
+
+- **Checkpoint:** `pytest` completo en verde; luego se propone un commit solo de esta fase (mensaje en inglés y lista de archivos) y se espera tu sí. Nunca `git add .` y nunca archivos de base de datos.
+
 ---
 
 ## Historial de cambios
@@ -191,3 +206,4 @@ Cómo leer esta lista:
 | 0.1 | 2026-10-27 | Borrador inicial | Plan 007 v1.0 aprobado |
 | 0.2 | 2026-10-27 | Copia de `data/asistencia.db` antes del primer arranque (T26) y cómo volver a ponerla (T31); T08 se parte en test (T08) y código (T09), y las siguientes se renumeran; checkpoint con commit propuesto al final de cada fase | Revisión de las tareas |
 | 1.0 | 2026-10-27 | Aprobadas | Ok de la persona que trabaja en esta carpeta |
+| 1.1 | 2026-10-27 | Fase J: un pase, un registro (T33 tests, T34 código) | Spec 007 v1.2 y plan v1.3 |

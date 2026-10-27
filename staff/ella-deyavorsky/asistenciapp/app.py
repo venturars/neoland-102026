@@ -18,7 +18,7 @@ from flask import Flask, Response, jsonify, request
 from werkzeug.exceptions import HTTPException
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from asistencia.domain.passes import PassExpired
+from asistencia.domain.passes import PassExpired, PassUsed
 from asistencia.domain.rate_limit import IpBanned
 from asistencia.domain.roster import (
     DuplicateName,
@@ -105,6 +105,11 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
 
     for error_class, status in DOMAIN_ERRORS.items():
         app.register_error_handler(error_class, lambda exc, status=status: error(status, str(exc)))
+
+    @app.errorhandler(PassUsed)
+    def pass_used(exc):
+        # Un pase, un registro: la página del alumno vuelve a pedir el código (spec 007, CA-21).
+        return jsonify(error=str(exc), needCode=True), 409
 
     @app.errorhandler(SimilarName)
     def similar_name(exc):

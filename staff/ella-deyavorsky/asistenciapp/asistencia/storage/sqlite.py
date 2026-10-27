@@ -61,6 +61,13 @@ CREATE TABLE IF NOT EXISTS group_students (
   UNIQUE (group_id, name_key)
 );
 
+-- Pases ya usados: un pase, un registro (spec 007, RF-11, CA-21). Sin datos del alumno (P4).
+CREATE TABLE IF NOT EXISTS used_passes (
+  session_id TEXT NOT NULL REFERENCES sessions(id),
+  pass       TEXT NOT NULL,
+  UNIQUE (session_id, pass)
+);
+
 -- Copia fija de la lista al abrir una sesión con grupo (spec 007, RF-9, RF-23).
 CREATE TABLE IF NOT EXISTS session_roster (
   session_id TEXT NOT NULL REFERENCES sessions(id),
@@ -842,3 +849,71 @@ def remove_group_student(db_path: str | os.PathLike[str], group_id: str, student
                 "DELETE FROM group_students WHERE id = ? AND group_id = ?", (student_id, group_id)
             )
     return cursor.rowcount == 1
+
+
+class _NameTaken(Exception):
+    """Interno: deshace la transacción cuando el nombre ya estaba registrado."""
+
+
+def add_checkin_with_pass(
+    db_path: str | os.PathLike[str],
+    session_id: str,
+    name: str,
+    key: str,
+    checked_at: str,
+    kind: str,
+    pass_: str,
+) -> tuple[str, dict | None]:
+    """Apunta el pase usado y guarda el registro en una sola transacción (spec 007, CA-21).
+
+    La restricción ``UNIQUE (session_id, pass)`` decide si el pase ya se usó, también
+    con dos peticiones a la vez. Si el nombre ya estaba registrado, se deshace todo
+    y el pase sigue sin usar (RF-11).
+
+    :param db_path: ruta de la base de datos.
+    :param session_id: identificador de la sesión.
+    :param name: nombre que se registra.
+    :param key: clave del nombre.
+    :param checked_at: hora del registro, en ISO 8601 UTC.
+    :param kind: ``'listed'`` o ``'new'``.
+    :param pass_: el pase con el que se registra.
+    :return: ``("created", registro)``, ``("pass_used", None)`` o ``("name_taken", None)``.
+    :rtype: tuple[str, dict | None]
+
+    Usage::
+
+        >>> import os, tempfile
+        >>> path = os.path.join(tempfile.mkdtemp(), "ejemplo.db")
+        >>> init_schema(path)
+        >>> s = create_session(path, "Clase", "2026-10-27T10:00:00.000+00:00")
+        >>> add_checkin_with_pass(path, s["id"], "Ana", "ana", "2026-10-27T10:01:00.000+00:00", "new", "p")[0]
+        'created'
+        >>> add_checkin_with_pass(path, s["id"], "Luis", "luis", "2026-10-27T10:01:00.000+00:00", "new", "p")[0]
+        'pass_used'
+    """
+    with _connection(db_path) as conn:
+        try:
+            with conn:
+                try:
+                    conn.execute(
+                        "INSERT INTO used_passes (session_id, pass) VALUES (?, ?)", (session_id, pass_)
+                    )
+                except sqlite3.IntegrityError:
+                    return "pass_used", None
+                cursor = conn.execute(
+                    """
+                    INSERT INTO checkins (session_id, name, name_key, checked_at, kind)
+                    VALUES (?, ?, ?, ?, ?)
+                    ON CONFLICT (session_id, name_key) DO NOTHING
+                    """,
+                    (session_id, name, key, checked_at, kind),
+                )
+                if cursor.rowcount != 1:
+                    raise _NameTaken
+        except _NameTaken:
+            return "name_taken", None
+        row = conn.execute(
+            "SELECT id, name, checked_at FROM checkins WHERE session_id = ? AND name_key = ?",
+            (session_id, key),
+        ).fetchone()
+    return "created", dict(row)

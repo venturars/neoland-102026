@@ -1,6 +1,6 @@
 # Spec 007 · Listas de grupo para pasar lista
 
-> Estado: **Aprobada v1.1 (2026-10-27)** · Creada: 2026-10-27 · Issue relacionada: #539
+> Estado: **Aprobada v1.2 (2026-10-27)** · Creada: 2026-10-27 · Issue relacionada: #539
 
 ---
 
@@ -80,6 +80,7 @@ Hoy cada alumno escribe su nombre a mano al registrarse. Eso trae tres problemas
 - **RF-11** La página del alumno pide primero el código. La lista de nombres solo se muestra después de validar el código. Abrir el enlace sin código válido no revela ningún nombre.
   - Validar el código cuenta como **un** intento para el límite por IP (spec 006).
   - Tras validarlo, el alumno tiene **2 minutos** para elegir su nombre y registrarse sin volver a escribir el código y sin gastar otro intento. Pasado ese tiempo, tiene que escribir el código vigente otra vez.
+  - Un pase sirve para un solo registro. Si el registro falla (nombre ya registrado, parecido, etc.), el pase sigue valiendo.
   - Si los 2 minutos se acaban mientras elige o escribe su nombre, ve un mensaje claro («Ha pasado el tiempo: escribe el código que ves ahora en la pantalla del profesor») y, al volver a validar el código, conserva el nombre que había elegido o escrito.
 - **RF-12** Tras validar el código, el alumno ve la lista del grupo con un buscador que filtra mientras escribe (sin distinguir acentos ni mayúsculas).
 - **RF-13** Los nombres ya registrados aparecen atenuados y no seleccionables («ya registrado»). Así nadie puede registrar dos veces a la misma persona.
@@ -137,6 +138,7 @@ Formato: **Dado** (situación inicial) · **Cuando** (acción) · **Entonces** (
 - **CA-18** (RF-1, RF-21): **Dado** un CSV de alumnos separado por `,` y otro por `;`, con acentos, **cuando** el profesor los sube, **entonces** los dos se leen bien; **y dado** un nuevo que se registró como «=SUMA(1)», **cuando** el profesor descarga la lista y la abre en Excel, **entonces** se ve como texto, no como fórmula.
 - **CA-19** (RF-8b): **Dado** un grupo guardado sin alumnos, **cuando** el profesor intenta abrir una asistencia con él, **entonces** la app no la abre, dice «Este grupo todavía no tiene alumnos» y le ofrece añadirlos o abrir una sesión rápida.
 - **CA-20** (RF-20, §5.1): **Dado** un grupo con 200 alumnos y una sesión con un nuevo, **cuando** el profesor elige «Añadir al grupo», **entonces** la app lo rechaza con «Este grupo ya tiene 200 alumnos», el grupo sigue con 200, y el profesor puede elegir «Dejar solo en esta sesión» o «Descartar».
+- **CA-21** (RF-11): **Dado** un pase que ya se ha usado para un registro, **cuando** se usa otra vez para registrar otro nombre, **entonces** se rechaza con el mensaje «Este pase ya se ha usado: escribe el código otra vez» y el segundo nombre no queda registrado.
 
 ---
 
@@ -185,7 +187,7 @@ Ninguna. Decisiones de la persona que trabaja en esta carpeta (2026-10-27):
 - **Almacenamiento:** donde la app guarda hoy sus datos, solo en el ordenador del profesor; que no pase a otro ordenador es aceptable.
 - **Límite de nombre:** 60 caracteres para todo.
 - **Enmienda:** versión 4.0; solo cambia la primera regla de P4, nombra la hora y el estado, y dice que se pueden borrar grupos sin sesiones abiertas y quitar registros, no sesiones enteras.
-- **Validar el código:** cuenta como un intento y da 2 minutos para registrarse sin volver a escribirlo.
+- **Validar el código:** cuenta como un intento y da 2 minutos para registrarse sin volver a escribirlo. Un pase sirve para un solo registro; si el registro falla, el pase sigue valiendo (2026-10-27).
 - **Textos:** RF-13 promete solo evitar registrar dos veces a la misma persona; RF-17 dice «navegador».
 - **Palabra:** «grupo» para el conjunto de alumnos; «clase» no cambia.
 - **Nuevos al cerrar:** cerrar funciona como hoy; se decide al cerrar o después; descartar quita el registro.
@@ -211,3 +213,4 @@ Ninguna. Decisiones de la persona que trabaja en esta carpeta (2026-10-27):
 | 0.3 | 2026-10-27 | Liberar un nombre libera el navegador (RF-17, RF-19, RF-22); casos de RF-20 al decidir tarde; formato y seguridad del CSV (RF-1, RF-21); nuevos repetidos (RF-14); tiempo agotado (RF-11); grupo vacío (RF-8b); CA-13 a CA-19 | Revisión de la spec |
 | 1.0 | 2026-10-27 | Aprobada | Ok de la persona que trabaja en esta carpeta |
 | 1.1 | 2026-10-27 | Excepción de la copia fija al unir un nuevo con un alumno del grupo (RF-9, RF-20); el texto de P4 dice que el profesor ve la lista en su panel (§7, HU-08, §9); límite de 200 al añadir un nuevo (§5.1, RF-20, CA-20); la «Hora» del CSV incluye a los nuevos (RF-21) | Revisión del plan: la spec no cubría esos casos |
+| 1.2 | 2026-10-27 | Un pase sirve para un solo registro; si el registro falla, sigue valiendo (RF-11, §9). CA-21 | Seguridad: con un pase se podían registrar muchos nombres durante 2 minutos sin que contara como intento |

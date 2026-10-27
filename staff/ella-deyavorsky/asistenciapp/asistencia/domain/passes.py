@@ -1,7 +1,7 @@
 """Pase de 2 minutos tras validar el código y recibo del registro (spec 007, RF-11, RF-17).
 
-Los dos se firman con el secreto de la sesión, como el código rotatorio: no
-hay que guardar nada para comprobarlos.
+Los dos se firman con el secreto de la sesión, como el código rotatorio. Este
+módulo no guarda nada: que un pase ya se usó lo apunta el almacenamiento (CA-21).
 """
 
 import hashlib
@@ -9,10 +9,15 @@ import hmac
 
 PASS_SECONDS = 120
 PASS_EXPIRED = "Ha pasado el tiempo: escribe el código que ves ahora en la pantalla del profesor."
+PASS_USED = "Este pase ya se ha usado: escribe el código otra vez."
 
 
 class PassExpired(Exception):
     """El pase falta, no es válido o ya caducó."""
+
+
+class PassUsed(Exception):
+    """El pase ya sirvió para un registro: un pase, un registro (CA-21)."""
 
 
 def _sign(secret: bytes, message: str) -> str:

@@ -93,7 +93,7 @@ Con **Editar** añades, renombras o quitas alumnos. **Archivar** lo esconde del 
 **Pasar lista con un grupo**
 
 1. Al abrir la asistencia, elige el grupo en **Lista** (o «Sesión rápida» para hacerlo como siempre). Un grupo sin alumnos no puede abrir asistencia.
-2. El alumno abre el enlace, escribe el **código** de tu pantalla y ve la lista. Busca su nombre y lo toca. Tiene **2 minutos** para elegir; si se le pasa, vuelve a escribir el código y no pierde lo que había elegido.
+2. El alumno abre el enlace, escribe el **código** de tu pantalla y ve la lista. Busca su nombre y lo toca. Tiene **2 minutos** para elegir; si se le pasa, vuelve a escribir el código y no pierde lo que había elegido. Cada código escrito sirve para **un solo registro**: para apuntar a otra persona hay que escribir el código otra vez.
 3. Los nombres ya registrados salen tachados y no se pueden elegir. Si alguien eligió mal, pulsa **Liberar** en su fila: el nombre vuelve a estar libre y ese navegador puede registrarse otra vez.
 4. Quien no está en la lista pulsa **No estoy en la lista** y escribe su nombre. Si se parece a uno de la lista, la app le pregunta «¿Quisiste decir…?». Queda como **nuevo**.
 5. Ves «X de N presentes», los nuevos y los que faltan. Al cerrar (o después, desde la sesión cerrada) decides qué hacer con cada nuevo: **Añadir al grupo** (estará en la lista la próxima vez), **Dejar solo aquí** o **Descartar**.

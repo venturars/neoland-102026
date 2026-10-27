@@ -13,7 +13,7 @@ asistenciapp/
     ├── domain/                 # reglas puras, sin Flask ni SQLite
     │   ├── codes.py            # código rotatorio de 4 cifras
     │   ├── names.py            # validar y normalizar nombres; nombres parecidos
-    │   ├── passes.py           # pase de 2 minutos y recibo del registro (firmados, no se guardan)
+    │   ├── passes.py           # pase de 2 minutos y recibo del registro (firmados); un pase, un registro
     │   ├── rate_limit.py       # límite de intentos por IP y su error
     │   ├── roster.py           # leer y revisar la lista de un grupo; errores de grupos
     │   └── session.py          # decisiones de sesión y de grupo, y sus errores
@@ -62,7 +62,7 @@ Las dependencias van siempre hacia el dominio. Lo que no está en la tabla está
 | Decide si un grupo puede abrir sesión (archivado, vacío) o borrarse (sesión abierta) | `domain/session.py` |
 | Crea, revisa, edita, archiva y borra grupos | `usecases/groups.py` |
 | Abre sesiones con grupo y su copia de la lista; valida el código y da el pase; registra de la lista o como nuevo; decide sobre los nuevos | `usecases/attendance.py` |
-| Guarda grupos (`groups`, `group_students`), la copia fija de cada sesión (`session_roster`) y añade al arrancar las columnas nuevas de `sessions` y `checkins` | `storage/sqlite.py` |
+| Guarda grupos (`groups`, `group_students`), la copia fija de cada sesión (`session_roster`), los pases ya usados (`used_passes`, sin datos del alumno) y añade al arrancar las columnas nuevas de `sessions` y `checkins` | `storage/sqlite.py` |
 | Decide si una IP se ha pasado de 5 intentos por segundo o 20 por minuto, y rechaza la bloqueada | `domain/rate_limit.py` |
 | Decide «sesión no existe», «sesión cerrada», «código no válido» y «registro no existe» | `domain/session.py` |
 | Crea, consulta, cierra sesiones; registra y borra asistentes; en `check_in` coordina el límite por IP (pregunta al almacenamiento, aplica la regla del dominio y bloquea) | `usecases/attendance.py` |

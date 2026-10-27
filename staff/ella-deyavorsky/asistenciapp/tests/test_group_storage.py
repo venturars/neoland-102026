@@ -117,3 +117,33 @@ def test_checkin_kind_and_decisions(db, group):
     linked = storage.get_checkin(db, session["id"], row["id"])
     assert (linked["kind"], linked["name"], linked["name_key"]) == ("listed", "Ella García", "ella garcia")
     assert storage.get_checkin(db, "otra", row["id"]) is None
+
+
+# ---------- un pase, un registro (spec v1.2, CA-21) ----------
+
+def used_passes(db):
+    with sqlite3.connect(db) as conn:
+        return conn.execute("SELECT session_id, pass FROM used_passes").fetchall()
+
+
+def test_add_checkin_with_pass_inserts_and_marks_the_pass(db, group):  # CA-21
+    session = open_with_group(db, group)
+    status, row = storage.add_checkin_with_pass(db, session["id"], "Luis", "luis", T1, "listed", "pase-1")
+    assert status == "created" and row["name"] == "Luis"
+    assert used_passes(db) == [(session["id"], "pase-1")]
+
+
+def test_repeated_pass_inserts_nothing(db, group):  # CA-21
+    session = open_with_group(db, group)
+    storage.add_checkin_with_pass(db, session["id"], "Luis", "luis", T1, "listed", "pase-1")
+    status, row = storage.add_checkin_with_pass(db, session["id"], "Ana García", "ana garcia", T1, "listed", "pase-1")
+    assert (status, row) == ("pass_used", None)
+    assert [c["name"] for c in storage.list_checkins(db, session["id"])] == ["Luis"]
+
+
+def test_taken_name_does_not_use_the_pass(db, group):  # RF-11
+    session = open_with_group(db, group)
+    storage.add_checkin_with_pass(db, session["id"], "Luis", "luis", T1, "listed", "pase-1")
+    status, row = storage.add_checkin_with_pass(db, session["id"], "Luis", "luis", T1, "listed", "pase-2")
+    assert (status, row) == ("name_taken", None)
+    assert used_passes(db) == [(session["id"], "pase-1")]

@@ -13,7 +13,9 @@ from asistencia.domain.codes import code_for, seconds_left
 from asistencia.domain.names import clean_name, find_similar, name_key
 from asistencia.domain.passes import (
     PASS_EXPIRED,
+    PASS_USED,
     PassExpired,
+    PassUsed,
     issue_pass,
     pass_is_valid,
     receipt_for,
@@ -237,7 +239,8 @@ def check_in_group(
 ) -> dict:
     """Registra a un alumno de la lista o a un nuevo con un pase vigente (spec 007, RF-13 a RF-15).
 
-    No cuenta intento: ya se contó al validar el código (CA-11).
+    No cuenta intento: ya se contó al validar el código (CA-11). Un pase sirve para un
+    solo registro; si el registro falla, el pase sigue valiendo (spec v1.2, CA-21).
 
     :param db_path: ruta de la base de datos.
     :param session_id: identificador de la sesión.
@@ -251,6 +254,7 @@ def check_in_group(
     :rtype: dict
     :raises IpBanned: si la IP está bloqueada.
     :raises PassExpired: si el pase falta o caducó.
+    :raises PassUsed: si el pase ya sirvió para otro registro.
     :raises NotInRoster: si el nombre elegido no está en la lista.
     :raises NameTaken: si ese nombre de la lista ya está registrado.
     :raises DuplicateName: si el nombre nuevo es igual a uno de la lista o a otro nuevo.
@@ -284,8 +288,10 @@ def check_in_group(
         if like and not confirm_similar:
             raise SimilarName(like)  # CA-05
         kind = "new"
-    row, created = storage.add_checkin(db_path, session_id, clean, key, _now_iso(now), kind=kind)
-    if not created:
+    status, row = storage.add_checkin_with_pass(db_path, session_id, clean, key, _now_iso(now), kind, pass_)
+    if status == "pass_used":
+        raise PassUsed(PASS_USED)  # CA-21
+    if status == "name_taken":
         raise NameTaken(NAME_TAKEN)  # otro alumno se adelantó con el mismo nombre
     return {
         "id": row["id"],

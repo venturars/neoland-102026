@@ -305,6 +305,7 @@ async function register(name, isNew, confirmSimilar) {
     const data = await res.json();
     if (res.status === 201) {
       clearInterval(passTimer);
+      pass = null; // un pase, un registro (CA-21)
       pending = null;
       rememberName(data.name);
       saveRegistration(data);
@@ -312,7 +313,8 @@ async function register(name, isNew, confirmSimilar) {
       showMessage("ok", `✓ Estás dentro, ${data.name} – ${hhmm(data.checkedAt)}`); // RF-16
       return;
     }
-    if (res.status === 401) return showCodeStep(data.error); // pase caducado (CA-16)
+    // Pase caducado (CA-16) o ya usado (CA-21): vuelta al código, conservando el nombre en `pending`.
+    if (res.status === 401 || data.needCode) return showCodeStep(data.error);
     if (data.suggestion) {
       // RF-14: «¿Quisiste decir…?»
       $("similar-text").textContent = data.error;

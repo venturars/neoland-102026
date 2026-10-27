@@ -2,6 +2,7 @@
 
 from asistencia.domain.passes import (
     PASS_EXPIRED,
+    PASS_USED,
     PASS_SECONDS,
     issue_pass,
     pass_is_valid,
@@ -44,3 +45,7 @@ def test_receipt_is_valid_only_for_its_checkin_and_session():  # CA-14
 
 def test_pass_expired_message():  # CA-16
     assert PASS_EXPIRED == "Ha pasado el tiempo: escribe el código que ves ahora en la pantalla del profesor."
+
+
+def test_pass_used_message():  # CA-21
+    assert PASS_USED == "Este pase ya se ha usado: escribe el código otra vez."
