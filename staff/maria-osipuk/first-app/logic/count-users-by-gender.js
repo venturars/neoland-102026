@@ -41,10 +41,10 @@ export async function countUsersByGender() {
 
   // Send the stored names in parts of 6. slice copies the next part
   // and leaves the full list in place. The last part can be shorter.
-  const batchSize = 6;
+  const BATCH_SIZE = 6;
 
-  for (let start = 0; start < rows.length; start = start + batchSize) {
-    const batch = rows.slice(start, start + batchSize);
+  for (let start = 0; start < rows.length; start = start + BATCH_SIZE) {
+    const batch = rows.slice(start, start + BATCH_SIZE);
     const names = [];
 
     for (const row of batch) {
@@ -56,7 +56,17 @@ export async function countUsersByGender() {
     const genders = await classifyNames(client, names);
 
     for (const gender of genders) {
-      if (gender === "female" || gender === "male") {
+      let isFemaleOrMale = false;
+
+      if (gender === "female") {
+        isFemaleOrMale = true;
+      }
+
+      if (gender === "male") {
+        isFemaleOrMale = true;
+      }
+
+      if (isFemaleOrMale) {
         counts[gender] = counts[gender] + 1;
       } else {
         // Any other text is still a successful classification.
@@ -131,20 +141,28 @@ async function classifyNames(client, names) {
 
   // The package puts the model's text on the first choice.
   // response_format json_object means that text should be JSON.
+  // The flag turns on only when the choice, its message and its text
+  // all exist, so no property is read from something that is missing.
   const choice = completion.choices[0];
+  let hasText = false;
 
-  if (
-    !choice ||
-    !choice.message ||
-    typeof choice.message.content !== "string"
-  ) {
+  if (choice) {
+    if (choice.message) {
+      if (typeof choice.message.content === "string") {
+        hasText = true;
+      }
+    }
+  }
+
+  if (!hasText) {
     throw new Error("Unable to classify names");
   }
 
+  const text = choice.message.content;
   let classification;
 
   try {
-    classification = JSON.parse(choice.message.content);
+    classification = JSON.parse(text);
   } catch {
     throw new Error("Unable to classify names");
   }
@@ -152,13 +170,32 @@ async function classifyNames(client, names) {
   // genders must be one string per name in this part, in the same order.
   // A missing field, a wrong length, or a value that is not text stops
   // the count, because those strings could not be lined up with the rows.
-  if (
-    classification === null ||
-    typeof classification !== "object" ||
-    Array.isArray(classification) ||
-    !Array.isArray(classification.genders) ||
-    classification.genders.length !== names.length
-  ) {
+  // Each step only runs when the previous one passed. The flag turns
+  // on at the end, so a null, an array or a wrong length never reaches
+  // a property that does not exist.
+  let hasValidGenders = false;
+  const isObject = typeof classification === "object";
+
+  if (classification !== null) {
+    if (isObject) {
+      const isList = Array.isArray(classification);
+
+      if (!isList) {
+        const gendersIsList = Array.isArray(classification.genders);
+
+        if (gendersIsList) {
+          const gendersCount = classification.genders.length;
+          const namesCount = names.length;
+
+          if (gendersCount === namesCount) {
+            hasValidGenders = true;
+          }
+        }
+      }
+    }
+  }
+
+  if (!hasValidGenders) {
     throw new Error("Unable to classify names");
   }
 
