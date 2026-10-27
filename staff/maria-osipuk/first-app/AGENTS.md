@@ -328,6 +328,12 @@ Si una modificación interna no afecta al árbol, al alcance, al flujo, al contr
 
 Una tarea que requiera actualizar la documentación no se considera terminada hasta que el código y la Constitución vuelvan a coincidir.
 
+## Al terminar una tarea
+
+- Ejecuta `pnpm format` desde `first-app` para aplicar el formato estándar de Prettier.
+- Ejecuta `pnpm lint` desde `first-app` para comprobar la sintaxis y las reglas de ESLint.
+- Si alguno de los dos comandos falla, la tarea todavía no está terminada.
+
 ## Verificación
 
 Para comprobar una funcionalidad:

@@ -30,8 +30,10 @@ Ninguna capa accede directamente a otra capa que no sea la siguiente del recorri
 
 - `AGENTS.md` guarda el proceso SDD, los comandos y el cierre de una tarea. Enlaza a `docs/STYLE.md`.
 - `.gitignore` deja fuera `node_modules/`, `.env`, los archivos de SQLite, los checkpoints de Jupyter y el log del cliente Jupyter.
-- `package.json` declara los módulos ESM, `packageManager` con `pnpm@10.34.7` y el control que impide instalar con otro gestor.
-- `pnpm-lock.yaml` es el archivo de bloqueo que se conserva.
+- `.prettierignore` evita que Prettier entre en `.venv/`, `node_modules/` y el archivo de bloqueo generado por pnpm.
+- `package.json` declara los módulos ESM, `packageManager` con `pnpm@10.34.7`, los comandos `pnpm format` y `pnpm lint`, y el control que impide instalar con otro gestor.
+- `pnpm-lock.yaml` fija las versiones de las dependencias de la aplicación y de las herramientas de desarrollo.
+- `eslint.config.js` limita ESLint a los archivos JavaScript, ignora el entorno y las dependencias, y activa las reglas `no-undef` y `no-unused-vars`.
 - `scripts/jupyter.sh` entra en la raíz de `first-app` y abre los cuadernos con el Jupyter del `.venv`.
 - `db/connection.js` abre la conexión SQLite. Acepta `FIRST_APP_DATABASE_FILE` para que un proceso use otra ruta.
 - `db/users.sqlite` es la base de la aplicación cuando no se configura otra ruta.
