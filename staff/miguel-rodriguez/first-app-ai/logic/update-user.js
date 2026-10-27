@@ -8,22 +8,55 @@ export function updateUser(id, changes) {
     throw new Error("Could not update the user");
   }
 
-  if (!existingUser) {
+  const userIsMissing = !existingUser;
+  if (userIsMissing) {
     throw new Error("User not found");
   }
 
-  const name =
-    changes.name === undefined ? existingUser.name : changes.name.trim();
-  if (!name) {
+  const suppliedName = changes.name;
+  const nameIsOmitted = suppliedName === undefined;
+  let name;
+  if (nameIsOmitted) {
+    name = existingUser.name;
+  } else {
+    name = suppliedName.trim();
+  }
+  const nameIsEmpty = !name;
+  if (nameIsEmpty) {
     throw new Error("Name is empty");
   }
 
-  const email =
-    changes.email === undefined
-      ? existingUser.email
-      : changes.email.trim().toLowerCase();
-  const parts = email.split("@");
-  if (email.length > 64 || parts.length !== 2 || !parts[0] || !parts[1]) {
+  const suppliedEmail = changes.email;
+  const emailIsOmitted = suppliedEmail === undefined;
+  let email;
+  if (emailIsOmitted) {
+    email = existingUser.email;
+  } else {
+    const trimmedEmail = suppliedEmail.trim();
+    email = trimmedEmail.toLowerCase();
+  }
+  const emailParts = email.split("@");
+  const emailLength = email.length;
+  const emailIsTooLong = emailLength > 64;
+  if (emailIsTooLong) {
+    throw new Error("Email is invalid");
+  }
+
+  const emailPartCount = emailParts.length;
+  const emailHasWrongPartCount = emailPartCount !== 2;
+  if (emailHasWrongPartCount) {
+    throw new Error("Email is invalid");
+  }
+
+  const localPart = emailParts[0];
+  const localPartIsEmpty = !localPart;
+  if (localPartIsEmpty) {
+    throw new Error("Email is invalid");
+  }
+
+  const domain = emailParts[1];
+  const domainIsEmpty = !domain;
+  if (domainIsEmpty) {
     throw new Error("Email is invalid");
   }
 
@@ -34,13 +67,21 @@ export function updateUser(id, changes) {
     throw new Error("Could not update the user");
   }
 
-  if (emailOwner && emailOwner.id !== existingUser.id) {
-    throw new Error("Email is already used");
+  const emailHasOwner = Boolean(emailOwner);
+  if (emailHasOwner) {
+    const ownerId = emailOwner.id;
+    const existingUserId = existingUser.id;
+    const emailBelongsToAnotherUser = ownerId !== existingUserId;
+    if (emailBelongsToAnotherUser) {
+      throw new Error("Email is already used");
+    }
   }
 
   let user;
   try {
-    user = update({ id: existingUser.id, name, email });
+    const existingUserId = existingUser.id;
+    const updatedFields = { id: existingUserId, name, email };
+    user = update(updatedFields);
   } catch {
     throw new Error("Could not update the user");
   }
