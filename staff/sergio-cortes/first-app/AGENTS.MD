@@ -105,10 +105,12 @@ validación.
 
 - Ejecutar: no hay comando.
 - Tests: no hay. El script `test` de `package.json` termina en error. No se añaden tests ni se cambia ese script.
-- Lint/formato: Prettier por defecto. No hay `.prettierrc` ni script de formato.
-
+- Formato: `pnpm run format` (Prettier por defecto, sin `.prettierrc`).
+- Lint: `pnpm run lint` (ESLint con `eslint.config.js`).
 
 ## Al terminar una tarea
 
 - Al crear una funcionalidad se crea su primer cliente en `clients/terminal/`, un `.txt` que se pega en la terminal con el directorio actual en `first-app`. Ese cliente importa la función de `logic/` y hace `console.log` del resultado. Es el test manual básico.
 - Comprueba que el desarrollo nuevo funciona antes de dar la tarea por terminada. La comprobación es ejecutar ese fragmento de `clients/terminal/`.
+- Ejecutar `pnpm run format` sobre el código tocado.
+- Ejecutar `pnpm run lint` y corregir los errores antes de dar la tarea por terminada.

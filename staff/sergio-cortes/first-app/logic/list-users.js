@@ -6,7 +6,7 @@ export function listUsers() {
 
   try {
     rows = findAll();
-  } catch (error) {
+  } catch {
     throw new DatabaseError("Could not list the users");
   }
 

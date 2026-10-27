@@ -10,7 +10,7 @@ export function deleteUser(id) {
 
   try {
     user = findById(id);
-  } catch (error) {
+  } catch {
     throw new DatabaseError("Could not delete the user");
   }
 
@@ -20,7 +20,7 @@ export function deleteUser(id) {
 
   try {
     remove(id);
-  } catch (error) {
+  } catch {
     throw new DatabaseError("Could not delete the user");
   }
 

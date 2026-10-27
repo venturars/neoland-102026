@@ -2,6 +2,7 @@
 
 first-app/
   AGENTS.MD
+  eslint.config.js
   package.json
   docs/
     ARCHITECTURE.md

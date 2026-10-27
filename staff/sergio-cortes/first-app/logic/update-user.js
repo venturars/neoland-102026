@@ -41,7 +41,7 @@ export function updateUser(input) {
 
   try {
     current = findById(id);
-  } catch (error) {
+  } catch {
     throw new DatabaseError("Could not update the user");
   }
 
@@ -53,7 +53,7 @@ export function updateUser(input) {
 
   try {
     owner = findByEmail(email);
-  } catch (error) {
+  } catch {
     throw new DatabaseError("Could not update the user");
   }
 
@@ -65,7 +65,7 @@ export function updateUser(input) {
 
   try {
     user = update({ id, name, email });
-  } catch (error) {
+  } catch {
     throw new DatabaseError("Could not update the user");
   }
 

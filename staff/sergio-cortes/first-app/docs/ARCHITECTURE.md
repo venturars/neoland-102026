@@ -1,5 +1,6 @@
 # Arquitectura
 
+- `eslint.config.js` aplica las reglas recomendadas de ESLint al JavaScript e ignora `.venv`, `node_modules` y los cuadernos Jupyter.
 - `docs/specs/<nombre>/` es donde empieza un desarrollo. `<nombre>` es la funcionalidad, en kebab-case.
 - `db/` abre la base de datos y no contiene reglas de negocio.
 - `db/connections.js` es la única conexión a la base de datos.
