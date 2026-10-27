@@ -2,7 +2,7 @@
 
 ## 1. Qué hace la app
 
-first-app guarda usuarios. No es una web. Se usa desde la terminal, con Node.
+first-app guarda usuarios. No es una web. Se usa desde la terminal, con Node. El CEO también valida esas funcionalidades desde los documentos de Jupyter.
 
 Se puede crear un usuario, listarlos, buscar uno, cambiarlo y borrarlo.
 
@@ -45,6 +45,8 @@ first-app/
   AGENTS.md
   package.json
   pnpm-lock.yaml
+  scripts/
+    jupyter.js
   db/
     connection.js
     users.sqlite
@@ -87,6 +89,16 @@ first-app/
       update-user.txt
       remove-user.txt
       users-gender-count.txt
+    jupyter/
+      create-users-table.ipynb
+      insert-user.ipynb
+      find-all.ipynb
+      find-by-email.ipynb
+      find-by-id.ipynb
+      find-user-by-name.ipynb
+      update-user.ipynb
+      remove-user.ipynb
+      users-gender-count.ipynb
 ```
 
 `AGENTS.md` dice cómo se trabaja en esta app: el orden de un cambio, el estilo y qué hacer al cerrar una tarea.
