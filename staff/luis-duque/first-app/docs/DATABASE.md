@@ -12,6 +12,8 @@ La tabla se llama `users`. Si no existe, se crea al cargar las consultas. Tiene 
 
 Las consultas no revisan los datos. Cada una ejecuta un solo SQL:
 
+# queries
+
 `db` abre `users.sqlite` y no ejecuta SQL. Ahí está el archivo de la base. No hay otro.
 
 `queries` es la única carpeta que lee y ejecuta el SQL. El texto de cada consulta está en `queries/queries`, un archivo por operación. `queries` no revisa los datos: inserta, modifica, borra o lee, y crea la tabla si no existe. Ni `logic` ni los clientes escriben SQL ni abren la base.
