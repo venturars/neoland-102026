@@ -107,6 +107,7 @@ PAIRS = (
     ("accent", "surface", TEXT),
     ("accent-text", "accent", TEXT),  # botón principal
     ("accent", "accent-soft", TEXT),  # etiqueta "abierta"
+    ("muted", "border", TEXT),  # etiqueta "cerrada"
     ("header-text", "header-bg", TEXT),
     ("danger", "bg", TEXT),
     ("danger", "surface", TEXT),
