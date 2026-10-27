@@ -8,7 +8,7 @@ Las reglas generales y los enlaces a las guías por tema están en [CONSTITUTION
 
 - Ejecución: todavía no existe un comando de ejecución.
 - Pruebas: aún no hay tests automatizados; el script `test` de `package.json` es solo el marcador de pnpm.
-- Formato: no hay scripts propios de lint o formato; las reglas están en [STYLE.md](docs/STYLE.md).
+- Formato: `pnpm format` ejecuta Prettier con sus opciones predeterminadas; las reglas están en [STYLE.md](docs/STYLE.md). `pnpm lint` revisa el JavaScript con ESLint.
 
 ## Reglas de trabajo
 
@@ -37,3 +37,5 @@ versión no cambie y las dependencias más allá de la tercera capa.
 
 - Cada funcionalidad nueva debe incluir su primer cliente en `clients/terminal/`. Es un archivo `.txt` que se ejecuta desde la carpeta `first-app`, importa la función de `logic/` y muestra su resultado con `console.log`.
 - Antes de cerrar el trabajo, ejecuta ese fragmento y confirma que la funcionalidad funciona.
+- Ejecuta `pnpm format` antes de dar la tarea por terminada.
+- Ejecuta `pnpm lint` antes de dar la tarea por terminada.
