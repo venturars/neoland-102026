@@ -12,13 +12,13 @@ Cómo leer esta lista:
 
 ## Fase A · Separar los dos títulos
 
-- [ ] **T01** · En `README.md`, cambiar el título «2. Arrancar la app» por «2. Activar el entorno».
+- [x] **T01** · En `README.md`, cambiar el título «2. Arrancar la app» por «2. Activar el entorno».
   - Debajo se quedan la frase «En cada terminal nueva, primero activa el entorno» y el bloque con `cd` y `source .venv/bin/activate`.
   - La ruta para entrar en la carpeta no se modifica.
   - *Cubre:* CA-01.
   - *Hecha cuando:* ese bloque se titula «Activar el entorno».
 
-- [ ] **T02** · Abrir una sección «3. Arrancar la app» justo antes de la tabla de comandos.
+- [x] **T02** · Abrir una sección «3. Arrancar la app» justo antes de la tabla de comandos.
   - Bajo ese título quedan la tabla (`python app.py --tunel` y `python app.py`) y el texto de lo que se ve al arrancar.
   - El paso de activar el entorno no queda bajo ese título.
   - *Cubre:* CA-02, CA-03.
@@ -26,7 +26,7 @@ Cómo leer esta lista:
 
 ## Fase B · Renumerar sin cambiar el resto
 
-- [ ] **T03** · Subir un número los títulos que van después, y corregir la remisión.
+- [x] **T03** · Subir un número los títulos que van después, y corregir la remisión.
   - «Pasar lista» pasa a 4, «Cerrar la app» a 5, «Problemas frecuentes» a 6, «Tests» a 7 y «Privacidad» a 8.
   - En problemas frecuentes, «ciérrala (sección 4)» pasa a «ciérrala (sección 5)».
   - El cuerpo de esas secciones no cambia.
