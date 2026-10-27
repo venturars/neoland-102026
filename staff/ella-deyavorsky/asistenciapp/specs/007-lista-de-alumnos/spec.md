@@ -1,6 +1,6 @@
 # Spec 007 · Listas de grupo para pasar lista
 
-> Estado: **Aprobada v1.0 (2026-10-27)** · Creada: 2026-10-27 · Issue relacionada: #539
+> Estado: **Aprobada v1.1 (2026-10-27)** · Creada: 2026-10-27 · Issue relacionada: #539
 
 ---
 
@@ -49,7 +49,7 @@ Hoy cada alumno escribe su nombre a mano al registrarse. Eso trae tres problemas
 - **HU-05**: Como alumno que no está en la lista, quiero poder añadirme, para que conste que vine.
 - **HU-06**: Como profesor, quiero ver durante la clase cuántos han venido de los que hay en la lista, y al terminar decidir qué hago con los nuevos.
 - **HU-07**: Como profesor, quiero descargar una sola tabla con quién vino, quién faltó y quién es nuevo.
-- **HU-08**: Como persona que trabaja aquí, quiero que la lista de un grupo solo la vea quien tiene un código válido, y que las sesiones de hoy sigan como están.
+- **HU-08**: Como persona que trabaja aquí, quiero que la lista de un grupo no la vean los alumnos ni nadie de fuera sin un código válido (el profesor la ve en su panel), y que las sesiones de hoy sigan como están.
 
 ---
 
@@ -66,13 +66,13 @@ Hoy cada alumno escribe su nombre a mano al registrarse. Eso trae tres problemas
 - **RF-5** Archivar un grupo: deja de aparecer en el listado principal y no se puede usar para abrir sesiones nuevas, pero conserva todas sus sesiones. Se puede restaurar. Se puede archivar aunque tenga una sesión abierta: esa sesión sigue funcionando hasta que se cierre.
 - **RF-6** Borrar un grupo: solo si no tiene sesiones abiertas. Pide confirmación explícita. Las sesiones cerradas de ese grupo se conservan (ver RF-23). Si tiene una sesión abierta, la app lo explica y ofrece archivar o cerrar la sesión primero.
 - **RF-7** No se permiten dos alumnos con el mismo nombre en un grupo. La comparación ignora mayúsculas, acentos y espacios sobrantes («maria garcia» = «María García»). Si el profesor introduce un duplicado, la app lo rechaza y le pide diferenciarlo (ej. «María García B.»). En importaciones, los duplicados se marcan en la vista previa y hay que resolverlos antes de guardar.
-- **Límites:** máximo 200 alumnos por grupo; nombres de hasta 60 caracteres, el mismo límite que hoy (spec 001, CA-08), para las listas y para las sesiones rápidas.
+- **Límites:** máximo 200 alumnos por grupo (también al añadir un nuevo desde una sesión, RF-20); nombres de hasta 60 caracteres, el mismo límite que hoy (spec 001, CA-08), para las listas y para las sesiones rápidas.
 
 ### 5.2 Abrir una sesión (profesor) · HU-03
 
 - **RF-8** Al abrir una asistencia, el profesor elige entre un grupo o sesión rápida.
 - **RF-8b** Un grupo se puede guardar sin alumnos (o quedarse sin ellos al quitarlos), para rellenarlo más tarde. Pero no se puede abrir una sesión con un grupo de 0 alumnos: la app dice «Este grupo todavía no tiene alumnos» y ofrece añadirlos o abrir una sesión rápida.
-- **RF-9** Al abrir una sesión con grupo se guarda una copia fija de la lista. Cambios posteriores en el grupo no afectan a la sesión ya abierta ni a las pasadas.
+- **RF-9** Al abrir una sesión con grupo se guarda una copia fija de la lista. Cambios posteriores en el grupo no afectan a la sesión ya abierta ni a las pasadas. Única excepción: cuando el profesor elige «Añadir al grupo» para un nuevo y el grupo ya tiene un alumno con el mismo nombre normalizado (RF-20), ese alumno se añade a la copia de esa sesión, para que pueda contar como presente en ella. Ningún otro cambio modifica la copia.
 - **RF-10** Enlace y código rotatorio funcionan como hoy. No cambia la mecánica del código.
 
 ### 5.3 Registro del alumno (sesión con grupo) · HU-04, HU-05, HU-08
@@ -101,8 +101,9 @@ Hoy cada alumno escribe su nombre a mano al registrarse. Eso trae tres problemas
   - Como se puede decidir después de cerrar, el grupo puede haber cambiado:
     - **Grupo archivado:** «Añadir al grupo» sigue disponible; el alumno aparece en el grupo cuando se restaura.
     - **Grupo borrado:** «Añadir al grupo» no se ofrece; solo «Dejar solo en esta sesión» o «Descartar».
-    - **El grupo ya tiene un alumno con el mismo nombre normalizado** (RF-7): no se duplica. La app avisa «Ya está en el grupo» y une este registro a ese alumno, que pasa de nuevo a presente en esta sesión.
-- **RF-21** Descarga: un único archivo CSV, como hoy (se abre en Excel o Google Sheets), con una tabla y una columna «Estado» con los valores presente, ausente, nuevo. Incluye grupo, fecha/hora y hora de registro de cada presente. El formato no cambia respecto a hoy: separado por `;` y en UTF-8 con BOM, para que Excel en español muestre bien las columnas y los acentos. Como los nombres los pueden escribir los alumnos, toda celda que empiece por `=`, `+`, `-` o `@` se guarda con un apóstrofo delante, para que Excel no la ejecute como fórmula (como hoy).
+    - **El grupo ya tiene un alumno con el mismo nombre normalizado** (RF-7): no se duplica. La app avisa «Ya está en el grupo» y une este registro a ese alumno, que pasa de nuevo a presente en esta sesión. Si ese alumno no estaba en la copia de esta sesión, se añade a ella (la excepción de RF-9).
+    - **El grupo ya tiene 200 alumnos:** «Añadir al grupo» se rechaza con el mensaje «Este grupo ya tiene 200 alumnos». El profesor puede elegir «Dejar solo en esta sesión» o «Descartar».
+- **RF-21** Descarga: un único archivo CSV, como hoy (se abre en Excel o Google Sheets), con una tabla y una columna «Estado» con los valores presente, ausente, nuevo. Incluye grupo y fecha/hora. La columna «Hora» tiene la hora de registro de cada presente y de cada nuevo; los ausentes no tienen hora. El formato no cambia respecto a hoy: separado por `;` y en UTF-8 con BOM, para que Excel en español muestre bien las columnas y los acentos. Como los nombres los pueden escribir los alumnos, toda celda que empiece por `=`, `+`, `-` o `@` se guarda con un apóstrofo delante, para que Excel no la ejecute como fórmula (como hoy).
 
 ### 5.5 Compatibilidad y datos · HU-08
 
@@ -135,6 +136,7 @@ Formato: **Dado** (situación inicial) · **Cuando** (acción) · **Entonces** (
 - **CA-17** (RF-20): **Dado** una sesión cerrada con un nuevo, **cuando** el grupo está archivado, **entonces** el profesor puede añadirlo; **cuando** el grupo está borrado, **entonces** no se le ofrece añadirlo; **cuando** el grupo ya tiene un alumno con el mismo nombre normalizado, **entonces** la app avisa «Ya está en el grupo», no lo duplica, y ese alumno pasa a presente en esa sesión.
 - **CA-18** (RF-1, RF-21): **Dado** un CSV de alumnos separado por `,` y otro por `;`, con acentos, **cuando** el profesor los sube, **entonces** los dos se leen bien; **y dado** un nuevo que se registró como «=SUMA(1)», **cuando** el profesor descarga la lista y la abre en Excel, **entonces** se ve como texto, no como fórmula.
 - **CA-19** (RF-8b): **Dado** un grupo guardado sin alumnos, **cuando** el profesor intenta abrir una asistencia con él, **entonces** la app no la abre, dice «Este grupo todavía no tiene alumnos» y le ofrece añadirlos o abrir una sesión rápida.
+- **CA-20** (RF-20, §5.1): **Dado** un grupo con 200 alumnos y una sesión con un nuevo, **cuando** el profesor elige «Añadir al grupo», **entonces** la app lo rechaza con «Este grupo ya tiene 200 alumnos», el grupo sigue con 200, y el profesor puede elegir «Dejar solo en esta sesión» o «Descartar».
 
 ---
 
@@ -146,7 +148,7 @@ La enmienda sube la constitución a la **versión 4.0**, porque contradice un pr
 
 Texto propuesto para esa primera regla:
 
-> **P4.** De cada alumno solo se guarda su nombre y, en cada sesión, la hora y el estado de su registro, y nada más. El nombre puede venir de dos orígenes: el que escribe el propio alumno, o el que introduce el profesor en la lista de un grupo antes de que el alumno se registre. Los nombres escritos por el alumno que no están en la lista se marcan como sin verificar. Los nombres se usan únicamente para pasar lista. El profesor puede borrar cualquier grupo que no tenga sesiones abiertas y quitar cualquier registro, y la lista de nombres de un grupo no es visible para nadie sin un código de sesión válido.
+> **P4.** De cada alumno solo se guarda su nombre y, en cada sesión, la hora y el estado de su registro, y nada más. El nombre puede venir de dos orígenes: el que escribe el propio alumno, o el que introduce el profesor en la lista de un grupo antes de que el alumno se registre. Los nombres escritos por el alumno que no están en la lista se marcan como sin verificar. Los nombres se usan únicamente para pasar lista. El profesor puede borrar cualquier grupo que no tenga sesiones abiertas y quitar cualquier registro, y la lista de nombres de un grupo no es visible para los alumnos ni para nadie de fuera sin un código de sesión válido; el profesor la ve en su panel.
 
 Consecuencias de la enmienda:
 
@@ -175,7 +177,7 @@ Ninguna. Decisiones de la persona que trabaja en esta carpeta (2026-10-27):
 - **Alumnos que no están:** se añaden ellos mismos como «nuevo»; el profesor decide qué hacer con ellos.
 - **Nombres parecidos o iguales:** «¿Quisiste decir…?» si es parecido; rechazo si es igual. Vale para alumno y profesor.
 - **Nombres ya registrados:** atenuados y no seleccionables; el profesor puede liberarlos.
-- **Lista oculta sin código:** los nombres solo se ven tras validar el código de 4 dígitos.
+- **Lista oculta sin código:** los alumnos y la gente de fuera solo ven los nombres tras validar el código de 4 dígitos; el profesor los ve en su panel.
 - **Copia fija al abrir:** renombrar o borrar en el grupo no cambia sesiones pasadas.
 - **Sesión rápida:** exactamente como hoy.
 - **Grupos:** editables, archivables (también con una sesión abierta, que sigue funcionando) y borrables solo sin sesiones abiertas.
@@ -194,6 +196,8 @@ Ninguna. Decisiones de la persona que trabaja en esta carpeta (2026-10-27):
 - **Nombres repetidos entre nuevos:** cuentan como existentes para RF-14.
 - **Tiempo agotado al registrarse:** mensaje claro y se conserva el nombre.
 - **Grupo vacío:** se puede guardar sin alumnos, pero no se puede abrir una sesión con él.
+- **Límite de 200 al añadir un nuevo (2026-10-27):** si «Añadir al grupo» haría pasar el grupo de 200 alumnos, se rechaza con «Este grupo ya tiene 200 alumnos»; quedan «Dejar solo en esta sesión» y «Descartar».
+- **Hora en la descarga (2026-10-27):** la columna «Hora» tiene la hora de registro de cada presente y de cada nuevo; los ausentes no tienen hora.
 - **Cambios respecto a v0.1:** renombrar a un alumno ya no cambia las sesiones pasadas, y borrar un grupo con sesiones cerradas ya se puede.
 
 ---
@@ -206,3 +210,4 @@ Ninguna. Decisiones de la persona que trabaja en esta carpeta (2026-10-27):
 | 0.2 | 2026-10-27 | Sustituye a v0.1: grupos con alta manual o CSV, archivar, copia fija de la lista por sesión, lista oculta hasta validar el código, alumnos «nuevo», columna «Estado», enmienda 4.0 de P4. Adaptada al formato del `AGENTS.md` (usuarios, historias, CA-01 a CA-12) | Nueva redacción de la persona que trabaja en esta carpeta y respuestas a los puntos abiertos |
 | 0.3 | 2026-10-27 | Liberar un nombre libera el navegador (RF-17, RF-19, RF-22); casos de RF-20 al decidir tarde; formato y seguridad del CSV (RF-1, RF-21); nuevos repetidos (RF-14); tiempo agotado (RF-11); grupo vacío (RF-8b); CA-13 a CA-19 | Revisión de la spec |
 | 1.0 | 2026-10-27 | Aprobada | Ok de la persona que trabaja en esta carpeta |
+| 1.1 | 2026-10-27 | Excepción de la copia fija al unir un nuevo con un alumno del grupo (RF-9, RF-20); el texto de P4 dice que el profesor ve la lista en su panel (§7, HU-08, §9); límite de 200 al añadir un nuevo (§5.1, RF-20, CA-20); la «Hora» del CSV incluye a los nuevos (RF-21) | Revisión del plan: la spec no cubría esos casos |
