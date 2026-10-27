@@ -21,7 +21,7 @@ first-app/
     queries/          one .sql file per statement
   db/                 the database file and the code that opens it
   clients/terminal/   paste files you run by hand
-  clients/jupyter/    notebooks, one per feature, opened in the browser with pnpm jupyter
+  clients/jupyter/    notebooks, one per feature, opened in the browser with scripts/jupyter.sh
   docs/               this explanation
 ```
 

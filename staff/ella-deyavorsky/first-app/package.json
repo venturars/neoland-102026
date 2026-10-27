@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "main": "index.js",
   "scripts": {
-    "jupyter": "test -x .venv/bin/jupyter-notebook || (test -d .venv || python3 -m venv .venv && .venv/bin/pip install notebook==7.6.3) && .venv/bin/jupyter notebook --ip=127.0.0.1 --port=8888 clients/jupyter",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
