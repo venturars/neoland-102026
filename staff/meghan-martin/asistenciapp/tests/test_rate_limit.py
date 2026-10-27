@@ -74,10 +74,10 @@ def test_one_valid_check_in_under_the_limit_is_saved(client, teacher):
     # One try with the real code checks the student in, as before.
     sid = open_session(client, teacher)
     res = attempt(
-        client, sid, "Ana García", current_code(client, teacher, sid), "203.0.113.2"
+        client, sid, "Meghan Martin", current_code(client, teacher, sid), "203.0.113.2"
     )
     assert res.status_code == 201
-    assert res.get_json()["name"] == "Ana García"
+    assert res.get_json()["name"] == "Meghan Martin"
     assert "checkedAt" in res.get_json()  # the answer includes the time
 
 
@@ -99,7 +99,7 @@ def test_reading_the_list_does_not_count(client, teacher):
             ).status_code
             == 200
         )
-    res = attempt(client, sid, "Ana", current_code(client, teacher, sid), address)
+    res = attempt(client, sid, "Meghan Martin", current_code(client, teacher, sid), address)
     assert res.status_code == 201
 
 
@@ -155,7 +155,7 @@ def test_a_typed_address_does_not_change_the_block(tmp_path, clock, teacher):
     assert res.status_code == 429  # the real computer is blocked
 
     # The other computer can still check in with the real code.
-    saved = attempt(client, sid, "Ana", current_code(client, teacher, sid), other)
+    saved = attempt(client, sid, "Meghan Martin", current_code(client, teacher, sid), other)
     assert saved.status_code == 201
 
     # The real computer is still blocked, even if it types the other address.

@@ -59,11 +59,13 @@ Ese enlace es **tu panel privado**: no lo compartas, porque quien lo tenga puede
 2. Escribe un título (opcional; si no, se usa la fecha y hora) y pulsa **Abrir asistencia**.
 3. **Comparte pantalla** en la llamada: el código se ve en grande, con una cuenta atrás.
 4. Pulsa **Copiar enlace de alumnos** y pégalo en el chat de Discord o Meet.
-5. Cada alumno abre el enlace, escribe su **nombre** y el **código** de tu pantalla, y pulsa **Estoy en clase**. Su nombre aparece en tu lista en un par de segundos.
+5. Cada alumno abre el enlace, escribe unas letras, **elige su nombre** y el **código** de tu pantalla, y pulsa **Estoy en clase**. Su nombre deja de salir como faltante.
 6. Cuando ya estén todos, pulsa **Cerrar asistencia** y confírmalo. Desde ese momento nadie más puede registrarse.
-7. Pulsa **Descargar lista** para obtener el CSV (columnas *Nombre* y *Hora*).
+7. Pulsa **Descargar lista** para obtener el CSV (columnas *Nombre* y *Hora*). La descarga incluye solo a quien ha pasado lista.
 
-**¿Ves un nombre falso o equivocado?** Pulsa **Quitar** en su fila y confirma con **Sí, quitar**. Desaparece de la lista, del total y de la descarga. Funciona también con la asistencia ya cerrada.
+**¿Quién falta?** Debajo de los presentes está el resto de la clase. Si quitas a alguien, vuelve a salir ahí.
+
+**¿Ves un nombre equivocado?** Pulsa **Quitar** en su fila y confirma con **Sí, quitar**. Desaparece de la lista, del total y de la descarga. Funciona también con la asistencia ya cerrada.
 
 ### Un registro por navegador
 
@@ -122,6 +124,7 @@ Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una 
 ## 8. Privacidad
 
 - Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails.
+- Del alumno se guarda **el nombre que elige en la lista de la clase** y **la hora**. La lista de la clase está en la app para ver quién falta. Nada de emails ni fotos.
 - La dirección desde la que intenta pasar lista se recuerda **solo** para contar esos intentos y para el bloqueo, en el mismo fichero local. No se guarda junto al nombre ni a la hora. Por el enlace público, cada alumno cuenta como su propia dirección.
 - El límite "un registro por navegador" se guarda **solo en el navegador del alumno**, no en el servidor.
 - Quitar un registro lo **borra de verdad** (no queda en ninguna papelera).

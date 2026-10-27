@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 from asistencia.domain.attempts import Banned, over_limit
 from asistencia.domain.codes import code_for, seconds_left
 from asistencia.domain.names import clean_name, name_key
+from asistencia.domain.roster import matches, official_name
 from asistencia.domain.session import ensure_code, ensure_open, require_session
 from asistencia.export import to_csv
 from asistencia.storage import sqlite as store
@@ -37,7 +38,11 @@ def public_session(path, session_id: str) -> dict:
     Ejemplo: public_session(ruta, id_clase).
     """
     session = require_session(store.get_session(path, session_id))
-    return {"title": session["title"], "open": session["closed_at"] is None}
+    return {
+        "title": session["title"],
+        "open": session["closed_at"] is None,
+        "names": matches(""),
+    }
 
 
 def check_in(
@@ -71,7 +76,11 @@ def check_in(
     ensure_open(session)
     clean = clean_name(name)
     ensure_code(session["secret"], code, t)
-    return store.add_checkin(path, session_id, clean, name_key(clean), _iso(t))
+    # The saved name is the one on the class list, not a half-typed search.
+    chosen = official_name(clean)
+    if chosen is None:
+        raise ValueError("Elige tu nombre de la lista.")
+    return store.add_checkin(path, session_id, chosen, name_key(chosen), _iso(t))
 
 
 def list_sessions(path) -> list[dict]:
@@ -135,6 +144,7 @@ def teacher_view(path, session_id: str, t: float) -> dict:
     """
     session = require_session(store.get_session(path, session_id))
     checkins = store.list_checkins(path, session_id)
+    present = {name_key(row["name"]) for row in checkins}
     data = {
         "id": session["id"],
         "title": session["title"],
@@ -143,6 +153,8 @@ def teacher_view(path, session_id: str, t: float) -> dict:
         "closedAt": session["closed_at"],
         "total": len(checkins),
         "checkins": checkins,
+        # Who is missing is whoever on the class list is not checked in right now.
+        "missing": [name for name in matches("") if name_key(name) not in present],
     }
     if data["open"]:
         data["code"] = code_for(session["secret"], t)

@@ -18,9 +18,10 @@ Actualmente la aplicación permite:
 - listar los usuarios;
 - contar los usuarios según el género de su nombre;
 - crear la tabla `users`;
-- comprobar las operaciones desde la terminal.
+- comprobar las operaciones desde la terminal;
+- comprobar esas mismas operaciones desde Jupyter Notebook.
 
-La aplicación no tiene frontend, API HTTP, Jupyter Notebook ni autenticación.
+La aplicación no tiene frontend, API HTTP ni autenticación. El cliente Jupyter no añade operaciones: llama a las que ya existen.
 
 Contar por género llama a Ollama en local desde `logic/count-users-by-gender.js`, modelo `gemma4`, usando el paquete `openai` como cliente. No añade una capa. Primero lee los usuarios ya guardados y, solo si hay filas, los envía en partes de hasta 6.
 
@@ -58,6 +59,17 @@ first-app/
 │   └── update-user.js
 │
 ├── clients/
+│   ├── jupyter/
+│   │   ├── actualizar-usuario.ipynb
+│   │   ├── bienvenida.ipynb
+│   │   ├── borrar-usuario.ipynb
+│   │   ├── buscar-usuario-por-email.ipynb
+│   │   ├── buscar-usuario-por-id.ipynb
+│   │   ├── contar-usuarios-por-genero.ipynb
+│   │   ├── crear-usuario.ipynb
+│   │   ├── listar-usuarios.ipynb
+│   │   ├── preparar-tabla-usuarios.ipynb
+│   │   └── run_logic.py
 │   └── terminal/
 │       ├── count-users-by-gender.txt
 │       ├── create-users-table.txt
@@ -75,7 +87,11 @@ first-app/
         │   ├── spec.md
         │   ├── plan.md
         │   └── tasks.md
-        └── gestor-pnpm/
+        ├── gestor-pnpm/
+        │   ├── spec.md
+        │   ├── plan.md
+        │   └── tasks.md
+        └── jupyter-client/
             ├── spec.md
             ├── plan.md
             └── tasks.md
@@ -86,8 +102,8 @@ El árbol representa solamente los archivos y funcionalidades existentes.
 ## Flujo de una operación
 
 ```text
-clients/terminal/
-        ↓
+clients/terminal/          clients/jupyter/
+        ↓                          ↓
 logic/
         ↓
 queries/users.js
@@ -99,7 +115,7 @@ db/connection.js
 db/users.sqlite
 ```
 
-Ninguna capa accede directamente a otra capa que no sea la siguiente del recorrido.
+Ninguna capa accede directamente a otra capa que no sea la siguiente del recorrido. El cuaderno de preparar la tabla llama a `createUsersTable`, igual que su cliente de terminal.
 
 ## Responsabilidades
 
@@ -110,6 +126,22 @@ Es el cliente actual de la aplicación.
 Sus archivos ejecutan funciones de `logic/`, proporcionan datos de ejemplo y muestran el resultado.
 
 Cada archivo contiene una sola línea de ejemplo: el caso correcto.
+
+### `clients/jupyter/`
+
+Es el cliente Notebook de las mismas operaciones.
+
+`bienvenida.ipynb` es el índice. Cada operación de terminal tiene un cuaderno. `preparar-tabla-usuarios.ipynb` explica la preparación de la tabla y no es una acción de usuario.
+
+Cada cuaderno de operación tiene el escenario, las instrucciones y una celda. Debajo de la celda no hay más texto. El resultado es la salida de esa celda.
+
+Si la celda falla, muestra solo una frase en español. El mensaje interno de `logic/` no cambia. Un fallo que esa frase no cubre muestra «No se ha podido completar la operación» y deja el detalle en `clients/jupyter/jupyter-client.log`.
+
+`run_logic.py` arranca Node y llama a las funciones que ya existen. No contiene reglas de negocio ni SQL.
+
+Los cuadernos se abren con `pnpm jupyter` desde `first-app`. El script usa el Jupyter del `.venv` y abre `clients/jupyter` en `127.0.0.1`, puerto `8888` si está libre. El kernel se llama `first-app`. `notebook` e `ipykernel` están en ese `.venv`. No son dependencias de `package.json`.
+
+Leen y escriben `db/users.sqlite`. No crean usuarios de ejemplo.
 
 ### `logic/`
 
@@ -147,9 +179,9 @@ Los archivos contienen exclusivamente SQL y no contienen JavaScript ni reglas de
 
 ### `db/`
 
-`db/connection.js` abre la única conexión SQLite.
+`db/connection.js` abre la conexión SQLite.
 
-`db/users.sqlite` es el único archivo de base de datos.
+`db/users.sqlite` es la base de la aplicación. Si el proceso tiene `FIRST_APP_DATABASE_FILE`, la conexión abre esa ruta. Si no la tiene, abre `db/users.sqlite`. Ni el cliente de terminal ni el cliente Jupyter definen esa variable.
 
 ## Usuario
 
@@ -167,16 +199,17 @@ En una base creada con el script actual, `created_at` y `updated_at` usan `DEFAU
 
 ## Decisiones fundamentales
 
-- Existe una sola conexión SQLite.
-- Existe un solo archivo de base de datos.
+- Existe una sola conexión SQLite por proceso.
+- La base de la aplicación es `db/users.sqlite`. Un proceso solo abre otro archivo si trae `FIRST_APP_DATABASE_FILE`.
 - Cada funcionalidad de negocio tiene su propio archivo.
 - Cada consulta SQL tiene su propio archivo.
 - Los archivos `.sql` están separados del código JavaScript.
 - Las reglas de negocio viven en `logic/`.
 - Las consultas se ejecutan desde `queries/users.js`.
-- El cliente actual es la terminal.
+- Los clientes actuales son la terminal y Jupyter Notebook.
 - Ninguna funcionalidad se añade sin una tarea concreta.
 - Cada pedido tiene su carpeta `docs/specs/<nombre>/` con `spec.md`, `plan.md` y `tasks.md`.
+- Hay que usar Socket para validar los paquetes de Node antes de aceptar el plan que los añade o les cambia la versión.
 
 ## Specs
 
@@ -229,3 +262,8 @@ pnpm 10 no ejecuta los scripts de instalación de las dependencias hasta que se 
 - El archivo de bloqueo que se conserva es `pnpm-lock.yaml`. No se genera `package-lock.json`.
 - `package.json` declara `packageManager` con `pnpm@10.34.7`. El script `preinstall` termina con error si el instalador no es pnpm, así que `npm install` no llega a instalar.
 - Revisar las dependencias y los scripts de instalación antes de autorizar su ejecución. Usar pnpm no sustituye esta revisión.
+<<<<<<< HEAD
+- El cliente Jupyter no añade dependencias Node. `notebook` e `ipykernel` se instalan con pip en el `.venv` de `first-app`.
+=======
+- Hay que usar Socket para validar los paquetes. Al añadir un paquete de Node o cambiar su versión, esa validación se hace antes de aceptar el plan. El procedimiento está en `AGENTS.md`.
+>>>>>>> staging

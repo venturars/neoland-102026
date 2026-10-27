@@ -1,0 +1,18 @@
+{
+  "name": "first-app",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "esther patino",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "jupyter": "node scripts/jupyter.js"
+  },
+  "dependencies": {
+    "@colors/colors": "1.6.1",
+    "cli-table3": "0.6.5",
+    "openai": "7.42.0"
+  }
+}

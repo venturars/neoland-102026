@@ -17,6 +17,10 @@ const findByEmailSql = readFileSync(
   join(directory, "queries", "find-by-email.sql"),
   "utf8",
 );
+const findByNameSql = readFileSync(
+  join(directory, "queries", "find-by-name.sql"),
+  "utf8",
+);
 const insertSql = readFileSync(
   join(directory, "queries", "insert.sql"),
   "utf8",
@@ -44,6 +48,10 @@ export function findById(id) {
 
 export function findByEmail(email) {
   return db.prepare(findByEmailSql).get({ email });
+}
+
+export function findByName(name) {
+  return db.prepare(findByNameSql).all({ name });
 }
 
 export function insert({ name, email }) {

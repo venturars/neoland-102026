@@ -1,0 +1,30 @@
+# Arquitectura
+
+- `db/` abre la base de datos y no contiene reglas de negocio.
+- `db/connection.js` es la única conexión a la base de datos.
+- `db/users.sqlite` es el único fichero de la base de datos.
+- `queries/queries/` guarda el SQL. Hay un fichero `.sql` por query.
+- `queries/users.js` lee esos ficheros, prepara el SQL y lo ejecuta.
+  No hay reglas de negocio en `queries/`.
+- `logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
+  Una funcionalidad por fichero. No importa la base de datos: recibe el
+  almacén. Cuando una funcionalidad existe, no se mueve ni se sustituye.
+- `logic/create-user.js` crea un usuario.
+- `logic/list-users.js` lista los usuarios.
+- `logic/update-user.js` actualiza un usuario.
+- `logic/delete-user.js` borra un usuario.
+- `logic/users-gender-count.js` cuenta los usuarios por género.
+- `clients/terminal/` llama a `logic/` y muestra el resultado. Es el
+  primer cliente y el test manual de cada funcionalidad.
+- `clients/jupyter/` es el cliente que se abre con el Jupyter de la app.
+- `start-jupyter.js` arranca el Jupyter del entorno de la app.
+- `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada
+  fichero.
+- `docs/TREE.md` es el árbol de carpetas y ficheros.
+- `docs/DATABASE.md` es la base de datos y las queries.
+- `docs/ERRORS.md` es la lista de errores.
+- `docs/STYLE.md` es el estilo y las convenciones.
+- `docs/CONSTITUTIONS.md` conserva las specs, los paquetes y el
+  contrato de `logic/`. Enlaza a las otras guías.
+- `docs/specs/<nombre>/` es un desarrollo. `<nombre>` va en kebab-case.
+  Ahí viven su spec, su plan y sus tareas.

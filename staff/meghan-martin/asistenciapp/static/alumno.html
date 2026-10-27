@@ -16,7 +16,11 @@
 
     <form id="form" class="card" hidden novalidate>
       <label for="name">Tu nombre</label>
-      <input id="name" name="name" autocomplete="name" maxlength="60" required>
+      <div class="name-field">
+        <input id="name" name="name" type="search" autocomplete="off" placeholder="Escribe tu nombre"
+               role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="names">
+        <ul id="names" class="name-choices" role="listbox" hidden></ul>
+      </div>
 
       <div class="field-code">
         <label for="code">Código de la pantalla del profesor</label>
