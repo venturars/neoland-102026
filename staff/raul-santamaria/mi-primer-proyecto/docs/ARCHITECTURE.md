@@ -18,6 +18,9 @@
   primer cliente y el test manual de cada funcionalidad.
 - `clients/jupyter/` es el cliente que se abre con el Jupyter de la app.
 - `start-jupyter.js` arranca el Jupyter del entorno de la app.
+- `eslint.config.js` aplica las reglas recomendadas de ESLint al
+  JavaScript, declara los globals de Node e ignora `.venv` y
+  `node_modules`.
 - `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada
   fichero.
 - `docs/TREE.md` es el árbol de carpetas y ficheros.

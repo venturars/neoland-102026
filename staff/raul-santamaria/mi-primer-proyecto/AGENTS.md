@@ -9,8 +9,9 @@ Las reglas de base están en `docs/CONSTITUTIONS.md`. Esa guía enlaza a la arqu
 ## Comandos
 
 Las dependencias se instalan con pnpm (`pnpm install`). No uses npm ni generes `package-lock.json`.
-No hay comando de ejecución. No hay tests. No hay script de lint ni de formato.
-El formato es el de Prettier que dice `docs/STYLE.md`.
+No hay comando de ejecución. No hay tests.
+`pnpm format` lanza Prettier. El formato es el estándar de `docs/STYLE.md`, sin configuración propia.
+`pnpm lint` lanza ESLint.
 
 ## Estilo
 
@@ -42,3 +43,5 @@ Queda fuera comprobar paquetes que no son de Node, comprobar un paquete cuya ver
 
 El primer cliente es un `.txt` en `clients/terminal/`. Se pega en la terminal con el directorio actual en `mi-primer-proyecto`. Importa la función de `logic/` y hace `console.log` del resultado.
 Antes de dar la tarea por terminada, pega ese fragmento y comprueba que el resultado sale.
+Lanza el formato antes de dar la tarea por terminada. El comando es `pnpm format`.
+Lanza el lint antes de dar la tarea por terminada. El comando es `pnpm lint`.
