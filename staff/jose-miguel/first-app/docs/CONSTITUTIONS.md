@@ -159,3 +159,7 @@ Un desarrollo nuevo vive en `specs/<nombre>/`. Son tres ficheros cortos. Se leen
 Una persona revisa `spec.md`, después `plan.md`, después `tasks.md`. El código se escribe solo cuando esos tres están aceptados.
 
 No hay bucle. Un fichero anterior no se reescribe salvo que la persona lo pida.
+
+## 8. Paquetes
+
+Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket. El procedimiento concreto está en `AGENTS.md`.
