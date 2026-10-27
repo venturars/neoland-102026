@@ -68,6 +68,10 @@ Each example starts a separate Node process. Clients import and call the relevan
 
 The application uses Node built-ins and the exact external dependency `openai@7.39.0`. The Jupyter client additionally uses the exact development dependency `cli-table3@0.6.5` for colored table headers. Its project-local Python environment uses `notebook==7.6.3` and the directly invoked `ipykernel==7.1.0` from `requirements-jupyter.txt`. These client dependencies do not change the business operations or classifier. pnpm generates `pnpm-lock.yaml`; it is maintained with `package.json`.
 
+Development checks use exact versions `prettier@3.9.10`, `eslint@10.13.0`, and
+`@eslint/js@10.0.1`. These development dependencies do not change application
+contracts or provide runtime business functionality.
+
 - Use pnpm. Do not mix package managers or introduce `package-lock.json` or `yarn.lock`.
 - Add dependencies only when required by an approved implementation plan.
 - A new Node package, or a change to its version, must be checked with Socket before the implementation plan is approved. Follow the procedure in [AGENTS.md](../AGENTS.md).

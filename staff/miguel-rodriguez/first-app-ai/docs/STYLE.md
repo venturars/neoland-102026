@@ -46,8 +46,9 @@ procedure in the [constitution](CONSTITUTIONS.md#dependencies-and-package-manage
 
 Use the standard Prettier format: double quotes, semicolons, trailing commas,
 two-space indentation, and a print width of 80. Formatting does not combine the
-separate actions above. This guide does not install a formatter or add a custom
-configuration.
+separate actions above. The project uses the approved formatter without a custom
+Prettier configuration. The required completion commands are in
+[AGENTS.md](../AGENTS.md).
 
 ## New work and existing code
 
