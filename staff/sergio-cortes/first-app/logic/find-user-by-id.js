@@ -10,7 +10,7 @@ export function findUserById(id) {
 
   try {
     user = findById(id);
-  } catch (error) {
+  } catch {
     throw new DatabaseError("Could not find the user");
   }
 

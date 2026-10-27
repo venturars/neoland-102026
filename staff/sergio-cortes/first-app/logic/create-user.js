@@ -31,7 +31,7 @@ export function createUser(input) {
 
   try {
     owner = findByEmail(email);
-  } catch (error) {
+  } catch {
     throw new DatabaseError("Could not create the user");
   }
 
@@ -43,7 +43,7 @@ export function createUser(input) {
 
   try {
     user = insert({ name, email });
-  } catch (error) {
+  } catch {
     throw new DatabaseError("Could not create the user");
   }
 

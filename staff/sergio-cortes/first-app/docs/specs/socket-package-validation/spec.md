@@ -25,7 +25,8 @@ Un resumen escrito dentro del plan, antes de darlo por aceptado. Para cada paque
 
 - si esa versión está afectada por una campaña;
 - si tiene alertas (detalladas aparte en la conversación);
-- si alguna stat está por debajo de 50 puntos.
+- las puntuaciones **license**, **maintenance**, **quality**, **supplyChain** y **vulnerability** de Socket (`depscore`, 0–100);
+- si alguna stat está por debajo de 50 puntos (columna aparte que resume incidencias).
 
 Ejemplo: el plan quiere añadir un paquete en una versión concreta. El resumen lista ese paquete y sus dependencias hasta la tercera capa. Una dependencia de la segunda capa tiene una stat por debajo de 50 y otra trae una alerta. La alerta aparece comentada; la persona decide si sigue con esas versiones antes de aceptar el plan.
 

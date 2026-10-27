@@ -50,7 +50,7 @@ export async function usersGenderCount() {
 
   try {
     rows = findAll();
-  } catch (error) {
+  } catch {
     throw new DatabaseError("Could not classify the users");
   }
 
@@ -77,10 +77,7 @@ export async function usersGenderCount() {
     const batchNames = names.slice(index, index + BATCH_SIZE);
     const batch = batchNames.join("\n");
     const batchNameSet = new Set(batchNames);
-    const messages = [
-      ...EXAMPLES,
-      { role: "user", content: batch },
-    ];
+    const messages = [...EXAMPLES, { role: "user", content: batch }];
 
     let completion;
 
@@ -124,7 +121,7 @@ export async function usersGenderCount() {
 
     try {
       parsed = JSON.parse(message);
-    } catch (error) {
+    } catch {
       continue;
     }
 

@@ -12,7 +12,7 @@ export function findUserByName(name) {
 
   try {
     rows = findByName(trimmedName);
-  } catch (error) {
+  } catch {
     throw new DatabaseError("Could not find the user");
   }
 

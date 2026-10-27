@@ -24,7 +24,7 @@ export function findUserByEmail(email) {
 
   try {
     user = findByEmail(email);
-  } catch (error) {
+  } catch {
     throw new DatabaseError("Could not find the user");
   }
 

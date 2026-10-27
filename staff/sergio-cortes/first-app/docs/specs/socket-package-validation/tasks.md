@@ -12,5 +12,5 @@
 
 3. Comprueba los dos textos.
    La constitución solo dice que el paquete se valida con Socket y que el cómo está en `AGENTS.MD`.
-   `AGENTS.MD` dice campaña, alerta, stats por debajo de 50, 3 capas, alertas comentadas, resumen `## Validación Socket` en el plan y herramientas MCP del plan.
+   `AGENTS.MD` dice campaña, alerta, las cinco stats de `depscore` en la tabla del plan, stats por debajo de 50, 3 capas, alertas comentadas, resumen `## Validación Socket` en el plan y herramientas MCP del plan.
    `package.json`, `pnpm-lock.yaml` y el código no cambian.

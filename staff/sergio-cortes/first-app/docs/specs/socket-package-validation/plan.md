@@ -62,9 +62,9 @@ la misma versión, no se vuelve a consultar.
 2. Llamar a `organizations` y guardar `org_slug` para herramientas de org.
 3. Por cada `depname@version` del árbol (capa 0 = directo, 1–3 = dependencias):
 
-   - **`depscore`**: `ecosystem` `npm`, `depname`, `version`. Anotar las stats
-     que devuelve Socket. Marcar **stat &lt; 50** cuando cualquier puntuación
-     numérica de la respuesta sea menor que 50.
+   - **`depscore`**: `ecosystem` `npm`, `depname`, `version`. Anotar **license**,
+     **maintenance**, **quality**, **supplyChain** y **vulnerability** (0–100).
+     Marcar **stat &lt; 50** cuando cualquiera de esas puntuaciones sea menor que 50.
    - **`alerts`**: `org_slug`, `artifact_type` `npm`, `artifact_name` =
      `depname`, `status` `open`. Quedarse con las que correspondan a esa versión
      si la respuesta lo permite.
@@ -78,9 +78,12 @@ la misma versión, no se vuelve a consultar.
 
 5. **Resumen en el plan**: añadir la sección `## Validación Socket` al
    `plan.md` del desarrollo **antes** de darlo por aceptado. Una fila por
-   paquete revisado, con columnas: capa, paquete@versión, campaña (sí/no),
-   alertas (sí/no; detalle en conversación), stats &lt; 50 (listar cuáles o
-   «ninguna»). Si no hubo incidencias, decirlo explícitamente.
+   paquete revisado, con columnas: **capa**, **paquete@versión**, **campaña**
+   (sí/no; si `threat_feed` no aplica en el plan de la org, indicarlo),
+   **alertas** (sí/no; detalle en conversación), **license**, **maintenance**,
+   **quality**, **supplyChain**, **vulnerability** (valores de `depscore`),
+   **stats &lt; 50** (listar cuáles o «ninguna»). Si no hubo incidencias,
+   decirlo explícitamente en el texto de la sección.
 
 Queda fuera comprobar paquetes que no son de Node, comprobar un paquete cuya
 versión no cambia en el plan, mirar más de 3 capas, decidir alertas sin la
@@ -114,9 +117,9 @@ del MCP antes de aceptar el plan:
 ```markdown
 ## Validación Socket
 
-| Capa | Paquete@versión | Campaña | Alertas | Stats < 50 |
-| --- | --- | --- | --- | --- |
-| 0 | ejemplo@1.0.0 | no | no | ninguna |
+| capa | paquete@versión | campaña | alertas | license | maintenance | quality | supplyChain | vulnerability | stats < 50 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 | ejemplo@1.0.0 | no | no | 100 | 90 | 95 | 100 | 100 | ninguna |
 
 Alertas comentadas en conversación: (ninguna / listar).
 Decisión humana sobre alertas: (pendiente / aceptadas / rechazadas).

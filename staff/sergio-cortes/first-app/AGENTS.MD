@@ -22,7 +22,7 @@ El camino issue, rama y pull request del bootcamp está en `docs/GIT-WORKFLOW.md
 - El proceso de implementación empieza cuando una persona ha leído esos ficheros y lo pide. Ese proceso solo ejecuta `tasks.md`.
 - Lee `docs/CONSTITUTIONS.md` y la spec activa antes de tocar código. Si no hay spec para ese cambio, se crea (proceso de spec) y se para.
 - No inventar ficheros, capas, campos ni enlaces.
-- Añadir código, dependencias, scripts, tests, SQL o clientes solo cuando el usuario lo pida en esa tarea.
+- Añadir código, dependencias, scripts, tests, SQL o clientes solo en la **fase Implementación**, con spec y plan **aprobados** por la persona. Pedir la funcionalidad en la issue o en el chat no sustituye esa aprobación.
 - Temperatura próxima a 0. No inventes: cíñete al plan y a la spec activa.
 - Usar pnpm como gestor de paquetes.
 - En cada tarea: investiga antes de escribir y compara si la tarea tiene parentesco con otra ya resuelta. El código que ya existe sirve para ver a qué fichero se parece una función nueva. La forma de cada línea se copia de `docs/STYLE.md`. Un spec nuevo no se para porque el código ya escrito no tenga esa forma.
@@ -37,6 +37,23 @@ El camino issue, rama y pull request del bootcamp está en `docs/GIT-WORKFLOW.md
 Antes de dar por aceptado un `plan.md` que añade un paquete de Node o cambia su
 versión en `package.json`. También antes de ejecutar `tasks.md` que incluya ese
 cambio si el plan aún no trae el resumen.
+
+### Hasta aprobación del plan
+
+La validación Socket la hace el agente al redactar el `plan.md` (fase Spec). Eso **no** autoriza instalar ni implementar.
+
+El plan con `## Validación Socket` queda **pendiente de aceptación** hasta que la persona:
+
+- aprueba el `spec.md` y el `plan.md`, y
+- si hubo alertas abiertas relevantes, dice explícitamente si las acepta.
+
+Mientras no haya esa aceptación:
+
+- prohibido `pnpm add`, `pnpm install` y `pnpm update` por esos paquetes;
+- prohibido editar `package.json` / `pnpm-lock.yaml` por ese desarrollo;
+- prohibido ejecutar pasos de `tasks.md` que instalen o configuren esos paquetes.
+
+Si el MCP Socket no permite completar la validación (por ejemplo `organizations` no autorizado tras `mcp_auth`), el plan **no** se presenta como listo para aprobar: se documenta el fallo en el plan y se espera (reintento MCP o decisión de la persona). No se sustituye Socket por un resumen inventado ni por una «muestra» parcial. Si la validación queda incompleta, la pregunta va al final del `plan.md` y no hay `tasks.md` hasta tener respuesta.
 
 ### Qué se revisa
 
@@ -56,9 +73,9 @@ la misma versión, no se vuelve a consultar.
 2. Llamar a `organizations` y guardar `org_slug` para herramientas de org.
 3. Por cada `depname@version` del árbol (capa 0 = directo, 1–3 = dependencias):
 
-   - **`depscore`**: `ecosystem` `npm`, `depname`, `version`. Anotar las stats
-     que devuelve Socket. Marcar **stat < 50** cuando cualquier puntuación
-     numérica de la respuesta sea menor que 50.
+   - **`depscore`**: `ecosystem` `npm`, `depname`, `version`. Anotar **license**,
+     **maintenance**, **quality**, **supplyChain** y **vulnerability** (0–100).
+     Marcar **stat < 50** cuando cualquiera de esas puntuaciones sea menor que 50.
    - **`alerts`**: `org_slug`, `artifact_type` `npm`, `artifact_name` =
      `depname`, `status` `open`. Quedarse con las que correspondan a esa versión
      si la respuesta lo permite.
@@ -72,9 +89,12 @@ la misma versión, no se vuelve a consultar.
 
 5. **Resumen en el plan**: añadir la sección `## Validación Socket` al
    `plan.md` del desarrollo **antes** de darlo por aceptado. Una fila por
-   paquete revisado, con columnas: capa, paquete@versión, campaña (sí/no),
-   alertas (sí/no; detalle en conversación), stats < 50 (listar cuáles o
-   «ninguna»). Si no hubo incidencias, decirlo explícitamente.
+   paquete revisado, con columnas: **capa**, **paquete@versión**, **campaña**
+   (sí/no; si `threat_feed` no aplica en el plan de la org, indicarlo, p. ej.
+   `n/d (plan free)`), **alertas** (sí/no; detalle en conversación),
+   **license**, **maintenance**, **quality**, **supplyChain**, **vulnerability**
+   (valores de `depscore`), **stats < 50** (listar cuáles o «ninguna»). Si no
+   hubo incidencias, decirlo explícitamente en el texto de la sección.
 
 Queda fuera comprobar paquetes que no son de Node, comprobar un paquete cuya
 versión no cambia en el plan, mirar más de 3 capas, decidir alertas sin la
@@ -85,10 +105,12 @@ validación.
 
 - Ejecutar: no hay comando.
 - Tests: no hay. El script `test` de `package.json` termina en error. No se añaden tests ni se cambia ese script.
-- Lint/formato: Prettier por defecto. No hay `.prettierrc` ni script de formato.
-
+- Formato: `pnpm run format` (Prettier por defecto, sin `.prettierrc`).
+- Lint: `pnpm run lint` (ESLint con `eslint.config.js`).
 
 ## Al terminar una tarea
 
 - Al crear una funcionalidad se crea su primer cliente en `clients/terminal/`, un `.txt` que se pega en la terminal con el directorio actual en `first-app`. Ese cliente importa la función de `logic/` y hace `console.log` del resultado. Es el test manual básico.
 - Comprueba que el desarrollo nuevo funciona antes de dar la tarea por terminada. La comprobación es ejecutar ese fragmento de `clients/terminal/`.
+- Ejecutar `pnpm run format` sobre el código tocado.
+- Ejecutar `pnpm run lint` y corregir los errores antes de dar la tarea por terminada.
