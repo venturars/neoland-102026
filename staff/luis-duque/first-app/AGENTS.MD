@@ -101,3 +101,7 @@ No compruebes un paquete que no es de Node, un paquete cuya versión no cambia, 
 ## Git
 
 `.cursor/` está en el `.gitignore` de la raíz del repositorio. No lo quites de ahí y no lo subas.
+
+## Al terminar una tarea
+
+Al terminar una tarea, lanza `pnpm format` y `pnpm lint` desde `first-app`.
