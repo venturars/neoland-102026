@@ -92,3 +92,84 @@ def test_styles_load_nothing_from_outside():
 @pytest.mark.parametrize("script", SCRIPTS, ids=lambda p: p.name)
 def test_scripts_call_only_the_app(script):
     assert re.findall(r"['\"`](?:https?:)?//", script.read_text(encoding="utf-8")) == []
+
+
+# ---------- CA-06: contraste suficiente en claro y en oscuro ----------
+
+TEXT, NON_TEXT = 4.5, 3.0
+# Escritos antes que los colores y la cabecera (T05); deben fallar hasta T06, que quita esta marca.
+LOOK_PENDING = pytest.mark.xfail(reason="los colores y la cabecera llegan en T06", strict=True)
+# (primer plano, fondo, mínimo) · plan §2.1
+PAIRS = (
+    ("text", "bg", TEXT),
+    ("text", "surface", TEXT),
+    ("muted", "bg", TEXT),
+    ("muted", "surface", TEXT),
+    ("accent", "bg", TEXT),  # enlaces y botones secundarios
+    ("accent", "surface", TEXT),
+    ("accent-text", "accent", TEXT),  # botón principal
+    pytest.param(*("accent", "accent-soft", TEXT), marks=LOOK_PENDING),  # etiqueta "abierta"
+    pytest.param(*("header-text", "header-bg", TEXT), marks=LOOK_PENDING),
+    ("danger", "bg", TEXT),
+    ("danger", "surface", TEXT),
+    pytest.param(*("danger-text", "danger", TEXT), marks=LOOK_PENDING),  # "Sí, cerrar"
+    ("ok-text", "ok-bg", TEXT),
+    ("error-text", "error-bg", TEXT),
+    ("warn-text", "warn-bg", TEXT),
+    pytest.param(*("control-border", "surface", NON_TEXT), marks=LOOK_PENDING),  # borde de los campos
+    pytest.param(*("control-border", "bg", NON_TEXT), marks=LOOK_PENDING),
+)
+
+
+def color_tokens(css):
+    """Las variables `--nombre: #rrggbb` de un bloque `:root`."""
+    return {name: value.lower() for name, value in re.findall(r"--([\w-]+):\s*(#[0-9a-fA-F]{6})\b", css)}
+
+
+def themes():
+    light = re.search(r"^:root\s*{([^}]*)}", STYLES, re.MULTILINE)
+    dark = re.search(r"@media\s*\(prefers-color-scheme:\s*dark\)\s*{\s*:root\s*{([^}]*)}", STYLES)
+    assert light and dark
+    light_tokens = color_tokens(light.group(1))
+    return {"claro": light_tokens, "oscuro": {**light_tokens, **color_tokens(dark.group(1))}}
+
+
+def luminance(hex_color):
+    channels = [int(hex_color[i : i + 2], 16) / 255 for i in (1, 3, 5)]
+    r, g, b = (c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4 for c in channels)
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+
+def contrast(a, b):
+    high, low = sorted((luminance(a), luminance(b)), reverse=True)
+    return (high + 0.05) / (low + 0.05)
+
+
+def test_contrast_formula():  # valores de referencia de WCAG
+    assert round(contrast("#ffffff", "#000000"), 1) == 21.0
+    assert round(contrast("#ffffff", "#e6284e"), 1) == 4.4
+
+
+@pytest.mark.parametrize("theme", ["claro", "oscuro"])
+@pytest.mark.parametrize(("fg", "bg", "minimum"), PAIRS, ids=lambda v: str(v))
+def test_contrast(theme, fg, bg, minimum):
+    tokens = themes()[theme]
+    assert contrast(tokens[fg], tokens[bg]) >= minimum
+
+
+@LOOK_PENDING
+def test_neoland_red_for_buttons_and_links():  # spec P1
+    assert themes()["claro"]["accent"] == "#d01f45"
+
+
+# ---------- CA-01: cabecera oscura con el nombre de la app ----------
+
+
+@LOOK_PENDING
+@pytest.mark.parametrize("page", ["index.html", "profesor.html", "alumno.html"])
+def test_every_page_has_the_brand_header(page):
+    html = (STATIC_DIR / page).read_text(encoding="utf-8").split("<body", 1)[1]  # sin el <title>
+    header = re.search(r'<header class="brand">(.*?)</header>', html, re.DOTALL)
+    assert header
+    assert re.search(r'class="wordmark">AsistenciApp<', header.group(1))
+    assert html.count("AsistenciApp<") == 1  # el nombre no se repite (plan §2.3)
