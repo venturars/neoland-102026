@@ -90,7 +90,7 @@ Cambiar el stack requiere enmendar esta constitución.
 
 ## 7. Alcance y límites del repositorio
 
-- El proyecto vive entero en `staff/Diego-Torres/asistenciapp/`. No se tocan archivos fuera de esta carpeta.
+- El proyecto vive entero en `staff/diego-torres/asistenciapp/`. No se tocan archivos fuera de esta carpeta.
 
 ---
 

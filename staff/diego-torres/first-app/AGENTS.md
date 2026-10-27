@@ -10,7 +10,7 @@ La arquitectura está en `docs/CONSTITUCION.md`. Esta guía no la repite. Si una
 
 Un desarrollo nuevo pasa por `docs/specs/<nombre>/`, con `<nombre>` en kebab-case. Ahí viven `spec.md`, `plan.md` y `tasks.md`.
 
-El directorio de trabajo es `staff/Diego-Torres/first-app`.
+El directorio de trabajo es `staff/diego-torres/first-app`.
 
 ## Base de datos
 
