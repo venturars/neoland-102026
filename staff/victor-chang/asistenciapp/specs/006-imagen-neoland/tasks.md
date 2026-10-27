@@ -66,9 +66,12 @@ Cómo leer esta lista:
 
 ## Fase D · Piezas (plan §2.4, §2.5)
 
-- [ ] **T07** · Botones (principal, `.secondary`, `.danger`, `.danger-solid`), tarjetas, etiquetas, campos y fondo.
+- [x] **T07** · Botones (principal, `.secondary`, `.danger`, `.danger-solid`), tarjetas, etiquetas, campos y fondo.
   - Ningún botón baja de 44 px (los `.small`, 36 px como hoy).
   - *Cubre:* CA-03, CA-06, CA-07.
+  - **Hecha (2026-10-27):** botón principal rojo con esquinas de 4 px; `.secondary` con borde rojo y totalmente redondo; peligro en gris carbón (borde) y sólido ("Sí, cerrar"). Al pasar el ratón: el principal se oscurece un poco, el secundario toma el rosa y el de peligro el gris. Tarjetas con esquinas de 8 px y sombra suave (en oscuro, sin sombra: `--card-shadow`). Etiqueta "abierta" en rojo sobre rosa.
+    - Test añadido antes del cambio: la etiqueta "cerrada" (`--muted` sobre `--border`) en claro y oscuro; ya cumplía. 494 tests en verde; `ruff` y `mypy` sin avisos; `profesor.js` y `alumno.js` sin cambios.
+    - Medido en Chrome: todos los botones miden 45 px, salvo los "Quitar" (`.small`), 36 px como antes. La confirmación de cierre se ve con "Sí, cerrar" en carbón y "Cancelar" con el foco. Servidor parado y 8012 libre.
 
 ## Fase E · Revisión y cierre
 
