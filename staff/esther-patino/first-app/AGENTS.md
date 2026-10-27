@@ -30,6 +30,20 @@ Una persona lee lo escrito. El proceso de implementación empieza cuando esa per
 - No propongas código que no se haya comprobado.
 - Si algo falla, se lanza `throw new Error("...")`. No se devuelve `{ ok: false }`. Los textos de error son los de la constitución.
 
+## Validación de paquetes
+
+Cada vez que un plan añade un paquete de Node o cambia su versión, el chequeo es automático. Se hace con el MCP `socket-mcp` de `MCP.md`, antes de aceptar el plan.
+
+Se mira el paquete y la versión: si una campaña lo afecta, si una alerta lo afecta, o si alguna de sus stats está por debajo de 50 puntos.
+
+Las alertas se comentan en el plan. La persona decide si las acepta.
+
+Se miran las dependencias de ese paquete hasta 3 capas. Cada capa sigue los mismos criterios.
+
+El resumen de ese chequeo entra en el plan antes de aceptarlo.
+
+Queda fuera comprobar paquetes que no son de Node, comprobar un paquete cuya versión no cambia, mirar más de 3 capas y decidir las alertas por la persona.
+
 ## Comandos
 
 - Ejecutar: no hay comando de arranque. `package.json` no tiene scripts.
