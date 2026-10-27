@@ -106,13 +106,13 @@ PAIRS = (
     ("accent", "bg", TEXT),  # enlaces y botones secundarios
     ("accent", "surface", TEXT),
     ("accent-text", "accent", TEXT),  # botón principal
-    ("accent", "accent-soft", TEXT),  # etiqueta "abierta"
+    ("accent", "accent-soft", TEXT),  # botón secundario al pasar el ratón
     ("muted", "border", TEXT),  # etiqueta "cerrada"
     ("header-text", "header-bg", TEXT),
     ("danger", "bg", TEXT),
     ("danger", "surface", TEXT),
     ("danger-text", "danger", TEXT),  # "Sí, cerrar"
-    ("ok-text", "ok-bg", TEXT),
+    ("ok-text", "ok-bg", TEXT),  # mensajes de éxito y etiqueta "abierta"
     ("error-text", "error-bg", TEXT),
     ("warn-text", "warn-bg", TEXT),
     ("control-border", "surface", NON_TEXT),  # borde de los campos
@@ -158,6 +158,13 @@ def test_contrast(theme, fg, bg, minimum):
 
 def test_neoland_red_for_buttons_and_links():  # spec P1
     assert themes()["claro"]["accent"] == "#d01f45"
+
+
+def test_open_badge_stays_green():  # plan §2.5 v1.1
+    rule = re.search(r"^\.badge\s*{([^}]*)}", STYLES, re.MULTILINE)
+    assert rule
+    assert re.search(r"background:\s*var\(--ok-bg\)", rule.group(1))
+    assert re.search(r"(?<![-\w])color:\s*var\(--ok-text\)", rule.group(1))
 
 
 # ---------- CA-01: cabecera oscura con el nombre de la app ----------

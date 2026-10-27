@@ -1,6 +1,6 @@
 # Plan técnico 006 · Imagen Neoland
 
-> Estado: **Aprobado** (2026-10-27) · Spec: [spec.md](spec.md) v1.0 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Creado: 2026-10-27
+> Versión 1.1 · Estado: **Aprobado** (2026-10-27) · Spec: [spec.md](spec.md) v1.0 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Creado: 2026-10-27
 
 Este documento explica **cómo** se cambia el aspecto de las tres pantallas para que se parezcan a neoland.es sin cambiar lo que hacen (spec 006).
 
@@ -41,7 +41,7 @@ Se cambian solo los valores de las variables de `:root`; los nombres se mantiene
 | `--control-border` | `#8A8A8A` | `#8A8A8A` | borde de los campos (3:1) |
 | `--accent` | `#D01F45` | `#FF5C7A` | botones, enlaces, foco |
 | `--accent-text` | `#FFFFFF` | `#1A0A0E` | texto sobre `--accent` |
-| `--accent-soft` | `#FDE8EC` | `#3A1720` | etiqueta "abierta", franjas |
+| `--accent-soft` | `#FDE8EC` | `#3A1720` | fondo del botón secundario al pasar el ratón *(v1.1: ya no es el de la etiqueta "abierta", §2.5)* |
 | `--header-bg` | `#333333` | `#0B0B0B` | cabecera |
 | `--header-text` | `#FFFFFF` | `#F2F2F2` | texto de la cabecera |
 | `--danger` | `#333333` | `#E0E0E0` | botones de peligro (§2.4) |
@@ -57,7 +57,8 @@ Contrastes medidos (WCAG), todos ≥ 4,5:1 en texto y ≥ 3:1 en bordes de contr
 | secundario / fondo, tarjeta | 5,9 / 6,4 | 7,6 / 6,7 |
 | rojo / fondo, tarjeta | 4,9 / 5,3 | 6,1 / 5,4 |
 | texto del botón / rojo | 5,3 | 6,5 |
-| rojo / rosa (etiqueta) | 4,5 | — (el oscuro usa `#FF8FA3` sobre `#3A1720`: 7,3) |
+| rojo / rosa | 4,5 | 5,3 |
+| etiqueta "abierta" (`--ok-text` / `--ok-bg`, sin cambios) | 7,4 | 9,4 |
 | cabecera | 12,6 | > 15 |
 | borde de campo / tarjeta | 3,5 | 4,6 |
 | peligro / tarjeta; texto / peligro sólido | 12,6 / 12,6 | 12,1 / 13,7 |
@@ -100,7 +101,7 @@ Una franja oscura arriba en las tres páginas, fuera de `<main>`:
 ### 2.5 Resto de piezas
 
 - **Tarjetas:** esquinas de 8 px y una sombra muy suave; en oscuro, solo el borde.
-- **Etiquetas:** "abierta" en rojo sobre rosa (`--accent-soft`); "cerrada" en gris; el modo ("Meet" / "código"), con borde, como hoy.
+- **Etiquetas:** "abierta" **en verde, como antes** (`--ok-text` sobre `--ok-bg`; v1.1); "cerrada" en gris; el modo ("Meet" / "código"), con borde, como hoy.
 - **Campos:** borde `--control-border` (hoy no llega a 3:1), foco rojo.
 - **Foco del teclado:** contorno de 3 px en `--accent`, como hoy (cambia solo el color).
 - **Fondo:** gris muy claro, para que las tarjetas blancas destaquen, como las franjas de Neoland.
@@ -181,3 +182,4 @@ Solo cambia `static/` y se añade un archivo de tests (`tests/test_static.py`, q
 | Versión | Fecha | Cambio |
 | --- | --- | --- |
 | 1.0 | 2026-10-27 | Borrador inicial |
+| 1.1 | 2026-10-27 | §2.1 y §2.5: la etiqueta "abierta" del panel vuelve al verde de antes; `--accent-soft` queda para el botón secundario (revisión del aspecto) |

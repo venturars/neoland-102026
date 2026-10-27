@@ -331,8 +331,8 @@ button.small, .button.small { min-height: 36px; padding: 0.3rem 0.7rem; font-siz
   border-radius: 999px;
   padding: 0.1rem 0.55rem;
   margin-left: 0.4rem;
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--ok-bg);
+  color: var(--ok-text);
   vertical-align: middle;
 }
 
