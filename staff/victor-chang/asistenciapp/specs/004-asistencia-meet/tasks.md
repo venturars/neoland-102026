@@ -21,7 +21,7 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
   - Si `mypy --strict` pide tipos de las bibliotecas de Google, añadir en `pyproject.toml` la excepción mínima, solo para esos módulos.
   - *Hecha cuando:* `python -c "import google_auth_oauthlib"` funciona y siguen en verde los 240 tests, `ruff` y `mypy`.
   - **Hecha (2026-10-23):** `google-auth-oauthlib` 1.5.0, que trae `google-auth` 2.62.0 y `requests` 2.34.2. Solo `google_auth_oauthlib` no publica tipos: en `pyproject.toml` se le aplica `ignore_missing_imports`, solo a ese módulo (comprobado con un archivo de prueba en `mypy --strict`). `google-auth` y `requests` sí traen tipos. 240 tests, `ruff` y `mypy` en verde.
-- [ ] **T02** 👤 · Preparar Google Cloud (Victor, guiado paso a paso; unos 15 min):
+- [x] **T02** 👤 · Preparar Google Cloud (Victor, guiado paso a paso; unos 15 min):
   1. Crear un proyecto en Google Cloud Console.
   2. Activar la **Google Meet REST API**.
   3. Configurar la pantalla de consentimiento: tipo *Externo*, permisos `meetings.space.readonly` y `openid`, y **publicarla "En producción"** sin verificar (decisión §8.1).
@@ -30,6 +30,7 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
   - **Notas (2026-10-23):**
     - Para publicar "En producción", Google pide una URL de página principal y de política de privacidad. Victor no las tiene, así que la app queda en **Testing**, con sus dos cuentas como usuarios de prueba: basta para el spike. La decisión §8.1 se revisa después del spike (permiso semanal o publicar con páginas sencillas).
     - El primer archivo era un cliente **Web**; hace falta uno de tipo **Aplicación de escritorio** para el flujo *loopback* (plan §2.4).
+    - **Hecha (marcada el 2026-10-27, en T17):** `data/google-client.json` de tipo escritorio, fuera de git y con `0600`; el spike (T03) y la prueba real (T16) lo usan. No se había marcado al hacerla.
 - [x] **T03** 👤 · Spike: `scripts/spike_meet.py` (desechable):
   - Inicia sesión con Google, pide un código de reunión e imprime, de cada participante activo, su tipo (`signedinUser` / `anonymousUser` / `phoneUser`), su `displayName` y su `user`; y el `sub` de la cuenta que ha iniciado sesión.
   - Victor crea una reunión con su cuenta gratuita, se une desde otro dispositivo (con otra cuenta o como invitado) y lo ejecuta.
@@ -219,7 +220,7 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
       - `test_app.py` sustituye `GoogleMeet.participants`, que es la frontera con Google; su comportamiento se prueba aparte con una sesión HTTP falsa (`test_google_meet.py`). El resto de tests usan una función falsa de participantes, que es lo que `create_app` recibe.
     - ✅ **Complejidad (§12).** `GoogleMeet` es una clase porque guarda estado (permiso y sesión HTTP), el caso permitido. Los participantes son un `Callable`, no un `Protocol`. La única dependencia nueva, `google-auth-oauthlib`, está justificada en plan §7.1.
     - ✅ **`pytest` en verde:** 435 tests.
-- [ ] **T16** 👤 · Prueba real en Meet (Victor, con su cuenta y otro dispositivo):
+- [x] **T16** 👤 · Prueba real en Meet (Victor, con su cuenta y otro dispositivo):
   1. `python app.py --meet <código>` → abre Google la primera vez (CA-11) y registra a los presentes sin el profesor (CA-05, CA-09).
   2. Entra otra persona → "Quién está ahora" → se añade 1 (CA-06).
   3. Sale alguien → nueva toma → sigue en la lista (CA-07).
@@ -229,9 +230,16 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
   7. Con una clase real del bootcamp en la que Victor participa → funciona con su cuenta (CA-15); con un enlace inventado → mensaje de CA-14.
   8. Descargar el CSV: solo nombres y horas (CA-16, CA-17).
   9. La consola no muestra nombres, IPs ni nada de Google (E7).
-- [ ] **T17** · Cierre:
+  - **Hecha (2026-10-27):** Victor confirma que los nueve pasos salen como se espera, incluido el paso 7 en una clase real del bootcamp (2026-10-26).
+- [x] **T17** · Cierre:
   - borrar `scripts/spike_meet.py`;
   - README: sección "Modo automático (Google Meet)" con la preparación de Google Cloud paso a paso, el uso de `--meet` y las variables nuevas;
   - AGENT.md: comandos, estructura y estado;
   - comprobar que `pytest`, `ruff` y `mypy` pasan y que los puertos quedan libres;
   - definición de terminado (AGENT.md §6).
+  - **Hecha (2026-10-27):** 435 tests en verde; `ruff check`, `ruff format --check` y `mypy --strict` sin avisos.
+    - `scripts/spike_meet.py` borrado, con su excepción de `ruff` en `pyproject.toml`. Los ejemplos que guardó siguen en `tests/fixtures/meet/`.
+    - README: nueva sección 4 "Modo automático (Google Meet)" (preparar Google Cloud, `--meet`, los dos botones, permiso semanal), variables `ASISTENCIA_GOOGLE_*`, mensajes de Meet en "Problemas frecuentes" y privacidad. Las secciones siguientes se renumeran.
+    - AGENT.md: estructura (`entrypoints/cli.py`, Google en `infra/`, `tests/fixtures/meet/`), comando `--meet` y estado.
+    - Definición de terminado: todas las tareas en `[x]`; cada CA con su test (plan §6) o su paso en T16; Victor la ha probado (T16).
+    - Puertos 8000, 8001 y 8012 sin AsistenciApp (en el 8000 escucha otro programa de Victor, `uvicorn`, que no se toca).

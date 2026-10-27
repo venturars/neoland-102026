@@ -38,8 +38,6 @@ convention = "google"
 # Excepción de spec 005 · plan §5: los tests no llevan tipos ni docstring en cada función.
 # S101: pytest usa assert. S105/S106: tokens de prueba escritos en el test.
 "tests/**" = ["ANN", "D", "S101", "S105", "S106"]
-# El spike de la spec 004 (T03) es desechable y enseña sus resultados por consola; se borra en T17.
-"scripts/spike_meet.py" = ["T20"]
 
 [tool.mypy]
 python_version = "3.13"
