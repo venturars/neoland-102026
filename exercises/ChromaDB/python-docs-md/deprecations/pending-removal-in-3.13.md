@@ -1,0 +1,74 @@
+---
+page: deprecations/pending-removal-in-3.13.html
+title: Pending removal in Python 3.13
+area: deprecations
+kind: deprecation
+removal_version: 3.13
+---
+
+<!-- anchor: pending-removal-in-python-3-13 | type: section -->
+# Pending removal in Python 3.13
+
+Modules (see **PEP 594**):
+
+- `aifc`
+
+- `audioop`
+
+- `cgi`
+
+- `cgitb`
+
+- `chunk`
+
+- `crypt`
+
+- `imghdr`
+
+- `mailcap`
+
+- `msilib`
+
+- `nis`
+
+- `nntplib`
+
+- `ossaudiodev`
+
+- `pipes`
+
+- `sndhdr`
+
+- `spwd`
+
+- `sunau`
+
+- `telnetlib`
+
+- `uu`
+
+- `xdrlib`
+
+Other modules:
+
+- `lib2to3`, and the **2to3** program (gh-84540)
+
+APIs:
+
+- `configparser.LegacyInterpolation` (gh-90765)
+
+- `locale.resetlocale()` (gh-90817)
+
+- `turtle.RawTurtle.settiltangle()` (gh-50096)
+
+- `unittest.findTestCases()` (gh-50096)
+
+- `unittest.getTestCaseNames()` (gh-50096)
+
+- `unittest.makeSuite()` (gh-50096)
+
+- `unittest.TestProgram.usageExit()` (gh-67048)
+
+- `webbrowser.MacOSX` (gh-86421)
+
+- `classmethod` descriptor chaining (gh-89519)

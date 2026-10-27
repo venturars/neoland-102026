@@ -1,0 +1,6 @@
+.venv/
+chroma_db/
+__pycache__/
+python-docs/
+src/db/users.sqlite
+.ipynb_checkpoints/
