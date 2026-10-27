@@ -16,6 +16,7 @@ from .usecases import races
 from .usecases.races import RaceError
 
 ERROR_STATUS = {
+    "catalog_empty": 409, "catalog_unavailable": 503,
     "invalid_input": 400, "access_denied": 403, "origin_unavailable": 403,
     "race_missing": 404, "state_conflict": 409, "entry_closed": 410,
     "access_expired": 410, "payload_too_large": 413, "unsupported_content": 415,

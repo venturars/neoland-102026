@@ -12,7 +12,8 @@ from typing import Callable, Iterator
 from uuid import uuid4
 import sqlite3
 from ..domain.race import RaceError, phase, valid_operation_id, MAX_ATTEMPTS, COUNTDOWN_SECONDS, LIFETIME_SECONDS
-from ..domain.roster import ROSTER, resolve_slot
+from ..domain.roster import resolve_slot
+from .roster import prepare_catalog
 from ..domain.names import name_key
 from ..domain.codes import code_for, seconds_left, is_valid_code
 from ..domain.registration import normalize_address
@@ -339,7 +340,7 @@ def _teacher(c: sqlite3.Connection, r: dict, now: float) -> dict:
     return data
 
 def prepare(db: str | Path, title: object, clock: Clock) -> dict:
-    """Crea clase, carrera y quince plazas juntas, sin presencias.
+    """Crea clase, carrera y plazas del catálogo juntas, sin presencias.
 
     :param db: archivo local de la copia de asistencia.
     :param title: título recibido para la clase.
@@ -352,10 +353,11 @@ def prepare(db: str | Path, title: object, clock: Clock) -> dict:
         prepare(path, "Clase", clock)
     """
     with _write(db, clock) as c:
+        roster = prepare_catalog(c)
         now = clock()
         sid = secrets.token_urlsafe(6)
         label = str(title or '').strip() or datetime.fromtimestamp(now).strftime('%d/%m/%Y %H:%M')
-        store.create(c, sid, label, _iso(now), secrets.token_bytes(16), now, now + LIFETIME_SECONDS, secrets.token_urlsafe(32), ROSTER)
+        store.create(c, sid, label, _iso(now), secrets.token_bytes(16), now, now + LIFETIME_SECONDS, secrets.token_urlsafe(32), roster)
         return {'id': sid, 'title': label, **_times(_race(c, sid, now), now)}
 
 def teacher_state(db: str | Path, sid: str, clock: Clock) -> dict:
@@ -417,6 +419,13 @@ def lobby(db: str | Path, sid: str, entry: object, clock: Clock) -> dict:
         _require_unexpired(r, now)
         return {**_times(r, now), 'roster': roster}
 
+def _resolve_race_slot(connection: sqlite3.Connection, session_id: str, value: object) -> dict | None:
+    """Resuelve contra las plazas guardadas, nunca contra el catálogo actual."""
+    slots = store.slots(connection, session_id)
+    roster = [{'key': slot['roster_key'], 'name': slot['display_name'], 'character': slot['character_slug']} for slot in slots]
+    return resolve_slot(value, roster)
+
+
 def join(db: str | Path, sid: str, entry: object, key: object, existing: object, clock: Clock) -> tuple[dict, str | None]:
     """Ocupa una plaza; el permiso se entrega aparte para fijar cookie.
 
@@ -444,7 +453,7 @@ def join(db: str | Path, sid: str, entry: object, key: object, existing: object,
                 owned = None
             if owned is not None:
                 return (_own(c, r, owned, now, existing), None)
-        ref = resolve_slot(key)
+        ref = _resolve_race_slot(c, sid, key)
         if ref is None:
             raise RaceError("invalid_input", 'Elige un nombre de la lista.')
         s = store.slot(c, sid, ref['key'])
@@ -473,7 +482,7 @@ def release(db: str | Path, sid: str, key: object, clock: Clock) -> dict:
         r = _race(c, sid, now, True)
         if _phase(r, now) != 'lobby':
             raise RaceError("state_conflict", 'No se pueden liberar plazas después de la salida.')
-        ref = resolve_slot(key)
+        ref = _resolve_race_slot(c, sid, key)
         if ref is None:
             raise RaceError("invalid_input", 'Elige un nombre de la lista.')
         store.release(c, sid, ref['key'])

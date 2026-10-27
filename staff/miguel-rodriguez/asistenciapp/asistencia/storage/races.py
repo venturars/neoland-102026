@@ -167,7 +167,7 @@ def create(c: sqlite3.Connection, sid: str, title: str, opened: str, secret: byt
 
     Usage::
 
-        create(conn, session_id, "Clase", opened_at, secret, 1800000000.0, 1800007200.0, entry_secret, ROSTER)
+        create(conn, session_id, "Clase", opened_at, secret, 1800000000.0, 1800007200.0, entry_secret, students)
     """
     c.execute('INSERT INTO sessions(id,title,secret,opened_at) VALUES (?,?,?,?)', (sid, title, secret.hex(), opened))
     c.execute('INSERT INTO races(session_id,prepared_at,expires_at,join_secret) VALUES (?,?,?,?)', (sid, prepared, expires, entry))
