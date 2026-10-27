@@ -50,11 +50,14 @@ Cómo leer esta lista:
 
 ## Fase C · Colores y cabecera (plan §2.1, §2.3)
 
-- [ ] **T05** 🧪 · Tests en `tests/test_static.py`:
+- [x] **T05** 🧪 · Tests en `tests/test_static.py`:
   - contraste: lee las variables de `:root` y del bloque oscuro de `styles.css` y comprueba cada par de la tabla del plan §2.1 (≥ 4,5:1 en texto, ≥ 3:1 en bordes de controles y foco);
   - cabecera: `index.html`, `profesor.html` y `alumno.html` tienen `<header class="brand">` con "AsistenciApp".
   - Deben fallar (colores y cabecera actuales).
   - *Cubre:* CA-01, CA-06.
+  - **Hecha (2026-10-27):** 39 tests nuevos: 17 pares de colores × claro y oscuro, la fórmula de contraste con valores de referencia (blanco/negro 21:1; blanco sobre `#E6284E` 4,4:1), el rojo `#D01F45` (spec P1) y la cabecera en las tres páginas. Fallaron 14 (variables nuevas que aún no existen, el rojo y la cabecera); los demás pares ya cumplen hoy y quedan como red. 478 en verde y 14 `xfail` estrictos (`LOOK_PENDING`, que quita T06); `ruff` y `mypy` sin avisos.
+    - La cabecera se busca solo dentro de `<body>`, porque el `<title>` también dice "AsistenciApp"; y el nombre debe aparecer una sola vez (plan §2.3).
+    - La etiqueta "abierta" en oscuro usa el mismo `--accent` (`#FF5C7A` sobre `#3A1720`: 5,3:1), así que no hace falta el `#FF8FA3` que mencionaba el plan §2.1: una variable menos.
 - [ ] **T06** · Variables nuevas en `styles.css` (claro y oscuro) y cabecera en las tres páginas; en `index.html` el `<h1>` pasa a la cabecera.
   - Los tests de T05 pasan.
   - *Cubre:* CA-01, CA-04, CA-06.
