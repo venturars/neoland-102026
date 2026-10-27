@@ -31,6 +31,7 @@ The active spec is the approved description of the feature you are building now.
 ## Commands
 
 - Install dependencies with `pnpm install`.
+- `pnpm format` runs Prettier on the `.js` files of `db/`, `queries/` and `logic/`. The format is the standard one, with no config of its own. `pnpm lint` runs ESLint.
 - There are no execution commands yet. Do not add a `pnpm start` script or another way to run the whole app unless the spec asks for it.
 - There are no tests yet. `pnpm test` only prints that no test is specified, then stops.
 
@@ -53,7 +54,8 @@ Before finishing a change in `logic/`, check it against the inputs in `docs/CONS
 
 1. A new feature gets a new file in `clients/terminal/`, named like its logic file (`find-user-by-email.txt` for `logic/find-user-by-email.js`). It is pasted in the terminal with `first-app` as the current folder. It imports the function from `logic/` and prints the result with `console.log`.
 2. Check the change by pasting the matching file in `clients/terminal/`. There is still no `pnpm start`.
-3. Show the result.
-4. Stop.
+3. Run `pnpm format` and `pnpm lint` before showing the result.
+4. Show the result.
+5. Stop.
 
 Do not start the next feature. A task is not done if the code has not been run.
