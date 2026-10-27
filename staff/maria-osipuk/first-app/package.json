@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "jupyter": ".venv/bin/jupyter notebook clients/jupyter --ip=127.0.0.1 --port=8888",
     "preinstall": "node -e \"const agent = process.env.npm_config_user_agent || ''; if (!agent.startsWith('pnpm/')) { console.error('Use pnpm. npm and npx are not allowed in this project.'); process.exit(1); }\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

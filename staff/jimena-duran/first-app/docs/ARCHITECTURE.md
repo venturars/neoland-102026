@@ -7,3 +7,6 @@ La aplicación usa Node.js con módulos ES (`"type": "module"`) y una base SQLit
 `logic/` es el núcleo estable de la aplicación. No se reemplaza por adaptadores, plugins o implementaciones intercambiables, y sus reglas no se trasladan a `queries/` ni a `clients/`. Cada operación tiene su propio archivo; una operación nueva no modifica otro archivo para reutilizarlo.
 
 Los contratos de funciones siguen [STYLE.md](STYLE.md); las salidas y los errores se definen en [ERRORS.md](ERRORS.md).
+
+`eslint.config.js` configura la revisión del JavaScript con las reglas
+recomendadas de ESLint y excluye `.venv` y `node_modules`.

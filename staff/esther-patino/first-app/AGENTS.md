@@ -56,3 +56,5 @@ El estilo está en `docs/style.md`.
 
 - Al crear una funcionalidad se crea su primer cliente en `clients/terminal/`, un `.txt` que se pega en la terminal desde la raíz del repositorio. Ese cliente entra en `first-app`, importa la función de `logic/` y hace `console.log` del resultado. Es el test manual.
 - Comprueba que el desarrollo nuevo funciona antes de dar la tarea por terminada. La comprobación es ejecutar ese fragmento de `clients/terminal/`.
+- Antes de dar la tarea por terminada se lanza `format`. Aplica Prettier con el formato estándar.
+- Antes de dar la tarea por terminada se lanza `lint`. ESLint avisa de la sintaxis y de las reglas de código.
