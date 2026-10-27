@@ -44,8 +44,7 @@ So today the agent can only check the scores. Alerts are "Not checked" with the 
 Answers to the open questions, 2026-10-27:
 
 1. **Alerts**: the socket.dev page of the package. The agent cannot read it, so it writes the link and the person who approves the plan reads it.
-2. **Campaigns**: dropped. The organization `neoland-oxog9` is on the free plan, and `threat_feed` answers 403 `threat_feed_not_entitled`. There is no other Socket source for it.
-3. **Layer versions**: the version in `pnpm-lock.yaml` when it is there, otherwise the highest that matches the range.
+2. **Layer versions**: the version in `pnpm-lock.yaml` when it is there, otherwise the highest that matches the range.
 
 ## Signature
 
