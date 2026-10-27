@@ -28,6 +28,7 @@ first-app/
     users-gender-count.js
   clients/
     terminal/           Primer cliente. Sirve de test manual
+    jupyter/            Segundo cliente. Un notebook por cada .txt de terminal
   docs/
     CONSTITUTIONS.md    Esta base
   specs/
@@ -38,6 +39,7 @@ first-app/
 ```
 
 - `clients/` no importa SQL ni abre la base de datos. Solo llama a `logic/`.
+- `clients/jupyter/` es un notebook por cada `.txt` de `clients/terminal/`, con el mismo comando `node --input-type=module`. Se abre con `pnpm jupyter` desde `first-app`.
 - `logic/` no escribe SQL y no abre SQLite. Solo llama a `queries/users.js`. `logic/users-gender-count.js` también puede usar la librería `openai`.
 - `queries/users.js` no valida reglas de negocio. Solo ejecuta SQL.
 - `db/` no conoce usuarios. Solo abre la conexión.
@@ -157,3 +159,7 @@ Un desarrollo nuevo vive en `specs/<nombre>/`. Son tres ficheros cortos. Se leen
 Una persona revisa `spec.md`, después `plan.md`, después `tasks.md`. El código se escribe solo cuando esos tres están aceptados.
 
 No hay bucle. Un fichero anterior no se reescribe salvo que la persona lo pida.
+
+## 8. Paquetes
+
+Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket. El procedimiento concreto está en `AGENTS.md`.

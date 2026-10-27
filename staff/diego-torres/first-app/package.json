@@ -1,0 +1,19 @@
+{
+  "name": "first-app",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "jupyter": "if not exist .venv\\Scripts\\jupyter.exe (if not exist .venv py -3 -m venv .venv & .venv\\Scripts\\pip.exe install notebook==7.6.3) & .venv\\Scripts\\jupyter.exe notebook clients/jupyter",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Diego Torres",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@colors/colors": "1.6.1",
+    "cli-table3": "0.6.5",
+    "openai": "7.39.0"
+  }
+}

@@ -1,0 +1,43 @@
+# Árbol
+
+```text
+mi-primer-proyecto/
+  package.json
+  pnpm-lock.yaml
+  .gitignore
+  AGENTS.md
+  eslint.config.js
+  start-jupyter.js
+  clients/
+    terminal/
+      create-user.txt
+      list-users.txt
+      update-user.txt
+      delete-user.txt
+      users-gender-count.txt
+    jupyter/
+  db/
+    connection.js
+    users.sqlite
+  docs/
+    ARCHITECTURE.md
+    TREE.md
+    DATABASE.md
+    ERRORS.md
+    STYLE.md
+    CONSTITUTIONS.md
+    specs/
+      <nombre>/
+        spec.md
+        plan.md
+        tasks.md
+  logic/
+    create-user.js
+    list-users.js
+    update-user.js
+    delete-user.js
+    users-gender-count.js
+  queries/
+    users.js
+    queries/
+```
