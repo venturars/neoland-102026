@@ -9,7 +9,8 @@ Está en Node, con módulos ES (`"type": "module"`) y SQLite (`node:sqlite`, fic
 ## Comandos
 
 - Ejecutar: pegar el contenido de `clients/terminal/` en la terminal, con el directorio actual en `first-app`.
-- Tests: no hay tests automatizados. El script `test` de `package.json` es el placeholder de npm. El test manual son los `.txt` de `clients/terminal/`.
+- Jupyter: `pnpm jupyter` desde `first-app` (abre Notebook sobre `clients/jupyter/`; la primera vez crea `.venv` e instala Notebook).
+- Tests: no hay tests automatizados. El script `test` de `package.json` es el placeholder de npm. El test manual son los `.txt` de `clients/terminal/` o sus notebooks en `clients/jupyter/`.
 - Lint/formato: Prettier, formato estándar. No hay script de lint ni de formato.
 - Dependencias: se instalan con pnpm, no con npm.
 
