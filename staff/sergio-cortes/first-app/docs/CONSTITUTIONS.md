@@ -27,11 +27,11 @@ Una funcionalidad vive en `docs/specs/<nombre>/`. El nombre va en kebab-case. Ah
 
 Una funcionalidad nueva es un fichero nuevo en `logic/`. Si la constitución, el código actual y la spec no dicen lo mismo, la pregunta se escribe al final del `plan.md` y ahí se para. No hay `tasks.md` ni código hasta tener la respuesta.
 
-`tasks.md` son los pasos, en el orden en que los haría una persona. Cada paso abre un sitio, hace una cosa y deja un resultado que se puede mirar. Un paso son como mucho cuatro líneas. Si el desarrollo no es una funcionalidad nueva, el grano es el mismo: mirar lo que ya existe, cambiar un sitio, comprobar.
+`tasks.md` son los pasos, en el orden en que los haría una persona. Cada paso abre un sitio, hace una cosa y deja un resultado que se puede mirar. Un paso son como mucho cuatro líneas. Si el desarrollo no es una funcionalidad nueva, el grano es el mismo: mirar lo que ya existe, cambiar un sitio, comprobar. Si el desarrollo añade o cambia paquetes de Node, el primer paso de `tasks.md` dice que solo se ejecuta tras aprobación del `spec.md` y del `plan.md` (y de las alertas Socket, si las hubo).
 
 ## Paquetes
 
-Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket.
+Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket. Nadie instala ni cambia versiones en `package.json` por un desarrollo hasta que un humano haya leído y aprobado el `spec.md` y el `plan.md` de ese desarrollo. Si el plan propone paquetes, el `plan.md` incluye la validación Socket descrita en `AGENTS.MD` antes de pedir esa aprobación.
 
 ## Logic no se reemplaza
 
