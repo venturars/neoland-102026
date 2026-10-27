@@ -23,3 +23,4 @@
 - `docs/STYLE.md` es el estilo y las convenciones.
 - `docs/CONSTITUTIONS.md` conserva las specs, los paquetes y el contrato de `logic/`. Enlaza a las otras guías.
 - `docs/specs/<nombre>/` es un desarrollo. `<nombre>` va en kebab-case. Ahí viven su spec, su plan y sus tareas.
+- `eslint.config.js` aplica las reglas recomendadas de ESLint al JavaScript e ignora `.venv` y `node_modules`.

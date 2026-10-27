@@ -1,7 +1,4 @@
-import {
-  deleteUser as deleteUserRow,
-  findUserById,
-} from "../queries/users.js";
+import { deleteUser as deleteUserRow, findUserById } from "../queries/users.js";
 
 export function deleteUser(id) {
   if (id === undefined || id === null || String(id).trim() === "") {

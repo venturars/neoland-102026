@@ -21,7 +21,7 @@ export async function usersGenderCount(names) {
 
   for (let start = 0; start < names.length; start = start + BATCH_SIZE) {
     const batch = names.slice(start, start + BATCH_SIZE);
-    let answer = "";
+    let answer;
 
     try {
       const completion = await client.chat.completions.create({

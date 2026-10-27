@@ -11,7 +11,7 @@ Está en Node, con módulos ES (`"type": "module"`) y SQLite (`node:sqlite`, fic
 - Ejecutar: pegar el contenido de `clients/terminal/` en la terminal, con el directorio actual en `first-app`.
 - Jupyter: `pnpm jupyter` desde `first-app` (abre Notebook sobre `clients/jupyter/`; la primera vez crea `.venv` e instala Notebook).
 - Tests: no hay tests automatizados. El script `test` de `package.json` es el placeholder de npm. El test manual son los `.txt` de `clients/terminal/` o sus notebooks en `clients/jupyter/`.
-- Lint/formato: Prettier, formato estándar. No hay script de lint ni de formato.
+- Lint/formato: `pnpm format` lanza Prettier. El formato es el estándar, sin configuración propia. `pnpm lint` lanza ESLint.
 - Dependencias: se instalan con pnpm, no con npm.
 
 ## Estilo y convenciones
@@ -83,3 +83,5 @@ validación.
 
 - Al crear una funcionalidad se crea su primer cliente en `clients/terminal/`, un `.txt` que se pega en la terminal con el directorio actual en `first-app`. Ese cliente importa la función de `logic/` y hace `console.log` del resultado. Es el test manual básico.
 - Comprueba que el desarrollo nuevo funciona antes de dar la tarea por terminada. La comprobación es ejecutar ese fragmento de `clients/terminal/`.
+- Lanza el formato antes de dar la tarea por terminada. El comando es `pnpm format`.
+- Lanza el lint antes de dar la tarea por terminada. El comando es `pnpm lint`.
