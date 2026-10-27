@@ -1,39 +1,51 @@
 /* AsistenciApp · estilos comunes (móvil primero, constitución P5) */
+/* Colores al estilo de neoland.es, con contraste comprobado por tests/test_static.py (spec 006 · plan §2.1). */
 
 :root {
-  --bg: #f7f7f5;
+  --bg: #f5f5f5;
   --surface: #ffffff;
-  --text: #1c1c1e;
-  --muted: #5c5c63;
-  --border: #d9d9de;
-  --accent: #2851c7;
+  --text: #333333;
+  --muted: #5f5f5f;
+  --border: #e0e0e0;
+  --control-border: #8a8a8a;
+  --accent: #d01f45;
   --accent-text: #ffffff;
+  --accent-soft: #fde8ec;
+  --header-bg: #333333;
+  --header-text: #ffffff;
+  --brand-mark: #e6284e;
   --ok-bg: #e5f5ea;
   --ok-text: #14592d;
   --error-bg: #fde8e8;
   --error-text: #8a1c1c;
   --warn-bg: #fff4d6;
   --warn-text: #6b4a00;
-  --danger: #b42318;
+  --danger: #333333;
+  --danger-text: #ffffff;
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #121214;
-    --surface: #1d1d20;
-    --text: #f2f2f5;
-    --muted: #a5a5ad;
-    --border: #3a3a40;
-    --accent: #8aa8ff;
-    --accent-text: #0d1430;
+    --bg: #161616;
+    --surface: #222222;
+    --text: #f2f2f2;
+    --muted: #a8a8a8;
+    --border: #3a3a3a;
+    --control-border: #8a8a8a;
+    --accent: #ff5c7a;
+    --accent-text: #1a0a0e;
+    --accent-soft: #3a1720;
+    --header-bg: #0b0b0b;
+    --header-text: #f2f2f2;
     --ok-bg: #133321;
     --ok-text: #a6e3bb;
     --error-bg: #3d1717;
     --error-text: #ffb4b4;
     --warn-bg: #3a2e0c;
     --warn-text: #ffd97a;
-    --danger: #ff8a80;
+    --danger: #e0e0e0;
+    --danger-text: #161616;
     color-scheme: dark;
   }
 }
@@ -80,6 +92,26 @@ body {
   font: 1rem/1.5 "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
+/* ---------- cabecera (spec 006 · CA-01): franja oscura con el nombre ---------- */
+
+header.brand {
+  background: var(--header-bg);
+  color: var(--header-text);
+}
+
+.wordmark {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 0.9rem 1rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+
+/* El guion bajo recuerda el cursor que escribe en la portada de Neoland: solo decoración. */
+.wordmark span { color: var(--brand-mark); }
+
 main {
   max-width: 40rem;
   margin: 0 auto;
@@ -114,7 +146,7 @@ input {
   font: inherit;
   font-size: 1.1rem;
   padding: 0.7rem 0.8rem;
-  border: 1px solid var(--border);
+  border: 1px solid var(--control-border);
   border-radius: 8px;
   background: var(--bg);
   color: var(--text);
@@ -158,7 +190,7 @@ button.danger {
 button.danger-solid {
   background: var(--danger);
   border-color: var(--danger);
-  color: var(--surface);
+  color: var(--danger-text);
 }
 
 button:disabled { opacity: 0.6; cursor: wait; }
