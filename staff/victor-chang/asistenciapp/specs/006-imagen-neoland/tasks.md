@@ -25,12 +25,16 @@ Cómo leer esta lista:
 
 ## Fase B · Letras (plan §2.2)
 
-- [ ] **T02** 🧪 · Tests de letras y de "nada sale de la app" en `tests/test_static.py`:
+- [x] **T02** 🧪 · Tests de letras y de "nada sale de la app" en `tests/test_static.py`:
   - cada `url(...)` de `@font-face` en `styles.css` apunta a un archivo de `static/fonts/` que existe, y la app lo sirve con `200` y tipo `font/woff2`;
   - ningún `<link>`, `<script>`, `url(...)` ni `@import` de `static/` apunta a otra dirección (`http://`, `https://` o `//`);
   - los `.woff2` pesan menos de 300 KB en total.
   - Deben fallar (aún no hay `@font-face`).
   - *Cubre:* CA-02, CA-08.
+  - **Hecha (2026-10-27):** 18 tests nuevos en `tests/test_static.py`; los 12 de letras fallaron todos (sin `@font-face` ni archivos). 441 tests en verde y 12 `xfail`; `ruff` y `mypy` sin avisos.
+    - Además de lo previsto: cada letra lleva `font-display: swap` (CA-02), sus dos licencias existen y los `.woff2` empiezan por `wOF2`.
+    - Los 6 de "nada sale de la app" pasan ya, porque hoy las pantallas no piden nada fuera; quedan como red para T04–T07. Se comprobó a mano que la expresión detecta `https://…`, `//…` y comillas, y deja pasar `fonts/…`, `styles.css` y `/api/…`.
+    - Para que la regla "todo en verde al acabar cada tarea" se cumpla, los tests de letras llevan la marca `FONTS_PENDING` (`xfail` estricto: si pasan antes de tiempo, fallan). T03 la quita de los tests de archivos (servir, licencias, tamaño) y T04 de los de `@font-face`.
 - [ ] **T03** 👤 · Descargar las letras (con permiso de Victor: nombres, origen y tamaño):
   - `montserrat-latin-700-normal.woff2`, `montserrat-latin-800-normal.woff2`, `roboto-latin-400-normal.woff2`, `roboto-latin-700-normal.woff2` de los paquetes de Fontsource, con versión fija;
   - sus licencias como `OFL-Montserrat.txt` y `OFL-Roboto.txt` en `static/fonts/`.
