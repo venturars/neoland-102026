@@ -3,61 +3,59 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { db } from "../db/connection.js";
 
-const directory = dirname(fileURLToPath(import.meta.url));
+const fileUrl = import.meta.url;
+const filePath = fileURLToPath(fileUrl);
+const directory = dirname(filePath);
 
-const createUsersTableSql = readFileSync(
-  join(directory, "queries", "create-users-table.sql"),
-  "utf8",
+const createUsersTablePath = join(
+  directory,
+  "queries",
+  "create-users-table.sql",
 );
-const findByIdSql = readFileSync(
-  join(directory, "queries", "find-by-id.sql"),
-  "utf8",
-);
-const findByEmailSql = readFileSync(
-  join(directory, "queries", "find-by-email.sql"),
-  "utf8",
-);
-const insertSql = readFileSync(
-  join(directory, "queries", "insert.sql"),
-  "utf8",
-);
-const updateSql = readFileSync(
-  join(directory, "queries", "update.sql"),
-  "utf8",
-);
-const removeSql = readFileSync(
-  join(directory, "queries", "remove.sql"),
-  "utf8",
-);
-const findAllSql = readFileSync(
-  join(directory, "queries", "find-all.sql"),
-  "utf8",
-);
+const createUsersTableSql = readFileSync(createUsersTablePath, "utf8");
+const findByIdPath = join(directory, "queries", "find-by-id.sql");
+const findByIdSql = readFileSync(findByIdPath, "utf8");
+const findByEmailPath = join(directory, "queries", "find-by-email.sql");
+const findByEmailSql = readFileSync(findByEmailPath, "utf8");
+const insertPath = join(directory, "queries", "insert.sql");
+const insertSql = readFileSync(insertPath, "utf8");
+const updatePath = join(directory, "queries", "update.sql");
+const updateSql = readFileSync(updatePath, "utf8");
+const removePath = join(directory, "queries", "remove.sql");
+const removeSql = readFileSync(removePath, "utf8");
+const findAllPath = join(directory, "queries", "find-all.sql");
+const findAllSql = readFileSync(findAllPath, "utf8");
 
 export function createUsersTable() {
   db.exec(createUsersTableSql);
 }
 
 export function findById(id) {
-  return db.prepare(findByIdSql).get({ id });
+  const statement = db.prepare(findByIdSql);
+  return statement.get({ id });
 }
 
 export function findByEmail(email) {
-  return db.prepare(findByEmailSql).get({ email });
+  const statement = db.prepare(findByEmailSql);
+  return statement.get({ email });
 }
 
 export function insert({ name, email }) {
-  return db.prepare(insertSql).get({ name, email });
+  const statement = db.prepare(insertSql);
+  return statement.get({ name, email });
 }
 
 export function update({ id, name, email }) {
-  return db.prepare(updateSql).get({ id, name, email });
+  const statement = db.prepare(updateSql);
+  return statement.get({ id, name, email });
 }
 
 export function remove(id) {
-  return db.prepare(removeSql).run({ id });
+  const statement = db.prepare(removeSql);
+  return statement.run({ id });
 }
 
 export function findAll() {
-  return db.prepare(findAllSql).all();
+  const statement = db.prepare(findAllSql);
+  return statement.all();
 }

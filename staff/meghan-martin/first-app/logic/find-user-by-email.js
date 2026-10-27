@@ -4,17 +4,35 @@ export function findUserByEmail(email) {
   if (typeof email !== "string") {
     throw new Error("Email is invalid");
   }
-  const normalizedEmail = email.trim().toLowerCase();
+  const rawEmail = email;
+  const trimmedEmail = rawEmail.trim();
+  const normalizedEmail = trimmedEmail.toLowerCase();
   const parts = normalizedEmail.split("@");
-  const hasSingleAt =
-    parts.length === 2 && parts[0].length > 0 && parts[1].length > 0;
-  if (
-    !hasSingleAt ||
-    normalizedEmail.length > 64 ||
-    /\s/.test(normalizedEmail)
-  ) {
+  const hasTwoParts = parts.length === 2;
+  let hasSingleAt = false;
+  if (hasTwoParts) {
+    const localPart = parts[0];
+    const domainPart = parts[1];
+    const localPartIsFilled = localPart.length > 0;
+    const domainPartIsFilled = domainPart.length > 0;
+    if (localPartIsFilled) {
+      if (domainPartIsFilled) {
+        hasSingleAt = true;
+      }
+    }
+  }
+  const emailIsTooLong = normalizedEmail.length > 64;
+  const emailHasSpace = /\s/.test(normalizedEmail);
+  if (!hasSingleAt) {
     throw new Error("Email is invalid");
   }
+  if (emailIsTooLong) {
+    throw new Error("Email is invalid");
+  }
+  if (emailHasSpace) {
+    throw new Error("Email is invalid");
+  }
+
   let user;
   try {
     user = findByEmail(normalizedEmail);
@@ -24,6 +42,7 @@ export function findUserByEmail(email) {
   if (!user) {
     throw new Error("User not found");
   }
+
   return {
     id: user.id,
     name: user.name,

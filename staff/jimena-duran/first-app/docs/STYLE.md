@@ -9,10 +9,11 @@ El flujo debe poder leerse de principio a fin. Prefiere condicionales claros y n
 Cada línea contiene una sola acción: una llamada o una comprobación.
 Obtener `input.name` y aplicar `.trim()` se escribe en líneas distintas.
 Las comprobaciones con `if` y su `throw new Error` van en líneas separadas.
-No se permiten clases, `this` ni métodos.
+No se definen clases ni métodos propios y no se usa `this`. Se conservan las
+instancias y llamadas a métodos de bibliotecas que ya utiliza la aplicación.
 
 Aplica el formato estándar de Prettier: comillas dobles, punto y coma, coma final, dos espacios de indentación y líneas de hasta 80 columnas.
 
 Los valores fijos se declaran como constantes en MAYÚSCULAS; las variables normales usan camelCase.
 
-Cada archivo de `logic/` exporta una sola función. La firma define el nombre, las entradas y la salida, y no se acompaña de un comentario de contrato. Las acciones usan nombres como `createUser`, `updateUser`, `deleteUser` y `listUsers`; los argumentos se declaran directamente (`name`, `email`, `id`) en vez de envolverlos en un objeto cuando ya se conocen.
+Cada archivo de `logic/` exporta una sola función. La firma define el nombre, las entradas y la salida, y no se acompaña de un comentario de contrato. Las acciones usan nombres como `createUser`, `updateUser`, `deleteUser` y `listUsers`; los argumentos se declaran directamente (`name`, `email`, `id`) cuando la firma existente así lo hace.

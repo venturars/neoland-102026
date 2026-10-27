@@ -1,17 +1,26 @@
 import { findByEmail, insert } from "../queries/users.js";
 
 export function createUser(input) {
-  const name = input.name.trim();
+  const rawName = input.name;
+  const name = rawName.trim();
   if (name === "") {
     throw new Error("Name is empty");
   }
 
-  const email = input.email.trim().toLowerCase();
+  const rawEmail = input.email;
+  const trimmedEmail = rawEmail.trim();
+  const email = trimmedEmail.toLowerCase();
   const parts = email.split("@");
-  const hasSingleAt =
-    parts.length === 2 && parts[0].length > 0 && parts[1].length > 0;
-
-  if (!hasSingleAt || email.length > 64) {
+  if (parts.length !== 2) {
+    throw new Error("Email is invalid");
+  }
+  if (parts[0].length === 0) {
+    throw new Error("Email is invalid");
+  }
+  if (parts[1].length === 0) {
+    throw new Error("Email is invalid");
+  }
+  if (email.length > 64) {
     throw new Error("Email is invalid");
   }
 

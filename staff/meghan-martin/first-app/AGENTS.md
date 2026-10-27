@@ -4,7 +4,7 @@
 
 first-app es la app de Meghan en este curso. Se construye con IA siguiendo SDD. No es una web: se usa desde la terminal y guarda personas en SQLite.
 
-Está en `staff/meghan-martin/first-app`, en Node, con módulos ES (`"type": "module"`) y `node:sqlite`. La conexión es `db/connection.js`. El fichero por defecto es `db/users.sqlite`; si existe `USERS_DB_PATH`, se usa ese. La arquitectura, la base de datos y qué llevan spec, plan y tasks están en `docs/CONSTITUTIONS.md`. Léelo antes de cambiar código.
+Las reglas de la app, y el camino a cada tema, están en [docs/CONSTITUTIONS.md](docs/CONSTITUTIONS.md). Para escribir código se sigue [docs/STYLE.md](docs/STYLE.md).
 
 ## Flujo
 
@@ -42,6 +42,7 @@ Ficheros en kebab-case, funciones y variables en camelCase, exportaciones con no
 Se lee de arriba abajo, con `if` y con nombres que digan qué hacen. No añadas envoltorios de resultado, clases de error, helpers genéricos ni capas que oculten los pasos.
 
 Prettier sin configuración propia: comillas dobles, punto y coma, coma final, 2 espacios, ancho 80.
+- No hay script de lint ni de formato. Cómo queda el código está en [docs/STYLE.md](docs/STYLE.md).
 
 ## Reglas
 

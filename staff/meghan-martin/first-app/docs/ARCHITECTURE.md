@@ -1,0 +1,23 @@
+# Arquitectura
+
+- `db/` abre la base y no decide reglas de negocio.
+- `db/connection.js` es la única conexión.
+- `db/users.sqlite` es el único fichero de la base.
+- `queries/queries/` guarda el SQL. Hay un fichero `.sql` por sentencia.
+- `queries/users.js` lee esos ficheros y los ejecuta. No decide si un email vale.
+- `logic/` es la app. Aquí viven las reglas. Una acción por fichero.
+- `logic/create-user.js` guarda una persona.
+- `logic/update-user.js` cambia una persona.
+- `logic/delete-user.js` borra una persona.
+- `logic/list-users.js` lista las personas.
+- `logic/find-user-by-email.js` busca una persona por email.
+- `logic/find-user-by-id.js` busca una persona por su número.
+- `logic/users-gender-count.js` cuenta las personas por género.
+- `clients/terminal/` llama a `logic/` y muestra el resultado. Es la prueba a mano de cada acción.
+- `docs/ARCHITECTURE.md` dice qué hace cada capa y cada fichero.
+- `docs/TREE.md` es el dibujo de carpetas y ficheros.
+- `docs/DATABASE.md` es la base y las consultas.
+- `docs/ERRORS.md` es las frases de error.
+- `docs/STYLE.md` es la forma del código.
+- `docs/CONSTITUTIONS.md` guarda cómo se escriben spec, plan y tasks, y los cuatro pasos. Enlaza las otras guías.
+- `docs/specs/<nombre>/` es un cambio. `<nombre>` va en kebab-case. Ahí están su spec, su plan y sus tareas.
