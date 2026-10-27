@@ -12,14 +12,17 @@ asistenciapp/
 └── asistencia/
     ├── domain/                 # reglas puras, sin Flask ni SQLite
     │   ├── codes.py            # código rotatorio de 4 cifras
-    │   ├── names.py            # validar y normalizar nombres
+    │   ├── names.py            # validar y normalizar nombres; nombres parecidos
+    │   ├── passes.py           # pase de 2 minutos y recibo del registro (firmados, no se guardan)
     │   ├── rate_limit.py       # límite de intentos por IP y su error
-    │   └── session.py          # decisiones de sesión y sus errores
+    │   ├── roster.py           # leer y revisar la lista de un grupo; errores de grupos
+    │   └── session.py          # decisiones de sesión y de grupo, y sus errores
     ├── usecases/
-    │   └── attendance.py       # acciones: crear, consultar, registrar, cerrar, borrar, listar para exportar
+    │   ├── attendance.py       # acciones: crear, consultar, registrar, cerrar, borrar, decidir sobre nuevos, exportar
+    │   └── groups.py           # acciones de grupos: revisar, crear, editar, archivar, borrar
     ├── storage/
-    │   └── sqlite.py           # acceso a SQLite (sesiones, registros, contadores y lista negra por IP)
-    ├── export.py               # CSV de la lista
+    │   └── sqlite.py           # acceso a SQLite (sesiones, registros, grupos, copias de la lista, IP)
+    ├── export.py               # CSV de la lista (sesión rápida y sesión con grupo)
     └── tunnel.py               # túnel público con cloudflared
 ```
 
@@ -53,13 +56,19 @@ Las dependencias van siempre hacia el dominio. Lo que no está en la tabla está
 | La app… | Va en |
 | --- | --- |
 | Calcula el código rotatorio y comprueba si vale | `domain/codes.py` |
-| Valida y normaliza nombres | `domain/names.py` |
+| Valida y normaliza nombres, y dice si dos nombres se parecen («¿Quisiste decir…?») | `domain/names.py` |
+| Lee una lista pegada o un CSV (`;` o `,`), la revisa (repetidos, largos, más de 200) y define los errores de grupos | `domain/roster.py` |
+| Firma y comprueba el pase de 2 minutos y el recibo que libera el navegador | `domain/passes.py` |
+| Decide si un grupo puede abrir sesión (archivado, vacío) o borrarse (sesión abierta) | `domain/session.py` |
+| Crea, revisa, edita, archiva y borra grupos | `usecases/groups.py` |
+| Abre sesiones con grupo y su copia de la lista; valida el código y da el pase; registra de la lista o como nuevo; decide sobre los nuevos | `usecases/attendance.py` |
+| Guarda grupos (`groups`, `group_students`), la copia fija de cada sesión (`session_roster`) y añade al arrancar las columnas nuevas de `sessions` y `checkins` | `storage/sqlite.py` |
 | Decide si una IP se ha pasado de 5 intentos por segundo o 20 por minuto, y rechaza la bloqueada | `domain/rate_limit.py` |
 | Decide «sesión no existe», «sesión cerrada», «código no válido» y «registro no existe» | `domain/session.py` |
 | Crea, consulta, cierra sesiones; registra y borra asistentes; en `check_in` coordina el límite por IP (pregunta al almacenamiento, aplica la regla del dominio y bloquea) | `usecases/attendance.py` |
 | Guarda y lee de SQLite, incluidas las tablas `ip_attempts` (contadores) y `blocked_ips` (lista negra), sin relación con nombres ni sesiones | `storage/sqlite.py` |
 | Averigua la IP de la conexión (`request.remote_addr`, nunca una cabecera) y traduce el bloqueo a 429 | `app.py` |
-| Exporta la lista a CSV | `export.py` |
+| Exporta la lista a CSV (`to_csv` para sesiones rápidas, `to_group_csv` con «Estado» para sesiones con grupo) | `export.py` |
 | Abre el túnel público | `tunnel.py` |
 | Atiende las rutas, comprueba el token, devuelve JSON y estados HTTP, arranca el servidor | `app.py` |
 
@@ -81,7 +90,7 @@ Las dependencias van siempre hacia el dominio. Lo que no está en la tabla está
 
 1. Escribe la spec, el plan y las tasks (constitución §4).
 2. Si hay una **regla nueva**, va en `domain/` con su test.
-3. Si es una **acción nueva**, va en `usecases/attendance.py`: recibe `db_path` y el reloj, usa el dominio y el almacenamiento, y lanza errores del dominio.
+3. Si es una **acción nueva**, va en `usecases/attendance.py` (sesiones y registros) o en `usecases/groups.py` (grupos): recibe `db_path` y el reloj, usa el dominio y el almacenamiento, y lanza errores del dominio.
 4. Si necesita **datos nuevos**, la función SQL va en `storage/sqlite.py`.
 5. Si es una **ruta nueva**, va en `app.py`: llama a la acción y traduce los errores a HTTP. Sin lógica de negocio.
 6. Una integración nueva (por ejemplo, un bot de Discord) es otro borde como `app.py` que llama a `usecases/`.

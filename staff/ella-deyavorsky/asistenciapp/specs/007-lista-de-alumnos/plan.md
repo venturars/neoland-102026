@@ -1,6 +1,6 @@
 # Plan técnico 007 · Listas de grupo para pasar lista
 
-> Estado: **Aprobado v1.1 (2026-10-27)** · Spec: [spec.md](spec.md) v1.1 · Creado: 2026-10-27
+> Estado: **Aprobado v1.2 (2026-10-27)** · Spec: [spec.md](spec.md) v1.1 · Creado: 2026-10-27
 
 Este documento explica **cómo** se cumple la spec. Cada decisión indica qué requisitos (`RF-n`) y criterios de aceptación (`CA-xx`) cubre.
 
@@ -199,6 +199,17 @@ Enmienda propuesta en `docs/CONSTITUTION.md`, que solo apruebas tú, en su propi
 - `specs/001-checkin-codigo/spec.md`: nota en su historial de que CA-26 cambia por la spec 007 (RF-22). El resto no se toca.
 - `AGENTS.md` §8: la fila de la spec 007 cambia de fase.
 
+### 2.10 Ajustes al implementar
+
+Cambios pequeños descubiertos al escribir el código. Ninguno cambia lo que pide la spec.
+
+- **`public_session`** añade `hasGroup` **solo** si la sesión tiene grupo. Las sesiones rápidas devuelven lo de hoy, porque `tests/test_api.py` (`test_public_session_info_does_not_leak_the_list`) compara la respuesta con `==`.
+- **`parse_csv`** elige el separador contando `;` y `,` en la primera línea con texto, en vez de `csv.Sniffer`, que falla con archivos de una columna o de pocas filas. La lectura sigue siendo con `csv.reader` (nombres entre comillas con comas).
+- **`unlock` y `roster_for_pass`** no devuelven los nombres de los nuevos: el servidor ya comprueba los repetidos (CA-15), y así se enseñan menos nombres.
+- **Errores añadidos:** `GroupNotFound` (404), `StudentNotFound` (404) y `NoGroup` (409, pedir la lista de una sesión rápida). Un nombre de grupo vacío o de más de 60 caracteres da 400. `decide_new` sobre un registro que no es un nuevo da 404.
+- **`check_in`** (sin pase) en una sesión con grupo responde `PassExpired` (401): ahí se entra con el código y el pase.
+- **Tests:** las funciones de almacenamiento de grupos se prueban en `tests/test_group_storage.py` (tasks T12 y T13).
+
 ---
 
 ## 3. Archivos
@@ -216,7 +227,7 @@ Enmienda propuesta en `docs/CONSTITUTION.md`, que solo apruebas tú, en su propi
 | `asistencia/export.py` | `to_group_csv` |
 | `app.py` | Rutas de §2.4 y errores nuevos |
 | `static/profesor.html`, `profesor.js`, `alumno.html`, `alumno.js`, `styles.css` | §2.6 y §2.7 |
-| `tests/test_roster.py`, `test_passes.py`, `test_session_rules.py`, `test_groups_api.py`, `test_group_checkin_api.py`, `test_group_export.py`, `test_migration.py` | **Nuevos** |
+| `tests/test_roster.py`, `test_passes.py`, `test_session_rules.py`, `test_group_storage.py`, `test_groups_api.py`, `test_group_checkin_api.py`, `test_group_export.py`, `test_migration.py` | **Nuevos** |
 | `tests/test_names.py` | Casos nuevos al final para `is_similar`; los de hoy no se tocan |
 | `docs/CONSTITUTION.md`, `docs/ARCHITECTURE.md`, `README.md`, `AGENTS.md`, `specs/001-checkin-codigo/spec.md` | §2.8 y §2.9 |
 
@@ -292,3 +303,4 @@ Verificación manual al final: `python app.py`, crear un grupo subiendo un CSV d
 | 0.2 | 2026-10-27 | `check_in` rápido añade `id` y `receipt` solo en 201; la respuesta `already` no cambia (§2.3). Excepción de la copia y límite de 200 en `decide_new`, con `GroupFull` 409 (§2.2, §2.3, §2.4). «Hora» de los nuevos en `to_group_csv` (§2.5). CA-20 y ajustes de CA-07 y CA-17 en §4 | Spec 007 v1.1 y revisión del plan |
 | 1.0 | 2026-10-27 | Aprobado | Ok de la persona que trabaja en esta carpeta |
 | 1.1 | 2026-10-27 | `tests/test_session_rules.py` en la tabla de archivos (§3) y en las pruebas de CA-09 y CA-19 (§4) | Las tareas separan el test de las reglas de sesión (tasks v0.2, T08) |
+| 1.2 | 2026-10-27 | §2.10: ajustes al implementar (`hasGroup` solo con grupo, separador del CSV, sin nombres de nuevos en la lista, errores añadidos); `test_group_storage.py` en §3 | Implementación de las tasks |
