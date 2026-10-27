@@ -42,9 +42,11 @@ Cómo leer esta lista:
   - *Cubre:* CA-08 (las letras viven en la app).
   - **Hecha (2026-10-27)**, con permiso de Victor: Fontsource 5.3.0 desde cdn.jsdelivr.net. Los cuatro `.woff2` empiezan por `wOF2` y suman **81 960 bytes** (~80 KB, < 300 KB); sus tamaños coinciden con los que publica el paquete. Las dos licencias son la SIL Open Font License 1.1.
     - Se quita `FONTS_PENDING` de los tests de archivos (servir, licencias, tamaño), que ahora pasan; la mantienen los 5 de `@font-face` hasta T04. 448 tests en verde y 5 `xfail`; `ruff` y `mypy` sin avisos.
-- [ ] **T04** · `@font-face` en `styles.css` con `font-display: swap`; Montserrat en `h1`, `h2`, `.code`, `.total`, `.wordmark`; Roboto en `body`; lo que hoy es `font-weight: 600` pasa a `700`.
+- [x] **T04** · `@font-face` en `styles.css` con `font-display: swap`; Montserrat en `h1`, `h2`, `.code`, `.total`, `.wordmark`; Roboto en `body`; lo que hoy es `font-weight: 600` pasa a `700`.
   - Los tests de T02 pasan.
   - *Cubre:* CA-02.
+  - **Hecha (2026-10-27):** 4 `@font-face` con `font-display: swap`; Montserrat (800 en `h1`, 700 en `h2`) para títulos, código, total y `.wordmark` (aún sin usar, llega en T06); Roboto para el resto, con la pila del sistema detrás. Los tres `600` (etiquetas, leyenda del modo y botones) pasan a `700`. Se quita `FONTS_PENDING`: 453 tests en verde, sin `xfail`; `ruff` y `mypy` sin avisos.
+    - Comprobado en Chrome con el servidor de vista previa: las cuatro letras quedan `loaded`, el título usa Montserrat y el texto Roboto, y ninguna petición sale de la app. Servidor parado y 8012 libre.
 
 ## Fase C · Colores y cabecera (plan §2.1, §2.3)
 

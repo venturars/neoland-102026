@@ -20,8 +20,6 @@ FONTS = (
 )
 MAX_FONTS_BYTES = 300 * 1024
 EXTERNAL = re.compile(r"^\s*['\"]?\s*(?:[a-z][a-z0-9+.-]*:|//)", re.IGNORECASE)
-# Escritos antes que las letras (T02); deben fallar hasta T04, que quita esta marca.
-FONTS_PENDING = pytest.mark.xfail(reason="el @font-face llega en T04", strict=True)
 
 
 def font_faces():
@@ -44,13 +42,11 @@ def font_faces():
 # ---------- CA-02: las letras de Neoland, servidas por la app ----------
 
 
-@FONTS_PENDING
 @pytest.mark.parametrize(("family", "weight", "file"), FONTS)
 def test_each_font_is_declared(family, weight, file):
     assert {"family": family, "weight": weight, "url": f"fonts/{file}"} in font_faces()
 
 
-@FONTS_PENDING
 def test_font_faces_swap_to_the_system_font_while_loading():
     blocks = re.findall(r"@font-face\s*{([^}]*)}", STYLES)
     assert blocks
