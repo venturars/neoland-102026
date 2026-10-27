@@ -4,4 +4,6 @@ db/*.sqlite
 db/*.sqlite-journal
 db/*.sqlite-wal
 db/*.sqlite-shm
+.ipynb_checkpoints/
+clients/jupyter/jupyter-client.log
 .DS_Store

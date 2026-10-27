@@ -20,10 +20,10 @@ Desde la carpeta del proyecto:
 
 ```bash
 cd staff/ella-deyavorsky/first-app
-pnpm jupyter
+scripts/jupyter.sh
 ```
 
-La primera vez crea el entorno `.venv` e instala `notebook` 7.6.3. Las siguientes solo arranca. Si `pnpm` no funciona en tu máquina, el comando equivalente es:
+La primera vez crea el entorno `.venv` e instala `notebook` 7.6.3. Las siguientes solo arranca. Si el script no funciona en tu máquina, los comandos equivalentes son:
 
 ```bash
 cd staff/ella-deyavorsky/first-app

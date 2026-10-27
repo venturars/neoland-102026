@@ -10,8 +10,9 @@ Lee en este orden al empezar cualquier tarea:
 
 1. `CONSTITUTION.md`: las reglas no negociables.
 2. Este archivo (`AGENT.md`).
-3. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
-4. Su `plan.md` y su `tasks.md`, si ya existen.
+3. `ARCHITECTURE.md`: las reglas de arquitectura, diseño y estilo que sigue todo el código.
+4. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
+5. Su `plan.md` y su `tasks.md`, si ya existen.
 
 Si algo de lo que te piden contradice la constitución, **para y avisa** antes de escribir nada.
 
@@ -72,6 +73,8 @@ asistenciapp/
 └── data/                  # base de datos SQLite (no se sube a git)
 ```
 
+Este árbol muestra cómo está el proyecto hoy. La estructura del código a la que hay que llegar es la de `ARCHITECTURE.md` (O1); el código se adaptará en una feature aparte.
+
 Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-discord-bot`.
 
 ---
@@ -121,7 +124,7 @@ Una funcionalidad está terminada cuando:
 
 | Spec | Fase | Notas |
 | --- | --- | --- |
-| `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
+| `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): CA-01 a CA-26 verificados. Revisión de código (2026-10-21, fase H): 30 tareas, 102 tests | Check-in con código rotatorio, válido para cualquier plataforma |
 | `002-discord-bot` | Idea futura | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.

@@ -11,6 +11,81 @@ first-app es una app pequeña en Node. No es una web. Se usa desde la terminal. 
 - [Base de datos](DATABASE.md) es la base y el SQL.
 - [Errores](ERRORS.md) es las frases de error.
 - [Estilo](STYLE.md) es la forma del código.
+```
+first-app/
+  AGENTS.md
+  README.md
+  SKILL.md
+  MCP.md
+  package.json
+  .gitignore
+  .github/
+    pull_request_template.md
+  db/
+    connection.js
+  queries/
+    users.js
+    queries/
+      create-users-table.sql
+      find-all.sql
+      find-by-email.sql
+      find-by-id.sql
+      insert.sql
+      remove.sql
+      update.sql
+  logic/
+    create-user.js
+    list-users.js
+    update-user.js
+    delete-user.js
+    find-user-by-email.js
+    find-user-by-id.js
+    users-gender-count.js
+  clients/
+    terminal/
+      create-users-table.txt
+      create-user.txt
+      list-users.txt
+      update-user.txt
+      delete-user.txt
+      find-user-by-email.txt
+      find-user-by-id.txt
+      users-gender-count.txt
+    jupyter/
+      create-users-table.ipynb
+      create-user.ipynb
+      list-users.ipynb
+      update-user.ipynb
+      delete-user.ipynb
+      find-user-by-email.ipynb
+      find-user-by-id.ipynb
+      users-gender-count.ipynb
+  docs/
+    CONSTITUTIONS.md
+    GIT-WORKFLOW.md
+    specs/
+      buscar-por-id/
+        spec.md
+        plan.md
+        tasks.md
+      recuento-generos/
+        spec.md
+        plan.md
+        tasks.md
+      jupyter-client/
+        spec.md
+        plan.md
+        tasks.md
+```
+
+`db/users.sqlite` existe en disco y no se sube a git.
+
+- `db/connection.js` abre la única conexión y la exporta como `db`. No se abre otra base ni otra conexión.
+- `queries/queries/*.sql` son solo sentencias. `queries/users.js` las lee y las ejecuta. Ahí no se decide si un email es válido.
+- `logic/` es la app. Cada acción es su propio fichero, con sus comprobaciones dentro. Un fichero ya creado no se reescribe para meter otra acción. Las reglas no se mueven a queries ni a clients.
+- `clients/terminal/*.txt` no son programas. Se pegan con el directorio actual en `first-app`. Solo ahí se imprime el resultado.
+- `clients/jupyter/*.ipynb` llaman a la misma acción que su `.txt`. Se abren con `npm run jupyter` desde `first-app`. No cambian `logic/`.
+- Una acción nueva es un fichero nuevo en `logic/` y un `.txt` nuevo en `clients/terminal/`.
 
 ## Specs
 
