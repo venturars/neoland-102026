@@ -180,3 +180,12 @@ La presentación mantiene los karts en la salida mientras se registran los alumn
 Recargar una carrera cerrada muestra directamente el resultado. Con movimiento reducido tampoco hay espera de cinco segundos ni recorrido animado. Si el profesor retira una asistencia durante la celebración, esta se interrumpe y se muestra la clasificación corregida. La cuenta atrás inicial para abrir el registro y la cuenta final de la animación son independientes.
 
 Evidencia del diseño, secuencia y regresión: [009](specs/009-refinar-presentacion-de-carrera/evidence.md). El servidor continúa ejecutándose en el ordenador del profesor; `python app.py --tunel` permite que los alumnos entren por HTTPS mientras está encendido.
+
+
+## Alumnos y personajes de las carreras
+
+Al preparar la primera carrera de esta versión se guardan una sola vez los quince alumnos y personajes originales. Las carreras nuevas utilizan ese catálogo local, conservando el orden guardado. Reiniciar la aplicación no vuelve a cargar el grupo inicial. Las carreras anteriores mantienen sus participantes y personajes, aunque el catálogo cambie después.
+
+Si el catálogo preparado está vacío, el panel muestra «No hay alumnos disponibles para preparar la carrera». Si los datos no se pueden cargar o son incoherentes, muestra «No se pudo cargar el catálogo de alumnos». En ambos casos se rechaza la nueva carrera sin reponer alumnos ni alterar carreras anteriores. Un error de conexión no significa que una operación ya confirmada se haya deshecho; revisa el listado antes de volver a preparar una carrera.
+
+El grupo inicial procede de `asistencia/storage/data/initial-students.csv`; después se utiliza la tabla local `students`. Esta versión no incorpora un panel para editar alumnos o gestionar varios grupos. El catálogo no atribuye asistencia: cada alumno sigue entrando al lobby y registrándose con el código.
