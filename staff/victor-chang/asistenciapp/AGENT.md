@@ -73,11 +73,13 @@ asistenciapp/
 │   ├── domain/            # reglas y tipos, sin E/S: códigos, nombres, clases, errores
 │   ├── usecases/          # una acción de usuario por función: clases y registros
 │   ├── entrypoints/web/   # Flask: fábrica, rutas, credencial, errores, validación, JSON
-│   └── infra/             # SQLite, CSV, cloudflared, puertos
+│   ├── entrypoints/cli.py # el atajo --meet (spec 004)
+│   └── infra/             # SQLite, CSV, cloudflared, puertos, Google (permiso y API de Meet)
 ├── static/                # HTML, CSS y JS del navegador
 ├── tests/                 # tests: test_<módulo>.py, y test_web_<área>.py para la web
+│   └── fixtures/meet/     # respuestas de ejemplo de Meet, con nombres inventados
 ├── .venv/                 # entorno virtual de Python (no se sube a git)
-└── data/                  # base de datos SQLite (no se sube a git)
+└── data/                  # base de datos SQLite y llave/permiso de Google (no se sube a git)
 ```
 
 El código sigue `ARCHITECTURE.md` desde la spec 005. Antes de añadir un módulo, mira en qué capa va (O1).
@@ -98,6 +100,7 @@ Ejecutar desde `staff/victor-chang/asistenciapp/`, **con el entorno activado**. 
 | Instalar el túnel (solo la primera vez) | `brew install cloudflared` |
 | Arrancar para una clase online | `python app.py --tunel` (imprime el enlace público del panel) |
 | Arrancar solo en local (desarrollo) | `python app.py` (abre en `http://localhost:8000`) |
+| Clase automática de Meet | `python app.py --meet <enlace>` (con `--meet-todos`, todos los que han estado; README §4) |
 | Ejecutar los tests | `pytest` |
 | Dar formato al código | `ruff format` |
 | Revisar estilo y errores habituales | `ruff check` |
@@ -141,7 +144,7 @@ Una funcionalidad está terminada cuando:
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): CA-01 a CA-26 verificados. Revisión de código (2026-10-21, fase H): 30 tareas, 102 tests | Check-in con código rotatorio, válido para cualquier plataforma |
 | `002-discord-bot` | Idea futura | Fuera del MVP |
 | `003-servidor-mcp` | Idea futura | Implementar MCP: que un asistente de IA (p. ej. Claude) pueda abrir y cerrar la asistencia, consultar listas y pedir informes por chat |
-| `004-asistencia-meet` | 4 · Implementar (2026-10-25): spec v1.2, plan v2.1 y tareas v2.1 aprobados. T01–T15 hechas; siguiente T16 (prueba real de Victor en Meet) | Asistencia automática de todos los participantes de una reunión de Meet, sin que el alumno haga nada |
+| `004-asistencia-meet` | ✅ Terminada (2026-10-27): spec v1.2, plan v2.1, 17 tareas; CA verificados (T16: prueba real de Victor, también en una clase del bootcamp); 435 tests; `ruff` y `mypy --strict` sin avisos | Asistencia automática de todos los participantes de una reunión de Meet, sin que el alumno haga nada |
 | `005-adaptar-arquitectura` | ✅ Terminada v1.1 (2026-10-23): 21 tareas, CA-01 a CA-08 verificados, 240 tests; `ruff` y `mypy --strict` sin avisos | Código adaptado a `ARCHITECTURE.md` sin cambiar el comportamiento, salvo errores más claros y el título de 20 caracteres como máximo |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
