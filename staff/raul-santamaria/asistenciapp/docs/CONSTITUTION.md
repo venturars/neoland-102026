@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 3.0 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-26
+> Versión 3.1 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-27
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -34,8 +34,8 @@ El registro de asistencia no depende de una plataforma concreta. Las integracion
 
 ### P4 · Privacidad mínima
 
-- Del alumno solo se guarda el **nombre que él mismo escribe** y la **hora del registro**.
-- **Prohibido** guardar emails, identificadores de dispositivo o cualquier dato no imprescindible. La IP pública estática es la excepción: se recuerda solo para contar los intentos de registrarse y para la lista de bloqueo. No forma parte del registro del alumno.
+- Del alumno solo se guarda el **nombre** y la **hora del registro**. El nombre es el que el alumno escribe en el check-in web, o el **nombre visible** de su cuenta de Discord cuando se registra por Discord.
+- **Prohibido** guardar emails, identificadores de Discord, identificadores de dispositivo o cualquier dato no imprescindible. La IP pública estática es la excepción: se recuerda solo para contar los intentos de registrarse y para la lista de bloqueo. No forma parte del registro del alumno.
 - Los datos se **almacenan** solo en local (SQLite). Ningún servicio de terceros los guarda.
 - Para que los alumnos lleguen a la app desde sus casas, el tráfico puede **pasar cifrado (HTTPS)** por un proveedor de túnel (p. ej. Cloudflare). Ese proveedor no los almacena, pero técnicamente podría verlos en tránsito; por eso solo se envía lo imprescindible (nombre y código).
 
@@ -117,3 +117,4 @@ El detalle de carpetas y dependencias entre partes está en [ARCHITECTURE.md](AR
 | 2.3 | 2026-10-23 | §4: una issue, una rama o una pull request no sustituyen al spec ni autorizan cambios sin spec aprobado | Spec 002, CA-05 |
 | 2.4 | 2026-10-26 | §3: nombra `asistencia/domain/`, `asistencia/usecases/`, `asistencia/storage/` y apunta a `ARCHITECTURE.md` | Spec 005: la constitución describe la organización nueva |
 | 3.0 | 2026-10-26 | P4: la IP pública estática se recuerda solo para contar intentos de registrarse y para la lista de bloqueo | Spec 006: contradice la prohibición total de guardar IPs |
+| 3.1 | 2026-10-27 | P4: el nombre de asistencia puede ser el nombre visible de Discord; prohibido guardar id o email de Discord | Spec 007: check-in con Discord |

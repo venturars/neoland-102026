@@ -173,6 +173,9 @@ function renderSession(data) {
   $("code-card").hidden = !data.open;
   $("s-closed").hidden = data.open;
   $("close").hidden = !data.open;
+  $("discord-card").hidden = !data.open;
+  $("enable-discord").hidden = !data.open || Boolean(data.discordEnabled);
+  $("discord-status").hidden = !data.open || !data.discordEnabled;
   if (data.open) {
     $("s-code").textContent = data.code;
     startCountdown(data.secondsLeft);
@@ -334,6 +337,25 @@ $("download").addEventListener("click", () => {
 });
 
 // Cerrar con confirmación dentro de la página (CA-13)
+$("enable-discord").addEventListener("click", async () => {
+  if (!currentSession) return;
+  const button = $("enable-discord");
+  button.disabled = true;
+  try {
+    const res = await api(`/api/sessions/${encodeURIComponent(currentSession.id)}/discord`, {
+      method: "POST",
+    });
+    if (!res.ok) throw new Error("discord");
+    currentSession.discordEnabled = true;
+    $("enable-discord").hidden = true;
+    $("discord-status").hidden = false;
+  } catch (error) {
+    handleError(error);
+  } finally {
+    button.disabled = false;
+  }
+});
+
 $("close").addEventListener("click", () => {
   $("confirm-close").hidden = false;
   $("confirm-no").focus();
