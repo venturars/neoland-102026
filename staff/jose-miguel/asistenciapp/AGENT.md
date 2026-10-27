@@ -21,13 +21,13 @@ Si algo de lo que te piden contradice la constitución, **para y avisa** antes d
 
 Nada se escribe en esta copia sin una spec aprobada por el usuario. Eso incluye las instrucciones de uso, las comprobaciones, el resto de documentación de uso y el código de una funcionalidad nueva. La issue, la rama y la pull request del bootcamp no sustituyen a esa spec. Si falta, el agente para y no escribe.
 
-Cada funcionalidad recorre estas fases **en orden**. Al terminar cada una, el agente **se detiene** y pide la aprobación de el usuario. No se avanza sin un "ok" explícito.
+Cada funcionalidad recorre estas fases **en orden**. Al terminar cada una, el agente **se detiene** y pide la aprobación del usuario. No se avanza sin un "ok" explícito.
 
 | Fase | Archivo | Pregunta que responde | Puerta de salida |
 | --- | --- | --- | --- |
-| 1. Especificar | `spec.md` | ¿**Qué** hay que construir y **por qué**? | Sin `[NECESITA ACLARACIÓN]` pendientes + aprobación de el usuario |
-| 2. Planificar | `plan.md` | ¿**Cómo** lo construimos? | Pasa la comprobación de la constitución + aprobación de el usuario |
-| 3. Desglosar | `tasks.md` | ¿En qué **pasos pequeños** lo hacemos? | Cada tarea apunta a un criterio de aceptación + aprobación de el usuario |
+| 1. Especificar | `spec.md` | ¿**Qué** hay que construir y **por qué**? | Sin `[NECESITA ACLARACIÓN]` pendientes + aprobación del usuario |
+| 2. Planificar | `plan.md` | ¿**Cómo** lo construimos? | Pasa la comprobación de la constitución + aprobación del usuario |
+| 3. Desglosar | `tasks.md` | ¿En qué **pasos pequeños** lo hacemos? | Cada tarea apunta a un criterio de aceptación + aprobación del usuario |
 | 4. Implementar | código + tests | Hacerlo, tarea a tarea | `pytest` en verde + criterios verificados |
 
 ### 2.1 Especificar (`spec.md`)
@@ -74,7 +74,7 @@ asistenciapp/
 └── data/                  # base de datos SQLite (no se sube a git)
 ```
 
-Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-spec-antes-del-cambio`, `003-activar-entorno-no-es-arrancar-app`.
+Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-spec-antes-del-cambio`, `003-activar-entorno-no-es-arrancar-app`, `004-quitar-referencias-personales`.
 
 ---
 
@@ -99,7 +99,7 @@ Las únicas dependencias son Flask y pytest (constitución P3).
 
 - **Solo se edita dentro de `staff/<usuario>/asistenciapp/`.**
 - **Pregunta antes de suponer.** Ante una ambigüedad, pregunta o márcala con `[NECESITA ACLARACIÓN]`.
-- **Explica lo que haces.** el usuario está aprendiendo SDD: al cerrar cada fase, resume qué se ha hecho, por qué y qué tiene que revisar.
+- **Explica lo que haces.** El usuario está aprendiendo SDD: al cerrar cada fase, resume qué se ha hecho, por qué y qué tiene que revisar.
 - **Cambios pequeños.** Mejor varias tareas cortas que una enorme.
 - **Nada de commits ni pushes** sin que el usuario lo pida.
 - **Para todo lo que arranques.** Si levantas el servidor o `cloudflared` para probar, páralos al terminar y comprueba que el puerto queda libre: `lsof -nP -iTCP:8000 -sTCP:LISTEN` no debe mostrar nada. Ojo: en macOS el proceso aparece como `Python` (con mayúscula). (Incidencia del 2026-10-20 en T12.)
@@ -115,7 +115,7 @@ Una funcionalidad está terminada cuando:
 - [ ] `pytest` pasa.
 - [ ] Cada `CA-xx` de la spec tiene su test o su verificación manual hecha.
 - [ ] El `README.md` explica cómo usar lo nuevo.
-- [ ] el usuario la ha probado y la ha dado por buena.
+- [ ] El usuario la ha probado y la ha dado por buena.
 
 ---
 
@@ -124,8 +124,9 @@ Una funcionalidad está terminada cuando:
 | Spec | Fase | Notas |
 | --- | --- | --- |
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
-| `002-spec-antes-del-cambio` | Implementada (2026-10-22) | La spec aprobada frena cualquier cambio. El ok es de el usuario, en esta carpeta |
+| `002-spec-antes-del-cambio` | Implementada (2026-10-22) | La spec aprobada frena cualquier cambio. El ok es del usuario, en esta carpeta |
 | `003-activar-entorno-no-es-arrancar-app` | Implementada (2026-10-25) | Activar el entorno y arrancar la app son dos pasos distintos en el README |
+| `004-quitar-referencias-personales` | Implementada (2026-10-25) | Las reglas y el README no nombran a una persona ni su carpeta |
 | Discord | Idea futura | Fuera del MVP, sin número de spec |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.

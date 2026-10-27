@@ -79,4 +79,4 @@ Ninguna. Lo que no esté en esta spec no se inventa.
 | Versión | Fecha | Cambio | Motivo |
 | --- | --- | --- | --- |
 | Borrador | 2026-10-22 | Versión inicial, pendiente de aprobación | — |
-| 1.0 | 2026-10-22 | Aprobada e implementada en las reglas de esta copia | Jose Miguel pidió seguir con la implementación |
+| 1.0 | 2026-10-22 | Aprobada e implementada en las reglas de esta copia | El usuario pidió seguir con la implementación |
