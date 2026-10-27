@@ -23,7 +23,9 @@ export function updateUser(input) {
   }
 
   const email =
-    input.email === undefined ? current.email : input.email.trim().toLowerCase();
+    input.email === undefined
+      ? current.email
+      : input.email.trim().toLowerCase();
   const parts = email.split("@");
   const hasSingleAt =
     parts.length === 2 && parts[0].length > 0 && parts[1].length > 0;
