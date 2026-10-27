@@ -61,7 +61,9 @@ export async function usersGenderCount() {
   const names = [];
 
   for (const user of rows) {
-    if (!names.includes(user.name)) {
+    const alreadyListed = names.includes(user.name);
+
+    if (!alreadyListed) {
       names.push(user.name);
     }
   }
@@ -98,22 +100,69 @@ export async function usersGenderCount() {
 
     const choices = completion?.choices;
 
-    if (!Array.isArray(choices) || choices.length === 0) {
+    const choicesIsArray = Array.isArray(choices);
+    let missingChoices = false;
+
+    if (!choicesIsArray) {
+      missingChoices = true;
+    }
+
+    if (choicesIsArray) {
+      const choiceCount = choices.length;
+
+      if (choiceCount === 0) {
+        missingChoices = true;
+      }
+    }
+
+    if (missingChoices) {
       continue;
     }
 
     const choice = choices[0];
     let message;
 
-    if (
-      choice !== undefined &&
-      choice.message !== undefined &&
-      choice.message !== null
-    ) {
-      message = choice.message.content;
+    let missingMessage = false;
+
+    if (choice === undefined) {
+      missingMessage = true;
     }
 
-    if (typeof message !== "string" || message === "") {
+    if (choice !== undefined) {
+      const choiceMessage = choice.message;
+
+      if (choiceMessage === undefined) {
+        missingMessage = true;
+      }
+
+      if (choiceMessage !== undefined) {
+        if (choiceMessage === null) {
+          missingMessage = true;
+        }
+
+        if (choiceMessage !== null) {
+          message = choiceMessage.content;
+        }
+      }
+    }
+
+    if (missingMessage) {
+      continue;
+    }
+
+    let emptyMessage = false;
+
+    if (typeof message !== "string") {
+      emptyMessage = true;
+    }
+
+    if (typeof message === "string") {
+      if (message === "") {
+        emptyMessage = true;
+      }
+    }
+
+    if (emptyMessage) {
       continue;
     }
 
@@ -125,28 +174,81 @@ export async function usersGenderCount() {
       continue;
     }
 
-    if (
-      parsed === null ||
-      typeof parsed !== "object" ||
-      !Array.isArray(parsed.classifications)
-    ) {
+    let invalidParsed = false;
+
+    if (parsed === null) {
+      invalidParsed = true;
+    }
+
+    if (parsed !== null) {
+      const parsedType = typeof parsed;
+
+      if (parsedType !== "object") {
+        invalidParsed = true;
+      }
+    }
+
+    if (parsed !== null) {
+      const classifications = parsed.classifications;
+      const classificationsIsArray = Array.isArray(classifications);
+
+      if (!classificationsIsArray) {
+        invalidParsed = true;
+      }
+    }
+
+    if (invalidParsed) {
       continue;
     }
 
     for (const item of parsed.classifications) {
-      if (item === null || typeof item !== "object") {
+      let invalidItem = false;
+
+      if (item === null) {
+        invalidItem = true;
+      }
+
+      if (item !== null) {
+        const itemType = typeof item;
+
+        if (itemType !== "object") {
+          invalidItem = true;
+        }
+      }
+
+      if (invalidItem) {
         continue;
       }
 
-      if (
-        item.gender !== "women" &&
-        item.gender !== "men" &&
-        item.gender !== "undefined"
-      ) {
+      let invalidGender = false;
+
+      if (item.gender !== "women") {
+        if (item.gender !== "men") {
+          if (item.gender !== "undefined") {
+            invalidGender = true;
+          }
+        }
+      }
+
+      if (invalidGender) {
         continue;
       }
 
-      if (typeof item.name !== "string" || !batchNameSet.has(item.name)) {
+      let invalidName = false;
+
+      if (typeof item.name !== "string") {
+        invalidName = true;
+      }
+
+      if (typeof item.name === "string") {
+        const nameInBatch = batchNameSet.has(item.name);
+
+        if (!nameInBatch) {
+          invalidName = true;
+        }
+      }
+
+      if (invalidName) {
         continue;
       }
 
