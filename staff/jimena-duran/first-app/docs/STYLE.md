@@ -16,4 +16,4 @@ Aplica el formato estándar de Prettier: comillas dobles, punto y coma, coma fin
 
 Los valores fijos se declaran como constantes en MAYÚSCULAS; las variables normales usan camelCase.
 
-Cada archivo de `logic/` exporta una sola función. La firma define el nombre, las entradas y la salida, y no se acompaña de un comentario de contrato. Las acciones usan nombres como `createUser`, `updateUser`, `deleteUser` y `listUsers`; los argumentos se declaran directamente (`name`, `email`, `id`) cuando la firma existente así lo hace. Se conservan las firmas existentes `createUser(input)` y `updateUser(id, changes)`.
+Cada archivo de `logic/` exporta una sola función. La firma define el nombre, las entradas y la salida, y no se acompaña de un comentario de contrato. Las acciones usan nombres como `createUser`, `updateUser`, `deleteUser` y `listUsers`; los argumentos se declaran directamente (`name`, `email`, `id`) cuando la firma existente así lo hace.

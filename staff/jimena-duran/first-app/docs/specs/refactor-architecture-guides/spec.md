@@ -12,6 +12,8 @@ el comportamiento de la aplicación.
   de datos y las listas vacías.
 - El conteo por género conserva sus resultados `women`, `men` y
   `genderUndefined`, y sus errores actuales.
+- Se conservan las firmas existentes `createUser(input)` y
+  `updateUser(id, changes)`, documentadas en `docs/CONSTITUTIONS.md`.
 - El código cumple las reglas aplicables de las guías vigentes. Según
   `docs/STYLE.md`, cada línea hace una sola acción; las llamadas y las
   comprobaciones van separadas, al igual que `if` y `throw new Error`.

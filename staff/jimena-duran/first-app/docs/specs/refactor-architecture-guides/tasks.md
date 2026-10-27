@@ -2,7 +2,7 @@
 
 Issue: #488. [Spec](./spec.md) · [Plan](./plan.md).
 
-- [x] Aclarar en `docs/STYLE.md` las firmas con objetos y las llamadas existentes a métodos de bibliotecas, conforme a la interpretación aprobada.
+- [x] Mantener en `docs/STYLE.md` las reglas generales y aclarar el uso de métodos de bibliotecas; documentar en `docs/CONSTITUTIONS.md` las firmas existentes.
 - [x] Separar acceso a propiedades, limpieza y validaciones en `logic/create-user.js`, `logic/update-user.js` y `logic/find-user-by-email.js`, conservando firmas, resultados y errores.
 - [x] Separar la preparación de nombres y las comprobaciones de respuesta en `logic/users-gender-count.js`, conservando petición, lotes, conteos y errores.
 - [x] Separar rutas, lectura de SQL y preparación y ejecución de sentencias en `queries/users.js`; separar ruta y apertura en `db/connection.js`, conservando interfaces y consultas.

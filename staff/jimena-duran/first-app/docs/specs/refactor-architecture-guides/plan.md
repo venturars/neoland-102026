@@ -9,13 +9,14 @@ Issue: #488. Spec: [spec.md](./spec.md).
 - `queries/users.js`: separar la construcción de rutas, lectura de SQL y preparación y ejecución de sentencias. Mantener exportaciones, firmas, parámetros con nombre, archivos SQL y valores devueltos.
 - `db/connection.js`: separar la obtención de la ruta y la apertura de la base de datos. Mantener la exportación `db` y su ubicación actual.
 - `clients/terminal/create-users-table.txt`: separar la preparación y ejecución de la consulta del ejemplo; conservar su consulta y salida.
-- `docs/STYLE.md`: aclarar las excepciones necesarias para describir las firmas existentes y el uso de métodos de bibliotecas, sin cambiar las demás reglas.
+- `docs/STYLE.md`: conservar las reglas generales y aclarar el uso de métodos de bibliotecas.
+- `docs/CONSTITUTIONS.md`: documentar las firmas existentes `createUser(input)` y `updateUser(id, changes)`.
 
 Los demás archivos no presentan cambios necesarios para este alcance. No se crean ni eliminan archivos de la aplicación; no cambian SQL, dependencias, mensajes de error ni la base local.
 
-## Contradicciones que requieren decisión
+## Compatibilidad con las guías
 
-`docs/STYLE.md` pide argumentos directos y prohíbe clases y métodos, mientras el código vigente usa `createUser(input)`, `updateUser(id, changes)`, `new OpenAI`, `new DatabaseSync` y métodos de bibliotecas. La spec exige conservar firmas y comportamiento. Se propone aclarar la guía para admitir esas firmas y llamadas existentes; la prohibición de definir clases, usar `this` y definir métodos propios sigue vigente. Esta interpretación requiere aprobación antes de implementar.
+`docs/STYLE.md` establece las convenciones generales de estilo y prohíbe definir clases, utilizar `this` y crear métodos propios. Se permiten las instancias y llamadas a métodos de bibliotecas existentes. Las firmas `createUser(input)` y `updateUser(id, changes)` se documentan en `docs/CONSTITUTIONS.md`, evitando duplicarlas en la guía de estilo.
 
 ## Comprobación
 

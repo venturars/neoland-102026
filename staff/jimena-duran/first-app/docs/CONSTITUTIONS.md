@@ -29,6 +29,10 @@ y cada cambio de versión.
 
 ## Pasos de la lógica
 
+`createUser(input)` recibe un objeto con `name` y `email`.
+`updateUser(id, changes)` recibe el identificador y un objeto con los cambios.
+Ambas firmas se conservan.
+
 El cuerpo de una función mantiene este orden:
 
 1. Comprobar los argumentos recibidos.
