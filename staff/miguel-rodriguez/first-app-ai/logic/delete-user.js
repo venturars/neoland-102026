@@ -8,7 +8,8 @@ export function deleteUser(id) {
     throw new Error("Could not delete the user");
   }
 
-  if (!user) {
+  const userIsMissing = !user;
+  if (userIsMissing) {
     throw new Error("User not found");
   }
 

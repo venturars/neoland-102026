@@ -8,11 +8,12 @@ export function listUsers() {
     throw new Error("Could not list the users");
   }
 
-  return users.map((user) => ({
+  const contacts = users.map((user) => ({
     id: user.id,
     name: user.name,
     email: user.email,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   }));
+  return contacts;
 }

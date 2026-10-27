@@ -1,9 +1,30 @@
 import { findByEmail } from "../queries/users.js";
 
 export function findUserByEmail(email) {
-  email = email.trim().toLowerCase();
-  const parts = email.split("@");
-  if (email.length > 64 || parts.length !== 2 || !parts[0] || !parts[1]) {
+  const trimmedEmail = email.trim();
+  email = trimmedEmail.toLowerCase();
+  const emailParts = email.split("@");
+  const emailLength = email.length;
+  const emailIsTooLong = emailLength > 64;
+  if (emailIsTooLong) {
+    throw new Error("Email is invalid");
+  }
+
+  const emailPartCount = emailParts.length;
+  const emailHasWrongPartCount = emailPartCount !== 2;
+  if (emailHasWrongPartCount) {
+    throw new Error("Email is invalid");
+  }
+
+  const localPart = emailParts[0];
+  const localPartIsEmpty = !localPart;
+  if (localPartIsEmpty) {
+    throw new Error("Email is invalid");
+  }
+
+  const domain = emailParts[1];
+  const domainIsEmpty = !domain;
+  if (domainIsEmpty) {
     throw new Error("Email is invalid");
   }
 
@@ -14,7 +35,8 @@ export function findUserByEmail(email) {
     throw new Error("Could not find the user");
   }
 
-  if (!user) {
+  const userIsMissing = !user;
+  if (userIsMissing) {
     throw new Error("User not found");
   }
 

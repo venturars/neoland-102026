@@ -14,12 +14,16 @@ import { usersGenderCount } from "../../logic/users-gender-count.js";
 function showTable(rows, fields) {
   const table = new Table({ head: fields, style: { head: ["cyan"] } });
   for (const row of rows) {
-    table.push(fields.map((field) => row[field]));
+    const cells = fields.map((field) => row[field]);
+    table.push(cells);
   }
-  console.log(table.toString());
+  const renderedTable = table.toString();
+  console.log(renderedTable);
 }
 
-const { operation, args } = JSON.parse(readFileSync(0, "utf8"));
+const inputText = readFileSync(0, "utf8");
+const request = JSON.parse(inputText);
+const { operation, args } = request;
 
 try {
   let result;
@@ -28,28 +32,41 @@ try {
       createUsersTable();
       console.log("Tabla de usuarios disponible.");
       break;
-    case "create-user":
-      result = createUser(args[0]);
+    case "create-user": {
+      const contactInput = args[0];
+      result = createUser(contactInput);
       break;
+    }
     case "list-users":
       result = listUsers();
       break;
-    case "find-user-by-email":
-      result = findUserByEmail(args[0]);
+    case "find-user-by-email": {
+      const email = args[0];
+      result = findUserByEmail(email);
       break;
-    case "find-user-by-id":
-      result = findUserById(args[0]);
+    }
+    case "find-user-by-id": {
+      const id = args[0];
+      result = findUserById(id);
       break;
-    case "find-user-by-name":
-      result = findUserByName(args[0]);
+    }
+    case "find-user-by-name": {
+      const name = args[0];
+      result = findUserByName(name);
       break;
-    case "update-user":
-      result = updateUser(args[0], args[1]);
+    }
+    case "update-user": {
+      const id = args[0];
+      const changes = args[1];
+      result = updateUser(id, changes);
       break;
-    case "delete-user":
-      deleteUser(args[0]);
+    }
+    case "delete-user": {
+      const id = args[0];
+      deleteUser(id);
       console.log("Contacto eliminado. La operación no devuelve datos.");
       break;
+    }
     case "users-gender-count":
       result = await usersGenderCount();
       break;
@@ -57,15 +74,24 @@ try {
       throw new Error("Operación desconocida.");
   }
 
-  if (result !== undefined) {
-    if (operation === "users-gender-count") {
+  const resultHasData = result !== undefined;
+  if (resultHasData) {
+    const operationIsClassifier = operation === "users-gender-count";
+    if (operationIsClassifier) {
       showTable([result], ["women", "men", "genderUndefined"]);
     } else {
-      const users = Array.isArray(result) ? result : [result];
+      const resultIsList = Array.isArray(result);
+      let users;
+      if (resultIsList) {
+        users = result;
+      } else {
+        users = [result];
+      }
       showTable(users, ["id", "name", "email", "createdAt", "updatedAt"]);
     }
   }
 } catch (error) {
-  console.error(error.message);
+  const message = error.message;
+  console.error(message);
   process.exitCode = 1;
 }

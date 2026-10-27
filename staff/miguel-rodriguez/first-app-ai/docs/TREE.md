@@ -38,6 +38,10 @@ first-app-ai/
 │   ├── STYLE.md
 │   ├── TREE.md
 │   └── specs/
+│       ├── align-code-with-guides/
+│       │   ├── plan.md
+│       │   ├── spec.md
+│       │   └── tasks.md
 │       ├── classifier/
 │       │   ├── plan.md
 │       │   ├── spec.md

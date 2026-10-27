@@ -92,5 +92,6 @@ is defined in [AGENTS.md](../AGENTS.md).
 
 `docs/specs/<feature-name>/` contains each development's `spec.md`, `plan.md`, and
 `tasks.md`. The current folders cover the classifier, name lookup, Jupyter client,
-Socket package validation, guide separation, and formatting/lint checks. Their individual documents
+Socket package validation, guide separation, formatting/lint checks, and alignment
+with the architecture and style guides. Their individual documents
 record the request, approved approach, tasks, decisions, and verification.
