@@ -1,10 +1,14 @@
 import { findByEmail, insert } from "../queries/users.js";
 
 export function createUser(input) {
-  if (typeof input?.name !== "string" || input.name.includes("\0")) {
+  if (typeof input?.name !== "string") {
     throw new Error("Name is empty");
   }
-  const name = input.name.trim();
+  if (input.name.includes("\0")) {
+    throw new Error("Name is empty");
+  }
+  const rawName = input.name;
+  const name = rawName.trim();
   if (name === "") {
     throw new Error("Name is empty");
   }
@@ -12,11 +16,32 @@ export function createUser(input) {
   if (typeof input?.email !== "string") {
     throw new Error("Email is invalid");
   }
-  const email = input.email.trim().toLowerCase();
+  const rawEmail = input.email;
+  const trimmedEmail = rawEmail.trim();
+  const email = trimmedEmail.toLowerCase();
   const parts = email.split("@");
-  const hasSingleAt =
-    parts.length === 2 && parts[0].length > 0 && parts[1].length > 0;
-  if (!hasSingleAt || email.length > 64 || /\s/.test(email)) {
+  const hasTwoParts = parts.length === 2;
+  let hasSingleAt = false;
+  if (hasTwoParts) {
+    const localPart = parts[0];
+    const domainPart = parts[1];
+    const localPartIsFilled = localPart.length > 0;
+    const domainPartIsFilled = domainPart.length > 0;
+    if (localPartIsFilled) {
+      if (domainPartIsFilled) {
+        hasSingleAt = true;
+      }
+    }
+  }
+  const emailIsTooLong = email.length > 64;
+  const emailHasSpace = /\s/.test(email);
+  if (!hasSingleAt) {
+    throw new Error("Email is invalid");
+  }
+  if (emailIsTooLong) {
+    throw new Error("Email is invalid");
+  }
+  if (emailHasSpace) {
     throw new Error("Email is invalid");
   }
 
@@ -29,17 +54,19 @@ export function createUser(input) {
   if (owner) {
     throw new Error("Email is already used");
   }
-  let user;
+
+  let savedUser;
   try {
-    user = insert({ name, email });
+    savedUser = insert({ name, email });
   } catch {
     throw new Error("Could not create the user");
   }
+
   return {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt,
+    id: savedUser.id,
+    name: savedUser.name,
+    email: savedUser.email,
+    createdAt: savedUser.createdAt,
+    updatedAt: savedUser.updatedAt,
   };
 }
