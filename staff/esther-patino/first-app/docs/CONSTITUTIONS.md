@@ -185,3 +185,7 @@ Si esta constitución, el código actual y la spec no dicen lo mismo, la pregunt
 `tasks.md` son los pasos, en el orden en que los haría una persona. Cada paso abre un sitio, hace una cosa y deja un resultado que se puede mirar. Un paso son como mucho cuatro líneas. Solo se escribe si no hay contradicción.
  No se inventan pasos.
 
+## 9. Validación de paquetes
+
+Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket. El cómo está en `AGENTS.md`.
+
