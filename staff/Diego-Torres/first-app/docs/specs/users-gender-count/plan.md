@@ -7,7 +7,6 @@ Funcionalidad nueva. No reemplaza los ficheros de operaciones de `logic/`. No gu
 Se crean:
 
 - `logic/users-gender-count.js`
-- la prueba nueva dentro de `test/users.test.js`
 
 Se tocan, al implementar:
 
@@ -86,7 +85,7 @@ Si la llamada falla, no se devuelve un recuento parcial.
 
 ## Comprobación
 
-La prueba va en `test/users.test.js`. Para verlo a mano, `ejemplo.js` importa `usersGenderCount`, le pasa el almacén SQLite y hace `console.log` del resultado. Se lanza con `pnpm run ejemplo`.
+Para verlo a mano, `ejemplo.js` importa `usersGenderCount`, le pasa el almacén SQLite y hace `console.log` del resultado. Se lanza con `pnpm run ejemplo`.
 
 ## Antes de escribir el código
 

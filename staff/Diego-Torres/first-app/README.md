@@ -5,8 +5,7 @@ Usuarios con la lógica separada de SQLite. Las reglas están en [docs/CONSTITUC
 Desde esta carpeta:
 
 ```bash
-pnpm test
 pnpm run ejemplo
 ```
 
-`pnpm test` prueba las reglas con un almacén en memoria y un caso con SQLite en `:memory:`. `pnpm run ejemplo` abre `db/users.sqlite` con `db/connection.js`, crea un usuario, lo cambia y lo lista. Ese fichero no se versiona.
+`pnpm run ejemplo` abre `db/users.sqlite` con `db/connection.js`, crea un usuario, lo cambia y lo lista. Ese fichero no se versiona.

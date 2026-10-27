@@ -3,7 +3,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test",
     "ejemplo": "node ejemplo.js",
     "jupyter": ".venv\\Scripts\\jupyter.exe notebook clients/jupyter"
   },

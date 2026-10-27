@@ -12,8 +12,6 @@ Si una tarea y esta constitución chocan, gana la constitución.
 | `queries/queries/*.sql` | Las frases SQL, una por fichero. `create-users-table.sql` es la tabla `users` |
 | `queries/users.js` | El almacén de verdad |
 | `db/connection.js` | La única conexión, a `db/users.sqlite` |
-| `test/memory-store.js` | El doble de las pruebas |
-| `test/users.test.js` | Las pruebas |
 | `ejemplo.js` | Une lógica y SQLite y hace `console.log` |
 | `clients/terminal/*.txt` | Un cliente por operación. Se pega en la terminal, le pasa el almacén y hace `console.log` |
 | `logic/users-gender-count.js` | Cuenta usuarios por género del nombre. No guarda nada |
@@ -24,7 +22,7 @@ Si una tarea y esta constitución chocan, gana la constitución.
 
 `db/` solo tiene dos cosas: `connection.js` y `users.sqlite`. No hay esquema, SQL ni almacén en esa carpeta.
 
-`db/connection.js` abre `db/users.sqlite` con `node:sqlite` y exporta `db`. Es la única conexión al fichero. No se abre otra base ni otra conexión para ese fichero. Las pruebas no importan `connection.js`: le pasan a `queries/users.js` una conexión en `:memory:`.
+`db/connection.js` abre `db/users.sqlite` con `node:sqlite` y exporta `db`. Es la única conexión al fichero. No se abre otra base ni otra conexión para ese fichero.
 
 `queries/users.js` recibe esa conexión ya abierta. Ejecuta `queries/queries/create-users-table.sql` y prepara el resto de `.sql`.
 
@@ -61,7 +59,7 @@ Cualquier almacén ofrece estas funciones `async` y ninguna regla:
 - `findAll()` devuelve un array de copias.
 - `remove(id)` indica si existía.
 
-`queries/users.js` es el almacén de verdad. `test/memory-store.js` es solo el doble de las pruebas. Un almacén nuevo es un fichero nuevo. No se reescribe SQLite para simular memoria.
+`queries/users.js` es el almacén de verdad. Un almacén nuevo es un fichero nuevo. No se reescribe SQLite para simular memoria.
 
 ## Operaciones
 

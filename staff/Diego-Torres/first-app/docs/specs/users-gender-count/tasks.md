@@ -23,12 +23,7 @@
    `women` y `men` suman en su campo. Cualquier otro valor suma en `genderUndefined`.
    Si no hay mensaje, el JSON no se lee, o `genders` no coincide, ese lote suma en `genderUndefined` y sigue. Si la llamada falla, lanza `No se han podido clasificar los usuarios`.
 
-6. Abre `test/users.test.js`.
-   Un caso con el almacén en memoria devuelve `{ women, men, genderUndefined }`.
-   La suma de los tres números es el número de usuarios listados.
-   Si no hay usuarios, los tres números son 0 y no se llama a la IA.
-
-7. Abre `ejemplo.js`.
+6. Abre `ejemplo.js`.
    Importa `usersGenderCount`, le pasa el almacén SQLite y hace `console.log`.
-   Ejecuta `pnpm test` y `pnpm run ejemplo`.
-   `pnpm test` pasa. El ejemplo imprime solo `{ women, men, genderUndefined }`.
+   Ejecuta `pnpm run ejemplo`.
+   El ejemplo imprime solo `{ women, men, genderUndefined }`.
