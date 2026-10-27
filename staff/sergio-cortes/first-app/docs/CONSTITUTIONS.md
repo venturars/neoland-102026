@@ -2,63 +2,13 @@
 
 first-app es una app para aprender los conceptos básicos de login. Se construye con IA siguiendo el sistema SDD. Un desarrollo nuevo no empieza en el código: pasa por `spec.md`, `plan.md` y `tasks.md`, y un humano lee cada uno antes de seguir.
 
-## Árbol
+## Guías
 
-```text
-first-app/
-  AGENTS.MD                   Reglas del agente; apunta a esta constitución
-  docs/
-    CONSTITUTIONS.md          Esta información base
-    specs/
-      <nombre>/               Una funcionalidad; el nombre lo elige quien la pide
-        spec.md               Negocio
-        plan.md               Técnica
-        tasks.md              Pasos
-  db/
-    connections.js            Única conexión a la base de datos
-    users.sqlite              Único fichero de la base de datos
-  queries/
-    queries/                  Texto SQL, un fichero .sql por sentencia
-    user.js                   Lee esos ficheros y ejecuta el SQL
-  logic/
-    errors.js                 Clases de error compartidas
-    create-user.js            Una funcionalidad por fichero
-    update-user.js
-    delete-user.js
-    find-user-by-id.js
-    find-user-by-email.js
-    find-user-by-name.js
-    list-users.js
-    user-gender-count.js
-  clients/
-    terminal/
-      create-user-table.txt   Crea la tabla vía queries
-      create-user.txt         Llama a logic y muestra el resultado
-      update-user.txt
-      delete-user.txt
-      find-user-by-id.txt
-      find-user-by-email.txt
-      find-user-by-name.txt
-      list-users.txt
-      user-gender-count.txt
-    jupyter/
-      create-user-table.ipynb
-      create-user.ipynb
-      update-user.ipynb
-      delete-user.ipynb
-      find-user-by-id.ipynb
-      find-user-by-email.ipynb
-      find-user-by-name.ipynb
-      list-users.ipynb
-      user-gender-count.ipynb
-```
-
-- `docs/specs/<nombre>/` es donde empieza un desarrollo. `<nombre>` es la funcionalidad, en kebab-case.
-- `db/` abre la base de datos y no contiene reglas de negocio.
-- `queries/queries/` guarda el SQL en ficheros `.sql`. `queries/user.js` los lee y los ejecuta. No hay reglas de negocio aquí.
-- `logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
-- `clients/terminal/` llama a `logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
-- `clients/jupyter/` es el cuaderno, uno por cada `.txt` de `clients/terminal/`. El bloque muestra ese texto: arranca `node --input-type=module` y, dentro, los `import` y la llamada quedan igual. El `console.log` se sustituye por la tabla. `cli-table3` y `@colors/colors` pintan esa tabla con colores y encabezados. Si la función falla, se ve ese mensaje. En esa carpeta no hay ficheros `.py` ni `requirements.txt`. Se abre con `pnpm jupyter` desde `first-app`.
+- `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada fichero.
+- `docs/TREE.md` es el árbol.
+- `docs/DATABASE.md` es la base de datos y las queries.
+- `docs/ERRORS.md` es la lista de errores.
+- `docs/STYLE.md` es la forma de cada línea y las convenciones.
 
 ## Specs
 
@@ -69,7 +19,7 @@ Una funcionalidad vive en `docs/specs/<nombre>/`. El nombre va en kebab-case. Ah
 `plan.md` es la técnica. Lo lee quien comprueba que el desarrollo cabe en esta constitución. Dice:
 
 - qué ficheros se crean y cuáles se tocan
-- si hace falta, qué cambios van en `docs/CONSTITUTIONS.md` (árbol, firmas en «Un fichero logic», clientes terminal)
+- si hace falta, qué cambios van en `docs/TREE.md`, en `docs/ARCHITECTURE.md` y en `docs/CONSTITUTIONS.md` (firmas en «Un fichero logic», clientes terminal)
 - a qué fichero de `logic/` se parece, sin pegar su código
 - la firma: nombre, parámetros y salida
 - el SQL nuevo, con los parámetros con nombre (`:id`, `:name`, `:email`)
@@ -79,16 +29,9 @@ Una funcionalidad nueva es un fichero nuevo en `logic/`. Si la constitución, el
 
 `tasks.md` son los pasos, en el orden en que los haría una persona. Cada paso abre un sitio, hace una cosa y deja un resultado que se puede mirar. Un paso son como mucho cuatro líneas. Si el desarrollo no es una funcionalidad nueva, el grano es el mismo: mirar lo que ya existe, cambiar un sitio, comprobar.
 
-## Base de datos
+## Paquetes
 
-Hay una sola base de datos: `db/users.sqlite`. Hay una sola conexión: el `db` que exporta `db/connections.js`. No se abre otra base de datos ni otra conexión.
-
-La tabla se llama `users`. Su formato es este:
-
-- `id`: `INTEGER PRIMARY KEY AUTOINCREMENT`. La base asigna el número.
-- `email`: `TEXT NOT NULL UNIQUE`.
-- `name`: `TEXT NOT NULL`.
-- `createdAt` y `updatedAt` son fechas. SQLite no tiene un tipo `DATE` propio. El tipo es `TEXT` con la fecha en `YYYY-MM-DD HH:MM:SS`, que es lo que devuelve `datetime('now', 'localtime')`. El alta no escribe esas columnas: las pone el default de la tabla. Al actualizar, el SQL pone `updatedAt = datetime('now', 'localtime')`.
+Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket.
 
 ## Logic no se reemplaza
 
@@ -100,6 +43,8 @@ Un fichero, una función. El nombre, la entrada y la salida los define la firma.
 
 El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `findUserById`, `findUserByEmail`, `findUserByName`, `listUsers`, `usersGenderCount`).
 
+Esos nombres son solo ejemplos; no hay que ampliar la lista en cada funcionalidad nueva.
+
 Si la función usa varios datos, como `name`, `email` e `id`, recibe un solo `input` y lee ahí cada valor. Si el dato es uno solo, como `id`, `email` o `name`, el argumento es ese valor. No se mete en un objeto.
 
 Ningún fichero de `logic/` abre la base. Llaman a `queries/user.js`. Donde hay una fila, devuelven `id`, `name`, `email`, `createdAt` y `updatedAt`.
@@ -110,26 +55,3 @@ El cuerpo sigue este orden, y no se mezcla:
 2. Validar el resto de reglas de negocio. Ahí se puede llamar a una query de lectura, como `findById` o `findByEmail`, para comprobar la regla antes de escribir.
 3. Aplicar la lógica de negocio.
 4. Estructurar la salida y sanear la respuesta.
-
-## Queries
-
-El SQL no vive dentro de la función que lo ejecuta. Vive aparte.
-
-`queries/queries/` contiene solo SQL agnóstico. Cada sentencia está en su propio `.sql`, sin JavaScript.
-
-`queries/` contiene la función que llama a ese SQL. En este proyecto es `queries/user.js`: lee el `.sql`, lo guarda en una constante y, al final del fichero, la función exportada lo ejecuta con `run`, `all` o `get`.
-
-## Errores
-
-Los errores de entrada y de negocio salen de `logic/errors.js`. Ese fichero no exporta una función de negocio: exporta las clases. Cada una extiende `Error`. El constructor recibe `message` y asigna `this.name`. Pueden añadirse más clases en ese mismo fichero.
-
-- `ValidationError`: el dato de entrada no vale. Mensajes: `"Id is invalid"`, `"Name is empty"`, `"Email is invalid"`.
-- `NotFoundError`: no hay fila. Mensaje: `"User not found"`.
-- `ConflictError`: el email ya existe. Mensaje: `"Email is already used"`.
-- `DatabaseError`: SQLite lanzó y ese error no sale de `logic/`. Mensajes: `"Could not create the user"`, `"Could not update the user"`, `"Could not delete the user"`, `"Could not list the users"`, `"Could not find the user"`, `"Could not classify the users"`. Este último lo lanza `usersGenderCount`.
-
-Una entrada o una regla de negocio que no llama a una query se comprueba con `if` y lanza esa clase con el mensaje. No va dentro de `try/catch`.
-
-Cada llamada a un querie va dentro de `try/catch`. Si la query lanza, el `catch` lanza la clase global de esa llamada, con su mensaje fijo. No relanza el error de SQLite. Si la query devuelve, la regla que mira ese resultado queda fuera del `try`: un `if` y el `throw` de la clase.
-
-El cliente no captura el error. Llama a la función y muestra el resultado. Si logic lanza, el error sale solo.

@@ -12,6 +12,7 @@
   "type": "module",
   "packageManager": "pnpm@12.14.0",
   "dependencies": {
+    "cli-table3": "0.6.5",
     "openai": "^7.43.0"
   }
 }

@@ -1,32 +1,37 @@
-﻿# AGENTS.md — first-app
+# AGENTS.md — first-app
 
-## Contexto del proyecto
+## Guías del proyecto
 
-La aplicación usa Node.js con módulos ES (`"type": "module"`) y una base SQLite gestionada por `node:sqlite`. La base está en `db/users.sqlite`; las reglas generales se encuentran en `docs/CONSTITUTIONS.md`.
+Las reglas generales y los enlaces a las guías por tema están en [CONSTITUTIONS.md](docs/CONSTITUTIONS.md). Para escribir código, sigue [STYLE.md](docs/STYLE.md).
 
 ## Comandos disponibles
 
 - Ejecución: todavía no existe un comando de ejecución.
 - Pruebas: aún no hay tests automatizados; el script `test` de `package.json` es solo el marcador de pnpm.
-- Formato: se sigue Prettier con su configuración predeterminada. No hay scripts propios de lint o formato.
-
-## Convenciones de código
-
-El código fuente se redacta en inglés. Los comentarios de los clientes de terminal pueden estar en español para facilitar el aprendizaje de alumnos hispanohablantes.
-
-Usa nombres de fichero en kebab-case, variables y funciones en camelCase, exportaciones con nombre e imports ESM que incluyan `.js`. Las consultas SQL reciben parámetros nombrados como `:id`, `:name` y `:email`. Las interfaces de `logic/` y los errores válidos están definidos en `docs/CONSTITUTIONS.md`.
-
-El flujo debe poder leerse de principio a fin. Prefiere condicionales claros y nombres descriptivos. No añadas envoltorios de resultados, jerarquías de errores, helpers genéricos ni abstracciones que oculten los pasos que un principiante necesita ver.
-
-Aplica el formato estándar de Prettier: comillas dobles, punto y coma, coma final, dos espacios de indentación y líneas de hasta 80 columnas.
+- Formato: no hay scripts propios de lint o formato; las reglas están en [STYLE.md](docs/STYLE.md).
 
 ## Reglas de trabajo
 
 - Antes de editar código, lee `docs/CONSTITUTIONS.md` y la spec que esté activa.
 - Trabaja con temperatura cercana a cero: sigue la spec y el plan, sin inventar requisitos.
-- Investiga primero, revisa si existe una tarea semejante ya resuelta y respeta las convenciones del código existente.
+- Investiga primero y revisa si existe una tarea semejante ya resuelta. El código existente sirve de referencia para encontrar operaciones parecidas; el estilo se toma de [STYLE.md](docs/STYLE.md). Las diferencias de estilo del código existente no bloquean una nueva spec.
+- Si un desarrollo añade o elimina archivos, su spec debe contemplar la actualización de [TREE.md](docs/TREE.md) y [ARCHITECTURE.md](docs/ARCHITECTURE.md).
 - Si la constitución, el código, una spec o esta guía ofrecen instrucciones incompatibles, detén la implementación. Registra la duda en el plan y solicita decidir qué fuente debe prevalecer, incluyendo si hace falta actualizar la documentación.
 - No presentes una solución que no haya sido comprobada.
+
+## Paquetes
+
+Antes de aprobar un plan que añada un paquete de Node o cambie su versión,
+valida con el MCP de Socket la versión propuesta y sus dependencias hasta
+tres capas. Aplica los mismos criterios a todos los paquetes revisados.
+
+Incluye en el plan un resumen por paquete y versión que indique si aparece
+en campañas, si presenta alertas y si alguna puntuación es inferior a 50.
+Comenta las alertas con quien aprueba el plan: esa persona decide si las
+acepta. El agente no decide en su lugar.
+
+Quedan fuera los paquetes que no sean de Node, los paquetes existentes cuya
+versión no cambie y las dependencias más allá de la tercera capa.
 
 ## Cierre de una tarea
 

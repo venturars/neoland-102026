@@ -79,6 +79,7 @@ __pycache__/
 .venv/
 venv/
 .pytest_cache/
+.ipynb_checkpoints/
 
 # Jupyter: checkpoints locales junto a los notebooks
 .ipynb_checkpoints/

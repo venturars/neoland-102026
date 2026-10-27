@@ -28,6 +28,18 @@ El contrato de `logic/` y los errores están en `docs/CONSTITUTIONS.md`.
 - Si la constitución, el código, una spec o esta guía se contradicen, no elijas. Pregúntalo en el plan. No escribas código hasta tener la respuesta.
 - Una tarea cada vez. El paso se deja en `- [ ]`.
 
+## Paquetes
+
+Al añadir un paquete de Node o cambiar su versión, se comprueba con Socket antes de aceptar el plan.
+
+Entra el paquete y la versión. También entran las dependencias de ese paquete, hasta 3 capas.
+
+El resumen entra en el plan antes de aceptarlo. Para el paquete y para cada dependencia, el resumen dice si esa versión está en una campaña, si tiene una alerta y si alguna stat está por debajo de 50 puntos.
+
+Las alertas se comentan. Quien acepta el plan decide si las acepta.
+
+Queda fuera comprobar paquetes que no son de Node, comprobar un paquete cuya versión no cambia, mirar más de 3 capas y decidir las alertas por la persona.
+
 ## Al terminar una tarea
 
 El primer cliente es un `.txt` en `clients/terminal/`. Se pega en la terminal con el directorio actual en `mi-primer-proyecto`. Importa la función de `logic/` y hace `console.log` del resultado.
