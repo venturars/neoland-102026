@@ -6,7 +6,7 @@
 
 No es una funcionalidad nueva. No hay fichero nuevo en `logic/`, ni firma ni SQL. Solo documentación: la constitución exige Socket; el procedimiento concreto va en `AGENTS.md`.
 
-La consulta usa el MCP `socket-mcp` del bootcamp ([`MCP.md`](../../../../../MCP.md) en la raíz del repo; en Cursor el namespace es `user-socket`).
+La consulta usa el MCP `socket-mcp` del bootcamp ([`MCP.md`](../../../../../../MCP.md) en la raíz del repo; en Cursor el namespace es `user-socket`).
 
 ## 2. Ficheros
 
