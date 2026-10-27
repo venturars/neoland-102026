@@ -8,7 +8,14 @@ export function deleteUser({ id }) {
     throw new Error("The database failed.");
   }
 
-  if (currentUser === undefined || currentUser === null) {
+  let userIsMissing = false;
+  if (currentUser === undefined) {
+    userIsMissing = true;
+  }
+  if (currentUser === null) {
+    userIsMissing = true;
+  }
+  if (userIsMissing) {
     throw new Error("No user was found.");
   }
 
