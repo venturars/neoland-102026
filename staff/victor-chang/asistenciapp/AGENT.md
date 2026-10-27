@@ -145,6 +145,7 @@ Una funcionalidad está terminada cuando:
 | `002-discord-bot` | Idea futura | Fuera del MVP |
 | `003-servidor-mcp` | Idea futura | Implementar MCP: que un asistente de IA (p. ej. Claude) pueda abrir y cerrar la asistencia, consultar listas y pedir informes por chat |
 | `004-asistencia-meet` | ✅ Terminada (2026-10-27): spec v1.2, plan v2.1, 17 tareas; CA verificados (T16: prueba real de Victor, también en una clase del bootcamp); 435 tests; `ruff` y `mypy --strict` sin avisos | Asistencia automática de todos los participantes de una reunión de Meet, sin que el alumno haga nada |
+| `006-imagen-neoland` | 4 · Implementar (2026-10-27): spec, plan y tareas v1.0 aprobados. T01 hecha; siguiente T02 | Aspecto de las pantallas parecido a neoland.es, sin cambiar el comportamiento |
 | `005-adaptar-arquitectura` | ✅ Terminada v1.1 (2026-10-23): 21 tareas, CA-01 a CA-08 verificados, 240 tests; `ruff` y `mypy --strict` sin avisos | Código adaptado a `ARCHITECTURE.md` sin cambiar el comportamiento, salvo errores más claros y el título de 20 caracteres como máximo |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
