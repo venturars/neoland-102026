@@ -1,8 +1,10 @@
 import { DatabaseSync } from "node:sqlite";
-import path from "node:path";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const here = path.dirname(fileURLToPath(import.meta.url));
-const dbPath = path.join(here, "users.sqlite");
+const fileUrl = import.meta.url;
+const filePath = fileURLToPath(fileUrl);
+const directory = dirname(filePath);
+const databasePath = join(directory, "users.sqlite");
 
-export const db = new DatabaseSync(dbPath);
+export const db = new DatabaseSync(databasePath);
