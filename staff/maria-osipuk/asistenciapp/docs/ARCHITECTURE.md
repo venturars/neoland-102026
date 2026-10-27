@@ -6,14 +6,14 @@ Hay cuatro responsabilidades. Cada una solo depende de las que tiene debajo.
 
 | Parte | Dónde | Qué hace |
 | --- | --- | --- |
-| Dominio | `asistencia/domain/` | Reglas independientes: el código, el nombre y si una clase existe, sigue abierta y acepta ese código. No abre la base y no habla con el navegador. |
+| Dominio | `asistencia/domain/` | Reglas independientes: el código, el nombre, si una clase existe, sigue abierta y acepta ese código, y el tope de intentos. No abre la base y no habla con el navegador. |
 | Acciones | `asistencia/usecases/attendance.py` | Las acciones coordinan un caso: registrar, abrir, cerrar, listar, ver, quitar y exportar. Reciben la ruta del archivo y un reloj. |
 | Almacenamiento | `asistencia/storage/sqlite.py` | Lee y escribe en `data/asistencia.db`. Abre y cierra la conexión en cada operación. No decide reglas. |
 | Entrada HTTP | `app.py` | Comunicación con el navegador: lee la petición, llama a la acción y convierte el resultado en la respuesta. Las pantallas están en `static/`. |
 
 La dirección es esta: el navegador entra por `app.py`, que llama a una acción. La acción llama al dominio y al almacenamiento. El dominio no llama al almacenamiento ni a `app.py`. El almacenamiento no llama al dominio.
 
-Un registro recorre ese camino. `check_in` comprueba dentro que la clase exista, que esté abierta, el nombre y el código. Si falla, lanza un error con nombre. `app.py` lo traduce al mensaje que ya ve el alumno. Si vale, el almacenamiento guarda el nombre y la hora.
+Un registro recorre ese camino. `check_in` anota antes el intento de esa dirección. `domain/attempts.py` decide si se pasó de 5 en el último segundo o de 20 en el último minuto. Si se pasó, o si la dirección ya está bloqueada, no se guarda la asistencia. `app.py` elige la dirección: en este ordenador usa `CF-Connecting-IP` cuando es una sola dirección válida; si no, usa la conexión. No lee una dirección escrita en el registro ni `X-Forwarded-For`. Luego comprueba que la clase exista, que esté abierta, el nombre y el código. Si falla, lanza un error con nombre. `app.py` lo traduce al mensaje que ya ve el alumno, y el bloqueo a la respuesta 429. Si vale, el almacenamiento guarda el nombre y la hora. Las marcas de intentos que ya salen del último minuto se tiran. La lista de bloqueo se queda en el mismo archivo.
 
 `export.py` convierte filas ya cargadas en CSV. `tunnel.py` solo lo usa el arranque, para que la clase se abra desde casa. `storage/` es código: la base sigue en `data/`.
 
