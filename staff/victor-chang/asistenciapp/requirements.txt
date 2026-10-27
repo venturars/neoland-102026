@@ -1,0 +1,5 @@
+flask
+google-auth-oauthlib
+pytest
+ruff
+mypy

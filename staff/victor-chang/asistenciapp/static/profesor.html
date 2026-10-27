@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Panel del profesor · AsistenciApp</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="profesor.js" defer></script>
+</head>
+<body>
+  <main>
+    <!-- CA-21: aviso si el panel se abre en local -->
+    <p id="local-warning" class="message warn" hidden>
+      Estás usando una dirección que solo funciona en este ordenador: <strong>tus alumnos no podrán abrir el enlace de alumnos</strong>.
+      Para una clase online, para la app (Ctrl+C) y arráncala con <code>python app.py --tunel</code>.
+    </p>
+
+    <div id="status" role="status" aria-live="polite"></div>
+
+    <!-- Vista: panel (T17) -->
+    <section id="panel-view" hidden>
+      <h1>Panel del profesor</h1>
+
+      <form id="new-session" class="card">
+        <label for="session-title">Título de la clase <span class="muted">(opcional)</span></label>
+        <input id="session-title" placeholder="Ej.: Clase 20/10 – SDD" maxlength="20">
+
+        <!-- spec 004 · CA-01, CA-04: un modo por clase; por defecto, código -->
+        <fieldset class="modes">
+          <legend>Cómo se pasa lista</legend>
+          <label class="choice"><input type="radio" name="mode" value="code" checked> Código <span class="muted">(los alumnos lo escriben)</span></label>
+          <label class="choice"><input type="radio" name="mode" value="automatic"> Automático (Meet)</label>
+        </fieldset>
+
+        <div id="meeting-field" hidden>
+          <label for="session-meeting">Enlace de la reunión de Meet</label>
+          <input id="session-meeting" placeholder="https://meet.google.com/abc-defg-hij" autocomplete="off" spellcheck="false">
+        </div>
+
+        <button type="submit" class="full">Abrir asistencia</button>
+      </form>
+
+      <h2>Sesiones anteriores</h2>
+      <p id="no-sessions" class="muted" hidden>Todavía no has abierto ninguna sesión.</p>
+      <ul id="sessions" class="list sessions card"></ul>
+    </section>
+
+    <!-- Vista: sesión en vivo (T18) -->
+    <section id="session-view" hidden>
+      <p><a id="back" href="#">← Volver al panel</a></p>
+      <h1 id="s-title"></h1>
+
+      <div id="code-card" class="card">
+        <p class="muted small" style="text-align:center;margin:0">Código para pasar lista</p>
+        <p id="s-code" class="code" aria-live="polite"></p>
+        <p id="s-countdown" class="countdown muted"></p>
+
+        <label for="s-link">Enlace para los alumnos</label>
+        <output id="s-link" class="link-box"></output>
+        <div class="actions">
+          <button id="copy" type="button" class="secondary">Copiar enlace de alumnos</button>
+        </div>
+      </div>
+
+      <!-- spec 004 · CA-18, CA-20: tomar la asistencia desde la reunión -->
+      <div id="meet-card" class="card" hidden>
+        <p class="muted small" style="margin:0">Reunión de Meet</p>
+        <p id="s-meeting" class="meeting-code"></p>
+        <div class="actions">
+          <button id="sync-now" type="button" data-who="now">Quién está ahora</button>
+          <button id="sync-everyone" type="button" class="secondary" data-who="everyone">Todos los que han estado</button>
+        </div>
+        <div id="sync-status" role="status" aria-live="polite"></div>
+      </div>
+
+      <p id="s-closed" class="message warn" hidden>Asistencia cerrada: ya no se aceptan registros.</p>
+
+      <div class="card">
+        <p id="s-total" class="total" aria-live="polite"></p>
+        <ol id="s-list" class="list"></ol>
+      </div>
+
+      <div class="actions">
+        <button id="download" type="button" class="secondary">Descargar lista</button>
+        <button id="close" type="button" class="danger">Cerrar asistencia</button>
+      </div>
+
+      <!-- Confirmación dentro de la página, sin confirm() (plan §5) -->
+      <div id="confirm-close" class="message warn" hidden>
+        <p><strong>¿Cerrar la asistencia?</strong> Nadie más podrá registrarse en esta clase.</p>
+        <div class="actions">
+          <button id="confirm-yes" type="button" class="danger-solid">Sí, cerrar</button>
+          <button id="confirm-no" type="button" class="secondary">Cancelar</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
