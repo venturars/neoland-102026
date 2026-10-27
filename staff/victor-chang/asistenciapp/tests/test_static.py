@@ -97,8 +97,6 @@ def test_scripts_call_only_the_app(script):
 # ---------- CA-06: contraste suficiente en claro y en oscuro ----------
 
 TEXT, NON_TEXT = 4.5, 3.0
-# Escritos antes que los colores y la cabecera (T05); deben fallar hasta T06, que quita esta marca.
-LOOK_PENDING = pytest.mark.xfail(reason="los colores y la cabecera llegan en T06", strict=True)
 # (primer plano, fondo, mínimo) · plan §2.1
 PAIRS = (
     ("text", "bg", TEXT),
@@ -108,16 +106,16 @@ PAIRS = (
     ("accent", "bg", TEXT),  # enlaces y botones secundarios
     ("accent", "surface", TEXT),
     ("accent-text", "accent", TEXT),  # botón principal
-    pytest.param(*("accent", "accent-soft", TEXT), marks=LOOK_PENDING),  # etiqueta "abierta"
-    pytest.param(*("header-text", "header-bg", TEXT), marks=LOOK_PENDING),
+    ("accent", "accent-soft", TEXT),  # etiqueta "abierta"
+    ("header-text", "header-bg", TEXT),
     ("danger", "bg", TEXT),
     ("danger", "surface", TEXT),
-    pytest.param(*("danger-text", "danger", TEXT), marks=LOOK_PENDING),  # "Sí, cerrar"
+    ("danger-text", "danger", TEXT),  # "Sí, cerrar"
     ("ok-text", "ok-bg", TEXT),
     ("error-text", "error-bg", TEXT),
     ("warn-text", "warn-bg", TEXT),
-    pytest.param(*("control-border", "surface", NON_TEXT), marks=LOOK_PENDING),  # borde de los campos
-    pytest.param(*("control-border", "bg", NON_TEXT), marks=LOOK_PENDING),
+    ("control-border", "surface", NON_TEXT),  # borde de los campos
+    ("control-border", "bg", NON_TEXT),
 )
 
 
@@ -157,7 +155,6 @@ def test_contrast(theme, fg, bg, minimum):
     assert contrast(tokens[fg], tokens[bg]) >= minimum
 
 
-@LOOK_PENDING
 def test_neoland_red_for_buttons_and_links():  # spec P1
     assert themes()["claro"]["accent"] == "#d01f45"
 
@@ -165,7 +162,6 @@ def test_neoland_red_for_buttons_and_links():  # spec P1
 # ---------- CA-01: cabecera oscura con el nombre de la app ----------
 
 
-@LOOK_PENDING
 @pytest.mark.parametrize("page", ["index.html", "profesor.html", "alumno.html"])
 def test_every_page_has_the_brand_header(page):
     html = (STATIC_DIR / page).read_text(encoding="utf-8").split("<body", 1)[1]  # sin el <title>

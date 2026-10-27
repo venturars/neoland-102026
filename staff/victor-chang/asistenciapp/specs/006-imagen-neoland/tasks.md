@@ -58,9 +58,11 @@ Cómo leer esta lista:
   - **Hecha (2026-10-27):** 39 tests nuevos: 17 pares de colores × claro y oscuro, la fórmula de contraste con valores de referencia (blanco/negro 21:1; blanco sobre `#E6284E` 4,4:1), el rojo `#D01F45` (spec P1) y la cabecera en las tres páginas. Fallaron 14 (variables nuevas que aún no existen, el rojo y la cabecera); los demás pares ya cumplen hoy y quedan como red. 478 en verde y 14 `xfail` estrictos (`LOOK_PENDING`, que quita T06); `ruff` y `mypy` sin avisos.
     - La cabecera se busca solo dentro de `<body>`, porque el `<title>` también dice "AsistenciApp"; y el nombre debe aparecer una sola vez (plan §2.3).
     - La etiqueta "abierta" en oscuro usa el mismo `--accent` (`#FF5C7A` sobre `#3A1720`: 5,3:1), así que no hace falta el `#FF8FA3` que mencionaba el plan §2.1: una variable menos.
-- [ ] **T06** · Variables nuevas en `styles.css` (claro y oscuro) y cabecera en las tres páginas; en `index.html` el `<h1>` pasa a la cabecera.
+- [x] **T06** · Variables nuevas en `styles.css` (claro y oscuro) y cabecera en las tres páginas; en `index.html` el `<h1>` pasa a la cabecera.
   - Los tests de T05 pasan.
   - *Cubre:* CA-01, CA-04, CA-06.
+  - **Hecha (2026-10-27):** variables del plan §2.1 en claro y oscuro (los nombres antiguos se mantienen, así que el resto del CSS no cambia); `--brand-mark` (`#E6284E`) solo para el guion bajo decorativo. Cabecera `header.brand` con `.wordmark` en las tres páginas; en `index.html` el `<h1>` pasa a ser el nombre de la cabecera. Los campos usan ya `--control-border` y "Sí, cerrar" `--danger-text`. Se quita `LOOK_PENDING`: 492 tests en verde, sin `xfail`; `ruff` y `mypy` sin avisos; `profesor.js` y `alumno.js` sin cambios.
+    - Vistazo en Chrome (claro y oscuro): cabecera oscura, botones y enlaces rojos; los de peligro ("Quitar") ya salen en gris carbón por la variable `--danger`. Servidor parado y 8012 libre. La revisión completa es T08.
 
 ## Fase D · Piezas (plan §2.4, §2.5)
 
