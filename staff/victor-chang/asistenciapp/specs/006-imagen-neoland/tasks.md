@@ -75,7 +75,7 @@ Cómo leer esta lista:
 
 ## Fase E · Revisión y cierre
 
-- [ ] **T08** 👤 · Revisión manual en Chrome (plan §5), con el mismo montaje que T01:
+- [x] **T08** 👤 · Revisión manual en Chrome (plan §5), con el mismo montaje que T01:
   - claro y oscuro, 400 px y escritorio, las tres páginas y los dos modos de clase;
   - sin desplazamiento horizontal a 400 px;
   - recorrido con el teclado: el foco se ve en todos los controles;
@@ -84,6 +84,13 @@ Cómo leer esta lista:
   - capturas "después" para Victor, que da el visto bueno.
   - Parar el servidor y comprobar que el puerto queda libre.
   - *Cubre:* CA-01 a CA-08 (parte manual).
+  - **Hecha (2026-10-27), con el visto bueno de Victor:** 21 capturas "después" (`despues/` en la carpeta temporal de la sesión) frente a las 15 de T01: escritorio claro y oscuro, y 400 px de verdad (en un `iframe` de 400 px) en claro y oscuro.
+    - 400 px: ninguna pantalla (inicio, panel, clase de código, clase de Meet, alumno) se desplaza en horizontal (`scrollWidth` = 400), en claro y oscuro (CA-07).
+    - Botones de 45 px; los "Quitar" (`.small`), 36 px como antes (CA-07). Los cuatro tipos de botón se distinguen (CA-03).
+    - Teclado: en la clase de Meet, el foco recorre volver, los dos botones de Meet, cada "Quitar", "Descargar lista" y "Cerrar asistencia", siempre con el contorno rojo de 3 px (CA-06).
+    - Ninguna petición fuera de la app en ninguna página ni modo (CA-08); letras Montserrat y Roboto cargadas (CA-02); ningún texto ni imagen de Neoland (CA-04).
+    - Ya existía antes y no se cambia: en el inicio, las tarjetas tienen un hueco grande sobre su título (margen del `h2`).
+    - Servidor parado y 8012 libre.
 - [ ] **T09** · Cierre:
   - README: de dónde vienen las letras y su licencia;
   - AGENT.md: estado;
