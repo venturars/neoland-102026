@@ -58,6 +58,10 @@ first-app/
         spec.md
         plan.md
         tasks.md
+      paquetes-socket/
+        spec.md
+        plan.md
+        tasks.md
 ```
 
 `db/users.sqlite` existe en disco y no se sube a git.
@@ -79,6 +83,10 @@ Cada funcionalidad tiene su carpeta `docs/specs/<nombre>/` con tres ficheros. No
 Una funcionalidad nueva es un fichero nuevo. Si la constitución, el código y la spec no dicen lo mismo, la pregunta se escribe al final del plan y ahí se para. No hay tareas ni código hasta tener la respuesta.
 
 `tasks.md` son los pasos, en el orden de una persona. Cada paso abre un sitio, hace una cosa y deja un resultado que se puede mirar. Un paso son como mucho cuatro líneas. Si el cambio no es una funcionalidad nueva, el grano es el mismo: mirar lo que ya existe, cambiar un sitio, comprobar.
+
+## Paquetes
+
+Un paquete de Node nuevo, o un cambio de su versión, se comprueba con Socket antes de aprobar el plan.
 
 ## Base de datos
 
