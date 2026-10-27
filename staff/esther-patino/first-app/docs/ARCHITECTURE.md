@@ -1,7 +1,7 @@
 # Arquitectura
 
 - `AGENTS.md` dice cómo se trabaja: el orden de un cambio, el estilo y qué hacer al cerrar una tarea.
-- `package.json` declara el proyecto. El script `jupyter` arranca `scripts/jupyter.js`.
+- `package.json` declara el proyecto. Los scripts `format` y `lint` lanzan Prettier y ESLint.
 - `pnpm-lock.yaml` fija las versiones de las dependencias.
 
 - `scripts/` arranca Jupyter sobre `clients/jupyter/`.
