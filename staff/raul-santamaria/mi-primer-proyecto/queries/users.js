@@ -2,7 +2,10 @@ import { readFileSync } from "node:fs";
 import { db } from "../db/connection.js";
 
 function readSql(fileName) {
-  return readFileSync(new URL(`./queries/${fileName}`, import.meta.url), "utf8");
+  return readFileSync(
+    new URL(`./queries/${fileName}`, import.meta.url),
+    "utf8",
+  );
 }
 
 const createTableSql = readSql("create-users-table.sql");
@@ -58,7 +61,12 @@ export function findById(id) {
 
 export function insert(input) {
   const createdAt = today();
-  const result = insertStatement.run(input.name, input.email, createdAt, createdAt);
+  const result = insertStatement.run(
+    input.name,
+    input.email,
+    createdAt,
+    createdAt,
+  );
 
   return {
     id: Number(result.lastInsertRowid),
