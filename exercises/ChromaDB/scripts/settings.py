@@ -40,6 +40,9 @@ MERGE_MAX = 2000
 SPLIT_ABOVE = 3200
 
 BATCH_SIZE = 32
+# Tokens que Ollama deja leer al modelo. El fragmento más grande tiene unos 5.700.
+# Más contexto gasta más memoria; menos haría fallar los fragmentos grandes.
+NUM_CTX = 8192
 
 # Qwen3-Embedding pide una instrucción delante de las preguntas, no de los documentos
 QUERY_INSTRUCTION = "Given a question about Python 3.15, retrieve the documentation passages that answer it"

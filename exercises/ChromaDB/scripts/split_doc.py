@@ -39,9 +39,9 @@ def split_doc(md_path: Path) -> list[dict]:
         if first["anchor"] != "":
             metadata["anchor"] = first["anchor"]
         if len(anchors) > 0:
-            metadata["anchors"] = ",".join(anchors)
+            metadata["anchors"] = anchors
         if len(symbols) > 0:
-            metadata["symbols"] = ",".join(symbols)
+            metadata["symbols"] = symbols
         if "module" in page_info:
             metadata["module"] = page_info["module"]
         if "removal_version" in page_info:
