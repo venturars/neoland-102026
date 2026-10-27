@@ -22,15 +22,11 @@ El directorio de trabajo es `staff/Diego-Torres/first-app`.
 
 ## Comandos
 
-Desde esta carpeta:
-
-- Ejemplo: `pnpm run ejemplo`
-
-Si el cambio se ve a mano, se ejecuta `pnpm run ejemplo`.
+Desde esta carpeta, Jupyter se abre con `pnpm run jupyter`.
 
 No hay script de lint ni de formato. No se añade uno salvo que se pida.
 
-La dependencia `openai` es la del clasificador. `@colors/colors` y `cli-table3` son las tablas del cliente Jupyter. Se instalan con `pnpm install`. Jupyter se abre con `pnpm run jupyter`.
+La dependencia `openai` es la del clasificador. `@colors/colors` y `cli-table3` son las tablas del cliente Jupyter. Se instalan con `pnpm install`.
 
 ## Estilo
 

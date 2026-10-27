@@ -23,7 +23,6 @@
    `women` y `men` suman en su campo. Cualquier otro valor suma en `genderUndefined`.
    Si no hay mensaje, el JSON no se lee, o `genders` no coincide, ese lote suma en `genderUndefined` y sigue. Si la llamada falla, lanza `No se han podido clasificar los usuarios`.
 
-6. Abre `ejemplo.js`.
-   Importa `usersGenderCount`, le pasa el almacén SQLite y hace `console.log`.
-   Ejecuta `pnpm run ejemplo`.
-   El ejemplo imprime solo `{ women, men, genderUndefined }`.
+6. Abre `clients/terminal/users-gender-count.txt`.
+   Llama a `usersGenderCount` con el almacén SQLite.
+   Imprime solo `{ women, men, genderUndefined }`.

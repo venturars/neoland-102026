@@ -13,7 +13,6 @@ Se tocan, al implementar:
 - `docs/CONSTITUCION.md`
 - `AGENTS.md`
 - `package.json` — dependencia `openai`, instalada con `pnpm add openai`
-- `ejemplo.js` — para ver el resultado a mano
 
 No se crea `clients/terminal/`.
 
@@ -85,7 +84,7 @@ Si la llamada falla, no se devuelve un recuento parcial.
 
 ## Comprobación
 
-Para verlo a mano, `ejemplo.js` importa `usersGenderCount`, le pasa el almacén SQLite y hace `console.log` del resultado. Se lanza con `pnpm run ejemplo`.
+Para verlo a mano, `clients/terminal/users-gender-count.txt` llama a `usersGenderCount` con el almacén SQLite.
 
 ## Antes de escribir el código
 

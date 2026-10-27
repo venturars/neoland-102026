@@ -12,7 +12,6 @@ Si una tarea y esta constitución chocan, gana la constitución.
 | `queries/queries/*.sql` | Las frases SQL, una por fichero. `create-users-table.sql` es la tabla `users` |
 | `queries/users.js` | El almacén de verdad |
 | `db/connection.js` | La única conexión, a `db/users.sqlite` |
-| `ejemplo.js` | Une lógica y SQLite y hace `console.log` |
 | `clients/terminal/*.txt` | Un cliente por operación. Se pega en la terminal, le pasa el almacén y hace `console.log` |
 | `logic/users-gender-count.js` | Cuenta usuarios por género del nombre. No guarda nada |
 | `clients/jupyter/*.ipynb` | Cliente que abre Jupyter y llama a las operaciones |
