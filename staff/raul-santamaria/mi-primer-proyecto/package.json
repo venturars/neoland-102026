@@ -6,7 +6,8 @@
   "description": "CRUD de usuarios con la lógica separada de SQLite y de la terminal",
   "scripts": {
     "jupyter": "node start-jupyter.js",
-    "format": "prettier --write \"db/**/*.js\" \"queries/**/*.js\" \"logic/**/*.js\""
+    "format": "prettier --write \"db/**/*.js\" \"queries/**/*.js\" \"logic/**/*.js\"",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@colors/colors": "1.6.1",
@@ -15,6 +16,9 @@
   },
   "packageManager": "pnpm@12.14.0+sha512.c18ba6d87993d3d164cb5e8948f32b2c06ee854487e06cd8d86781342fb3e5bb4634367034711e86802baa9c37bea906ce1929ad08d70884c97d801df13389a6",
   "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.13.0",
+    "globals": "17.13.0",
     "prettier": "3.9.10"
   }
 }

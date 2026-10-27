@@ -6,6 +6,7 @@ mi-primer-proyecto/
   pnpm-lock.yaml
   .gitignore
   AGENTS.md
+  eslint.config.js
   start-jupyter.js
   clients/
     terminal/
