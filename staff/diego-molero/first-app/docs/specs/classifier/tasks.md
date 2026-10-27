@@ -37,9 +37,13 @@ Con Ollama real y llama3.2, Ada Lovelace produjo directamente
 Se revisaron enlaces, sintaxis y UTF-8. Las comprobaciones de fallos de lotes
 siguen pendientes; no se presentan como ejecutadas en esta iteración.
 
-## Casos manuales pendientes
+## Casos manuales adicionales
 
-- [ ] Procesar más de seis usuarios y usuarios con el mismo nombre.
-- [ ] Observar categorías desconocidas, JSON ilegible y lotes incompletos con
+- [x] Procesar más de seis usuarios y usuarios con el mismo nombre.
+- [x] Observar categorías desconocidas, JSON ilegible y lotes incompletos con
   respuestas controladas, distinguiéndolas de llamadas a IA real.
-- [ ] Observar un fallo después de un lote correcto sin devolver un recuento parcial.
+- [x] Observar un fallo después de un lote correcto sin devolver un recuento parcial.
+
+## Iteración del 27 de octubre de 2026
+
+Se comprobaron en copias temporales las respuestas controladas de dos lotes (6 y 2 nombres), nombres repetidos, JSON ilegible, categorías desconocidas, respuestas incompletas, fallo del segundo lote, HTTP fallido y configuración no local. Se distinguieron de la ejecución con Ollama real y llama3.2, realizada desde terminal y notebook. El resultado de los escenarios existentes coincide antes y después de reorganizar el código.
