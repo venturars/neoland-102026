@@ -4,27 +4,25 @@
 
 Primera app con IA para alumnos junior de AI Engineering. Se construye siguiendo SDD.
 Node, módulos ES y una sola base SQLite en `db/users.sqlite`.
-La base está en `docs/CONSTITUTIONS.md`.
+Las reglas de base están en `docs/CONSTITUTIONS.md`. Esa guía enlaza a la arquitectura, el árbol, la base de datos, los errores y el estilo.
 
 ## Comandos
 
 Las dependencias se instalan con pnpm (`pnpm install`). No uses npm ni generes `package-lock.json`.
 No hay comando de ejecución. No hay tests. No hay script de lint ni de formato.
-El formato es el de Prettier que dice `docs/CONSTITUTIONS.md`.
+El formato es el de Prettier que dice `docs/STYLE.md`.
 
 ## Estilo
 
-El código va en inglés. Los comentarios de `clients/terminal/` van en español.
-Ficheros en kebab-case. Funciones y variables en camelCase. Exportaciones con nombre. Los imports ESM llevan la extensión `.js`.
-Se lee de arriba a abajo, con `if` y con nombres que dicen qué hacen.
-Sin envoltorios de resultado, sin clases de error y sin helpers que oculten los pasos.
-El contrato de `logic/` y los errores están en `docs/CONSTITUTIONS.md`.
+La forma de cada línea y las convenciones están en `docs/STYLE.md`.
+El contrato de `logic/` está en `docs/CONSTITUTIONS.md`. Los errores están en `docs/ERRORS.md`.
 
 ## Reglas
 
 - Lee `docs/CONSTITUTIONS.md` y la spec activa antes de tocar código.
 - Temperatura próxima a 0. No inventes. Cíñete al plan y a la spec activa.
-- Antes de escribir, mira el código ya resuelto que se parezca y sigue ese estilo.
+- Antes de escribir, mira el código ya resuelto que se parezca. El código que ya existe sirve para ver a qué fichero se parece una función nueva. La forma de cada línea se copia de `docs/STYLE.md`. Un spec nuevo no se para porque el código ya escrito no tenga esa forma.
+- Si un desarrollo añade o quita un fichero, su spec también actualiza `docs/TREE.md` y `docs/ARCHITECTURE.md`.
 - Si la constitución, el código, una spec o esta guía se contradicen, no elijas. Pregúntalo en el plan. No escribas código hasta tener la respuesta.
 - Una tarea cada vez. El paso se deja en `- [ ]`.
 
