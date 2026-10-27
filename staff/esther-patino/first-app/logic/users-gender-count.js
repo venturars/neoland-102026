@@ -2,6 +2,16 @@ import OpenAI from "openai";
 import { findAll } from "../queries/users.js";
 
 const MODEL = "llama3.2";
+const BASE_URL = "http://127.0.0.1:11434/v1";
+const API_KEY = "ollama";
+const TEMPERATURE = 0;
+const BATCH_SIZE = 6;
+const USER_ROLE = "user";
+const ASSISTANT_ROLE = "assistant";
+const EXAMPLE_NAMES = "Carmen\nLucia\nJavier\nPablo\nKim";
+const EXAMPLE_GENDERS = "women\nwomen\nmen\nmen\nundefined";
+const WOMEN = "women";
+const MEN = "men";
 
 export async function usersGenderCount() {
   let users;
@@ -17,47 +27,64 @@ export async function usersGenderCount() {
   }
 
   const client = new OpenAI({
-    baseURL: "http://127.0.0.1:11434/v1",
-    apiKey: "ollama",
+    baseURL: BASE_URL,
+    apiKey: API_KEY,
   });
 
   let women = 0;
   let men = 0;
   let undefinedUser = 0;
 
-  for (let start = 0; start < users.length; start += 6) {
-    const names = users.slice(start, start + 6).map((user) => user.name);
+  for (let start = 0; start < users.length; start += BATCH_SIZE) {
+    const batch = users.slice(start, start + BATCH_SIZE);
+    const names = batch.map((user) => user.name);
 
     let message;
 
     try {
       const completion = await client.chat.completions.create({
         model: MODEL,
-        temperature: 0,
+        temperature: TEMPERATURE,
         messages: [
           {
-            role: "user",
-            content: "Carmen\nLucia\nJavier\nPablo\nKim",
+            role: USER_ROLE,
+            content: EXAMPLE_NAMES,
           },
           {
-            role: "assistant",
-            content: "women\nwomen\nmen\nmen\nundefined",
+            role: ASSISTANT_ROLE,
+            content: EXAMPLE_GENDERS,
           },
-          { role: "user", content: names.join("\n") },
+          { role: USER_ROLE, content: names.join("\n") },
         ],
       });
 
-      message = completion.choices[0]?.message?.content;
+      const firstChoice = completion.choices[0];
+      if (firstChoice === undefined || firstChoice === null) {
+        message = undefined;
+      } else if (
+        firstChoice.message === undefined ||
+        firstChoice.message === null
+      ) {
+        message = undefined;
+      } else {
+        message = firstChoice.message.content;
+      }
     } catch {
       throw new Error("Could not classify the users");
     }
 
-    if (typeof message !== "string" || message.trim() === "") {
+    if (typeof message !== "string") {
       undefinedUser += names.length;
       continue;
     }
 
-    const lines = message.trim().split("\n");
+    const trimmedMessage = message.trim();
+    if (trimmedMessage === "") {
+      undefinedUser += names.length;
+      continue;
+    }
+
+    const lines = trimmedMessage.split("\n");
 
     if (lines.length !== names.length) {
       undefinedUser += names.length;
@@ -67,9 +94,9 @@ export async function usersGenderCount() {
     for (const line of lines) {
       const value = line.trim();
 
-      if (value === "women") {
+      if (value === WOMEN) {
         women += 1;
-      } else if (value === "men") {
+      } else if (value === MEN) {
         men += 1;
       } else {
         undefinedUser += 1;
