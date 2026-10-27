@@ -42,34 +42,48 @@ const REMOVE_SQL = readFileSync(
 );
 
 export function createUsersTable(database) {
-  return database.prepare(CREATE_USERS_TABLE_SQL).run();
+  const statement = database.prepare(CREATE_USERS_TABLE_SQL);
+
+  return statement.run();
 }
 
 export function insert(user) {
-  return db.prepare(INSERT_SQL).get({
+  const statement = db.prepare(INSERT_SQL);
+
+  return statement.get({
     name: user.name,
     email: user.email,
   });
 }
 
 export function findById(id) {
-  return db.prepare(FIND_BY_ID_SQL).get({ id });
+  const statement = db.prepare(FIND_BY_ID_SQL);
+
+  return statement.get({ id });
 }
 
 export function findByEmail(email) {
-  return db.prepare(FIND_BY_EMAIL_SQL).get({ email });
+  const statement = db.prepare(FIND_BY_EMAIL_SQL);
+
+  return statement.get({ email });
 }
 
 export function findByName(name) {
-  return db.prepare(FIND_BY_NAME_SQL).all({ name });
+  const statement = db.prepare(FIND_BY_NAME_SQL);
+
+  return statement.all({ name });
 }
 
 export function findAll() {
-  return db.prepare(FIND_ALL_SQL).all();
+  const statement = db.prepare(FIND_ALL_SQL);
+
+  return statement.all();
 }
 
 export function update(user) {
-  return db.prepare(UPDATE_SQL).get({
+  const statement = db.prepare(UPDATE_SQL);
+
+  return statement.get({
     name: user.name,
     email: user.email,
     id: user.id,
@@ -77,5 +91,7 @@ export function update(user) {
 }
 
 export function remove(id) {
-  return db.prepare(REMOVE_SQL).run({ id });
+  const statement = db.prepare(REMOVE_SQL);
+
+  return statement.run({ id });
 }
