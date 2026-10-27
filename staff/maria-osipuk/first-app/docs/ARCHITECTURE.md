@@ -10,7 +10,7 @@
 
 Cada cuaderno de operación tiene el escenario, las instrucciones y una celda. Si esa celda falla, muestra una frase en español y deja el detalle en `clients/jupyter/jupyter-client.log`.
 
-Los cuadernos se abren con `pnpm jupyter` desde `first-app`. Usan el Jupyter del `.venv`, el kernel `first-app` y la base `db/users.sqlite`. No crean usuarios de ejemplo.
+Los cuadernos se abren con `./scripts/jupyter.sh` desde `first-app`. Usan el Jupyter del `.venv`, el kernel `first-app` y la base `db/users.sqlite`. No crean usuarios de ejemplo.
 
 `logic/` es el núcleo de la aplicación. Contiene las funcionalidades para crear, buscar, actualizar, borrar y listar usuarios, y para contarlos según el género del nombre. Aplica las reglas de negocio y decide qué resultado recibe el cliente.
 
@@ -30,8 +30,9 @@ Ninguna capa accede directamente a otra capa que no sea la siguiente del recorri
 
 - `AGENTS.md` guarda el proceso SDD, los comandos y el cierre de una tarea. Enlaza a `docs/STYLE.md`.
 - `.gitignore` deja fuera `node_modules/`, `.env`, los archivos de SQLite, los checkpoints de Jupyter y el log del cliente Jupyter.
-- `package.json` declara los módulos ESM, `packageManager` con `pnpm@10.34.7`, el comando `pnpm jupyter` y el control que impide instalar con otro gestor.
+- `package.json` declara los módulos ESM, `packageManager` con `pnpm@10.34.7` y el control que impide instalar con otro gestor.
 - `pnpm-lock.yaml` es el archivo de bloqueo que se conserva.
+- `scripts/jupyter.sh` entra en la raíz de `first-app` y abre los cuadernos con el Jupyter del `.venv`.
 - `db/connection.js` abre la conexión SQLite. Acepta `FIRST_APP_DATABASE_FILE` para que un proceso use otra ruta.
 - `db/users.sqlite` es la base de la aplicación cuando no se configura otra ruta.
 - `queries/users.js` lee, prepara y ejecuta las consultas. Al cargarse, crea la tabla `users` si no existe.
