@@ -33,6 +33,57 @@ El formato es el estándar de Prettier, sin configuración propia: comillas dobl
 - Si aparecen dos fuentes de verdad o dos procedimientos que se contradicen (la constitución, el código actual, una spec, un plan o esta guía), no se elige uno. Se pregunta qué camino seguir y si hay que modificar la documentacion antes de empezar la spec nueva. No se escribe código hasta tener esa respuesta.
 - No propongas código que no se haya comprobado.
 
+## Paquetes
+
+### Cuándo
+
+Antes de dar por aceptado un `plan.md` que añade un paquete de Node o cambia su
+versión en `package.json`. También antes de ejecutar `tasks.md` que incluya ese
+cambio si el plan aún no trae el resumen.
+
+### Qué se revisa
+
+Ecosistema `npm`. Entra el paquete principal con la versión exacta que propone
+el plan. Entran sus dependencias hasta **3 capas**, cada una con versión
+concreta resuelta (no rangos en el resumen).
+
+Para obtener el árbol hasta 3 capas: partir del manifest publicado de la versión
+(`pnpm view <paquete>@<versión> dependencies`, y repetir por cada dependencia
+nueva hasta la tercera capa). Si un paquete ya salió en una capa anterior con
+la misma versión, no se vuelve a consultar.
+
+### MCP Socket
+
+1. Si el MCP no responde o pide autenticación, usar `mcp_auth` y reintentar. Si
+   sigue fallando, no se acepta el plan (spec: no inventar resumen).
+2. Llamar a `organizations` y guardar `org_slug` para herramientas de org.
+3. Por cada `depname@version` del árbol (capa 0 = directo, 1–3 = dependencias):
+
+   - **`depscore`**: `ecosystem` `npm`, `depname`, `version`. Anotar las stats
+     que devuelve Socket. Marcar **stat < 50** cuando cualquier puntuación
+     numérica de la respuesta sea menor que 50.
+   - **`alerts`**: `org_slug`, `artifact_type` `npm`, `artifact_name` =
+     `depname`, `status` `open`. Quedarse con las que correspondan a esa versión
+     si la respuesta lo permite.
+   - **`threat_feed`**: `org_slug`, `ecosystem` `npm`, `name`, `version`. Si
+     hay coincidencia, cuenta como **campaña / threat feed** para el resumen.
+
+4. **Alertas**: las abiertas relevantes se **comentan en la conversación**
+   (paquete, versión, tipo o categoría, severidad si viene). No se acepta el
+   plan ni se sigue con dependencias hasta que la persona diga si acepta esas
+   alertas.
+
+5. **Resumen en el plan**: añadir la sección `## Validación Socket` al
+   `plan.md` del desarrollo **antes** de darlo por aceptado. Una fila por
+   paquete revisado, con columnas: capa, paquete@versión, campaña (sí/no),
+   alertas (sí/no; detalle en conversación), stats < 50 (listar cuáles o
+   «ninguna»). Si no hubo incidencias, decirlo explícitamente.
+
+Queda fuera comprobar paquetes que no son de Node, comprobar un paquete cuya
+versión no cambia en el plan, mirar más de 3 capas, decidir alertas sin la
+persona y usar herramientas distintas del MCP Socket para sustituir esta
+validación.
+
 ## Al terminar cualquier tarea
 
 - Al crear una funcionalidad se crea su primer cliente en `clients/terminal/`, un `.txt` que se pega en la terminal con el directorio actual en `first-app`. Ese cliente importa la función de `logic/` y hace `console.log` del resultado. Es el test manual básico.
