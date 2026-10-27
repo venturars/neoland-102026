@@ -135,6 +135,12 @@ $("new-session").addEventListener("submit", async (event) => {
       body: JSON.stringify({ title: $("session-title").value }),
     }); // CA-01, CA-02
     const session = await res.json();
+    if (!res.ok && racing) {
+      const message = typeof session?.error === "string" && session.error.trim()
+        ? session.error : "No se pudo preparar la carrera.";
+      showMessage("error", message);
+      return;
+    }
     if (!res.ok) throw new Error(session.error || "No se pudo abrir la clase.");
     if (racing) { location.assign(`race-display.html?r=${encodeURIComponent(session.id)}#t=${encodeURIComponent(token())}`); return; }
     $("session-title").value = "";
