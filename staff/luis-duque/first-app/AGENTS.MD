@@ -116,6 +116,18 @@ Mantén los dos documentos en el mismo cambio que provoque la novedad.
 
 Este archivo, `AGENTS.MD`, es tu información de agente. Actualízalo cuando te den una regla, un estilo, un nombre o algo que haya que hacer o dejar de hacer. Sigue siendo concreto y legible. Conserva las reglas que sigan en vigor. Si una instrucción nueva anula otra, quédate solo con la nueva. No pongas nombres de personas.
 
+## Paquetes
+
+Antes de aceptar un plan que añade un paquete de Node o cambia su versión, comprueba ese paquete y esa versión con el MCP `socket-mcp`. El servidor es el de `MCP.md` en la raíz del repositorio.
+
+Mira si una campaña lo afecta, si tiene alguna alerta y si alguna stat está por debajo de 50. Mira también las dependencias, hasta 3 capas, con los mismos criterios.
+
+Comenta las alertas en el plan. Quien acepta el plan decide. No decidas tú.
+
+El plan lleva un resumen antes de aceptarse: paquete, versión, capa, campaña, alertas y stats por debajo de 50. Si una comprobación no está disponible, dilo. No lo presentes como ausencia de avisos.
+
+No compruebes un paquete que no es de Node, un paquete cuya versión no cambia, ni una dependencia más allá de la tercera capa.
+
 ## Git
 
 `.cursor/` está en el `.gitignore` de la raíz del repositorio. No lo quites de ahí y no lo subas.
