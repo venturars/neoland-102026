@@ -21,7 +21,7 @@ FONTS = (
 MAX_FONTS_BYTES = 300 * 1024
 EXTERNAL = re.compile(r"^\s*['\"]?\s*(?:[a-z][a-z0-9+.-]*:|//)", re.IGNORECASE)
 # Escritos antes que las letras (T02); deben fallar hasta T04, que quita esta marca.
-FONTS_PENDING = pytest.mark.xfail(reason="las letras llegan en T03 y T04", strict=True)
+FONTS_PENDING = pytest.mark.xfail(reason="el @font-face llega en T04", strict=True)
 
 
 def font_faces():
@@ -57,7 +57,6 @@ def test_font_faces_swap_to_the_system_font_while_loading():
     assert all(re.search(r"font-display:\s*swap", b) for b in blocks)
 
 
-@FONTS_PENDING
 @pytest.mark.parametrize(("family", "weight", "file"), FONTS)
 def test_the_app_serves_each_font(client, family, weight, file):
     res = client.get(f"/fonts/{file}")
@@ -66,14 +65,12 @@ def test_the_app_serves_each_font(client, family, weight, file):
     assert res.data[:4] == b"wOF2"
 
 
-@FONTS_PENDING
 @pytest.mark.parametrize("family", ["Montserrat", "Roboto"])
 def test_each_font_comes_with_its_licence(family):
     licence = STATIC_DIR / "fonts" / f"OFL-{family}.txt"
     assert "SIL OPEN FONT LICENSE" in licence.read_text(encoding="utf-8").upper()
 
 
-@FONTS_PENDING
 def test_fonts_are_small():  # spec §5: menos de 300 KB en total
     sizes = [f.stat().st_size for f in (STATIC_DIR / "fonts").glob("*.woff2")]
     assert len(sizes) == len(FONTS)

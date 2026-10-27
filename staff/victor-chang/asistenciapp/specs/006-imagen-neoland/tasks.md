@@ -35,11 +35,13 @@ Cómo leer esta lista:
     - Además de lo previsto: cada letra lleva `font-display: swap` (CA-02), sus dos licencias existen y los `.woff2` empiezan por `wOF2`.
     - Los 6 de "nada sale de la app" pasan ya, porque hoy las pantallas no piden nada fuera; quedan como red para T04–T07. Se comprobó a mano que la expresión detecta `https://…`, `//…` y comillas, y deja pasar `fonts/…`, `styles.css` y `/api/…`.
     - Para que la regla "todo en verde al acabar cada tarea" se cumpla, los tests de letras llevan la marca `FONTS_PENDING` (`xfail` estricto: si pasan antes de tiempo, fallan). T03 la quita de los tests de archivos (servir, licencias, tamaño) y T04 de los de `@font-face`.
-- [ ] **T03** 👤 · Descargar las letras (con permiso de Victor: nombres, origen y tamaño):
+- [x] **T03** 👤 · Descargar las letras (con permiso de Victor: nombres, origen y tamaño):
   - `montserrat-latin-700-normal.woff2`, `montserrat-latin-800-normal.woff2`, `roboto-latin-400-normal.woff2`, `roboto-latin-700-normal.woff2` de los paquetes de Fontsource, con versión fija;
   - sus licencias como `OFL-Montserrat.txt` y `OFL-Roboto.txt` en `static/fonts/`.
   - Comprobar que son archivos `woff2` de verdad (cabecera `wOF2`) y el tamaño total.
   - *Cubre:* CA-08 (las letras viven en la app).
+  - **Hecha (2026-10-27)**, con permiso de Victor: Fontsource 5.3.0 desde cdn.jsdelivr.net. Los cuatro `.woff2` empiezan por `wOF2` y suman **81 960 bytes** (~80 KB, < 300 KB); sus tamaños coinciden con los que publica el paquete. Las dos licencias son la SIL Open Font License 1.1.
+    - Se quita `FONTS_PENDING` de los tests de archivos (servir, licencias, tamaño), que ahora pasan; la mantienen los 5 de `@font-face` hasta T04. 448 tests en verde y 5 `xfail`; `ruff` y `mypy` sin avisos.
 - [ ] **T04** · `@font-face` en `styles.css` con `font-display: swap`; Montserrat en `h1`, `h2`, `.code`, `.total`, `.wordmark`; Roboto en `body`; lo que hoy es `font-weight: 600` pasa a `700`.
   - Los tests de T02 pasan.
   - *Cubre:* CA-02.
