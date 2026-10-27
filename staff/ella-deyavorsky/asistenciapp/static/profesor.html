@@ -25,12 +25,62 @@
       <form id="new-session" class="card">
         <label for="session-title">Título de la clase <span class="muted">(opcional)</span></label>
         <input id="session-title" placeholder="Ej.: Clase 20/10 – SDD" maxlength="100">
+        <!-- spec 007, RF-8: grupo o sesión rápida -->
+        <label for="session-group">Lista</label>
+        <select id="session-group">
+          <option value="">Sesión rápida (cada alumno escribe su nombre)</option>
+        </select>
         <button type="submit" class="full">Abrir asistencia</button>
+        <div id="open-error" class="message error" hidden>
+          <p id="open-error-text"></p>
+          <div class="actions">
+            <a id="open-error-edit" class="button secondary small" href="#">Añadir alumnos</a>
+            <button id="open-quick" type="button" class="secondary small">Abrir sesión rápida</button>
+          </div>
+        </div>
       </form>
+
+      <!-- spec 007: grupos del profesor -->
+      <h2>Grupos</h2>
+      <p><a id="new-group" class="button secondary" href="#">Nuevo grupo</a></p>
+      <p id="no-groups" class="muted" hidden>Todavía no tienes grupos.</p>
+      <ul id="groups" class="list sessions card"></ul>
+      <p><button id="toggle-archived" type="button" class="secondary small">Ver archivados</button></p>
+      <ul id="archived-groups" class="list sessions card" hidden></ul>
 
       <h2>Sesiones anteriores</h2>
       <p id="no-sessions" class="muted" hidden>Todavía no has abierto ninguna sesión.</p>
       <ul id="sessions" class="list sessions card"></ul>
+    </section>
+
+    <!-- Vista: grupo (spec 007, RF-1 a RF-3) -->
+    <section id="group-view" hidden>
+      <p><a id="group-back" href="#">← Volver al panel</a></p>
+      <h1 id="g-title">Nuevo grupo</h1>
+
+      <div class="card">
+        <label for="g-name">Nombre del grupo</label>
+        <input id="g-name" maxlength="60" placeholder="Ej.: SDD 2º A">
+        <div class="actions" id="g-rename-actions" hidden>
+          <button id="g-rename" type="button" class="secondary small">Guardar nombre</button>
+        </div>
+      </div>
+
+      <div id="g-students-card" class="card" hidden>
+        <p id="g-count" class="total"></p>
+        <ol id="g-students" class="list"></ol>
+      </div>
+
+      <form id="g-add" class="card">
+        <h2 id="g-add-title" style="margin-top:0">Alumnos</h2>
+        <label for="g-paste">Pega los nombres, uno por línea</label>
+        <textarea id="g-paste" rows="6"></textarea>
+        <label for="g-file">O sube un CSV <span class="muted">(primera columna: el nombre)</span></label>
+        <input id="g-file" type="file" accept=".csv,text/csv">
+        <button type="submit" class="secondary">Revisar</button>
+        <div id="g-preview" aria-live="polite"></div>
+        <button id="g-save" type="button" class="full" disabled>Guardar grupo</button>
+      </form>
     </section>
 
     <!-- Vista: sesión en vivo (T18) -->
@@ -55,6 +105,17 @@
       <div class="card">
         <p id="s-total" class="total" aria-live="polite"></p>
         <ol id="s-list" class="list"></ol>
+      </div>
+
+      <!-- spec 007, RF-18 a RF-20: nuevos y ausentes de una sesión con grupo -->
+      <div id="s-new-card" class="card" hidden>
+        <h2 style="margin-top:0">Nuevos <span class="muted small">(no estaban en la lista)</span></h2>
+        <p id="s-new-msg" class="message error" hidden></p>
+        <ol id="s-new" class="list"></ol>
+      </div>
+      <div id="s-absent-card" class="card" hidden>
+        <h2 style="margin-top:0" id="s-absent-title">Faltan</h2>
+        <ol id="s-absent" class="list"></ol>
       </div>
 
       <div class="actions">
