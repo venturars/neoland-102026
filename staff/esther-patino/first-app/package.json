@@ -7,9 +7,17 @@
   "author": "esther patino",
   "license": "MIT",
   "type": "module",
+  "scripts": {
+    "format": "prettier --write .",
+    "lint": "eslint ."
+  },
   "dependencies": {
     "@colors/colors": "1.6.1",
     "cli-table3": "0.6.5",
     "openai": "7.42.0"
+  },
+  "devDependencies": {
+    "eslint": "10.13.0",
+    "prettier": "3.9.10"
   }
 }

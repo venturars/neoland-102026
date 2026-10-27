@@ -24,9 +24,11 @@ El resto de este manual se usa cuando el momento ya es hacer el cambio en la ram
 
 Lee completamente `docs/CONSTITUTION.md` antes de modificar código.
 
-Respeta el árbol, el flujo y las responsabilidades definidos allí. No los repitas ni los redefinas en otros documentos.
+Esa guía enlaza a la arquitectura, el árbol, la base de datos, los errores y el estilo.
 
-Si el código contradice la Constitución, explica la contradicción y espera una decisión antes de programar.
+Respeta el árbol, el flujo y las responsabilidades definidos en esas guías. No los repitas ni los redefinas en otros documentos.
+
+Si el código contradice esas guías, explica la contradicción y espera una decisión antes de programar.
 
 ## Antes de editar
 
@@ -39,6 +41,10 @@ Cuando la revisión esté hecha, implementa solo ese pedido:
 1. Inspecciona los archivos relacionados.
 2. Sigue `tasks.md` de esa carpeta, en orden.
 3. Trabaja un solo pedido a la vez.
+
+Si un desarrollo añade o quita un fichero, su spec también actualiza `docs/TREE.md` y `docs/ARCHITECTURE.md`.
+
+La forma de cada línea se copia de `docs/STYLE.md`. El código que ya existe sirve para ver a qué fichero se parece una función nueva. Esta issue no lo reescribe. Un desarrollo posterior puede alinearlo. Mientras tanto, un spec nuevo no se para por esa diferencia.
 
 ## Forma de trabajar
 
@@ -83,27 +89,15 @@ La desarrolladora es junior. El código debe ser:
 
 Evita:
 
-- clases innecesarias;
 - abstracciones prematuras;
 - patrones de diseño no solicitados;
-- helpers genéricos que oculten pasos;
-- expresiones demasiado compactas;
 - dependencias externas innecesarias.
 
 Una solución más larga es preferible si resulta más fácil de comprender.
 
-## Idioma y formato
+## Estilo
 
-- Código y nombres técnicos: inglés.
-- Explicaciones para la desarrolladora: español.
-- Archivos: kebab-case.
-- Funciones y variables: camelCase.
-- Módulos: ESM.
-- Imports JavaScript con extensión `.js`.
-- Comillas dobles.
-- Punto y coma.
-- Indentación de 2 espacios.
-- Formato estándar de Prettier.
+La forma de cada línea y las convenciones están en `docs/STYLE.md`.
 
 Los comentarios son material de estudio. Deben ser lo más explicativos posible para que la desarrolladora pueda aprender el código leyéndolos.
 
@@ -267,58 +261,7 @@ updateUser(id, changes);
 - Si se modifica un valor único, permite que la entidad conserve su propio valor, pero no que utilice el de otra fila.
 - Devuelve la entidad completa y saneada después de actualizarla, salvo que la spec defina otro resultado.
 
-## Orden de una función de negocio
-
-1. Recibir los parámetros.
-2. Validar sus tipos.
-3. Normalizar los datos.
-4. Validar las reglas de negocio.
-5. Solicitar la operación correspondiente.
-6. Estructurar la respuesta.
-
-Los pasos deben ser visibles y no combinarse en una única expresión compleja.
-
-## Gestión de errores
-
-Los errores se gestionan en `logic/`, cerca de la regla de negocio que puede fallar.
-
-Cuando una entrada o una regla de negocio no es válida, la función lanza un `Error` con un mensaje claro en inglés:
-
-```js
-throw new Error("User email is invalid");
-```
-
-El mensaje explica el problema de forma comprensible. No se utilizan códigos opacos, clases de error propias ni objetos genéricos como `{ ok: false, error }`.
-
-Mensajes de referencia para esta aplicación:
-
-- `User id must be a positive integer`;
-- `User name is required`;
-- `User email is invalid`;
-- `User email is already registered`;
-- `User does not exist`.
-
-Los errores internos de SQLite nunca llegan directamente al cliente. `logic/` los captura y lanza un nuevo error que identifica la operación que no pudo completarse.
-
-Mensajes de referencia para errores de operación:
-
-- `Unable to create user`;
-- `Unable to update user`;
-- `Unable to delete user`;
-- `Unable to list users`;
-- `Unable to find user`.
-
-Ejemplo:
-
-```js
-let user;
-
-try {
-  user = findUserByEmail(email);
-} catch {
-  throw new Error("Unable to find user");
-}
-```
+## Respuesta
 
 Cuando una operación funciona, devuelve directamente el dato saneado. No lo envuelve en `{ ok: true }`.
 
@@ -343,13 +286,8 @@ Cada archivo de `clients/terminal/` contiene una sola línea: un ejemplo del cas
 - Utiliza las capas existentes según `docs/CONSTITUTION.md`.
 - Antes de crear un archivo, comprueba si ya existe uno con esa responsabilidad.
 - Antes de crear una consulta, comprueba si puede reutilizarse una existente.
-- Lee los archivos SQL una vez al cargar el módulo.
-- Utiliza parámetros SQL con nombre.
-- Nunca concatenes datos del usuario dentro del SQL.
 - No devuelvas campos que el cliente no necesita.
 - No conviertas silenciosamente datos inválidos.
-- No cambies el esquema como efecto secundario de otra tarea.
-- `logic/` no llama a `createUsersTable()` ni crea tablas. La tabla `users` queda preparada al cargar `queries/users.js`. Asegurarla con `CREATE TABLE IF NOT EXISTS` no es un cambio de esquema.
 
 ## Seguridad
 
@@ -360,16 +298,6 @@ Cada archivo de `clients/terminal/` contiene una sola línea: un ejemplo del cas
 - No borres ni reemplaces la base real durante las comprobaciones.
 - No añadas autenticación ni contraseñas sin una tarea específica.
 
-## Cambios en la base de datos
-
-Antes de cambiar columnas, tipos o restricciones:
-
-1. Explica el esquema actual.
-2. Explica el cambio propuesto.
-3. Indica si los datos existentes pueden verse afectados.
-4. Presenta el plan de migración.
-5. Espera autorización.
-
 ## Sincronización de la documentación
 
 `docs/CONSTITUTION.md` debe representar siempre el estado real del proyecto.
@@ -378,20 +306,20 @@ Después de implementar un cambio, comprueba si también hay que actualizar la C
 
 Actualízala en la misma tarea cuando:
 
-- se crea, elimina, mueve o renombra un archivo o carpeta;
+- se crea, elimina, mueve o renombra un archivo o carpeta: también `docs/TREE.md` y `docs/ARCHITECTURE.md`;
 - se añade o elimina una funcionalidad;
-- cambia el árbol del proyecto;
+- cambia el árbol del proyecto: `docs/TREE.md`;
 - cambia el recorrido de los datos;
-- cambia la responsabilidad de una capa;
+- cambia la responsabilidad de una capa o de un fichero: `docs/ARCHITECTURE.md`;
 - cambia el contrato de entrada o salida de `logic/`;
-- cambia la estructura de la base de datos;
+- cambia la estructura de la base de datos: `docs/DATABASE.md`;
 - cambia una decisión fundamental de la arquitectura.
 
 Al actualizar la Constitución:
 
 - describe únicamente lo que ya existe;
 - no añadas archivos ni funcionalidades planificadas;
-- actualiza el árbol para que coincida con el proyecto;
+- no copies ahí el árbol ni las responsabilidades;
 - elimina información que haya dejado de ser cierta.
 
 Si cambian los tipos o las reglas de validación de `id`, `name`, `email`, `created_at` o `updated_at`, actualiza también la sección correspondiente de este `AGENTS.md`.

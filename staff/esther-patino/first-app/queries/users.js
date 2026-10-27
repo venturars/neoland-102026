@@ -3,36 +3,54 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { db } from "../db/connection.js";
 
-const queriesDirectory = dirname(fileURLToPath(import.meta.url));
-
-function readQuery(name) {
-  return readFileSync(join(queriesDirectory, "queries", `${name}.sql`), "utf8");
-}
+const QUERIES_FILE = fileURLToPath(import.meta.url);
+const QUERIES_DIRECTORY = dirname(QUERIES_FILE);
 
 export function findById(id) {
-  return db.prepare(readQuery("find-by-id")).get({ id });
+  const sqlPath = join(QUERIES_DIRECTORY, "queries", "find-by-id.sql");
+  const sql = readFileSync(sqlPath, "utf8");
+  const statement = db.prepare(sql);
+  return statement.get({ id });
 }
 
 export function findByEmail(email) {
-  return db.prepare(readQuery("find-by-email")).get({ email });
+  const sqlPath = join(QUERIES_DIRECTORY, "queries", "find-by-email.sql");
+  const sql = readFileSync(sqlPath, "utf8");
+  const statement = db.prepare(sql);
+  return statement.get({ email });
 }
 
 export function findByName(name) {
-  return db.prepare(readQuery("find-by-name")).all({ name });
+  const sqlPath = join(QUERIES_DIRECTORY, "queries", "find-by-name.sql");
+  const sql = readFileSync(sqlPath, "utf8");
+  const statement = db.prepare(sql);
+  return statement.all({ name });
 }
 
 export function insertUser({ name, email }) {
-  return db.prepare(readQuery("insert-user")).get({ name, email });
+  const sqlPath = join(QUERIES_DIRECTORY, "queries", "insert-user.sql");
+  const sql = readFileSync(sqlPath, "utf8");
+  const statement = db.prepare(sql);
+  return statement.get({ name, email });
 }
 
 export function updateUser({ id, name, email }) {
-  return db.prepare(readQuery("update-user")).get({ id, name, email });
+  const sqlPath = join(QUERIES_DIRECTORY, "queries", "update-user.sql");
+  const sql = readFileSync(sqlPath, "utf8");
+  const statement = db.prepare(sql);
+  return statement.get({ id, name, email });
 }
 
 export function removeUser(id) {
-  return db.prepare(readQuery("remove-user")).run({ id });
+  const sqlPath = join(QUERIES_DIRECTORY, "queries", "remove-user.sql");
+  const sql = readFileSync(sqlPath, "utf8");
+  const statement = db.prepare(sql);
+  return statement.run({ id });
 }
 
 export function findAll() {
-  return db.prepare(readQuery("find-all")).all();
+  const sqlPath = join(QUERIES_DIRECTORY, "queries", "find-all.sql");
+  const sql = readFileSync(sqlPath, "utf8");
+  const statement = db.prepare(sql);
+  return statement.all();
 }

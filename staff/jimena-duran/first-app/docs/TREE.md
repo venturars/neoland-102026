@@ -2,6 +2,7 @@
 
 ```
 first-app/
+  eslint.config.js
   db/connection.js
   db/users.sqlite
   queries/queries/

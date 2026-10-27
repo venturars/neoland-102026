@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write \"db/**/*.js\" \"queries/**/*.js\" \"logic/**/*.js\"",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "Jimena Durán",
@@ -12,5 +14,10 @@
   "type": "module",
   "dependencies": {
     "openai": "7.39.0"
+  },
+  "devDependencies": {
+    "prettier": "3.9.10",
+    "eslint": "10.13.0",
+    "@eslint/js": "10.0.1"
   }
 }

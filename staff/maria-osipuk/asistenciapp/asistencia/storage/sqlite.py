@@ -30,6 +30,17 @@ CREATE TABLE IF NOT EXISTS checkins (
   checked_at  TEXT NOT NULL,
   UNIQUE (session_id, name_key)
 );
+
+CREATE TABLE IF NOT EXISTS registration_attempts (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  address      TEXT NOT NULL,
+  attempted_at REAL NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS registration_blocks (
+  address    TEXT PRIMARY KEY,
+  blocked_at REAL NOT NULL
+);
 """
 
 
@@ -241,3 +252,73 @@ def remove_checkin(path: Path | str, session_id: str, checkin_id: int) -> bool:
         return cursor.rowcount == 1
 
     return _using(path, work)
+
+
+def note_attempt(path: Path | str, address: str, now: float) -> tuple[bool, int, int]:
+    """Anota un intento, tira los que ya no caben en un minuto y cuenta.
+
+    Si la dirección ya está bloqueada, no anota nada.
+
+    :param path: Ruta del archivo.
+    :param address: Dirección de este intento.
+    :param now: Segundos Unix.
+    :return: Si ya estaba bloqueada, cuántos intentos caen en el último segundo y cuántos en el último minuto. Las dos cuentas incluyen este intento.
+    :rtype: tuple[bool, int, int]
+    """
+
+    def work(connection: sqlite3.Connection) -> tuple[bool, int, int]:
+        blocked = connection.execute(
+            "SELECT 1 FROM registration_blocks WHERE address = ?",
+            (address,),
+        ).fetchone()
+        if blocked is not None:
+            return True, 0, 0
+        with connection:
+            connection.execute(
+                "INSERT INTO registration_attempts (address, attempted_at) VALUES (?, ?)",
+                (address, now),
+            )
+            connection.execute(
+                "DELETE FROM registration_attempts WHERE attempted_at <= ?",
+                (now - 60,),
+            )
+        in_second = connection.execute(
+            """
+            SELECT COUNT(*) AS total FROM registration_attempts
+            WHERE address = ? AND attempted_at > ? AND attempted_at <= ?
+            """,
+            (address, now - 1, now),
+        ).fetchone()["total"]
+        in_minute = connection.execute(
+            """
+            SELECT COUNT(*) AS total FROM registration_attempts
+            WHERE address = ? AND attempted_at > ? AND attempted_at <= ?
+            """,
+            (address, now - 60, now),
+        ).fetchone()["total"]
+        return False, int(in_second), int(in_minute)
+
+    return _using(path, work)
+
+
+def block_address(path: Path | str, address: str, now: float) -> None:
+    """Deja la dirección bloqueada. Si ya lo estaba, no cambia la hora.
+
+    :param path: Ruta del archivo.
+    :param address: Dirección que se bloquea.
+    :param now: Segundos Unix.
+    :return: Nada.
+    :rtype: None
+    """
+
+    def work(connection: sqlite3.Connection) -> None:
+        with connection:
+            connection.execute(
+                """
+                INSERT INTO registration_blocks (address, blocked_at) VALUES (?, ?)
+                ON CONFLICT (address) DO NOTHING
+                """,
+                (address, now),
+            )
+
+    _using(path, work)
