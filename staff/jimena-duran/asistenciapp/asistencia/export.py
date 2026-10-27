@@ -21,10 +21,22 @@ def _local_time(iso: str, tz) -> str:
 
 
 def to_csv(rows, tz=None) -> str:
-    """rows: dicts con `name` y `checked_at` (ISO UTC). tz=None → hora local del servidor."""
+    """Exporta los asistentes por nombre y añade su total.
+
+    :param rows: registros con `name` y `checked_at` (ISO UTC).
+    :param tz: zona horaria; None usa la hora local del servidor.
+    :return: CSV con encabezado, asistentes ordenados y total final.
+    :rtype: str
+
+    Usage::
+
+        text = to_csv(rows)
+    """
+    ordered_rows = sorted(rows, key=lambda row: row["name"].casefold())
     out = io.StringIO()
     writer = csv.writer(out, delimiter=";", lineterminator="\r\n")
     writer.writerow(["Nombre", "Hora"])
-    for row in sorted(rows, key=lambda r: r["checked_at"]):
+    for row in ordered_rows:
         writer.writerow([_safe(row["name"]), _local_time(row["checked_at"], tz)])
+    writer.writerow(["Total de registros", len(ordered_rows)])
     return BOM + out.getvalue()
