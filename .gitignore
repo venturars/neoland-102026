@@ -2,6 +2,8 @@
 node_modules/
 package-lock.json
 npm-shrinkwrap.json
+next-env.d.ts
+.next/
 
 # Variables de entorno (cualquier carpeta)
 .env
@@ -77,9 +79,13 @@ __pycache__/
 .venv/
 venv/
 .pytest_cache/
+.ipynb_checkpoints/
+
+# Jupyter: checkpoints locales junto a los notebooks
+.ipynb_checkpoints/
 
 # SQLite generada en local (cualquier carpeta). *.sqlite se versiona en first-app,
-# salvo la base local de Esther, que no se sube.
+# salvo la base local de Esther y la de Ventura, que no se suben.
 *.db
 *.db-journal
 *.db-wal
@@ -88,3 +94,10 @@ staff/esther-patino/first-app/db/*.sqlite
 staff/esther-patino/first-app/db/*.sqlite-journal
 staff/esther-patino/first-app/db/*.sqlite-wal
 staff/esther-patino/first-app/db/*.sqlite-shm
+staff/ventura-rodriguez/first-app/db/*.sqlite
+staff/ventura-rodriguez/first-app/db/*.sqlite-journal
+staff/ventura-rodriguez/first-app/db/*.sqlite-wal
+staff/ventura-rodriguez/first-app/db/*.sqlite-shm
+
+# AsistenciApp de Esther: data/ guarda nombres de alumnos y el token del profesor.
+staff/esther-patino/asistenciapp/data/

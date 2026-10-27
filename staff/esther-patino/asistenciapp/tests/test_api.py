@@ -4,8 +4,13 @@ import re
 
 import pytest
 
+from app import create_app
+from asistencia.infra import db
+from tests.conftest import TOKEN
+
 INVALID_CODE = "El código no es válido o ha caducado. Pide el código actual al profesor."
 CLOSED = "La asistencia de esta clase ya está cerrada."
+BANNED = "No puedes pasar lista: tu acceso está bloqueado."
 
 
 def open_session(client, teacher, title="Clase de prueba"):
@@ -291,3 +296,159 @@ def test_removed_person_can_check_in_again(client, teacher):  # CA-26
     checkin_id = checkins_of(client, teacher, sid)[0]["id"]
     client.delete(f"/api/sessions/{sid}/checkins/{checkin_id}", headers=teacher)
     assert check_in(client, sid, "ana garcia", code).status_code == 201
+
+
+# ---------- 006 · control de acceso por IP (CA-01 a CA-10) ----------
+
+def post_from(client, sid, name, code, ip):
+    return client.post(
+        f"/api/s/{sid}/checkin",
+        json={"name": name, "code": code, "ip": "198.51.100.9"},
+        headers={"X-Forwarded-For": "198.51.100.9", "CF-Connecting-IP": "198.51.100.9"},
+        environ_overrides={"REMOTE_ADDR": ip},
+    )
+
+
+def test_blacklist_saves_and_reads(tmp_path):  # CA-05, CA-09
+    path = tmp_path / "lista.db"
+    conn = db.connect(path)
+    db.init_schema(conn)
+    assert db.is_banned(conn, "203.0.113.8") is False
+    db.ban(conn, "203.0.113.8", "2026-10-24T14:00:00.000+00:00")
+    assert db.is_banned(conn, "203.0.113.8") is True
+    conn.close()
+
+    again = db.connect(path)
+    db.init_schema(again)
+    assert db.is_banned(again, "203.0.113.8") is True
+    again.close()
+
+
+def test_blacklist_cannot_be_changed(tmp_path):  # CA-10
+    conn = db.connect(tmp_path / "lista.db")
+    db.init_schema(conn)
+    db.ban(conn, "203.0.113.8", "2026-10-24T14:00:00.000+00:00")
+    db.ban(conn, "203.0.113.8", "2026-10-24T18:00:00.000+00:00")
+    row = conn.execute("SELECT banned_at FROM blacklist WHERE ip = ?", ("203.0.113.8",)).fetchone()
+    assert row["banned_at"] == "2026-10-24T14:00:00.000+00:00"
+    names = {item for item in dir(db) if item.startswith(("unban", "remove_ban", "delete_ban"))}
+    assert names == set()
+    conn.close()
+
+
+def test_checkins_have_no_ip_column(tmp_path):  # CA-08
+    conn = db.connect(tmp_path / "lista.db")
+    db.init_schema(conn)
+    columns = [row["name"] for row in conn.execute("PRAGMA table_info(checkins)")]
+    assert "ip" not in columns
+    conn.close()
+
+
+def test_five_calls_in_one_second_still_check_in(client, teacher):  # CA-01
+    sid = open_session(client, teacher)
+    code = current_code(client, teacher, sid)
+    for i in range(5):
+        res = post_from(client, sid, f"Alumno {i}", code, "203.0.113.8")
+        assert res.status_code == 201
+
+
+def test_invalid_code_counts_toward_the_limit(client, teacher):  # CA-02
+    sid = open_session(client, teacher)
+    for i in range(5):
+        res = post_from(client, sid, f"Alumno {i}", "0000", "203.0.113.10")
+        assert res.status_code == 422
+        assert res.get_json()["error"] == INVALID_CODE
+    res = post_from(client, sid, "Alumno 5", "0000", "203.0.113.10")
+    assert res.status_code == 403
+    assert res.get_json()["error"] == BANNED
+
+
+def test_sixth_call_in_one_second_is_banned(client, teacher):  # CA-03, CA-08
+    sid = open_session(client, teacher)
+    code = current_code(client, teacher, sid)
+    ip = "203.0.113.11"
+    for i in range(5):
+        assert post_from(client, sid, f"Alumno {i}", code, ip).status_code == 201
+    res = post_from(client, sid, "Alumno 5", code, ip)
+    assert res.status_code == 403
+    assert res.get_json()["error"] == BANNED
+    names = [item["name"] for item in checkins_of(client, teacher, sid)]
+    assert names == [f"Alumno {i}" for i in range(5)]
+    assert "ip" not in checkins_of(client, teacher, sid)[0]
+    csv = client.get(f"/api/sessions/{sid}/export", headers=teacher).get_data(as_text=True)
+    assert ip not in csv
+    assert "Alumno 5" not in csv
+
+
+def test_twenty_first_call_in_one_minute_is_banned(client, teacher, clock):  # CA-04
+    sid = open_session(client, teacher)
+    code = current_code(client, teacher, sid)
+    ip = "203.0.113.12"
+    for i in range(20):
+        res = post_from(client, sid, f"Alumno {i}", code, ip)
+        assert res.status_code == 201
+        clock.advance(1)
+    res = post_from(client, sid, "Alumno 20", code, ip)
+    assert res.status_code == 403
+    assert res.get_json()["error"] == BANNED
+
+
+def test_banned_ip_stays_blocked_with_a_valid_code(client, teacher, clock):  # CA-05
+    sid = open_session(client, teacher)
+    code = current_code(client, teacher, sid)
+    ip = "203.0.113.13"
+    for _ in range(6):
+        post_from(client, sid, "Ana", code, ip)
+    clock.advance(120)
+    res = post_from(client, sid, "Luis", code, ip)
+    assert res.status_code == 403
+    assert res.get_json()["error"] == BANNED
+    assert [item["name"] for item in checkins_of(client, teacher, sid)] == ["Ana"]
+
+
+def test_spoofed_ip_does_not_avoid_the_ban(client, teacher):  # CA-06
+    sid = open_session(client, teacher)
+    code = current_code(client, teacher, sid)
+    real = "203.0.113.14"
+    fake = "198.51.100.9"
+    for i in range(6):
+        post_from(client, sid, f"Alumno {i}", code, real)
+    ok = post_from(client, sid, "Otra persona", code, fake)
+    assert ok.status_code == 201
+    again = post_from(client, sid, "Sigue bloqueada", code, real)
+    assert again.status_code == 403
+
+
+def test_ban_survives_time_close_and_a_new_app(tmp_path, clock):  # CA-09
+    path = tmp_path / "misma.db"
+    teacher = {"X-Teacher-Token": TOKEN}
+    first = create_app(path, token=TOKEN, now=clock)
+    client = first.test_client()
+    sid = open_session(client, teacher)
+    code = current_code(client, teacher, sid)
+    ip = "203.0.113.15"
+    for _ in range(6):
+        post_from(client, sid, "Ana", code, ip)
+    assert client.post(f"/api/sessions/{sid}/close", headers=teacher).status_code == 200
+    clock.advance(3600)
+
+    second = create_app(path, token=TOKEN, now=clock)
+    client = second.test_client()
+    sid = open_session(client, teacher, "Clase siguiente")
+    code = current_code(client, teacher, sid)
+    res = post_from(client, sid, "Ana", code, ip)
+    assert res.status_code == 403
+    assert res.get_json()["error"] == BANNED
+
+
+def test_nobody_can_remove_or_change_a_banned_ip(client, teacher):  # CA-10
+    sid = open_session(client, teacher)
+    code = current_code(client, teacher, sid)
+    ip = "203.0.113.16"
+    for _ in range(6):
+        post_from(client, sid, "Ana", code, ip)
+    missing = client.delete("/api/no-existe", headers=teacher)
+    attempt = client.delete(f"/api/sessions/blacklist/{ip}", headers=teacher)
+    assert attempt.status_code == missing.status_code
+    assert attempt.status_code != 200
+    assert post_from(client, sid, "Luis", code, ip).status_code == 403

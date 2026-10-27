@@ -81,9 +81,61 @@ function stopTimers() {
 
 // ---------- panel (T17) ----------
 
+async function renderBlockedIps() {
+  const rows = await (await api("/api/blocked-ips")).json();
+  const list = $("blocked-list");
+  list.replaceChildren();
+  $("no-blocked").hidden = rows.length > 0;
+  $("unblock-all").hidden = rows.length === 0;
+  for (const row of rows) {
+    const li = document.createElement("li");
+    const info = document.createElement("div");
+    info.className = "info";
+    const ipEl = document.createElement("strong");
+    ipEl.textContent = row.ip;
+    const meta = document.createElement("div");
+    meta.className = "muted small";
+    meta.textContent = `Bloqueada ${dateTime(row.blockedAt)}`;
+    info.append(ipEl, meta);
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.className = "secondary";
+    remove.textContent = "Quitar";
+    remove.addEventListener("click", async () => {
+      remove.disabled = true;
+      try {
+        const res = await api(`/api/blocked-ips/${encodeURIComponent(row.ip)}`, { method: "DELETE" });
+        if (!res.ok) throw new Error("unblock");
+        await renderBlockedIps();
+      } catch (error) {
+        handleError(error);
+      } finally {
+        remove.disabled = false;
+      }
+    });
+    li.append(info, remove);
+    list.append(li);
+  }
+}
+
+$("unblock-all").addEventListener("click", async () => {
+  const button = $("unblock-all");
+  button.disabled = true;
+  try {
+    const res = await api("/api/blocked-ips", { method: "DELETE" });
+    if (!res.ok) throw new Error("unblock-all");
+    await renderBlockedIps();
+  } catch (error) {
+    handleError(error);
+  } finally {
+    button.disabled = false;
+  }
+});
+
 async function renderPanel() {
   showView("panel");
   document.title = "Panel del profesor · AsistenciApp";
+  await renderBlockedIps();
   const sessions = await (await api("/api/sessions")).json(); // CA-16
 
   const list = $("sessions");

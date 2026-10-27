@@ -1,6 +1,26 @@
 # AGENTS.md — Manual de trabajo para agentes de IA
 
-Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [CONSTITUTION.md](CONSTITUTION.md) dice **qué reglas** se cumplen; este archivo dice **cómo se trabaja** día a día.
+## Qué va primero
+
+Cualquier tarea nueva sigue `docs/GIT-WORKFLOW.md` en la raíz de `neoland-102026`, aunque el mensaje no nombre ese fichero ni diga «issue». Esta sección va antes que el resto de este manual.
+
+Una tarea es una issue, una rama desde `staging` y una pull request en draft hacia `staging`.
+
+El momento es dejar la tarea escrita cuando el mensaje cuenta qué hay que hacer. También lo es si:
+
+- trae los títulos «Qué hay que hacer» y «Cómo probarlo»;
+- nombra una carpeta o un fichero de esta app y dice qué debe quedar escrito ahí;
+- pide una forma de trabajar, una spec o un cambio en `AGENTS.md` o en la constitución.
+
+En ese momento se abre solo `neoland-102026/docs/skills/create-issue/SKILL.md`, más `.github/issue_template.md` y `scripts/new-issue.sh`. No hace falta que la skill esté en la lista de skills de la sesión: se abre por esta ruta. No se abre `SKILL.md` ni `MCP.md`. No se usa el resto de este manual para decidir el momento ni para completar la issue.
+
+Se enseña la persona asignada y el título, y se espera el sí. No se enseña la descripción. Con el sí, `scripts/new-issue.sh` crea la issue.
+
+Nombrar el fichero de destino no autoriza a editarlo. Un mensaje que a la vez describe la tarea y pide escribir ficheros cabe en dos momentos: se pregunta cuál es y se espera. No se elige editar.
+
+El resto de este manual se usa cuando el momento ya es hacer el cambio en la rama de esa issue. La issue no sustituye al spec de la app. El spec de la app no sustituye a la issue. El orden es: issue, después la rama, y en esa rama este manual.
+
+Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [constitución](docs/CONSTITUTION.md) dice **qué reglas** se cumplen. La [arquitectura](docs/ARCHITECTURE.md) dice **qué hace cada parte**. Este archivo dice **cómo se trabaja** día a día.
 
 ---
 
@@ -8,10 +28,11 @@ Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en 
 
 Lee en este orden al empezar cualquier tarea:
 
-1. `CONSTITUTION.md`: las reglas no negociables.
-2. Este archivo (`AGENTS.md`).
-3. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual"). Busca specs **únicamente** en `staff/maria-osipuk/asistenciapp/specs/`. Un spec o una aprobación de un compañero no autorizan un cambio aquí.
-4. Su `plan.md` y su `tasks.md`, si ya existen.
+1. `docs/CONSTITUTION.md`: las reglas no negociables.
+2. `docs/ARCHITECTURE.md`: qué hace cada parte.
+3. Este archivo (`AGENTS.md`).
+4. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual"). Busca specs **únicamente** en `staff/maria-osipuk/asistenciapp/specs/`. Un spec o una aprobación de un compañero no autorizan un cambio aquí.
+5. Su `plan.md` y su `tasks.md`, si ya existen.
 
 Si algo de lo que te piden contradice la constitución, **para y avisa** antes de escribir nada.
 
@@ -58,9 +79,11 @@ Al empezar el cambio, el único fichero nuevo permitido es el `spec.md` dentro d
 
 ```
 asistenciapp/
-├── CONSTITUTION.md        # reglas no negociables
-├── AGENTS.md              # este archivo
+├── AGENTS.md              # este archivo: cómo trabajar
 ├── README.md              # cómo arrancar la app (para humanos)
+├── docs/
+│   ├── CONSTITUTION.md    # reglas no negociables
+│   └── ARCHITECTURE.md    # qué hace cada parte
 ├── specs/
 │   └── NNN-nombre/
 │       ├── spec.md        # qué y por qué
@@ -68,12 +91,22 @@ asistenciapp/
 │       └── tasks.md       # pasos
 ├── requirements.txt       # dependencias de Python (Flask, pytest)
 ├── pytest.ini             # configuración de pytest
-├── app.py                 # aplicación Flask y punto de entrada
-├── asistencia/            # lógica del servidor (paquete de Python)
+├── app.py                 # entrada HTTP, puerto y túnel
+├── asistencia/
+│   ├── domain/
+│   │   ├── codes.py       # códigos
+│   │   ├── names.py       # nombres
+│   │   └── session.py     # la clase existe, está abierta y el código vale
+│   ├── usecases/
+│   │   └── attendance.py  # acciones de profesor y alumno
+│   ├── storage/
+│   │   └── sqlite.py      # lectura y escritura
+│   ├── export.py          # CSV de filas ya cargadas
+│   └── tunnel.py          # túnel, lo usa app.py
 ├── static/                # HTML, CSS y JS del navegador
 ├── tests/                 # tests (test_*.py)
 ├── .venv/                 # entorno virtual de Python (no se sube a git)
-└── data/                  # base de datos SQLite (no se sube a git)
+└── data/                  # base de datos (no se sube a git)
 ```
 
 Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-spec-antes-del-cambio`.
@@ -127,7 +160,25 @@ Una funcionalidad está terminada cuando:
 | --- | --- | --- |
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
 | `002-spec-antes-del-cambio` | ✅ Implementada (2026-10-23) | Ningún fichero de esta app se toca sin un spec local aprobado |
+| `003-aclarar-instrucciones-arranque` | ✅ Implementada (2026-10-23) | T01–T03 hechas en el README, sin cambio de requisitos |
 | `004-quitar-referencias-personales` | ✅ Implementada (2026-10-23) | Referencias personales quitadas de la documentación. Instrucciones con un usuario genérico |
+| `005-reorganizar-documentos-y-arquitectura` | ✅ Implementada (2026-10-23) | Dominio, acciones, almacenamiento y entrada HTTP. Correcciones de pruebas, tipos y tabla de estado. Tres fallos de validación quedan para otra spec |
 | Bot de Discord | Idea futura, sin número | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
+
+---
+
+## 8. Funciones comprensibles
+
+Una persona tiene que poder leer una función sin adivinar. No se añade un formateador, un linter ni otra herramienta para vigilar estas normas.
+
+- Cada módulo explica en pocas líneas cuál es su responsabilidad.
+- Una función hace una sola cosa y el nombre dice cuál.
+- Se lee de arriba abajo.
+- Los parámetros y el resultado llevan tipos.
+- El docstring dice qué entra, qué sale y qué errores importan, con `:param`, `:return`, `:rtype` y `:raises`.
+- Si un ejemplo corto ayuda, va en `Usage::`.
+- No se comenta una línea que ya se entiende leyéndola.
+- No hay abreviaturas ambiguas, funciones que solo pasan la llamada, ni la misma regla escrita dos veces.
+- Las explicaciones y los mensajes que ve el usuario van en español.

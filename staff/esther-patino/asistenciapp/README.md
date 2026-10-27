@@ -4,16 +4,15 @@ Pasa lista en una clase online (Discord, Google Meet o cualquier otra plataforma
 
 El profesor abre una sesión y comparte en la llamada un **código de 4 cifras** que cambia cada 30 segundos. Los alumnos abren un enlace, escriben su nombre y el código, y aparecen al momento en la lista del profesor. Al final de la clase, la lista se descarga para Excel o Google Sheets.
 
-> Proyecto hecho con *Spec-Driven Development*. Las reglas están en [CONSTITUTION.md](CONSTITUTION.md), el manual para agentes de IA en [AGENT.md](AGENT.md) y la especificación en [specs/001-checkin-codigo/](specs/001-checkin-codigo/spec.md).
+> Proyecto hecho con *Spec-Driven Development*. Las reglas están en [CONSTITUTION.md](docs/CONSTITUTION.md), el manual para agentes de IA en [AGENTS.md](AGENTS.md) y la especificación en [specs/001-checkin-codigo/](specs/001-checkin-codigo/spec.md).
 
 ---
 
 ## 1. Preparar el entorno (solo la primera vez)
 
-Necesitas **Python 3.13+** y, para clases online, **Homebrew** (macOS).
+Necesitas **Python 3.13+** y, para clases online, **Homebrew** (macOS). Estos comandos se ejecutan dentro de la carpeta de este proyecto.
 
 ```bash
-cd staff/victor-chang/asistenciapp
 python3 -m venv .venv                # crea el entorno virtual del proyecto
 source .venv/bin/activate            # lo activa (verás "(.venv)" en el prompt)
 pip install -r requirements.txt      # instala Flask y pytest
@@ -22,14 +21,15 @@ brew install cloudflared             # el túnel para que los alumnos entren des
 
 ---
 
-## 2. Arrancar la app
+## 2. Activar el entorno
 
-En cada terminal nueva, primero activa el entorno:
+En cada terminal nueva, primero activa el entorno. Estos comandos se ejecutan dentro de la carpeta de este proyecto:
 
 ```bash
-cd staff/victor-chang/asistenciapp
 source .venv/bin/activate
 ```
+
+### Arrancar la app
 
 | Para… | Comando |
 | --- | --- |
@@ -69,9 +69,11 @@ Cuando un alumno se registra, su navegador lo recuerda **para esa clase**: si vu
 
 Es un límite **disuasorio**, no una prueba de identidad: se salta con otro navegador, una ventana privada u otro dispositivo. Para lo que se cuele, está el botón **Quitar**. Si quitas a alguien, su navegador sigue mostrando "ya te registraste": tendría que usar otro navegador para registrarse de nuevo.
 
-Las **sesiones anteriores** aparecen en el panel con su número de asistentes, y puedes volver a verlas o descargarlas cuando quieras.
+### Límite por IP
 
----
+Una misma IP solo puede intentar pasar lista **5 veces por segundo** y **20 veces por minuto**. Si pasa de ahí, ve *«No puedes pasar lista: tu acceso está bloqueado.»* y esa IP entra en una blacklist que se guarda siempre. Nadie puede quitarla ni cambiarla.
+
+Las **sesiones anteriores** aparecen en el panel con su número de asistentes, y puedes volver a verlas o descargarlas cuando quieras.
 
 ## 4. Cerrar la app
 
@@ -86,8 +88,6 @@ lsof -nP -iTCP:8000 -sTCP:LISTEN     # muestra el proceso "Python" y su número 
 kill <PID>                           # lo para
 pkill cloudflared                    # para el túnel, si lo usabas
 ```
-
----
 
 ## 5. Problemas frecuentes
 
@@ -110,8 +110,6 @@ pytest            # o "pytest -v" para ver cada test
 ```
 
 Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una verificación manual; la tabla está en [plan.md §6](specs/001-checkin-codigo/plan.md).
-
----
 
 ## 7. Privacidad
 

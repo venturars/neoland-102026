@@ -74,4 +74,4 @@ Ninguna. El alcance, la carpeta y quién aprueba quedaron decididos el 2026-10-2
 | --- | --- | --- | --- |
 | 0.1 | 2026-10-23 | Versión inicial (borrador) | El agente escribió un cambio de README (issue #301) sin spec |
 | 1.0 | 2026-10-23 | Aprobada | Ok para pasar al plan |
-| 1.1 | 2026-10-23 | Implementada | Enmienda aplicada a `CONSTITUTION.md` (v2.2) y `AGENT.md`; `grep` de «victor» vacío y 77 tests en verde |
+| 1.1 | 2026-10-23 | Implementada | Enmienda aplicada a `CONSTITUTION.md` (v2.2) y `AGENT.md`; búsqueda de nombres de personas vacía y 77 tests en verde |

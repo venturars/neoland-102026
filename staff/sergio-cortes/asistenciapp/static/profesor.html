@@ -28,6 +28,15 @@
         <button type="submit" class="full">Abrir asistencia</button>
       </form>
 
+      <h2>Conexiones bloqueadas</h2>
+      <div class="card" id="blocked-card">
+        <p id="no-blocked" class="muted" hidden>No hay direcciones bloqueadas.</p>
+        <ul id="blocked-list" class="list"></ul>
+        <div class="actions">
+          <button id="unblock-all" type="button" class="secondary" hidden>Quitar todas</button>
+        </div>
+      </div>
+
       <h2>Sesiones anteriores</h2>
       <p id="no-sessions" class="muted" hidden>Todavía no has abierto ninguna sesión.</p>
       <ul id="sessions" class="list sessions card"></ul>

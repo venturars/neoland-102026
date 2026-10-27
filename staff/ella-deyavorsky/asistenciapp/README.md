@@ -4,7 +4,7 @@ Pasa lista en una clase online (Discord, Google Meet o cualquier otra plataforma
 
 El profesor abre una sesión y comparte en la llamada un **código de 4 cifras** que cambia cada 30 segundos. Los alumnos abren un enlace, escriben su nombre y el código, y aparecen al momento en la lista del profesor. Al final de la clase, la lista se descarga para Excel o Google Sheets.
 
-> Proyecto hecho con *Spec-Driven Development*. Las reglas están en [CONSTITUTION.md](CONSTITUTION.md), el manual para agentes de IA en [AGENT.md](AGENT.md) y la especificación en [specs/001-checkin-codigo/](specs/001-checkin-codigo/spec.md).
+> Proyecto hecho con *Spec-Driven Development*. Las reglas están en [docs/CONSTITUTION.md](docs/CONSTITUTION.md), la organización del código en [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), el manual para agentes de IA en [AGENTS.md](AGENTS.md) y la especificación en [specs/001-checkin-codigo/](specs/001-checkin-codigo/spec.md).
 
 ---
 
@@ -13,7 +13,7 @@ El profesor abre una sesión y comparte en la llamada un **código de 4 cifras**
 Necesitas **Python 3.13+** y, para clases online, **Homebrew** (macOS).
 
 ```bash
-cd staff/victor-chang/asistenciapp
+cd staff/ella-deyavorsky/asistenciapp
 python3 -m venv .venv                # crea el entorno virtual del proyecto
 source .venv/bin/activate            # lo activa (verás "(.venv)" en el prompt)
 pip install -r requirements.txt      # instala Flask y pytest
@@ -22,14 +22,18 @@ brew install cloudflared             # el túnel para que los alumnos entren des
 
 ---
 
-## 2. Arrancar la app
+## 2. Activar el entorno
 
 En cada terminal nueva, primero activa el entorno:
 
 ```bash
-cd staff/victor-chang/asistenciapp
+cd staff/ella-deyavorsky/asistenciapp
 source .venv/bin/activate
 ```
+
+---
+
+## 3. Arrancar la app
 
 | Para… | Comando |
 | --- | --- |
@@ -51,7 +55,7 @@ Ese enlace es **tu panel privado**: no lo compartas, porque quien lo tenga puede
 
 ---
 
-## 3. Pasar lista, paso a paso
+## 4. Pasar lista, paso a paso
 
 1. Abre el **enlace del panel** que aparece en la terminal.
 2. Escribe un título (opcional; si no, se usa la fecha y hora) y pulsa **Abrir asistencia**.
@@ -73,7 +77,7 @@ Las **sesiones anteriores** aparecen en el panel con su número de asistentes, y
 
 ---
 
-## 4. Cerrar la app
+## 5. Cerrar la app
 
 Pulsa **Ctrl+C** en la terminal donde está arrancada. Se paran la app y el túnel. Los datos quedan guardados en `data/asistencia.db`.
 
@@ -89,20 +93,35 @@ pkill cloudflared                    # para el túnel, si lo usabas
 
 ---
 
-## 5. Problemas frecuentes
+## 6. Problemas frecuentes
 
 | Mensaje o síntoma | Qué hacer |
 | --- | --- |
-| `El puerto 8000 ya está en uso` | Ya tienes la app abierta en otra terminal: ciérrala (sección 4). O usa otro puerto: `PORT=8001 python app.py --tunel`. |
+| `El puerto 8000 ya está en uso` | Ya tienes la app abierta en otra terminal: ciérrala (sección 5). O usa otro puerto: `PORT=8001 python app.py --tunel`. |
 | `No se encontró cloudflared` | Instálalo: `brew install cloudflared`. |
 | El enlace del túnel no carga | Espera unos 20 segundos y recarga: los túneles nuevos tardan en estar accesibles. |
 | Aviso amarillo en el panel: *"tus alumnos no podrán abrir el enlace"* | Abriste el panel en `localhost`. Para la app y arráncala con `python app.py --tunel`. |
 | *"Enlace del panel no válido"* | Usa el enlace exacto de la terminal, incluido todo lo que va detrás de `#t=`. |
 | `command not found: pytest` o `python` no encuentra Flask | No has activado el entorno: `source .venv/bin/activate`. |
+| Los alumnos ven *"Tu IP ha sido bloqueada…"* | Se superó el límite de intentos y la IP quedó bloqueada para siempre. Mira *Si una IP queda bloqueada*, justo debajo. |
+
+### Límite de intentos y IP bloqueada
+
+Para que nadie ausente pruebe códigos hasta acertar, el registro admite como máximo **5 intentos por segundo y 20 por minuto** desde cada IP. Quien se pasa recibe el aviso *"Tu IP ha sido bloqueada…"* y queda en una lista negra **para siempre**, también si reinicias la app. Solo cuentan los registros de los alumnos; tu panel no tiene límite.
+
+> **Ojo con el enlace público:** con `--tunel` todos los alumnos llegan a la app con la misma IP (`127.0.0.1`), así que comparten el límite. Si se registran más de 5 a la vez, o más de 20 en un minuto, se bloquea a toda la clase. Es una decisión aceptada (spec 006).
+
+**Si una IP queda bloqueada** (por ejemplo, toda la clase), desbloquéala a mano. Para la app (sección 5) y, desde esta carpeta, ejecuta:
+
+```bash
+sqlite3 data/asistencia.db "DELETE FROM blocked_ips WHERE ip = '127.0.0.1'; DELETE FROM ip_attempts WHERE ip = '127.0.0.1';"
+```
+
+Cambia `127.0.0.1` por la IP que quieras desbloquear. Después vuelve a arrancar la app.
 
 ---
 
-## 6. Tests
+## 7. Tests
 
 ```bash
 source .venv/bin/activate
@@ -113,9 +132,10 @@ Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una 
 
 ---
 
-## 7. Privacidad
+## 8. Privacidad
 
-- Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails ni IPs.
+- Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails.
+- La **IP** se guarda solo para limitar los intentos (lista negra y contadores), **separada de los nombres** y sin salir en el CSV (constitución P4, v3.0).
 - El límite "un registro por navegador" se guarda **solo en el navegador del alumno**, no en el servidor.
 - Quitar un registro lo **borra de verdad** (no queda en ninguna papelera).
 - Los datos se guardan **solo en tu ordenador** (`data/`, que no se sube a git).
