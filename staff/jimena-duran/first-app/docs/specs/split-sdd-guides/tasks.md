@@ -11,4 +11,19 @@
 - [x] Contrastar todas las reglas originales con su destino, comprobar
   enlaces y criterios de la spec, y verificar el alcance documental del diff.
 
-Verificado: reglas conservadas, enlaces válidos y cambios solo documentales.
+## Ampliación de la spec
+
+- [x] Añadir en `docs/STYLE.md` una acción por línea, `if` y
+  `throw new Error` separados y la prohibición de clases, `this` y métodos.
+- [x] Actualizar `AGENTS.md`: la spec debe contemplar árbol y arquitectura
+  al añadir o eliminar archivos; el estilo previo no bloquea nuevas specs.
+- [x] Cuando se autorice expresamente el merge, integrar `origin/staging`
+  conservando las guías, las dos secciones «Paquetes» y la documentación SDD
+  de Socket, sin reemplazar documentos completos por una sola versión.
+- [x] Contrastar las reglas de Socket con su versión integrada: momento,
+  tres capas, criterios, resumen, exclusiones y decisión humana completos.
+- [x] Verificar las cinco reglas, conservación de las anteriores, enlaces,
+  formato y alcance documental del diff; sin código, SQL ni dependencias.
+
+Implementación e integración de staging completadas y verificadas.
+Guardado y subida autorizados.

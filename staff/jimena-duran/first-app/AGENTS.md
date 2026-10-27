@@ -14,7 +14,8 @@ Las reglas generales y los enlaces a las guías por tema están en [CONSTITUTION
 
 - Antes de editar código, lee `docs/CONSTITUTIONS.md` y la spec que esté activa.
 - Trabaja con temperatura cercana a cero: sigue la spec y el plan, sin inventar requisitos.
-- Investiga primero, revisa si existe una tarea semejante ya resuelta y respeta las convenciones del código existente.
+- Investiga primero y revisa si existe una tarea semejante ya resuelta. El código existente sirve de referencia para encontrar operaciones parecidas; el estilo se toma de [STYLE.md](docs/STYLE.md). Las diferencias de estilo del código existente no bloquean una nueva spec.
+- Si un desarrollo añade o elimina archivos, su spec debe contemplar la actualización de [TREE.md](docs/TREE.md) y [ARCHITECTURE.md](docs/ARCHITECTURE.md).
 - Si la constitución, el código, una spec o esta guía ofrecen instrucciones incompatibles, detén la implementación. Registra la duda en el plan y solicita decidir qué fuente debe prevalecer, incluyendo si hace falta actualizar la documentación.
 - No presentes una solución que no haya sido comprobada.
 
