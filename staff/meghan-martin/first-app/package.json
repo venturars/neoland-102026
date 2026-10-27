@@ -3,8 +3,17 @@
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
+  "scripts": {
+    "format": "prettier --write \"db/**/*.js\" \"queries/**/*.js\" \"logic/**/*.js\" \"eslint.config.js\"",
+    "lint": "eslint ."
+  },
   "keywords": [],
   "author": "Meghan Martin",
   "license": "MIT",
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.13.0",
+    "prettier": "3.9.10"
+  }
 }

@@ -29,7 +29,8 @@ La plantilla de la pull request es `.github/pull_request_template.md` de esta ap
 - No hay comando de arranque. Cada acción se prueba pegando su `clients/terminal/*.txt` desde dentro de `first-app`.
 - No hay tests. `package.json` no tiene script `test`.
 - El lock que hay es `package-lock.json`. No hay `pnpm-lock.yaml`.
-- Prettier, formato estándar. No hay script de lint ni de formato.
+- `npm run format` lanza Prettier. El formato es el estándar, sin configuración propia.
+- `npm run lint` lanza ESLint.
 
 ## Estilo
 
@@ -50,8 +51,10 @@ Prettier sin configuración propia: comillas dobles, punto y coma, coma final, 2
 - No digas que algo funciona si no has ejecutado el ejemplo de terminal.
 - `.gitignore` ignora `node_modules/` y los ficheros `*.sqlite`. No subas tampoco `.DS_Store` ni restos de Jupyter (`Untitled.ipynb`).
 
-## Al terminar
+## Al terminar una tarea
 
 Al crear una funcionalidad se crea su ejemplo en `clients/terminal/`: un `.txt` que se pega con el directorio actual en `first-app`. Importa la función de `logic/` y hace `console.log` del resultado. Si la función es async, el ejemplo la espera con `await`. Esa es la comprobación.
+
+Antes de dar la tarea por terminada, lanza `npm run format` y `npm run lint`.
 
 La tarea está terminada solo si hubo spec aprobada, plan, código, y ese ejemplo ejecutado.
