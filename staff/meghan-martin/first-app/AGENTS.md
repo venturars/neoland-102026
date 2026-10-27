@@ -4,7 +4,7 @@
 
 first-app es la app de Meghan en este curso. Se construye con IA siguiendo SDD. No es una web: se usa desde la terminal y guarda personas en SQLite.
 
-Está en `staff/meghan-martin/first-app`, en Node, con módulos ES (`"type": "module"`) y `node:sqlite`. La conexión es `db/connection.js`. El fichero por defecto es `db/users.sqlite`; si existe `USERS_DB_PATH`, se usa ese. La arquitectura, la base de datos y qué llevan spec, plan y tasks están en `docs/CONSTITUTIONS.md`. Léelo antes de cambiar código.
+Las reglas de la app, y el camino a cada tema, están en [docs/CONSTITUTIONS.md](docs/CONSTITUTIONS.md). Para escribir código se sigue [docs/STYLE.md](docs/STYLE.md).
 
 ## Flujo
 
@@ -30,17 +30,7 @@ La plantilla de la pull request es `.github/pull_request_template.md` de esta ap
 - `npm run jupyter`, desde `first-app`, abre la lista de notebooks. La primera vez prepara el Jupyter de esta app.
 - No hay tests. `package.json` no tiene script `test`.
 - El lock que hay es `package-lock.json`. No hay `pnpm-lock.yaml`.
-- Prettier, formato estándar. No hay script de lint ni de formato.
-
-## Estilo
-
-El código va en inglés. Los comentarios de `clients/terminal/*.txt` van en español. Esos `.txt` son un bloque `node --input-type=module`. Las acciones de `logic/` importan su función y hacen `console.log`. Crear la tabla importa `createUsersTable` y `db`, y muestra el nombre de la tabla.
-
-Ficheros en kebab-case, funciones y variables en camelCase, exportaciones con nombre e imports ESM con `.js`. El SQL usa parámetros con nombre (`:id`, `:name`, `:email`). El contrato de `logic/` está en la constitución. La frase de error de cada acción está en su plan.
-
-Se lee de arriba abajo, con `if` y con nombres que digan qué hacen. No añadas envoltorios de resultado, clases de error, helpers genéricos ni capas que oculten los pasos.
-
-Prettier sin configuración propia: comillas dobles, punto y coma, coma final, 2 espacios, ancho 80.
+- No hay script de lint ni de formato. Cómo queda el código está en [docs/STYLE.md](docs/STYLE.md).
 
 ## Reglas
 
