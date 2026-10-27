@@ -20,6 +20,11 @@ Desde `exercises/ChromaDB/`, en PowerShell:
 
 - Activar el entorno: `.venv\Scripts\Activate.ps1`
 - Instalar dependencias: `pip install -r requirements.txt`
+- Descargar el modelo: `ollama pull qwen3-embedding:0.6b`
+- Regenerar el Markdown desde el HTML: `python scripts/convert_docs.py`
+- Revisar el troceado: `python scripts/count_chunks.py`
+- Construir el índice: `python scripts/build_index.py`
+- Consultar: `python scripts/search.py "pregunta"` y `python scripts/get_doc.py nombre.exacto`
 - Tests: no hay.
 - Formato y lint: no hay.
 
