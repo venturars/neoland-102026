@@ -91,9 +91,15 @@ Cómo leer esta lista:
     - Ninguna petición fuera de la app en ninguna página ni modo (CA-08); letras Montserrat y Roboto cargadas (CA-02); ningún texto ni imagen de Neoland (CA-04).
     - Ya existía antes y no se cambia: en el inicio, las tarjetas tienen un hueco grande sobre su título (margen del `h2`).
     - Servidor parado y 8012 libre.
-- [ ] **T09** · Cierre:
+- [x] **T09** · Cierre:
   - README: de dónde vienen las letras y su licencia;
   - AGENT.md: estado;
   - lista de comprobación de `ARCHITECTURE.md` (§13) y de la constitución (plan §6);
   - `pytest`, `ruff` y `mypy` en verde; `git diff` sin cambios en `profesor.js` ni `alumno.js`; puertos libres.
   - *Cubre:* CA-05.
+  - **Hecha (2026-10-27):**
+    - README §8 (Privacidad): las pantallas no piden nada fuera de la app; las letras son Montserrat y Roboto de Fontsource 5.3.0, con licencia SIL OFL 1.1, en `static/fonts/` junto a sus licencias; el aspecto se inspira en neoland.es sin su logotipo ni sus imágenes. README §7 enlaza la trazabilidad de la spec 006 (plan §5).
+    - AGENT.md §7: spec 006 terminada.
+    - **Comprobación final:** 494 tests en verde; `ruff check`, `ruff format --check` y `mypy` sin avisos. Desde el inicio de la spec (rama de la 004) solo cambian `static/` (tres HTML, `styles.css` y `fonts/`), `tests/test_static.py`, el README, AGENT.md y los documentos de la spec; `profesor.js` y `alumno.js`, sin cambios (CA-05). El 8012 está libre; el 8000 lo ocupa otro programa de Victor (`uvicorn webapp`), que no es de esta tarea y no se toca.
+    - **Constitución (plan §6.1):** se cumple tal como se planeó. P2: mismas clases y nombres de variables, solo CSS y la cabecera. P3: ninguna dependencia nueva (las letras son archivos estáticos). P4 y CA-08: nada sale de la app, comprobado por test y en la pestaña Red. P5: contraste comprobado por test en claro y oscuro, foco visible, 400 px, 44 px. P6: el único texto nuevo es el nombre de la app. §6: el servidor no cambia.
+    - **`ARCHITECTURE.md` §13:** no cambia ningún archivo de Python de la app, así que las preguntas de capas, SQL, errores, validación y registros siguen como al cerrar la spec 004. U2: el JS no cambia. T1/T3: cada CA tiene test (CA-01, 02, 05, 06, 08) o paso manual (CA-03, 04, 07, en T08), y no se simula nada. §12: ninguna abstracción ni dependencia nueva. **Excepciones:** ninguna.
