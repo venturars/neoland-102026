@@ -21,6 +21,7 @@ first-app/
     queries/          one .sql file per statement
   db/                 the database file and the code that opens it
   clients/terminal/   paste files you run by hand
+  clients/jupyter/    notebooks, one per feature, opened in the browser with scripts/jupyter.sh
   docs/               this explanation
 ```
 
@@ -116,6 +117,10 @@ The SQL text lives only in `queries/queries/`. `queries/users.js` reads a file a
 `insert`, `findById`, `findByEmail`, and `update` use `.get()`. `findAll` uses `.all()`. `remove` uses `.run()` and returns nothing.
 
 A file in `logic/` calls a function exported by `queries/users.js`. It does not read a `.sql` file. The query functions do not decide if a name or an email is valid. Those decisions stay in `logic/`. They use the one connection from `db/connection.js`.
+
+## Packages
+
+Every Node package that is added, or whose version is changed, is validated with Socket before the plan is accepted. How to do it is written in `AGENTS.md`.
 
 ## Specs
 

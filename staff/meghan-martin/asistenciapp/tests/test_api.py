@@ -49,9 +49,12 @@ def test_unknown_api_route_is_404_json(client):
 
 def test_public_session_info_does_not_leak_the_list(client, teacher):
     sid = open_session(client, teacher)
-    check_in(client, sid, "Ana", current_code(client, teacher, sid))
+    check_in(client, sid, "Meghan Martin", current_code(client, teacher, sid))
     data = client.get(f"/api/s/{sid}").get_json()
-    assert data == {"title": "Clase de prueba", "open": True}
+    assert data["title"] == "Clase de prueba"
+    assert data["open"] is True
+    assert "checkins" not in data
+    assert "Meghan Martin" in data["names"]
 
 
 # ---------- T07 · crear y listar sesiones (CA-01, CA-02, CA-16) ----------
@@ -72,8 +75,8 @@ def test_create_session_without_title_uses_date(client, teacher, body):  # CA-02
 
 def test_list_sessions_newest_first_with_totals(client, teacher, clock):  # CA-16
     first = open_session(client, teacher, "Primera")
-    check_in(client, first, "Ana", current_code(client, teacher, first))
-    check_in(client, first, "Luis", current_code(client, teacher, first))
+    check_in(client, first, "Meghan Martin", current_code(client, teacher, first))
+    check_in(client, first, "Luis Duque", current_code(client, teacher, first))
     clock.advance(3600)
     second = open_session(client, teacher, "Segunda")
 
@@ -89,10 +92,10 @@ def test_list_sessions_newest_first_with_totals(client, teacher, clock):  # CA-1
 
 def test_check_in_with_current_code(client, teacher):  # CA-04
     sid = open_session(client, teacher)
-    res = check_in(client, sid, "Ana García", current_code(client, teacher, sid))
+    res = check_in(client, sid, "Meghan Martin", current_code(client, teacher, sid))
     assert res.status_code == 201
     data = res.get_json()
-    assert data["name"] == "Ana García"
+    assert data["name"] == "Meghan Martin"
     assert "checkedAt" in data
 
 
@@ -100,7 +103,7 @@ def test_check_in_with_previous_code(client, teacher, clock):  # CA-05
     sid = open_session(client, teacher)
     previous = current_code(client, teacher, sid)
     clock.advance(30)
-    assert check_in(client, sid, "Ana", previous).status_code == 201
+    assert check_in(client, sid, "Meghan Martin", previous).status_code == 201
 
 
 def test_check_in_with_code_from_two_windows_ago(client, teacher, clock):  # CA-06
@@ -126,11 +129,11 @@ def test_check_in_with_wrong_code(client, teacher, code):  # CA-06
 
 def test_duplicate_name_is_not_added_twice(client, teacher, clock):  # CA-07
     sid = open_session(client, teacher)
-    first = check_in(client, sid, "Ana García", current_code(client, teacher, sid)).get_json()
+    first = check_in(client, sid, "Meghan Martin", current_code(client, teacher, sid)).get_json()
     clock.advance(10)
-    res = check_in(client, sid, "  ana   GARCIA ", current_code(client, teacher, sid))
+    res = check_in(client, sid, "  meghan   martin ", current_code(client, teacher, sid))
     assert res.status_code == 200
-    assert res.get_json() == {"already": True, "name": "Ana García", "checkedAt": first["checkedAt"]}
+    assert res.get_json() == {"already": True, "name": "Meghan Martin", "checkedAt": first["checkedAt"]}
     assert client.get(f"/api/sessions/{sid}", headers=teacher).get_json()["total"] == 1
 
 
@@ -144,9 +147,9 @@ def test_invalid_name_is_rejected(client, teacher, name):  # CA-08
 
 def test_html_name_is_returned_literally(client, teacher):  # CA-12
     sid = open_session(client, teacher)
-    check_in(client, sid, "<b>Ana</b>", current_code(client, teacher, sid))
-    checkins = client.get(f"/api/sessions/{sid}", headers=teacher).get_json()["checkins"]
-    assert checkins[0]["name"] == "<b>Ana</b>"
+    res = check_in(client, sid, "<b>Ana</b>", current_code(client, teacher, sid))
+    assert res.status_code == 400
+    assert client.get(f"/api/sessions/{sid}", headers=teacher).get_json()["checkins"] == []
 
 
 def test_unknown_session(client):
@@ -164,13 +167,13 @@ def test_teacher_view(client, teacher, clock):  # CA-10, CA-11
     assert 1 <= data["secondsLeft"] <= 30
     assert data["studentUrl"].endswith(f"/alumno.html?s={sid}")
 
-    check_in(client, sid, "Luis", data["code"])
+    check_in(client, sid, "Luis Duque", data["code"])
     clock.advance(5)
-    check_in(client, sid, "Ana", current_code(client, teacher, sid))
+    check_in(client, sid, "Meghan Martin", current_code(client, teacher, sid))
 
     data = client.get(f"/api/sessions/{sid}", headers=teacher).get_json()
     assert data["total"] == 2
-    assert [c["name"] for c in data["checkins"]] == ["Luis", "Ana"]
+    assert [c["name"] for c in data["checkins"]] == ["Luis Duque", "Meghan Martin"]
 
 
 # ---------- T10 · cerrar sesión (CA-09, CA-13) ----------
@@ -199,9 +202,9 @@ def test_close_unknown_session(client, teacher):
 
 def test_export_csv(client, teacher, clock):  # CA-14
     sid = open_session(client, teacher)
-    check_in(client, sid, "Luis", current_code(client, teacher, sid))
+    check_in(client, sid, "Luis Duque", current_code(client, teacher, sid))
     clock.advance(5)
-    check_in(client, sid, "Ana García", current_code(client, teacher, sid))
+    check_in(client, sid, "Meghan Martin", current_code(client, teacher, sid))
 
     res = client.get(f"/api/sessions/{sid}/export", headers=teacher)
     assert res.status_code == 200
@@ -211,7 +214,7 @@ def test_export_csv(client, teacher, clock):  # CA-14
 
     rows = res.get_data(as_text=True).lstrip("﻿").splitlines()
     assert rows[0] == "Nombre;Hora"
-    assert [r.split(";")[0] for r in rows[1:]] == ["Luis", "Ana García"]
+    assert [r.split(";")[0] for r in rows[1:]] == ["Luis Duque", "Meghan Martin"]
 
 
 # ---------- T13 · acceso a través del túnel (CA-19) ----------
@@ -233,30 +236,30 @@ def checkins_of(client, teacher, sid):
 
 def test_checkins_include_id(client, teacher):
     sid = open_session(client, teacher)
-    check_in(client, sid, "Ana", current_code(client, teacher, sid))
+    check_in(client, sid, "Meghan Martin", current_code(client, teacher, sid))
     assert isinstance(checkins_of(client, teacher, sid)[0]["id"], int)
 
 
 def test_remove_checkin(client, teacher):  # CA-24
     sid = open_session(client, teacher)
     code = current_code(client, teacher, sid)
-    check_in(client, sid, "Ana", code)
-    check_in(client, sid, "Falso", code)
-    fake = next(c for c in checkins_of(client, teacher, sid) if c["name"] == "Falso")
+    check_in(client, sid, "Meghan Martin", code)
+    check_in(client, sid, "Luis Duque", code)
+    fake = next(c for c in checkins_of(client, teacher, sid) if c["name"] == "Luis Duque")
 
     res = client.delete(f"/api/sessions/{sid}/checkins/{fake['id']}", headers=teacher)
     assert res.status_code == 200
 
     data = client.get(f"/api/sessions/{sid}", headers=teacher).get_json()
-    assert [c["name"] for c in data["checkins"]] == ["Ana"]
+    assert [c["name"] for c in data["checkins"]] == ["Meghan Martin"]
     assert data["total"] == 1
     csv = client.get(f"/api/sessions/{sid}/export", headers=teacher).get_data(as_text=True)
-    assert "Falso" not in csv and "Ana" in csv
+    assert "Luis Duque" not in csv and "Meghan Martin" in csv
 
 
 def test_remove_checkin_from_closed_session(client, teacher):  # CA-24
     sid = open_session(client, teacher)
-    check_in(client, sid, "Ana", current_code(client, teacher, sid))
+    check_in(client, sid, "Meghan Martin", current_code(client, teacher, sid))
     client.post(f"/api/sessions/{sid}/close", headers=teacher)
     checkin_id = checkins_of(client, teacher, sid)[0]["id"]
     assert client.delete(f"/api/sessions/{sid}/checkins/{checkin_id}", headers=teacher).status_code == 200
@@ -266,7 +269,7 @@ def test_remove_checkin_from_closed_session(client, teacher):  # CA-24
 def test_remove_unknown_or_other_session_checkin(client, teacher):  # CA-24
     sid = open_session(client, teacher)
     other = open_session(client, teacher, "Otra")
-    check_in(client, other, "Ana", current_code(client, teacher, other))
+    check_in(client, other, "Meghan Martin", current_code(client, teacher, other))
     other_id = checkins_of(client, teacher, other)[0]["id"]
 
     assert client.delete(f"/api/sessions/{sid}/checkins/{other_id}", headers=teacher).status_code == 404
@@ -278,7 +281,7 @@ def test_remove_unknown_or_other_session_checkin(client, teacher):  # CA-24
 @pytest.mark.parametrize("headers", [{}, {"X-Teacher-Token": "token-falso"}])
 def test_remove_requires_token(client, teacher, headers):  # CA-25
     sid = open_session(client, teacher)
-    check_in(client, sid, "Ana", current_code(client, teacher, sid))
+    check_in(client, sid, "Meghan Martin", current_code(client, teacher, sid))
     checkin_id = checkins_of(client, teacher, sid)[0]["id"]
     assert client.delete(f"/api/sessions/{sid}/checkins/{checkin_id}", headers=headers).status_code == 401
     assert len(checkins_of(client, teacher, sid)) == 1
@@ -287,7 +290,7 @@ def test_remove_requires_token(client, teacher, headers):  # CA-25
 def test_removed_person_can_check_in_again(client, teacher):  # CA-26
     sid = open_session(client, teacher)
     code = current_code(client, teacher, sid)
-    check_in(client, sid, "Ana García", code)
+    check_in(client, sid, "Meghan Martin", code)
     checkin_id = checkins_of(client, teacher, sid)[0]["id"]
     client.delete(f"/api/sessions/{sid}/checkins/{checkin_id}", headers=teacher)
-    assert check_in(client, sid, "ana garcia", code).status_code == 201
+    assert check_in(client, sid, "meghan martin", code).status_code == 201

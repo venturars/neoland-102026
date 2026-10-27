@@ -7,7 +7,12 @@
   "author": "esther patino",
   "license": "MIT",
   "type": "module",
+  "scripts": {
+    "jupyter": "node scripts/jupyter.js"
+  },
   "dependencies": {
-    "openai": "^7.42.0"
+    "@colors/colors": "1.6.1",
+    "cli-table3": "0.6.5",
+    "openai": "7.42.0"
   }
 }

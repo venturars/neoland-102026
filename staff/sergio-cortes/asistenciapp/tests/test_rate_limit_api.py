@@ -1,6 +1,6 @@
 """Tests API rate limit por IP (spec 006)."""
 
-from asistencia.infra.sqlite import connect
+from asistencia.infra.sqlite.connection import connect
 
 from test_api import INVALID_CODE, current_code, open_session
 

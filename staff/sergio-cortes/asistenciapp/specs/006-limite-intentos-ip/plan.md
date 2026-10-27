@@ -11,15 +11,13 @@ Este documento explica **cómo** cumplimos la spec 006 sin cambiar el comportami
 ### 1.1 Flujo en `POST /api/s/<session_id>/checkin`
 
 ```
-web: client_ip(request)
-  → si IP bloqueada → 429 + mensaje bloqueo (CA-05)
-  → uc.check_in(...) como hoy
-       → InvalidCode → uc.record_invalid_code_attempt(ip, now)
-            → purga intentos > 60 s
-            → cuenta ventanas 1 s y 60 s
-            → si umbral → repo.block_ip + 429
-            → si no → 422 (mensaje código inválido, CA-01)
-       → resto de errores → sin contador (CA-02)
+web: request.remote_addr (tras ProxyFix) → run(action)
+  → attendance.check_in(path, session_id, name, code, now, ip)
+       → storage.is_ip_blocked → raise Banned → 429 (CA-05)
+       → código inválido → _after_invalid_code (purga, insert, cuenta ventanas)
+            → over_limit → block_ip + raise Banned → 429 (CA-03, CA-04)
+            → si no → raise InvalidCode → 422 (CA-01)
+       → resto de errores de sesión/nombre → sin contador (CA-02)
        → éxito → 201 / already (CA-02)
 ```
 
@@ -29,15 +27,13 @@ La comprobación de bloqueo va **antes** de validar código válido (CA-05). Sol
 
 | Pieza | Capa | Ubicación |
 | --- | --- | --- |
-| Umbrales 5/1 s, 20/60 s, decisión bloqueo | Dominio | `domain/rate_limit.py` |
-| `IpBlocked` (petición desde IP ya bloqueada) | Dominio | `domain/errors.py` |
-| Orquestación intento inválido + bloqueo | Casos de uso | `use_cases/rate_limit.py` |
-| Contrato persistencia bloqueos/intentos | Port | `ports/rate_limit_repository.py` |
-| Tablas + SQL | Infra | `infra/sqlite/schema.py`, `rate_limit_repository.py` |
-| IP cliente, rutas JSON, HTTP 429/422 | Web | `web/flask_app.py` |
+| Umbrales 5/1 s, 20/60 s, `over_limit`, `Banned` | Dominio | `domain/attempts.py` |
+| Orquestación check-in + intento inválido | Casos de uso | `usecases/attendance.py` (`check_in`, `_after_invalid_code`, `list_blocked`, …) |
+| SQL asistencia + bloqueos/intentos | Almacén | `storage/sqlite.py` (funciones con `path`); DDL en `infra/sqlite/schema.py` |
+| IP cliente, rutas JSON, HTTP 429/422 | Borde | `app.py` (`run(action)` captura `Banned` e `InvalidCode`) |
 | Lista / quitar bloqueos | Web + static | API profesor + `profesor.html` / `profesor.js` |
 | Enmienda P4 + §6 | Docs | `docs/CONSTITUTIONS.md` §8 (v2.4) |
-| Dónde va la lógica | Docs | `docs/ARCHITECTURE.md` (tabla §4 ampliada) |
+| Dónde va la lógica | Docs | `docs/ARCHITECTURE.md` v1.5 |
 
 ---
 
@@ -72,54 +68,50 @@ No FK a `sessions` ni `checkins` (CA-07).
 
 ### 3.1 Constantes y regla pura
 
-`domain/rate_limit.py`:
+`domain/attempts.py`:
 
-- `MAX_INVALID_PER_SECOND = 5` (el 6.º bloquea, CA-06).
-- `MAX_INVALID_PER_MINUTE = 20` (el 21.º bloquea, CA-06).
+- `MAX_PER_SECOND = 5` (el 6.º bloquea, CA-06).
+- `MAX_PER_MINUTE = 20` (el 21.º bloquea, CA-06).
 - `ATTEMPT_RETENTION_SECONDS = 60` (purga y ventana del minuto).
-- `def should_block_after_attempt(count_last_second: int, count_last_minute: int) -> bool` — true si `count_last_second > 5` o `count_last_minute > 20` **después** de insertar el intento actual (equivalente a 6.º / 21.º).
+- `over_limit(in_last_second, in_last_minute) -> bool` — true si el recuento **incluye** el intento recién insertado y supera umbrales.
+- `Banned` — excepción con `BAN_MESSAGE` (CA-03, CA-05).
 
-Tests unitarios en `tests/test_rate_limit.py` sin Flask ni SQLite.
+Tests unitarios en `tests/test_rate_limit.py` (dominio `attempts`) sin Flask ni SQLite.
 
-### 3.2 Errores
+### 3.2 Errores HTTP
 
-- `IpBlocked`: la IP está en block list antes de procesar check-in.
-- Mantener `InvalidCode` para intento inválido que **aún** no bloquea.
+- IP bloqueada o bloqueo tras intento inválido: `check_in` lanza **`Banned`** → `run(action)` responde **429** con el mensaje de `BAN_MESSAGE` (CA-05, CA-03).
+- Código inválido sin bloqueo: **`InvalidCode`** → **422** con el mensaje ya usado en spec 001 (CA-01).
 
 ---
 
-## 4. Port e infra
+## 4. Almacén (`storage/sqlite.py`)
 
-`RateLimitRepository` (Protocol):
+Funciones con **`path`** al fichero SQLite (mismo módulo que asistencia spec 001):
 
-| Método | Uso |
+| Función | Uso |
 | --- | --- |
-| `is_blocked(ip: str) -> bool` | CA-05 |
-| `block_ip(ip: str, blocked_at_iso: str) -> None` | CA-03, CA-04 |
-| `record_invalid_attempt(ip: str, attempted_at_iso: str) -> None` | CA-01 |
-| `count_invalid_attempts(ip: str, since_iso: str) -> int` | Ventanas 1 s / 60 s |
-| `purge_attempts_older_than(cutoff_iso: str) -> None` | CA-08 |
-| `list_blocked() -> list[dict]` | `{ip, blocked_at}` |
-| `unblock_ip(ip: str) -> bool` | CA-10 |
-| `unblock_all() -> int` | CA-11, filas borradas |
+| `is_ip_blocked(path, ip) -> bool` | CA-05 |
+| `block_ip(path, ip, blocked_at_iso)` | CA-03, CA-04 |
+| `record_invalid_code_attempt(path, ip, attempted_at_iso)` | CA-01 |
+| `count_invalid_code_attempts(path, ip, since_iso) -> int` | Ventanas 1 s / 60 s |
+| `purge_invalid_code_attempts_older_than(path, cutoff_iso)` | CA-08 |
+| `list_blocked_ips(path) -> list[dict]` | `{ip, blocked_at}` |
+| `unblock_ip(path, ip) -> bool` | CA-10 |
+| `unblock_all_ips(path) -> int` | CA-11 |
 
-Implementación: `SqliteRateLimitRepository` en `infra/sqlite/rate_limit_repository.py`, misma conexión por request que el repositorio de asistencia (patrón `g` en Flask).
+Cada llamada abre/cierra conexión vía `infra/sqlite/connection.py`; el DDL compartido vive en `schema.py`.
 
 ---
 
 ## 5. Casos de uso
 
-`use_cases/rate_limit.py`:
+`usecases/attendance.py`:
 
-1. **`assert_not_blocked(repo, ip)`** — lanza `IpBlocked` si aplica.
-2. **`after_invalid_code(repo, ip, now_float, now_iso)`**:
-   - `purge_attempts_older_than(now - 60s)`
-   - `record_invalid_attempt`
-   - contar desde `now - 1s` y `now - 60s`
-   - si `should_block_after_attempt` → `block_ip` y devolver `{blocked: True}`
-   - si no → `{blocked: False}`
+1. **`check_in(..., ip)`** — al inicio `is_ip_blocked`; tras código inválido llama **`_after_invalid_code`**: purga, registra intento, cuenta ventanas; si `over_limit`, `block_ip` y **`raise Banned()`**; si no, **`raise InvalidCode()`**.
+2. **`list_blocked`**, **`unblock_one`**, **`unblock_all`** — API profesor (delegan en `storage`).
 
-`check_in` en `use_cases/attendance.py` **no** mezcla rate limit; la ruta web orquesta (mantiene attendance.py enfocado en asistencia).
+La ruta Flask solo obtiene IP, parsea JSON y llama a `check_in` dentro de **`run(action)`** (sin SQL ni umbrales en `web`).
 
 ---
 
@@ -127,23 +119,20 @@ Implementación: `SqliteRateLimitRepository` en `infra/sqlite/rate_limit_reposit
 
 ### 6.1 IP del cliente
 
-- Función `client_ip(request) -> str` en `web/flask_app.py` (o `web/client_ip.py` si crece).
-- Ampliar `ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)` para túnel Cloudflare (cabecera `X-Forwarded-For`).
+- `ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)` para túnel Cloudflare: Flask rellena `request.remote_addr` desde `X-Forwarded-For`.
+- En check-in se pasa `request.remote_addr or ""` a `check_in` (sin módulo aparte).
 - Tests: fijar IP con `environ_overrides` / `REMOTE_ADDR` en cliente de prueba.
 
 ### 6.2 Check-in
 
 En `check_in` route:
 
-1. `ip = client_ip(request)`
-2. `assert_not_blocked(rate_repo, ip)` → capturar `IpBlocked` → **429** + `BLOCKED_MSG`
-3. `uc.check_in(...)` como hoy
-4. `except InvalidCode`: llamar `after_invalid_code`; si `blocked` → **429** + `BLOCKED_MSG`; si no → **422** + mensaje actual
+1. IP = `request.remote_addr or ""`
+2. `check_in(app.config["DB_PATH"], session_id, …, now, ip)` dentro de `run(action)`
+3. **`Banned`** → **429** + texto de `BAN_MESSAGE` (`domain/attempts.py`, CA-03)
+4. **`InvalidCode`** → **422** + mensaje spec 001
 
-Mensajes propuestos (español, CA-03):
-
-- `BLOCKED_MSG`: «Demasiados intentos incorrectos. Tu conexión quedó bloqueada. Pide al profesor que te desbloquee.»
-- Distinto de `INVALID_CODE` existente.
+El mensaje de bloqueo vive en **`BAN_MESSAGE`**; distinto del error de código inválido.
 
 ### 6.3 API profesor (token `X-Teacher-Token`, CA-12)
 
@@ -202,7 +191,7 @@ Añadir breve apartado: bloqueo por intentos, mensaje al alumno, panel profesor 
 
 | Principio | Cómo lo cumple |
 | --- | --- |
-| **P2** Simplicidad | Un port + repo SQLite; sin Redis ni middleware externo |
+| **P2** Simplicidad | Funciones en `storage/sqlite.py`; sin Redis ni middleware externo |
 | **P3** Dependencias | Solo stdlib + Flask/pytest existentes |
 | **P4** Privacidad | IP fuera de checkins; enmienda acotada; purga de intentos |
 | **P5** Móvil | UI profesor en la misma hoja/CSS |
@@ -224,3 +213,19 @@ Añadir breve apartado: bloqueo por intentos, mensaje al alumno, panel profesor 
 
 - `tasks.md` (siguiente fase tras aprobación de este plan).
 - Cambios en `hack-etico.sh` (opcional manual en issue).
+
+---
+
+## 13. Alineación con arquitectura 005 (2026-10-26)
+
+Con la arquitectura **005**, la feature 006 **no** usa módulos aparte `rate_limit_db.py` ni `use_cases/rate_limit.py`. Toda la persistencia anti-abuso está en **`storage/sqlite.py`**; la orquestación en **`usecases/attendance.py`**; reglas puras en **`domain/attempts.py`**. IP del check-in: **`request.remote_addr`** tras `ProxyFix` en **`app.py`**. Ver `specs/005-clean-architecture/plan.md` §1.2 y `docs/ARCHITECTURE.md` v1.5.
+
+---
+
+## 14. Historial
+
+| Fecha | Cambio |
+| --- | --- |
+| 2026-10-23 | Borrador inicial tras aprobación de spec. |
+| 2026-10-26 | §1–§6 y §10 actualizados a `attempts` + `storage` + `usecases`; §13 enlace 005. |
+| 2026-10-26 | §6.1: IP vía `request.remote_addr` (eliminado `client_ip.py`). |
