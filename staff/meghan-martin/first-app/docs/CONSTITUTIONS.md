@@ -46,6 +46,15 @@ first-app/
       find-user-by-email.txt
       find-user-by-id.txt
       users-gender-count.txt
+    jupyter/
+      create-users-table.ipynb
+      create-user.ipynb
+      list-users.ipynb
+      update-user.ipynb
+      delete-user.ipynb
+      find-user-by-email.ipynb
+      find-user-by-id.ipynb
+      users-gender-count.ipynb
   docs/
     CONSTITUTIONS.md
     GIT-WORKFLOW.md
@@ -58,6 +67,10 @@ first-app/
         spec.md
         plan.md
         tasks.md
+      jupyter-client/
+        spec.md
+        plan.md
+        tasks.md
 ```
 
 `db/users.sqlite` existe en disco y no se sube a git.
@@ -66,6 +79,7 @@ first-app/
 - `queries/queries/*.sql` son solo sentencias. `queries/users.js` las lee y las ejecuta. Ahí no se decide si un email es válido.
 - `logic/` es la app. Cada acción es su propio fichero, con sus comprobaciones dentro. Un fichero ya creado no se reescribe para meter otra acción. Las reglas no se mueven a queries ni a clients.
 - `clients/terminal/*.txt` no son programas. Se pegan con el directorio actual en `first-app`. Solo ahí se imprime el resultado.
+- `clients/jupyter/*.ipynb` llaman a la misma acción que su `.txt`. Se abren con `npm run jupyter` desde `first-app`. No cambian `logic/`.
 - Una acción nueva es un fichero nuevo en `logic/` y un `.txt` nuevo en `clients/terminal/`.
 
 ## Specs
