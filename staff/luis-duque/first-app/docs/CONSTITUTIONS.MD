@@ -20,6 +20,10 @@ Es un SDD de iniciación. Una persona lee cada fichero antes del siguiente. No h
 
 Si la constitución, el código y la spec no dicen lo mismo, la pregunta queda al final del plan y no hay tareas.
 
+## Paquetes
+
+Un paquete de Node nuevo, o un cambio de su versión, se comprueba con Socket antes de aceptar el plan. El cómo está en `AGENTS.MD`.
+
 ## Estructura
 
 ```text
