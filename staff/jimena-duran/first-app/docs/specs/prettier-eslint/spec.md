@@ -21,12 +21,7 @@ las reglas actuales del proyecto y sus módulos ES.
 
 ## Dependencias y límites
 
-Las PR #419 y #421 siguen pendientes: la primera establece la validación
-de paquetes y la segunda reorganiza las guías, incluida la de estilo.
-Antes de implementar se resolverá en el plan cómo coordinar esos cambios
-sin duplicarlos ni perder reglas. La validación con Socket se aplica a esta
-tarea aunque su documentación todavía no esté integrada.
-
+Antes de implementar, el plan debe respetar las reglas vigentes de validación de paquetes, arquitectura y estilo, sin duplicar documentación ni perder requisitos.
 El alcance se limita a las herramientas, sus comandos y la documentación
 de first-app. No se cambian comportamientos de negocio ni la base de datos
 local, ni se copian archivos ajenos. No se revisan paquetes ajenos a Node,
