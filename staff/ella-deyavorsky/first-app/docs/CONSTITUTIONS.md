@@ -118,6 +118,10 @@ The SQL text lives only in `queries/queries/`. `queries/users.js` reads a file a
 
 A file in `logic/` calls a function exported by `queries/users.js`. It does not read a `.sql` file. The query functions do not decide if a name or an email is valid. Those decisions stay in `logic/`. They use the one connection from `db/connection.js`.
 
+## Packages
+
+Every Node package that is added, or whose version is changed, is validated with Socket before the plan is accepted. How to do it is written in `AGENTS.md`.
+
 ## Specs
 
 A new feature is a new folder in `docs/specs/`. The folder name is kebab-case, like `docs/specs/classifier/`. Each folder has three files, written in this order. No code for a feature is written until its `spec.md`, `plan.md`, and `tasks.md` exist, in that order. If the folder or a file is missing, write the missing file.

@@ -34,6 +34,15 @@ The active spec is the approved description of the feature you are building now.
 - There are no tests yet. `pnpm test` only prints that no test is specified, then stops.
 - Format code with Prettier, using Prettier's standard settings. Do not add a custom Prettier config.
 
+## Packages
+
+When you add a Node package or change its version, validate it with the Socket MCP before the plan is accepted. `docs/CONSTITUTIONS.md` says this is required; this is how it is done.
+
+1. Check with Socket that the package and that exact version are not affected by a campaign, not affected by an alert, and have no stat below 50 points.
+2. Do not decide an alert yourself. Comment it, and the person who accepts the plan decides.
+3. Check the dependencies of that package with the same criteria, down to 3 layers.
+4. Put a summary of this review in the plan, before the plan is accepted.
+
 ## Style and conventions
 
 - File and folder names use kebab-case: lowercase words joined by `-`, as in `create-user.js`, `find-by-email.sql`, and `clients/terminal`.
