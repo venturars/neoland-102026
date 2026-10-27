@@ -1,0 +1,11 @@
+# Pega esto en la terminal, con el directorio actual en first-app
+node --input-type=module <<'EOF'
+import { db } from "./db/connection.js";
+import { buscarUsuarioPorNombre } from "./logic/buscar-usuario-por-nombre.js";
+import { crearAlmacenSqlite } from "./queries/users.js";
+
+const almacen = crearAlmacenSqlite(db);
+const result = await buscarUsuarioPorNombre(almacen, "Ana");
+
+console.log(result);
+EOF

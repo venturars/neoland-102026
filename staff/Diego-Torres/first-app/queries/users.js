@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const carpetaQueries = dirname(fileURLToPath(import.meta.url));
+const carpetaQueries = join(dirname(fileURLToPath(import.meta.url)), "queries");
 
 function leerSql(nombre) {
   return readFileSync(join(carpetaQueries, nombre), "utf8");
@@ -20,14 +20,15 @@ function copia(fila) {
 }
 
 export function crearAlmacenSqlite(db) {
-  db.exec(leerSql("esquema.sql"));
+  db.exec(leerSql("create-users-table.sql"));
 
-  const insertar = db.prepare(leerSql("insertar-usuario.sql"));
-  const actualizar = db.prepare(leerSql("actualizar-usuario.sql"));
-  const borrarUsuario = db.prepare(leerSql("borrar-usuario.sql"));
-  const buscarPorId = db.prepare(leerSql("buscar-por-id.sql"));
-  const buscarPorEmail = db.prepare(leerSql("buscar-por-email.sql"));
-  const listarUsuarios = db.prepare(leerSql("listar-usuarios.sql"));
+  const insertar = db.prepare(leerSql("insert.sql"));
+  const actualizar = db.prepare(leerSql("update.sql"));
+  const borrarUsuario = db.prepare(leerSql("remove.sql"));
+  const buscarPorId = db.prepare(leerSql("find-by-id.sql"));
+  const buscarPorEmail = db.prepare(leerSql("find-by-email.sql"));
+  const buscarPorNombre = db.prepare(leerSql("find-by-name.sql"));
+  const listarUsuarios = db.prepare(leerSql("find-all.sql"));
 
   return {
     async guardar(usuario) {
@@ -55,6 +56,10 @@ export function crearAlmacenSqlite(db) {
 
     async buscarPorEmail(email) {
       return copia(buscarPorEmail.get({ email }));
+    },
+
+    async buscarPorNombre(nombre) {
+      return buscarPorNombre.all({ name: nombre }).map((fila) => copia(fila));
     },
 
     async listar() {

@@ -7,25 +7,27 @@ Si una tarea y esta constitución chocan, gana la constitución.
 | Carpeta o fichero | Qué sabe |
 | --- | --- |
 | `logic/usuario.js` | Qué es un nombre y un email válidos |
-| `logic/operaciones.js` | Crear, actualizar, eliminar y las tres lecturas |
+| `logic/crear-usuario.js` y el resto, un fichero por operación | Crear, actualizar, eliminar y las tres lecturas |
 | `logic/errores.js` | Los tres errores |
 | `logic/index.js` | Reexporta la lógica. No exporta SQLite |
-| `queries/*.sql` | Las frases SQL, una por fichero. `queries/esquema.sql` es la tabla `users` |
-| `queries/sqlite.js` | El almacén de verdad |
+| `queries/queries/*.sql` | Las frases SQL, una por fichero. `create-users-table.sql` es la tabla `users` |
+| `queries/users.js` | El almacén de verdad |
 | `db/connection.js` | La única conexión, a `db/users.sqlite` |
 | `test/almacen-memoria.js` | El doble de las pruebas |
 | `test/usuarios.test.js` | Las pruebas |
 | `ejemplo.js` | Une lógica y SQLite y hace `console.log` |
-| `clients/terminal/*.js` | Un módulo por operación. Le pasa el almacén y hace `console.log` |
+| `clients/terminal/*.txt` | Un cliente por operación. Se pega en la terminal, le pasa el almacén y hace `console.log` |
+| `logic/clasificador.js` | Cuenta usuarios por género del nombre. No guarda nada |
+| `clients/jupyter/*.ipynb` | Cliente que abre Jupyter y llama a las operaciones |
 
 
 ## Base de datos
 
 `db/` solo tiene dos cosas: `connection.js` y `users.sqlite`. No hay esquema, SQL ni almacén en esa carpeta.
 
-`db/connection.js` abre `db/users.sqlite` con `node:sqlite` y exporta `db`. Es la única conexión al fichero. No se abre otra base ni otra conexión para ese fichero. Las pruebas no importan `connection.js`: le pasan a `queries/sqlite.js` una conexión en `:memory:`.
+`db/connection.js` abre `db/users.sqlite` con `node:sqlite` y exporta `db`. Es la única conexión al fichero. No se abre otra base ni otra conexión para ese fichero. Las pruebas no importan `connection.js`: le pasan a `queries/users.js` una conexión en `:memory:`.
 
-`queries/sqlite.js` recibe esa conexión ya abierta. Ejecuta `queries/esquema.sql` y prepara el resto de `.sql`.
+`queries/users.js` recibe esa conexión ya abierta. Ejecuta `queries/queries/create-users-table.sql` y prepara el resto de `.sql`.
 
 Tabla `users`:
 
@@ -38,7 +40,7 @@ Tabla `users`:
 
 Un usuario guardado es `{ id, nombre, email }`.
 
-- `id` es texto (`"1"`, `"2"`). SQLite guarda el entero y `queries/sqlite.js` lo devuelve como texto.
+- `id` es texto (`"1"`, `"2"`). SQLite guarda el entero y `queries/users.js` lo devuelve como texto.
 - `nombre` es la columna `name`.
 - `email` es la columna `email`.
 - `createdAt` y `updatedAt` no forman parte del usuario.
@@ -56,14 +58,15 @@ Cualquier almacén ofrece estas funciones `async` y ninguna regla:
 - `guardar(usuario)` devuelve la copia con `id`. Sin `id` inserta. Con `id` actualiza.
 - `buscarPorId(id)` devuelve la copia o `null`.
 - `buscarPorEmail(email)` devuelve la copia o `null`.
+- `buscarPorNombre(nombre)` devuelve un array de copias con ese nombre.
 - `listar()` devuelve un array de copias.
 - `borrar(id)` indica si existía.
 
-`queries/sqlite.js` es el almacén de verdad. `test/almacen-memoria.js` es solo el doble de las pruebas. Un almacén nuevo es un fichero nuevo. No se reescribe SQLite para simular memoria.
+`queries/users.js` es el almacén de verdad. `test/almacen-memoria.js` es solo el doble de las pruebas. Un almacén nuevo es un fichero nuevo. No se reescribe SQLite para simular memoria.
 
 ## Operaciones
 
-Las seis funciones de `logic/operaciones.js` reciben el almacén como primer argumento:
+Cada operación es un fichero de `logic/`. Estas funciones reciben el almacén como primer argumento:
 
 - `crearUsuario(almacen, datos)`
 - `actualizarUsuario(almacen, id, cambios)`
@@ -71,6 +74,9 @@ Las seis funciones de `logic/operaciones.js` reciben el almacén como primer arg
 - `obtenerUsuario(almacen, id)`
 - `listarUsuarios(almacen)`
 - `buscarUsuarioPorEmail(almacen, email)`
+- `buscarUsuarioPorNombre(almacen, nombre)`
+
+`contarUsuariosPorGenero(almacen)` vive en `logic/clasificador.js`. No es una de las operaciones de usuarios. Devuelve `{ women, men, genderUndefined }`. Si no hay usuarios, los tres números son 0 y no llama a la IA.
 
 El orden interno es siempre el mismo: primero lo que se decide con los datos en la mano, después lo que mira el almacén, después guardar o borrar, al final la copia de salida.
 
@@ -86,6 +92,8 @@ Solo estas tres clases. No se añaden clases ni mensajes.
 
 `DatosInvalidos` lo lanza `logic/usuario.js`. `EmailDuplicado` y `UsuarioNoEncontrado` los lanzan las operaciones.
 
+`No se han podido clasificar los usuarios` lo lanza `logic/clasificador.js` si el almacén no se puede leer o la llamada a la IA falla. No es una de las tres clases.
+
 ## Qué no entra
 
-HTTP, Jupyter y frontend no se añaden. Cuando lleguen, llaman a las operaciones que ya existen. No copian la regla de que el email es único.
+HTTP y frontend no se añaden. Jupyter llama a las operaciones que ya existen. No copia la regla de que el email es único.

@@ -4,8 +4,8 @@ import {
   buscarUsuarioPorEmail,
   crearUsuario,
   listarUsuarios,
-} from "./logic/operaciones.js";
-import { crearAlmacenSqlite } from "./queries/sqlite.js";
+} from "./logic/index.js";
+import { crearAlmacenSqlite } from "./queries/users.js";
 
 const almacen = crearAlmacenSqlite(db);
 

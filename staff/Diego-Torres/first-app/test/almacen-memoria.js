@@ -35,6 +35,12 @@ export function crearAlmacenMemoria() {
       return null;
     },
 
+    async buscarPorNombre(nombre) {
+      return [...usuarios.values()]
+        .filter((usuario) => usuario.nombre === nombre)
+        .map((usuario) => ({ ...usuario }));
+    },
+
     async listar() {
       return [...usuarios.values()].map((usuario) => ({ ...usuario }));
     },

@@ -1,0 +1,11 @@
+# Pega esto en la terminal, con el directorio actual en first-app
+node --input-type=module <<'EOF'
+import { db } from "./db/connection.js";
+import { eliminarUsuario } from "./logic/eliminar-usuario.js";
+import { crearAlmacenSqlite } from "./queries/users.js";
+
+const almacen = crearAlmacenSqlite(db);
+const result = await eliminarUsuario(almacen, "1");
+
+console.log(result);
+EOF

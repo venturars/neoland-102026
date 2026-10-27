@@ -1,6 +1,6 @@
 # Plan — clasificador de género
 
-Funcionalidad nueva. No reemplaza `logic/operaciones.js`. No guarda datos. No toca el resto de funcionalidades.
+Funcionalidad nueva. No reemplaza los ficheros de operaciones de `logic/`. No guarda datos. No toca el resto de funcionalidades.
 
 ## Ficheros
 
@@ -92,5 +92,5 @@ La prueba va en `test/usuarios.test.js`. Para verlo a mano, `ejemplo.js` importa
 
 Hoy la constitución y `AGENTS.md` no admiten esta funcionalidad. Al implementar hay que ampliarlos, y solo entonces escribir el código:
 
-- En `docs/CONSTITUCION.md`, la tabla de quién sabe qué incluye `logic/clasificador.js`. La operación `contarUsuariosPorGenero(almacen)` queda aparte de las seis de `logic/operaciones.js`. El mensaje `No se han podido clasificar los usuarios` queda escrito, y se dice que lo lanza `logic/clasificador.js`, no las tres clases actuales.
+- En `docs/CONSTITUCION.md`, la tabla de quién sabe qué incluye `logic/clasificador.js`. La operación `contarUsuariosPorGenero(almacen)` queda aparte de las seis operaciones, una por fichero. El mensaje `No se han podido clasificar los usuarios` queda escrito, y se dice que lo lanza `logic/clasificador.js`, no las tres clases actuales.
 - En `AGENTS.md`, los scripts siguen con pnpm. Se admite la dependencia `openai`.

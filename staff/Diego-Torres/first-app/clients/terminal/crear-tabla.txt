@@ -1,0 +1,8 @@
+# Pega esto en la terminal, con el directorio actual en first-app
+node --input-type=module <<'EOF'
+import { db } from "./db/connection.js";
+import { crearAlmacenSqlite } from "./queries/users.js";
+
+crearAlmacenSqlite(db);
+console.log(db.prepare("SELECT name FROM sqlite_master WHERE type = 'table'").all());
+EOF

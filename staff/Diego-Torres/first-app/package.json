@@ -4,6 +4,12 @@
   "type": "module",
   "scripts": {
     "test": "node --test",
-    "ejemplo": "node ejemplo.js"
+    "ejemplo": "node ejemplo.js",
+    "jupyter": "node scripts/jupyter.js"
+  },
+  "dependencies": {
+    "@colors/colors": "1.6.1",
+    "cli-table3": "0.6.5",
+    "openai": "7.39.0"
   }
 }

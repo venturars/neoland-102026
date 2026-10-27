@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { DatabaseSync } from "node:sqlite";
 import { describe, it } from "node:test";
-import { crearAlmacenSqlite } from "../queries/sqlite.js";
+import { crearAlmacenSqlite } from "../queries/users.js";
 import {
   DatosInvalidos,
   EmailDuplicado,
@@ -10,11 +10,13 @@ import {
 import {
   actualizarUsuario,
   buscarUsuarioPorEmail,
+  buscarUsuarioPorNombre,
+  contarUsuariosPorGenero,
   crearUsuario,
   eliminarUsuario,
   listarUsuarios,
   obtenerUsuario,
-} from "../logic/operaciones.js";
+} from "../logic/index.js";
 import { crearAlmacenMemoria } from "./almacen-memoria.js";
 
 describe("usuarios en memoria", () => {
@@ -124,6 +126,23 @@ describe("usuarios en memoria", () => {
         return true;
       },
     );
+  });
+
+  it("busca por nombre y, sin usuarios, no clasifica", async () => {
+    const vacio = crearAlmacenMemoria();
+    assert.deepEqual(await contarUsuariosPorGenero(vacio), {
+      women: 0,
+      men: 0,
+      genderUndefined: 0,
+    });
+
+    const almacen = crearAlmacenMemoria();
+    const ana = await crearUsuario(almacen, {
+      nombre: "Ana",
+      email: "ana@ejemplo.com",
+    });
+    assert.deepEqual(await buscarUsuarioPorNombre(almacen, "  Ana "), [ana]);
+    assert.deepEqual(await buscarUsuarioPorNombre(almacen, "Nadie"), []);
   });
 });
 
