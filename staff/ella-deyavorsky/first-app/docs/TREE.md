@@ -3,6 +3,7 @@
 ```text
 first-app/
   AGENTS.md
+  eslint.config.js
   package.json
   logic/
     count-users-by-gender.js

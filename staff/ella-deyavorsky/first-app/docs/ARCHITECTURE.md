@@ -15,6 +15,10 @@ The rules in `logic/` stay even if the database changes, or if a notebook or a w
 
 ## Files
 
+### first-app/
+
+- `eslint.config.js` applies ESLint's recommended rules to the JavaScript and ignores `.venv` and `node_modules`.
+
 ### logic/
 
 One file per action. Each file exports one function. The order inside the function is in [CONSTITUTIONS.md](CONSTITUTIONS.md).
