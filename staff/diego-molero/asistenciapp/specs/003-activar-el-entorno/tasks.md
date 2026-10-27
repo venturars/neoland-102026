@@ -40,7 +40,7 @@ Estas tareas se redactan después del plan y antes de implementar, bajo la autor
   - **Cubre:** trazabilidad de CA-01 a CA-04 y entrega del plan §4.
   - **Hecha cuando:** la spec refleja la implementación comprobada y la entrega autorizada, con merge pendiente.
 
-Después se ejecutarán el commit, el push, la actualización de la PR y la solicitud de revisión a `Dietor878` y `ChangVictor`, conforme a la autorización recibida. El merge queda fuera de esta entrega.
+Después se ejecutarán el commit, el push, la actualización de la PR y la solicitud de revisión a las dos personas revisoras autorizadas, conforme a la autorización recibida. El merge queda fuera de esta entrega.
 
 ## 4. Resultados
 
@@ -50,7 +50,7 @@ Después se ejecutarán el commit, el push, la actualización de la PR y la soli
 | UTF-8, enlaces y formato | Comprobados por el agente, 2026-10-23 | Los cinco documentos se leen como UTF-8, sin espacios finales y con enlaces locales válidos; comprobación final realizada tras actualizar el seguimiento. |
 | Suite existente | Comprobada por el agente, 2026-10-23 | Python 3.14.7 y pytest 9.1.1: `77 passed in 1.30s` con el comando de T03, ejecutado localmente fuera del aislamiento. |
 | Autorización de las fases y de la entrega | Recibida, 2026-10-23 | La persona responsable aprobó la spec y autorizó las fases restantes, commit, push, actualización de PR y solicitud de revisión, sin nuevas confirmaciones. |
-| Revisión de compañeros e incorporación a `staging` | Pendiente | Revisiones autorizadas a `Dietor878` y `ChangVictor`; sus aprobaciones y el merge requieren las condiciones del flujo de Git y autorización posterior para la incorporación. |
+| Revisión de compañeros e incorporación a `staging` | Pendiente | Revisiones autorizadas a las dos personas revisoras autorizadas; sus aprobaciones y el merge requieren las condiciones del flujo de Git y autorización posterior para la incorporación. |
 
 ## 5. Historial
 

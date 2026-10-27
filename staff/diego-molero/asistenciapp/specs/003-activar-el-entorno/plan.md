@@ -59,7 +59,7 @@ La rama es `255-docs-clarify-environment-activation-and-startup`; la PR [#257](h
 
 La rama incorpora los commits pendientes de las PR #211 y #254. La revisión aislada del cambio 003 utiliza `df9f760` como referencia. Ninguna de esas PR se integra como parte de esta tarea.
 
-Con la autorización recibida, se guardará y subirá el commit `docs(asistenciapp): clarify activation and startup`, se actualizará la PR y se marcará como lista para revisión, solicitándola a `Dietor878` y `ChangVictor`. La persona asignada seguirá siendo `moolero12`. El merge queda pendiente de las revisiones y de su autorización posterior.
+Con la autorización recibida, se guardará y subirá el commit `docs(asistenciapp): clarify activation and startup`, se actualizará la PR y se marcará como lista para revisión, solicitándola a las dos personas revisoras autorizadas. La persona asignada seguirá siendo `moolero12`. El merge queda pendiente de las revisiones y de su autorización posterior.
 
 ## 5. Historial
 
