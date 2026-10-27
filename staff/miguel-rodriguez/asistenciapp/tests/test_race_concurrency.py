@@ -31,7 +31,6 @@ def test_join_collision_and_parallel_attempts(tmp_path,clock,monkeypatch):
 def test_fifteen_clients_share_a_blocked_ip_without_losing_normal_policy(tmp_path,clock):
     from contextlib import closing
     from app import create_app
-    from asistencia.domain.roster import ROSTER
     from asistencia.storage import races as store
     app=create_app(tmp_path/"shared.sqlite",token="teacher",now=clock,race_origin="http://localhost",race_local_http=True)
     db=tmp_path/"shared.sqlite"; teacher=app.test_client();head={"X-Teacher-Token":"teacher"}
@@ -39,7 +38,7 @@ def test_fifteen_clients_share_a_blocked_ip_without_losing_normal_policy(tmp_pat
     entry=teacher.get(f"/api/sessions/{sid}/race",headers=head).json["joinUrl"].split("#join=")[1]
     with closing(store.connect(db)) as c:c.execute("INSERT INTO blocked_addresses VALUES ('127.0.0.1')")
     clients=[]
-    for ref in ROSTER:
+    for ref in races.teacher_state(db,sid,clock)["roster"]:
         client=app.test_client()
         assert client.post(f"/api/races/{sid}/join",headers={"X-Race-Request":"1"},json={"join_secret":entry,"roster_key":ref["key"]}).status_code==200
         clients.append((client,client.get(f"/api/races/{sid}/me").json["csrfToken"]))
@@ -60,12 +59,11 @@ def test_fifteen_clients_share_a_blocked_ip_without_losing_normal_policy(tmp_pat
 
 def test_owned_slot_attack_does_not_spend_other_fourteen_budgets(tmp_path,clock,monkeypatch):
     from contextlib import closing
-    from asistencia.domain.roster import ROSTER
     from asistencia.storage import races as store
     from asistencia.domain.codes import is_valid_code,code_for
     db=tmp_path/"attack.sqlite";attendance.prepare(db,"teacher")
     sid=races.prepare(db,"Convivencia",clock)["id"];entry=races.teacher_state(db,sid,clock)["entrySecret"]
-    tokens=[races.join(db,sid,entry,ref["key"],None,clock)[1] for ref in ROSTER]
+    tokens=[races.join(db,sid,entry,ref["key"],None,clock)[1] for ref in races.teacher_state(db,sid,clock)["roster"]]
     races.start(db,sid,clock);clock.advance(3)
     with closing(store.connect(db)) as c:secret=store.get_race(c,sid)["secret"]
     bad=next(f"{i:04d}" for i in range(10) if not is_valid_code(secret,f"{i:04d}",clock()))
@@ -89,10 +87,9 @@ def test_owned_slot_attack_does_not_spend_other_fourteen_budgets(tmp_path,clock,
 
 
 def test_all_fifteen_claimed_slots_still_have_only_forty_five_evaluations(tmp_path,clock,monkeypatch):
-    from asistencia.domain.roster import ROSTER
     db=tmp_path/"allclaimed.sqlite";attendance.prepare(db,"teacher")
     sid=races.prepare(db,"Todos",clock)["id"];entry=races.teacher_state(db,sid,clock)["entrySecret"]
-    tokens=[races.join(db,sid,entry,ref["key"],None,clock)[1] for ref in ROSTER]
+    tokens=[races.join(db,sid,entry,ref["key"],None,clock)[1] for ref in races.teacher_state(db,sid,clock)["roster"]]
     races.start(db,sid,clock);clock.advance(3);calls=[]
     monkeypatch.setattr(races,"is_valid_code",lambda *args:calls.append(1) or False)
     for token in tokens:
