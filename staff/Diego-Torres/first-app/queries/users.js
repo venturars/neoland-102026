@@ -2,72 +2,72 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const carpetaQueries = join(dirname(fileURLToPath(import.meta.url)), "queries");
+const queriesDir = join(dirname(fileURLToPath(import.meta.url)), "queries");
 
-function leerSql(nombre) {
-  return readFileSync(join(carpetaQueries, nombre), "utf8");
+function readSql(name) {
+  return readFileSync(join(queriesDir, name), "utf8");
 }
 
-function copia(fila) {
-  if (!fila) {
+function copy(row) {
+  if (!row) {
     return null;
   }
   return {
-    id: String(fila.id),
-    nombre: fila.name,
-    email: fila.email,
+    id: String(row.id),
+    nombre: row.name,
+    email: row.email,
   };
 }
 
-export function crearAlmacenSqlite(db) {
-  db.exec(leerSql("create-users-table.sql"));
+export function createSqliteStore(db) {
+  db.exec(readSql("create-users-table.sql"));
 
-  const insertar = db.prepare(leerSql("insert.sql"));
-  const actualizar = db.prepare(leerSql("update.sql"));
-  const borrarUsuario = db.prepare(leerSql("remove.sql"));
-  const buscarPorId = db.prepare(leerSql("find-by-id.sql"));
-  const buscarPorEmail = db.prepare(leerSql("find-by-email.sql"));
-  const buscarPorNombre = db.prepare(leerSql("find-by-name.sql"));
-  const listarUsuarios = db.prepare(leerSql("find-all.sql"));
+  const insertStmt = db.prepare(readSql("insert.sql"));
+  const updateStmt = db.prepare(readSql("update.sql"));
+  const removeStmt = db.prepare(readSql("remove.sql"));
+  const findByIdStmt = db.prepare(readSql("find-by-id.sql"));
+  const findByEmailStmt = db.prepare(readSql("find-by-email.sql"));
+  const findByNameStmt = db.prepare(readSql("find-by-name.sql"));
+  const findAllStmt = db.prepare(readSql("find-all.sql"));
 
   return {
-    async guardar(usuario) {
-      if (usuario.id === undefined || usuario.id === null) {
-        return copia(
-          insertar.get({
-            name: usuario.nombre,
-            email: usuario.email,
+    async save(user) {
+      if (user.id === undefined || user.id === null) {
+        return copy(
+          insertStmt.get({
+            name: user.nombre,
+            email: user.email,
           }),
         );
       }
 
-      return copia(
-        actualizar.get({
-          id: Number(usuario.id),
-          name: usuario.nombre,
-          email: usuario.email,
+      return copy(
+        updateStmt.get({
+          id: Number(user.id),
+          name: user.nombre,
+          email: user.email,
         }),
       );
     },
 
-    async buscarPorId(id) {
-      return copia(buscarPorId.get({ id: Number(id) }));
+    async findById(id) {
+      return copy(findByIdStmt.get({ id: Number(id) }));
     },
 
-    async buscarPorEmail(email) {
-      return copia(buscarPorEmail.get({ email }));
+    async findByEmail(email) {
+      return copy(findByEmailStmt.get({ email }));
     },
 
-    async buscarPorNombre(nombre) {
-      return buscarPorNombre.all({ name: nombre }).map((fila) => copia(fila));
+    async findByName(name) {
+      return findByNameStmt.all({ name }).map((row) => copy(row));
     },
 
-    async listar() {
-      return listarUsuarios.all().map((fila) => copia(fila));
+    async findAll() {
+      return findAllStmt.all().map((row) => copy(row));
     },
 
-    async borrar(id) {
-      const info = borrarUsuario.run({ id: Number(id) });
+    async remove(id) {
+      const info = removeStmt.run({ id: Number(id) });
       return info.changes > 0;
     },
   };

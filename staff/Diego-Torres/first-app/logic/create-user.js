@@ -1,0 +1,13 @@
+import { DuplicateEmail } from "./errors.js";
+import { validateNewUser } from "./user.js";
+
+export async function createUser(store, data) {
+  const user = validateNewUser(data);
+  const existing = await store.findByEmail(user.email);
+  if (existing) {
+    throw new DuplicateEmail(
+      `Email ${user.email} is already registered`,
+    );
+  }
+  return store.save(user);
+}

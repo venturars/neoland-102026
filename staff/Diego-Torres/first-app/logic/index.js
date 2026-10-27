@@ -1,18 +1,18 @@
 export {
-  DatosInvalidos,
-  EmailDuplicado,
-  UsuarioNoEncontrado,
-} from "./errores.js";
+  InvalidData,
+  DuplicateEmail,
+  UserNotFound,
+} from "./errors.js";
 export {
-  validarCambios,
-  validarEmail,
-  validarUsuarioNuevo,
-} from "./usuario.js";
-export { actualizarUsuario } from "./actualizar-usuario.js";
-export { buscarUsuarioPorEmail } from "./buscar-usuario-por-email.js";
-export { buscarUsuarioPorNombre } from "./buscar-usuario-por-nombre.js";
-export { contarUsuariosPorGenero } from "./clasificador.js";
-export { crearUsuario } from "./crear-usuario.js";
-export { eliminarUsuario } from "./eliminar-usuario.js";
-export { listarUsuarios } from "./listar-usuarios.js";
-export { obtenerUsuario } from "./obtener-usuario.js";
+  validateChanges,
+  validateEmail,
+  validateNewUser,
+} from "./user.js";
+export { updateUser } from "./update-user.js";
+export { findUserByEmail } from "./find-user-by-email.js";
+export { findUserByName } from "./find-user-by-name.js";
+export { usersGenderCount } from "./users-gender-count.js";
+export { createUser } from "./create-user.js";
+export { deleteUser } from "./delete-user.js";
+export { listUsers } from "./list-users.js";
+export { findUserById } from "./find-user-by-id.js";

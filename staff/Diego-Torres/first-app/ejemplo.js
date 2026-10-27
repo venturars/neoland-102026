@@ -1,26 +1,26 @@
 import { db } from "./db/connection.js";
 import {
-  actualizarUsuario,
-  buscarUsuarioPorEmail,
-  crearUsuario,
-  listarUsuarios,
+  updateUser,
+  findUserByEmail,
+  createUser,
+  listUsers,
 } from "./logic/index.js";
-import { crearAlmacenSqlite } from "./queries/users.js";
+import { createSqliteStore } from "./queries/users.js";
 
-const almacen = crearAlmacenSqlite(db);
+const store = createSqliteStore(db);
 
 const email = "Ana@Ejemplo.com";
-let ana = await buscarUsuarioPorEmail(almacen, email);
+let ana = await findUserByEmail(store, email);
 if (!ana) {
-  ana = await crearUsuario(almacen, {
+  ana = await createUser(store, {
     nombre: " Ana ",
     email,
   });
 }
 console.log(ana);
 
-const cambiada = await actualizarUsuario(almacen, ana.id, {
+const changed = await updateUser(store, ana.id, {
   nombre: "Ana Torres",
 });
-console.log(cambiada);
-console.log(await listarUsuarios(almacen));
+console.log(changed);
+console.log(await listUsers(store));

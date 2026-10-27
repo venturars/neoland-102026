@@ -1,6 +1,6 @@
 # first-app
 
-Usuarios con la lógica separada de SQLite. El dibujo corto está en [docs/MAPA.md](docs/MAPA.md). Las reglas están en [docs/CONSTITUCION.md](docs/CONSTITUCION.md).
+Usuarios con la lógica separada de SQLite. Las reglas están en [docs/CONSTITUCION.md](docs/CONSTITUCION.md).
 
 Desde esta carpeta:
 

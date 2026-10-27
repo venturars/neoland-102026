@@ -34,7 +34,7 @@ La dependencia `openai` es la del clasificador. `@colors/colors` y `cli-table3` 
 
 ## Estilo
 
-El código y los mensajes de error están en castellano.
+El código se escribe en castellano. Los nombres de las queries, de las funciones y de los documentos que las nombran van en inglés. Los tres errores de `logic/errors.js` también.
 
 Ficheros en kebab-case. Funciones y variables en camelCase. Exportaciones con nombre. Imports ESM con la extensión `.js`.
 

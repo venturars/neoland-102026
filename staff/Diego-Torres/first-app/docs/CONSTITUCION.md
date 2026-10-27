@@ -6,18 +6,18 @@ Si una tarea y esta constitución chocan, gana la constitución.
 
 | Carpeta o fichero | Qué sabe |
 | --- | --- |
-| `logic/usuario.js` | Qué es un nombre y un email válidos |
-| `logic/crear-usuario.js` y el resto, un fichero por operación | Crear, actualizar, eliminar y las tres lecturas |
-| `logic/errores.js` | Los tres errores |
+| `logic/user.js` | Qué es un nombre y un email válidos |
+| `logic/create-user.js` y el resto, un fichero por operación | Crear, actualizar, eliminar y las tres lecturas |
+| `logic/errors.js` | Los tres errores |
 | `logic/index.js` | Reexporta la lógica. No exporta SQLite |
 | `queries/queries/*.sql` | Las frases SQL, una por fichero. `create-users-table.sql` es la tabla `users` |
 | `queries/users.js` | El almacén de verdad |
 | `db/connection.js` | La única conexión, a `db/users.sqlite` |
-| `test/almacen-memoria.js` | El doble de las pruebas |
-| `test/usuarios.test.js` | Las pruebas |
+| `test/memory-store.js` | El doble de las pruebas |
+| `test/users.test.js` | Las pruebas |
 | `ejemplo.js` | Une lógica y SQLite y hace `console.log` |
 | `clients/terminal/*.txt` | Un cliente por operación. Se pega en la terminal, le pasa el almacén y hace `console.log` |
-| `logic/clasificador.js` | Cuenta usuarios por género del nombre. No guarda nada |
+| `logic/users-gender-count.js` | Cuenta usuarios por género del nombre. No guarda nada |
 | `clients/jupyter/*.ipynb` | Cliente que abre Jupyter y llama a las operaciones |
 
 
@@ -55,28 +55,28 @@ El email es único. Lo decide `logic` mirando el almacén. El `UNIQUE` de la tab
 
 Cualquier almacén ofrece estas funciones `async` y ninguna regla:
 
-- `guardar(usuario)` devuelve la copia con `id`. Sin `id` inserta. Con `id` actualiza.
-- `buscarPorId(id)` devuelve la copia o `null`.
-- `buscarPorEmail(email)` devuelve la copia o `null`.
-- `buscarPorNombre(nombre)` devuelve un array de copias con ese nombre.
-- `listar()` devuelve un array de copias.
-- `borrar(id)` indica si existía.
+- `save(user)` devuelve la copia con `id`. Sin `id` inserta. Con `id` actualiza.
+- `findById(id)` devuelve la copia o `null`.
+- `findByEmail(email)` devuelve la copia o `null`.
+- `findByName(name)` devuelve un array de copias con ese nombre.
+- `findAll()` devuelve un array de copias.
+- `remove(id)` indica si existía.
 
-`queries/users.js` es el almacén de verdad. `test/almacen-memoria.js` es solo el doble de las pruebas. Un almacén nuevo es un fichero nuevo. No se reescribe SQLite para simular memoria.
+`queries/users.js` es el almacén de verdad. `test/memory-store.js` es solo el doble de las pruebas. Un almacén nuevo es un fichero nuevo. No se reescribe SQLite para simular memoria.
 
 ## Operaciones
 
 Cada operación es un fichero de `logic/`. Estas funciones reciben el almacén como primer argumento:
 
-- `crearUsuario(almacen, datos)`
-- `actualizarUsuario(almacen, id, cambios)`
-- `eliminarUsuario(almacen, id)`
-- `obtenerUsuario(almacen, id)`
-- `listarUsuarios(almacen)`
-- `buscarUsuarioPorEmail(almacen, email)`
-- `buscarUsuarioPorNombre(almacen, nombre)`
+- `createUser(store, data)`
+- `updateUser(store, id, changes)`
+- `deleteUser(store, id)`
+- `findUserById(store, id)`
+- `listUsers(store)`
+- `findUserByEmail(store, email)`
+- `findUserByName(store, name)`
 
-`contarUsuariosPorGenero(almacen)` vive en `logic/clasificador.js`. No es una de las operaciones de usuarios. Devuelve `{ women, men, genderUndefined }`. Si no hay usuarios, los tres números son 0 y no llama a la IA.
+`usersGenderCount(store)` vive en `logic/users-gender-count.js`. No es una de las operaciones de usuarios. Devuelve `{ women, men, genderUndefined }`. Si no hay usuarios, los tres números son 0 y no llama a la IA.
 
 El orden interno es siempre el mismo: primero lo que se decide con los datos en la mano, después lo que mira el almacén, después guardar o borrar, al final la copia de salida.
 
@@ -84,15 +84,15 @@ El orden interno es siempre el mismo: primero lo que se decide con los datos en 
 
 Solo estas tres clases. No se añaden clases ni mensajes.
 
-- `DatosInvalidos`: `El nombre es obligatorio`
-- `DatosInvalidos`: `El email no es válido`
-- `DatosInvalidos`: `Hay que indicar un nombre o un email`
-- `EmailDuplicado`: `El email <email> ya está registrado`
-- `UsuarioNoEncontrado`: `No existe un usuario con id <id>`
+- `InvalidData`: `Name is required`
+- `InvalidData`: `Email is invalid`
+- `InvalidData`: `A name or an email is required`
+- `DuplicateEmail`: `Email <email> is already registered`
+- `UserNotFound`: `There is no user with id <id>`
 
-`DatosInvalidos` lo lanza `logic/usuario.js`. `EmailDuplicado` y `UsuarioNoEncontrado` los lanzan las operaciones.
+`InvalidData` lo lanza `logic/user.js`. `DuplicateEmail` y `UserNotFound` los lanzan las operaciones.
 
-`No se han podido clasificar los usuarios` lo lanza `logic/clasificador.js` si el almacén no se puede leer o la llamada a la IA falla. No es una de las tres clases.
+`No se han podido clasificar los usuarios` lo lanza `logic/users-gender-count.js` si el almacén no se puede leer o la llamada a la IA falla. No es una de las tres clases.
 
 ## Qué no entra
 
