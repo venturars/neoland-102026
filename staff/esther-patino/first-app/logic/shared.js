@@ -16,12 +16,30 @@ export function validateEmail(value) {
     throw new Error("Email is invalid");
   }
 
-  const email = value.trim().toLowerCase();
+  const trimmed = value.trim();
+  const email = trimmed.toLowerCase();
   const parts = email.split("@");
-  const hasSingleAt =
-    parts.length === 2 && parts[0].length > 0 && parts[1].length > 0;
 
-  if (!hasSingleAt || email.length > 64 || email.includes(" ")) {
+  if (parts.length !== 2) {
+    throw new Error("Email is invalid");
+  }
+
+  const localPart = parts[0];
+  const domain = parts[1];
+
+  if (localPart.length === 0) {
+    throw new Error("Email is invalid");
+  }
+
+  if (domain.length === 0) {
+    throw new Error("Email is invalid");
+  }
+
+  if (email.length > 64) {
+    throw new Error("Email is invalid");
+  }
+
+  if (email.includes(" ")) {
     throw new Error("Email is invalid");
   }
 
@@ -29,7 +47,15 @@ export function validateEmail(value) {
 }
 
 export function validateId(value) {
-  if (typeof value !== "number" || !Number.isInteger(value) || value < 1) {
+  if (typeof value !== "number") {
+    throw new Error("Invalid id");
+  }
+
+  if (!Number.isInteger(value)) {
+    throw new Error("Invalid id");
+  }
+
+  if (value < 1) {
     throw new Error("Invalid id");
   }
 
