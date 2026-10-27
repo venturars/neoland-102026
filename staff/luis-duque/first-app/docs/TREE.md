@@ -45,6 +45,7 @@ first-app/
       find-user-by-id.sql
       find-user-by-email.sql
       find-user-by-name.sql
+  eslint.config.js
   package.json
   pnpm-lock.yaml
   docs/
