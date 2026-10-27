@@ -7,6 +7,9 @@ first-app/
 ├── package.json
 ├── pnpm-lock.yaml
 │
+├── scripts/
+│   └── jupyter.sh
+│
 ├── db/
 │   ├── connection.js
 │   └── users.sqlite
@@ -70,6 +73,10 @@ first-app/
         │   ├── plan.md
         │   └── tasks.md
         ├── jupyter-client/
+        │   ├── spec.md
+        │   ├── plan.md
+        │   └── tasks.md
+        ├── jupyter-script/
         │   ├── spec.md
         │   ├── plan.md
         │   └── tasks.md
