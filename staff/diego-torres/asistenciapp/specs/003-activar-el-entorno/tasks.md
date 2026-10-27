@@ -1,6 +1,6 @@
 # Tareas 003 · Activar el entorno no es arrancar la app
 
-> Estado: **Aprobado** (2026-10-27) · Plan: [plan.md](plan.md) · Creado: 2026-10-27 · Aprobado: 2026-10-27
+> Estado: **Terminado** (2026-10-27) · Plan: [plan.md](plan.md) · Creado: 2026-10-27 · Aprobado: 2026-10-27
 
 Cómo leer esta lista:
 
@@ -35,6 +35,6 @@ Cómo leer esta lista:
 
 ## Fase C · Comprobar
 
-- [ ] **T04** · Leer el README con la tabla del plan §3 y lanzar `pytest` una vez desde `staff/diego-torres/asistenciapp/`.
+- [x] **T04** · Leer el README con la tabla del plan §3 y lanzar `pytest` una vez desde `staff/diego-torres/asistenciapp/`.
   - *Cubre:* CA-01, CA-02, CA-03, CA-04.
   - *Hecha cuando:* las cuatro filas de esa tabla cuadran y `pytest` termina en verde.

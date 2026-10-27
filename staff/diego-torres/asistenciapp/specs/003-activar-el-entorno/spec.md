@@ -1,6 +1,6 @@
 # Spec 003 · Activar el entorno no es arrancar la app
 
-> Estado: **Aprobada** (2026-10-27) · Creada: 2026-10-27 · Aprobada: 2026-10-27
+> Estado: **Implementada** (2026-10-27) · Creada: 2026-10-27 · Aprobada: 2026-10-27
 
 ---
 
@@ -66,3 +66,4 @@ Ninguna. El título del bloque y qué queda bajo «Arrancar la app» es el de la
 | --- | --- | --- | --- |
 | 0.1 | 2026-10-27 | Borrador inicial | Separar activar el entorno y arrancar la app, con el mismo alcance que la spec 003 de referencia. La spec 002 dejó ese README fuera |
 | 1.0 | 2026-10-27 | Aprobada | Ok para pasar al plan y a las tareas |
+| 1.1 | 2026-10-27 | Implementada | T01–T04 hechas en el README; 85 tests en verde |
