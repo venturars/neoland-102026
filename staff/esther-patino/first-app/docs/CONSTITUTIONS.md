@@ -2,7 +2,7 @@
 
 ## 1. Qué hace la app
 
-first-app guarda usuarios. No es una web. Se usa desde la terminal, con Node.
+first-app guarda usuarios. No es una web. Se usa desde la terminal, con Node. El CEO también valida esas funcionalidades desde los documentos de Jupyter.
 
 Se puede crear un usuario, listarlos, buscar uno, cambiarlo y borrarlo.
 
@@ -45,6 +45,8 @@ first-app/
   AGENTS.md
   package.json
   pnpm-lock.yaml
+  scripts/
+    jupyter.js
   db/
     connection.js
     users.sqlite
@@ -87,6 +89,16 @@ first-app/
       update-user.txt
       remove-user.txt
       users-gender-count.txt
+    jupyter/
+      create-users-table.ipynb
+      insert-user.ipynb
+      find-all.ipynb
+      find-by-email.ipynb
+      find-by-id.ipynb
+      find-user-by-name.ipynb
+      update-user.ipynb
+      remove-user.ipynb
+      users-gender-count.ipynb
 ```
 
 `AGENTS.md` dice cómo se trabaja en esta app: el orden de un cambio, el estilo y qué hacer al cerrar una tarea.
@@ -172,4 +184,8 @@ Si esta constitución, el código actual y la spec no dicen lo mismo, la pregunt
 
 `tasks.md` son los pasos, en el orden en que los haría una persona. Cada paso abre un sitio, hace una cosa y deja un resultado que se puede mirar. Un paso son como mucho cuatro líneas. Solo se escribe si no hay contradicción.
  No se inventan pasos.
+
+## 9. Validación de paquetes
+
+Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket. El cómo está en `AGENTS.md`.
 

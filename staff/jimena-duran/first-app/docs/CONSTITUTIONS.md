@@ -22,6 +22,11 @@ La documentación debe ser breve, concreta y determinista; no se añade compleji
 
 El nombre de cada spec usa kebab-case.
 
+## Paquetes
+
+Es obligatorio validar con Socket cada paquete de Node que se incorpore
+y cada cambio de versión.
+
 ## Pasos de la lógica
 
 El cuerpo de una función mantiene este orden:
