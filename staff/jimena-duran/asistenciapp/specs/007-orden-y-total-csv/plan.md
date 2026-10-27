@@ -45,13 +45,12 @@ Usar las bases temporales de las pruebas, sin abrir ni modificar la base local.
 Revisar que el diff se limite a los archivos previstos y a esta documentación
 SDD.
 
-## Ajuste aprobado y resultados
+## Ajuste y resultados
 
-Jimena Durán aprobó adaptar `tests/test_readme_environment.py` para exigir el
-texto exacto nuevo de descarga y revertir únicamente ese fragmento antes de
-comprobar el hash histórico. Se conserva el hash y se detecta la alteración,
-eliminación o duplicación del texto, además de las alteraciones anteriores.
+Se adaptó `tests/test_readme_environment.py` al nuevo texto del README,
+conservando la comprobación de integridad del contenido histórico.
 
-Pruebas de exportación y API: 51 aprobadas. Suite completa tras el ajuste:
-191 aprobadas. Jimena Durán confirmó la descarga correcta del CSV y el acceso
-desde otro dispositivo mediante Cloudflare Tunnel. El alcance funcional no cambia.
+- Pruebas de exportación y API: 51 aprobadas.
+- Suite completa: 191 pruebas aprobadas.
+- Prueba manual: descarga del CSV y acceso desde otro dispositivo mediante
+  Cloudflare Tunnel.
