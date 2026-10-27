@@ -1,6 +1,6 @@
 # Plan técnico 007 · Listas de grupo para pasar lista
 
-> Estado: **Aprobado v1.0 (2026-10-27)** · Spec: [spec.md](spec.md) v1.1 · Creado: 2026-10-27
+> Estado: **Aprobado v1.1 (2026-10-27)** · Spec: [spec.md](spec.md) v1.1 · Creado: 2026-10-27
 
 Este documento explica **cómo** se cumple la spec. Cada decisión indica qué requisitos (`RF-n`) y criterios de aceptación (`CA-xx`) cubre.
 
@@ -216,7 +216,7 @@ Enmienda propuesta en `docs/CONSTITUTION.md`, que solo apruebas tú, en su propi
 | `asistencia/export.py` | `to_group_csv` |
 | `app.py` | Rutas de §2.4 y errores nuevos |
 | `static/profesor.html`, `profesor.js`, `alumno.html`, `alumno.js`, `styles.css` | §2.6 y §2.7 |
-| `tests/test_roster.py`, `test_passes.py`, `test_groups_api.py`, `test_group_checkin_api.py`, `test_group_export.py`, `test_migration.py` | **Nuevos** |
+| `tests/test_roster.py`, `test_passes.py`, `test_session_rules.py`, `test_groups_api.py`, `test_group_checkin_api.py`, `test_group_export.py`, `test_migration.py` | **Nuevos** |
 | `tests/test_names.py` | Casos nuevos al final para `is_similar`; los de hoy no se tocan |
 | `docs/CONSTITUTION.md`, `docs/ARCHITECTURE.md`, `README.md`, `AGENTS.md`, `specs/001-checkin-codigo/spec.md` | §2.8 y §2.9 |
 
@@ -236,7 +236,7 @@ Enmienda propuesta en `docs/CONSTITUTION.md`, que solo apruebas tú, en su propi
 | CA-06 | `test_groups_api.py`: `decide_new add` y la siguiente sesión tiene ese nombre en su copia |
 | CA-07 | `test_group_export.py`: una fila por alumno de la copia y por nuevo; `Estado` presente, ausente o nuevo; «Hora» en presentes y nuevos, vacía en ausentes |
 | CA-08 | `test_groups_api.py`: renombrar en el grupo no cambia la copia ni el CSV de una sesión anterior |
-| CA-09 | `test_groups_api.py`: borrar con sesión abierta da 409; archivar sí, y la sesión abierta sigue aceptando registros |
+| CA-09 | `test_session_rules.py`: `ensure_can_delete` con y sin sesión abierta; `test_groups_api.py`: borrar con sesión abierta da 409; archivar sí, y la sesión abierta sigue aceptando registros |
 | CA-10 | Todos los tests de hoy siguen pasando sin tocarlos; `test_migration.py`: una base con el esquema de hoy se actualiza y sus sesiones se ven y descargan igual |
 | CA-11 | `test_group_checkin_api.py`: con reloj de prueba, `unlock` y `checkin` a los 60 s solo apuntan un intento en `ip_attempts` |
 | CA-12 | `test_groups_api.py`: cerrar con un nuevo sin decidir; después `add`, `keep` y `discard` funcionan con la sesión cerrada |
@@ -246,7 +246,7 @@ Enmienda propuesta en `docs/CONSTITUTION.md`, que solo apruebas tú, en su propi
 | CA-16 | `test_passes.py`: el pase caduca a los 120 s; API: `PassExpired` con el mensaje; verificación manual de que el nombre se conserva |
 | CA-17 | `test_groups_api.py`: `add` con grupo archivado funciona, con grupo borrado da 410, y con nombre ya en el grupo une el registro a ese alumno y lo añade a la copia si faltaba; renombrar o añadir alumnos al grupo no cambia la copia |
 | CA-18 | `test_roster.py`: CSV con `,`, con `;` y con BOM; `test_group_export.py`: «=SUMA(1)» sale como `'=SUMA(1)` |
-| CA-19 | `test_groups_api.py`: abrir sesión con un grupo de 0 alumnos da 409 con el mensaje |
+| CA-19 | `test_session_rules.py`: `ensure_can_open` con grupo archivado, con 0 alumnos y con un grupo válido; `test_groups_api.py`: abrir sesión con un grupo de 0 alumnos da 409 con el mensaje |
 | CA-20 | `test_roster.py`: `ensure_room` con 200; `test_groups_api.py`: `add` con un grupo de 200 da 409 «Este grupo ya tiene 200 alumnos», el grupo sigue con 200, y luego `keep` y `discard` funcionan |
 
 Verificación manual al final: `python app.py`, crear un grupo subiendo un CSV de Excel, abrir sesión, registrarse desde dos navegadores (uno de la lista y uno nuevo), liberar y volver a registrarse, cerrar, decidir sobre el nuevo y abrir el CSV en Excel o Google Sheets. Al terminar, parar la app y comprobar con `lsof -nP -iTCP:8000 -sTCP:LISTEN` que el puerto queda libre (`AGENTS.md` §5).
@@ -291,3 +291,4 @@ Verificación manual al final: `python app.py`, crear un grupo subiendo un CSV d
 | 0.1 | 2026-10-27 | Borrador inicial | Spec 007 v1.0 aprobada |
 | 0.2 | 2026-10-27 | `check_in` rápido añade `id` y `receipt` solo en 201; la respuesta `already` no cambia (§2.3). Excepción de la copia y límite de 200 en `decide_new`, con `GroupFull` 409 (§2.2, §2.3, §2.4). «Hora» de los nuevos en `to_group_csv` (§2.5). CA-20 y ajustes de CA-07 y CA-17 en §4 | Spec 007 v1.1 y revisión del plan |
 | 1.0 | 2026-10-27 | Aprobado | Ok de la persona que trabaja en esta carpeta |
+| 1.1 | 2026-10-27 | `tests/test_session_rules.py` en la tabla de archivos (§3) y en las pruebas de CA-09 y CA-19 (§4) | Las tareas separan el test de las reglas de sesión (tasks v0.2, T08) |
