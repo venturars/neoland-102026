@@ -226,9 +226,15 @@ function checkinRow(c) {
     li.append(question, actions);
     return li;
   }
+  const who = document.createElement("span");
+  who.className = "who";
   const name = document.createElement("span");
-  name.className = "name";
+  name.className = `name ${c.arrival === "A tiempo" ? "on-time" : "late"}`;
   name.textContent = c.name; // CA-12: siempre texto literal
+  const arrival = document.createElement("span");
+  arrival.className = "arrival";
+  arrival.textContent = c.arrival;
+  who.append(name, arrival);
   const actions = document.createElement("span");
   actions.className = "row-actions";
   const time = document.createElement("span");
@@ -237,7 +243,7 @@ function checkinRow(c) {
   const remove = button("Quitar", "danger small", "remove", c.id);
   remove.setAttribute("aria-label", `Quitar a ${c.name}`);
   actions.append(time, remove);
-  li.append(name, actions);
+  li.append(who, actions);
   return li;
 }
 
