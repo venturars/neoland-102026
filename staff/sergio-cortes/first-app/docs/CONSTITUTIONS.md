@@ -79,6 +79,10 @@ Una funcionalidad nueva es un fichero nuevo en `logic/`. Si la constitución, el
 
 `tasks.md` son los pasos, en el orden en que los haría una persona. Cada paso abre un sitio, hace una cosa y deja un resultado que se puede mirar. Un paso son como mucho cuatro líneas. Si el desarrollo no es una funcionalidad nueva, el grano es el mismo: mirar lo que ya existe, cambiar un sitio, comprobar.
 
+## Paquetes
+
+Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket.
+
 ## Base de datos
 
 Hay una sola base de datos: `db/users.sqlite`. Hay una sola conexión: el `db` que exporta `db/connections.js`. No se abre otra base de datos ni otra conexión.
