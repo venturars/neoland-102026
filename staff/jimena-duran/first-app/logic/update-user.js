@@ -12,20 +12,32 @@ export function updateUser(id, changes) {
     throw new Error("User not found");
   }
 
-  const name = changes.name === undefined ? current.name : changes.name.trim();
+  let name = current.name;
+  if (changes.name !== undefined) {
+    const rawName = changes.name;
+    name = rawName.trim();
+  }
   if (name === "") {
     throw new Error("Name is empty");
   }
 
-  const email =
-    changes.email === undefined
-      ? current.email
-      : changes.email.trim().toLowerCase();
+  let email = current.email;
+  if (changes.email !== undefined) {
+    const rawEmail = changes.email;
+    const trimmedEmail = rawEmail.trim();
+    email = trimmedEmail.toLowerCase();
+  }
   const parts = email.split("@");
-  const hasSingleAt =
-    parts.length === 2 && parts[0].length > 0 && parts[1].length > 0;
-
-  if (!hasSingleAt || email.length > 64) {
+  if (parts.length !== 2) {
+    throw new Error("Email is invalid");
+  }
+  if (parts[0].length === 0) {
+    throw new Error("Email is invalid");
+  }
+  if (parts[1].length === 0) {
+    throw new Error("Email is invalid");
+  }
+  if (email.length > 64) {
     throw new Error("Email is invalid");
   }
 
@@ -36,8 +48,10 @@ export function updateUser(id, changes) {
     throw new Error("Could not update the user");
   }
 
-  if (owner && owner.id !== current.id) {
-    throw new Error("Email is already used");
+  if (owner) {
+    if (owner.id !== current.id) {
+      throw new Error("Email is already used");
+    }
   }
 
   let user;

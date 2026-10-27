@@ -26,7 +26,8 @@ export async function usersGenderCount() {
 
   for (let start = 0; start < users.length; start += 6) {
     const batch = users.slice(start, start + 6);
-    const names = batch.map((user) => user.name).join("\n");
+    const batchNames = batch.map((user) => user.name);
+    const names = batchNames.join("\n");
 
     let completion;
     try {
@@ -72,29 +73,50 @@ export async function usersGenderCount() {
       throw new Error("Could not classify the users");
     }
 
-    const choice = completion?.choices?.[0];
+    const choices = completion?.choices;
+    const choice = choices?.[0];
 
-    if (!choice || !choice.message) {
+    if (!choice) {
       genderUndefined += batch.length;
       continue;
     }
 
-    const text = choice.message.content;
+    const message = choice.message;
+    if (!message) {
+      genderUndefined += batch.length;
+      continue;
+    }
 
-    if (typeof text !== "string" || text.trim() === "") {
+    const text = message.content;
+
+    if (typeof text !== "string") {
+      genderUndefined += batch.length;
+      continue;
+    }
+
+    const trimmedText = text.trim();
+    if (trimmedText === "") {
       genderUndefined += batch.length;
       continue;
     }
 
     let genders;
     try {
-      genders = JSON.parse(text).genders;
+      const parsed = JSON.parse(text);
+      genders = parsed.genders;
     } catch {
       genderUndefined += batch.length;
       continue;
     }
 
-    if (!Array.isArray(genders) || genders.length !== batch.length) {
+    const isArray = Array.isArray(genders);
+    if (!isArray) {
+      genderUndefined += batch.length;
+      continue;
+    }
+
+    const hasMatchingLength = genders.length === batch.length;
+    if (!hasMatchingLength) {
       genderUndefined += batch.length;
       continue;
     }
