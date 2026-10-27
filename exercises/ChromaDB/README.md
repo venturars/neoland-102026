@@ -81,7 +81,9 @@ Si el nombre no existe en Python 3.15, responde `not found in Python 3.15 docs`.
 
 ## Usarlo desde un agente
 
-`SKILL.md` es la skill `python-3-15-docs`. Le dice al agente cuándo consultar, qué comando usar y cómo citar la fuente. Se instala como las demás skills del repositorio: los pasos están en el `README.md` de la raíz.
+`SKILL.md` es la skill `python-3-15-docs`. Le dice al agente cuándo consultar, qué comando usar y cómo citar la fuente.
+
+No hay que instalarla: `AGENTS.md` le dice al agente que la siga, y la mayoría de agentes leen ese fichero solos cuando trabajan en esta carpeta. Solo hace falta haber construido el índice y tener Ollama arrancado.
 
 ## Ver los datos con ChromaDash
 

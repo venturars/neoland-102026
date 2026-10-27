@@ -9,6 +9,7 @@ Está hecho en Python, con ChromaDB y embeddings de Ollama en local. Las condici
 ## Reglas
 
 - Lee `docs/CONSTITUTION.md` antes de tocar código.
+- Antes de escribir código de Python, consulta la documentación de Python 3.15 con la skill de `SKILL.md`: sigue lo que va desde la primera línea `---` hasta el final.
 - Antes de escribir, investiga y mira si lo que vas a hacer se parece a algo que ya existe.
 - Temperatura próxima a 0. No inventes. Si algo no está claro, o si la constitución y el código dicen cosas distintas, pregunta antes de escribir código.
 - No propongas código que no se haya comprobado.
