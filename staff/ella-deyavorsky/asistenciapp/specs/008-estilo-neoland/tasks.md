@@ -1,6 +1,6 @@
 # Tareas 008 · Aspecto de Neoland
 
-> Estado: **Aprobado v1.0 (2026-10-28)** · Plan: [plan.md](plan.md) v1.1 · Spec: [spec.md](spec.md) v1.0 · Creado: 2026-10-28
+> Estado: **Aprobado v1.0 (2026-10-28)** · Plan: [plan.md](plan.md) v1.2 · Spec: [spec.md](spec.md) v1.0 · Creado: 2026-10-28
 
 Cómo leer esta lista:
 
@@ -26,12 +26,12 @@ Cómo leer esta lista:
 
 ## Fase B · Colores y contraste
 
-- [ ] **T03** · Test primero: nuevo `tests/test_contrast.py`. Lee `static/styles.css`, saca las variables del `:root` claro y del oscuro (`@media (prefers-color-scheme: dark)`) y comprueba el contraste de cada par en los dos modos:
-  - 4,5:1: `--text` y `--muted` sobre `--bg` y `--surface`; `--heading` sobre `--surface`; `--accent-ink` sobre `--bg` y `--surface`; `--accent-text` sobre `--accent-ink`; blanco y `--accent-on-dark` sobre `--charcoal`; `--ok-text`, `--warn-text` y `--error-text` sobre su fondo.
+- [x] **T03** · Test primero: nuevo `tests/test_contrast.py`. Lee `static/styles.css`, saca las variables del `:root` claro y del oscuro (`@media (prefers-color-scheme: dark)`) y comprueba el contraste de cada par en los dos modos:
+  - 4,5:1: `--text` y `--muted` sobre `--bg` y `--surface`; `--heading` sobre `--surface`; `--accent-ink` sobre `--bg` y `--surface`; `--accent-text` sobre `--accent-strong`; blanco y `--accent-on-dark` sobre `--charcoal`; `--ok-text`, `--warn-text` y `--error-text` sobre su fondo.
   - 3:1: `--accent-text` sobre `--accent` (texto de 18 px en negrita).
   - *Cubre:* CA-04.
   - *Hecha cuando:* el test falla porque faltan las variables nuevas, y los tests de hoy siguen pasando. Se para a esperar tu ok.
-- [ ] **T04** · Variables de plan §2.1 en el `:root` y en el modo oscuro de `styles.css`.
+- [x] **T04** · Variables de plan §2.1 en el `:root` y en el modo oscuro de `styles.css`.
   - *Cubre:* RF-1, RF-7, CA-04.
   - *Hecha cuando:* `pytest` completo en verde, incluido `test_contrast.py`.
 
@@ -74,3 +74,4 @@ Cómo leer esta lista:
 | --- | --- | --- | --- |
 | 0.1 | 2026-10-28 | Borrador inicial | Plan 008 v1.1 |
 | 1.0 | 2026-10-28 | Aprobadas | Ok de la persona que trabaja en esta carpeta |
+| 1.1 | 2026-10-28 | T03 comprueba `--accent-strong` en vez de `--accent-ink` como relleno | Plan 008 v1.2 |

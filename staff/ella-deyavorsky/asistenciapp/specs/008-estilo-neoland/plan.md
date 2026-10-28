@@ -1,6 +1,6 @@
 # Plan técnico 008 · Aspecto de Neoland
 
-> Estado: **Aprobado v1.1 (2026-10-28)** · Spec: [spec.md](spec.md) v1.0 · Creado: 2026-10-28
+> Estado: **Aprobado v1.2 (2026-10-28)** · Spec: [spec.md](spec.md) v1.0 · Creado: 2026-10-28
 
 Este documento explica **cómo** se cumple la spec. Cada decisión indica qué requisitos (`RF-n`) y criterios (`CA-xx`) cubre.
 
@@ -29,7 +29,8 @@ Medidas en neoland.es el 2026-10-28 con los estilos calculados del navegador.
 | `--muted` | `#6B6B6B` | `#BDBDBD` | texto secundario |
 | `--border` | `#E5E5E5` | `#4A4A4A` | bordes de campos y separadores |
 | `--accent` | `#E6284E` | `#E6284E` | rellenos, bordes y foco (texto blanco encima solo a 18 px en negrita) |
-| `--accent-ink` | `#C41E42` | `#FF6B86` | carmesí para texto pequeño y botones pequeños rellenos |
+| `--accent-ink` | `#C41E42` | `#FF6B86` | carmesí para texto pequeño (enlaces, botones de peligro, avisos de las casillas) |
+| `--accent-strong` | `#C41E42` | `#C41E42` | relleno de botones pequeños y confirmaciones, con texto blanco (v1.2) |
 | `--accent-text` | `#FFFFFF` | `#FFFFFF` | texto sobre carmesí |
 | `--charcoal` | `#333333` | `#1F1F1F` | banda del código |
 | `--accent-on-dark` | `#FF6B86` | `#FF6B86` | carmesí para texto sobre la banda oscura (v1.1) |
@@ -41,7 +42,7 @@ Medidas en neoland.es el 2026-10-28 con los estilos calculados del navegador.
 
 `--ok-*`, `--warn-*` y `--error-*` se quedan con sus colores de hoy (RF-6). `--danger` pasa a ser `--accent-ink`.
 
-**Contraste (RF-11, CA-04).** Blanco sobre `#E6284E` da 4,4:1. Vale para texto grande (18 px en negrita), así que los botones principales usan 18 px en negrita, como en neoland.es («Saber más»: 18 px, 700). En botones pequeños rellenos y en texto carmesí pequeño se usa `--accent-ink` (`#C41E42`, 5,8:1 sobre blanco; `#FF6B86`, 4,6:1 sobre `#333333`). Cada par se comprueba con un script en las tasks.
+**Contraste (RF-11, CA-04).** Blanco sobre `#E6284E` da 4,4:1. Vale para texto grande (18 px en negrita), así que los botones principales usan 18 px en negrita, como en neoland.es («Saber más»: 18 px, 700). El texto carmesí pequeño usa `--accent-ink` (`#C41E42`, 5,8:1 sobre blanco; `#FF6B86`, 4,6:1 sobre `#333333`). Los botones pequeños rellenos y las confirmaciones usan `--accent-strong` (`#C41E42` en los dos modos, 5,8:1 con texto blanco): en modo oscuro, blanco sobre `#FF6B86` daría solo 2,7:1 (v1.2). Cada par se comprueba con un script en las tasks.
 
 ### 2.2 Reglas que cambian en `styles.css` (RF-2 a RF-7)
 
@@ -52,10 +53,10 @@ Medidas en neoland.es el 2026-10-28 con los estilos calculados del navegador.
   - `button` y `.button`: píldora, 18 px, peso 700, relleno `--accent`;
   - `.secondary`: transparente, borde 2 px `--text`, texto `--text`;
   - `.danger`: transparente, borde 2 px `--accent`, texto `--accent-ink`;
-  - `.danger-solid`: relleno `--accent-ink`;
-  - `.small`: 14 px y relleno `--accent-ink` si no es secundario ni de peligro.
+  - `.danger-solid`: relleno `--accent-strong`;
+  - `.small`: 14 px y relleno `--accent-strong` si no es secundario ni de peligro.
 - **Foco:** contorno de 3 px en `--accent` (P5).
-- **`.badge`:** píldora con los colores de hoy («abierta» verde, «cerrada» gris).
+- **`.badge`:** píldora con los colores de hoy («abierta» verde). «cerrada» pasa a fondo `--bg` con borde de 1 px `--border` y texto `--muted` (4,9:1); hoy su fondo es `--border` y daría 4,2:1 (v1.2).
 - **`.message`:** radio 16 px y los colores de hoy.
 - **Banda del código** (RF-4), con `.card.dark`:
   - fondo `--charcoal` y texto blanco;
@@ -165,3 +166,4 @@ Al terminar, parar la app y comprobar con `lsof -nP -iTCP:<puerto> -sTCP:LISTEN`
 | 0.1 | 2026-10-28 | Borrador inicial | Spec 008 v1.0 aprobada |
 | 1.0 | 2026-10-28 | Aprobado | Ok de la persona que trabaja en esta carpeta |
 | 1.1 | 2026-10-28 | El contraste se comprueba con un test nuevo, `tests/test_contrast.py`, en vez de un script suelto (§3, §4); variable `--accent-on-dark` para la etiqueta sobre la banda (§2.1, §2.2) | Al desglosar las tareas: así la comprobación se queda y vuelve a pasar en cada cambio |
+| 1.2 | 2026-10-28 | `--accent-strong` para el relleno de botones pequeños y confirmaciones; `--accent-ink` queda para texto (§2.1, §2.2). La etiqueta «cerrada» pasa a fondo `--bg` con borde (§2.2) | T03: el test de contraste mostró que blanco sobre `#FF6B86` da 2,7:1 en modo oscuro y que el gris sobre `--border` da 4,2:1 |
