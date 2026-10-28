@@ -71,9 +71,38 @@ Ese enlace es **tu panel privado**: no lo compartas, porque quien lo tenga puede
 
 Cuando un alumno se registra, su navegador lo recuerda **para esa clase**: si vuelve a abrir el enlace, ve *"Ya te registraste en esta clase como Ana García a las 11:07"* y no puede apuntar a otra persona. En la clase siguiente puede registrarse con normalidad.
 
-Es un límite **disuasorio**, no una prueba de identidad: se salta con otro navegador, una ventana privada u otro dispositivo. Para lo que se cuele, está el botón **Quitar**. Si quitas a alguien, su navegador sigue mostrando "ya te registraste": tendría que usar otro navegador para registrarse de nuevo.
+Es un límite **disuasorio**, no una prueba de identidad: se salta con otro navegador, una ventana privada u otro dispositivo. Para lo que se cuele, está el botón **Quitar**. Si quitas a alguien, **su navegador puede volver a registrarse**: al abrir otra vez el enlace ve el formulario (spec 007). Los registros hechos antes de este cambio siguen mostrando "ya te registraste".
 
 Las **sesiones anteriores** aparecen en el panel con su número de asistentes, y puedes volver a verlas o descargarlas cuando quieras.
+
+### Grupos: los alumnos eligen su nombre de una lista
+
+En vez de que cada alumno escriba su nombre, puedes preparar **una vez** la lista de un grupo (por ejemplo «SDD 2º A»). Así no hay erratas ni nombres inventados, y la app te dice **quién faltó**.
+
+> **Antes del primer arranque con esta versión**, copia `data/asistencia.db` a una carpeta fuera del repositorio. Al arrancar, la app añade columnas nuevas a la base (sin borrar nada). Si algo saliera mal, vuelve a poner la copia.
+
+**Crear un grupo**
+
+1. En el panel, en **Grupos**, pulsa **Nuevo grupo** y escribe su nombre.
+2. Escribe un alumno en cada casilla. Con **Intro** pasas a la siguiente (o aparece una nueva), y con **×** quitas una casilla. Si pegas varios nombres a la vez (uno por línea, por ejemplo una columna copiada de Excel), cada uno va a su casilla.
+3. ¿Tienes la lista en un **CSV** de Excel o Google Sheets? Elígelo en «O sube un CSV» y pulsa **Revisar**: sus nombres pasan a las casillas, detrás de los que ya había. Vale separado por `;` o por `,`; se usa la primera columna, y la primera fila puede ser una cabecera como «Nombre».
+4. Pulsa **Subir lista**. Antes de guardar, la app revisa la lista: los nombres repetidos o demasiado largos salen marcados en su casilla y no se guarda nada hasta que los corrijas (diferéncialos, por ejemplo con la inicial del apellido). Si un nombre solo **se parece** a otro, te lo enseña («¿Quisiste decir…?») y el botón pasa a **Subir igualmente**.
+5. Al guardar, cada palabra empieza por **mayúscula**: «maría de la fuente» queda «María de la Fuente» («de», «del», «la», «las», «los», «y» y «e» se quedan en minúscula). El resto de la palabra se queda como lo escribiste. Los nombres que escriben los alumnos no cambian.
+
+Un grupo puede tener hasta 200 alumnos y puede guardarse vacío para rellenarlo luego: escribe solo su nombre y pulsa **Subir lista**.
+
+Con **Editar** añades alumnos (con las mismas casillas, el CSV y **Subir lista**), los renombras (también con mayúscula) o los quitas. **Archivar** lo esconde del panel sin perder nada (puedes restaurarlo). **Borrar** solo funciona si el grupo no tiene una asistencia abierta; sus listas pasadas se conservan.
+
+**Pasar lista con un grupo**
+
+1. Al abrir la asistencia, elige el grupo en **Lista** (o «Sesión rápida» para hacerlo como siempre). Un grupo sin alumnos no puede abrir asistencia.
+2. El alumno abre el enlace, escribe el **código** de tu pantalla y ve la lista. Busca su nombre y lo toca. Tiene **2 minutos** para elegir; si se le pasa, vuelve a escribir el código y no pierde lo que había elegido. Cada código escrito sirve para **un solo registro**: para apuntar a otra persona hay que escribir el código otra vez.
+3. Los nombres ya registrados salen tachados y no se pueden elegir. Si alguien eligió mal, pulsa **Liberar** en su fila: el nombre vuelve a estar libre y ese navegador puede registrarse otra vez.
+4. Quien no está en la lista pulsa **No estoy en la lista** y escribe su nombre. Si se parece a uno de la lista, la app le pregunta «¿Quisiste decir…?». Queda como **nuevo**.
+5. Ves «X de N presentes», los nuevos y los que faltan. Al cerrar (o después, desde la sesión cerrada) decides qué hacer con cada nuevo: **Añadir al grupo** (estará en la lista la próxima vez), **Dejar solo aquí** o **Descartar**.
+6. **Descargar lista** da un CSV con las columnas *Grupo*, *Fecha*, *Nombre*, *Estado* (presente, ausente o nuevo) y *Hora*.
+
+Cada sesión guarda una **copia fija** de la lista: si luego cambias el grupo, las sesiones pasadas no cambian.
 
 ---
 
@@ -134,9 +163,10 @@ Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una 
 
 ## 8. Privacidad
 
-- Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails.
+- De cada alumno solo se guarda **su nombre** (el que escribe él o el que pones tú en la lista de un grupo) y, en cada clase, **la hora** y **el estado** de su registro. Nada de emails (constitución P4, v4.0).
+- La lista de un grupo **no la ve nadie sin el código** de la clase; tú la ves en tu panel. De un CSV solo se guarda la primera columna.
 - La **IP** se guarda solo para limitar los intentos (lista negra y contadores), **separada de los nombres** y sin salir en el CSV (constitución P4, v3.0).
 - El límite "un registro por navegador" se guarda **solo en el navegador del alumno**, no en el servidor.
-- Quitar un registro lo **borra de verdad** (no queda en ninguna papelera).
+- Quitar un registro o descartar a un nuevo lo **borra de verdad** (no queda en ninguna papelera). Borrar un grupo borra su lista; las listas de asistencia pasadas se conservan.
 - Los datos se guardan **solo en tu ordenador** (`data/`, que no se sube a git).
 - Con `--tunel`, el tráfico pasa **cifrado** por Cloudflare, que no lo almacena (constitución P4, v2.1).
