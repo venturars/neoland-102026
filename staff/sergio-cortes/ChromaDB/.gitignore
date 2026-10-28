@@ -1,0 +1,8 @@
+.venv/
+chroma_db/
+__pycache__/
+# El HTML descargado vive en la raíz del proyecto. La barra deja skills/python-docs/ en git.
+/python-docs/
+python-docs-md/
+src/db/users.sqlite
+.ipynb_checkpoints/
