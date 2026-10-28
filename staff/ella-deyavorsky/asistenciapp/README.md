@@ -84,11 +84,14 @@ En vez de que cada alumno escriba su nombre, puedes preparar **una vez** la list
 **Crear un grupo**
 
 1. En el panel, en **Grupos**, pulsa **Nuevo grupo** y escribe su nombre.
-2. Pega los nombres (uno por línea) o sube un **CSV** de Excel o Google Sheets. Vale separado por `;` o por `,`; se usa la primera columna, y la primera fila puede ser una cabecera como «Nombre».
-3. Pulsa **Revisar**: verás cuántos alumnos hay y los problemas (nombres repetidos, demasiado largos o parecidos). Con repetidos no se puede guardar: diferéncialos, por ejemplo con la inicial del apellido.
-4. Pulsa **Guardar grupo**. Un grupo puede tener hasta 200 alumnos y puede guardarse vacío para rellenarlo luego.
+2. Escribe un alumno en cada casilla. Con **Intro** pasas a la siguiente (o aparece una nueva), y con **×** quitas una casilla. Si pegas varios nombres a la vez (uno por línea, por ejemplo una columna copiada de Excel), cada uno va a su casilla.
+3. ¿Tienes la lista en un **CSV** de Excel o Google Sheets? Elígelo en «O sube un CSV» y pulsa **Revisar**: sus nombres pasan a las casillas, detrás de los que ya había. Vale separado por `;` o por `,`; se usa la primera columna, y la primera fila puede ser una cabecera como «Nombre».
+4. Pulsa **Subir lista**. Antes de guardar, la app revisa la lista: los nombres repetidos o demasiado largos salen marcados en su casilla y no se guarda nada hasta que los corrijas (diferéncialos, por ejemplo con la inicial del apellido). Si un nombre solo **se parece** a otro, te lo enseña («¿Quisiste decir…?») y el botón pasa a **Subir igualmente**.
+5. Al guardar, cada palabra empieza por **mayúscula**: «maría de la fuente» queda «María de la Fuente» («de», «del», «la», «las», «los», «y» y «e» se quedan en minúscula). El resto de la palabra se queda como lo escribiste. Los nombres que escriben los alumnos no cambian.
 
-Con **Editar** añades, renombras o quitas alumnos. **Archivar** lo esconde del panel sin perder nada (puedes restaurarlo). **Borrar** solo funciona si el grupo no tiene una asistencia abierta; sus listas pasadas se conservan.
+Un grupo puede tener hasta 200 alumnos y puede guardarse vacío para rellenarlo luego: escribe solo su nombre y pulsa **Subir lista**.
+
+Con **Editar** añades alumnos (con las mismas casillas, el CSV y **Subir lista**), los renombras (también con mayúscula) o los quitas. **Archivar** lo esconde del panel sin perder nada (puedes restaurarlo). **Borrar** solo funciona si el grupo no tiene una asistencia abierta; sus listas pasadas se conservan.
 
 **Pasar lista con un grupo**
 

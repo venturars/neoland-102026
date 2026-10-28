@@ -221,7 +221,7 @@ Salen de la verificación manual de T26. Cuando esta fase acabe, T26 se verifica
 
 - **Checkpoint:** `pytest` completo en verde; luego se propone un commit solo de T37 y T38 (mensaje en inglés y lista de archivos) y se espera tu sí. Nunca `git add .` y nunca archivos de base de datos.
 
-- [ ] **T39** · Documentación: en `README.md`, la sección «Grupos» explica las casillas, Intro, pegar varias líneas, «Revisar» para el CSV, «Subir lista» y las mayúsculas automáticas. En `AGENTS.md` §8, la fila de la spec 007 dice v1.3 y el número de tests.
+- [x] **T39** · Documentación: en `README.md`, la sección «Grupos» explica las casillas, Intro, pegar varias líneas, «Revisar» para el CSV, «Subir lista» y las mayúsculas automáticas. En `AGENTS.md` §8, la fila de la spec 007 dice v1.3 y el número de tests.
   - *Hecha cuando:* el README describe lo que hace la app y `pytest` completo en verde.
 
 - **Checkpoint:** `pytest` completo en verde; luego se propone un commit solo de T39 (mensaje en inglés y lista de archivos) y se espera tu sí. Nunca `git add .` y nunca archivos de base de datos.
