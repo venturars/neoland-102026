@@ -34,39 +34,49 @@
 :root {
   --font-heading: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-body: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --bg: #f7f7f5;
+  /* spec 008 · RF-1: colores medidos en neoland.es. tests/test_contrast.py vigila el contraste (CA-04). */
+  --bg: #f5f5f5;
   --surface: #ffffff;
-  --text: #1c1c1e;
-  --muted: #5c5c63;
-  --border: #d9d9de;
-  --accent: #2851c7;
+  --text: #3a3a3a;
+  --heading: #000000;
+  --muted: #6b6b6b;
+  --border: #e5e5e5;
+  --accent: #e6284e;          /* rellenos y bordes; texto blanco encima solo a 18 px en negrita */
+  --accent-ink: #c41e42;      /* carmesí para texto pequeño */
+  --accent-strong: #c41e42;   /* relleno de botones pequeños y confirmaciones */
   --accent-text: #ffffff;
+  --accent-on-dark: #ff6b86;  /* carmesí sobre la banda del código */
+  --charcoal: #333333;
   --ok-bg: #e5f5ea;
   --ok-text: #14592d;
   --error-bg: #fde8e8;
   --error-text: #8a1c1c;
   --warn-bg: #fff4d6;
   --warn-text: #6b4a00;
-  --danger: #b42318;
+  --danger: var(--accent-ink);
+  --radius-card: 25px;
+  --radius-field: 12px;
+  --radius-pill: 999px;
   color-scheme: light;
 }
 
+/* spec 008 · RF-7: modo oscuro con los grises oscuros de Neoland */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #121214;
-    --surface: #1d1d20;
-    --text: #f2f2f5;
-    --muted: #a5a5ad;
-    --border: #3a3a40;
-    --accent: #8aa8ff;
-    --accent-text: #0d1430;
+    --bg: #262626;
+    --surface: #333333;
+    --text: #f2f2f2;
+    --heading: #ffffff;
+    --muted: #bdbdbd;
+    --border: #4a4a4a;
+    --accent-ink: #ff6b86;
+    --charcoal: #1f1f1f;
     --ok-bg: #133321;
     --ok-text: #a6e3bb;
     --error-bg: #3d1717;
     --error-text: #ffb4b4;
     --warn-bg: #3a2e0c;
     --warn-text: #ffd97a;
-    --danger: #ff8a80;
     color-scheme: dark;
   }
 }
