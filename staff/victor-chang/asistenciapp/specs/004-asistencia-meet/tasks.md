@@ -260,7 +260,8 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
   - **Hecha (2026-10-28):** `local_day(iso, tz)` en `domain/sessions.py` (sin E/S; la zona llega por parámetro) y `export_attendance` la usa en vez de los 10 primeros caracteres de `opened_at` en UTC. La ruta de descarga ya pasaba la zona de la configuración.
     - Test nuevo `test_export_filename_uses_the_local_day` (`test_sessions.py`), en verano (22:30 UTC del 24/10/2026) y en invierno (23:30 UTC del 14/01/2027): los dos fallaron con el día anterior y ahora dan el día de Madrid.
     - 438 tests en verde; `ruff` y `mypy` sin avisos.
-- [ ] **T20** · `requests` en `requirements.txt` (plan §2.12, §7.1); AGENT.md §4 nombra las dependencias de la app.
+- [x] **T20** · `requests` en `requirements.txt` (plan §2.12, §7.1); AGENT.md §4 nombra las dependencias de la app.
+  - **Hecha (2026-10-28):** `requests` en `requirements.txt`, justo después de `google-auth-oauthlib`, sin versión fija como las demás. Ya estaba instalada (2.34.2, por `requests-oauthlib`): no hay nada nuevo que instalar. AGENT.md §4 nombra las tres dependencias de la app, y §3 corrige la línea de `requirements.txt`, que solo hablaba de Flask y las herramientas. 438 tests en verde; `ruff` y `mypy` sin avisos.
 - [ ] **T21** · Cierre de la revisión:
   - `pytest`, `ruff check`, `ruff format --check` y `mypy` en verde;
   - respuestas en la PR #532 a los cinco comentarios;

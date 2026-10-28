@@ -1,5 +1,6 @@
 flask
 google-auth-oauthlib
+requests
 pytest
 ruff
 mypy
