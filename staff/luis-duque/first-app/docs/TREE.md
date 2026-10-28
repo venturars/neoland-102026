@@ -45,6 +45,8 @@ first-app/
       find-user-by-id.sql
       find-user-by-email.sql
       find-user-by-name.sql
+  scripts/
+    jupyter.sh
   eslint.config.js
   package.json
   pnpm-lock.yaml
