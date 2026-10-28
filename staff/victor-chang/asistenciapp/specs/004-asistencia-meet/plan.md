@@ -1,6 +1,6 @@
 # Plan técnico 004 · Asistencia automática desde Google Meet
 
-> Versión 2.1 · Estado: **Aprobado** (2026-10-25) · Spec: [spec.md](spec.md) v1.2 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Constitución v3.1 · Creado: 2026-10-21 · Reescrito: 2026-10-23
+> Versión 2.2 · Estado: **En revisión** (2026-10-28) · Spec: [spec.md](spec.md) v1.2 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Constitución v3.1 · Creado: 2026-10-21 · Reescrito: 2026-10-23
 
 Este documento explica **cómo** construimos lo que pide la spec 004 sobre el código ya adaptado a `ARCHITECTURE.md` (spec 005). Meet es una **segunda forma de llenar la lista**: una entrada nueva que llama a casos de uso, y una pieza de infraestructura nueva que habla con Google (C3, P1). Las reglas se citan por su identificador (`C2`, `E4`…).
 
@@ -177,6 +177,18 @@ Después cada nombre pasa por `name_key` y `storage.add_checkin`, sin cambios.
 
 Todos los registros de una misma toma llevan **la hora de la toma** (`to_iso(t)`), también con "Todos los que han estado" y al terminar la clase: es cuándo se pasó lista, no cuándo entró cada uno (la spec deja fuera las entradas y salidas). La descarga en CSV (CA-16) muestra esa hora.
 
+### 2.12 Revisión de código de la PR #532 (2026-10-28)
+
+Tres arreglos que no cambian la spec ni la API:
+
+- **El formato del enlace de Meet pasa al dominio.** `parse_meeting_code` y su expresión regular salen de `infra/google_meet.py` a un módulo nuevo, `domain/meetings.py`: solo comprueban un texto, sin E/S (C1, O1). Hoy `usecases/sessions.py` importa `infra/google_meet.py`, que a su vez importa `requests` y las librerías de Google: los casos de uso de **cualquier** clase, también las de código, dependen de Google. Después, solo `infra/` y `app.py` (que monta `GoogleMeet` al arrancar, §2.2) las cargan. Arrancar la app sigue necesitándolas, porque son dependencias de la app en `requirements.txt` (§7.1); hacerlas opcionales sería otra decisión.
+- **El nombre del CSV usa la fecha local.** `export_attendance` toma el día de `opened_at` en UTC; una clase abierta entre las 00:00 y la 01:00 o 02:00 de Madrid recibe la fecha del día anterior. Se convierte con la zona horaria de la configuración, como ya se hace con las horas del CSV (D6, §2.11).
+- **`requests` en `requirements.txt`.** `infra/google_meet.py` la importa directamente; hoy solo llega como dependencia de `google-auth-oauthlib` (§7.1). Se lista para que no dependa de eso; no es una dependencia nueva.
+
+Se deja como está, con su motivo en la PR:
+- **Invitados sin nombre entre tomas:** límite conocido (§2.8, decisión §8.7). Distinguirlos exigiría guardar un identificador de la plataforma, que la constitución (P4) no permite.
+- **`requires-python` en `pyproject.toml`:** exige una sección `[project]`, y el archivo solo configura herramientas, sin convertir el proyecto en un paquete (ARCHITECTURE §12). La versión 3.13 ya la fijan `ruff` (`target-version`) y `mypy` (`python_version`).
+
 ## 3. Modelo de datos
 
 Dos columnas nuevas en `sessions`; `checkins` **no cambia**.
@@ -228,7 +240,7 @@ asistenciapp/
 │   │   ├── cli.py                   # NUEVO: atajo --meet
 │   │   └── web/                     # create_app(..., fetch_participants); ruta meet-sync; errores; serializadores
 │   └── infra/
-│       ├── google_meet.py           # NUEVO: GoogleMeet, parse_meeting_code
+│       ├── google_meet.py           # NUEVO: GoogleMeet (parse_meeting_code pasa a domain/meetings.py, §2.12)
 │       └── storage.py               # columnas, migración, tipos con modo
 ├── static/
 │   ├── profesor.html / .js          # selector de modo, campo de Meet, "Tomar asistencia ahora", etiqueta de modo
@@ -328,5 +340,6 @@ asistenciapp/
 | Versión | Fecha | Cambio | Motivo |
 | --- | --- | --- | --- |
 | 1.0 | 2026-10-21 | Versión inicial, aprobada por Victor | — |
+| 2.2 | 2026-10-28 | §2.12: arreglos de la revisión de la PR #532 (formato del enlace en el dominio, fecha local en el nombre del CSV, `requests` en `requirements.txt`) | Comentarios de la revisión de código |
 | 2.1 | 2026-10-23 | Resultados del spike (§0): vía `conferenceRecords` y elección de la reunión (§2.3), dos modos de toma (§2.2, §2.3, §4), cualquier participante (§2.6), errores revisados (§2.7), permisos a medias y caducidad semanal (§2.4), trazabilidad de CA-18 a CA-21 (§6), decisiones §8.1 y §8.9 a §8.11 | Spike de la tarea T03 y spec v1.2 |
 | 2.0 | 2026-10-23 | Reescrito sobre `ARCHITECTURE.md`: capas (§2.1), participantes como función (§2.2), errores con nombre y sus códigos (§2.7), tiempos máximos (§2.3, §2.4), `CHECK` en la BD (§3), pruebas de `GoogleMeet` sin red (§2.10) y comprobación de la arquitectura (§7.2) | Decisión §8.4: la spec 005 dejó el código en capas |

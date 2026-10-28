@@ -1,6 +1,6 @@
 # Tareas 004 · Asistencia automática desde Google Meet
 
-> Versión 2.1 · Estado: **Aprobado** (2026-10-25) · Plan: [plan.md](plan.md) v2.1 · Creado: 2026-10-21 · Reescrito: 2026-10-23
+> Versión 2.2 · Estado: **En revisión** (2026-10-28) · Plan: [plan.md](plan.md) v2.2 · Creado: 2026-10-21 · Reescrito: 2026-10-23
 
 Cómo leer esta lista:
 - Se hacen **en orden**, una cada vez. Al terminar una se marca `[x]`.
@@ -243,3 +243,19 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
     - AGENT.md: estructura (`entrypoints/cli.py`, Google en `infra/`, `tests/fixtures/meet/`), comando `--meet` y estado.
     - Definición de terminado: todas las tareas en `[x]`; cada CA con su test (plan §6) o su paso en T16; Victor la ha probado (T16).
     - Puertos 8000, 8001 y 8012 sin AsistenciApp (en el 8000 escucha otro programa de Victor, `uvicorn`, que no se toca).
+
+## Fase H · Revisión de código de la PR #532 (plan §2.12)
+
+- [ ] **T18** 🧪 · El formato del enlace de Meet en el dominio:
+  - test que falla: importar `attendance.usecases.sessions` y crear una clase de código no carga `attendance.infra.google_meet` ni las librerías de Google (comprobado en un proceso aparte, mirando `sys.modules`);
+  - mover `parse_meeting_code` y `MEETING_LINK` a `domain/meetings.py`; `usecases/sessions.py` y `app.py` lo importan de ahí; sus tests pasan de `test_google_meet.py` a `test_meetings.py`.
+  - *Cubre:* CA-01 a CA-04 (las clases de código no dependen de Meet).
+- [ ] **T19** 🧪 · Fecha local en el nombre del CSV:
+  - test que falla: una clase abierta a las 00:30 de Madrid (22:30 UTC del día anterior en verano, 23:30 en invierno) descarga `asistencia-<día de Madrid>-<id>.csv`;
+  - `export_attendance` convierte `opened_at` con la zona horaria antes de tomar el día.
+  - *Cubre:* spec 001 · CA-14.
+- [ ] **T20** · `requests` en `requirements.txt` (plan §2.12, §7.1); AGENT.md §4 nombra las dependencias de la app.
+- [ ] **T21** · Cierre de la revisión:
+  - `pytest`, `ruff check`, `ruff format --check` y `mypy` en verde;
+  - respuestas en la PR #532 a los cinco comentarios;
+  - llevar los arreglos a la rama de la PR #547 con un merge (sin reescribir su historia).
