@@ -4,7 +4,7 @@ Lee este fichero al empezar. Después lee `docs/CONSTITUTION.md`. Antes de escri
 
 Implementa únicamente la task de la ronda que indica el encargo. Relee `spec.md`, `plan.md` y `tasks.md`.
 
-Puedes editar el resto de `exercises/ChromaDB`. No edites `docs/specs/`.
+Puedes editar el resto de `staff/sergio-cortes/ChromaDB`. No edites `docs/specs/`.
 
 No lances subagentes. No hables con el tester.
 

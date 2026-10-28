@@ -14,7 +14,7 @@ Tú eres el agente principal. No escribes el código ni ejecutas las comprobacio
 - Escribe `docs/specs/<cambio>/spec.md`, `plan.md` y `tasks.md` en español y lanza la ronda 1.
 - El encargo lleva solo las rutas y el número de ronda. No lleva el chat, tu plan ni el reporte del otro agente.
 - El developer de las rondas 2 y 3, 5 y 6, y 8 y 9 es el mismo, reanudado. En las rondas 1, 4 y 7 se abre uno nuevo. El tester no se reanuda nunca.
-- El developer implementa la task de la ronda. Puede editar cualquier fichero de `exercises/ChromaDB` salvo `docs/specs/`.
+- El developer implementa la task de la ronda. Puede editar cualquier fichero de `staff/sergio-cortes/ChromaDB` salvo `docs/specs/`.
 - Llama al tester solo si esa task crea o modifica `src/core` o `src/sdk`. Si no, borra `tasks.md` y cierra.
 - El tester devuelve la ronda, la task, el veredicto y las comprobaciones fallidas. Con eso, precisa la spec si una comprobación era ambigua, actualiza el plan y añade la task siguiente. No añadas un objetivo nuevo ni escribas código.
 - Pasa cuando todas las comprobaciones de `spec.md` salen bien. No se crea una suite de tests. Entonces borra `tasks.md` y no pidas la contraseña.
@@ -22,7 +22,7 @@ Tú eres el agente principal. No escribes el código ni ejecutas las comprobacio
 
 ## Comandos
 
-Desde `exercises/ChromaDB/`, en PowerShell:
+Desde `staff/sergio-cortes/ChromaDB/`, en PowerShell:
 
 - Activar el entorno: `.venv\Scripts\Activate.ps1`
 - Instalar dependencias: `pip install -r requirements.txt`
