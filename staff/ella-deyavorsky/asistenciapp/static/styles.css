@@ -1,39 +1,83 @@
 /* AsistenciApp · estilos comunes (móvil primero, constitución P5) */
 
+/* spec 008 · RF-2, RF-10: las tipografías de neoland.es van dentro de la app (static/fonts/, OFL-1.1);
+   ningún navegador pide nada fuera. Si no cargan, se ven las del sistema. */
+@font-face {
+  font-family: "Montserrat";
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  src: url("fonts/montserrat-latin-800-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Roboto";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("fonts/roboto-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Roboto";
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url("fonts/roboto-latin-500-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Roboto";
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url("fonts/roboto-latin-700-normal.woff2") format("woff2");
+}
+
 :root {
-  --bg: #f7f7f5;
+  --font-heading: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* spec 008 · RF-1: colores medidos en neoland.es. tests/test_contrast.py vigila el contraste (CA-04). */
+  --bg: #f5f5f5;
   --surface: #ffffff;
-  --text: #1c1c1e;
-  --muted: #5c5c63;
-  --border: #d9d9de;
-  --accent: #2851c7;
+  --text: #3a3a3a;
+  --heading: #000000;
+  --muted: #6b6b6b;
+  --border: #e5e5e5;
+  --accent: #e6284e;          /* rellenos y bordes; texto blanco encima solo a 18 px en negrita */
+  --accent-ink: #c41e42;      /* carmesí para texto pequeño */
+  --accent-strong: #c41e42;   /* relleno de botones pequeños y confirmaciones */
   --accent-text: #ffffff;
+  --accent-on-dark: #ff6b86;  /* carmesí sobre la banda del código */
+  --charcoal: #333333;
+  --on-dark-muted: #d0d0d0;  /* texto secundario sobre la banda del código */
   --ok-bg: #e5f5ea;
   --ok-text: #14592d;
   --error-bg: #fde8e8;
   --error-text: #8a1c1c;
   --warn-bg: #fff4d6;
   --warn-text: #6b4a00;
-  --danger: #b42318;
+  --danger: var(--accent-ink);
+  --radius-card: 25px;
+  --radius-field: 12px;
+  --radius-pill: 999px;
   color-scheme: light;
 }
 
+/* spec 008 · RF-7: modo oscuro con los grises oscuros de Neoland */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #121214;
-    --surface: #1d1d20;
-    --text: #f2f2f5;
-    --muted: #a5a5ad;
-    --border: #3a3a40;
-    --accent: #8aa8ff;
-    --accent-text: #0d1430;
+    --bg: #262626;
+    --surface: #333333;
+    --text: #f2f2f2;
+    --heading: #ffffff;
+    --muted: #bdbdbd;
+    --border: #4a4a4a;
+    --accent-ink: #ff6b86;
+    --charcoal: #1f1f1f;
     --ok-bg: #133321;
     --ok-text: #a6e3bb;
     --error-bg: #3d1717;
     --error-text: #ffb4b4;
     --warn-bg: #3a2e0c;
     --warn-text: #ffd97a;
-    --danger: #ff8a80;
     color-scheme: dark;
   }
 }
@@ -47,7 +91,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font: 1rem/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font: 1rem/1.5 var(--font-body);
 }
 
 main {
@@ -56,29 +100,35 @@ main {
   padding: 1.5rem 1rem 3rem;
 }
 
-h1 { font-size: 1.6rem; line-height: 1.2; margin: 0 0 1rem; }
-h2 { font-size: 1.2rem; margin: 2rem 0 0.75rem; }
+/* spec 008 · RF-2: títulos en Montserrat muy gruesa, como neoland.es */
+h1, h2 { font-family: var(--font-heading); font-weight: 800; color: var(--heading); }
+h1 { font-size: 2rem; line-height: 1.15; margin: 0 0 1rem; }
+h2 { font-size: 1.35rem; line-height: 1.2; margin: 2rem 0 0.75rem; }
+/* La nota pequeña dentro de un título («(primera columna: el nombre)») va en el texto normal. */
+h2 .small { font-family: var(--font-body); font-weight: 400; }
 p { margin: 0 0 1rem; }
-a { color: var(--accent); }
+a { color: var(--accent-ink); }
 
 .muted { color: var(--muted); }
 .small { font-size: 0.875rem; }
 
+/* spec 008 · RF-3: tarjetas como las de neoland.es, sin borde ni sombra y muy redondeadas */
 .card {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.25rem;
+  border-radius: var(--radius-card);
+  padding: 1.5rem;
   margin-bottom: 1rem;
 }
 
-/* RF-25: el hueco de abajo de una tarjeta lo pone su padding, no el margen del último elemento. */
+/* RF-25: el hueco de arriba y de abajo de una tarjeta lo pone su padding, no el margen de lo de dentro. */
+.card > :first-child { margin-top: 0; }
 .card > :last-child { margin-bottom: 0; }
 .card-title { margin-top: 0; }
 
 /* ---------- formularios ---------- */
 
-label { display: block; font-weight: 600; margin-bottom: 0.25rem; }
+label { display: block; font-weight: 500; margin-bottom: 0.25rem; }
+label.spaced { margin-top: 1rem; }
 
 input, select, textarea {
   width: 100%;
@@ -86,50 +136,61 @@ input, select, textarea {
   font-size: 1.1rem;
   padding: 0.7rem 0.8rem;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-field);
   background: var(--bg);
   color: var(--text);
   margin-bottom: 1rem;
 }
 
+input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+
 .field-code input {
+  font-family: var(--font-heading);
+  font-weight: 800;
   font-size: 2rem;
   letter-spacing: 0.4em;
   text-align: center;
   font-variant-numeric: tabular-nums;
 }
 
+/* spec 008 · RF-3: botones píldora de neoland.es. El principal va a 18 px en negrita:
+   es texto grande, y así el blanco sobre --accent cumple el contraste (CA-04). */
 button, .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 44px;
-  padding: 0.6rem 1.1rem;
+  padding: 0.6rem 1.5rem;
   font: inherit;
-  font-weight: 600;
-  border-radius: 8px;
-  border: 1px solid var(--accent);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.2;
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--accent);
   background: var(--accent);
   color: var(--accent-text);
   cursor: pointer;
   text-decoration: none;
 }
 
+/* Secundario: contorno gris oscuro, como «Campus »» en neoland.es */
 button.secondary, .button.secondary {
   background: transparent;
-  color: var(--accent);
+  border-color: var(--text);
+  color: var(--text);
 }
 
+/* Peligro: contorno carmesí; la confirmación, rellena de carmesí oscuro */
 button.danger {
   background: transparent;
-  border-color: var(--danger);
+  border-color: var(--accent);
   color: var(--danger);
 }
 
 button.danger-solid {
-  background: var(--danger);
-  border-color: var(--danger);
-  color: var(--surface);
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+  color: var(--accent-text);
 }
 
 button:disabled { opacity: 0.6; cursor: wait; }
@@ -151,7 +212,7 @@ button:disabled { opacity: 0.6; cursor: wait; }
 /* ---------- mensajes ---------- */
 
 .message {
-  border-radius: 8px;
+  border-radius: 16px;
   padding: 0.8rem 1rem;
   margin: 0 0 1rem;
 }
@@ -163,7 +224,8 @@ button:disabled { opacity: 0.6; cursor: wait; }
 /* ---------- vista de sesión (profesor) ---------- */
 
 .code {
-  font-size: clamp(4.5rem, 24vw, 9rem);
+  font-family: var(--font-heading);
+  font-size: clamp(4rem, 21vw, 9rem);
   font-weight: 800;
   line-height: 1;
   letter-spacing: 0.08em;
@@ -182,12 +244,30 @@ button:disabled { opacity: 0.6; cursor: wait; }
   font-size: 0.9rem;
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-field);
   padding: 0.6rem 0.8rem;
   margin-bottom: 0.5rem;
 }
 
-.total { font-size: 1.25rem; font-weight: 700; }
+/* spec 008 · RF-5: etiqueta encima de un título, pequeña, en mayúsculas y carmesí (como «BOOTCAMPS») */
+.eyebrow {
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  margin: 0 0 0.25rem;
+}
+
+/* spec 008 · RF-4: el código, en una banda gris carbón como la portada de neoland.es */
+.card.dark { background: var(--charcoal); color: #ffffff; }
+.card.dark .eyebrow { color: var(--accent-on-dark); text-align: center; }
+.card.dark .code { color: #ffffff; }
+.card.dark .countdown, .card.dark label { color: var(--on-dark-muted); }
+.card.dark .link-box { background: #262626; border-color: #4a4a4a; color: #f2f2f2; }
+.card.dark .secondary { border-color: #ffffff; color: #ffffff; }
+
+.total { font-family: var(--font-heading); font-size: 1.35rem; font-weight: 800; color: var(--heading); }
 
 .list {
   list-style: none;
@@ -207,16 +287,24 @@ button:disabled { opacity: 0.6; cursor: wait; }
 
 /* Una lista que además es tarjeta recupera el margen interior de .card,
    y también el de abajo, que .list pone a 0 (RF-25: «Ver archivados» quedaba pegado). */
-.list.card { padding: 0.25rem 1.25rem; margin-bottom: 1rem; }
+.list.card { padding: 0.25rem 1.5rem; margin-bottom: 1rem; }
 
 .list .name { overflow-wrap: anywhere; }
+.list strong { color: var(--heading); }
 .list .meta { color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
-.list li { align-items: center; }
-.row-actions { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
-.confirm-row { flex-wrap: wrap; background: var(--warn-bg); color: var(--warn-text); margin: 0 -0.5rem; padding: 0.6rem 0.5rem !important; border-radius: 8px; }
+/* CA-05: si una fila no cabe, los botones bajan debajo del nombre en vez de aplastarlo. */
+.list li { align-items: center; flex-wrap: wrap; }
+.list li > .name { flex: 1 1 8rem; min-width: 0; }
+.row-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 0.5rem; }
+.confirm-row { flex-wrap: wrap; background: var(--warn-bg); color: var(--warn-text); margin: 0 -0.5rem; padding: 0.6rem 0.75rem !important; border-radius: 16px; }
 
-button.small, .button.small { min-height: 36px; padding: 0.3rem 0.7rem; font-size: 0.875rem; }
+button.small, .button.small { min-height: 36px; padding: 0.3rem 0.9rem; font-size: 0.875rem; }
+/* A 14 px el blanco no se lee bien sobre --accent: los botones pequeños rellenos van en --accent-strong (CA-04). */
+button.small:not(.secondary, .danger), .button.small:not(.secondary) {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+}
 
 .sessions li { flex-wrap: wrap; align-items: center; }
 .sessions .info { flex: 1 1 14rem; }
@@ -234,7 +322,8 @@ button.small, .button.small { min-height: 36px; padding: 0.3rem 0.7rem; font-siz
   vertical-align: middle;
 }
 
-.badge.closed { background: var(--border); color: var(--muted); }
+/* Sobre --bg y con borde: el gris sobre --border no llegaba a 4,5:1 (plan 008 v1.2). */
+.badge.closed { background: var(--bg); border: 1px solid var(--border); color: var(--muted); }
 
 /* ---------- spec 007 · grupos y lista ---------- */
 
@@ -260,8 +349,8 @@ input[type="file"] { font-size: 0.95rem; }
 .boxes li + li { margin-top: 0.5rem; }
 .boxes input { flex: 1; min-width: 0; margin-bottom: 0; }
 .boxes button { min-width: 44px; font-size: 1.1rem; }
-.boxes input[aria-invalid="true"] { border-color: var(--danger); }
-.box-note { flex-basis: 100%; font-size: 0.875rem; font-weight: 600; color: var(--danger); }
+.boxes input[aria-invalid="true"] { border: 2px solid var(--accent); }
+.box-note { flex-basis: 100%; font-size: 0.875rem; font-weight: 700; color: var(--danger); }
 
 .problems { margin: 0.5rem 0 1rem; padding-left: 1.25rem; }
 
@@ -272,11 +361,22 @@ input[type="file"] { font-size: 0.95rem; }
   justify-content: space-between;
   background: var(--surface);
   color: var(--text);
-  border-color: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  font-size: 1rem;
   font-weight: 500;
   text-align: left;
 }
+.roster button:not(:disabled):hover { border-color: var(--accent); }
 .roster button:disabled { opacity: 0.5; cursor: not-allowed; text-decoration: line-through; }
 .roster .tag { font-size: 0.8rem; color: var(--muted); text-decoration: none; }
 
 .timer { text-align: right; }
+
+/* spec 008 · RF-11, CA-05: en el móvil, tarjetas algo menos redondeadas y títulos más pequeños */
+@media (max-width: 480px) {
+  :root { --radius-card: 20px; }
+  .card { padding: 1.25rem; }
+  .list.card { padding: 0.25rem 1.25rem; }
+  h1 { font-size: 1.7rem; }
+}

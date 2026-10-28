@@ -78,6 +78,7 @@ asistenciapp/
 │   ├── export.py          # CSV
 │   └── tunnel.py          # túnel cloudflared
 ├── static/                # HTML, CSS y JS del navegador
+│   └── fonts/             # tipografías de Neoland (Montserrat, Roboto) y sus licencias OFL
 ├── tests/                 # tests (test_*.py)
 ├── .venv/                 # entorno virtual de Python (no se sube a git)
 └── data/                  # base de datos SQLite (no se sube a git)
@@ -174,6 +175,7 @@ Una funcionalidad está terminada cuando:
 | `005-arquitectura-por-capas` | ✅ Implementada v1.3 (2026-10-26) | Documentación en `docs/`, `AGENTS.md` con normas de escritura y código en `domain`, `usecases` y `storage` |
 | `006-limite-por-ip` | 🚧 En implementación (2026-10-26) | Límite de 5 intentos por segundo y 20 por minuto por IP; bloqueo permanente en la base; constitución 3.0 |
 | `007-lista-de-alumnos` | 🚧 Código hecho v1.3 (2026-10-28): T01–T25, T29, T30, T33–T39; 263 tests. Falta la verificación manual (T26–T28, T31) y T32 | Listas de grupo: el alumno elige su nombre, ausentes y nuevos en la descarga; propone la enmienda 4.0 de P4 (issue #539). v1.3: una casilla por alumno, «Subir lista» y mayúscula inicial en las listas del profesor |
+| `008-estilo-neoland` | 🚧 Código hecho (2026-10-28): T01–T09; 295 tests (32 de contraste nuevos). Falta que lo pruebes tú | Aspecto de neoland.es: colores, Montserrat y Roboto dentro de la app, botones píldora, banda oscura del código y modo oscuro; sin cambios de funcionalidad (issue #544) |
 | Bot de Discord | Idea futura, sin número | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
