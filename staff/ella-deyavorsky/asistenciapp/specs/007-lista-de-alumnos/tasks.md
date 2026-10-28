@@ -1,6 +1,6 @@
 # Tareas 007 · Listas de grupo para pasar lista
 
-> Estado: **Aprobado v1.1 (2026-10-27)** · Plan: [plan.md](plan.md) v1.3 · Spec: [spec.md](spec.md) v1.2 · Creado: 2026-10-27
+> Estado: **Aprobado v1.2 (2026-10-28)** · Plan: [plan.md](plan.md) v1.4 · Spec: [spec.md](spec.md) v1.3 · Creado: 2026-10-27
 
 Cómo leer esta lista:
 
@@ -197,6 +197,35 @@ Cómo leer esta lista:
 
 - **Checkpoint:** `pytest` completo en verde; luego se propone un commit solo de esta fase (mensaje en inglés y lista de archivos) y se espera tu sí. Nunca `git add .` y nunca archivos de base de datos.
 
+## Fase K · Casillas, mayúsculas y separación (spec v1.3, plan v1.4)
+
+Salen de la verificación manual de T26. Cuando esta fase acabe, T26 se verifica con las pantallas nuevas.
+
+- [x] **T35** · Tests primero:
+  - Al final de `tests/test_names.py`, `capitalize_name`: «maría de la fuente» → «María de la Fuente»; «de la rosa» → «De la Rosa»; «McDonald» no cambia; «ana-belén» → «Ana-Belén»; «ana  garcía» → «Ana  García» (conserva los dos espacios); «ELLA» no cambia.
+  - Nuevo `tests/test_group_capitals_api.py`: crear un grupo con «ana lópez» guarda «Ana López»; añadir «luis de la rosa» guarda «Luis de la Rosa»; renombrar a un alumno como «luis» guarda «Luis»; la vista previa devuelve `students` con mayúscula y `duplicates` tal como se escribieron; una sesión rápida con «ana» guarda «ana»; un nuevo «ella g.» en una sesión con grupo se guarda «ella g.».
+  - *Cubre:* CA-22.
+  - *Hecha cuando:* los casos de mayúsculas fallan, los de «se guarda tal cual» pasan, y los tests de hoy siguen pasando. Se para a esperar tu ok.
+- [x] **T36** · Código del dominio (plan §2.11): `LOWERCASE_WORDS` y `capitalize_name` en `asistencia/domain/names.py`; la aplican `review()` en `domain/roster.py` y `rename_student` en `usecases/groups.py`. `usecases/attendance.py` no cambia.
+  - *Cubre:* CA-22.
+  - *Hecha cuando:* `pytest` completo en verde.
+
+- **Checkpoint:** `pytest` completo en verde; luego se propone un commit solo de T35 y T36 (mensaje en inglés y lista de archivos) y se espera tu sí. Nunca `git add .` y nunca archivos de base de datos.
+
+- [ ] **T37** · Formulario de alumnos (plan §2.11) en `static/profesor.html` y `profesor.js`: casillas con «×» y «+ Añadir alumno»; Intro y pegar varias líneas; tarjeta del CSV con «Revisar», que llena las casillas; «Subir lista» con la vista previa, las marcas en las casillas, «Subir igualmente» y el guardado con las rutas de hoy. Desaparecen el `<textarea>`, «Guardar grupo» y «Añadir a la lista».
+  - *Cubre:* CA-01, CA-02, CA-23, CA-24 (pantalla).
+  - *Hecha cuando:* `pytest` en verde y verificación manual: pegar 25 nombres da 25 casillas y se guardan; Intro crea una casilla sin subir nada; un CSV con un repetido lo marca en su casilla y no guarda hasta corregirlo; un nombre parecido pide «Subir igualmente»; en «Editar grupo», sin nombres, sale «Escribe al menos un nombre.»; un grupo nuevo sin nombres se crea vacío.
+- [ ] **T38** · Separación (plan §2.11) en `static/styles.css` y `profesor.html`: `margin-bottom` de `.list.card`; cabecera de «Grupos» con «Nuevo grupo» a la derecha; botones de las sesiones anteriores en `small`; `.card-title`, `.boxes` y filas de botones con `.actions`.
+  - *Cubre:* CA-25.
+  - *Hecha cuando:* verificación manual del panel, «Nuevo grupo» y «Editar grupo» en un ordenador y a ~400 px, en modo claro y oscuro: la misma separación y ningún botón pegado a otro ni a una tarjeta.
+
+- **Checkpoint:** `pytest` completo en verde; luego se propone un commit solo de T37 y T38 (mensaje en inglés y lista de archivos) y se espera tu sí. Nunca `git add .` y nunca archivos de base de datos.
+
+- [ ] **T39** · Documentación: en `README.md`, la sección «Grupos» explica las casillas, Intro, pegar varias líneas, «Revisar» para el CSV, «Subir lista» y las mayúsculas automáticas. En `AGENTS.md` §8, la fila de la spec 007 dice v1.3 y el número de tests.
+  - *Hecha cuando:* el README describe lo que hace la app y `pytest` completo en verde.
+
+- **Checkpoint:** `pytest` completo en verde; luego se propone un commit solo de T39 (mensaje en inglés y lista de archivos) y se espera tu sí. Nunca `git add .` y nunca archivos de base de datos.
+
 ---
 
 ## Historial de cambios
@@ -207,3 +236,4 @@ Cómo leer esta lista:
 | 0.2 | 2026-10-27 | Copia de `data/asistencia.db` antes del primer arranque (T26) y cómo volver a ponerla (T31); T08 se parte en test (T08) y código (T09), y las siguientes se renumeran; checkpoint con commit propuesto al final de cada fase | Revisión de las tareas |
 | 1.0 | 2026-10-27 | Aprobadas | Ok de la persona que trabaja en esta carpeta |
 | 1.1 | 2026-10-27 | Fase J: un pase, un registro (T33 tests, T34 código) | Spec 007 v1.2 y plan v1.3 |
+| 1.2 | 2026-10-28 | Fase K: mayúsculas (T35 tests, T36 código), formulario con casillas (T37), separación (T38) y documentación (T39) | Spec 007 v1.3 y plan v1.4 |

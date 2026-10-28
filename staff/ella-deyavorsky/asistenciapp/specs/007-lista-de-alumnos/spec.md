@@ -1,6 +1,6 @@
 # Spec 007 · Listas de grupo para pasar lista
 
-> Estado: **Aprobada v1.2 (2026-10-27)** · Creada: 2026-10-27 · Issue relacionada: #539
+> Estado: **Aprobada v1.3 (2026-10-28)** · Creada: 2026-10-27 · Issue relacionada: #539
 
 ---
 
@@ -58,14 +58,15 @@ Hoy cada alumno escribe su nombre a mano al registrarse. Eso trae tres problemas
 ### 5.1 Gestión de grupos (profesor) · HU-01, HU-02
 
 - **RF-1** Crear un grupo con un nombre y una lista de alumnos. Dos formas de introducirlos, combinables:
-  - a) Manual: añadir alumnos uno a uno, o pegar texto con un nombre por línea.
-  - b) CSV: subir un archivo (una columna con el nombre; la primera fila puede ser cabecera). Se acepta separado por `;` (Excel en español) o por `,` (Google Sheets y otros), y en UTF-8 con o sin BOM, para que los acentos se lean bien.
-- **RF-2** Antes de guardar, mostrar una vista previa con el número de alumnos detectados y los problemas encontrados (duplicados, líneas vacías).
+  - a) Manual: una casilla para cada alumno. Al pulsar Intro en una casilla, el cursor pasa a la siguiente y, si era la última, aparece una nueva. Cada casilla se puede quitar. Si se pegan varias líneas en una casilla, cada línea pasa a su propia casilla.
+  - b) CSV: subir un archivo (una columna con el nombre; la primera fila puede ser cabecera). Se acepta separado por `;` (Excel en español) o por `,` (Google Sheets y otros), y en UTF-8 con o sin BOM, para que los acentos se lean bien. El botón «Revisar» es solo para el CSV: lee el archivo y pone sus nombres en las casillas, detrás de los que ya había, para revisarlos antes de subir la lista.
+- **RF-2** El botón «Subir lista», debajo de las casillas, guarda la lista: en un grupo nuevo crea el grupo con su nombre y sus alumnos; en un grupo guardado añade los alumnos. Antes de guardar revisa la lista y muestra el número de alumnos y los problemas encontrados (duplicados, nombres de más de 60 caracteres, más de 200 alumnos); cada nombre con problema queda marcado en su casilla. Con problemas no guarda. Si solo hay nombres parecidos, los muestra («¿Quisiste decir…?») y el botón pasa a «Subir igualmente»; cambiar cualquier casilla lo devuelve a «Subir lista». Las casillas vacías no cuentan: en un grupo nuevo, «Subir lista» con todas vacías crea el grupo sin alumnos (RF-8b); en un grupo guardado pide al menos un nombre.
 - **RF-3** Editar un grupo: añadir, renombrar y quitar alumnos, y cambiar el nombre del grupo.
 - **RF-4** Crear varios grupos. Listado de grupos en el panel del profesor.
 - **RF-5** Archivar un grupo: deja de aparecer en el listado principal y no se puede usar para abrir sesiones nuevas, pero conserva todas sus sesiones. Se puede restaurar. Se puede archivar aunque tenga una sesión abierta: esa sesión sigue funcionando hasta que se cierre.
 - **RF-6** Borrar un grupo: solo si no tiene sesiones abiertas. Pide confirmación explícita. Las sesiones cerradas de ese grupo se conservan (ver RF-23). Si tiene una sesión abierta, la app lo explica y ofrece archivar o cerrar la sesión primero.
 - **RF-7** No se permiten dos alumnos con el mismo nombre en un grupo. La comparación ignora mayúsculas, acentos y espacios sobrantes («maria garcia» = «María García»). Si el profesor introduce un duplicado, la app lo rechaza y le pide diferenciarlo (ej. «María García B.»). En importaciones, los duplicados se marcan en la vista previa y hay que resolverlos antes de guardar.
+- **RF-7b** Los nombres que introduce el profesor en la lista de un grupo (casillas, CSV y «Renombrar») se guardan con la primera letra de cada palabra en mayúscula: «maría de la fuente» se guarda como «María de la Fuente». «de», «del», «la», «las», «los», «y» y «e» se quedan como se escribieron cuando no son la primera palabra. Después de un guion también va mayúscula («Ana-Belén»). El resto de cada palabra se queda como se escribió («McDonald» no cambia). Los nombres que escriben los propios alumnos (nuevos y sesiones rápidas) no cambian.
 - **Límites:** máximo 200 alumnos por grupo (también al añadir un nuevo desde una sesión, RF-20); nombres de hasta 60 caracteres, el mismo límite que hoy (spec 001, CA-08), para las listas y para las sesiones rápidas.
 
 ### 5.2 Abrir una sesión (profesor) · HU-03
@@ -112,14 +113,18 @@ Hoy cada alumno escribe su nombre a mano al registrarse. Eso trae tres problemas
 - **RF-23** Las sesiones pasadas con grupo guardan su copia de la lista y el nombre del grupo tal como estaba, incluso si el grupo se renombra, archiva o borra.
 - **RF-24** Los grupos se guardan donde la app guarda hoy sus datos: solo en el ordenador del profesor. No pasan a otro ordenador; es aceptable. No hay inicio de sesión. De cada alumno solo se guarda lo que permite P4 (sección 7).
 
+### 5.6 Pantallas del profesor · HU-01, HU-02
+
+- **RF-25** El panel y la vista de un grupo dejan la misma separación entre secciones, tarjetas y botones: ningún botón queda pegado a otro ni a una tarjeta. En el panel, los botones de los grupos y los de las sesiones anteriores tienen el mismo tamaño, y «Nuevo grupo» está junto al título «Grupos».
+
 ---
 
 ## 6. Criterios de aceptación
 
 Formato: **Dado** (situación inicial) · **Cuando** (acción) · **Entonces** (resultado esperado).
 
-- **CA-01** (RF-1, RF-2): **Dado** el profesor en su panel, **cuando** crea un grupo pegando 25 nombres, uno por línea, **entonces** ve una vista previa con 25 alumnos y puede guardar el grupo.
-- **CA-02** (RF-1, RF-2, RF-7): **Dado** un CSV con un nombre repetido (sin distinguir mayúsculas, acentos ni espacios), **cuando** el profesor lo sube, **entonces** la vista previa marca el duplicado y no deja guardar hasta resolverlo.
+- **CA-01** (RF-1, RF-2): **Dado** el profesor en su panel, **cuando** crea un grupo pegando 25 nombres, uno por línea, en una casilla, **entonces** aparecen 25 casillas y, al pulsar «Subir lista», se guarda el grupo con 25 alumnos.
+- **CA-02** (RF-1, RF-2, RF-7): **Dado** un CSV con un nombre repetido (sin distinguir mayúsculas, acentos ni espacios), **cuando** el profesor lo sube y pulsa «Revisar», **entonces** los nombres aparecen en las casillas, el duplicado queda marcado en la suya y «Subir lista» no guarda hasta resolverlo.
 - **CA-03** (RF-11): **Dado** una sesión con grupo abierta, **cuando** alguien abre el enlace de alumnos sin escribir un código válido, **entonces** no ve ningún nombre del grupo.
 - **CA-04** (RF-12, RF-13): **Dado** un alumno que ha validado el código, **cuando** escribe «mari», ve «María García» y se registra, **entonces** queda presente y ese nombre aparece atenuado y no seleccionable para los demás.
 - **CA-05** (RF-14, RF-15): **Dado** un grupo con «Ella García», **cuando** un alumno que no está en la lista escribe «Ella G.», **entonces** la app le pregunta «¿Quisiste decir Ella García?»; si continúa, queda registrado como nuevo.
@@ -139,6 +144,10 @@ Formato: **Dado** (situación inicial) · **Cuando** (acción) · **Entonces** (
 - **CA-19** (RF-8b): **Dado** un grupo guardado sin alumnos, **cuando** el profesor intenta abrir una asistencia con él, **entonces** la app no la abre, dice «Este grupo todavía no tiene alumnos» y le ofrece añadirlos o abrir una sesión rápida.
 - **CA-20** (RF-20, §5.1): **Dado** un grupo con 200 alumnos y una sesión con un nuevo, **cuando** el profesor elige «Añadir al grupo», **entonces** la app lo rechaza con «Este grupo ya tiene 200 alumnos», el grupo sigue con 200, y el profesor puede elegir «Dejar solo en esta sesión» o «Descartar».
 - **CA-21** (RF-11): **Dado** un pase que ya se ha usado para un registro, **cuando** se usa otra vez para registrar otro nombre, **entonces** se rechaza con el mensaje «Este pase ya se ha usado: escribe el código otra vez» y el segundo nombre no queda registrado.
+- **CA-22** (RF-7b): **Dado** el profesor creando un grupo, **cuando** escribe «maría de la fuente» en una casilla y pulsa «Subir lista», **entonces** el grupo guarda «María de la Fuente»; **cuando** renombra a un alumno como «luis», **entonces** se guarda «Luis»; **y dado** una sesión rápida, **cuando** un alumno escribe «ana», **entonces** se guarda «ana».
+- **CA-23** (RF-1): **Dado** el formulario de alumnos, **cuando** el profesor escribe un nombre en la última casilla y pulsa Intro, **entonces** aparece una casilla nueva con el cursor en ella y no se sube nada.
+- **CA-24** (RF-2): **Dado** una lista con un nombre parecido a otro, **cuando** el profesor pulsa «Subir lista», **entonces** ve «¿Quisiste decir…?», no se guarda nada y el botón pasa a «Subir igualmente»; **cuando** lo pulsa, **entonces** se guarda.
+- **CA-25** (RF-25): **Dado** el panel con grupos y sesiones anteriores, y las vistas «Nuevo grupo» y «Editar grupo», **cuando** se miran en un ordenador y a unos 400 px de ancho, **entonces** la separación entre secciones, tarjetas y botones es la misma y ningún botón toca otro botón ni una tarjeta.
 
 ---
 
@@ -201,6 +210,10 @@ Ninguna. Decisiones de la persona que trabaja en esta carpeta (2026-10-27):
 - **Límite de 200 al añadir un nuevo (2026-10-27):** si «Añadir al grupo» haría pasar el grupo de 200 alumnos, se rechaza con «Este grupo ya tiene 200 alumnos»; quedan «Dejar solo en esta sesión» y «Descartar».
 - **Hora en la descarga (2026-10-27):** la columna «Hora» tiene la hora de registro de cada presente y de cada nuevo; los ausentes no tienen hora.
 - **Cambios respecto a v0.1:** renombrar a un alumno ya no cambia las sesiones pasadas, y borrar un grupo con sesiones cerradas ya se puede.
+- **Casillas (2026-10-28):** una casilla por alumno en vez de un cuadro de texto; pegar varias líneas reparte los nombres en casillas.
+- **Botones del formulario (2026-10-28):** «Revisar» es solo para el CSV y pone sus nombres en las casillas; «Subir lista», debajo de las casillas, revisa y guarda. Desaparecen «Guardar grupo» y «Añadir a la lista».
+- **Mayúsculas (2026-10-28):** primera letra de cada palabra, salvo «de», «del», «la», «las», «los», «y» y «e» si no son la primera; el resto como se escribió. Solo en las listas del profesor; lo que escriben los alumnos no cambia.
+- **Separación (2026-10-28):** la misma separación entre bloques y botones en el panel y en la vista de grupo.
 
 ---
 
@@ -214,3 +227,4 @@ Ninguna. Decisiones de la persona que trabaja en esta carpeta (2026-10-27):
 | 1.0 | 2026-10-27 | Aprobada | Ok de la persona que trabaja en esta carpeta |
 | 1.1 | 2026-10-27 | Excepción de la copia fija al unir un nuevo con un alumno del grupo (RF-9, RF-20); el texto de P4 dice que el profesor ve la lista en su panel (§7, HU-08, §9); límite de 200 al añadir un nuevo (§5.1, RF-20, CA-20); la «Hora» del CSV incluye a los nuevos (RF-21) | Revisión del plan: la spec no cubría esos casos |
 | 1.2 | 2026-10-27 | Un pase sirve para un solo registro; si el registro falla, sigue valiendo (RF-11, §9). CA-21 | Seguridad: con un pase se podían registrar muchos nombres durante 2 minutos sin que contara como intento |
+| 1.3 | 2026-10-28 | Una casilla por alumno (RF-1a); «Revisar» solo para el CSV y «Subir lista» revisa y guarda (RF-1b, RF-2); mayúscula inicial en las listas del profesor (RF-7b); separación en las pantallas del profesor (RF-25, §5.6). CA-01 y CA-02 reescritos; CA-22 a CA-25 | Verificación manual de T26: el formulario de alumnos era incómodo y había botones pegados |

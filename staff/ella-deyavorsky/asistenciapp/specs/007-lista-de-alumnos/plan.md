@@ -1,6 +1,6 @@
 # Plan técnico 007 · Listas de grupo para pasar lista
 
-> Estado: **Aprobado v1.3 (2026-10-27)** · Spec: [spec.md](spec.md) v1.2 · Creado: 2026-10-27
+> Estado: **Aprobado v1.4 (2026-10-28)** · Spec: [spec.md](spec.md) v1.3 · Creado: 2026-10-27
 
 Este documento explica **cómo** se cumple la spec. Cada decisión indica qué requisitos (`RF-n`) y criterios de aceptación (`CA-xx`) cubre.
 
@@ -179,7 +179,7 @@ Profesor: todo lo que cuelga de `/api/groups` pasa por el mismo `require_teacher
 ### 2.6 Panel del profesor: `static/profesor.html` y `profesor.js` (RF-1 a RF-8b, RF-18 a RF-20)
 
 - **Panel:** sección «Grupos» con el listado, el número de alumnos de cada uno, y botones Editar, Archivar y Borrar (con confirmación dentro de la página, como el Quitar de hoy). Enlace «Ver archivados», con Restaurar.
-- **Vista nueva «Grupo»** (`#t=…&g=<id>` o `&g=new`): nombre del grupo; un `<textarea>` para pegar nombres y un `<input type="file" accept=".csv,text/csv">` que se lee con `FileReader` y se manda como texto (sin subidas de ficheros ni dependencias); vista previa con el número de alumnos y los problemas marcados; Guardar desactivado mientras haya duplicados (CA-01, CA-02). En un grupo ya guardado: filas con Renombrar y Quitar, y avisos «¿Quisiste decir…?» que no bloquean.
+- **Vista nueva «Grupo»** (`#t=…&g=<id>` o `&g=new`): nombre del grupo; una casilla por alumno y, aparte, un `<input type="file" accept=".csv,text/csv">` que se lee con `FileReader` y se manda como texto (sin subidas de ficheros ni dependencias); vista previa con el número de alumnos y los problemas marcados en su casilla; nada se guarda mientras haya duplicados (CA-01, CA-02). El detalle de las casillas, «Revisar» y «Subir lista» está en §2.11. En un grupo ya guardado: filas con Renombrar y Quitar, y avisos «¿Quisiste decir…?» que no bloquean.
 - **Abrir asistencia:** un `<select>` con «Sesión rápida» y los grupos activos. Un grupo vacío muestra el error de CA-19 con los botones «Añadir alumnos» y «Abrir sesión rápida».
 - **Sesión con grupo:** «X de N presentes», listas de presentes (con Liberar), nuevos (con Añadir al grupo, Dejar solo aquí y Descartar, que también se ven con la sesión cerrada) y ausentes. «Añadir al grupo» no aparece si el grupo está borrado (CA-17). Encuesta cada 2 s, como hoy.
 - Todo texto se pinta con `textContent` (spec 001, CA-12).
@@ -221,6 +221,32 @@ Cambios pequeños descubiertos al escribir el código. Ninguno cambia lo que pid
 - **`check_in`** (sin pase) en una sesión con grupo responde `PassExpired` (401): ahí se entra con el código y el pase.
 - **Tests:** las funciones de almacenamiento de grupos se prueban en `tests/test_group_storage.py` (tasks T12 y T13).
 
+### 2.11 Casillas, mayúsculas y separación (spec v1.3: RF-1, RF-2, RF-7b, RF-25)
+
+**Mayúsculas (RF-7b, CA-22)**, en `domain/names.py`:
+- `LOWERCASE_WORDS = {"de", "del", "la", "las", "los", "y", "e"}`.
+- `capitalize_name(name) -> str`: parte el nombre por `" "` (los espacios dobles se conservan) y cada palabra por `"-"`. Pone en mayúscula solo la primera letra de cada parte (`parte[:1].upper() + parte[1:]`), salvo las palabras de `LOWERCASE_WORDS` que no son la primera. Nada pasa a minúsculas.
+- La aplican `roster.review()`, justo después de `clean_name`, y `groups.rename_student`. Así la vista previa, `create_group`, `add_students` y «Renombrar» enseñan y guardan el nombre con mayúscula. Los `duplicates` siguen saliendo tal como se escribieron, para que la pantalla los encuentre en su casilla. `name_key` ya ignora las mayúsculas: los repetidos se detectan igual.
+- `usecases/attendance.py` no la usa: lo que escriben los alumnos (nuevos y sesiones rápidas) no cambia, tampoco cuando el profesor elige «Añadir al grupo» para un nuevo.
+
+**Formulario de alumnos (RF-1, RF-2, CA-01, CA-02, CA-23, CA-24)**, en `static/profesor.html` y `profesor.js`. Es el mismo para «Nuevo grupo» y «Editar grupo».
+- Tarjeta «Alumnos» (o «Añadir alumnos» en un grupo guardado): una `<ol>` de casillas, cada una un `<input maxlength="60">` con `aria-label="Alumno N"` y un botón «×» con `aria-label="Quitar la casilla N"`; un botón «+ Añadir alumno»; y debajo, «Subir lista» (`type="submit"`, ancho completo). La última casilla no se quita: se vacía.
+- Intro en una casilla pasa a la siguiente o crea una nueva, con `preventDefault` para no enviar el formulario (CA-23). Pegar texto con saltos de línea lo reparte en casillas (CA-01).
+- Tarjeta aparte «O sube un CSV» con el `<input type="file">` y «Revisar». «Revisar» lee el archivo con `FileReader`, pide la vista previa con `source: "csv"` y añade, detrás de las casillas con texto, los `students`, `duplicates` y `tooLong` que devuelve, ya marcados (CA-02).
+- «Subir lista», en este orden:
+  1. Junta las casillas con texto. En «Editar grupo», sin nombres, dice «Escribe al menos un nombre.».
+  2. Si hay nombres, pide la vista previa de hoy (`POST /api/groups/preview` con `text` = los nombres separados por saltos de línea y `source: "paste"`). **No hay ruta nueva.**
+  3. Enseña el número y los problemas con el `renderPreview` de hoy y marca cada casilla con problema (`aria-invalid="true"` y una nota «Repetido» o «Demasiado largo»). Si `canSave` es falso, para.
+  4. Si hay parecidos sin confirmar, los enseña, el botón pasa a «Subir igualmente» y para (CA-24).
+  5. Guarda con las rutas de hoy: `POST /api/groups` en un grupo nuevo (sin nombres, lo crea vacío, RF-8b) o `POST /api/groups/<gid>/students`. Envía los `students` de la vista previa. El servidor vuelve a revisar, como hoy.
+- Escribir en cualquier casilla quita las marcas y devuelve el botón a «Subir lista». Desaparecen el `<textarea>`, «Guardar grupo» y «Añadir a la lista».
+
+**Separación (RF-25, CA-25)**, en `static/styles.css` y `profesor.html`:
+- `.list.card` recupera el `margin-bottom: 1rem` de `.card`. Hoy `.list` lo pone a 0, y por eso «Ver archivados» toca la tarjeta de los grupos.
+- La cabecera de «Grupos» va en una fila (`.section-head`): el título a la izquierda y «Nuevo grupo» a la derecha.
+- Los botones de las sesiones anteriores («Ver», «Descargar lista») pasan a `small`, como los de los grupos.
+- `.card-title` para los títulos dentro de una tarjeta (sustituye los `style="margin-top:0"`), estilos de `.boxes`, y filas de botones con `.actions`, para que ningún botón toque otro. El modo oscuro usa las variables de hoy.
+
 ---
 
 ## 3. Archivos
@@ -228,7 +254,7 @@ Cambios pequeños descubiertos al escribir el código. Ninguno cambia lo que pid
 | Archivo | Cambio |
 | --- | --- |
 | `specs/007-lista-de-alumnos/` | `plan.md`, `tasks.md` |
-| `asistencia/domain/names.py` | `is_similar`, `find_similar` |
+| `asistencia/domain/names.py` | `is_similar`, `find_similar`; `capitalize_name` (v1.4) |
 | `asistencia/domain/roster.py` | **Nuevo** |
 | `asistencia/domain/passes.py` | **Nuevo** |
 | `asistencia/domain/session.py` | `ensure_can_open`, `ensure_can_delete` |
@@ -239,7 +265,8 @@ Cambios pequeños descubiertos al escribir el código. Ninguno cambia lo que pid
 | `app.py` | Rutas de §2.4 y errores nuevos |
 | `static/profesor.html`, `profesor.js`, `alumno.html`, `alumno.js`, `styles.css` | §2.6 y §2.7 |
 | `tests/test_roster.py`, `test_passes.py`, `test_session_rules.py`, `test_group_storage.py`, `test_groups_api.py`, `test_group_checkin_api.py`, `test_group_export.py`, `test_migration.py` | **Nuevos** |
-| `tests/test_names.py` | Casos nuevos al final para `is_similar`; los de hoy no se tocan |
+| `tests/test_group_capitals_api.py` | **Nuevo** (v1.4) |
+| `tests/test_names.py` | Casos nuevos al final para `is_similar` y `capitalize_name`; los de hoy no se tocan |
 | `docs/CONSTITUTION.md`, `docs/ARCHITECTURE.md`, `README.md`, `AGENTS.md`, `specs/001-checkin-codigo/spec.md` | §2.8 y §2.9 |
 
 `asistencia/domain/codes.py`, `asistencia/domain/rate_limit.py`, `asistencia/tunnel.py` y los tests que ya existen no cambian.
@@ -271,6 +298,10 @@ Cambios pequeños descubiertos al escribir el código. Ninguno cambia lo que pid
 | CA-18 | `test_roster.py`: CSV con `,`, con `;` y con BOM; `test_group_export.py`: «=SUMA(1)» sale como `'=SUMA(1)` |
 | CA-19 | `test_session_rules.py`: `ensure_can_open` con grupo archivado, con 0 alumnos y con un grupo válido; `test_groups_api.py`: abrir sesión con un grupo de 0 alumnos da 409 con el mensaje |
 | CA-20 | `test_roster.py`: `ensure_room` con 200; `test_groups_api.py`: `add` con un grupo de 200 da 409 «Este grupo ya tiene 200 alumnos», el grupo sigue con 200, y luego `keep` y `discard` funcionan |
+| CA-22 | `test_names.py`: `capitalize_name` con «maría de la fuente», «de la rosa», «McDonald», «ana-belén» y espacios dobles. `test_group_capitals_api.py`: crear, añadir y renombrar guardan con mayúscula; la vista previa devuelve `students` con mayúscula y `duplicates` tal cual; una sesión rápida con «ana» y un nuevo en una sesión con grupo se guardan tal cual |
+| CA-23 | Verificación manual: Intro crea una casilla y no sube nada; pegar 25 líneas da 25 casillas (también CA-01) |
+| CA-24 | Verificación manual: un nombre parecido cambia el botón a «Subir igualmente» y no guarda hasta pulsarlo. El aviso sale de la vista previa, ya probada en `test_groups_api.py` |
+| CA-25 | Verificación manual del panel, «Nuevo grupo» y «Editar grupo» en un ordenador y a ~400 px, en modo claro y oscuro |
 
 Verificación manual al final: `python app.py`, crear un grupo subiendo un CSV de Excel, abrir sesión, registrarse desde dos navegadores (uno de la lista y uno nuevo), liberar y volver a registrarse, cerrar, decidir sobre el nuevo y abrir el CSV en Excel o Google Sheets. Al terminar, parar la app y comprobar con `lsof -nP -iTCP:8000 -sTCP:LISTEN` que el puerto queda libre (`AGENTS.md` §5).
 
@@ -283,13 +314,13 @@ Verificación manual al final: `python app.py`, crear un grupo subiendo un CSV d
 | Regla | Cómo la cumple el plan |
 | --- | --- |
 | P1 · Independiente de la plataforma | Los grupos son de la app, no de Discord ni de Meet. |
-| P2 · Simplicidad | Sin clases ni ORM; diccionarios, funciones y cuatro tablas. El pase y el recibo son firmas; del pase solo se apunta que se usó, y la restricción `UNIQUE` de la base decide las carreras sin bloqueos propios. El alumno se registra en menos de 30 s: código, tres letras y un toque. |
+| P2 · Simplicidad | Sin clases ni ORM; diccionarios, funciones y cuatro tablas. El pase y el recibo son firmas; del pase solo se apunta que se usó, y la restricción `UNIQUE` de la base decide las carreras sin bloqueos propios. El alumno se registra en menos de 30 s: código, tres letras y un toque. Las casillas (v1.4) reutilizan la vista previa y las rutas de hoy: ninguna ruta nueva. |
 | P3 · Dependencias mínimas | Solo biblioteca estándar (`csv`, `difflib`, `hmac`) y el navegador (`FileReader`). Nada nuevo en `requirements.txt`. |
-| P4 · Privacidad mínima | **Requiere la enmienda 4.0 (§2.8).** De cada alumno solo se guarda el nombre y, por sesión, la hora y el estado. No se guardan otras columnas del CSV. `used_passes` guarda solo la sesión y el pase usado, sin nombre ni IP; el recibo no se guarda. La lista no sale sin código válido (CA-03). Las reglas de IP no cambian. |
-| P5 · Accesible y móvil | Buscador con `<label>`, botones navegables con teclado, nombres atenuados con `disabled`, mensajes con `aria-live`, pantallas probadas a ~400 px. |
+| P4 · Privacidad mínima | **Requiere la enmienda 4.0 (§2.8).** De cada alumno solo se guarda el nombre y, por sesión, la hora y el estado. No se guardan otras columnas del CSV. `used_passes` guarda solo la sesión y el pase usado, sin nombre ni IP; el recibo no se guarda. La lista no sale sin código válido (CA-03). Las reglas de IP no cambian. La mayúscula automática (v1.4) no guarda nada nuevo: solo cambia cómo se escribe el nombre. |
+| P5 · Accesible y móvil | Buscador con `<label>`, botones navegables con teclado, nombres atenuados con `disabled`, mensajes con `aria-live`, pantallas probadas a ~400 px. Las casillas (v1.4) llevan `aria-label`, los problemas `aria-invalid`, se rellenan solo con teclado (Intro) y tienen la misma separación en móvil y en ordenador (RF-25). |
 | P6 · Todo en español | Mensajes, pantallas y README en español; código en inglés. |
 | §3 Stack | Sin cambios: Flask, SQLite, HTML, CSS y JS sin frameworks. |
-| §4 SDD | Spec 007 aprobada; este plan, luego tasks, luego código. |
+| §4 SDD | Spec 007 v1.3 aprobada; este plan, luego tasks, luego código. |
 | §5 Calidad | Cada CA tiene test o verificación manual (§4); los errores dicen qué hacer. |
 | §6 Seguridad | Validar el código cuenta como intento (límite por IP intacto). El pase y el recibo van firmados con el secreto de la sesión y no se pueden inventar. **Un pase, un registro** (CA-21): un código validado no sirve para apuntar a varias personas sin gastar intentos. Un alumno no puede registrar dos veces el mismo nombre. Una sesión cerrada no acepta registros. Toda entrada se valida en el servidor y se pinta como texto. |
 | §7 Alcance | Todo dentro de `staff/ella-deyavorsky/asistenciapp/`. |
@@ -305,6 +336,7 @@ Verificación manual al final: `python app.py`, crear un grupo subiendo un CSV d
 - **`used_passes` crece** una fila por registro con grupo. Son filas pequeñas y sin datos personales; no se borran (como los registros).
 - **El recibo se queda en el navegador.** Si alguien copia la marca de `localStorage` de otro navegador, solo puede preguntar si ese registro existe; no puede registrar ni borrar nada.
 - **«¿Quisiste decir…?»** es una heurística: puede no avisar en algún caso raro, o avisar de más. Nunca bloquea; solo pregunta.
+- **Mayúsculas automáticas (v1.4).** Las partículas que no están en la lista («van», «da», «di») salen con mayúscula, y «Renombrar» no puede dejarlas en minúscula. Se acepta (spec RF-7b). Si algún test de hoy guarda en un grupo un nombre en minúscula y compara el resultado, fallará: se para y se propone el cambio antes de tocarlo (regla de las tasks).
 
 ---
 
@@ -318,3 +350,4 @@ Verificación manual al final: `python app.py`, crear un grupo subiendo un CSV d
 | 1.1 | 2026-10-27 | `tests/test_session_rules.py` en la tabla de archivos (§3) y en las pruebas de CA-09 y CA-19 (§4) | Las tareas separan el test de las reglas de sesión (tasks v0.2, T08) |
 | 1.2 | 2026-10-27 | §2.10: ajustes al implementar (`hasGroup` solo con grupo, separador del CSV, sin nombres de nuevos en la lista, errores añadidos); `test_group_storage.py` en §3 | Implementación de las tasks |
 | 1.3 | 2026-10-27 | Un pase, un registro: tabla `used_passes` (§2.1), `PassUsed` 409 con `needCode` (§2.2, §2.4), pase apuntado en la misma transacción que el registro y sin gastarse si el registro falla (§2.3), la página del alumno trata `PassUsed` como `PassExpired` (§2.7), CA-21 y nota de CA-14 (§4), frases sobre «no se guarda nada» corregidas (§1, §5, §6) | Spec 007 v1.2: con un pase se podían registrar muchos nombres |
+| 1.4 | 2026-10-28 | §2.11: `capitalize_name` en `review()` y `rename_student`; formulario con una casilla por alumno, «Revisar» solo para el CSV y «Subir lista» que revisa y guarda sin rutas nuevas; separación del panel y de la vista de grupo. §2.6, §3, §4 (CA-22 a CA-25), §5 y §6 al día | Spec 007 v1.3 |
