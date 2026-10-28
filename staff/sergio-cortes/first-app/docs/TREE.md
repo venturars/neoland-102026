@@ -4,6 +4,8 @@ first-app/
   AGENTS.MD
   eslint.config.js
   package.json
+  scripts/
+    jupyter.sh
   docs/
     ARCHITECTURE.md
     TREE.md

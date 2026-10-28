@@ -4,7 +4,7 @@ No es una funcionalidad nueva. No hay fichero nuevo en `logic/`. El cliente de t
 
 En `clients/jupyter/` solo hay cuadernos. No hay ficheros `.py` ni `requirements.txt`. La celda es Python. Busca la carpeta de la app y arranca `node --input-type=module` con el directorio actual en `first-app`. El programa de Node es el interior del `.txt`: los `import` y la llamada, carácter por carácter. El `console.log` se sustituye por la tabla. La tabla la pintan `cli-table3` `0.6.5` y `@colors/colors` `1.6.1`, instaladas en `package.json`. El encabezado usa `style.head` `["cyan", "bold"]`.
 
-Se abre con `pnpm jupyter` desde `first-app`. El script es una línea: si no está `.venv/bin/jupyter-notebook`, crea `.venv` si falta e instala `notebook==7.6.3`. Después arranca `jupyter notebook` en `clients/jupyter`. `.venv/` no se versiona.
+Se abre con `pnpm jupyter` desde `first-app`. El script `jupyter` de `package.json` ejecuta `sh scripts/jupyter.sh`, que crea `.venv` si falta, instala `notebook==7.6.3` y arranca el cuaderno en `clients/jupyter/`. `.venv/` no se versiona.
 
 ## Ficheros
 
@@ -26,7 +26,7 @@ Se quitan `clients/jupyter/bridge.py` y `clients/jupyter/requirements.txt`.
 
 Se tocan:
 
-- `package.json` y `pnpm-lock.yaml`: entran `cli-table3` y `@colors/colors`. El script `jupyter` es la línea que crea `.venv` si falta, instala `notebook==7.6.3` si no está `jupyter-notebook` y abre los cuadernos.
+- `package.json` y `pnpm-lock.yaml`: entran `cli-table3` y `@colors/colors`. El script `jupyter` es `sh scripts/jupyter.sh`.
 - `docs/CONSTITUTIONS.md`: la línea de `clients/jupyter/` dice que hay un cuaderno por cada `.txt`, que el bloque arranca `node --input-type=module` con el interior de ese `.txt` y que el `console.log` pasa a ser la tabla.
 
 ## Parecido

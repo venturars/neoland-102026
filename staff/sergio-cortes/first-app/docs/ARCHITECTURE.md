@@ -18,6 +18,7 @@
 - `logic/list-users.js` lista los usuarios.
 - `logic/user-gender-count.js` cuenta usuarios por género.
 - `clients/terminal/` llama a `logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
+- `scripts/jupyter.sh` prepara `.venv` si hace falta, instala `notebook==7.6.3` y arranca Jupyter en `clients/jupyter/`. Funciona en Mac, Linux y Windows (con `sh`). `package.json` lo invoca con `pnpm jupyter`.
 - `clients/jupyter/` es el cuaderno, uno por cada `.txt` de `clients/terminal/`. El bloque muestra ese texto: arranca `node --input-type=module` y, dentro, los `import` y la llamada quedan igual. El `console.log` se sustituye por la tabla. `cli-table3` y `@colors/colors` pintan esa tabla con colores y encabezados. Si la función falla, se ve ese mensaje. En esa carpeta no hay ficheros `.py` ni `requirements.txt`. Se abre con `pnpm jupyter` desde `first-app`.
 - `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada fichero.
 - `docs/TREE.md` es el árbol de carpetas y ficheros.
