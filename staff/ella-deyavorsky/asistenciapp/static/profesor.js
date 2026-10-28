@@ -18,7 +18,7 @@ let renderedListKey = ""; // para no repintar la lista si no ha cambiado
 let showArchived = false; // spec 007: lista de grupos archivados desplegada
 let pendingGroupAction = null; // {id, action} del grupo que espera confirmación
 let currentGroup = null; // grupo abierto en la vista «Grupo», o null si es nuevo
-let preview = null; // última vista previa de la lista (RF-2)
+let similarAccepted = false; // «Subir igualmente»: los parecidos ya se han visto (CA-24)
 let pendingStudent = null; // {id, action} del alumno que espera confirmación o renombre
 
 // ---------- utilidades ----------
@@ -120,12 +120,12 @@ async function renderPanel() {
     const buttons = document.createElement("div");
     buttons.className = "buttons";
     const open = document.createElement("a");
-    open.className = "button secondary";
+    open.className = "button secondary small";
     open.href = hrefFor(s.id);
     open.textContent = "Ver";
     const download = document.createElement("button");
     download.type = "button";
-    download.className = "secondary";
+    download.className = "secondary small";
     download.textContent = "Descargar lista";
     download.addEventListener("click", () => downloadCsv(s.id).catch(handleError));
     buttons.append(open, download);
@@ -281,21 +281,18 @@ $("session-group").addEventListener("change", () => ($("open-error").hidden = tr
 
 async function renderGroupView(groupId) {
   showView("group");
-  preview = null;
   pendingStudent = null;
-  $("g-paste").value = "";
+  setBoxes([]);
   $("g-file").value = "";
-  $("g-preview").replaceChildren();
-  $("g-save").disabled = true;
+  resetReview();
   if (groupId === "new") {
     currentGroup = null;
     document.title = "Nuevo grupo · AsistenciApp";
     $("g-title").textContent = "Nuevo grupo";
     $("g-name").value = "";
-    $("g-rename-actions").hidden = true;
+    $("g-rename").hidden = true;
     $("g-students-card").hidden = true;
     $("g-add-title").textContent = "Alumnos";
-    $("g-save").textContent = "Guardar grupo";
     $("g-name").focus();
     return;
   }
@@ -309,9 +306,8 @@ async function renderGroupView(groupId) {
   document.title = `${currentGroup.name} · AsistenciApp`;
   $("g-title").textContent = currentGroup.archived ? `${currentGroup.name} (archivado)` : currentGroup.name;
   $("g-name").value = currentGroup.name;
-  $("g-rename-actions").hidden = false;
+  $("g-rename").hidden = false;
   $("g-add-title").textContent = "Añadir alumnos";
-  $("g-save").textContent = "Añadir a la lista";
   renderGroupStudents();
 }
 
@@ -471,44 +467,165 @@ function renderPreview(data) {
       data.similar.map((s) => `${s.name} → ${s.like}`)));
     box.append(warn);
   }
-  $("g-save").disabled = !data.canSave || (currentGroup !== null && data.students.length === 0);
 }
 
-$("g-add").addEventListener("submit", async (event) => {
-  event.preventDefault();
-  showMessage("", "");
-  try {
-    const file = $("g-file").files[0];
-    let text = $("g-paste").value;
-    let source = "paste";
-    if (file) {
-      text = (await readFile(file)) + (text ? `\n${text}` : "");
-      source = "csv";
-    }
-    const res = await api("/api/groups/preview", {
-      method: "POST",
-      body: JSON.stringify({ text, source, groupId: currentGroup?.id }),
-    });
-    preview = await res.json();
-    renderPreview(preview);
-  } catch (error) {
-    if (error instanceof AuthError) return handleError(error);
-    showMessage("error", "No se pudo leer el archivo. ¿Es un CSV?");
-  }
-});
+// ---------- casillas de alumnos (spec 007 v1.3, RF-1, RF-2) ----------
 
-// Cambiar el texto o el archivo obliga a revisar de nuevo antes de guardar.
-for (const id of ["g-paste", "g-file"]) {
-  $(id).addEventListener("input", () => {
-    preview = null;
-    $("g-save").disabled = true;
+function boxInputs() {
+  return [...$("g-boxes").querySelectorAll("input")];
+}
+
+function boxRow(value = "") {
+  const li = document.createElement("li");
+  const input = document.createElement("input");
+  input.value = value;
+  input.maxLength = 60;
+  input.autocomplete = "off";
+  const remove = document.createElement("button");
+  remove.type = "button";
+  remove.className = "secondary small";
+  remove.dataset.action = "box-remove";
+  remove.textContent = "×";
+  const note = document.createElement("span");
+  note.className = "box-note";
+  note.hidden = true;
+  li.append(input, remove, note);
+  return li;
+}
+
+// Las etiquetas llevan el número de casilla: se rehacen cada vez que se añade o se quita una.
+function renumberBoxes() {
+  $("g-boxes").querySelectorAll("li").forEach((li, i) => {
+    const input = li.querySelector("input");
+    const note = li.querySelector(".box-note");
+    note.id = `g-box-note-${i + 1}`;
+    input.setAttribute("aria-label", `Alumno ${i + 1}`);
+    input.setAttribute("aria-describedby", note.id);
+    li.querySelector("button").setAttribute("aria-label", `Quitar la casilla ${i + 1}`);
   });
 }
 
-$("g-save").addEventListener("click", async () => {
-  const students = preview ? preview.students : [];
-  $("g-save").disabled = true;
+function setBoxes(names) {
+  $("g-boxes").replaceChildren(...(names.length ? names : [""]).map((name) => boxRow(name)));
+  renumberBoxes();
+}
+
+// Inserta casillas detrás de `li` y devuelve la última, para ponerle el foco.
+function addBoxesAfter(li, names) {
+  const rows = names.map((name) => boxRow(name));
+  li.after(...rows);
+  renumberBoxes();
+  return rows[rows.length - 1].querySelector("input");
+}
+
+function boxNames() {
+  return boxInputs().map((input) => input.value.trim()).filter(Boolean);
+}
+
+function setBoxProblem(input, text) {
+  const note = input.parentElement.querySelector(".box-note");
+  note.textContent = text;
+  note.hidden = !text;
+  if (text) input.setAttribute("aria-invalid", "true");
+  else input.removeAttribute("aria-invalid");
+}
+
+// RF-2: cada problema se marca en su casilla. De dos nombres repetidos, el servidor
+// señala el de más abajo, así que se busca empezando por la última casilla.
+function markBoxes(data) {
+  const pending = [
+    ...data.duplicates.map((name) => [name.trim(), "Repetido"]),
+    ...data.tooLong.map((name) => [name.trim(), "Demasiado largo"]),
+  ];
+  for (const input of boxInputs().reverse()) {
+    const i = pending.findIndex(([name]) => name === input.value.trim());
+    if (i === -1) continue;
+    setBoxProblem(input, pending[i][1]);
+    pending.splice(i, 1);
+  }
+}
+
+// Cambiar una casilla deja viejo lo revisado: se quitan las marcas y se vuelve a «Subir lista».
+function resetReview() {
+  similarAccepted = false;
+  $("g-save").textContent = "Subir lista";
+  $("g-preview").replaceChildren();
+  for (const input of boxInputs()) setBoxProblem(input, "");
+}
+
+async function reviewBoxes() {
+  const res = await api("/api/groups/preview", {
+    method: "POST",
+    body: JSON.stringify({ text: boxNames().join("\n"), source: "paste", groupId: currentGroup?.id }),
+  });
+  const data = await res.json();
+  renderPreview(data);
+  markBoxes(data);
+  return data;
+}
+
+// CA-23: Intro pasa a la casilla siguiente o crea una nueva; nunca sube la lista.
+$("g-boxes").addEventListener("keydown", (event) => {
+  if (event.key !== "Enter" || event.isComposing || !event.target.matches("input")) return;
+  event.preventDefault();
+  const li = event.target.closest("li");
+  (li.nextElementSibling?.querySelector("input") || addBoxesAfter(li, [""])).focus();
+});
+
+// RF-1a: pegar varias líneas en una casilla reparte los nombres, uno por casilla.
+$("g-boxes").addEventListener("paste", (event) => {
+  const text = event.clipboardData?.getData("text") || "";
+  if (!event.target.matches("input") || !/[\r\n]/.test(text)) return;
+  event.preventDefault();
+  const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  const input = event.target;
+  if (lines.length && !input.value.trim()) input.value = lines.shift();
+  (lines.length ? addBoxesAfter(input.closest("li"), lines) : input).focus();
+  resetReview();
+});
+
+$("g-boxes").addEventListener("click", (event) => {
+  if (!event.target.closest("[data-action='box-remove']")) return;
+  const li = event.target.closest("li");
+  const neighbour = li.previousElementSibling || li.nextElementSibling;
+  if (neighbour) {
+    li.remove();
+    renumberBoxes();
+    neighbour.querySelector("input").focus();
+  } else {
+    li.querySelector("input").value = ""; // la última casilla no se quita: se vacía
+    li.querySelector("input").focus();
+  }
+  resetReview();
+});
+
+$("g-boxes").addEventListener("input", resetReview);
+
+$("g-add-box").addEventListener("click", () => {
+  const last = boxInputs().at(-1);
+  (last.value.trim() ? addBoxesAfter(last.closest("li"), [""]) : last).focus();
+});
+
+// RF-2: «Subir lista» revisa y, si no hay problemas, guarda: crea el grupo o le añade los alumnos.
+$("g-add").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  showMessage("", "");
+  const names = boxNames();
+  if (currentGroup && names.length === 0) return showMessage("error", "Escribe al menos un nombre.");
+  const save = $("g-save");
+  save.disabled = true;
   try {
+    let students = []; // RF-8b: un grupo nuevo puede guardarse sin alumnos
+    if (names.length) {
+      const review = await reviewBoxes();
+      if (!review.canSave) return;
+      if (review.similar.length && !similarAccepted) {
+        similarAccepted = true; // CA-24: los parecidos se enseñan y hay que pulsar otra vez
+        save.textContent = "Subir igualmente";
+        return;
+      }
+      students = review.students;
+    }
     const res = currentGroup
       ? await api(`/api/groups/${encodeURIComponent(currentGroup.id)}/students`, {
           method: "POST",
@@ -519,21 +636,38 @@ $("g-save").addEventListener("click", async () => {
           body: JSON.stringify({ name: $("g-name").value, students }),
         });
     const data = await res.json();
-    if (!res.ok) {
-      showMessage("error", data.error);
-      $("g-save").disabled = false;
-      return;
-    }
+    if (!res.ok) return showMessage("error", data.error);
     if (currentGroup) return reloadGroup();
     location.hash = hrefForGroup(data.id);
   } catch (error) {
     handleError(error);
+  } finally {
+    save.disabled = false;
   }
 });
 
-// Un grupo nuevo puede guardarse vacío (RF-8b): basta con el nombre.
-$("g-name").addEventListener("input", () => {
-  if (!currentGroup) $("g-save").disabled = preview ? !preview.canSave : false;
+// RF-1b: «Revisar» lee el CSV y pone sus nombres en las casillas, detrás de los que ya había.
+$("g-csv").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  showMessage("", "");
+  const file = $("g-file").files[0];
+  if (!file) return showMessage("error", "Elige primero un archivo CSV.");
+  try {
+    const res = await api("/api/groups/preview", {
+      method: "POST",
+      body: JSON.stringify({ text: await readFile(file), source: "csv", groupId: currentGroup?.id }),
+    });
+    const data = await res.json();
+    const found = [...data.students, ...data.duplicates, ...data.tooLong];
+    if (!found.length) return showMessage("error", "No hay nombres en ese archivo.");
+    setBoxes([...boxNames(), ...found]);
+    resetReview();
+    $("g-file").value = "";
+    await reviewBoxes();
+  } catch (error) {
+    if (error instanceof AuthError) return handleError(error);
+    showMessage("error", "No se pudo leer el archivo. ¿Es un CSV?");
+  }
 });
 
 // ---------- descarga (CA-14) ----------

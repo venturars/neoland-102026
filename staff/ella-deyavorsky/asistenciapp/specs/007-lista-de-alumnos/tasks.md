@@ -212,10 +212,10 @@ Salen de la verificación manual de T26. Cuando esta fase acabe, T26 se verifica
 
 - **Checkpoint:** `pytest` completo en verde; luego se propone un commit solo de T35 y T36 (mensaje en inglés y lista de archivos) y se espera tu sí. Nunca `git add .` y nunca archivos de base de datos.
 
-- [ ] **T37** · Formulario de alumnos (plan §2.11) en `static/profesor.html` y `profesor.js`: casillas con «×» y «+ Añadir alumno»; Intro y pegar varias líneas; tarjeta del CSV con «Revisar», que llena las casillas; «Subir lista» con la vista previa, las marcas en las casillas, «Subir igualmente» y el guardado con las rutas de hoy. Desaparecen el `<textarea>`, «Guardar grupo» y «Añadir a la lista».
+- [x] **T37** · Formulario de alumnos (plan §2.11) en `static/profesor.html` y `profesor.js`: casillas con «×» y «+ Añadir alumno»; Intro y pegar varias líneas; tarjeta del CSV con «Revisar», que llena las casillas; «Subir lista» con la vista previa, las marcas en las casillas, «Subir igualmente» y el guardado con las rutas de hoy. Desaparecen el `<textarea>`, «Guardar grupo» y «Añadir a la lista».
   - *Cubre:* CA-01, CA-02, CA-23, CA-24 (pantalla).
   - *Hecha cuando:* `pytest` en verde y verificación manual: pegar 25 nombres da 25 casillas y se guardan; Intro crea una casilla sin subir nada; un CSV con un repetido lo marca en su casilla y no guarda hasta corregirlo; un nombre parecido pide «Subir igualmente»; en «Editar grupo», sin nombres, sale «Escribe al menos un nombre.»; un grupo nuevo sin nombres se crea vacío.
-- [ ] **T38** · Separación (plan §2.11) en `static/styles.css` y `profesor.html`: `margin-bottom` de `.list.card`; cabecera de «Grupos» con «Nuevo grupo» a la derecha; botones de las sesiones anteriores en `small`; `.card-title`, `.boxes` y filas de botones con `.actions`.
+- [x] **T38** · Separación (plan §2.11) en `static/styles.css` y `profesor.html`: `margin-bottom` de `.list.card`; cabecera de «Grupos» con «Nuevo grupo» a la derecha; botones de las sesiones anteriores en `small`; `.card-title`, `.boxes` y filas de botones con `.actions`.
   - *Cubre:* CA-25.
   - *Hecha cuando:* verificación manual del panel, «Nuevo grupo» y «Editar grupo» en un ordenador y a ~400 px, en modo claro y oscuro: la misma separación y ningún botón pegado a otro ni a una tarjeta.
 
