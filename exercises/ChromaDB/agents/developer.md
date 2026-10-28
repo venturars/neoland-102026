@@ -1,6 +1,6 @@
 # Developer
 
-Lee este fichero al empezar. Después lee `docs/CONSTITUTION.md`. Antes de escribir Python, sigue la skill de `SKILL.md` desde la primera línea `---` hasta el final.
+Lee este fichero al empezar. Después lee `docs/CONSTITUTION.md`. Antes de escribir Python, sigue la skill `skills/python-docs/SKILL.md`.
 
 Implementa únicamente la task de la ronda que indica el encargo. Relee `spec.md`, `plan.md` y `tasks.md`.
 
