@@ -17,7 +17,7 @@ agente ── get_doc.py pathlib.Path.open ─────┘  busca por nombre 
 
 - `python-docs-md/` es esa documentación en Markdown. No viene en el repositorio: se genera en tu equipo a partir del HTML oficial.
 - `build_index.py` la trocea en unos 11.000 fragmentos, calcula sus vectores con Ollama y los guarda en `chroma_db/`.
-- `search.py` y `get_doc.py` son los comandos que usa el agente. `SKILL.md` le explica cómo.
+- `search.py` y `get_doc.py` son los comandos que usa el agente. `skills/python-docs/SKILL.md` le explica cómo.
 
 El CRUD de usuarios con Jupyter, más abajo, es otro ejercicio: guarda los usuarios en SQLite.
 
@@ -186,9 +186,11 @@ Las comillas dobles de estos ejemplos valen igual en Terminal y en PowerShell.
 
 ## Usarlo desde un agente
 
-`SKILL.md` es la skill `python-3-15-docs`. Le dice al agente cuándo consultar, qué comando usar y cómo citar la fuente.
+`skills/python-docs/SKILL.md` es la skill `python-docs`. Le dice al agente cuándo consultar, qué comando usar y cómo citar la fuente. El fichero empieza por el frontmatter: el `name` es `python-docs`.
 
-La skill se lee sola: `AGENTS.md` le dice al agente que la siga, y la mayoría de agentes leen ese fichero cuando trabajan en esta carpeta. Hace falta el índice construido y, para las búsquedas por significado, Ollama en marcha.
+`agents/developer.md` le dice al agente que siga esa skill. Hace falta el índice construido y, para las búsquedas por significado, Ollama en marcha.
+
+Para usarla fuera de este proyecto, copia la carpeta `skills/python-docs/` a `.cursor/skills/python-docs/`. El nombre de la carpeta tiene que coincidir con el `name` del frontmatter.
 
 ## Ver los datos con ChromaDash
 

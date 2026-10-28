@@ -1,28 +1,6 @@
-## Adaptación a tu entorno
-
-Esta sección es para las personas del equipo. Edita tu copia instalada, no este fichero, salvo que el cambio sea una convención para todo el repositorio.
-
-La skill sigue el estándar Agent Skills: un directorio con el nombre de la skill y, dentro, un `SKILL.md`. El `name` del frontmatter tiene que coincidir con el nombre de esa carpeta: `python-3-15-docs`.
-
-Antes de usarla, el proyecto tiene que estar instalado y con el índice construido. Los pasos están en `exercises/ChromaDB/README.md`.
-
-Qué significa cada campo del frontmatter:
-
-| Campo           | Quién lo usa | Qué hacer al adaptar                                                                                                                       |
-| --------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `name`          | Todos        | Déjalo en `python-3-15-docs`. La carpeta de instalación tiene que llamarse igual.                                                          |
-| `description`   | Todos        | El agente decide con este texto cuándo cargar la skill. Si la acortas, conserva cuándo usarla: escribir o revisar código de Python 3.15.     |
-| `allowed-tools` | Claude Code  | `Bash` permite ejecutar los scripts. Cursor no usa este campo y lo ignora. En otra herramienta, quítalo solo si el frontmatter deja de ser válido. |
-
-Los comandos usan el Python del entorno virtual del proyecto. En Windows es `exercises/ChromaDB/.venv/Scripts/python.exe`; en macOS y Linux, `exercises/ChromaDB/.venv/bin/python`. Si tu copia solo se usa en un sistema, deja solo esa ruta.
-
-## Skill
-
-La copia que instales empieza aquí. Desde la primera línea `---` hasta el final es un `SKILL.md` válido. Los pasos están en el `README.md` de la raíz.
-
 ---
 
-name: python-3-15-docs
+name: python-docs
 description: >-
   Look up the official Python documentation in a local RAG before writing,
   reviewing or explaining Python code. The index is the version downloaded
