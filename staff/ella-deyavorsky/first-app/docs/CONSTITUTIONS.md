@@ -26,7 +26,7 @@ The actions are listed in [TREE.md](TREE.md).
 Each file exports one function. The function is built in this order:
 
 1. A function that takes input receives one object: `createUser({ name, email })`, `findUserByEmail({ email })`, `findUserById({ id })`, `updateUser({ id, name, email })`, or `deleteUser({ id })`. `listUsers()` takes nothing.
-2. It cleans the input by calling `.trim()` on the string directly: `name.trim()`, `email.trim().toLowerCase()`. It does not test the type first. If `name` or `email` is missing, the `TypeError` is expected. Do not catch it. In `updateUser`, a field that is `undefined` is not cleaned, because it keeps its current value.
+2. It cleans the input by calling `.trim()` on the string directly, one call per line: `name.trim()`, then `email.trim()` and `.toLowerCase()` on the trimmed email. It does not test the type first. If `name` or `email` is missing, the `TypeError` is expected. Do not catch it. In `updateUser`, a field that is `undefined` is not cleaned, because it keeps its current value.
 3. It checks the input, without the database: "The name is missing.", "The email is not valid.", "There is nothing to update."
 4. It checks the business rules, with the queries it needs: "This email is already used.", "No user was found."
 5. It applies the action with a function exported by `queries/users.js`.

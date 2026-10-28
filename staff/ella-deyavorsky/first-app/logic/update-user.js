@@ -4,7 +4,13 @@ import { findByEmail, findById, update } from "../queries/users.js";
 const MAX_EMAIL_LENGTH = 64;
 
 export function updateUser({ id, name, email }) {
-  if (name === undefined && email === undefined) {
+  let nothingToUpdate = false;
+  if (name === undefined) {
+    if (email === undefined) {
+      nothingToUpdate = true;
+    }
+  }
+  if (nothingToUpdate) {
     throw new Error("There is nothing to update.");
   }
 
@@ -15,7 +21,14 @@ export function updateUser({ id, name, email }) {
     throw new Error("The database failed.");
   }
 
-  if (currentUser === undefined || currentUser === null) {
+  let userIsMissing = false;
+  if (currentUser === undefined) {
+    userIsMissing = true;
+  }
+  if (currentUser === null) {
+    userIsMissing = true;
+  }
+  if (userIsMissing) {
     throw new Error("No user was found.");
   }
 
@@ -31,16 +44,30 @@ export function updateUser({ id, name, email }) {
   let nextEmail = currentUser.email;
   // undefined keeps the current email.
   if (email !== undefined) {
-    nextEmail = email.trim().toLowerCase();
+    const trimmedEmail = email.trim();
+    nextEmail = trimmedEmail.toLowerCase();
+    const emailIsTooLong = nextEmail.length >= MAX_EMAIL_LENGTH;
     const emailParts = nextEmail.split("@");
     const hasTwoParts = emailParts.length === 2;
-    const bothPartsHaveText =
-      emailParts[0]?.length > 0 && emailParts[1]?.length > 0;
-    if (
-      nextEmail.length >= MAX_EMAIL_LENGTH ||
-      hasTwoParts === false ||
-      bothPartsHaveText === false
-    ) {
+    let bothPartsHaveText = false;
+    if (hasTwoParts) {
+      const localPart = emailParts[0];
+      const domainPart = emailParts[1];
+      const hasLocalPart = localPart.length > 0;
+      const hasDomainPart = domainPart.length > 0;
+      if (hasLocalPart) {
+        if (hasDomainPart) {
+          bothPartsHaveText = true;
+        }
+      }
+    }
+    if (emailIsTooLong) {
+      throw new Error("The email is not valid.");
+    }
+    if (hasTwoParts === false) {
+      throw new Error("The email is not valid.");
+    }
+    if (bothPartsHaveText === false) {
       throw new Error("The email is not valid.");
     }
 
@@ -52,11 +79,16 @@ export function updateUser({ id, name, email }) {
     }
 
     // This user may keep their own email. Another user may not take it.
-    if (
-      existingUser !== undefined &&
-      existingUser !== null &&
-      existingUser.id !== currentUser.id
-    ) {
+    let emailUsedByAnother = false;
+    if (existingUser !== undefined) {
+      if (existingUser !== null) {
+        const isSameUser = existingUser.id === currentUser.id;
+        if (isSameUser === false) {
+          emailUsedByAnother = true;
+        }
+      }
+    }
+    if (emailUsedByAnother) {
       throw new Error("This email is already used.");
     }
   }
