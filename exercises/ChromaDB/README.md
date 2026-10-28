@@ -236,6 +236,8 @@ Esa carpeta importa: los notebooks suben dos niveles desde ahí hasta `src/` par
 
 Hay un notebook por acción: `create_user`, `read_users`, `update_user` y `delete_user`. Cada uno tiene pasos numerados: primero se ejecuta la celda «1. Prepara el notebook» y después, en la celda de la acción, se cambian los datos y se ejecuta. `gender` admite `male`, `female` y `undefined`.
 
+Las notas musicales de un usuario están en la misma base. Hay un notebook por acción: `create_music_note`, `read_music_notes`, `update_music_note` y `delete_music_note`.
+
 La base de datos se crea sola la primera vez, en `src/db/users.sqlite`. No va a git. Para empezar de cero, para Jupyter y borra ese fichero.
 
 macOS:
