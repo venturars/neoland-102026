@@ -6,6 +6,7 @@ from typing import Iterable
 
 MAX_LENGTH = 60
 SIMILAR_RATIO = 0.8
+LOWERCASE_WORDS = {"de", "del", "la", "las", "los", "y", "e"}
 
 
 def clean_name(raw: str | None) -> str:
@@ -30,6 +31,33 @@ def clean_name(raw: str | None) -> str:
     if len(name) > MAX_LENGTH:
         raise ValueError(f"El nombre no puede tener más de {MAX_LENGTH} caracteres.")
     return name
+
+
+def _capitalize_word(word: str) -> str:
+    return "-".join(part[:1].upper() + part[1:] for part in word.split("-"))
+
+
+def capitalize_name(name: str) -> str:
+    """Pone en mayúscula la primera letra de cada palabra (spec 007, RF-7b, CA-22).
+
+    Solo para los nombres que introduce el profesor en la lista de un grupo.
+    «de», «del», «la», «las», «los», «y» y «e» se quedan como están si no son
+    la primera palabra, y el resto de cada palabra no cambia: «McDonald» sigue igual.
+
+    :param name: nombre ya limpio, de :func:`clean_name`.
+    :return: el nombre con mayúscula inicial en cada palabra.
+    :rtype: str
+
+    Usage::
+
+        >>> capitalize_name("maría de la fuente")
+        'María de la Fuente'
+    """
+    words = name.split(" ")  # sin split() a secas: los espacios dobles se conservan
+    return " ".join(
+        word if i > 0 and word.casefold() in LOWERCASE_WORDS else _capitalize_word(word)
+        for i, word in enumerate(words)
+    )
 
 
 def name_key(name: str) -> str:

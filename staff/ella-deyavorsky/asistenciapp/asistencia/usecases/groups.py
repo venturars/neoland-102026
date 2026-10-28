@@ -9,7 +9,7 @@ import os
 from datetime import datetime, timezone
 from typing import Callable
 
-from asistencia.domain.names import MAX_LENGTH, clean_name, find_similar, name_key
+from asistencia.domain.names import MAX_LENGTH, capitalize_name, clean_name, find_similar, name_key
 from asistencia.domain.roster import (
     DUPLICATE,
     GROUP_FULL,
@@ -277,7 +277,7 @@ def rename_student(db_path: DbPath, group_id: str, student_id: int, name: str | 
         {'similar': None}
     """
     _group(db_path, group_id)
-    clean = clean_name(name)
+    clean = capitalize_name(clean_name(name))  # RF-7b
     key = name_key(clean)
     others = [s for s in storage.list_group_students(db_path, group_id) if s["id"] != student_id]
     if any(s["name_key"] == key for s in others):

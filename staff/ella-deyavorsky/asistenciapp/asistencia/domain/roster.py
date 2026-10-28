@@ -3,7 +3,7 @@
 import csv
 import io
 
-from asistencia.domain.names import MAX_LENGTH, clean_name, find_similar, name_key
+from asistencia.domain.names import MAX_LENGTH, capitalize_name, clean_name, find_similar, name_key
 
 MAX_STUDENTS = 200
 HEADERS = {"nombre", "nombres", "name", "alumno", "alumnos"}
@@ -131,8 +131,9 @@ def review(names: list[str], existing: list[str] = ()) -> dict:
 
     :param names: nombres leídos, sin limpiar.
     :param existing: nombres que ya tiene el grupo, si se está editando.
-    :return: ``students`` (los válidos, sin repetir), ``duplicates``, ``empty``,
-        ``too_long``, ``similar`` (avisos ``{name, like}``) y ``too_many``.
+    :return: ``students`` (los válidos, sin repetir y con mayúscula inicial),
+        ``duplicates``, ``empty``, ``too_long``, ``similar`` (avisos ``{name, like}``)
+        y ``too_many``.
     :rtype: dict
 
     Usage::
@@ -151,7 +152,7 @@ def review(names: list[str], existing: list[str] = ()) -> dict:
         if len(stripped) > MAX_LENGTH:
             result["too_long"].append(stripped)
             continue
-        name = clean_name(stripped)
+        name = capitalize_name(clean_name(stripped))  # RF-7b
         key = name_key(name)
         if key in seen:
             result["duplicates"].append(raw)
