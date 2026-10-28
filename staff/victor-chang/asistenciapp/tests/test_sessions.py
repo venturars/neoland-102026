@@ -6,8 +6,9 @@ Con una base de datos real y temporal, y la hora fijada por el test (ARCHITECTUR
 import subprocess
 import sys
 from contextlib import closing
-from datetime import UTC
+from datetime import UTC, datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import pytest
 
@@ -109,6 +110,20 @@ def test_export_attendance(conn):  # spec 001 CA-14
     export = sessions.export_attendance(conn, session.id, UTC)
     assert export.filename == f"asistencia-2027-01-15-{session.id}.csv"
     assert export.content.lstrip("﻿").splitlines() == ["Nombre;Hora", "Ana;15/01/2027 08:00:00"]
+
+
+@pytest.mark.parametrize(
+    ("opened_utc", "day"),
+    [
+        (datetime(2026, 10, 24, 22, 30, tzinfo=UTC), "2026-10-25"),  # 00:30 en Madrid, horario de verano
+        (datetime(2027, 1, 14, 23, 30, tzinfo=UTC), "2027-01-15"),  # 00:30 en Madrid, horario de invierno
+    ],
+)
+def test_export_filename_uses_the_local_day(conn, opened_utc, day):  # plan 004 §2.12
+    madrid = ZoneInfo("Europe/Madrid")
+    session = sessions.create_session(conn, "Clase", opened_utc.timestamp(), madrid)
+    export = sessions.export_attendance(conn, session.id, madrid)
+    assert export.filename == f"asistencia-{day}-{session.id}.csv"
 
 
 def test_export_unknown_session(conn):

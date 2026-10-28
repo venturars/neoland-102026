@@ -253,10 +253,13 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
   - **Hecha (2026-10-28):** `parse_meeting_code` y `MEETING_LINK` en `domain/meetings.py`; `usecases/sessions.py` y `app.py` lo importan de ahí, y `infra/google_meet.py` ya no lo tiene. Sus 26 tests pasan, sin cambios, de `test_google_meet.py` a `test_meetings.py`.
     - Test nuevo `test_code_classes_do_not_load_google` (`test_sessions.py`): en otro proceso carga la parte web y los casos de uso y abre una clase de código. Antes del cambio cargaba 48 módulos de Google (`requests`, `google.*`, `attendance.infra.google_*`); ahora, ninguno.
     - 436 tests en verde; `ruff` y `mypy` sin avisos. `app.py` sigue montando `GoogleMeet` al arrancar (plan §2.12).
-- [ ] **T19** 🧪 · Fecha local en el nombre del CSV:
+- [x] **T19** 🧪 · Fecha local en el nombre del CSV:
   - test que falla: una clase abierta a las 00:30 de Madrid (22:30 UTC del día anterior en verano, 23:30 en invierno) descarga `asistencia-<día de Madrid>-<id>.csv`;
   - `export_attendance` convierte `opened_at` con la zona horaria antes de tomar el día.
   - *Cubre:* spec 001 · CA-14.
+  - **Hecha (2026-10-28):** `local_day(iso, tz)` en `domain/sessions.py` (sin E/S; la zona llega por parámetro) y `export_attendance` la usa en vez de los 10 primeros caracteres de `opened_at` en UTC. La ruta de descarga ya pasaba la zona de la configuración.
+    - Test nuevo `test_export_filename_uses_the_local_day` (`test_sessions.py`), en verano (22:30 UTC del 24/10/2026) y en invierno (23:30 UTC del 14/01/2027): los dos fallaron con el día anterior y ahora dan el día de Madrid.
+    - 438 tests en verde; `ruff` y `mypy` sin avisos.
 - [ ] **T20** · `requests` en `requirements.txt` (plan §2.12, §7.1); AGENT.md §4 nombra las dependencias de la app.
 - [ ] **T21** · Cierre de la revisión:
   - `pytest`, `ruff check`, `ruff format --check` y `mypy` en verde;
