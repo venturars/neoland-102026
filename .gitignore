@@ -2,8 +2,6 @@
 node_modules/
 package-lock.json
 npm-shrinkwrap.json
-next-env.d.ts
-.next/
 
 # Variables de entorno (cualquier carpeta)
 .env
@@ -81,7 +79,7 @@ venv/
 .pytest_cache/
 .ipynb_checkpoints/
 
-# Jupyter: checkpoints locales junto a los notebooks
+# Jupyter: checkpoints locales y junto a los notebooks
 .ipynb_checkpoints/
 
 # SQLite generada en local (cualquier carpeta). *.sqlite se versiona en first-app,
