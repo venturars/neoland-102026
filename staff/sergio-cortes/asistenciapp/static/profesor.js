@@ -202,7 +202,7 @@ async function downloadCsv(sessionId) {
   if (!res.ok) throw new Error("export");
   const blob = await res.blob();
   const filename =
-    /filename="([^"]+)"/.exec(res.headers.get("Content-Disposition") || "")?.[1] || "asistencia.csv";
+    /filename="([^"]+)"/.exec(res.headers.get("Content-Disposition") || "")?.[1] || "asistencia.xlsx";
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;

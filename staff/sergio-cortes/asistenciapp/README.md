@@ -2,7 +2,7 @@
 
 Pasa lista en una clase online (Discord, Google Meet o cualquier otra plataforma) en menos de un minuto.
 
-El profesor abre una sesión y comparte en la llamada un **código de 4 cifras** que cambia cada 30 segundos. Los alumnos abren un enlace, escriben su nombre y el código, y aparecen al momento en la lista del profesor. Al final de la clase, la lista se descarga para Excel o Google Sheets.
+El profesor abre una sesión y comparte en la llamada un **código de 4 cifras** que cambia cada 30 segundos. Los alumnos abren un enlace, escriben su nombre y el código, y aparecen al momento en la lista del profesor. Al final de la clase, la lista se descarga como informe Excel (`.xlsx`) para Excel, Google Sheets o Numbers.
 
 > Proyecto hecho con *Spec-Driven Development*. Las reglas están en [docs/CONSTITUTIONS.md](docs/CONSTITUTIONS.md), el manual para agentes de IA en [AGENTS.md](AGENTS.md) y la especificación en [specs/001-checkin-codigo/](specs/001-checkin-codigo/spec.md).
 
@@ -63,7 +63,7 @@ Ese enlace es **tu panel privado**: no lo compartas, porque quien lo tenga puede
 4. Pulsa **Copiar enlace de alumnos** y pégalo en el chat de Discord o Meet.
 5. Cada alumno abre el enlace, escribe su **nombre** y el **código** de tu pantalla, y pulsa **Estoy en clase**. Su nombre aparece en tu lista en un par de segundos.
 6. Cuando ya estén todos, pulsa **Cerrar asistencia** y confírmalo. Desde ese momento nadie más puede registrarse.
-7. Pulsa **Descargar lista** para obtener el CSV (columnas *Nombre* y *Hora*).
+7. Pulsa **Descargar lista** para obtener un informe `.xlsx` con título `Asistencia {nombre de la clase} - AAAA-MM-DD`, total de asistentes y columnas *#*, *Nombre*, *Fecha* y *Hora*.
 
 **¿Ves un nombre falso o equivocado?** Pulsa **Quitar** en su fila y confirma con **Sí, quitar**. Desaparece de la lista, del total y de la descarga. Funciona también con la asistencia ya cerrada.
 

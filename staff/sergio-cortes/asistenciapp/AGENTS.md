@@ -43,6 +43,7 @@ Al empezar el cambio, el único fichero nuevo permitido es el `spec.md`. El agen
 - Arquitectura, modelo de datos, rutas/API, archivos que se crearán.
 - Sección obligatoria **"Comprobación de la constitución"**: repasa P1–P6 y §5–§6 y di cómo los cumple el plan.
 - Si propones una dependencia externa, justifícala aquí (constitución P3).
+- Si el plan **añade o cambia** paquetes en `requirements.txt`, incluye **`## Validación Socket`** (MCP `socket-mcp`, ecosistema **`pypi`**, tabla como en [MCP.md](../../../MCP.md)) **antes** de pedir aprobación del plan; no instalar hasta plan y spec aprobados.
 
 ### 2.3 Desglosar (`tasks.md`)
 - Lista de casillas `- [ ] T01 …` en orden de ejecución.
@@ -113,6 +114,7 @@ Una funcionalidad está terminada cuando:
 | `004-sin-referencias-victor` | ✅ Implementada (2026-10-22) | Issue #245; documentación sin referencias personales ajenas ni rutas de otra copia bajo `staff/` |
 | `005-clean-architecture` | ✅ Implementada (2026-10-22) | Issue #239; `domain/`, `usecases/`, `storage/`, HTTP en `app.py` |
 | `006-limite-intentos-ip` | ✅ Implementada (2026-10-23); 93 tests pytest | Issue #318, PR #319; rate limit IP, block list, panel profesor, constitución v2.4 |
+| `007-informe-descarga-asistencia` | ✅ Terminada (2026-10-28) | Issue #324; informe `.xlsx` openpyxl; título/total fusionados A–D; 96 tests pytest |
 | Bot de Discord | Idea futura, sin número | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
