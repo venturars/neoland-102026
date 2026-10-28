@@ -12,10 +12,10 @@ from datetime import tzinfo
 
 from attendance.domain.codes import code_for, seconds_left
 from attendance.domain.errors import SessionNotFoundError
+from attendance.domain.meetings import parse_meeting_code
 from attendance.domain.sessions import ExportFile, Mode, Session, TeacherView, clean_title, default_title, to_iso
 from attendance.infra import storage
 from attendance.infra.export import to_csv
-from attendance.infra.google_meet import parse_meeting_code
 
 
 def create_session(

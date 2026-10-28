@@ -1,6 +1,6 @@
 # Tareas 004 · Asistencia automática desde Google Meet
 
-> Versión 2.2 · Estado: **En revisión** (2026-10-28) · Plan: [plan.md](plan.md) v2.2 · Creado: 2026-10-21 · Reescrito: 2026-10-23
+> Versión 2.2 · Estado: **Aprobado** (2026-10-28) · Plan: [plan.md](plan.md) v2.2 · Creado: 2026-10-21 · Reescrito: 2026-10-23
 
 Cómo leer esta lista:
 - Se hacen **en orden**, una cada vez. Al terminar una se marca `[x]`.
@@ -246,10 +246,13 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
 
 ## Fase H · Revisión de código de la PR #532 (plan §2.12)
 
-- [ ] **T18** 🧪 · El formato del enlace de Meet en el dominio:
+- [x] **T18** 🧪 · El formato del enlace de Meet en el dominio:
   - test que falla: importar `attendance.usecases.sessions` y crear una clase de código no carga `attendance.infra.google_meet` ni las librerías de Google (comprobado en un proceso aparte, mirando `sys.modules`);
   - mover `parse_meeting_code` y `MEETING_LINK` a `domain/meetings.py`; `usecases/sessions.py` y `app.py` lo importan de ahí; sus tests pasan de `test_google_meet.py` a `test_meetings.py`.
   - *Cubre:* CA-01 a CA-04 (las clases de código no dependen de Meet).
+  - **Hecha (2026-10-28):** `parse_meeting_code` y `MEETING_LINK` en `domain/meetings.py`; `usecases/sessions.py` y `app.py` lo importan de ahí, y `infra/google_meet.py` ya no lo tiene. Sus 26 tests pasan, sin cambios, de `test_google_meet.py` a `test_meetings.py`.
+    - Test nuevo `test_code_classes_do_not_load_google` (`test_sessions.py`): en otro proceso carga la parte web y los casos de uso y abre una clase de código. Antes del cambio cargaba 48 módulos de Google (`requests`, `google.*`, `attendance.infra.google_*`); ahora, ninguno.
+    - 436 tests en verde; `ruff` y `mypy` sin avisos. `app.py` sigue montando `GoogleMeet` al arrancar (plan §2.12).
 - [ ] **T19** 🧪 · Fecha local en el nombre del CSV:
   - test que falla: una clase abierta a las 00:30 de Madrid (22:30 UTC del día anterior en verano, 23:30 en invierno) descarga `asistencia-<día de Madrid>-<id>.csv`;
   - `export_attendance` convierte `opened_at` con la zona horaria antes de tomar el día.

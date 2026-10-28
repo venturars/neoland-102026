@@ -1,4 +1,6 @@
-"""Tests de attendance/infra/google_meet.py · spec 004 CA-05, CA-09, CA-13, CA-14, CA-17 a CA-21; plan §2.3, §2.7."""
+"""Tests de attendance/infra/google_meet.py · spec 004 CA-05, CA-09, CA-13, CA-14, CA-17 a CA-21; plan §2.3, §2.7.
+
+El formato del enlace de Meet está en tests/test_meetings.py (plan §2.12)."""
 
 import copy
 import json
@@ -11,7 +13,6 @@ from google_fakes import FakeCredentials
 
 from attendance.domain.errors import (
     MeetingEndedError,
-    MeetingLinkInvalidError,
     MeetingNotVisibleError,
     MeetLoginNotCompletedError,
     MeetNotConfiguredError,
@@ -19,55 +20,7 @@ from attendance.domain.errors import (
     MeetServiceError,
 )
 from attendance.domain.participants import Who
-from attendance.infra.google_meet import GoogleMeet, parse_meeting_code
-
-# ---------- Enlace o código de la reunión (T08) ----------
-
-
-@pytest.mark.parametrize(
-    "text",
-    [
-        "abc-defg-hij",
-        "  abc-defg-hij  ",
-        "ABC-DEFG-HIJ",
-        "https://meet.google.com/abc-defg-hij",
-        "https://meet.google.com/abc-defg-hij?authuser=1",
-        "https://meet.google.com/abc-defg-hij?pli=1&authuser=0",
-        "http://meet.google.com/abc-defg-hij",
-        "meet.google.com/abc-defg-hij",
-        "https://meet.google.com/abc-defg-hij/",
-        "  HTTPS://MEET.GOOGLE.COM/ABC-DEFG-HIJ  ",
-    ],
-)
-def test_valid_links_and_codes(text):
-    assert parse_meeting_code(text) == "abc-defg-hij"
-
-
-@pytest.mark.parametrize(
-    "text",
-    [
-        "",
-        "   ",
-        "abc-defg-hi",  # le falta una letra
-        "abcd-efg-hij",
-        "abc_defg_hij",
-        "abcdefghij",
-        "123-4567-890",
-        "abc-defg-hij extra",
-        "https://meet.google.com/",
-        "https://meet.google.com/lookup/abc",
-        "https://zoom.us/j/abc-defg-hij",  # otra plataforma
-        "https://meet.google.com.evil.com/abc-defg-hij",  # dominio que se parece
-        "https://evil.com/meet.google.com/abc-defg-hij",
-        "https://meet.google.com/abc-defg-hij#x",
-        "аbc-defg-hij",  # la primera "а" es cirílica
-        "Kbc-defg-hij",  # signo Kelvin: .lower() lo convertiría en una "k" ASCII
-    ],
-)
-def test_invalid_links_and_codes(text):  # CA-14 (enlace mal escrito)
-    with pytest.raises(MeetingLinkInvalidError):
-        parse_meeting_code(text)
-
+from attendance.infra.google_meet import GoogleMeet
 
 # ---------- Cliente de la API (T09) ----------
 # Solo se simula lo externo (ARCHITECTURE.md · T4): la sesión HTTP, las credenciales de Google y su flujo OAuth.

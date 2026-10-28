@@ -1,16 +1,14 @@
 """Google Meet: el único módulo que habla con Google (spec 004 · plan §2.3, §2.4, §2.7; ARCHITECTURE.md · F4).
 
-- `parse_meeting_code`: el formato de los enlaces de Meet.
 - `GoogleMeet.participants`: quién está, o quién ha estado, en una reunión. Usa la vía `conferenceRecords`,
   la que funcionó en el spike con una cuenta gratuita (plan §0).
-- El permiso de Google (OAuth) vive en `google_auth.py`.
+- El permiso de Google (OAuth) vive en `google_auth.py`; el formato de los enlaces, en `domain/meetings.py`.
 
 Cada llamada tiene un tiempo máximo, cada fallo se traduce a un error con nombre del dominio, y nada de
 lo que responde Google (que puede llevar nombres) se registra ni se muestra (E5, E7).
 """
 
 import logging
-import re
 from pathlib import Path
 from typing import Any
 
@@ -19,7 +17,6 @@ from google.oauth2.credentials import Credentials
 
 from attendance.domain.errors import (
     MeetingEndedError,
-    MeetingLinkInvalidError,
     MeetingNotVisibleError,
     MeetLoginNotCompletedError,
     MeetNotConfiguredError,
@@ -36,30 +33,6 @@ USERINFO = "https://openidconnect.googleapis.com/v1/userinfo"
 TIMEOUT_SECONDS = 10
 MAX_PAGES = 10
 PARTICIPANT_KINDS = ("signedinUser", "anonymousUser", "phoneUser")
-
-# Código de reunión de Meet: tres grupos de letras ASCII ([a-z], no \w, ARCHITECTURE.md · E1), solo o
-# dentro del enlace, con parámetros opcionales (p. ej. ?authuser=1).
-MEETING_LINK = re.compile(
-    r"(?:(?:https?://)?meet\.google\.com/)?(?P<code>[a-z]{3}-[a-z]{4}-[a-z]{3})/?(?:\?[\w=&.-]*)?"
-)
-
-
-def parse_meeting_code(text: str) -> str:
-    """El código de la reunión (`abc-defg-hij`) a partir de un enlace de Meet o del propio código.
-
-    Acepta mayúsculas y espacios alrededor.
-
-    Raises:
-        MeetingLinkInvalidError: no es un enlace ni un código de Meet.
-    """
-    text = text.strip()
-    # Antes de pasar a minúsculas: lower() convierte algunos símbolos (p. ej. el signo Kelvin) en letras ASCII.
-    if not text.isascii():
-        raise MeetingLinkInvalidError
-    match = MEETING_LINK.fullmatch(text.lower())
-    if match is None:
-        raise MeetingLinkInvalidError
-    return match.group("code")
 
 
 class GoogleMeet:

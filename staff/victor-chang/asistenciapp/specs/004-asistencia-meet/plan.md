@@ -1,6 +1,6 @@
 # Plan técnico 004 · Asistencia automática desde Google Meet
 
-> Versión 2.2 · Estado: **En revisión** (2026-10-28) · Spec: [spec.md](spec.md) v1.2 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Constitución v3.1 · Creado: 2026-10-21 · Reescrito: 2026-10-23
+> Versión 2.2 · Estado: **Aprobado** (2026-10-28) · Spec: [spec.md](spec.md) v1.2 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Constitución v3.1 · Creado: 2026-10-21 · Reescrito: 2026-10-23
 
 Este documento explica **cómo** construimos lo que pide la spec 004 sobre el código ya adaptado a `ARCHITECTURE.md` (spec 005). Meet es una **segunda forma de llenar la lista**: una entrada nueva que llama a casos de uso, y una pieza de infraestructura nueva que habla con Google (C3, P1). Las reglas se citan por su identificador (`C2`, `E4`…).
 
