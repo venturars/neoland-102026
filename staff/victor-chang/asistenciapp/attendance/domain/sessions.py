@@ -90,6 +90,11 @@ def to_iso(t: float) -> str:
     return datetime.fromtimestamp(t, UTC).isoformat(timespec="milliseconds")
 
 
+def local_day(iso: str, tz: tzinfo | None) -> str:
+    """El día (AAAA-MM-DD) de un instante ISO 8601 en la zona horaria tz; None usa la del sistema (plan 004 §2.12)."""
+    return datetime.fromisoformat(iso).astimezone(tz).date().isoformat()
+
+
 def clean_title(raw: str) -> str:
     """El título sin los espacios de los extremos; vacío si no hay título (spec 005 · CA-08).
 

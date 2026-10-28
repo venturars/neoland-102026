@@ -64,13 +64,13 @@ asistenciapp/
 │       ├── spec.md        # qué y por qué
 │       ├── plan.md        # cómo
 │       └── tasks.md       # pasos
-├── requirements.txt       # Flask y las herramientas de desarrollo (pytest, ruff, mypy)
+├── requirements.txt       # Flask, Google (google-auth-oauthlib, requests) y las herramientas de desarrollo (pytest, ruff, mypy)
 ├── pytest.ini             # configuración de pytest
 ├── pyproject.toml         # configuración de ruff y mypy (no es un paquete instalable)
 ├── app.py                 # arranque: lee la configuración, monta las piezas y lanza (ARCHITECTURE C4)
 ├── attendance/            # código de la app, por capas (ARCHITECTURE O1)
 │   ├── config.py          # Config y load_config: variables de entorno
-│   ├── domain/            # reglas y tipos, sin E/S: códigos, nombres, clases, errores
+│   ├── domain/            # reglas y tipos, sin E/S: códigos, nombres, clases, enlaces de Meet, errores
 │   ├── usecases/          # una acción de usuario por función: clases y registros
 │   ├── entrypoints/web/   # Flask: fábrica, rutas, credencial, errores, validación, JSON
 │   ├── entrypoints/cli.py # el atajo --meet (spec 004)
@@ -107,7 +107,7 @@ Ejecutar desde `staff/victor-chang/asistenciapp/`, **con el entorno activado**. 
 | Revisar los tipos | `mypy` |
 | Probar con otra BD, puerto o zona horaria | `ASISTENCIA_DB=/tmp/copia.db PORT=8001 ASISTENCIA_TZ=Europe/Madrid python app.py` |
 
-Las dependencias de la app son Flask y `google-auth-oauthlib` (justificada en el plan 004 §7.1). pytest, ruff y mypy son herramientas de desarrollo: no cuentan como dependencias (constitución P3 v3.1).
+Las dependencias de la app son Flask, `google-auth-oauthlib` y `requests` (justificadas en el plan 004 §7.1; `requests` ya llegaba con la primera y se lista porque `infra/google_meet.py` la importa directamente, plan 004 §2.12). pytest, ruff y mypy son herramientas de desarrollo: no cuentan como dependencias (constitución P3 v3.1).
 
 ---
 
@@ -144,7 +144,7 @@ Una funcionalidad está terminada cuando:
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): CA-01 a CA-26 verificados. Revisión de código (2026-10-21, fase H): 30 tareas, 102 tests | Check-in con código rotatorio, válido para cualquier plataforma |
 | `002-discord-bot` | Idea futura | Fuera del MVP |
 | `003-servidor-mcp` | Idea futura | Implementar MCP: que un asistente de IA (p. ej. Claude) pueda abrir y cerrar la asistencia, consultar listas y pedir informes por chat |
-| `004-asistencia-meet` | ✅ Terminada (2026-10-27): spec v1.2, plan v2.1, 17 tareas; CA verificados (T16: prueba real de Victor, también en una clase del bootcamp); 435 tests; `ruff` y `mypy --strict` sin avisos | Asistencia automática de todos los participantes de una reunión de Meet, sin que el alumno haga nada |
+| `004-asistencia-meet` | ✅ Terminada (2026-10-28): spec v1.2, plan y tareas v2.2, 21 tareas (fase H: revisión de la PR #532), 438 tests. Al cerrar la fase G (2026-10-27): 17 tareas; CA verificados (T16: prueba real de Victor, también en una clase del bootcamp); 435 tests; `ruff` y `mypy --strict` sin avisos | Asistencia automática de todos los participantes de una reunión de Meet, sin que el alumno haga nada |
 | `006-imagen-neoland` | ✅ Terminada (2026-10-27): spec v1.0, plan y tareas v1.1 (la etiqueta "abierta" sigue en verde), 10 tareas; CA-01 a CA-08 verificados (T08: revisión en Chrome con el visto bueno de Victor); 495 tests; `ruff` y `mypy --strict` sin avisos | Aspecto de las pantallas parecido a neoland.es, sin cambiar el comportamiento |
 | `005-adaptar-arquitectura` | ✅ Terminada v1.1 (2026-10-23): 21 tareas, CA-01 a CA-08 verificados, 240 tests; `ruff` y `mypy --strict` sin avisos | Código adaptado a `ARCHITECTURE.md` sin cambiar el comportamiento, salvo errores más claros y el título de 20 caracteres como máximo |
 

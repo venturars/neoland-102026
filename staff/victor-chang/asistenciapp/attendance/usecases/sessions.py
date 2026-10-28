@@ -12,10 +12,19 @@ from datetime import tzinfo
 
 from attendance.domain.codes import code_for, seconds_left
 from attendance.domain.errors import SessionNotFoundError
-from attendance.domain.sessions import ExportFile, Mode, Session, TeacherView, clean_title, default_title, to_iso
+from attendance.domain.meetings import parse_meeting_code
+from attendance.domain.sessions import (
+    ExportFile,
+    Mode,
+    Session,
+    TeacherView,
+    clean_title,
+    default_title,
+    local_day,
+    to_iso,
+)
 from attendance.infra import storage
 from attendance.infra.export import to_csv
-from attendance.infra.google_meet import parse_meeting_code
 
 
 def create_session(
@@ -98,13 +107,13 @@ def teacher_view(conn: sqlite3.Connection, session_id: str, t: float) -> Teacher
 
 
 def export_attendance(conn: sqlite3.Connection, session_id: str, tz: tzinfo | None) -> ExportFile:
-    """La lista de la clase en CSV, con la fecha de apertura en el nombre (spec 001 · CA-14).
+    """La lista de la clase en CSV, con el día local de apertura en el nombre (spec 001 · CA-14; plan 004 §2.12).
 
     Raises:
         SessionNotFoundError: no hay ninguna clase con ese id.
     """
     session = find_session(conn, session_id)
-    day = session.opened_at[:10]
+    day = local_day(session.opened_at, tz)
     return ExportFile(
         filename=f"asistencia-{day}-{session_id}.csv",
         content=to_csv(storage.list_checkins(conn, session_id), tz),

@@ -3,8 +3,12 @@
 Con una base de datos real y temporal, y la hora fijada por el test (ARCHITECTURE.md · T2).
 """
 
+import subprocess
+import sys
 from contextlib import closing
-from datetime import UTC
+from datetime import UTC, datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import pytest
 
@@ -108,6 +112,20 @@ def test_export_attendance(conn):  # spec 001 CA-14
     assert export.content.lstrip("﻿").splitlines() == ["Nombre;Hora", "Ana;15/01/2027 08:00:00"]
 
 
+@pytest.mark.parametrize(
+    ("opened_utc", "day"),
+    [
+        (datetime(2026, 10, 24, 22, 30, tzinfo=UTC), "2026-10-25"),  # 00:30 en Madrid, horario de verano
+        (datetime(2027, 1, 14, 23, 30, tzinfo=UTC), "2027-01-15"),  # 00:30 en Madrid, horario de invierno
+    ],
+)
+def test_export_filename_uses_the_local_day(conn, opened_utc, day):  # plan 004 §2.12
+    madrid = ZoneInfo("Europe/Madrid")
+    session = sessions.create_session(conn, "Clase", opened_utc.timestamp(), madrid)
+    export = sessions.export_attendance(conn, session.id, madrid)
+    assert export.filename == f"asistencia-{day}-{session.id}.csv"
+
+
 def test_export_unknown_session(conn):
     with pytest.raises(SessionNotFoundError):
         sessions.export_attendance(conn, "no-existe", UTC)
@@ -143,3 +161,39 @@ def test_teacher_view_of_an_automatic_session_has_no_code(conn):  # spec 004 CA-
     view = sessions.teacher_view(conn, session.id, T + 10)
     assert view.session.is_open
     assert (view.code, view.seconds_left) == (None, None)
+
+
+# ---------- Las clases no dependen de Google (plan 004 §2.12) ----------
+
+# En un proceso aparte, porque en este los tests de Meet ya han cargado esos módulos.
+NO_GOOGLE = """
+import sys
+from contextlib import closing
+from datetime import UTC
+from pathlib import Path
+
+from attendance.entrypoints.web import create_app
+from attendance.infra import storage
+from attendance.usecases import sessions
+
+db = Path(sys.argv[1])
+with closing(storage.connect(db)) as conn:
+    storage.init_schema(conn)
+    with conn:
+        sessions.create_session(conn, "Clase", 1_800_000_000.0, UTC)
+google = ("requests", "google", "attendance.infra.google")
+print(" ".join(sorted(m for m in sys.modules if m.startswith(google))))
+"""
+
+
+def test_code_classes_do_not_load_google(tmp_path):
+    app_dir = Path(__file__).resolve().parents[1]
+    # S603: el propio intérprete de los tests, con argumentos fijos y sin shell.
+    done = subprocess.run(  # noqa: S603
+        [sys.executable, "-c", NO_GOOGLE, str(tmp_path / "t.db")],
+        cwd=app_dir,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    assert done.stdout.split() == []

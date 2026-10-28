@@ -15,11 +15,12 @@ from contextlib import closing
 
 from attendance.config import Config, ConfigError, load_config
 from attendance.domain.errors import MeetingLinkInvalidError
+from attendance.domain.meetings import parse_meeting_code
 from attendance.domain.participants import Who
 from attendance.entrypoints import cli
 from attendance.entrypoints.web import context, create_app
 from attendance.infra import storage
-from attendance.infra.google_meet import GoogleMeet, parse_meeting_code
+from attendance.infra.google_meet import GoogleMeet
 from attendance.infra.ports import port_in_use
 from attendance.infra.tunnel import TunnelError, start_tunnel
 
