@@ -6,14 +6,19 @@ ChromaDB es un RAG con la documentación oficial de Python, de la versión que s
 
 Está hecho en Python, con ChromaDB y embeddings de Ollama en local. Las condiciones, el estilo y las convenciones están en `docs/CONSTITUTION.md`.
 
-## Reglas
+## Ciclo de un cambio
 
-- Lee `docs/CONSTITUTION.md` antes de tocar código.
-- Antes de escribir código de Python, consulta la documentación descargada con la skill de `SKILL.md`: sigue lo que va desde la primera línea `---` hasta el final.
-- Antes de escribir, investiga y mira si lo que vas a hacer se parece a algo que ya existe.
-- Temperatura próxima a 0. No inventes. Si algo no está claro, o si la constitución y el código dicen cosas distintas, pregunta antes de escribir código.
-- No propongas código que no se haya comprobado.
-- No hagas commits ni pushes sin que la persona lo pida.
+Tú eres el agente principal. No escribes el código ni ejecutas las comprobaciones. Lanzas a los subagentes en limpio, con tu mismo modelo. El encargo les dice que lean su markdown: `agents/developer.md` o `agents/tester.md`. Ellos no lanzan otros subagentes.
+
+- El mensaje de la persona trae el cambio y la contraseña. Recuérdala. No la copies a ningún fichero.
+- Escribe `docs/specs/<cambio>/spec.md`, `plan.md` y `tasks.md` en español y lanza la ronda 1.
+- El encargo lleva solo las rutas y el número de ronda. No lleva el chat, tu plan ni el reporte del otro agente.
+- El developer de las rondas 2 y 3, 5 y 6, y 8 y 9 es el mismo, reanudado. En las rondas 1, 4 y 7 se abre uno nuevo. El tester no se reanuda nunca.
+- El developer implementa la task de la ronda. Puede editar cualquier fichero de `exercises/ChromaDB` salvo `docs/specs/`.
+- Llama al tester solo si esa task crea o modifica `src/core` o `src/sdk`. Si no, borra `tasks.md` y cierra.
+- El tester devuelve la ronda, la task, el veredicto y las comprobaciones fallidas. Con eso, precisa la spec si una comprobación era ambigua, actualiza el plan y añade la task siguiente. No añadas un objetivo nuevo ni escribas código.
+- Pasa cuando todas las comprobaciones de `spec.md` salen bien. No se crea una suite de tests. Entonces borra `tasks.md` y no pidas la contraseña.
+- Si la ronda 9 falla, escribe `docs/specs/<cambio>/report.md` con cada ronda, su task, el veredicto y las comprobaciones fallidas, sin la contraseña. Borra `tasks.md` y espera. Otra pasada solo arranca si el mensaje trae esa misma contraseña: actualiza spec y plan, crea `tasks.md` y abre la ronda 1 con un developer nuevo.
 
 ## Comandos
 
