@@ -25,6 +25,7 @@ PAIRS = [
     ("--accent-text", "--accent", LARGE),  # botones principales: 18 px en negrita
     ("#ffffff", "--charcoal", AA),  # números y texto de la banda del código
     ("--accent-on-dark", "--charcoal", AA),  # etiqueta carmesí sobre la banda
+    ("--on-dark-muted", "--charcoal", AA),  # cuenta atrás y etiqueta del enlace en la banda
     ("--ok-text", "--ok-bg", AA),
     ("--warn-text", "--warn-bg", AA),
     ("--error-text", "--error-bg", AA),

@@ -39,13 +39,13 @@ Cómo leer esta lista:
 
 ## Fase C · Reglas y clases
 
-- [ ] **T05** · Reglas base de plan §2.2: títulos, tarjetas, campos, botones (principal, `.secondary`, `.danger`, `.danger-solid`, `.small`), foco, `.badge` y `.message`.
+- [x] **T05** · Reglas base de plan §2.2: títulos, tarjetas, campos, botones (principal, `.secondary`, `.danger`, `.danger-solid`, `.small`), foco, `.badge` y `.message`.
   - *Cubre:* RF-2, RF-3, RF-6, CA-02, CA-03.
   - *Hecha cuando:* capturas del panel y de «Editar grupo», en claro y oscuro, comparadas con neoland.es.
-- [ ] **T06** · Banda del código y etiquetas (plan §2.2 y §2.4): `.card.dark`, `.code`, `.countdown`, `.link-box` y botones dentro de la banda; clase `.eyebrow`. En `profesor.html`, `#code-card` pasa a `card dark` y «Código para pasar lista» a `eyebrow`. En `alumno.html`, «Pasar lista» pasa a `eyebrow` y el `style` de «Escribe tu nombre» pasa a una clase. Ningún texto cambia.
+- [x] **T06** · Banda del código y etiquetas (plan §2.2 y §2.4): `.card.dark`, `.code`, `.countdown`, `.link-box` y botones dentro de la banda; clase `.eyebrow`. En `profesor.html`, `#code-card` pasa a `card dark` y «Código para pasar lista» a `eyebrow`. En `alumno.html`, «Pasar lista» pasa a `eyebrow` y el `style` de «Escribe tu nombre» pasa a una clase. Ningún texto cambia.
   - *Cubre:* RF-4, RF-5, CA-02.
   - *Hecha cuando:* capturas de una sesión abierta con grupo y de la página del alumno, en claro y oscuro.
-- [ ] **T07** · Lista del alumno (`.roster`), casillas (`.boxes`, con «Repetido») y móvil (menos de 480 px: radio de tarjeta 20 px y `h1` más pequeño).
+- [x] **T07** · Lista del alumno (`.roster`), casillas (`.boxes`, con «Repetido») y móvil (menos de 480 px: radio de tarjeta 20 px y `h1` más pequeño).
   - *Cubre:* RF-3, RF-6, RF-11, CA-02, CA-05.
   - *Hecha cuando:* capturas a 400 px de todas las pantallas sin desplazamiento lateral.
 
