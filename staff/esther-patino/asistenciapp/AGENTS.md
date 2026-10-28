@@ -160,6 +160,7 @@ Una funcionalidad está terminada cuando:
 | `004-impersonal-references` | 4. Implementar · T01 a T04 hechas (2026-10-23) | CA-01, CA-02 y CA-05 leídos. Las specs 001, 002 y 003 no se han tocado. Falta el visto bueno |
 | `005-docs-and-architecture` | 4. Implementar · T01 a T12 hechas (2026-10-23) | Implementada. pytest: 82 passed. Las specs 001 a 004 no están en el diff. Falta el visto bueno |
 | `006-ip-access-control` | 4. Implementar · T01 a T09 hechas (2026-10-24) | pytest: 98 passed. Nadie quita ni cambia una IP de la blacklist. Falta el visto bueno |
+| `007-late-arrivals` | 4. Implementar · T01 a T11 hechas (2026-10-27) | pytest: 107 passed. A 400 px se lee el texto y no hay desplazamiento horizontal. Falta el visto bueno |
 
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.

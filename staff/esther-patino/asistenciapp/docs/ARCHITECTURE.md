@@ -14,6 +14,7 @@ asistenciapp/
 └── asistencia/
     ├── domain/                 # reglas
     │   ├── access.py           # límite de llamadas por IP
+    │   ├── arrival.py          # a tiempo o llegada tardía
     │   ├── codes.py
     │   └── names.py
     ├── actions/
@@ -26,7 +27,7 @@ asistenciapp/
 
 `app.py` recibe la petición del navegador, llama a una acción y devuelve la respuesta. Elige el estado HTTP, el JSON, la página y la dirección del alumno.
 
-`asistencia/domain/` guarda las reglas del código de cuatro cifras, del nombre y del límite de llamadas por IP. No abre la base y no conoce el navegador.
+`asistencia/domain/` guarda las reglas del código de cuatro cifras, del nombre, del límite de llamadas por IP y de la llegada a tiempo o tardía. No abre la base y no conoce el navegador.
 
 `asistencia/actions/attendance.py` hace las acciones de pasar lista: datos públicos de una clase, registrar a un alumno, listar clases, abrir una clase, vista del profesor, cerrar una clase, quitar un registro y preparar el CSV. Usa las reglas y la base. No conoce el navegador.
 
