@@ -2,10 +2,14 @@ import argparse
 import sys
 
 from find_doc import find_doc
+from settings import VERSION
 
 
 def get_doc() -> None:
-    parser = argparse.ArgumentParser(description="Get the Python 3.15 docs of an exact name.")
+    docs_name = "Python docs"
+    if VERSION != "":
+        docs_name = f"Python {VERSION} docs"
+    parser = argparse.ArgumentParser(description=f"Get the {docs_name} of an exact name.")
     parser.add_argument("name", help="Full name: pathlib.Path.read_text, c.PyList_New, cmdoption-c, term-generator...")
     args = parser.parse_args()
 
@@ -14,7 +18,7 @@ def get_doc() -> None:
 
     results = find_doc(args.name)
     if len(results) == 0:
-        print(f"{args.name}: not found in Python 3.15 docs")
+        print(f"{args.name}: not found in {docs_name}")
         sys.exit(1)
 
     for result in results:

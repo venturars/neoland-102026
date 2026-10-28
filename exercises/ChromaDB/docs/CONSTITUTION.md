@@ -1,18 +1,18 @@
 # Constitución — ChromaDB
 
-ChromaDB es un RAG con la documentación oficial de Python 3.15. Sirve para que un agente consulte esa documentación cuando genera código.
+ChromaDB es un RAG con la documentación oficial de Python, de la versión que se descarga. Sirve para que un agente consulte esa documentación cuando genera código.
 
 ## Condiciones
 
-- Solo entra la documentación de Python 3.15. Lo de otras versiones se excluye al indexar.
+- Solo entra la documentación de la versión descargada. Lo de otras versiones se excluye al indexar.
 - Todo corre en local: ChromaDB guarda los datos en `chroma_db/` y Ollama calcula los embeddings.
 - No se recorta información: ningún fragmento se trunca al calcular su embedding.
 - El agente consulta con scripts de terminal, no con un MCP.
 - `python-docs/` es solo lectura.
 - Los scripts abren `chroma_db/` directamente, sin servidor. El servidor de Chroma solo se arranca para usar ChromaDash, nunca mientras un script escribe, y se para al terminar.
-- `python-docs/`, `chroma_db/` y `.venv/` no van a git.
+- `python-docs/`, `python-docs-md/`, `chroma_db/` y `.venv/` no van a git.
 - `chromadash/` es el visor ChromaDash, parcheado para la API v2 de Chroma. Va en el repositorio.
-- `python-docs-md/` es la fuente del índice y va en git. Se genera desde `python-docs/` con `scripts/convert_docs.py` y no se edita a mano.
+- `python-docs-md/` es la fuente del índice. Se genera en cada equipo: `scripts/download_docs.py` baja el HTML oficial de la versión elegida y `scripts/convert_docs.py` lo pasa a Markdown. No se edita a mano.
 - Cada participante construye su índice en su equipo. El modelo de embeddings no va en git: se define en `scripts/settings.py` y se descarga con Ollama.
 
 ## Dependencias

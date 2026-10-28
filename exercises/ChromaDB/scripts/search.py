@@ -2,10 +2,14 @@ import argparse
 import sys
 
 from search_docs import search_docs
+from settings import VERSION
 
 
 def search() -> None:
-    parser = argparse.ArgumentParser(description="Search the Python 3.15 docs by meaning.")
+    docs_name = "Python docs"
+    if VERSION != "":
+        docs_name = f"Python {VERSION} docs"
+    parser = argparse.ArgumentParser(description=f"Search the {docs_name} by meaning.")
     parser.add_argument("question", help="What you are looking for, in English")
     parser.add_argument("-n", type=int, default=5, help="Number of results (default 5)")
     parser.add_argument("--area", help="Only this docs area: library, c-api, reference, tutorial...")

@@ -24,17 +24,18 @@ La copia que instales empieza aquí. Desde la primera línea `---` hasta el fina
 
 name: python-3-15-docs
 description: >-
-  Look up the official Python 3.15 documentation in a local RAG before writing,
-  reviewing or explaining Python code. Use it to check that a module, function,
-  class, parameter or command-line option exists in Python 3.15 and how it
-  behaves, and to find what is new, changed or deprecated in 3.15.
+  Look up the official Python documentation in a local RAG before writing,
+  reviewing or explaining Python code. The index is the version downloaded
+  for this project. Use it to check that a module, function, class, parameter
+  or command-line option exists in that version and how it behaves, and to
+  find what is new, changed or deprecated in it.
 allowed-tools: Bash
 
 ---
 
-# Python 3.15 docs
+# Python docs
 
-A local index of the official Python 3.15 documentation (about 11,000 chunks). Use it instead of your memory: your training data may describe older versions.
+A local index of the official Python documentation for the version downloaded in this project (about 11,000 chunks). Use it instead of your memory: your training data may describe another version.
 
 ## Requirements
 
@@ -61,7 +62,7 @@ A local index of the official Python 3.15 documentation (about 11,000 chunks). U
    PY exercises/ChromaDB/scripts/get_doc.py pathlib.Path.read_text
    ```
 
-   If it prints `not found in Python 3.15 docs`, do not use that name. Search again.
+   If it prints `not found in Python 3.15 docs` (the number is the downloaded version), do not use that name. Search again.
 
 3. **Cite the source** (`page#anchor`) next to the code or in your answer, so the user can check it.
 
@@ -75,7 +76,7 @@ PY exercises/ChromaDB/scripts/search.py "question" [-n 5] [--area AREA] [--modul
 - `-n`: number of results (default 5). Use more if the first results do not answer.
 - `--module`: only one module (`pathlib`, `json`, `asyncio`...). Use it only when you are sure of the module.
 - `--area`: `library` (modules), `builtins` (built-in functions and types), `reference` (language), `c-api`, `tutorial`, `howto`, `using` (command line, install), `extending`, `faq`, `glossary`, `deprecations`, `whatsnew`.
-- `--kind`: `api` (a function, class, option...), `guide` (explanations), `whatsnew` (what is new in 3.15), `changelog` (single changes in 3.15), `deprecation` (what will be removed).
+- `--kind`: `api` (a function, class, option...), `guide` (explanations), `whatsnew` (what is new in the downloaded version), `changelog` (single changes in that version), `deprecation` (what will be removed).
 
 If you are not sure about a filter, search without it. A wrong filter returns nothing useful.
 
@@ -117,5 +118,5 @@ pathlib — Object-oriented filesystem paths > Concrete paths > Reading and writ
 
 ## Rules
 
-- The documentation is the source of truth for Python 3.15. If it disagrees with what you remember, follow the documentation.
-- If neither command finds it, say that you could not confirm it in the Python 3.15 docs. Do not invent it.
+- The documentation is the source of truth for the downloaded Python version. If it disagrees with what you remember, follow the documentation.
+- If neither command finds it, say that you could not confirm it in those docs. Do not invent it.

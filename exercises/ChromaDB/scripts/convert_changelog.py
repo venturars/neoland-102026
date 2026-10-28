@@ -3,7 +3,7 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 
 from convert_block import convert_block
-from settings import CHANGELOG_PAGE, CHANGELOG_RELEASES
+from settings import CHANGELOG_PAGE, CHANGELOG_RELEASES, VERSION
 
 
 def convert_changelog(html_dir: Path) -> str:
@@ -22,7 +22,7 @@ def convert_changelog(html_dir: Path) -> str:
         if any(title.startswith(prefix) for prefix in CHANGELOG_RELEASES):
             releases.append(convert_block(release, 1))
     if len(releases) == 0:
-        raise RuntimeError("No Python 3.15 releases found in the changelog")
+        raise RuntimeError(f"No Python {VERSION} releases found in the changelog")
 
     front_matter = [
         "---",

@@ -20,10 +20,10 @@ def build_index() -> None:
     print(f"Chunks: {len(chunks)}")
 
     client = chromadb.PersistentClient(path=str(DB_DIR))
-    # Se rehace entera para que no queden fragmentos de páginas que ya no existen
+    # Se borra lo anterior, también si el índice era de otra versión
     existing = [collection.name for collection in client.list_collections()]
-    if COLLECTION in existing:
-        client.delete_collection(COLLECTION)
+    for name in existing:
+        client.delete_collection(name)
     collection = client.create_collection(
         COLLECTION,
         embedding_function=None,
