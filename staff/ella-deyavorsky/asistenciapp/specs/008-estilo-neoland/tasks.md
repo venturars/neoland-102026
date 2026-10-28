@@ -53,7 +53,7 @@ Cómo leer esta lista:
 
 ## Fase D · Verificación y documentación
 
-- [ ] **T08** · Verificación completa (plan §4), con la app de esta carpeta en un puerto libre:
+- [x] **T08** · Verificación completa (plan §4), con la app de esta carpeta en un puerto libre:
   - recorrido de CA-01: crear y editar un grupo, sesión rápida y con grupo, registrarse, liberar, cerrar, decidir sobre un nuevo y descargar;
   - capturas de CA-02, CA-03 y CA-05: inicio, panel, «Nuevo grupo», «Editar grupo» (con «Repetido» y «Subir igualmente»), sesión abierta y cerrada, sesión rápida, y página del alumno (formulario rápido, código y lista), en un ordenador y a 400 px, en claro y oscuro;
   - CA-05 con el teclado: Tab e Intro con el foco visible;
@@ -61,7 +61,7 @@ Cómo leer esta lista:
   - Al acabar, se para la app y `lsof -nP -iTCP:<puerto> -sTCP:LISTEN` no muestra nada.
   - *Cubre:* CA-01 a CA-06.
   - *Hecha cuando:* todo funciona como antes, se parece a neoland.es y el puerto queda libre.
-- [ ] **T09** · Documentación: en `README.md`, una línea con el aspecto de Neoland y que las tipografías están en `static/fonts/` con su licencia. En `AGENTS.md`, `fonts/` en el árbol de §3 y la fila de la spec 008 en §8.
+- [x] **T09** · Documentación: en `README.md`, una línea con el aspecto de Neoland y que las tipografías están en `static/fonts/` con su licencia. En `AGENTS.md`, `fonts/` en el árbol de §3 y la fila de la spec 008 en §8.
   - *Hecha cuando:* `pytest` completo en verde y la documentación describe la app.
 
 - **Checkpoint:** `pytest` completo en verde; luego se propone un commit solo de esta fase y se espera tu sí.

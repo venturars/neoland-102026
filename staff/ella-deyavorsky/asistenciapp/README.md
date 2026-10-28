@@ -4,6 +4,8 @@ Pasa lista en una clase online (Discord, Google Meet o cualquier otra plataforma
 
 El profesor abre una sesión y comparte en la llamada un **código de 4 cifras** que cambia cada 30 segundos. Los alumnos abren un enlace, escriben su nombre y el código, y aparecen al momento en la lista del profesor. Al final de la clase, la lista se descarga para Excel o Google Sheets.
 
+La app usa el aspecto de [neoland.es](https://neoland.es): sus colores, sus tipografías (Montserrat y Roboto) y sus botones redondeados, también en modo oscuro.
+
 > Proyecto hecho con *Spec-Driven Development*. Las reglas están en [docs/CONSTITUTION.md](docs/CONSTITUTION.md), la organización del código en [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), el manual para agentes de IA en [AGENTS.md](AGENTS.md) y la especificación en [specs/001-checkin-codigo/](specs/001-checkin-codigo/spec.md).
 
 ---
@@ -170,3 +172,4 @@ Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una 
 - Quitar un registro o descartar a un nuevo lo **borra de verdad** (no queda en ninguna papelera). Borrar un grupo borra su lista; las listas de asistencia pasadas se conservan.
 - Los datos se guardan **solo en tu ordenador** (`data/`, que no se sube a git).
 - Con `--tunel`, el tráfico pasa **cifrado** por Cloudflare, que no lo almacena (constitución P4, v2.1).
+- Las tipografías van **dentro de la app** (`static/fonts/`, con su licencia OFL): ni tu navegador ni el de los alumnos piden nada a Google ni a otro servicio.
