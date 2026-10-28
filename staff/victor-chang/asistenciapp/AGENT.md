@@ -144,7 +144,7 @@ Una funcionalidad está terminada cuando:
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): CA-01 a CA-26 verificados. Revisión de código (2026-10-21, fase H): 30 tareas, 102 tests | Check-in con código rotatorio, válido para cualquier plataforma |
 | `002-discord-bot` | Idea futura | Fuera del MVP |
 | `003-servidor-mcp` | Idea futura | Implementar MCP: que un asistente de IA (p. ej. Claude) pueda abrir y cerrar la asistencia, consultar listas y pedir informes por chat |
-| `004-asistencia-meet` | Revisión de la PR #532 (2026-10-28): plan y tareas v2.2, fase H (T18–T21); T18–T20 hechas, siguiente T21 (cierre). Antes: ✅ Terminada (2026-10-27): spec v1.2, plan v2.1, 17 tareas; CA verificados (T16: prueba real de Victor, también en una clase del bootcamp); 435 tests; `ruff` y `mypy --strict` sin avisos | Asistencia automática de todos los participantes de una reunión de Meet, sin que el alumno haga nada |
+| `004-asistencia-meet` | ✅ Terminada (2026-10-28): spec v1.2, plan y tareas v2.2, 21 tareas (fase H: revisión de la PR #532), 438 tests. Al cerrar la fase G (2026-10-27): 17 tareas; CA verificados (T16: prueba real de Victor, también en una clase del bootcamp); 435 tests; `ruff` y `mypy --strict` sin avisos | Asistencia automática de todos los participantes de una reunión de Meet, sin que el alumno haga nada |
 | `005-adaptar-arquitectura` | ✅ Terminada v1.1 (2026-10-23): 21 tareas, CA-01 a CA-08 verificados, 240 tests; `ruff` y `mypy --strict` sin avisos | Código adaptado a `ARCHITECTURE.md` sin cambiar el comportamiento, salvo errores más claros y el título de 20 caracteres como máximo |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.

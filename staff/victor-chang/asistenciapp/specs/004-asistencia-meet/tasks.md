@@ -262,7 +262,10 @@ Antes de tocar la app, comprobamos que Google deja hacer lo que necesitamos con 
     - 438 tests en verde; `ruff` y `mypy` sin avisos.
 - [x] **T20** · `requests` en `requirements.txt` (plan §2.12, §7.1); AGENT.md §4 nombra las dependencias de la app.
   - **Hecha (2026-10-28):** `requests` en `requirements.txt`, justo después de `google-auth-oauthlib`, sin versión fija como las demás. Ya estaba instalada (2.34.2, por `requests-oauthlib`): no hay nada nuevo que instalar. AGENT.md §4 nombra las tres dependencias de la app, y §3 corrige la línea de `requirements.txt`, que solo hablaba de Flask y las herramientas. 438 tests en verde; `ruff` y `mypy` sin avisos.
-- [ ] **T21** · Cierre de la revisión:
+- [x] **T21** · Cierre de la revisión:
   - `pytest`, `ruff check`, `ruff format --check` y `mypy` en verde;
   - respuestas en la PR #532 a los cinco comentarios;
   - llevar los arreglos a la rama de la PR #547 con un merge (sin reescribir su historia).
+  - **Hecha (2026-10-28):** 438 tests en verde; `ruff check`, `ruff format --check` y `mypy` sin avisos; ningún servidor de prueba en marcha.
+    - Los comentarios llegaron en una sola revisión (aprobada), así que las cinco respuestas van en un comentario de la PR #532: tres arreglados (T18, T19, T20, con su commit) y dos que se quedan como están, con su motivo (invitados sin nombre: plan §8.7 y constitución P4; `requires-python`: ARCHITECTURE §12).
+    - Justo después de este commit, la rama de la PR #547 hace merge de esta rama (sin reescribir su historia).
