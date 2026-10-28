@@ -66,6 +66,10 @@ first-app/
     ├── STYLE.md
     ├── TREE.md
     └── specs/
+        ├── align-code-with-guides/
+        │   ├── spec.md
+        │   ├── plan.md
+        │   └── tasks.md
         ├── classifier/
         │   ├── spec.md
         │   ├── plan.md
