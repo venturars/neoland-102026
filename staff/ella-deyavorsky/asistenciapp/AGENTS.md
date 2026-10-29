@@ -1,7 +1,5 @@
 # AGENTS.md — Manual de trabajo para agentes de IA
 
-Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [constitución](docs/CONSTITUTION.md) dice **qué reglas** se cumplen; [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) dice **dónde va cada pieza de código**; este archivo dice **cómo se trabaja** día a día.
-
 ---
 
 ## 1. Antes de hacer nada: lectura obligatoria
@@ -11,10 +9,10 @@ Lee en este orden al empezar cualquier tarea:
 1. `docs/CONSTITUTION.md`: las reglas no negociables.
 2. Este archivo (`AGENTS.md`).
 3. `docs/ARCHITECTURE.md`: las partes del código y qué puede importar cada una.
-4. La spec activa: `specs/NNN-nombre/spec.md` (ver §8 "Estado actual").
+4. La spec activa: `specs/NNN-nombre/spec.md` (ver §5 "Estado actual").
 5. Su `plan.md` y su `tasks.md`, si ya existen.
 
-Si algo de lo que te piden contradice la constitución, **para y avisa** antes de escribir nada.
+Si lo que te piden va en contra de la constitución, **no cambies ningún fichero**. Di a la persona que trabaja en esta carpeta qué regla choca con la petición y espera su respuesta.
 
 ---
 
@@ -54,70 +52,7 @@ Al empezar el cambio, el único fichero nuevo permitido es el `spec.md`. El agen
 
 ---
 
-## 3. Estructura de carpetas
-
-```
-asistenciapp/
-├── AGENTS.md              # este archivo
-├── README.md              # cómo arrancar la app (para humanos)
-├── docs/
-│   ├── CONSTITUTION.md    # reglas no negociables
-│   └── ARCHITECTURE.md    # partes del código y dependencias permitidas
-├── specs/
-│   └── NNN-nombre/
-│       ├── spec.md        # qué y por qué
-│       ├── plan.md        # cómo
-│       └── tasks.md       # pasos
-├── requirements.txt       # dependencias de Python (Flask, pytest)
-├── pytest.ini             # configuración de pytest
-├── app.py                 # borde HTTP (Flask) y punto de entrada
-├── asistencia/            # lógica del servidor (paquete de Python)
-│   ├── domain/            # reglas: códigos, nombres, decisiones de sesión
-│   ├── usecases/          # acciones de la app
-│   ├── storage/           # SQLite
-│   ├── export.py          # CSV
-│   └── tunnel.py          # túnel cloudflared
-├── static/                # HTML, CSS y JS del navegador
-│   └── fonts/             # tipografías de Neoland (Montserrat, Roboto) y sus licencias OFL
-├── tests/                 # tests (test_*.py)
-├── .venv/                 # entorno virtual de Python (no se sube a git)
-└── data/                  # base de datos SQLite (no se sube a git)
-```
-
-Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-spec-antes-del-cambio`.
-
----
-
-## 4. Comandos
-
-Ejecutar desde `staff/ella-deyavorsky/asistenciapp/`:
-
-| Acción | Comando |
-| --- | --- |
-| Preparar el entorno (solo la primera vez) | `python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt` |
-| Activar el entorno (en cada terminal nueva) | `source .venv/bin/activate` |
-| Instalar el túnel (solo la primera vez) | `brew install cloudflared` |
-| Arrancar para una clase online | `python app.py --tunel` (imprime el enlace público del panel) |
-| Arrancar solo en local (desarrollo) | `python app.py` (abre en `http://localhost:8000`) |
-| Ejecutar los tests | `pytest` |
-
-Las únicas dependencias son Flask y pytest (constitución P3).
-
----
-
-## 5. Reglas de comportamiento
-
-- **Solo se edita dentro de `staff/ella-deyavorsky/asistenciapp/`.**
-- **Pregunta antes de suponer.** Ante una ambigüedad, pregunta o márcala con `[NECESITA ACLARACIÓN]`.
-- **Explica lo que haces.** Al cerrar cada fase, resume qué se ha hecho, por qué y qué tiene que revisar la persona que trabaja en esta carpeta.
-- **Cambios pequeños.** Mejor varias tareas cortas que una enorme.
-- **Nada de commits ni pushes** sin que lo pida la persona que trabaja en esta carpeta.
-- **Para todo lo que arranques.** Si levantas el servidor o `cloudflared` para probar, páralos al terminar y comprueba que el puerto queda libre: `lsof -nP -iTCP:8000 -sTCP:LISTEN` no debe mostrar nada. Ojo: en macOS el proceso aparece como `Python` (con mayúscula). (Incidencia del 2026-10-20 en T12.)
-- **No toques la constitución** salvo para proponer una enmienda, que solo aprueba la persona que trabaja en esta carpeta (constitución §8).
-
----
-
-## 6. Normas de escritura del código
+## 3. Normas de escritura del código
 
 Al estilo de la API pública de `requests`. Las partes y lo que puede importar cada una están en [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md); `tests/test_architecture.py` lo vigila.
 
@@ -152,7 +87,7 @@ def ensure_open(session: dict) -> None:
 
 ---
 
-## 7. Definición de "terminado"
+## 4. Definición de "terminado"
 
 Una funcionalidad está terminada cuando:
 
@@ -164,7 +99,7 @@ Una funcionalidad está terminada cuando:
 
 ---
 
-## 8. Estado actual
+## 5. Estado actual
 
 | Spec | Fase | Notas |
 | --- | --- | --- |
@@ -176,6 +111,7 @@ Una funcionalidad está terminada cuando:
 | `006-limite-por-ip` | 🚧 En implementación (2026-10-26) | Límite de 5 intentos por segundo y 20 por minuto por IP; bloqueo permanente en la base; constitución 3.0 |
 | `007-lista-de-alumnos` | 🚧 Código hecho v1.3 (2026-10-28): T01–T25, T29, T30, T33–T39; 263 tests. Falta la verificación manual (T26–T28, T31) y T32 | Listas de grupo: el alumno elige su nombre, ausentes y nuevos en la descarga; propone la enmienda 4.0 de P4 (issue #539). v1.3: una casilla por alumno, «Subir lista» y mayúscula inicial en las listas del profesor |
 | `008-estilo-neoland` | 🚧 Código hecho (2026-10-28): T01–T09; 295 tests (32 de contraste nuevos). Falta que lo pruebes tú | Aspecto de neoland.es: colores, Montserrat y Roboto dentro de la app, botones píldora, banda oscura del código y modo oscuro; sin cambios de funcionalidad (issue #544) |
+| `009-agents-mas-simple` | ✅ Implementada (2026-10-29): T01–T09, 295 tests | `AGENTS.md` solo dice cómo se trabaja: la estructura de carpetas va en `docs/ARCHITECTURE.md` y los comandos en el README (issue #565) |
 | Bot de Discord | Idea futura, sin número | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.

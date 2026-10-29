@@ -95,3 +95,37 @@ Las dependencias van siempre hacia el dominio. Lo que no está en la tabla está
 5. Si es una **ruta nueva**, va en `app.py`: llama a la acción y traduce los errores a HTTP. Sin lógica de negocio.
 6. Una integración nueva (por ejemplo, un bot de Discord) es otro borde como `app.py` que llama a `usecases/`.
 7. Ejecuta `pytest`: `test_architecture.py` avisa si algún `import` va en sentido contrario.
+
+---
+
+## 6. Estructura de carpetas
+
+```
+asistenciapp/
+├── AGENTS.md              # manual de trabajo para agentes de IA
+├── README.md              # cómo arrancar la app (para humanos)
+├── docs/
+│   ├── CONSTITUTION.md    # reglas no negociables
+│   └── ARCHITECTURE.md    # este archivo: partes del código y dependencias permitidas
+├── specs/
+│   └── NNN-nombre/
+│       ├── spec.md        # qué y por qué
+│       ├── plan.md        # cómo
+│       └── tasks.md       # pasos
+├── requirements.txt       # dependencias de Python (Flask, pytest)
+├── pytest.ini             # configuración de pytest
+├── app.py                 # borde HTTP (Flask) y punto de entrada
+├── asistencia/            # lógica del servidor (paquete de Python)
+│   ├── domain/            # reglas: códigos, nombres, decisiones de sesión
+│   ├── usecases/          # acciones de la app
+│   ├── storage/           # SQLite
+│   ├── export.py          # CSV
+│   └── tunnel.py          # túnel cloudflared
+├── static/                # HTML, CSS y JS del navegador
+│   └── fonts/             # tipografías de Neoland (Montserrat, Roboto) y sus licencias OFL
+├── tests/                 # tests (test_*.py)
+├── .venv/                 # entorno virtual de Python (no se sube a git)
+└── data/                  # base de datos SQLite (no se sube a git)
+```
+
+Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-spec-antes-del-cambio`.

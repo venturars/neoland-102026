@@ -178,7 +178,7 @@ Cómo leer esta lista:
 - [ ] **T31** · Verificación manual completa (plan §4): `python app.py`, grupo desde un CSV de Excel, sesión, registro desde dos navegadores (uno de la lista y uno nuevo), liberar y volver a registrarse, cerrar, decidir sobre el nuevo, abrir el CSV en Excel o Google Sheets. Parar la app y comprobar que `lsof -nP -iTCP:8000 -sTCP:LISTEN` no muestra nada. Si algo salió mal, vuelve a poner la copia de `data/asistencia.db`.
   - *Cubre:* todos los CA, de punta a punta.
   - *Hecha cuando:* todo funciona y el puerto queda libre.
-- [ ] **T32** · `AGENTS.md` §8: la fila de la spec 007 pasa a «Implementada», con el número de tests.
+- [ ] **T32** · `AGENTS.md` §5: la fila de la spec 007 pasa a «Implementada», con el número de tests.
   - *Hecha cuando:* `pytest` completo en verde y la tabla está al día.
 - **Checkpoint:** `pytest` completo en verde; luego se propone un commit solo de esta fase (mensaje en inglés y lista de archivos) y se espera tu sí. Nunca `git add .` y nunca archivos de base de datos.
 
