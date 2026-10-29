@@ -78,7 +78,7 @@ fi
 if [[ -n "${GITHUB_TOKEN:-}" ]]; then
   echo "Token de GitHub: GITHUB_TOKEN definido"
 else
-  echo "Token de GitHub: falta. Define GITHUB_TOKEN y reinicia Claude Code."
+  echo "Token de GitHub: falta. Define GITHUB_TOKEN y reinicia tu editor o agente."
 fi
 
 if upstream=$(git rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null); then

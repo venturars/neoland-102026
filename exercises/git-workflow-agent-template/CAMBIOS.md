@@ -1,6 +1,6 @@
 # Cambios respecto a la plantilla original
 
-La plantilla original es la de la pull request [#571](https://github.com/venturars/neoland-102026/pull/571) (commit `f769163`). Estos cambios la convierten en un paquete APM que se instala en cualquier proyecto.
+La plantilla original es la de la pull request [#571](https://github.com/venturars/neoland-102026/pull/571) (commit `f769163`). Estos cambios la convierten en un paquete APM que se instala en cualquier proyecto, con Claude Code, Cursor o Codex.
 
 ## Estructura
 
@@ -27,8 +27,9 @@ La plantilla original es la de la pull request [#571](https://github.com/ventura
 - **`create-branch.sh`.** Los argumentos pasan de `BASE NUMERO TIPO DESCRIPCION` a `NUMERO TIPO DESCRIPCION [BASE]`.
 - **`create-empty-commit.sh`.** Se niega a hacer el commit vacío en la rama base detectada, además de en `staging` y `main`, y también en `master`.
 - **`check-status.sh`.** Escribe además la rama base y si `GITHUB_TOKEN` está definida (sin mostrar su valor). El orquestador para antes de los pasos con MCP si falta el token.
-- **Rutas de los scripts.** Las skills llaman a sus scripts con `${CLAUDE_SKILL_DIR}/scripts/…` en vez de `./tools/…`, así funcionan instaladas en cualquier proyecto y desde cualquier carpeta. `commit-changes` sigue lanzándose desde la raíz, porque las rutas de los ficheros son relativas a ella.
-- **Frontmatter.** Cada skill y cada subagente lleva `name` y `description` (en español), que Claude Code necesita para encontrarlos. Los subagentes precargan sus skills con `skills:`.
+- **Tres herramientas.** `apm.yml` declara `targets: [claude, cursor, codex]`. La plantilla original solo pensaba en Claude Code.
+- **Rutas de los scripts.** Las skills llaman a sus scripts desde la carpeta de la skill (`<carpeta de esta skill>/scripts/…`) en vez de `./tools/…`, y dicen cuál es esa carpeta en cada herramienta: `${CLAUDE_SKILL_DIR}` en Claude Code y `.agents/skills/<skill>` en Cursor y Codex, que no tienen variable. Lo mismo para las plantillas de `assets/`. Los comandos se lanzan desde la raíz del repositorio.
+- **Frontmatter.** Cada skill y cada subagente lleva `name` y `description` (en español), que Claude Code necesita para encontrarlos. Los subagentes precargan sus skills con `skills:`. Codex descarta ese campo al instalar (APM lo avisa), pero sus subagentes heredan las skills igualmente.
 - **Referencias.** Las rutas a ficheros (`agents/…`, `skills/…/SKILL.md`, `templates/…`, `MCPS/…`) pasan a nombres de skill y de subagente, porque al instalar cambian de sitio.
 - **Entrevistas.** `entrevista-con-repo` y `entrevista-libre` mantienen sus reglas. Quitan la línea de instalación de las skills de Matt Pocock y la cambian por un enlace de inspiración: no hace falta instalarlas.
 - **Erratas.** «En empezar» pasa a «Al empezar» en `create-commit`. `check-status.sh` fallaba en un repositorio sin commits: ahora escribe la rama y «todavía no hay commits».

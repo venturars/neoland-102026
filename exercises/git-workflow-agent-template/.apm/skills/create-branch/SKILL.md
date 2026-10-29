@@ -6,9 +6,9 @@ description: "Crea la rama de trabajo número-tipo-descripcion desde la rama bas
 ### Herramienta: CREATE_BRANCH
 
 - **Descripción**: Úsala cuando hay que abrir la rama `número-tipo-descripcion`. Sin base, sale de la rama base detectada. No la uses para guardar un commit ni para abrir la pull request.
-- **Comando de Terminal**: `"${CLAUDE_SKILL_DIR}/scripts/create-branch.sh" "[NUMERO]" "[TIPO]" "[DESCRIPCION]" "[BASE]"`
+- **Comando de Terminal**: `"<carpeta de esta skill>/scripts/create-branch.sh" "[NUMERO]" "[TIPO]" "[DESCRIPCION]" "[BASE]"`
 
-El comando se lanza desde cualquier carpeta del repositorio git: el script se mueve solo a su raíz.
+El comando se lanza desde la raíz del repositorio git. La carpeta de esta skill es la que contiene este `SKILL.md`: en Claude Code, `${CLAUDE_SKILL_DIR}`; en Cursor y Codex, `.agents/skills/create-branch`.
 
 #### Especificación de Argumentos
 

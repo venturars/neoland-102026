@@ -15,7 +15,7 @@ Fuente de la forma del cuerpo: [github-pr](https://www.skills.sh/gentleman-progr
 1. **Base** _(Obligatorio)_: La rama base que dio `check-status`, o la base con la que se creó la rama.
 2. **Cabeza** _(Obligatorio)_: La rama que acaba de subirse.
 3. **Título** _(Obligatorio)_: El título de la issue, en inglés.
-4. **Cuerpo** _(Obligatorio)_: Español, con la plantilla `${CLAUDE_SKILL_DIR}/assets/basic-pull-request.md`. La sección Issue se deja vacía.
+4. **Cuerpo** _(Obligatorio)_: Español, con la plantilla `<carpeta de esta skill>/assets/basic-pull-request.md` (en Claude Code, `${CLAUDE_SKILL_DIR}`; en Cursor y Codex, `.agents/skills/create-pr-base`). La sección Issue se deja vacía.
 
 #### Reglas de Invocación Críticas
 

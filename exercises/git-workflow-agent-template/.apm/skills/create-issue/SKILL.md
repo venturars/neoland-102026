@@ -11,7 +11,7 @@ description: "Crea la issue en GitHub con título en inglés y cuerpo en españo
 #### Especificación de Argumentos
 
 1. **Título** _(Obligatorio)_: Inglés, menos de 72 caracteres.
-2. **Cuerpo** _(Obligatorio)_: Español. Rellena la plantilla `${CLAUDE_SKILL_DIR}/assets/basic_issue.md` con «Qué hay que hacer» y «Cómo probarlo».
+2. **Cuerpo** _(Obligatorio)_: Español. Rellena la plantilla `<carpeta de esta skill>/assets/basic_issue.md` (en Claude Code, `${CLAUDE_SKILL_DIR}`; en Cursor y Codex, `.agents/skills/create-issue`) con «Qué hay que hacer» y «Cómo probarlo».
 3. **Persona asignada** _(Obligatorio)_: El usuario autenticado en el MCP.
 
 #### Reglas de Invocación Críticas

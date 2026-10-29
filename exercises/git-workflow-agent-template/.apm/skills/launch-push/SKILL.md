@@ -6,9 +6,9 @@ description: "Sube la rama actual a origin y fija el upstream, sin force push. �
 ### Herramienta: LAUNCH_PUSH
 
 - **Descripción**: Úsala única y exclusivamente para subir la rama actual a `origin` y fijar el upstream. No la uses para hacer commit. No la uses con force push.
-- **Comando de Terminal**: `"${CLAUDE_SKILL_DIR}/scripts/launch-push.sh"`
+- **Comando de Terminal**: `"<carpeta de esta skill>/scripts/launch-push.sh"`
 
-El comando se lanza desde cualquier carpeta del repositorio git: el script se mueve solo a su raíz.
+El comando se lanza desde la raíz del repositorio git. La carpeta de esta skill es la que contiene este `SKILL.md`: en Claude Code, `${CLAUDE_SKILL_DIR}`; en Cursor y Codex, `.agents/skills/launch-push`.
 
 #### Especificación de Argumentos
 
