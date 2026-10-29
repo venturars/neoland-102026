@@ -82,20 +82,15 @@ venv/
 # Jupyter: checkpoints locales y junto a los notebooks
 .ipynb_checkpoints/
 
-# SQLite generada en local (cualquier carpeta). *.sqlite se versiona en first-app,
-# salvo la base local de Esther y la de Ventura, que no se suben.
+# SQLite generada en local (cualquier carpeta)
 *.db
 *.db-journal
 *.db-wal
 *.db-shm
-staff/esther-patino/first-app/db/*.sqlite
-staff/esther-patino/first-app/db/*.sqlite-journal
-staff/esther-patino/first-app/db/*.sqlite-wal
-staff/esther-patino/first-app/db/*.sqlite-shm
-staff/ventura-rodriguez/first-app/db/*.sqlite
-staff/ventura-rodriguez/first-app/db/*.sqlite-journal
-staff/ventura-rodriguez/first-app/db/*.sqlite-wal
-staff/ventura-rodriguez/first-app/db/*.sqlite-shm
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
 
-# AsistenciApp de Esther: data/ guarda nombres de alumnos y el token del profesor.
-staff/esther-patino/asistenciapp/data/
+# AsistenciApp: data/ guarda nombres de alumnos y el token del profesor.
+**/asistenciapp/data/
