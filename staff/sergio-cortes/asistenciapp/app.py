@@ -25,7 +25,7 @@ from asistencia.usecases.attendance import (
     check_in,
     close_session,
     create_session,
-    export_csv,
+    export_report,
     list_blocked,
     list_sessions,
     prepare,
@@ -218,13 +218,11 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
     @app.get("/api/sessions/<session_id>/export")
     def export_route(session_id):
         def action():
-            text, day = export_csv(db_path, session_id)
+            content, filename = export_report(db_path, session_id)
             return Response(
-                text,
-                mimetype="text/csv",
-                headers={
-                    "Content-Disposition": f'attachment; filename="asistencia-{day}-{session_id}.csv"'
-                },
+                content,
+                mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                headers={"Content-Disposition": f'attachment; filename="{filename}"'},
             )
 
         return run(action)

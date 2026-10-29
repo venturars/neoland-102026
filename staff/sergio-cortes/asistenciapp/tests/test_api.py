@@ -1,10 +1,14 @@
 """Tests de la API (app.py) · T06–T11."""
 
 import re
+from io import BytesIO
 
 import pytest
+from openpyxl import load_workbook
 
-INVALID_CODE = "El código no es válido o ha caducado. Pide el código actual al profesor."
+INVALID_CODE = (
+    "El código no es válido o ha caducado. Pide el código actual al profesor."
+)
 CLOSED = "La asistencia de esta clase ya está cerrada."
 
 
@@ -23,6 +27,7 @@ def check_in(client, sid, name, code):
 
 
 # ---------- T06 · base y acceso del profesor (CA-15, CA-17) ----------
+
 
 @pytest.mark.parametrize(
     "method, path",
@@ -58,8 +63,11 @@ def test_public_session_info_does_not_leak_the_list(client, teacher):
 
 # ---------- T07 · crear y listar sesiones (CA-01, CA-02, CA-16) ----------
 
+
 def test_create_session_with_title(client, teacher):  # CA-01
-    res = client.post("/api/sessions", json={"title": "  Clase 20/10 – SDD "}, headers=teacher)
+    res = client.post(
+        "/api/sessions", json={"title": "  Clase 20/10 – SDD "}, headers=teacher
+    )
     assert res.status_code == 201
     assert res.get_json()["title"] == "Clase 20/10 – SDD"
     assert re.fullmatch(r"\d{4}", current_code(client, teacher, res.get_json()["id"]))
@@ -88,6 +96,7 @@ def test_list_sessions_newest_first_with_totals(client, teacher, clock):  # CA-1
 
 
 # ---------- T08 · registro del alumno (CA-04 … CA-08, CA-12) ----------
+
 
 def test_check_in_with_current_code(client, teacher):  # CA-04
     sid = open_session(client, teacher)
@@ -128,11 +137,17 @@ def test_check_in_with_wrong_code(client, teacher, code):  # CA-06
 
 def test_duplicate_name_is_not_added_twice(client, teacher, clock):  # CA-07
     sid = open_session(client, teacher)
-    first = check_in(client, sid, "Ana García", current_code(client, teacher, sid)).get_json()
+    first = check_in(
+        client, sid, "Ana García", current_code(client, teacher, sid)
+    ).get_json()
     clock.advance(10)
     res = check_in(client, sid, "  ana   GARCIA ", current_code(client, teacher, sid))
     assert res.status_code == 200
-    assert res.get_json() == {"already": True, "name": "Ana García", "checkedAt": first["checkedAt"]}
+    assert res.get_json() == {
+        "already": True,
+        "name": "Ana García",
+        "checkedAt": first["checkedAt"],
+    }
     assert client.get(f"/api/sessions/{sid}", headers=teacher).get_json()["total"] == 1
 
 
@@ -147,7 +162,9 @@ def test_invalid_name_is_rejected(client, teacher, name):  # CA-08
 def test_html_name_is_returned_literally(client, teacher):  # CA-12
     sid = open_session(client, teacher)
     check_in(client, sid, "<b>Ana</b>", current_code(client, teacher, sid))
-    checkins = client.get(f"/api/sessions/{sid}", headers=teacher).get_json()["checkins"]
+    checkins = client.get(f"/api/sessions/{sid}", headers=teacher).get_json()[
+        "checkins"
+    ]
     assert checkins[0]["name"] == "<b>Ana</b>"
 
 
@@ -157,6 +174,7 @@ def test_unknown_session(client):
 
 
 # ---------- T09 · vista del profesor (CA-10, CA-11) ----------
+
 
 def test_teacher_view(client, teacher, clock):  # CA-10, CA-11
     sid = open_session(client, teacher)
@@ -177,6 +195,7 @@ def test_teacher_view(client, teacher, clock):  # CA-10, CA-11
 
 # ---------- T10 · cerrar sesión (CA-09, CA-13) ----------
 
+
 def test_closed_session(client, teacher):  # CA-09, CA-13
     sid = open_session(client, teacher)
     code = current_code(client, teacher, sid)
@@ -194,12 +213,31 @@ def test_closed_session(client, teacher):  # CA-09, CA-13
 
 
 def test_close_unknown_session(client, teacher):
-    assert client.post("/api/sessions/no-existe/close", headers=teacher).status_code == 404
+    assert (
+        client.post("/api/sessions/no-existe/close", headers=teacher).status_code == 404
+    )
 
 
-# ---------- T11 · exportar (CA-14) ----------
+# ---------- T11 · exportar (spec 007 / CA-14) ----------
 
-def test_export_csv(client, teacher, clock):  # CA-14
+XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+
+
+def export_sheet(res):
+    return load_workbook(BytesIO(res.data), read_only=True, data_only=True).active
+
+
+def export_plaintext(res):
+    sheet = export_sheet(res)
+    return "\n".join(
+        str(cell)
+        for row in sheet.iter_rows(values_only=True)
+        for cell in row
+        if cell is not None
+    )
+
+
+def test_export_xlsx(client, teacher, clock):  # CA-14, spec 007
     sid = open_session(client, teacher)
     check_in(client, sid, "Luis", current_code(client, teacher, sid))
     clock.advance(5)
@@ -207,27 +245,40 @@ def test_export_csv(client, teacher, clock):  # CA-14
 
     res = client.get(f"/api/sessions/{sid}/export", headers=teacher)
     assert res.status_code == 200
-    assert res.mimetype == "text/csv"
-    assert "attachment" in res.headers["Content-Disposition"]
-    assert ".csv" in res.headers["Content-Disposition"]
+    assert res.mimetype == XLSX_MIME
+    disposition = res.headers["Content-Disposition"]
+    assert "attachment" in disposition
+    assert "Asistencia Clase de prueba -" in disposition
+    assert disposition.endswith('.xlsx"')
+    assert sid not in disposition
 
-    rows = res.get_data(as_text=True).lstrip("﻿").splitlines()
-    assert rows[0] == "Nombre;Hora"
-    assert [r.split(";")[0] for r in rows[1:]] == ["Luis", "Ana García"]
+    sheet = export_sheet(res)
+    assert sheet["A1"].value.startswith("Asistencia Clase de prueba -")
+    assert sheet["A2"].value == "Total de asistentes: 2"
+    assert [sheet["B5"].value, sheet["B6"].value] == ["Luis", "Ana García"]
 
 
 # ---------- T13 · acceso a través del túnel (CA-19) ----------
+
 
 def test_student_url_uses_public_tunnel_address(client, teacher):  # CA-19
     sid = open_session(client, teacher)
     res = client.get(
         f"/api/sessions/{sid}",
-        headers={**teacher, "X-Forwarded-Proto": "https", "X-Forwarded-Host": "abc.trycloudflare.com"},
+        headers={
+            **teacher,
+            "X-Forwarded-Proto": "https",
+            "X-Forwarded-Host": "abc.trycloudflare.com",
+        },
     )
-    assert res.get_json()["studentUrl"] == f"https://abc.trycloudflare.com/alumno.html?s={sid}"
+    assert (
+        res.get_json()["studentUrl"]
+        == f"https://abc.trycloudflare.com/alumno.html?s={sid}"
+    )
 
 
 # ---------- T22 · quitar registros (CA-24, CA-25, CA-26) ----------
+
 
 def checkins_of(client, teacher, sid):
     return client.get(f"/api/sessions/{sid}", headers=teacher).get_json()["checkins"]
@@ -252,8 +303,9 @@ def test_remove_checkin(client, teacher):  # CA-24
     data = client.get(f"/api/sessions/{sid}", headers=teacher).get_json()
     assert [c["name"] for c in data["checkins"]] == ["Ana"]
     assert data["total"] == 1
-    csv = client.get(f"/api/sessions/{sid}/export", headers=teacher).get_data(as_text=True)
-    assert "Falso" not in csv and "Ana" in csv
+    export_res = client.get(f"/api/sessions/{sid}/export", headers=teacher)
+    text = export_plaintext(export_res)
+    assert "Falso" not in text and "Ana" in text
 
 
 def test_remove_checkin_from_closed_session(client, teacher):  # CA-24
@@ -261,7 +313,12 @@ def test_remove_checkin_from_closed_session(client, teacher):  # CA-24
     check_in(client, sid, "Ana", current_code(client, teacher, sid))
     client.post(f"/api/sessions/{sid}/close", headers=teacher)
     checkin_id = checkins_of(client, teacher, sid)[0]["id"]
-    assert client.delete(f"/api/sessions/{sid}/checkins/{checkin_id}", headers=teacher).status_code == 200
+    assert (
+        client.delete(
+            f"/api/sessions/{sid}/checkins/{checkin_id}", headers=teacher
+        ).status_code
+        == 200
+    )
     assert checkins_of(client, teacher, sid) == []
 
 
@@ -271,10 +328,27 @@ def test_remove_unknown_or_other_session_checkin(client, teacher):  # CA-24
     check_in(client, other, "Ana", current_code(client, teacher, other))
     other_id = checkins_of(client, teacher, other)[0]["id"]
 
-    assert client.delete(f"/api/sessions/{sid}/checkins/{other_id}", headers=teacher).status_code == 404
-    assert client.delete(f"/api/sessions/{sid}/checkins/99999", headers=teacher).status_code == 404
-    assert client.delete(f"/api/sessions/no-existe/checkins/1", headers=teacher).status_code == 404
-    assert len(checkins_of(client, teacher, other)) == 1  # la de la otra sesión sigue ahí
+    assert (
+        client.delete(
+            f"/api/sessions/{sid}/checkins/{other_id}", headers=teacher
+        ).status_code
+        == 404
+    )
+    assert (
+        client.delete(
+            f"/api/sessions/{sid}/checkins/99999", headers=teacher
+        ).status_code
+        == 404
+    )
+    assert (
+        client.delete(
+            f"/api/sessions/no-existe/checkins/1", headers=teacher
+        ).status_code
+        == 404
+    )
+    assert (
+        len(checkins_of(client, teacher, other)) == 1
+    )  # la de la otra sesión sigue ahí
 
 
 @pytest.mark.parametrize("headers", [{}, {"X-Teacher-Token": "token-falso"}])
@@ -282,7 +356,12 @@ def test_remove_requires_token(client, teacher, headers):  # CA-25
     sid = open_session(client, teacher)
     check_in(client, sid, "Ana", current_code(client, teacher, sid))
     checkin_id = checkins_of(client, teacher, sid)[0]["id"]
-    assert client.delete(f"/api/sessions/{sid}/checkins/{checkin_id}", headers=headers).status_code == 401
+    assert (
+        client.delete(
+            f"/api/sessions/{sid}/checkins/{checkin_id}", headers=headers
+        ).status_code
+        == 401
+    )
     assert len(checkins_of(client, teacher, sid)) == 1
 
 
