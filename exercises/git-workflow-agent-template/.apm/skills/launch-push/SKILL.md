@@ -1,9 +1,14 @@
+---
+name: launch-push
+description: "Sube la rama actual a origin y fija el upstream, sin force push. Úsala después del commit vacío y de cada trozo guardado."
+---
+
 ### Herramienta: LAUNCH_PUSH
 
 - **Descripción**: Úsala única y exclusivamente para subir la rama actual a `origin` y fijar el upstream. No la uses para hacer commit. No la uses con force push.
-- **Comando de Terminal**: `./tools/launch-push.sh`
+- **Comando de Terminal**: `"${CLAUDE_SKILL_DIR}/scripts/launch-push.sh"`
 
-El comando se lanza desde el root del repositorio git (la carpeta que contenga el directorio .git).
+El comando se lanza desde cualquier carpeta del repositorio git: el script se mueve solo a su raíz.
 
 #### Especificación de Argumentos
 

@@ -1,9 +1,18 @@
+---
+name: create-pr
+description: "Único subagente que crea pull requests: la abre contra la rama base, asigna al autor y la deja en draft, sin enlazar la issue. Lo llama el orquestador git-workflow."
+skills:
+  - create-pr-base
+  - assign-author
+  - create-draft
+---
+
 # Subagente: Create pull request
 
 ## 1. Perfil y Rol
 
 - **Rol:** Único agente que crea pull requests.
-- **Objetivo Principal:** Abrir la pull request de la rama actual contra `staging` y dejarla en draft, sin enlazar la issue.
+- **Objetivo Principal:** Abrir la pull request de la rama actual contra la rama base y dejarla en draft, sin enlazar la issue.
 - **Tono de Comunicación:** Claro, en español.
 
 ## 2. Contexto y Alcance
@@ -13,20 +22,19 @@
 
 ## 3. Flujo de Trabajo (Paso a Paso)
 
-1. **Recepción:** Toma el título en inglés y la rama que acaba de subirse. No hace falta el número de issue.
-2. **Validación:** El cuerpo va en español y rellena `templates/pull-request/<template>.md`. La sección Issue se deja vacía.
+1. **Recepción:** Toma el título en inglés, la rama que acaba de subirse y la rama base. No hace falta el número de issue.
+2. **Validación:** El cuerpo va en español y rellena la plantilla de la skill `create-pr-base`. La sección Issue se deja vacía.
 3. **Procesamiento:** En este orden:
-   1. `skills/create-pr-base-staging/SKILL.md`
-   2. `skills/assign-author/SKILL.md`
-   3. `skills/create-draft/SKILL.md`
-4. **Formateo:** Responde con el título, la base `staging`, el autor, que está en draft y la URL.
+   1. Skill `create-pr-base`
+   2. Skill `assign-author`
+   3. Skill `create-draft`
+4. **Formateo:** Responde con el título, la base, el autor, que está en draft y la URL.
 
 ## 4. Herramientas y APIs Asignadas
 
-- **SKILL create-pr-base-staging:** Abre la pull request con base `staging`.
-- **SKILL assign-author:** Asigna al usuario autenticado.
-- **SKILL create-draft:** La deja en draft.
-- **templates/pull-request/<template>.md:** La forma del cuerpo.
+- **Skill `create-pr-base`:** Abre la pull request contra la rama base. Trae la plantilla del cuerpo.
+- **Skill `assign-author`:** Asigna al usuario autenticado.
+- **Skill `create-draft`:** La deja en draft.
 
 ## 5. Manejo de Errores y Excepciones
 

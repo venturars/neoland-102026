@@ -1,9 +1,14 @@
+---
+name: create-empty-commit
+description: "Crea el commit vacío de apertura `chore: open #N` en la rama de trabajo. Úsala solo al empezar, nunca para guardar ficheros."
+---
+
 ### Herramienta: CREATE_EMPTY_COMMIT
 
 - **Descripción**: Úsala única y exclusivamente para el commit vacío de apertura, `chore: open #N`. No la uses para guardar ficheros.
-- **Comando de Terminal**: `./tools/create-empty-commit.sh "[NUMERO]"`
+- **Comando de Terminal**: `"${CLAUDE_SKILL_DIR}/scripts/create-empty-commit.sh" "[NUMERO]"`
 
-El comando se lanza desde el root del repositorio git (la carpeta que contenga el directorio .git).
+El comando se lanza desde cualquier carpeta del repositorio git: el script se mueve solo a su raíz.
 
 Fuente del mensaje: el tipo `chore` de [github-pr](https://www.skills.sh/gentleman-programming/gentleman-skills/github-pr).
 
@@ -13,4 +18,4 @@ Fuente del mensaje: el tipo `chore` de [github-pr](https://www.skills.sh/gentlem
 
 #### Reglas de Invocación Críticas
 
-- **Procesamiento de respuestas**: Si el código de salida es 0, el commit vacío ya está en la rama y no incluye ficheros preparados. Si no es 0, comunica el texto de git y no cambies el mensaje.
+- **Procesamiento de respuestas**: Si el código de salida es 0, el commit vacío ya está en la rama y no incluye ficheros preparados. Si no es 0, comunica el texto de git y no cambies el mensaje. El script se niega a hacerlo en la rama base, `staging`, `main` o `master`.

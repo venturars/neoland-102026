@@ -1,12 +1,17 @@
+---
+name: create-issue
+description: "Crea la issue en GitHub con título en inglés y cuerpo en español según la plantilla, asignada al usuario autenticado. Úsala para dejar la tarea escrita."
+---
+
 ### Herramienta: CREATE_ISSUE
 
 - **Descripción**: Úsala única y exclusivamente para dejar la tarea escrita en GitHub. No la uses para abrir la rama ni la pull request.
-- **MCP**: El servidor remoto descrito en `MCPS/github-mcp-server/mcp.txt`. No uses `gh` ni un script de `tools/`.
+- **MCP**: El servidor MCP `github`, declarado en `apm.yml`. No uses `gh` ni un script.
 
 #### Especificación de Argumentos
 
 1. **Título** _(Obligatorio)_: Inglés, menos de 72 caracteres.
-2. **Cuerpo** _(Obligatorio)_: Español. Rellena `templates/issues/basic_issue.md` con «Qué hay que hacer» y «Cómo probarlo».
+2. **Cuerpo** _(Obligatorio)_: Español. Rellena la plantilla `${CLAUDE_SKILL_DIR}/assets/basic_issue.md` con «Qué hay que hacer» y «Cómo probarlo».
 3. **Persona asignada** _(Obligatorio)_: El usuario autenticado en el MCP.
 
 #### Reglas de Invocación Críticas

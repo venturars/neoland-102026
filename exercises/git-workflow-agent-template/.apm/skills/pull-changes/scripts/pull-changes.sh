@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Adelanta staging local a origin/staging solo en fast-forward.
+# Adelanta la rama base local a su remoto solo en fast-forward.
 # No cambia la rama en la que estás.
 
 set -euo pipefail
@@ -10,30 +10,61 @@ root=$(git rev-parse --show-toplevel 2>/dev/null) || {
 }
 cd "$root"
 
+# Rama base: GIT_WORKFLOW_BASE, staging si existe en origin, o la rama por defecto de origin.
+detect_base() {
+  local head candidate
+  if [[ -n "${GIT_WORKFLOW_BASE:-}" ]]; then
+    if [[ ! "$GIT_WORKFLOW_BASE" =~ ^[A-Za-z0-9._/-]+$ ]]; then
+      echo "GIT_WORKFLOW_BASE tiene que ser el nombre de una rama." >&2
+      return 1
+    fi
+    echo "${GIT_WORKFLOW_BASE#origin/}"
+    return
+  fi
+  if git show-ref --verify --quiet refs/remotes/origin/staging; then
+    echo "staging"
+    return
+  fi
+  if head=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null); then
+    echo "${head#origin/}"
+    return
+  fi
+  for candidate in main master; do
+    if git show-ref --verify --quiet "refs/remotes/origin/${candidate}"; then
+      echo "$candidate"
+      return
+    fi
+  done
+  echo "No se pudo detectar la rama base. Defínela con GIT_WORKFLOW_BASE." >&2
+  return 1
+}
+
 if [[ $# -gt 0 ]]; then
   echo "pull-changes.sh no recibe argumentos." >&2
   exit 1
 fi
 
-git fetch origin staging
+git fetch origin
 
-if ! git show-ref --verify --quiet refs/remotes/origin/staging; then
-  echo "No existe origin/staging." >&2
+base=$(detect_base)
+
+if ! git show-ref --verify --quiet "refs/remotes/origin/${base}"; then
+  echo "No existe origin/${base}." >&2
   exit 1
 fi
 
-if git show-ref --verify --quiet refs/heads/staging; then
-  if ! git merge-base --is-ancestor staging origin/staging; then
-    echo "staging no se puede adelantar en fast-forward." >&2
+if git show-ref --verify --quiet "refs/heads/${base}"; then
+  if ! git merge-base --is-ancestor "$base" "origin/${base}"; then
+    echo "${base} no se puede adelantar en fast-forward." >&2
     exit 1
   fi
-  if [[ $(git rev-parse --abbrev-ref HEAD) == "staging" ]]; then
-    git merge --ff-only origin/staging
+  if [[ $(git rev-parse --abbrev-ref HEAD) == "$base" ]]; then
+    git merge --ff-only "origin/${base}"
   else
-    git branch -f staging origin/staging
+    git branch -f "$base" "origin/${base}"
   fi
 else
-  git branch staging origin/staging
+  git branch "$base" "origin/${base}"
 fi
 
-echo "staging quedó en $(git rev-parse --short staging)."
+echo "${base} quedó en $(git rev-parse --short "$base")."

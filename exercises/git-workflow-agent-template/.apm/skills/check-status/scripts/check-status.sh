@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Resume la rama, el remoto y los cambios locales.
+# Resume la rama, la rama base, el remoto, el token de GitHub y los cambios locales.
 
 set -euo pipefail
 
@@ -8,6 +8,35 @@ root=$(git rev-parse --show-toplevel 2>/dev/null) || {
   exit 1
 }
 cd "$root"
+
+# Rama base: GIT_WORKFLOW_BASE, staging si existe en origin, o la rama por defecto de origin.
+detect_base() {
+  local head candidate
+  if [[ -n "${GIT_WORKFLOW_BASE:-}" ]]; then
+    if [[ ! "$GIT_WORKFLOW_BASE" =~ ^[A-Za-z0-9._/-]+$ ]]; then
+      echo "GIT_WORKFLOW_BASE tiene que ser el nombre de una rama." >&2
+      return 1
+    fi
+    echo "${GIT_WORKFLOW_BASE#origin/}"
+    return
+  fi
+  if git show-ref --verify --quiet refs/remotes/origin/staging; then
+    echo "staging"
+    return
+  fi
+  if head=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null); then
+    echo "${head#origin/}"
+    return
+  fi
+  for candidate in main master; do
+    if git show-ref --verify --quiet "refs/remotes/origin/${candidate}"; then
+      echo "$candidate"
+      return
+    fi
+  done
+  echo "No se pudo detectar la rama base. Defínela con GIT_WORKFLOW_BASE." >&2
+  return 1
+}
 
 list_changes() {
   local changes=$1
@@ -35,10 +64,22 @@ list_changes() {
   done <<<"$changes"
 }
 
-branch=$(git rev-parse --abbrev-ref HEAD)
+branch=$(git symbolic-ref --quiet --short HEAD 2>/dev/null || git rev-parse --short HEAD)
 
 echo "Repositorio: ${root}"
 echo "Rama: ${branch}"
+
+if base=$(detect_base 2>/dev/null); then
+  echo "Rama base: ${base}"
+else
+  echo "Rama base: no detectada. Defínela con GIT_WORKFLOW_BASE."
+fi
+
+if [[ -n "${GITHUB_TOKEN:-}" ]]; then
+  echo "Token de GitHub: GITHUB_TOKEN definido"
+else
+  echo "Token de GitHub: falta. Define GITHUB_TOKEN y reinicia Claude Code."
+fi
 
 if upstream=$(git rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null); then
   counts=$(git rev-list --left-right --count "HEAD...${upstream}")

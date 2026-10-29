@@ -10,6 +10,35 @@ root=$(git rev-parse --show-toplevel 2>/dev/null) || {
 }
 cd "$root"
 
+# Rama base: GIT_WORKFLOW_BASE, staging si existe en origin, o la rama por defecto de origin.
+detect_base() {
+  local head candidate
+  if [[ -n "${GIT_WORKFLOW_BASE:-}" ]]; then
+    if [[ ! "$GIT_WORKFLOW_BASE" =~ ^[A-Za-z0-9._/-]+$ ]]; then
+      echo "GIT_WORKFLOW_BASE tiene que ser el nombre de una rama." >&2
+      return 1
+    fi
+    echo "${GIT_WORKFLOW_BASE#origin/}"
+    return
+  fi
+  if git show-ref --verify --quiet refs/remotes/origin/staging; then
+    echo "staging"
+    return
+  fi
+  if head=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null); then
+    echo "${head#origin/}"
+    return
+  fi
+  for candidate in main master; do
+    if git show-ref --verify --quiet "refs/remotes/origin/${candidate}"; then
+      echo "$candidate"
+      return
+    fi
+  done
+  echo "No se pudo detectar la rama base. Defínela con GIT_WORKFLOW_BASE." >&2
+  return 1
+}
+
 if [[ $# -ne 1 ]]; then
   echo "Uso: create-empty-commit.sh NUMERO" >&2
   exit 1
@@ -23,10 +52,13 @@ if [[ ! "$number" =~ ^[0-9]+$ ]]; then
 fi
 
 current=$(git rev-parse --abbrev-ref HEAD)
-if [[ "$current" == "staging" || "$current" == "main" ]]; then
-  echo "El commit vacío no se hace en ${current}." >&2
-  exit 1
-fi
+base=$(detect_base 2>/dev/null) || base=""
+for protected in "$base" staging main master; do
+  if [[ -n "$protected" && "$current" == "$protected" ]]; then
+    echo "El commit vacío no se hace en ${current}." >&2
+    exit 1
+  fi
+done
 
 tmp_index=$(mktemp)
 cleanup() { rm -f "$tmp_index"; }

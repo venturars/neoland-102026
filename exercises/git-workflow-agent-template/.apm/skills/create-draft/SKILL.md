@@ -1,7 +1,12 @@
+---
+name: create-draft
+description: "Deja en draft la pull request de la rama actual. Úsala desde el subagente create-pr, no para crearla ni para pedir revisión."
+---
+
 ### Herramienta: CREATE_DRAFT
 
-- **Descripción**: Úsala desde el agente `create-pr`, si la pull request ya existe se pasa a draft. No la uses para crearla ni para pedir revisión.
-- **MCP**: El servidor remoto descrito en `MCPS/github-mcp-server/mcp.txt`.
+- **Descripción**: Úsala desde el subagente `create-pr`: si la pull request ya existe, se pasa a draft. No la uses para crearla ni para pedir revisión.
+- **MCP**: El servidor MCP `github`, declarado en `apm.yml`.
 
 #### Especificación de Argumentos
 

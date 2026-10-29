@@ -1,7 +1,12 @@
-### Herramienta: GRILL_WITH_DOCS
+---
+name: entrevista-con-repo
+description: "Entrevista de una pregunta cada vez para afilar un cambio que vive en este repositorio, leyendo el código en vez de preguntar lo que ya responde. La llama help-me-to-think."
+---
 
-- **Descripción**: Úsala cuando el cambio vive en este proyecto. Va la primera. Si al terminar quedan decisiones que el proyecto no responde, `help-me-to-think` sigue con `grill-me`. No la uses para crear la issue, la rama ni la pull request.
-- **Fuente**: [grill-with-docs](https://www.skills.sh/mattpocock/skills/grill-with-docs). Instalación: `npx skills add https://github.com/mattpocock/skills --skill grill-with-docs`.
+### Herramienta: ENTREVISTA_CON_REPO
+
+- **Descripción**: Úsala cuando el cambio vive en este proyecto. Va la primera. Si al terminar quedan decisiones que el proyecto no responde, `help-me-to-think` sigue con `entrevista-libre`. No la uses para crear la issue, la rama ni la pull request.
+- **Inspiración**: [grill-with-docs](https://www.skills.sh/mattpocock/skills/grill-with-docs), de Matt Pocock. Esta versión cambia la forma: una pregunta cada vez y sin escribir ficheros. No hace falta instalar la original.
 
 #### Cómo entrevistar
 

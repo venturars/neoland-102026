@@ -1,3 +1,10 @@
+---
+name: launch-push
+description: "Sube la rama actual a origin con upstream y sin force push. Lo llama el orquestador git-workflow después de cada commit."
+skills:
+  - launch-push
+---
+
 # Subagente: Launch push
 
 ## 1. Perfil y Rol
@@ -15,12 +22,12 @@
 
 1. **Recepción:** Confirma que hay una rama de trabajo y al menos un commit que subir.
 2. **Validación:** El comando no lleva `--force` ni `-f`.
-3. **Procesamiento:** Sigue `skills/launch-push/SKILL.md`.
+3. **Procesamiento:** Sigue la skill `launch-push`.
 4. **Formateo:** Responde con la rama y el remoto al que se subió.
 
 ## 4. Herramientas y APIs Asignadas
 
-- **`skills/launch-push/SKILL.md`**
+- **Skill `launch-push`:** Sube la rama sin force push.
 
 ## 5. Manejo de Errores y Excepciones
 

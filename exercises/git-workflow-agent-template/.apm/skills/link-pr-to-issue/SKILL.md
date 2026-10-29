@@ -1,7 +1,12 @@
+---
+name: link-pr-to-issue
+description: "Deja Related to #N en el cuerpo de la pull request sin cerrar la issue. Úsala desde el orquestador git-workflow después de create-pr."
+---
+
 ### Herramienta: LINK_PR_TO_ISSUE
 
 - **Descripción**: Úsala desde el orquestador, después de `create-pr`, para dejar `Related to #N` en el cuerpo de la pull request. `create-pr` no la llama: puede abrir la pull request sin issue. No la uses para abrir la pull request ni para cambiar la base. No cierres la issue: no escribas `close`, `closes`, `closed`, `fix`, `fixes`, `fixed`, `resolve`, `resolves` ni `resolved`.
-- **MCP**: El servidor remoto descrito en `MCPS/github-mcp-server/mcp.txt`. No uses `gh` ni un script de `tools/`.
+- **MCP**: El servidor MCP `github`, declarado en `apm.yml`. No uses `gh` ni un script.
 
 #### Especificación de Argumentos
 

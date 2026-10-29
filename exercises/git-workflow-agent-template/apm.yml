@@ -1,0 +1,15 @@
+name: git-workflow-agent
+version: "1.0.0"
+description: Flujo de git del bootcamp Neoland AI (10/2026) para Claude Code. Issue, rama, commits y pull request en draft, en español.
+author: Ventura Rodríguez
+repository: https://github.com/venturars/neoland-102026
+keywords: [git, github, workflow, claude-code, neoland]
+targets: [claude]
+dependencies:
+  mcp:
+    - name: github
+      registry: false
+      transport: http
+      url: https://api.githubcopilot.com/mcp/
+      headers:
+        Authorization: "Bearer ${GITHUB_TOKEN}"

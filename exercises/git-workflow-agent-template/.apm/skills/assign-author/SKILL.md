@@ -1,7 +1,12 @@
+---
+name: assign-author
+description: "Asigna una issue o una pull request al usuario autenticado en el MCP de GitHub. Úsala para el autor, nunca para revisores."
+---
+
 ### Herramienta: ASSIGN_AUTHOR
 
 - **Descripción**: Úsala única y exclusivamente para asignar la issue o la pull request al usuario autenticado en el MCP. No la uses para asignar revisores.
-- **MCP**: El servidor remoto descrito en `MCPS/github-mcp-server/mcp.txt`.
+- **MCP**: El servidor MCP `github`, declarado en `apm.yml`.
 
 #### Especificación de Argumentos
 

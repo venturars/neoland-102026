@@ -1,7 +1,12 @@
+---
+name: assign-reviewers
+description: "Asigna los revisores que nombra el alumno a la pull request y la saca de draft. Úsala en el momento «que la revisen»."
+---
+
 ### Herramienta: ASSIGN_REVIEWERS
 
 * **Descripción**: Úsala cuando el alumno nombra a quienes tienen que mirar la pull request. Asigna esos nombres y sácala de draft. No la uses para asignar al autor.
-* **MCP**: El servidor remoto descrito en `MCPS/github-mcp-server/mcp.txt`. No uses `gh` ni un script de `tools/`.
+* **MCP**: El servidor MCP `github`, declarado en `apm.yml`. No uses `gh` ni un script.
 
 #### Especificación de Argumentos
 

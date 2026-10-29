@@ -1,17 +1,22 @@
-### Herramienta: CREATE_PR_BASE_STAGING
+---
+name: create-pr-base
+description: "Abre la pull request de la rama de trabajo contra la rama base, con cuerpo en español según la plantilla. Úsala desde el subagente create-pr."
+---
 
-- **Descripción**: Úsala desde el agente `create-pr` para abrir la pull request con base `staging`. No la uses para enlazar la issue: eso es `link-pr-to-issue`. No la uses para dejarla en draft: eso es `create-draft`.
-- **MCP**: El servidor remoto descrito en `MCPS/github-mcp-server/mcp.txt`. No uses `gh` ni un script de `tools/`.
+### Herramienta: CREATE_PR_BASE
 
-Fuente de la forma del cuerpo: [github-pr](https://www.skills.sh/gentleman-programming/gentleman-skills/github-pr), adaptada a esta plantilla. La base es `staging` y la descripción va en español.
+- **Descripción**: Úsala desde el subagente `create-pr` para abrir la pull request contra la rama base. No la uses para enlazar la issue: eso es `link-pr-to-issue`. No la uses para dejarla en draft: eso es `create-draft`.
+- **MCP**: El servidor MCP `github`, declarado en `apm.yml`. No uses `gh` ni un script.
+
+Fuente de la forma del cuerpo: [github-pr](https://www.skills.sh/gentleman-programming/gentleman-skills/github-pr), adaptada a este paquete. La descripción va en español.
 
 #### Especificación de Argumentos
 
-1. **Base** _(Obligatorio)_: `staging`.
+1. **Base** _(Obligatorio)_: La rama base que dio `check-status`, o la base con la que se creó la rama.
 2. **Cabeza** _(Obligatorio)_: La rama que acaba de subirse.
 3. **Título** _(Obligatorio)_: El título de la issue, en inglés.
-4. **Cuerpo** _(Obligatorio)_: Español, con `templates/pull-request/<template>.md`. La sección Issue se deja vacía.
+4. **Cuerpo** _(Obligatorio)_: Español, con la plantilla `${CLAUDE_SKILL_DIR}/assets/basic-pull-request.md`. La sección Issue se deja vacía.
 
 #### Reglas de Invocación Críticas
 
-- **Procesamiento de respuestas**: Si ya hay una pull request de esa rama hacia `staging`, actualiza esa. No abras otra. Devuelve la URL. Si el MCP falla, comunica el error y no inventes el enlace.
+- **Procesamiento de respuestas**: Si ya hay una pull request de esa rama hacia esa base, actualiza esa. No abras otra. Devuelve la URL. Si el MCP falla, comunica el error y no inventes el enlace.
