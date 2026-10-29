@@ -1,0 +1,3 @@
+# El orquestador y la entrevista son skills, no subagentes
+
+En Claude Code un subagente trabaja solo hasta acabar y devuelve un único mensaje: no puede parar a preguntar al alumno y esperar la respuesta. El orquestador (`git-workflow`) tiene que pedir los datos que faltan y `help-me-to-think` entrevista con una pregunta cada vez, así que los dos pasan a ser skills, que corren en la conversación principal. Los cinco subagentes de pasos (`create-issue`, `create-branch`, `create-commit`, `launch-push`, `create-pr`) siguen siendo subagentes: no necesitan preguntar nada y así su salida de git y de GitHub no llena la conversación del alumno.
