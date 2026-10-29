@@ -20,6 +20,11 @@ first-app/
   clients/
     terminal/
     jupyter/
+  agents/
+  skills/
+  tools/
+  templates/
+  MCPS/
   docs/
     ARCHITECTURE.md
     TREE.md
