@@ -1,8 +1,8 @@
 # Pega esto en la terminal, con el directorio actual en first-app
 node --input-type=module <<'EOF'
-import { findUserById } from "./logic/find-user-by-id.js";
+import { findUserByName } from "./src/logic/find-user-by-name.js";
 
-const result = findUserById(3);
+const result = findUserByName("Ada");
 
 console.log(result);
 EOF

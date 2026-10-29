@@ -6,7 +6,7 @@
   "scripts": {
     "jupyter": "sh scripts/jupyter.sh",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write \"db/**/*.js\" \"queries/**/*.js\" \"logic/**/*.js\"",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\"",
     "lint": "eslint ."
   },
   "keywords": [],
