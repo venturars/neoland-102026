@@ -63,9 +63,11 @@ function Assert-NoGitOperation {
 
 function Assert-CleanWorktree {
     Assert-NoGitOperation
-    $status = Invoke-Git -Arguments @('status', '--porcelain=v1', '--untracked-files=all')
+    # Untracked files are not dirty tracked work. Git checks target collisions
+    # during switch/merge; --no-overwrite-ignore also protects ignored files.
+    $status = Invoke-Git -Arguments @('status', '--porcelain=v1', '--untracked-files=no')
     if ($status.Output.Count -gt 0) {
-        throw 'Local changes exist. Preserve them and report the blocker before switching or updating branches.'
+        throw 'Tracked changes exist. Preserve them and report the blocker before switching or updating branches.'
     }
 }
 

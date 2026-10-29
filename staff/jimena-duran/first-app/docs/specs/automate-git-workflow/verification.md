@@ -2,6 +2,8 @@ Issue: #588
 
 # Resultado de la implementación
 
+El bloque inicial registra el cierre de las comprobaciones anterior a la publicación de la PR. La corrección posterior de archivos sin seguimiento se documenta al final de este informe.
+
 Entrega en `jimena-duran-291020262`. T01–T23 implementadas y comprobadas dentro del alcance autorizado. No se hizo commit, push, PR ni merge en el repositorio personal. Su HEAD sigue en `911289f52e5dd7b046f7b878eb093598d1c603ad` y no se prepararon archivos en su índice.
 
 ## Entorno reutilizado
@@ -80,3 +82,23 @@ La carpeta local ChromaDB sigue sin seguimiento y no se incorporó a la entrega.
 - La referencia MCP no instala ni autentica un servidor. Cada sesión debe comprobar las herramientas e identidad disponibles; gh puede requerir acceso al almacén de credenciales de Windows fuera del sandbox.
 - Las skills de `skills/` se leen explícitamente. No se registraron skills globales ni agentes personalizados TOML; la delegación real sí se verificó con las herramientas de esta sesión.
 - Jupyter emitió avisos de permisos de IPython/ZMQ sin fallar las celdas. El CLI de VS Code emitió un aviso de crashpad por permisos aunque devolvió su versión y código 0. No se cambiaron permisos globales para suprimir esos avisos.
+
+## Corrección: archivos sin seguimiento ajenos
+
+Se reprodujo el bloqueo en el repositorio real de esta entrega: el único cambio local era `staff/jimena-duran/ChromaDB/` sin seguimiento y `Assert-CleanWorktree` devolvía código 1. No había cambios versionados que justificaran ese rechazo.
+
+La comprobación inicial ahora consulta los cambios versionados con `--untracked-files=no`. No hay excepciones por nombre de carpeta ni cambios en ignore, índice o datos. Los cambios versionados y las operaciones Git sin terminar siguen bloqueados. Los cambios de rama y avances rápidos conservan `--no-overwrite-ignore`; Git comprueba y rechaza las colisiones reales antes de sobrescribir datos locales.
+
+Mientras el archivo versionado de esta corrección estaba modificado, se comprobó en el repositorio real que el guard seguía devolviendo código 1 con el mensaje explícito `Tracked changes exist`. No se cambió de rama ni se actualizó staging en el repositorio real para probarlo.
+
+Se añadió [tools/tests/test-untracked-worktree.ps1](../../../tools/tests/test-untracked-worktree.ps1), ejecutado en PowerShell 5.1 con datos ficticios y un remoto local:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File './staff/jimena-duran/first-app/tools/tests/test-untracked-worktree.ps1'
+```
+
+Resultado: 19 comprobaciones del recorrido dirigido y una comprobación puntual adicional superadas. El recorrido terminó con código 0. Se verificaron archivos y carpetas realmente sin seguimiento, actualización de staging, creación y recuperación de ramas, base alternativa y avance rápido real, sin añadir, ocultar ni quitar esos archivos y conservando sus hashes. Las colisiones de archivo, directorio y avance rápido se rechazaron conservando los datos y HEAD. Un conflicto real siguió bloqueando actualizar staging; la comprobación puntual de creación de rama confirmó explícitamente el bloqueo por `MERGE_HEAD`.
+
+El caso de creación de rama durante conflicto se corrigió para llamar al script de staging correspondiente y se comprobó puntualmente contra el conflicto existente, sin repetir el resto del recorrido. La carpeta temporal se conserva en `C:/windows/TEMP/jimena-untracked-test-f33471b9327f4a028366778ebeb0531f`; el conflicto queda intencionadamente sin resolver en esa copia desechable. No se usó ni modificó la carpeta ChromaDB real.
+
+Las 39 comprobaciones generales y 23 de seguridad de las secciones anteriores corresponden a la versión previa a esta corrección. No se repitieron esas suites ni usuarios, notebooks, clasificador, formato o lint, ya que no cambiaron sus funcionalidades. Esta corrección no añade dependencias ni modifica la lógica de usuarios.

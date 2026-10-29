@@ -61,9 +61,13 @@ Para una ruta con espacios, mantén las comillas y el operador `&`. Si necesitas
 
 `pull-changes.ps1` actualiza staging únicamente con avance rápido y conserva la rama actual. Los comandos de rama recuperan una existente sin reemplazarla. Integrar nuevos cambios en una rama existente requiere la autorización aplicable; ante un conflicto se informa antes de resolver. No hay stash automático, reset --hard, clean ni force push.
 
+Los archivos sin seguimiento que no colisionan con el destino no bloquean actualizar staging o crear y recuperar ramas, aunque estén fuera de first-app. Permanecen visibles y sin seguimiento: no se añaden, borran, excluyen ni ocultan para permitir la operación. La comprobación inicial sigue bloqueando cambios versionados y operaciones Git sin terminar. Al cambiar de rama o avanzar staging, Git comprueba las colisiones reales y rechaza sobrescribir datos locales.
+
 Los cambios de rama y avances rápidos usan `--no-overwrite-ignore`: un archivo ignorado también debe conservarse si otra rama lo tiene versionado. Antes de un commit automático se comprueba si hay hooks activos que puedan modificar el índice, mensajes o referencias. Si existen, el script se detiene para revisión; no los desactiva ni los ejecuta a escondidas. Los `.sample` que trae Git no activan ese bloqueo.
 
 Las comprobaciones reproducibles de Git están en [tools/tests/test-git-workflow.ps1](../tools/tests/test-git-workflow.ps1) y `tools/tests/test-git-safety.ps1`. La ruta del recorrido general, comprobada contra el archivo real, es `staff/jimena-duran/first-app/tools/tests/test-git-workflow.ps1` desde la raíz del repositorio. Crean repositorios temporales con un remoto local y requieren autorización para commits y publicaciones exclusivamente en esa prueba. No apuntan al remoto del repositorio personal ni modifican sus datos. Conservan las carpetas temporales para inspección; el ensayo de seguridad deja intencionadamente un conflicto sin resolver en su repositorio desechable.
+
+La comprobación específica de archivos sin seguimiento está en [tools/tests/test-untracked-worktree.ps1](../tools/tests/test-untracked-worktree.ps1). Usa datos ficticios en su propio repositorio temporal para verificar operaciones seguras, conservación de archivos y bloqueos ante colisiones y conflictos. Desde first-app: `powershell.exe -NoProfile -ExecutionPolicy Bypass -File './tools/tests/test-untracked-worktree.ps1'`.
 
 Desde first-app, tras autorizar esas pruebas:
 
