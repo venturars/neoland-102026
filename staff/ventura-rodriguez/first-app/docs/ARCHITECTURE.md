@@ -54,8 +54,8 @@
 - `skills/create-pr-base-staging/SKILL.md` abre la pull request con base
   `staging`.
 - `skills/create-draft/SKILL.md` deja la pull request en draft.
-- `skills/link-pr-to-issue/SKILL.md` deja `Related to #N` sin cerrar la
-  issue.
+- `skills/link-pr-to-issue/SKILL.md` deja el enlace en Development y
+  `Related to #N` en el cuerpo, sin cerrar la issue.
 - `skills/assign-reviewers/SKILL.md` asigna a quienes miran la pull
   request y la saca de draft.
 - `tools/check-status.sh` escribe la rama, el remoto y los cambios.
