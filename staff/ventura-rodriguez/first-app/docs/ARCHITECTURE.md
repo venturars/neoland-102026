@@ -20,7 +20,7 @@
   primer cliente y el test manual de cada funcionalidad.
 - `clients/jupyter/` es el cliente que se abre con el Jupyter de la app.
 - `agents/git-workflow-agent.md` reconoce el momento y llama al
-  subagente o a la skill que toca.
+  subagente como un agente aparte. El padre no hace ese trabajo.
 - `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la
   tarea se puede dejar escrita.
 - `agents/create-issue.md` crea la issue con título en inglés y

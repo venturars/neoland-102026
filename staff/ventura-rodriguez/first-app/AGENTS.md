@@ -10,9 +10,11 @@ Las reglas de base están en `docs/CONSTITUTIONS.md`. Esa guía enlaza a la arqu
 
 ## Orden
 
-Un cambio del proyecto es un desarrollo. Lo es una funcionalidad, una dependencia, la configuración y la documentación.
+Lo primero es el orquestador. Elige un momento y llama a ese subagente como un agente aparte. El padre no entrevista, no crea la issue y no ejecuta el git ni el MCP de ese momento.
 
-El primer proceso crea `docs/specs/<nombre>/`. `<nombre>` va en kebab-case. Escribe `spec.md` y `plan.md`. No toca ningún otro fichero. Ahí se para. Una persona revisa la spec y el plan.
+No se crea `docs/specs/<nombre>/` antes de que exista el número de issue. `<nombre>` va en kebab-case.
+
+Con la issue escrita, el proceso siguiente escribe `spec.md` y `plan.md`. La spec abre con `Issue: #N`. No toca ningún otro fichero. Ahí se para. Una persona revisa la spec y el plan.
 
 Si la constitución, el código actual y la spec no dicen lo mismo, la pregunta queda al final del plan y no hay `tasks.md`.
 
@@ -22,7 +24,7 @@ La implementación empieza cuando esa persona lo pide. Ejecuta `tasks.md` y no i
 
 ## Reglas
 
-- Un cambio del proyecto empieza por `docs/specs/<nombre>/` y sigue «Orden».
+- Un cambio del proyecto empieza por el orquestador y sigue «Orden».
 - La implementación empieza cuando una persona ha leído la spec, el plan y las tareas y lo pide. Ese proceso solo ejecuta `tasks.md`.
 - Lee docs/CONSTITUTIONS.md y la spec activa antes de tocar código. Si no hay spec para ese cambio, se crea y se para.
 - Temperatura próxima a 0. No inventes: cíñete al plan y a la spec activa.
