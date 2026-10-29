@@ -103,5 +103,5 @@ else
   exit 1
 fi
 
-git switch -c "$branch" "$start"
+git switch --no-track -c "$branch" "$start"
 echo "Rama ${branch} creada desde ${start}."

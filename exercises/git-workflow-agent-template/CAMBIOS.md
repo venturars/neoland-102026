@@ -32,7 +32,7 @@ La plantilla original es la de la pull request [#571](https://github.com/ventura
 - **Frontmatter.** Cada skill y cada subagente lleva `name` y `description` (en español), que Claude Code necesita para encontrarlos. Los subagentes precargan sus skills con `skills:`. Codex descarta ese campo al instalar (APM lo avisa), pero sus subagentes heredan las skills igualmente.
 - **Referencias.** Las rutas a ficheros (`agents/…`, `skills/…/SKILL.md`, `templates/…`, `MCPS/…`) pasan a nombres de skill y de subagente, porque al instalar cambian de sitio.
 - **Entrevistas.** `entrevista-con-repo` y `entrevista-libre` mantienen sus reglas. Quitan la línea de instalación de las skills de Matt Pocock y la cambian por un enlace de inspiración: no hace falta instalarlas.
-- **Erratas.** «En empezar» pasa a «Al empezar» en `create-commit`. `check-status.sh` fallaba en un repositorio sin commits: ahora escribe la rama y «todavía no hay commits».
+- **Erratas.** «En empezar» pasa a «Al empezar» en `create-commit`. `check-status.sh` fallaba en un repositorio sin commits: ahora escribe la rama y «todavía no hay commits». La rama nueva ya no sigue a la rama base remota (`--no-track`): hasta el primer push, `check-status` decía que seguía a `origin/staging`.
 
 ## Sin cambios
 
