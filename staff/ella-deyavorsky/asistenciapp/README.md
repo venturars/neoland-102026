@@ -22,6 +22,8 @@ pip install -r requirements.txt      # instala Flask y pytest
 brew install cloudflared             # el túnel para que los alumnos entren desde casa
 ```
 
+Las únicas dependencias son Flask y pytest (constitución P3).
+
 ---
 
 ## 2. Activar el entorno
@@ -40,7 +42,7 @@ source .venv/bin/activate
 | Para… | Comando |
 | --- | --- |
 | **Una clase online** (alumnos en sus casas) | `python app.py --tunel` |
-| Probar solo en tu ordenador | `python app.py` |
+| Probar solo en tu ordenador | `python app.py` (abre en `http://localhost:8000`) |
 
 Al arrancar verás algo así:
 
