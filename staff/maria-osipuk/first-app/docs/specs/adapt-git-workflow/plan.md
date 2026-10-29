@@ -45,6 +45,8 @@ La sección «Qué primero» se sustituye por un texto corto que dice:
 - Las paradas de «Antes de editar» siguen. El flujo de git no las quita.
 - El orden es: issue, rama, pull request en draft, y en esa rama la spec.
 
+En «Validación de paquetes con Socket», la frase «el de `MCP.md` en la raíz del repositorio» desaparece, porque `MCP.md` no existe. Queda «El servidor es `socket-mcp`.» El resto de esa sección no cambia.
+
 El resto del fichero sigue igual. En «Forma de trabajar», la regla «No hagas `commit`, `push`, merge ni pull request sin autorización» se queda. Pedir al orquestador empezar una tarea, guardar un trozo o pedir revisión es la autorización de ese paso.
 
 ## Árbol

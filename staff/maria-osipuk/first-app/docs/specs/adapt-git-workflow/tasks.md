@@ -32,24 +32,30 @@ Abrir `AGENTS.md` de `first-app`.
 Sustituir la sección «Qué primero» por el texto del apartado «AGENTS.md» del plan.
 El resto del fichero sigue igual.
 
-## 7. Actualizar el árbol
+## 7. Corregir la sección de Socket
+
+Abrir `AGENTS.md`, apartado «Validación de paquetes con Socket».
+Quitar «el de `MCP.md` en la raíz del repositorio», porque `MCP.md` no existe. Debe quedar «El servidor es `socket-mcp`.»
+El resto de la sección sigue igual.
+
+## 8. Actualizar el árbol
 
 Abrir `docs/TREE.md`.
 Añadir las cinco carpetas con sus ficheros y la carpeta de esta spec.
 El resto del árbol sigue igual.
 
-## 8. Actualizar la arquitectura
+## 9. Actualizar la arquitectura
 
 Abrir `docs/ARCHITECTURE.md`.
 Añadir la sección «Flujo de git» y los puntos de «Ficheros» del apartado «Arquitectura» del plan.
 El resto sigue igual. No se repite el árbol.
 
-## 9. Formato y lint
+## 10. Formato y lint
 
 Desde `first-app`, ejecutar `pnpm format` y `pnpm lint`.
 Los dos terminan bien.
 
-## 10. Comprobar
+## 11. Comprobar
 
 Desde la raíz del repositorio, ejecutar `staff/maria-osipuk/first-app/tools/check-status.sh`. Termina bien.
 Comprobar que `grep -rn "\./tools/" skills` no devuelve nada.
