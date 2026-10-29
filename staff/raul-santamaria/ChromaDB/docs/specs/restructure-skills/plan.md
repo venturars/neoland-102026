@@ -6,7 +6,7 @@ Este plan dice cómo se cumple la spec. No hay código nuevo, ni dependencia nue
 
 ## Ficheros
 
-Rutas desde `exercises/ChromaDB/`.
+Rutas desde `staff/raul-santamaria/ChromaDB/`.
 
 | Fichero | Cambio |
 | --- | --- |
@@ -22,7 +22,7 @@ La skill sigue siendo una. `search.py` y `get_doc.py` se quedan en el mismo fich
 
 Del `SKILL.md` actual solo pasa al fichero nuevo lo que empieza en la primera línea `---`. La nota «Adaptación a tu entorno» no entra en la skill que lee el agente: pasa al README, como nota de cómo copiar la carpeta. El nombre de esa carpeta es `python-docs`, igual que el `name`.
 
-En `agents/developer.md` la ruta es `skills/python-docs/SKILL.md`, relativa a `exercises/ChromaDB/`, igual que `docs/CONSTITUTION.md` en ese mismo fichero.
+En `agents/developer.md` la ruta es `skills/python-docs/SKILL.md`, relativa a `staff/raul-santamaria/ChromaDB/`, igual que `docs/CONSTITUTION.md` en ese mismo fichero.
 
 `.gitignore` tiene `python-docs/` sin barra delante. Esa regla ignora cualquier carpeta con ese nombre, también `skills/python-docs/`. Con `/python-docs/` solo queda fuera el HTML descargado, en la raíz del proyecto. `python-docs-md/`, `chroma_db/` y `.venv/` no se tocan.
 
@@ -46,5 +46,5 @@ El estilo de código no entra: no se edita ningún `.py`.
 | 2 | Mismas secciones de consulta en ese fichero |
 | 3 | `agents/developer.md` |
 | 4 | `README.md`, sección «Usarlo desde un agente» y la línea de «Cómo funciona» |
-| 5 | `SKILL.md` ausente en la raíz de `exercises/ChromaDB` |
+| 5 | `SKILL.md` ausente en la raíz de `staff/raul-santamaria/ChromaDB` |
 | 6 | `git check-ignore -v` sobre `skills/python-docs/SKILL.md` (no ignora) y sobre `python-docs/` (sí ignora) |

@@ -19,25 +19,25 @@ A local index of the official Python documentation for the version downloaded in
 
 - Run the commands from the repository root.
 - Ollama must be running (`ollama serve`, or the Ollama app). `search.py` needs it; `get_doc.py` does not.
-- The index must exist. If a command says `Index not found`, ask the user to run `scripts/build_index.py` (see `exercises/ChromaDB/README.md`). Do not build it yourself without asking: it takes several minutes.
+- The index must exist. If a command says `Index not found`, ask the user to run `scripts/build_index.py` (see `staff/raul-santamaria/ChromaDB/README.md`). Do not build it yourself without asking: it takes several minutes.
 
 `PY` below is the project Python:
 
-- Windows: `exercises/ChromaDB/.venv/Scripts/python.exe`
-- macOS / Linux: `exercises/ChromaDB/.venv/bin/python`
+- Windows: `staff/raul-santamaria/ChromaDB/.venv/Scripts/python.exe`
+- macOS / Linux: `staff/raul-santamaria/ChromaDB/.venv/bin/python`
 
 ## Workflow
 
 1. **Search by meaning** when you do not know the exact name:
 
    ```bash
-   PY exercises/ChromaDB/scripts/search.py "read the contents of a text file"
+   PY staff/raul-santamaria/ChromaDB/scripts/search.py "read the contents of a text file"
    ```
 
 2. **Confirm by exact name** before you use a function, class or option in code:
 
    ```bash
-   PY exercises/ChromaDB/scripts/get_doc.py pathlib.Path.read_text
+   PY staff/raul-santamaria/ChromaDB/scripts/get_doc.py pathlib.Path.read_text
    ```
 
    If it prints `not found in Python 3.15 docs` (the number is the downloaded version), do not use that name. Search again.
@@ -47,7 +47,7 @@ A local index of the official Python documentation for the version downloaded in
 ## search.py
 
 ```bash
-PY exercises/ChromaDB/scripts/search.py "question" [-n 5] [--area AREA] [--module MODULE] [--kind KIND]
+PY staff/raul-santamaria/ChromaDB/scripts/search.py "question" [-n 5] [--area AREA] [--module MODULE] [--kind KIND]
 ```
 
 - Write the question in English, describing what you want to do.
@@ -61,7 +61,7 @@ If you are not sure about a filter, search without it. A wrong filter returns no
 ## get_doc.py
 
 ```bash
-PY exercises/ChromaDB/scripts/get_doc.py NAME
+PY staff/raul-santamaria/ChromaDB/scripts/get_doc.py NAME
 ```
 
 `NAME` is the full name used in the docs:

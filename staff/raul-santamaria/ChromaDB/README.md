@@ -4,7 +4,7 @@ RAG basado en [ChromaDB](https://www.trychroma.com/) con la documentación ofici
 
 Todo corre en tu equipo: ChromaDB guarda el índice en `chroma_db/` y [Ollama](https://ollama.com/) convierte los textos en vectores con el modelo `qwen3-embedding:0.6b`.
 
-Los comandos de más abajo se ejecutan desde `exercises/ChromaDB`. Crear y activar el entorno virtual cambia entre macOS y Windows. Con el entorno activo, los comandos que siguen son los mismos en los dos sistemas. El prompt muestra `(.venv)` al principio de la línea.
+Los comandos de más abajo se ejecutan desde `staff/raul-santamaria/ChromaDB`. Crear y activar el entorno virtual cambia entre macOS y Windows. Con el entorno activo, los comandos que siguen son los mismos en los dos sistemas. El prompt muestra `(.venv)` al principio de la línea.
 
 ## Cómo funciona
 
@@ -60,7 +60,7 @@ ollama --version
 Desde la raíz del repositorio:
 
 ```bash
-cd exercises/ChromaDB
+cd staff/raul-santamaria/ChromaDB
 ```
 
 Ese `cd` vale en Terminal, PowerShell y el Símbolo del sistema.
@@ -111,14 +111,14 @@ El entorno y el modelo se quedan instalados. En cada terminal hace falta entrar 
 macOS:
 
 ```bash
-cd exercises/ChromaDB
+cd staff/raul-santamaria/ChromaDB
 source .venv/bin/activate
 ```
 
 Windows (PowerShell):
 
 ```powershell
-cd exercises/ChromaDB
+cd staff/raul-santamaria/ChromaDB
 .venv\Scripts\Activate.ps1
 ```
 
@@ -196,13 +196,13 @@ Para usarla fuera de este proyecto, copia la carpeta `skills/python-docs/` a `.c
 
 `chromadash/` es [ChromaDash](https://github.com/coffeecodeconverter/ChromaDash), un visor web de ChromaDB, parcheado para la API v2 de Chroma 1.x. Sirve para mirar el índice en el navegador. Las consultas de la sección anterior siguen igual sin él.
 
-El visor necesita el servidor de Chroma. Arráncalo desde `exercises/ChromaDB`, con el entorno virtual activo:
+El visor necesita el servidor de Chroma. Arráncalo desde `staff/raul-santamaria/ChromaDB`, con el entorno virtual activo:
 
 ```bash
 chroma run chromadash/chroma-cors.yaml
 ```
 
-`chromadash/chroma-cors.yaml` abre `./chroma_db` en el puerto 8000 y permite que el navegador se conecte (CORS). El servidor usa esa ruta relativa, por eso el comando se lanza desde `exercises/ChromaDB`.
+`chromadash/chroma-cors.yaml` abre `./chroma_db` en el puerto 8000 y permite que el navegador se conecte (CORS). El servidor usa esa ruta relativa, por eso el comando se lanza desde `staff/raul-santamaria/ChromaDB`.
 
 Abre `chromadash/index.html` en el navegador (doble clic en el fichero) y conecta a `http://localhost:8000`. Desde la terminal, con el servidor ya arrancado en otra ventana:
 
@@ -224,7 +224,7 @@ Para el servidor antes de lanzar un script que escriba en `chroma_db/`, por ejem
 
 `src/` tiene un CRUD de usuarios (nombre, email, edad y género) sobre SQLite. Es aparte del RAG: no usa ChromaDB ni Ollama. Las capas se explican en `docs/CONSTITUTION.md`.
 
-Desde `exercises/ChromaDB`, con el entorno virtual activo:
+Desde `staff/raul-santamaria/ChromaDB`, con el entorno virtual activo:
 
 ```bash
 python -m jupyter notebook src/clients/jupyter
