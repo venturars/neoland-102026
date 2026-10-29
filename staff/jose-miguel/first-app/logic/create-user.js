@@ -1,30 +1,60 @@
 import { findUserByEmail, insertUser } from "../queries/users.js";
 
-export function createUser(input) {
-  const name = input[0];
-  const email = input[1];
+const MAX_NAME_LENGTH = 100;
+const MAX_EMAIL_LENGTH = 255;
 
-  if (name === undefined || name === null || String(name).trim() === "") {
+export function createUser(input) {
+  const rawName = input[0];
+  let nameMissing = false;
+  if (rawName === undefined) {
+    nameMissing = true;
+  }
+  if (rawName === null) {
+    nameMissing = true;
+  }
+  let trimmedName = "";
+  if (!nameMissing) {
+    const nameAsText = String(rawName);
+    trimmedName = nameAsText.trim();
+  }
+  if (trimmedName === "") {
+    nameMissing = true;
+  }
+  if (nameMissing) {
     throw new Error("Name is required");
   }
-
-  const trimmedName = String(name).trim();
-
-  if (trimmedName.length > 100) {
+  const nameIsTooLong = trimmedName.length > MAX_NAME_LENGTH;
+  if (nameIsTooLong) {
     throw new Error("Name cannot exceed 100 characters");
   }
 
-  if (email === undefined || email === null || String(email).trim() === "") {
+  const rawEmail = input[1];
+  let emailMissing = false;
+  if (rawEmail === undefined) {
+    emailMissing = true;
+  }
+  if (rawEmail === null) {
+    emailMissing = true;
+  }
+  let trimmedEmail = "";
+  if (!emailMissing) {
+    const emailAsText = String(rawEmail);
+    const trimmedEmailRaw = emailAsText.trim();
+    trimmedEmail = trimmedEmailRaw.toLowerCase();
+  }
+  if (trimmedEmail === "") {
+    emailMissing = true;
+  }
+  if (emailMissing) {
     throw new Error("Email is required");
   }
-
-  const trimmedEmail = String(email).trim().toLowerCase();
-
-  if (trimmedEmail.length > 255) {
+  const emailIsTooLong = trimmedEmail.length > MAX_EMAIL_LENGTH;
+  if (emailIsTooLong) {
     throw new Error("Email cannot exceed 255 characters");
   }
-
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailIsValid = emailPattern.test(trimmedEmail);
+  if (!emailIsValid) {
     throw new Error("Email is not valid");
   }
 

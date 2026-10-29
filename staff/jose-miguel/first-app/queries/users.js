@@ -1,53 +1,64 @@
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { db } from "../db/connection.js";
 
-const directory = join(import.meta.dirname, "queries");
+const fileUrl = import.meta.url;
+const filePath = fileURLToPath(fileUrl);
+const fileDirectory = dirname(filePath);
+const directory = join(fileDirectory, "queries");
 
-const createUsersTableSql = readFileSync(
-  join(directory, "create-users-table.sql"),
-  "utf8",
-);
+const createUsersTablePath = join(directory, "create-users-table.sql");
+const createUsersTableSql = readFileSync(createUsersTablePath, "utf8");
 
-const findUserByIdSql = readFileSync(join(directory, "find-by-id.sql"), "utf8");
+const findUserByIdPath = join(directory, "find-by-id.sql");
+const findUserByIdSql = readFileSync(findUserByIdPath, "utf8");
 
-const findUserByEmailSql = readFileSync(
-  join(directory, "find-by-email.sql"),
-  "utf8",
-);
+const findUserByEmailPath = join(directory, "find-by-email.sql");
+const findUserByEmailSql = readFileSync(findUserByEmailPath, "utf8");
 
-const insertUserSql = readFileSync(join(directory, "insert.sql"), "utf8");
+const insertUserPath = join(directory, "insert.sql");
+const insertUserSql = readFileSync(insertUserPath, "utf8");
 
-const updateUserSql = readFileSync(join(directory, "update.sql"), "utf8");
+const updateUserPath = join(directory, "update.sql");
+const updateUserSql = readFileSync(updateUserPath, "utf8");
 
-const deleteUserSql = readFileSync(join(directory, "remove.sql"), "utf8");
+const deleteUserPath = join(directory, "remove.sql");
+const deleteUserSql = readFileSync(deleteUserPath, "utf8");
 
-const listUsersSql = readFileSync(join(directory, "find-all.sql"), "utf8");
+const listUsersPath = join(directory, "find-all.sql");
+const listUsersSql = readFileSync(listUsersPath, "utf8");
 
 export function createUsersTable() {
   db.exec(createUsersTableSql);
 }
 
 export function findUserById(id) {
-  return db.prepare(findUserByIdSql).get({ id });
+  const statement = db.prepare(findUserByIdSql);
+  return statement.get({ id });
 }
 
 export function findUserByEmail(email) {
-  return db.prepare(findUserByEmailSql).get({ email });
+  const statement = db.prepare(findUserByEmailSql);
+  return statement.get({ email });
 }
 
 export function insertUser(name, email) {
-  return db.prepare(insertUserSql).get({ name, email });
+  const statement = db.prepare(insertUserSql);
+  return statement.get({ name, email });
 }
 
 export function updateUser(id, name, email) {
-  return db.prepare(updateUserSql).get({ id, name, email });
+  const statement = db.prepare(updateUserSql);
+  return statement.get({ id, name, email });
 }
 
 export function deleteUser(id) {
-  return db.prepare(deleteUserSql).run({ id });
+  const statement = db.prepare(deleteUserSql);
+  return statement.run({ id });
 }
 
 export function listUsers() {
-  return db.prepare(listUsersSql).all();
+  const statement = db.prepare(listUsersSql);
+  return statement.all();
 }

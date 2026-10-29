@@ -18,7 +18,7 @@ Cada funcionalidad es un fichero. Un fichero de `logic/` ya creado no se reempla
 
 ### Un fichero de logic
 
-Un fichero, una función. El nombre de la función es la acción. Los parámetros van en la firma, cada uno con su nombre. No se recibe un objeto `input` genérico.
+Un fichero, una función. El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `listUsers`, `findUserByEmail`). Los parámetros van en la firma, con su nombre. `createUser` recibe un array con nombre y email en las posiciones 0 y 1. `updateUser` recibe el `id` y un array con los cambios en las posiciones 0 y 1.
 
 Ejemplos de firma:
 
