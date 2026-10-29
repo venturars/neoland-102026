@@ -1,9 +1,14 @@
 # Árbol
 
 first-app/
-  AGENTS.MD
+  AGENTS.md
   eslint.config.js
   package.json
+  agents/
+  skills/
+  tools/
+  templates/
+  MCPS/
   scripts/
     jupyter.sh
   docs/

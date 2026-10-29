@@ -1,6 +1,6 @@
 # Constitución
 
-first-app es una app para aprender los conceptos básicos de login. Se construye con IA siguiendo el sistema SDD. Un desarrollo nuevo no empieza en el código: pasa por `spec.md`, `plan.md` y `tasks.md`, y un humano lee cada uno antes de seguir.
+first-app es una app para aprender los conceptos básicos de login. Se construye con IA siguiendo el sistema SDD. Un desarrollo nuevo no empieza en el código: antes está la issue, escrita por su subagente; después pasa por `spec.md`, `plan.md` y `tasks.md`, y un humano lee cada uno antes de seguir. La spec abre con `Issue: #N`.
 
 ## Guías
 
@@ -31,7 +31,7 @@ Una funcionalidad nueva es un fichero nuevo en `logic/`. Si la constitución, el
 
 ## Paquetes
 
-Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket. Nadie instala ni cambia versiones en `package.json` por un desarrollo hasta que un humano haya leído y aprobado el `spec.md` y el `plan.md` de ese desarrollo. Si el plan propone paquetes, el `plan.md` incluye la validación Socket descrita en `AGENTS.MD` antes de pedir esa aprobación.
+Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket. Nadie instala ni cambia versiones en `package.json` por un desarrollo hasta que un humano haya leído y aprobado el `spec.md` y el `plan.md` de ese desarrollo. Si el plan propone paquetes, el `plan.md` incluye la validación Socket descrita en `AGENTS.md` antes de pedir esa aprobación.
 
 ## Logic no se reemplaza
 
