@@ -19,6 +19,8 @@ pip install -r requirements.txt      # instala Flask y pytest
 brew install cloudflared             # el túnel para que los alumnos entren desde casa
 ```
 
+Las únicas dependencias son Flask y pytest, como dice [CONSTITUTION.md](docs/CONSTITUTION.md).
+
 ---
 
 ## 2. Activar el entorno
