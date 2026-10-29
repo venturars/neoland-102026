@@ -65,13 +65,23 @@ Ese enlace es **tu panel privado**: no lo compartas, porque quien lo tenga puede
 6. Cuando ya estén todos, pulsa **Cerrar asistencia** y confírmalo. Desde ese momento nadie más puede registrarse.
 7. Pulsa **Descargar lista** para obtener el CSV (columnas *Nombre* y *Hora*).
 
-**¿Ves un nombre falso o equivocado?** Pulsa **Quitar** en su fila y confirma con **Sí, quitar**. Desaparece de la lista, del total y de la descarga. Funciona también con la asistencia ya cerrada.
+### Apariencia
+
+AsistenciApp utiliza un único **tema oscuro** para mantener la misma identidad visual en el panel, Aula en directo y el registro del alumno. No hay que configurar nada.
+
+### Aula en directo
+
+Cuando la sesión esté abierta, pulsa **Entrar en Aula en directo**. Esta vista está preparada para compartir pantalla: enseña el título, el código, la cuenta atrás, el total y los alumnos que van llegando, sin mostrar las acciones privadas de gestión.
+
+- Si el navegador lo permite, Aula en directo ocupa la pantalla completa.
+- Para salir, pulsa **Salir de Aula en directo** o la tecla **Esc**.
+- Al volver al panel normal recuperas los botones para cerrar la asistencia y descargar la lista.
 
 ### Un registro por navegador
 
 Cuando un alumno se registra, su navegador lo recuerda **para esa clase**: si vuelve a abrir el enlace, ve *"Ya te registraste en esta clase como Ana García a las 11:07"* y no puede apuntar a otra persona. En la clase siguiente puede registrarse con normalidad.
 
-Es un límite **disuasorio**, no una prueba de identidad: se salta con otro navegador, una ventana privada u otro dispositivo. Para lo que se cuele, está el botón **Quitar**. Si quitas a alguien, su navegador sigue mostrando "ya te registraste": tendría que usar otro navegador para registrarse de nuevo.
+Es un límite **disuasorio**, no una prueba de identidad: se puede saltar con otro navegador, una ventana privada u otro dispositivo.
 
 Las **sesiones anteriores** aparecen en el panel con su número de asistentes, y puedes volver a verlas o descargarlas cuando quieras.
 
@@ -125,6 +135,5 @@ Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una 
 - Con `--tunel`, la conexión sigue siendo la de este ordenador. Si Cloudflare envía una sola dirección de visitante (`CF-Connecting-IP`), esa es la que cuenta. Si falta o no es una sola dirección, cuenta la conexión local. Una conexión que no sea la de este ordenador no usa esa cabecera.
 - Varios alumnos pueden compartir una dirección pública: el bloqueo es de ese grupo, no de toda la clase por usar el túnel. Un programa en este ordenador puede presentar otra dirección. La aplicación no identifica para siempre a una persona ni comprueba si la dirección es fija.
 - El límite "un registro por navegador" se guarda **solo en el navegador del alumno**, no en el servidor.
-- Quitar un registro lo **borra de verdad** (no queda en ninguna papelera).
 - Los datos se guardan **solo en tu ordenador** (`data/`, que no se sube a git).
 - Con `--tunel`, el tráfico pasa **cifrado** por Cloudflare, que no lo almacena (constitución P4, v2.1).
