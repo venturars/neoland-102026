@@ -1,7 +1,8 @@
 ### Herramienta: GRILL_ME
 
 - **Descripción**: Úsala cuando la idea no depende de este repositorio, o cuando `grill-with-docs` ya dejó decisiones que el repositorio no responde. En ese caso va después. No la uses para crear la issue, la rama ni la pull request. No tiene script ni MCP.
-- **Fuente**: [grill-me](https://www.skills.sh/mattpocock/skills/grill-me). Instalación: `npx skills add https://github.com/mattpocock/skills --skill grill-me`.
+
+* **Fuente**: [grill-me](https://www.skills.sh/mattpocock/skills/grill-me). Instalación: `npx skills add https://github.com/mattpocock/skills --skill grill-me`.
 
 #### Cómo entrevistar
 
