@@ -60,6 +60,8 @@ first-app/
 
 A new dependency is added here before any plan uses it.
 
+A plan that adds a Node package, or changes the version of one, has a **Socket check** section, and it is not approved without it. The steps are in [AGENTS.md](../AGENTS.md#node-packages).
+
 ## Specs
 
 **spec.md is the business.** Read by whoever decides if the feature is what they want, without opening the code. It says what is asked, who uses it, what goes in, what comes out with an example, and which failure is seen. A failure names a message from **Errors**. It also says what is out of scope. It never names files, functions or SQL.
@@ -89,6 +91,7 @@ A new dependency is added here before any plan uses it.
 ## Signature
 ## SQL
 ## Errors
+## Socket check  only when it adds or changes a Node package
 ## Open questions
 ```
 
