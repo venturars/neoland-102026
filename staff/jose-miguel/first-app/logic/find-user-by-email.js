@@ -1,17 +1,34 @@
 import { findUserByEmail as findUserRowByEmail } from "../queries/users.js";
 
+const MAX_EMAIL_LENGTH = 255;
+
 export function findUserByEmail(email) {
-  if (email === undefined || email === null || String(email).trim() === "") {
+  let emailMissing = false;
+  if (email === undefined) {
+    emailMissing = true;
+  }
+  if (email === null) {
+    emailMissing = true;
+  }
+  let trimmedEmail = "";
+  if (!emailMissing) {
+    const emailAsText = String(email);
+    const trimmedEmailRaw = emailAsText.trim();
+    trimmedEmail = trimmedEmailRaw.toLowerCase();
+  }
+  if (trimmedEmail === "") {
+    emailMissing = true;
+  }
+  if (emailMissing) {
     throw new Error("Email is required");
   }
-
-  const trimmedEmail = String(email).trim().toLowerCase();
-
-  if (trimmedEmail.length > 255) {
+  const emailIsTooLong = trimmedEmail.length > MAX_EMAIL_LENGTH;
+  if (emailIsTooLong) {
     throw new Error("Email cannot exceed 255 characters");
   }
-
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailIsValid = emailPattern.test(trimmedEmail);
+  if (!emailIsValid) {
     throw new Error("Email is not valid");
   }
 
