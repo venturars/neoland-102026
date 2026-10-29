@@ -4,7 +4,7 @@
 
 first-app es la primera app del curso de IA Engineer creada por una alumna junior. Creada a través de interacción con IA. No es una web. Se usa desde la terminal.
 
-Está en Node, con módulos ES (`"type": "module"`) y SQLite (`node:sqlite`, fichero `db/users.sqlite`). Los campos del usuario están en `docs/CONSTITUTIONS.md`. Ese documento manda sobre el comportamiento de la app. La arquitectura está en `docs/ARCHITECTURE.md`. Los mensajes de error están en `docs/errors.md`. Los nombres de las funciones están en `docs/style.md`.
+Está en Node, con módulos ES (`"type": "module"`) y SQLite (`node:sqlite`, fichero `src/db/users.sqlite`). Los campos del usuario están en `docs/CONSTITUTIONS.md`. Ese documento manda sobre el comportamiento de la app. La arquitectura está en `docs/ARCHITECTURE.md`. Los mensajes de error están en `docs/errors.md`. Los nombres de las funciones están en `docs/style.md`.
 
 ## Orden
 
@@ -54,7 +54,7 @@ El estilo está en `docs/style.md`.
 
 ## Al terminar una tarea
 
-- Al crear una funcionalidad se crea su primer cliente en `clients/terminal/`, un `.txt` que se pega en la terminal desde la raíz del repositorio. Ese cliente entra en `first-app`, importa la función de `logic/` y hace `console.log` del resultado. Es el test manual.
-- Comprueba que el desarrollo nuevo funciona antes de dar la tarea por terminada. La comprobación es ejecutar ese fragmento de `clients/terminal/`.
+- Al crear una funcionalidad se crea su primer cliente en `src/clients/terminal/`, un `.txt` que se pega en la terminal desde la raíz del repositorio. Ese cliente entra en `first-app`, importa la función de `src/logic/` y hace `console.log` del resultado. Es el test manual.
+- Comprueba que el desarrollo nuevo funciona antes de dar la tarea por terminada. La comprobación es ejecutar ese fragmento de `src/clients/terminal/`.
 - Antes de dar la tarea por terminada se lanza `format`. Aplica Prettier con el formato estándar.
 - Antes de dar la tarea por terminada se lanza `lint`. ESLint avisa de la sintaxis y de las reglas de código.
