@@ -8,6 +8,7 @@ Sirve para cualquier proyecto en GitHub, no solo para el repositorio del curso. 
 
 - Un proyecto con git y un remoto `origin` en GitHub.
 - Claude Code, Cursor o Codex.
+- La CLI de GitHub (`gh`) con sesión iniciada (`gh auth login`), para enlazar la pull request con la issue en Development. Sin ella, la pull request solo lleva `Related to #N`.
 - APM: `brew install apm` (o `curl -sSL https://aka.ms/apm-unix | sh`).
 - Un token de GitHub en la variable `GITHUB_TOKEN` cuando arrancas el editor o el agente. Con la CLI de GitHub:
 
@@ -25,7 +26,7 @@ Desde la raíz de tu proyecto, con la herramienta que uses en `--target`:
 apm install venturars/neoland-102026/exercises/git-workflow-agent-template#git-workflow-agent--v1.0.0 --target cursor
 ```
 
-`--target` acepta `claude`, `cursor` o `codex`, y varios separados por comas (`--target claude,cursor`). Mientras no exista la etiqueta `git-workflow-agent--v1.0.0`, usa `#main`.
+`--target` acepta `claude`, `cursor` o `codex`, y varios separados por comas (`--target claude,cursor`). Mientras no exista la etiqueta `git-workflow-agent--v1.0.0`, usa `#staging`.
 
 APM añade el paquete a tu `apm.yml`, fija la versión en `apm.lock.yaml` y deja:
 
@@ -56,7 +57,7 @@ Llama al orquestador o pide directamente un momento:
 |---|---|---|
 | Pensar la tarea | «Ayúdame a pensar cómo contar usuarios por género» | Una entrevista de una pregunta cada vez y un resumen. |
 | Dejarla escrita | «Crea la issue» | Issue con título en inglés y cuerpo en español. |
-| Empezar | «Empieza la issue 184» | Rama `184-feat-…` desde la rama base, commit `chore: open #184`, push y pull request en draft con `Related to #184`. |
+| Empezar | «Empieza la issue 184» | Rama `184-feat-…` desde la rama base, commit `chore: open #184`, push y pull request en draft con `Related to #184`, enlazada en Development si la rama base no es la rama por defecto. |
 | Guardar un trozo | «Guarda `src/users.js` con feat: count users by gender» | Commit solo con esos ficheros y push. |
 | Que la revisen | «Que la revisen @ana y @luis» | Revisores asignados y pull request fuera de draft. |
 
@@ -107,10 +108,10 @@ Una prueba de unos diez minutos en un repositorio desechable, para comprobar el 
 
    ```bash
    export GITHUB_TOKEN=$(gh auth token)
-   apm install venturars/neoland-102026/exercises/git-workflow-agent-template#main --target cursor
+   apm install venturars/neoland-102026/exercises/git-workflow-agent-template#staging --target cursor
    ```
 
-   Para probar una copia local del paquete, pasa su ruta en vez de `venturars/…#main`.
+   Para probar una copia local del paquete, pasa su ruta en vez de `venturars/…#staging`.
 
 3. Comprueba que están las piezas: `ls .agents/skills .cursor/agents` (16 skills y 5 subagentes) y `cat .cursor/mcp.json` (servidor `github` con `Bearer ${env:GITHUB_TOKEN}`).
 
@@ -135,7 +136,7 @@ Una prueba de unos diez minutos en un repositorio desechable, para comprobar el 
 
 ## Publicar una versión
 
-Para quien mantiene el paquete: sube `version` en `apm.yml`, haz merge en `main` y etiqueta ese commit con `git-workflow-agent--v<versión>`:
+Para quien mantiene el paquete: sube `version` en `apm.yml`, haz merge en `staging` y etiqueta ese commit con `git-workflow-agent--v<versión>`:
 
 ```bash
 git tag git-workflow-agent--v1.0.0

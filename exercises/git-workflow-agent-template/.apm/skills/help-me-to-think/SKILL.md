@@ -20,7 +20,7 @@ description: "Elige la entrevista que afila la tarea antes de dejarla escrita y 
 
 1. **Recepción:** Lee la idea del alumno y mira si el cambio vive en este repositorio.
 2. **Validación:** Si el cambio vive en el repositorio, empieza por `entrevista-con-repo`. Si no depende del repositorio, empieza por `entrevista-libre`. Si la primera deja decisiones que el repositorio no responde, sigue con la otra.
-3. **Procesamiento:** Haz una pregunta, espera la respuesta y pasa a la siguiente. Si hacen falta las dos, el orden es primero la skill `entrevista-con-repo` y después la skill `entrevista-libre`.
+3. **Procesamiento:** Haz una pregunta, espera la respuesta y pasa a la siguiente. No escribas ficheros. Si hacen falta las dos, el orden es primero la skill `entrevista-con-repo` y después la skill `entrevista-libre`.
 4. **Formateo:** Cuando las entrevistas necesarias hayan terminado, cierra con un solo resumen: qué hay que hacer y cómo se sabría que está hecho. Ese resumen lo usa después `create-issue`. No lo conviertas en issue aquí.
 
 ## 4. Herramientas y APIs Asignadas

@@ -2,24 +2,30 @@
 
 first-app/
   eslint.config.js
-  db/
-    connection.js
-    users.sqlite
-  queries/
+  src/
+    db/
+      connection.js
+      users.sqlite
     queries/
-    users.js
-  logic/
-    create-user.js
-    update-user.js
-    delete-user.js
-    list-users.js
-    find-user-by-email.js
-    find-user-by-id.js
-    find-user-by-name.js
-    users-gender-count.js
-  clients/
-    terminal/
-    jupyter/
+      queries/
+      users.js
+    logic/
+      create-user.js
+      update-user.js
+      delete-user.js
+      list-users.js
+      find-user-by-email.js
+      find-user-by-id.js
+      find-user-by-name.js
+      users-gender-count.js
+    clients/
+      terminal/
+      jupyter/
+  agents/
+  skills/
+  tools/
+  templates/
+  MCPS/
   docs/
     ARCHITECTURE.md
     TREE.md

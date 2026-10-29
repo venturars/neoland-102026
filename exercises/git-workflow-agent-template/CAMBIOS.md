@@ -34,6 +34,15 @@ La plantilla original es la de la pull request [#571](https://github.com/ventura
 - **Entrevistas.** `entrevista-con-repo` y `entrevista-libre` mantienen sus reglas. Quitan la línea de instalación de las skills de Matt Pocock y la cambian por un enlace de inspiración: no hace falta instalarlas.
 - **Erratas.** «En empezar» pasa a «Al empezar» en `create-commit`. `check-status.sh` fallaba en un repositorio sin commits: ahora escribe la rama y «todavía no hay commits». La rama nueva ya no sigue a la rama base remota (`--no-track`): hasta el primer push, `check-status` decía que seguía a `origin/staging`.
 
+## Cambios de `staging` incorporados
+
+Después de #571, `staging` cambió la plantilla. Esos cambios están portados a la nueva estructura:
+
+- **`assign-reviewers`.** Resuelve cada nombre a un login de colaborador del repositorio y no pide revisión a quien no colabora. Igual que en `staging`.
+- **`link-pr-to-issue`.** Además de `Related to #N`, enlaza la issue en Development con `gh api graphql`. Cambia una cosa: ese enlace cierra la issue al fusionar en la rama por defecto, así que solo se hace cuando la rama base es otra (como `staging` en el repositorio del curso). Si la base es la rama por defecto, que es lo normal en un proyecto con solo `main`, deja solo `Related to #N` para no cerrar la issue. Si falta `gh`, también.
+- **`help-me-to-think`.** En `staging` pasó a hacer una pregunta y devolverla al orquestador sin esperar la respuesta, porque era un subagente. Aquí es una skill en la conversación principal ([ADR 0001](docs/adr/0001-orquestador-y-entrevista-como-skills.md)), así que sigue esperando cada respuesta. Se incorpora «no escribas ficheros».
+- **`grill-me`.** El cambio de formato de la línea Fuente no aplica: esa línea pasó a ser la de inspiración de `entrevista-libre`.
+
 ## Sin cambios
 
 - Las convenciones: `número-tipo-descripcion`, los seis tipos, conventional commits en inglés, cuerpos en español, sin force push y sin `git add -A`.
