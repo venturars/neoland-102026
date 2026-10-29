@@ -2,23 +2,15 @@
 
 ## Qué va primero
 
-Cualquier tarea nueva sigue `docs/GIT-WORKFLOW.md` en la raíz de `neoland-102026`, aunque el mensaje no nombre ese fichero ni diga «issue». Esta sección va antes que el resto de este manual.
+El trabajo de git sigue `agents/git-workflow-agent.md` de esta carpeta, aunque el mensaje no nombre ese fichero ni diga «issue». Esta sección va antes que el resto de este manual.
 
-Una tarea es una issue, una rama desde `staging` y una pull request en draft hacia `staging`.
+Una tarea es una issue, una rama desde `staging` y una pull request en draft hacia `staging`. El orquestador elige el momento y llama al subagente o a la skill que toca.
 
-El momento es dejar la tarea escrita cuando el mensaje cuenta qué hay que hacer. También lo es si:
-
-- trae los títulos «Qué hay que hacer» y «Cómo probarlo»;
-- nombra una carpeta o un fichero de esta app y dice qué debe quedar escrito ahí;
-- pide una forma de trabajar, una spec o un cambio en `AGENTS.md` o en la constitución.
-
-En ese momento se abre solo `neoland-102026/docs/skills/create-issue/SKILL.md`, más `.github/issue_template.md` y `scripts/new-issue.sh`. No hace falta que la skill esté en la lista de skills de la sesión: se abre por esta ruta. No se abre `SKILL.md` ni `MCP.md`. No se usa el resto de este manual para decidir el momento ni para completar la issue.
-
-Se enseña la persona asignada y el título, y se espera el sí. No se enseña la descripción. Con el sí, `scripts/new-issue.sh` crea la issue.
+Ese flujo no quita las paradas de este manual. Antes de crear la issue se enseñan la persona asignada y el título, y se espera el sí. No se toca código hasta que existe `docs/specs/<nombre>/` y María dice de forma explícita que la revisión está hecha.
 
 Nombrar el fichero de destino no autoriza a editarlo. Un mensaje que a la vez describe la tarea y pide escribir ficheros cabe en dos momentos: se pregunta cuál es y se espera. No se elige editar.
 
-El resto de este manual se usa cuando el momento ya es hacer el cambio en la rama de esa issue. La issue no sustituye a la spec de la app. La spec de la app no sustituye a la issue. El orden es: issue, después la rama, y en esa rama este manual.
+El orden es: issue, después la rama, después la pull request en draft, y en esa rama la spec y este manual. La issue no sustituye a la spec de la app. La spec de la app no sustituye a la issue.
 
 ## Fuente de verdad
 
@@ -62,7 +54,7 @@ Las reglas de este documento se aplican al código nuevo y a las partes que se m
 
 ## Validación de paquetes con Socket
 
-Al añadir un paquete de Node o cambiar su versión, comprueba ese paquete y esa versión con el MCP de Socket antes de aceptar el plan. El servidor es `socket-mcp`, el de `MCP.md` en la raíz del repositorio.
+Al añadir un paquete de Node o cambiar su versión, comprueba ese paquete y esa versión con el MCP de Socket antes de aceptar el plan. El servidor es `socket-mcp`.
 
 Comprueba si ese paquete y esa versión:
 
