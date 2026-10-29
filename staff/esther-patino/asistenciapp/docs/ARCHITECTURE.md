@@ -8,7 +8,9 @@ Este documento dice cómo se organiza el código de esta app. La idea sale de se
 asistenciapp/
 ├── docs/
 │   ├── CONSTITUTION.md
-│   └── ARCHITECTURE.md
+│   ├── ARCHITECTURE.md       # este archivo
+│   ├── TREE.md               # estructura de carpetas
+│   └── STYLE.md              # cómo se escribe el código
 ├── AGENTS.md
 ├── app.py                      # navegador: petición y respuesta
 └── asistencia/
@@ -24,6 +26,8 @@ asistenciapp/
         ├── export.py           # CSV
         └── tunnel.py           # túnel
 ```
+
+La estructura de carpetas del proyecto está en `TREE.md`. Cómo se escribe el código está en `STYLE.md`.
 
 `app.py` recibe la petición del navegador, llama a una acción y devuelve la respuesta. Elige el estado HTTP, el JSON, la página y la dirección del alumno.
 
