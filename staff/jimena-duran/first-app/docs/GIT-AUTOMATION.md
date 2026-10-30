@@ -95,7 +95,9 @@ gh api user --jq .login
 
 En Windows, Codex puede necesitar acceso al almacén de credenciales fuera de su sandbox. Un 401 dentro del sandbox no demuestra por sí solo que el acceso web haya fallado. Comprobar con los permisos necesarios sin imprimir tokens. Para renovar la sesión, `gh auth login --hostname github.com --git-protocol https --web` requiere que la persona complete la autorización en GitHub.
 
-Buscar issues y PR existentes antes de crear otras. El título va en inglés y el cuerpo en español. Las PR usan base staging y estado draft. El rol create-pr no enlaza la issue; el orquestador añade `Related to #N` conservando el resto del cuerpo y comprueba cualquier enlace Development por separado. No afirmar que el texto equivale a un enlace estructurado ni que integrar a staging cerrará automáticamente la issue.
+Buscar issues y PR existentes antes de crear otras. El título va en inglés y el cuerpo en español. Las PR usan base staging y estado draft. La plantilla contiene el marcador `Closes #N`; create-pr lo retira al preparar el cuerpo y el orquestador escribe después una única referencia con el número real, conservando el resto del texto. Al actualizar una PR, sustituir la referencia anterior de esa misma issue y mantener los vínculos existentes en Development. El texto y Development se comprueban por separado; no cerrar issues manualmente.
+
+GitHub interpreta las palabras de cierre de una PR únicamente cuando esta apunta a la rama predeterminada. Si la predeterminada es main, fusionar una PR con base staging no cierra la issue ni crea automáticamente el vínculo a partir de `Closes #N`. Al promover el cambio a la rama predeterminada, conservar y verificar la referencia de cierre en la PR o commit correspondiente. La [documentación de GitHub](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue) explica estas condiciones; no prometer el cierre solo por añadir la palabra en staging.
 
 ## Capacidades y límites de Codex
 

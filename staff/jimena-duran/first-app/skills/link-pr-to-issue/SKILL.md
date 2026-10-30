@@ -1,6 +1,6 @@
 ---
 name: link-pr-to-issue
-description: Relaciona desde el orquestador una PR existente con su issue sin crear recursos ni prometer cierre automático.
+description: Vincula desde el orquestador una PR existente con Closes y conserva Development sin cerrar issues manualmente.
 ---
 
 # Relacionar la tarea
@@ -8,9 +8,11 @@ description: Relaciona desde el orquestador una PR existente con su issue sin cr
 La ejecuta el orquestador después de recibir la PR de `create-pr`; no la llama ese subagente. Recibe issue y PR existentes en el repositorio comprobado, con base staging.
 
 1. Lee ambos recursos y el cuerpo completo de la PR. Comprueba identidad `jiji-mena`; prefiere MCP compatible con esa cuenta y, si no es suficiente o la identidad difiere, informa y usa `gh` autenticado como Jimena.
-2. Conserva el resto del cuerpo y deja en su sección Issue una única línea `Related to #N`. Sustituye cualquier referencia de cierre de esa misma issue por esa relación; no alteres otras referencias sin revisar su propósito. Usa un archivo temporal UTF-8 si la alternativa es `gh pr edit $prNumber --repo $repository --body-file $bodyPath`. Comprueba `$LASTEXITCODE`.
-3. Relee el cuerpo para confirmar la relación. La línea por sí sola no acredita un enlace en Development. Si la herramienta disponible permite ese enlace, verifica antes su contrato, autorización y resultado; no copies una mutación GraphQL sin comprobar su soporte. Si no puede verificarse, informa de que Development queda pendiente.
-4. Devuelve por separado el resultado del cuerpo y el de Development. No afirmes cierre automático al fusionar en staging, no cierres la issue y no crees una PR o issue nueva.
+2. Conserva el resto del cuerpo y deja en su sección Issue una única línea `Closes #N`, con el número real. Si ya existe, no la dupliques. Sustituye `Related to #N` u otra referencia aislada de esa misma issue por `Closes #N`; no alteres referencias a otras issues. Usa un archivo temporal UTF-8 si la alternativa es `gh pr edit $prNumber --repo $repository --body-file $bodyPath`. Comprueba `$LASTEXITCODE`.
+3. Lee Development antes de modificar y conserva sus vínculos existentes. Relee el cuerpo para confirmar la línea. La palabra de cierre no acredita por sí sola un enlace en Development cuando la PR apunta a staging y esta no es la rama predeterminada. Si falta el enlace y la herramienta permite crearlo, comprueba primero contrato, autorización y resultado; no copies una mutación GraphQL sin verificar su soporte. Si no puede verificarse, informa de que Development queda pendiente; no elimines enlaces para recrearlos.
+4. Devuelve por separado el resultado del cuerpo y el de Development. No llames a una API ni a `gh issue close` para cerrar la issue. No crees una PR o issue nueva ni cambies la base staging desde esta skill.
+
+GitHub interpreta las palabras de cierre de una PR solo si esta apunta a la rama predeterminada del repositorio. Comprueba esa rama en los metadatos, sin asumirla. Si es main y la PR apunta a staging, `Closes #N` no crea automáticamente el vínculo ni cierra la issue al fusionar en staging. Al promover el cambio a la rama predeterminada se debe conservar y verificar la referencia de cierre en la PR o commit que llegue a ella; no prometer cierre por el solo hecho de añadir esta línea a la PR de staging.
 
 Esta skill modifica una PR y necesita autorización aplicable. Si la entrega actual prohíbe operaciones sobre PR, informa de que el paso está pendiente y no lo ejecutes como prueba.
 

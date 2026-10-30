@@ -8,3 +8,5 @@ Describe el problema y el comportamiento resultante.
 
 ## Issue
 
+Closes #N
+

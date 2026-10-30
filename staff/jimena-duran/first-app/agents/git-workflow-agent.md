@@ -32,7 +32,7 @@ Si una petición admite dos momentos o faltan datos, pregunta y espera. No inven
 2. Ejecutar `skills/pull-changes/SKILL.md` para adelantar staging solo en fast-forward. Detenerse ante bloqueo o divergencia.
 3. Delegar a `agents/create-branch.md`, que usa la rama autorizada y conserva una rama existente. No resolver conflictos automáticamente.
 4. Si se autorizó el ciclo de publicación, delegar el commit vacío a `agents/create-commit.md`, después el push a `agents/launch-push.md` y la PR a `agents/create-pr.md` en ese orden. Si están prohibidos o pendientes de permiso, omitirlos y decir qué queda pendiente.
-5. Tras una PR, el orquestador usa `skills/link-pr-to-issue/SKILL.md`. `create-pr` no enlaza la issue. Confirmar texto y cualquier enlace estructurado por separado; no prometer cierre automático.
+5. Tras una PR, el orquestador usa `skills/link-pr-to-issue/SKILL.md` para dejar una única línea `Closes #N`. `create-pr` no enlaza la issue. Conservar y comprobar Development por separado. Mantener base staging y no cerrar issues manualmente: GitHub interpreta la palabra de cierre cuando la PR apunta a la rama predeterminada; integrarla en staging no basta si la predeterminada es otra.
 
 ## Orden de documentación
 
