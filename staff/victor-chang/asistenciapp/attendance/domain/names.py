@@ -1,25 +1,27 @@
-"""Validación y normalización de nombres de alumnos (plan §2.4)."""
+"""Validación y normalización de nombres de alumnos (spec 001 · plan §2.4)."""
 
 import unicodedata
+
+from attendance.domain.errors import EmptyNameError, NameTooLongError
 
 MAX_LENGTH = 60
 
 
-def clean_name(raw: object) -> str:
-    """Devuelve el nombre sin espacios sobrantes o lanza ValueError (CA-08).
+def clean_name(raw: str) -> str:
+    """Devuelve el nombre sin espacios sobrantes (CA-08).
 
     El nombre se guarda tal como lo escribió el alumno: no se escapa HTML
     aquí, porque el frontend lo muestra siempre como texto (CA-12).
+
+    Raises:
+        EmptyNameError: el nombre está vacío o solo tiene espacios.
+        NameTooLongError: el nombre pasa de MAX_LENGTH caracteres.
     """
-    if raw is None:
-        raw = ""
-    if not isinstance(raw, str):
-        raise ValueError("Escribe tu nombre.")
     name = raw.strip()
     if not name:
-        raise ValueError("Escribe tu nombre.")
+        raise EmptyNameError
     if len(name) > MAX_LENGTH:
-        raise ValueError(f"El nombre no puede tener más de {MAX_LENGTH} caracteres.")
+        raise NameTooLongError
     return name
 
 

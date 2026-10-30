@@ -1,28 +1,23 @@
-"""Tests de la API (app.py) · T06–T11."""
+"""Tests de las rutas del profesor (attendance/entrypoints/web/teacher.py).
+
+spec 001 CA-01, CA-02, CA-09 a CA-19, CA-24 a CA-26; spec 005 CA-06, CA-08.
+
+Vienen de test_api.py (spec 005 · T14). Cambia solo el de abrir con un cuerpo mal formado (spec 005 · P1).
+"""
 
 import re
 
 import pytest
+from web_helpers import check_in, current_code, open_session
 
-INVALID_CODE = "El código no es válido o ha caducado. Pide el código actual al profesor."
-CLOSED = "La asistencia de esta clase ya está cerrada."
+from attendance.domain.errors import TitleTooLongError
+from attendance.entrypoints.web.errors import MalformedRequestError
 
-
-def open_session(client, teacher, title="Clase de prueba"):
-    res = client.post("/api/sessions", json={"title": title}, headers=teacher)
-    assert res.status_code == 201
-    return res.get_json()["id"]
-
-
-def current_code(client, teacher, sid):
-    return client.get(f"/api/sessions/{sid}", headers=teacher).get_json()["code"]
-
-
-def check_in(client, sid, name, code):
-    return client.post(f"/api/s/{sid}/checkin", json={"name": name, "code": code})
+CLOSED = "La asistencia de esta clase ya está cerrada. Si acabas de llegar, avisa al profesor."
 
 
 # ---------- T06 · base y acceso del profesor (CA-15, CA-17) ----------
+
 
 @pytest.mark.parametrize(
     "method, path",
@@ -41,20 +36,8 @@ def test_teacher_routes_require_token(client, method, path, headers):
     assert "error" in res.get_json()
 
 
-def test_unknown_api_route_is_404_json(client):
-    res = client.get("/api/no-existe")
-    assert res.status_code == 404
-    assert "error" in res.get_json()
-
-
-def test_public_session_info_does_not_leak_the_list(client, teacher):
-    sid = open_session(client, teacher)
-    check_in(client, sid, "Ana", current_code(client, teacher, sid))
-    data = client.get(f"/api/s/{sid}").get_json()
-    assert data == {"title": "Clase de prueba", "open": True}
-
-
 # ---------- T07 · crear y listar sesiones (CA-01, CA-02, CA-16) ----------
+
 
 def test_create_session_with_title(client, teacher):  # CA-01
     res = client.post("/api/sessions", json={"title": "  Clase 20/10 – SDD "}, headers=teacher)
@@ -85,77 +68,8 @@ def test_list_sessions_newest_first_with_totals(client, teacher, clock):  # CA-1
     assert {"openedAt", "closedAt"} <= sessions[0].keys()
 
 
-# ---------- T08 · registro del alumno (CA-04 … CA-08, CA-12) ----------
-
-def test_check_in_with_current_code(client, teacher):  # CA-04
-    sid = open_session(client, teacher)
-    res = check_in(client, sid, "Ana García", current_code(client, teacher, sid))
-    assert res.status_code == 201
-    data = res.get_json()
-    assert data["name"] == "Ana García"
-    assert "checkedAt" in data
-
-
-def test_check_in_with_previous_code(client, teacher, clock):  # CA-05
-    sid = open_session(client, teacher)
-    previous = current_code(client, teacher, sid)
-    clock.advance(30)
-    assert check_in(client, sid, "Ana", previous).status_code == 201
-
-
-def test_check_in_with_code_from_two_windows_ago(client, teacher, clock):  # CA-06
-    sid = open_session(client, teacher)
-    old = current_code(client, teacher, sid)
-    clock.advance(30)
-    middle = current_code(client, teacher, sid)
-    clock.advance(30)
-    if old in (middle, current_code(client, teacher, sid)):
-        pytest.skip("Coincidencia casual de códigos (1 entre 5.000)")
-    res = check_in(client, sid, "Ana", old)
-    assert res.status_code == 422
-    assert res.get_json()["error"] == INVALID_CODE
-
-
-@pytest.mark.parametrize("code", ["abcd", "", "12345"])
-def test_check_in_with_wrong_code(client, teacher, code):  # CA-06
-    sid = open_session(client, teacher)
-    res = check_in(client, sid, "Ana", code)
-    assert res.status_code == 422
-    assert res.get_json()["error"] == INVALID_CODE
-
-
-def test_duplicate_name_is_not_added_twice(client, teacher, clock):  # CA-07
-    sid = open_session(client, teacher)
-    first = check_in(client, sid, "Ana García", current_code(client, teacher, sid)).get_json()
-    clock.advance(10)
-    res = check_in(client, sid, "  ana   GARCIA ", current_code(client, teacher, sid))
-    assert res.status_code == 200
-    assert res.get_json() == {"already": True, "name": "Ana García", "checkedAt": first["checkedAt"]}
-    assert client.get(f"/api/sessions/{sid}", headers=teacher).get_json()["total"] == 1
-
-
-@pytest.mark.parametrize("name", ["", "   ", "a" * 61])
-def test_invalid_name_is_rejected(client, teacher, name):  # CA-08
-    sid = open_session(client, teacher)
-    res = check_in(client, sid, name, current_code(client, teacher, sid))
-    assert res.status_code == 400
-    assert res.get_json()["error"]
-
-
-def test_html_name_is_returned_literally(client, teacher):  # CA-12
-    sid = open_session(client, teacher)
-    check_in(client, sid, "<b>Ana</b>", current_code(client, teacher, sid))
-    checkins = client.get(f"/api/sessions/{sid}", headers=teacher).get_json()["checkins"]
-    assert checkins[0]["name"] == "<b>Ana</b>"
-
-
-def test_unknown_session(client):
-    assert client.get("/api/s/no-existe").status_code == 404
-    assert check_in(client, "no-existe", "Ana", "1234").status_code == 404
-    assert client.get("/api/s/no-existe").get_json()["error"] == "Esta clase no existe. Revisa el enlace."
-
-
 # ---------- T09 · vista del profesor (CA-10, CA-11) ----------
+
 
 def test_teacher_view(client, teacher, clock):  # CA-10, CA-11
     sid = open_session(client, teacher)
@@ -175,6 +89,7 @@ def test_teacher_view(client, teacher, clock):  # CA-10, CA-11
 
 
 # ---------- T10 · cerrar sesión (CA-09, CA-13) ----------
+
 
 def test_closed_session(client, teacher):  # CA-09, CA-13
     sid = open_session(client, teacher)
@@ -198,6 +113,7 @@ def test_close_unknown_session(client, teacher):
 
 # ---------- T11 · exportar (CA-14) ----------
 
+
 def test_export_csv(client, teacher, clock):  # CA-14
     sid = open_session(client, teacher)
     check_in(client, sid, "Luis", current_code(client, teacher, sid))
@@ -217,6 +133,7 @@ def test_export_csv(client, teacher, clock):  # CA-14
 
 # ---------- T13 · acceso a través del túnel (CA-19) ----------
 
+
 def test_student_url_uses_public_tunnel_address(client, teacher):  # CA-19
     sid = open_session(client, teacher)
     res = client.get(
@@ -227,6 +144,7 @@ def test_student_url_uses_public_tunnel_address(client, teacher):  # CA-19
 
 
 # ---------- T22 · quitar registros (CA-24, CA-25, CA-26) ----------
+
 
 def checkins_of(client, teacher, sid):
     return client.get(f"/api/sessions/{sid}", headers=teacher).get_json()["checkins"]
@@ -272,7 +190,7 @@ def test_remove_unknown_or_other_session_checkin(client, teacher):  # CA-24
 
     assert client.delete(f"/api/sessions/{sid}/checkins/{other_id}", headers=teacher).status_code == 404
     assert client.delete(f"/api/sessions/{sid}/checkins/99999", headers=teacher).status_code == 404
-    assert client.delete(f"/api/sessions/no-existe/checkins/1", headers=teacher).status_code == 404
+    assert client.delete("/api/sessions/no-existe/checkins/1", headers=teacher).status_code == 404
     assert len(checkins_of(client, teacher, other)) == 1  # la de la otra sesión sigue ahí
 
 
@@ -294,40 +212,37 @@ def test_removed_person_can_check_in_again(client, teacher):  # CA-26
     assert check_in(client, sid, "ana garcia", code).status_code == 201
 
 
-# ---------- Entradas mal formadas: siempre JSON, nunca un 500 ----------
-
-@pytest.mark.parametrize(
-    "raw, status",
-    [
-        ("[1]", 400),  # JSON que no es un objeto
-        ('"Ana"', 400),
-        ('{"name": 123, "code": "1234"}', 400),  # nombre que no es texto
-        ('{"name": ["Ana"], "code": "1234"}', 400),
-        ('{"name": "Ana", "code": "١٢٣٤"}', 422),  # dígitos árabes desde el móvil
-        ('{"name": "Ana", "code": "12é4"}', 422),
-    ],
-)
-def test_malformed_checkin_is_rejected_as_json(client, teacher, raw, status):
-    sid = open_session(client, teacher)
-    res = client.post(f"/api/s/{sid}/checkin", data=raw, content_type="application/json")
-    assert res.status_code == status
-    assert res.get_json()["error"]
+# ---------- Entradas mal formadas y título (spec 005 · plan §2.6, CA-06, CA-08; ARCHITECTURE T3) ----------
 
 
-@pytest.mark.parametrize("raw", ["[1]", '{"title": {"a": 1}}', '{"title": 5}'])
-def test_create_session_with_malformed_body_uses_date(client, teacher, raw):  # CA-02
+def sessions_of(client, teacher):
+    return client.get("/api/sessions", headers=teacher).get_json()
+
+
+@pytest.mark.parametrize("raw", ["[1]", '"Clase"', "{roto", '{"title": {"a": 1}}', '{"title": 5}', '{"title": null}'])
+def test_create_session_with_malformed_body_is_rejected(client, teacher, raw):  # spec 005 CA-06 y P1
     res = client.post("/api/sessions", data=raw, content_type="application/json", headers=teacher)
+    assert res.status_code == 400
+    assert res.get_json() == {"error": MalformedRequestError.MESSAGE}
+    assert sessions_of(client, teacher) == []
+
+
+def test_create_session_without_body_uses_date(client, teacher):  # spec 001 CA-02
+    res = client.post("/api/sessions", headers=teacher)
     assert res.status_code == 201
     assert re.fullmatch(r"\d{2}/\d{2}/\d{4} \d{2}:\d{2}", res.get_json()["title"])
 
 
-def test_unexpected_error_is_json_500(client, teacher, monkeypatch):
-    sid = open_session(client, teacher)
+@pytest.mark.parametrize("title", ["a" * 20, "  " + "b" * 20 + "  ", "Клас 1 · 李雷", "مرحبا"])
+def test_titles_up_to_the_limit_are_accepted(client, teacher, title):  # spec 005 CA-08
+    res = client.post("/api/sessions", json={"title": title}, headers=teacher)
+    assert res.status_code == 201
+    assert res.get_json()["title"] == title.strip()
 
-    def boom(*_args):
-        raise RuntimeError("fallo simulado")
 
-    monkeypatch.setattr("asistencia.db.list_checkins", boom)
-    res = client.get(f"/api/sessions/{sid}", headers=teacher)
-    assert res.status_code == 500
-    assert res.get_json()["error"]
+@pytest.mark.parametrize("title", ["a" * 21, "é" * 21, "x" * 1000])
+def test_title_over_the_limit_is_rejected(client, teacher, title):  # spec 005 CA-08
+    res = client.post("/api/sessions", json={"title": title}, headers=teacher)
+    assert res.status_code == 400
+    assert res.get_json() == {"error": TitleTooLongError.MESSAGE}
+    assert sessions_of(client, teacher) == []

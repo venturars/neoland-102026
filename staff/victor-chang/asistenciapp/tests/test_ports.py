@@ -1,8 +1,8 @@
-"""Tests de port_in_use (app.py) · T14b."""
+"""Tests de attendance/infra/ports.py · spec 001 T14b."""
 
 import socket
 
-from app import port_in_use
+from attendance.infra.ports import port_in_use
 
 
 def test_detects_listening_port_and_free_port():

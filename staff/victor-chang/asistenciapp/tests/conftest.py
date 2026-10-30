@@ -2,7 +2,8 @@
 
 import pytest
 
-from app import create_app
+from attendance.config import Config
+from attendance.entrypoints.web import create_app
 
 TOKEN = "token-de-prueba"
 
@@ -27,7 +28,9 @@ def clock():
 
 @pytest.fixture
 def app(tmp_path, clock):
-    return create_app(tmp_path / "test.db", token=TOKEN, now=clock)
+    # timezone=None: la zona del sistema, como hasta ahora (spec 005 · plan §2.4).
+    config = Config(db_path=tmp_path / "test.db", port=8000, timezone=None)
+    return create_app(config, clock=clock, teacher_token=TOKEN)
 
 
 @pytest.fixture
