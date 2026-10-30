@@ -66,7 +66,7 @@ def test_app_does_not_open_the_database():  # CA-06
 
 def test_constitution_names_the_new_folders():  # CA-09
     text = _text("docs/CONSTITUTION.md")
-    assert "Versión 4.0" in text
+    assert "Versión 4.1" in text
     assert "IP de quien intenta registrarse" in text
     assert "códigos fallados" in text
     assert "lista de bloqueo" in text

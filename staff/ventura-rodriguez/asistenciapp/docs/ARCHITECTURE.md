@@ -37,7 +37,11 @@ asistenciapp/
 ├── AGENTS.md              # cómo se trabaja y cómo se escribe el código
 ├── README.md              # cómo arrancar la app (para humanos)
 ├── specs/
-│   └── NNN-nombre/
+│   ├── 000-historial/
+│   │   ├── specs.md       # todas las specs, en orden, con su estado
+│   │   ├── enmienda.md    # historial de enmiendas de la constitución
+│   │   └── resumenes/     # resúmenes de specs antiguas
+│   └── <issue>-nombre/    # 001 a 008 conservan su número
 │       ├── spec.md        # qué y por qué
 │       ├── plan.md        # cómo
 │       └── tasks.md       # pasos
