@@ -141,6 +141,7 @@ En ese momento se indicó recargar VS Code para cargar el header. La inicializac
 - Los cambios son documentales; no se repiten suites históricas de Git, usuarios, clientes, notebooks ni Ollama. La comprobación de conexión HTTP 200 anterior no se presenta como prueba de escritura.
 
 Este informe se prepara antes del commit y push autorizados. El resultado real de publicación, escritura MCP y vínculo Development se confirma después contra GitHub; no se da por realizado anticipadamente. Se conserva #600 en draft contra staging, sin cambiar revisores ni hacer merge.
+
 ## Reanudación de la publicación autorizada
 
 La terminal vuelve a responder. Se comprobaron el checkout `.tmp/pr600-mcp-review`, la rama `jimena-duran-291020262`, el índice vacío y los mismos doce archivos documentales pendientes. `git diff --check` termina con código 0; las comprobaciones dirigidas anteriores se conservan sin repetir suites históricas.
