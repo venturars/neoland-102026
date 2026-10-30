@@ -6,7 +6,7 @@ El trabajo de git sigue `agents/git-workflow-agent.md` de esta carpeta. Las para
 
 first-app es una app de usuarios para alumnos junior. Se construye con IA siguiendo el sistema SDD.
 
-Está en Node, con módulos ES (`"type": "module"`). SQLite entra con `node:sqlite`. Las dependencias de paquete son `openai`, `cli-table3` y `@colors/colors`. Los scripts se lanzan con pnpm.
+Está en Node, con módulos ES (`"type": "module"`). SQLite entra con `node:sqlite`. Las dependencias de paquete son `openai`, `cli-table3` y `@colors/colors`. Las de desarrollo son `prettier`, `eslint` y `@eslint/js`. Los scripts se lanzan con pnpm.
 
 La arquitectura está en `docs/CONSTITUCION.md`. Esta guía no la repite. Si una tarea y la constitución chocan, gana la constitución. Si la constitución, el código y esta guía se contradicen, se pregunta antes de escribir.
 
@@ -54,9 +54,9 @@ Para empezar, copia `.mcp.example.json` a `.mcp.json` y define `SOCKET_API_TOKEN
 
 ## Comandos
 
-Desde esta carpeta, Jupyter se abre con `pnpm run jupyter`.
+Desde esta carpeta, Jupyter se abre con `pnpm run jupyter`, en Linux y en Windows. Lo lanza `scripts/jupyter.js`: la primera vez crea `.venv` e instala `notebook==7.6.3`; las siguientes lo reutiliza.
 
-No hay script de lint ni de formato. No se añade uno salvo que se pida.
+`pnpm format` pasa Prettier por los `.js` de `src/db/`, `src/queries/` y `src/logic/`, con el formato estándar y sin configuración propia. `pnpm lint` pasa ESLint con las reglas recomendadas, según `eslint.config.js`.
 
 La dependencia `openai` es la del clasificador. `@colors/colors` y `cli-table3` son las tablas del cliente Jupyter. Se instalan con `pnpm install`.
 
