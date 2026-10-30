@@ -112,3 +112,8 @@ agent documents. It does not duplicate their procedures. These are optional comp
 bodies. `MCPS/github-mcp-server/mcp.txt` is a public server documentation reference,
 not an installed connection or credential store. Setup and verification are in
 README.md; workflow permissions and SDD gates remain in AGENTS.md.
+
+[MCPS/socket-mcp/mcp.txt](../MCPS/socket-mcp/mcp.txt) is the public Socket MCP
+documentation reference, alongside the GitHub reference. It is not an installed
+connection or credential store. The constitution explains access and source
+coverage; AGENTS.md retains the detailed dependency-validation procedure.
