@@ -43,6 +43,7 @@
 - `templates/issues/basic_issue.md` es el cuerpo de la issue: qué hay que hacer y cómo probarlo.
 - `templates/pull-request/basic-pull-request.md` es el cuerpo de la pull request.
 - `MCPS/github-mcp-server/mcp.txt` es la dirección del MCP de GitHub.
+- `MCPS/socket-mcp/mcp.txt` es la dirección del MCP de Socket.
 
 - `docs/` guarda la constitución y las specs.
   - `docs/CONSTITUTIONS.md` manda el comportamiento de la app.
