@@ -6,7 +6,8 @@ Whoever works in this app follows the git workflow of the course: think
 the task through, write it down, start it, save a piece of work and ask
 for a review.
 
-It is used by the person who builds the app with AI.
+It is used by the person who builds the app with AI. Only that person
+has access, signed in to GitHub with write access to the repository.
 
 The input is a task of this app. The output is the task written down,
 with the title in English and the body in Spanish. When the work starts,

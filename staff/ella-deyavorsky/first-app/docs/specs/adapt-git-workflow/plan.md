@@ -76,6 +76,23 @@ that run a script, each `./tools/` becomes
 `staff/ella-deyavorsky/first-app/tools/`. The rest of each skill stays
 the same.
 
+## Outside tools
+
+This change installs nothing. To use the workflow, the machine already
+has:
+
+- `git` and `bash`. The seven scripts in `tools/` use only them.
+- `gh`, signed in to GitHub. `skills/link-pr-to-issue/SKILL.md` uses
+  `gh api graphql` to link the issue in Development.
+- The GitHub MCP, set up as `MCPS/github-mcp-server/mcp.txt` says. Six
+  skills write through it: `create-issue`, `assign-author`,
+  `create-pr-base-staging`, `create-draft`, `link-pr-to-issue` and
+  `assign-reviewers`. In Cursor, its `github` entry carries the
+  `X-MCP-Features` header, so it writes directly instead of opening a
+  form.
+
+The last check of the tasks only needs `git` and `bash`.
+
 ## AGENTS.md
 
 After the first line, "This file tells a coding assistant how to work in
@@ -275,7 +292,7 @@ One folder per skill, each with a `SKILL.md`. A skill that runs a script names i
 In "docs/", the `specs/` line becomes:
 
 ```
-- `specs/` holds one folder per feature, with `spec.md`, `plan.md` and `tasks.md`. Each `spec.md` opens with `Issue: #N`.
+- `specs/` holds one folder per feature, with `spec.md`, `plan.md` and `tasks.md`. A new `spec.md` opens with `Issue: #N`.
 ```
 
 The other points stay the same. The tree is not repeated.

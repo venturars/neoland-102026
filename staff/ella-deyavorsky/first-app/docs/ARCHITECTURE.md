@@ -114,4 +114,4 @@ One folder per skill, each with a `SKILL.md`. A skill that runs a script names i
 - `DATABASE.md` holds the table and the queries.
 - `ERRORS.md` holds the list of errors.
 - `STYLE.md` holds the conventions and the shape of each line.
-- `specs/` holds one folder per feature, with `spec.md`, `plan.md` and `tasks.md`. Each `spec.md` opens with `Issue: #N`.
+- `specs/` holds one folder per feature, with `spec.md`, `plan.md` and `tasks.md`. A new `spec.md` opens with `Issue: #N`.
