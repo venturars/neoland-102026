@@ -1,5 +1,7 @@
 # AGENTS.md — first-app
 
+El trabajo de git sigue [agents/git-workflow-agent.md](agents/git-workflow-agent.md). Las paradas de la app siguen: spec antes del código, y `npm run format` con `npm run lint` antes de terminar.
+
 ## Proyecto
 
 first-app es la app de Meghan en este curso. Se construye con IA siguiendo SDD. No es una web: se usa desde la terminal y guarda personas en SQLite.
