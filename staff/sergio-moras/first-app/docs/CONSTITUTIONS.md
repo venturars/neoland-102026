@@ -16,7 +16,7 @@ El flujo es `terminal → logic → queries → db/connection.js`.
 ### 2. Estructura fija
 - Una operación = un archivo en `logic/` + un `.txt` en `clients/terminal/`.
 - Una tabla = un archivo en `queries/`.
-- Cada archivo de `logic/` solo exporta su función. No lee `process.argv`, no imprime y no llama a `process.exit`. El `.txt` de `terminal/` la importa y muestra el resultado.
+- Cada archivo de `logic/` solo exporta su función. No lee `process.argv`, no imprime y no llama a `process.exit`. El `.txt` de `clients/terminal/` la importa y muestra el resultado.
 - No se crean, mueven ni borran archivos o carpetas sin que el usuario lo pida.
 
 *Motivo:* el proyecto es didáctico y su forma debe ser predecible.
