@@ -34,4 +34,4 @@ if (!existsSync(notebookMarkerPath)) {
   run(pipPath, ["install", "notebook==7.6.3"]);
 }
 
-run(jupyterPath, ["notebook", "clients/jupyter"]);
+run(jupyterPath, ["notebook", "src/clients/jupyter"]);
