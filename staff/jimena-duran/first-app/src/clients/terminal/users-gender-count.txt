@@ -1,8 +1,8 @@
 # Pega esto en PowerShell desde la carpeta first-app.
 $script = @'
-import { listUsers } from "./logic/list-users.js";
+import { usersGenderCount } from "./src/logic/users-gender-count.js";
 
-const result = listUsers();
+const result = await usersGenderCount();
 
 console.log(result);
 '@

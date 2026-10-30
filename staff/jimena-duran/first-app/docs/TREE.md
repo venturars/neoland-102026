@@ -3,17 +3,18 @@
 ```
 first-app/
   eslint.config.js
-  db/connection.js
-  db/users.sqlite
-  queries/queries/
-  queries/users.js
-  logic/                  una función de negocio por archivo
-    create-user.js, update-user.js, delete-user.js
-    list-users.js, find-user-by-email.js, find-user-by-id.js
-    find-users-by-name.js
-    users-gender-count.js
-  clients/terminal/
-  clients/jupyter/
+  src/
+    db/connection.js
+    db/users.sqlite         local, fuera de Git
+    queries/queries/
+    queries/users.js
+    logic/                  una función de negocio por archivo
+      create-user.js, update-user.js, delete-user.js
+      list-users.js, find-user-by-email.js, find-user-by-id.js
+      find-users-by-name.js
+      users-gender-count.js
+    clients/terminal/
+    clients/jupyter/
   agents/                 orquestador y subagentes del flujo de Git
   skills/                 instrucciones reutilizables por momento
   tools/                  herramientas PowerShell

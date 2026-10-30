@@ -1,8 +1,8 @@
 # Pega esto en PowerShell desde la carpeta first-app.
 $script = @'
-import { findUserById } from "./logic/find-user-by-id.js";
+import { createUser } from "./src/logic/create-user.js";
 
-const result = findUserById(3);
+const result = createUser({ name: "Ada", email: "ada@example.com" });
 
 console.log(result);
 '@

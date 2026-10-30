@@ -45,7 +45,7 @@ versión no cambie y las dependencias más allá de la tercera capa.
 
 ## Cierre de una tarea
 
-- Cada funcionalidad nueva debe incluir su primer cliente en `clients/terminal/`. Es un archivo `.txt` que se ejecuta desde la carpeta `first-app`, importa la función de `logic/` y muestra su resultado con `console.log`.
+- Cada funcionalidad nueva debe incluir su primer cliente en `src/clients/terminal/`. Es un archivo `.txt` que se ejecuta desde la carpeta `first-app`, importa la función de `src/logic/` y muestra su resultado con `console.log`.
 - Antes de cerrar el trabajo, ejecuta ese fragmento y confirma que la funcionalidad funciona.
 - Ejecuta `pnpm format` antes de dar la tarea por terminada.
 - Ejecuta `pnpm lint` antes de dar la tarea por terminada.

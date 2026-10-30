@@ -6,11 +6,21 @@ escribir código ni rellenar formularios.
 
 ## Abrir
 
+Antes de ejecutar celdas en un checkout actualizado, comprueba el [traslado manual de SQLite](DATABASE.md#conservar-la-base-al-actualizar-un-checkout). Git no mueve la base ignorada de `db/` a `src/db/`.
+
 Desde `staff/jimena-duran/first-app`:
+
+```powershell
+python -m jupyterlab src/clients/jupyter --ServerApp.ip=127.0.0.1 --port=8899 --IdentityProvider.token= --PasswordIdentityProvider.hashed_password=
+```
+
+Desde `staff/jimena-duran/first-app/src`, el mismo arranque usa:
 
 ```powershell
 python -m jupyterlab clients/jupyter --ServerApp.ip=127.0.0.1 --port=8899 --IdentityProvider.token= --PasswordIdentityProvider.hashed_password=
 ```
+
+Los nueve notebooks localizan exclusivamente `staff/jimena-duran/first-app/src` de este checkout. Pueden ejecutarse con el kernel iniciado desde first-app, src o la carpeta de los notebooks; una carpeta `logic/` de otro alumno no identifica esta aplicación.
 
 Abre `http://127.0.0.1:8899/lab`. Esta demo local no pide token ni contraseña
 y solo admite conexiones desde este equipo. Si otra persona la prueba en su
