@@ -2,7 +2,7 @@
 
 The notebooks stay in Python. The business rules stay in logic/.
 This file only starts Node and returns the value or the error message
-that the function already uses. Node opens db/users.sqlite.
+that the function already uses. Node opens src/db/users.sqlite.
 """
 
 import json
@@ -15,20 +15,20 @@ from pathlib import Path
 
 from IPython.display import HTML, display
 
-# clients/jupyter/run_logic.py -> first-app, where package.json and logic/ live.
-APP_ROOT = Path(__file__).resolve().parents[2]
+# src/clients/jupyter/run_logic.py -> first-app, where package.json and src/ live.
+APP_ROOT = Path(__file__).resolve().parents[3]
 
 # The names below are the real exports. They are fixed here so a notebook
 # cannot build its own Node program or its own SQL.
 FUNCTIONS = {
-    "createUser": "logic/create-user.js",
-    "findUserByEmail": "logic/find-user-by-email.js",
-    "findUserById": "logic/find-user-by-id.js",
-    "updateUser": "logic/update-user.js",
-    "deleteUser": "logic/delete-user.js",
-    "listUsers": "logic/list-users.js",
-    "countUsersByGender": "logic/count-users-by-gender.js",
-    "createUsersTable": "queries/users.js",
+    "createUser": "src/logic/create-user.js",
+    "findUserByEmail": "src/logic/find-user-by-email.js",
+    "findUserById": "src/logic/find-user-by-id.js",
+    "updateUser": "src/logic/update-user.js",
+    "deleteUser": "src/logic/delete-user.js",
+    "listUsers": "src/logic/list-users.js",
+    "countUsersByGender": "src/logic/count-users-by-gender.js",
+    "createUsersTable": "src/queries/users.js",
 }
 
 
@@ -116,7 +116,7 @@ def delete_user(user_id):
 
 
 def list_users():
-    """Return the users stored in db/users.sqlite."""
+    """Return the users stored in src/db/users.sqlite."""
     return _call("listUsers", [])
 
 
@@ -152,7 +152,7 @@ def _call(function_name, arguments, wait_for_result=False):
 
     arguments travel as JSON. They are not pasted into the program text,
     so a name or an email cannot change the call itself.
-    Node keeps its default database, db/users.sqlite.
+    Node keeps its default database, src/db/users.sqlite.
     """
     if function_name not in FUNCTIONS:
         raise RuntimeError("That function is not part of the Jupyter client.")

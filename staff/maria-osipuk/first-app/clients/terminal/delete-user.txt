@@ -1,1 +1,0 @@
-node --input-type=module -e "import { deleteUser } from './logic/delete-user.js'; deleteUser(1)"
