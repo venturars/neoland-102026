@@ -2,6 +2,8 @@
 
 Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [constitución](docs/CONSTITUTIONS.md) dice **qué reglas** se cumplen; este archivo dice **cómo se trabaja** día a día.
 
+El trabajo de git sigue `agents/git-workflow-agent.md` de esta carpeta. Quien trabaja aquí pide un momento. El agente elige ese momento y no lo encadena con el siguiente.
+
 ---
 
 ## 1. Antes de hacer nada: lectura obligatoria
@@ -20,9 +22,11 @@ Si algo de lo que te piden contradice la constitución, **para y avisa** antes d
 
 ## 2. Flujo SDD paso a paso
 
-Cada cambio en esta app recorre estas fases **en orden**. Al terminar cada una, el agente **se detiene** y pide la aprobación de la persona que trabaja en esta carpeta. No se avanza sin un "ok" explícito. Una issue, una rama o una pull request **no sustituyen** al spec.
+El flujo de git vive en `agents/git-workflow-agent.md`. El agente elige un solo momento y no sigue al siguiente. El momento «empezar», cuando se pide, adelanta `staging`, abre la rama desde `staging`, hace el commit vacío `chore: open #N`, sube la rama y abre la pull request en draft contra `staging` con `Closes #N`. No escribe specs.
 
-Al empezar el cambio, el único fichero nuevo permitido es el `spec.md`. El agente lo enseña y espera el ok. El plan, las tasks y el cambio vienen después.
+Las specs recorren estas fases **en orden**. Al terminar cada una, el agente **se detiene** y pide la aprobación de la persona que trabaja en esta carpeta. No se avanza sin un "ok" explícito. Una issue, una rama o una pull request **no sustituyen** al spec y no autorizan el código.
+
+No se abre `specs/NNN-nombre/` sin número de issue. Cuando se piden las specs, el primer fichero nuevo de esa carpeta es el `spec.md`. Abre con `Issue: #N`. El agente lo enseña y espera el ok. Tras el ok, el plan. Tras el ok del plan, las tasks. Tras el ok de las tasks, la implementación.
 
 | Fase | Archivo | Pregunta que responde | Puerta de salida |
 | --- | --- | --- | --- |
@@ -37,6 +41,7 @@ Al empezar el cambio, el único fichero nuevo permitido es el `spec.md`. El agen
 - Cada criterio de aceptación lleva un identificador (`CA-01`, `CA-02`…) para poder enlazarlo desde tareas y tests.
 - Si falta información, escribe `[NECESITA ACLARACIÓN: pregunta concreta]`. **No inventes la respuesta.**
 - Si la spec activa no describe lo pedido, no se reutiliza: se abre `specs/NNN-nombre/spec.md`.
+- No se abre `specs/NNN-nombre/` sin número de issue. El spec abre con `Issue: #N`.
 - Cada spec vive en `specs/NNN-nombre/` con tres dígitos y nombre en kebab-case (p. ej. `001-checkin-codigo`, `002-spec-antes-del-cambio`).
 
 ### 2.2 Planificar (`plan.md`)
@@ -52,7 +57,7 @@ Al empezar el cambio, el único fichero nuevo permitido es el `spec.md`. El agen
 
 ### 2.4 Implementar
 - Haz **una tarea cada vez**. Al acabarla, márcala `[x]` en `tasks.md`.
-- Ningún fichero de la app se adelanta al spec. Si la spec activa no cubre el pedido, **para**, escribe el spec y espera aprobación.
+- Ningún fichero de la app se adelanta al spec. Si la spec activa no cubre el pedido, **para**. Si no hay número de issue, no se abre `specs/NNN-nombre/`. Con el número, se escribe el spec y se espera aprobación.
 - Si durante la implementación descubres que la spec o el plan están mal o incompletos, **para**, propón el cambio en el documento y espera aprobación.
 
 ---
@@ -86,7 +91,7 @@ Las únicas dependencias son Flask y pytest (constitución P3).
 - **Pregunta antes de suponer.** Ante una ambigüedad, pregunta o márcala con `[NECESITA ACLARACIÓN]`.
 - **Explica lo que haces.** Al cerrar cada fase, resume qué se ha hecho, por qué y qué tiene que revisar quien trabaja en esta carpeta.
 - **Cambios pequeños.** Mejor varias tareas cortas que una enorme.
-- **Nada de commits ni pushes** sin que quien trabaja en esta carpeta lo pida.
+- **Commit y push** solo cuando el momento pedido es «empezar» (commit vacío `chore: open #N`, push y pull request en draft contra `staging`, con `Closes #N`) o cuando, más tarde, se pide guardar un trozo o actuar sobre la pull request. No se fusiona a `staging`.
 - **Para todo lo que arranques.** Si levantas el servidor o `cloudflared` para probar, páralos al terminar y comprueba que el puerto queda libre: `lsof -nP -iTCP:8000 -sTCP:LISTEN` no debe mostrar nada. Ojo: en macOS el proceso aparece como `Python` (con mayúscula). (Incidencia del 2026-10-20 en T12.)
 - **No toques la constitución** salvo para proponer una enmienda, que solo aprueba quien trabaja en esta carpeta (constitución §8).
 
@@ -115,6 +120,7 @@ Una funcionalidad está terminada cuando:
 | `005-clean-architecture` | ✅ Implementada (2026-10-22) | Issue #239; `domain/`, `usecases/`, `storage/`, HTTP en `app.py` |
 | `006-limite-intentos-ip` | ✅ Implementada (2026-10-23); 93 tests pytest | Issue #318, PR #319; rate limit IP, block list, panel profesor, constitución v2.4 |
 | `007-informe-descarga-asistencia` | ✅ Terminada (2026-10-28) | Issue #324; informe `.xlsx` openpyxl; título/total fusionados A–D; 96 tests pytest |
+| `008-flujo-git-curso` | ✅ Implementada (2026-10-30): T01–T07, 96 tests | Issue #688; flujo de git del curso en esta carpeta |
 | Bot de Discord | Idea futura, sin número | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
