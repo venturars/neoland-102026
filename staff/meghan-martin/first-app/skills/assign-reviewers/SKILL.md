@@ -1,7 +1,7 @@
 # Pedir revisión
 
-Úsala cuando la persona nombra a quienes tienen que mirar la pull request. No elijas tú los nombres.
+Úsala al empezar, después de enlazar la issue. Los revisores de esta app son Miguel (`mglnglxx`) y Jimena (`jiji-mena`).
 
-Resuelve el login dentro de este repositorio. Si un nombre no es colaborador, dilo y no pidas esa revisión. Quita a quien abre la pull request si aparece en la lista.
+Pide la revisión a esos dos logins. Quita a quien abre la pull request si aparece en la lista. Después, saca la pull request de draft.
 
-Después, saca la pull request de draft. Si falla, dilo y no marques la revisión como pedida.
+Si falla, dilo y no marques la revisión como pedida.

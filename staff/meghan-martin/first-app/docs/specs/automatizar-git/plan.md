@@ -8,6 +8,7 @@ Cumple `docs/specs/automatizar-git/spec.md`. Los comandos son de shell, para zsh
 - `skills/`: un paso de git por carpeta. Se leen por su ruta.
 - `tools/`: scripts de shell. Encuentran la raíz con git. Valen lanzados desde la raíz del repositorio o desde `first-app`.
 - `templates/`: la issue y la pull request. Título en inglés. El enlace es `Related to #N`. No cierra la issue.
+- Al empezar, la pull request pide revisión a Miguel (`mglnglxx`) y a Jimena (`jiji-mena`) y sale de draft.
 - `MCPS/`: la dirección del servidor de GitHub.
 - `docs/GIT-AUTOMATION.md`: cómo se lanza en el Mac.
 - `docs/TREE.md` y `docs/ARCHITECTURE.md`: una línea por las carpetas nuevas.

@@ -10,4 +10,4 @@ En este orden:
 
 El cuerpo rellena `templates/pull-request/basic-pull-request.md`. La sección Issue se deja vacía. No hagas merge.
 
-Responde con el título, la base, que está en draft y la URL. Si no hay URL, dilo. No la inventes.
+Responde con el título, la base y la URL. El orquestador pide después la revisión a Miguel y a Jimena y la saca de draft. Si no hay URL, dilo. No la inventes.
