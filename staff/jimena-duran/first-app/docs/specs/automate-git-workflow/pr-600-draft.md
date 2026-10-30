@@ -12,8 +12,8 @@ Automatiza el flujo Git de first-app para Windows, PowerShell, VS Code y Codex c
 
 - Revisión del Markdown UTF-8 real, enlaces locales y rutas de comandos; dos manifiestos modificados validados con `quick_validate.py`; `git diff --check` correcto.
 - Comparación con el commit de Ventura `30149d6118c3f42362deff9ecec73bf92f14412f`: adaptación de Closes y MCP, conservando las pausas SDD y staging.
-- Lectura autenticada con identidad `jiji-mena`; PR abierta en draft contra staging e issue abierta. Development se comprueba y establece por separado después de esta actualización.
-- Historial, sin repetir suites por estos cambios documentales: 39 comprobaciones generales de Git, 23 de seguridad, 19 de archivos sin seguimiento más una puntual; lógica, 9 clientes, 9 notebooks, Ollama, formato y lint. HTTP 200 de inicialización MCP solo acredita conexión; la actualización real mediante gh CLI comprueba la escritura alternativa tras el 403 del MCP.
+- Publicados `fa1ab9de747dafb99e429a40edbc3c9c1f4cefe1` y `babacfc1bc650b29b022c62cd3fb143e0d43e0d9`. `gh pr edit` aplicó la descripción y su relectura confirmó el cuerpo exacto. PR abierta en draft contra staging e issue abierta; Development confirmado en ambos sentidos entre #600 y #588. La rama predeterminada actual es staging: `Closes #588` produjo el vínculo, sin mutación manual.
+- Historial, sin repetir suites por estos cambios documentales: 39 comprobaciones generales de Git, 23 de seguridad, 19 de archivos sin seguimiento más una puntual; lógica, 9 clientes, 9 notebooks, Ollama, formato y lint. La actualización mediante gh CLI valida la alternativa autorizada. El MCP falló con `403: Resource not accessible by integration` y su escritura sigue sin validar; el HTTP 200 histórico solo acredita inicialización.
 
 Documentación SDD: [spec, plan, tareas y verificación](https://github.com/venturars/neoland-102026/tree/jimena-duran-291020262/staff/jimena-duran/first-app/docs/specs/automate-git-workflow).
 

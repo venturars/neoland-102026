@@ -140,12 +140,22 @@ En ese momento se indicó recargar VS Code para cargar el header. La inicializac
 - La introspección GraphQL confirmó `addCloseIssueReferences`, su entrada `issueId` y `pullRequestIds` y su resultado `issue`: agrega vínculos manuales sin cerrar la issue. El MCP disponible no expone esta operación; se preparó la alternativa gh del procedimiento del proyecto para después de actualizar el cuerpo.
 - Los cambios son documentales; no se repiten suites históricas de Git, usuarios, clientes, notebooks ni Ollama. La comprobación de conexión HTTP 200 anterior no se presenta como prueba de escritura.
 
-Este informe se prepara antes del commit y push autorizados. El resultado real de publicación, escritura MCP y vínculo Development se confirma después contra GitHub; no se da por realizado anticipadamente. Se conserva #600 en draft contra staging, sin cambiar revisores ni hacer merge.
+Este bloque se preparó antes del commit y push autorizados. Los resultados posteriores de publicación, escritura alternativa y vínculo Development se registran al final; la escritura MCP no quedó validada. Se conserva #600 en draft contra staging, sin cambiar revisores ni hacer merge.
 
-## Reanudación de la publicación autorizada
+## Historial: reanudación de la publicación autorizada
 
 La terminal vuelve a responder. Se comprobaron el checkout `.tmp/pr600-mcp-review`, la rama `jimena-duran-291020262`, el índice vacío y los mismos doce archivos documentales pendientes. `git diff --check` termina con código 0; las comprobaciones dirigidas anteriores se conservan sin repetir suites históricas.
 
 El intento anterior de actualizar la descripción mediante MCP falló con `403: Resource not accessible by integration`; la relectura confirmó que no cambió el cuerpo. Se utiliza ahora gh CLI según autorización expresa, sin cambiar configuración ni permisos: identidad `jiji-mena`, permiso `push: true`, PR #600 abierta en draft con base staging y head inicial `e7e51b11fe90b748a2cc18ae7669783905e48a34`, sin solicitudes de revisión. La lectura actual del repositorio devuelve `default_branch: staging`; la referencia a main de las secciones anteriores corresponde a lecturas históricas. No se ha cambiado la rama predeterminada desde esta sesión.
 
-El checkout principal de #601 conserva su rama, el commit local y ChromaDB sin seguimiento. No se modifican sus archivos ni datos. La configuración personal del MCP permanece fuera del alcance del commit. Se publicarán exclusivamente los doce archivos revisados de #588 mediante commit selectivo y push a la rama existente; después se aplicará `pr-600-draft.md` y se comprobará Development por separado. Este registro precede a esas operaciones: los resultados finales se verifican por relectura y se comunican al terminar, sin anticipar éxito.
+El checkout principal de #601 conserva su rama, el commit local y ChromaDB sin seguimiento. No se modifican sus archivos ni datos. La configuración personal del MCP permanece fuera del alcance del commit. En ese momento estaban pendientes la publicación de los doce archivos revisados, la aplicación de `pr-600-draft.md` y la comprobación de Development. Esas operaciones se completaron después, como registra el estado final siguiente.
+
+## Estado final comprobado tras la publicación
+
+- Publicados en `jimena-duran-291020262`: `fa1ab9de747dafb99e429a40edbc3c9c1f4cefe1` (doce archivos documentales) y `babacfc1bc650b29b022c62cd3fb143e0d43e0d9` (separación del encabezado). HEAD local y remoto coincidieron en `babacfc1`; el checkout quedó limpio.
+- `gh pr edit` aplicó el cuerpo exacto de `pr-600-draft.md` publicado en `babacfc1` a [#600](https://github.com/venturars/neoland-102026/pull/600); la relectura confirmó el texto y una única línea `Closes #588`. Esta es escritura mediante gh, la alternativa permitida y autorizada, no mediante MCP.
+- Development se comprobó en ambos sentidos: #600 referencia a #588 y #588 referencia a #600. La rama predeterminada comprobada es `staging`, igual que la base de la PR; la referencia `Closes #588` produjo el vínculo. No fue necesario ejecutar la mutación manual `addCloseIssueReferences` ni cerrar la issue.
+- #600 permanece abierta en draft contra staging; #588 permanece abierta. No se cambiaron revisores, base ni rama predeterminada y no se hizo merge. Se conservaron #601, ChromaDB y la configuración personal fuera del commit.
+- El MCP de GitHub falló con `403: Resource not accessible by integration`; su escritura sigue sin validar. El HTTP 200 histórico solo acredita inicialización. La escritura por gh no demuestra que el MCP pueda escribir.
+
+La relectura autenticada anterior al commit de esta corrección documental como `jiji-mena` confirma head `babacfc1`, PR OPEN en draft contra staging, `reviewRequests: []`, `closingIssuesReferences` con #588 e issue OPEN con `closedByPullRequestsReferences` con #600. El checkout de #601 conserva `b62abae3` y ChromaDB sin seguimiento. Esta corrección afecta solo a plan, tareas, verificación y borrador; sus enlaces locales y `git diff --check` pasan, sin repetir suites de código ni anticipar el hash del siguiente commit documental.

@@ -2,7 +2,7 @@ Issue: #588
 
 # Plan de adaptación a Windows y Codex
 
-Estado: spec, plan y tareas T01–T23 aprobados por Jimena. Implementación y comprobaciones realizadas; resultados y límites en [verification.md](verification.md). Sin commit, push ni PR en el repositorio personal.
+Estado: spec, plan y tareas T01–T23 aprobados por Jimena. Implementación y comprobaciones realizadas; resultados y límites en [verification.md](verification.md). La PR #600 está publicada; los commits y el estado remoto comprobados se registran en verification.md. Jimena autorizó commit selectivo, push y actualización de esa PR existente, manteniendo draft y base staging, sin merge ni cambios de revisores.
 
 ## Organización y funcionamiento
 
@@ -45,7 +45,7 @@ Usar --no-overwrite-ignore en cambios de rama y merges de avance rápido para pr
 
 Para guardar archivos concretos o hacer un commit vacío, usar un índice temporal desde PowerShell, preservando el índice ajeno y restaurando GIT_INDEX_FILE incluso ante errores. Validar rutas y rechazar directorios, comodines que amplíen el alcance y opciones de incorporación masiva. Bloquear commits y publicaciones en main/staging y comprobar que la rama coincide con la autorizada para la tarea en curso, recibida como parámetro o contexto explícito.
 
-Durante esta entrega no ejecutar los pasos de commit vacío, commit, push ni PR. El flujo habitual puede describirlos, pero la autorización de esta sesión prevalece. La rama jimena-duran-291020262 es una excepción expresamente solicitada al patrón habitual número-tipo-descripción; no renombrarla.
+En la preparación inicial no estaban autorizados commit vacío, commit, push ni PR. Posteriormente Jimena autorizó la publicación y actualización de #600, y la corrección documental actual mediante commit selectivo y push. No crear recursos de prueba ni interpretar estas autorizaciones como permiso de merge o cambio de revisores. La rama jimena-duran-291020262 es una excepción expresamente solicitada al patrón habitual número-tipo-descripción; no renombrarla.
 
 La restricción a jimena-duran-291020262 corresponde únicamente a esta entrega. No fijar ese nombre permanentemente en los scripts, agentes o skills reutilizables. La automatización debe permitir crear y usar otras ramas en futuras tareas, tomando la rama autorizada de los datos de cada tarea. Verificar ese comportamiento con nombres distintos en las pruebas aisladas.
 
@@ -79,4 +79,4 @@ Un AGENTS.md no puede fijar la temperatura del modelo ni conceder permisos del s
 
 Jimena aprobó spec y plan con la aclaración de que la rama indicada corresponde solo a esta entrega y autorizó continuar con las tareas. El AGENTS.md local ya incluye el orden acordado. La adaptación de MCP/gh y la lectura explícita de skills conservan el funcionamiento en Codex. No se añadieron dependencias, por lo que no se activó la revisión de paquetes con Socket. Las reglas existentes de paquetes permanecen.
 
-Tras revisar tasks.md, Jimena autorizó T01–T23, implementación y verificaciones aisladas. También autorizó instalar herramientas faltantes tras buscar las existentes; no fue necesario instalar ni descargar nada. La implementación no amplía la autorización a commit, push ni PR en el repositorio personal.
+Tras revisar tasks.md, Jimena autorizó T01–T23, implementación y verificaciones aisladas. También autorizó instalar herramientas faltantes tras buscar las existentes; no fue necesario instalar ni descargar nada. Esa aprobación inicial de implementación no autorizaba por sí sola commit, push ni PR; las publicaciones posteriores y la corrección documental actual cuentan con autorización expresa separada.
