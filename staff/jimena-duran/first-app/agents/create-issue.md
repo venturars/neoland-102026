@@ -10,6 +10,7 @@ Dejar una tarea escrita en GitHub, asignada a la persona autenticada y comprobad
 2. Leer `skills/create-issue/SKILL.md` y `templates/issues/basic_issue.md`. Título en inglés, sin prefijo de commit y con menos de 72 caracteres. Cuerpo en español: qué se hará y cómo se comprobará esa misma tarea.
 3. Comprobar la identidad de la herramienta elegida y buscar si ya existe una issue de esa tarea. Reutilizar una coincidencia confirmada; no crear duplicados.
 4. Crear con MCP de GitHub si está disponible, tiene la capacidad necesaria y corresponde a la cuenta autorizada. Si no es suficiente, informar del motivo y usar gh autenticado conforme a la skill. No guardar ni imprimir credenciales.
-5. Aplicar `skills/assign-author/SKILL.md` cuando la asignación no se haya hecho en el alta. Verificar número, título, persona y URL.
+5. Si falla una escritura o su respuesta es incierta, aplicar la [consulta del estado remoto](../docs/GIT-AUTOMATION.md#consultar-el-estado-remoto-antes-de-reintentar) antes de reintentar o cambiar a gh: reutilizar la issue aplicada, reintentar solo si se confirma que no se creó o detenerse si no puede determinarse.
+6. Aplicar `skills/assign-author/SKILL.md` cuando la asignación no se haya hecho en el alta. Verificar número, título, persona y URL.
 
 Devolver esos cuatro datos al orquestador. Un error no produce un número inventado. La spec solo se prepara después de confirmar una issue real.

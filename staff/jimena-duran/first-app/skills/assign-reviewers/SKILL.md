@@ -14,3 +14,5 @@ Alternativa PowerShell, por cada login validado: `gh pr edit $number --repo $rep
 Relee lista de revisores y estado draft. Devuelve resultados reales y cualquier paso pendiente. Si una operación falla, informa antes de resolver; no sigas publicando la revisión a pesar del fallo. No hace merge, push ni abre PR. Si esta entrega prohíbe PR, no ejecutes el paso para probarlo.
 
 En los comandos, `$repository` es el repositorio `owner/name` comprobado a partir de origin y del contexto de esta tarea. No lo tomes de un nombre personal fijo ni actúes sobre otro repositorio.
+
+Antes de reintentar una escritura fallida o cambiar a gh, aplica la [consulta del estado remoto](../../docs/GIT-AUTOMATION.md#consultar-el-estado-remoto-antes-de-reintentar): relee revisores y draft por separado. Reutiliza los resultados aplicados, reintenta solo el paso confirmado como no aplicado y detente si no puede determinarse. Un fallo incierto no autoriza sacar la PR de draft. La regla incluye comprobar el almacén de Windows ante un 401 dentro del sandbox.

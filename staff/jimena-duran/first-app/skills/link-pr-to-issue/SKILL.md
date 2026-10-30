@@ -17,3 +17,5 @@ GitHub interpreta las palabras de cierre de una PR solo si esta apunta a la rama
 Esta skill modifica una PR y necesita autorización aplicable. Si la entrega actual prohíbe operaciones sobre PR, informa de que el paso está pendiente y no lo ejecutes como prueba.
 
 En los comandos, `$repository` es el repositorio `owner/name` comprobado a partir de origin y del contexto de esta tarea. No lo tomes de un nombre personal fijo ni actúes sobre otro repositorio.
+
+Antes de reintentar una escritura fallida o cambiar a gh, aplica la [consulta del estado remoto](../../docs/GIT-AUTOMATION.md#consultar-el-estado-remoto-antes-de-reintentar): relee el cuerpo completo y Development por separado. Conserva los resultados aplicados y completa solo lo confirmado como pendiente y autorizado. Si no puede determinarse, detente e informa; no dupliques referencias ni recrees vínculos. La regla incluye comprobar el almacén de Windows ante un 401 dentro del sandbox.

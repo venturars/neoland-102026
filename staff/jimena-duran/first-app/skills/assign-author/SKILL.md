@@ -12,3 +12,5 @@ Prefiere MCP GitHub si su identidad coincide con Jimena y soporta el paso. Si no
 Si ya está asignada, no escribas. Conserva las demás personas asignadas. Relee el recurso y devuelve la asignación real, o el error y la operación pendiente. No crees recursos ni asignes revisores desde esta skill.
 
 En los comandos, `$repository` es el repositorio `owner/name` comprobado a partir de origin y del contexto de esta tarea. No lo tomes de un nombre personal fijo ni actúes sobre otro repositorio.
+
+Si una escritura falla o su respuesta es incierta, antes de reintentar o cambiar a gh aplica la [consulta del estado remoto](../../docs/GIT-AUTOMATION.md#consultar-el-estado-remoto-antes-de-reintentar): relee las asignaciones y reutiliza el resultado aplicado; reintenta solo lo confirmado como no aplicado y detente si no puede determinarse. La regla incluye la comprobación del almacén de Windows ante un 401 dentro del sandbox.

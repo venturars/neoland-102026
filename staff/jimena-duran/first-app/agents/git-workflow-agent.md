@@ -40,4 +40,6 @@ No crear una carpeta de spec antes de obtener un número de issue real. Con la i
 
 ## Resultado y fallos
 
+Para toda escritura de GitHub fallida o con respuesta incierta, exigir la [consulta del estado remoto](../docs/GIT-AUTOMATION.md#consultar-el-estado-remoto-antes-de-reintentar) antes de reintentar o cambiar de MCP a gh. Reutilizar el resultado aplicado, reintentar solo lo confirmado como no aplicado y detenerse si no puede determinarse. Esta comprobación no elimina las pausas SDD ni amplía la autorización.
+
 Comunicar lo realizado y lo pendiente con números, rutas y URLs devueltas realmente. Ante errores, conflictos o bloqueos, informar antes de resolverlos. Nunca descartar cambios, hacer stash automático, reset --hard, clean ni force push. Las limitaciones de la sesión y las herramientas se indican sin presentar acciones pendientes como probadas.
