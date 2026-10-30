@@ -1,20 +1,27 @@
 # AGENTS.md — Manual de trabajo para agentes de IA
 
-Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [CONSTITUTION.md](docs/CONSTITUTION.md) dice **qué reglas** se cumplen; este archivo dice **cómo se trabaja** día a día.
-
----
-
 ## 1. Antes de hacer nada: lectura obligatoria
 
-Lee en este orden al empezar cualquier tarea:
+Empieza por este manual. Después lee, en este orden, antes de comenzar una tarea:
 
-1. `docs/CONSTITUTION.md`: las reglas no negociables.
-2. `docs/ARCHITECTURE.md`: responsabilidades y dirección de las llamadas.
-3. Este archivo (`AGENTS.md`).
-4. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
-5. Su `plan.md` y su `tasks.md`, si ya existen.
+1. La [constitución](docs/CONSTITUTION.md): las reglas no negociables, con prioridad ante conflictos.
+2. La [arquitectura](docs/ARCHITECTURE.md): responsabilidades y dirección de las llamadas.
+3. El [árbol](docs/TREE.md): la estructura de esta copia y los nombres de las specs.
+4. El [estilo](docs/STYLE.md): las normas de escritura del código.
+5. La spec activa: `specs/NNN-nombre/spec.md` (ver §4 "Estado actual").
+6. Su `plan.md` y su `tasks.md`, si ya existen.
 
-Si algo de lo que te piden contradice la constitución, **para y avisa** antes de escribir nada.
+Los comandos de preparación, activación, arranque, pruebas y cierre están en el [README](README.md).
+
+Si el pedido contradice la constitución o las instrucciones de estos documentos, **no modifiques archivos**. Explica qué pedido y qué regla entran en conflicto y espera la respuesta de la persona responsable. La constitución conserva su prioridad; una respuesta no aprueba implícitamente una enmienda.
+
+- **Solo se edita dentro de `staff/diego-molero/asistenciapp/`.**
+- **Pregunta antes de suponer.** Ante una ambigüedad, pregunta o márcala con `[NECESITA ACLARACIÓN]`.
+- **Explica lo que haces.** La persona que trabaja en esta carpeta está aprendiendo SDD: al cerrar cada fase, resume qué se ha hecho, por qué y qué tiene que revisar.
+- **Cambios pequeños.** Mejor varias tareas cortas que una enorme.
+- **Nada de commits ni pushes** sin que la persona que trabaja en esta carpeta lo pida y confirme el mensaje y los archivos conforme al flujo de Git del repositorio.
+- **Para todo lo que arranques.** Si levantas el servidor o `cloudflared` para probar, páralos al terminar y comprueba que el puerto quede libre. El [cierre de la app y el diagnóstico del puerto](README.md#5-cerrar-la-app) indican cómo hacerlo, incluida la identificación del proceso `Python` en macOS. (Incidencia del 2026-10-20 en T12.)
+- **No toques la constitución** salvo para proponer una enmienda, que solo la persona que trabaja en esta carpeta aprueba según sus [reglas de enmienda](docs/CONSTITUTION.md#8-enmiendas).
 
 ---
 
@@ -41,7 +48,7 @@ Al comenzar un pedido sin una spec aprobada que lo cubra, el único archivo que 
 ### 2.2 Planificar (`plan.md`)
 - Arquitectura, modelo de datos, rutas/API, archivos que se crearán.
 - Sección obligatoria **"Comprobación de la constitución"**: repasa P1–P6 y §5–§6 y di cómo los cumple el plan.
-- Si propones una dependencia externa, justifícala aquí (constitución P3).
+- Si propones una dependencia externa, justifícala aquí como indica la [constitución](docs/CONSTITUTION.md).
 
 ### 2.3 Desglosar (`tasks.md`)
 - Lista de casillas `- [ ] T01 …` en orden de ejecución.
@@ -56,65 +63,7 @@ Al comenzar un pedido sin una spec aprobada que lo cubra, el único archivo que 
 
 ---
 
-## 3. Estructura de carpetas
-
-```text
-asistenciapp/
-├── docs/
-│   ├── CONSTITUTION.md    # reglas del proyecto
-│   └── ARCHITECTURE.md    # responsabilidades y dependencias
-├── AGENTS.md             # trabajo diario y escritura del código
-├── README.md             # instrucciones de uso
-├── specs/                # spec, plan y tareas de cada cambio
-├── app.py                # entrada HTTP y punto de arranque
-├── asistencia/
-│   ├── domain/           # decisiones sin HTTP ni base de datos
-│   ├── usecases/         # coordinación de las acciones
-│   ├── storage/          # persistencia SQLite
-│   ├── export.py         # formato CSV
-│   └── tunnel.py         # enlace público
-├── static/               # pantallas
-├── tests/                # comportamiento y fronteras
-├── requirements.txt      # Flask y pytest
-├── pytest.ini            # configuración de pruebas
-├── .venv/                # entorno local fuera de Git
-└── data/                 # datos locales fuera de Git
-```
-
-Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-spec-antes-del-cambio`.
-
----
-
-## 4. Comandos
-
-Ejecutar desde `staff/diego-molero/asistenciapp/`:
-
-| Acción | Comando |
-| --- | --- |
-| Preparar el entorno (solo la primera vez) | `python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt` |
-| Activar el entorno (en cada terminal nueva) | `source .venv/bin/activate` |
-| Instalar el túnel (solo la primera vez) | `brew install cloudflared` |
-| Arrancar para una clase online | `python app.py --tunel` (imprime el enlace público del panel) |
-| Arrancar solo en local (desarrollo) | `python app.py` (abre en `http://localhost:8000`) |
-| Ejecutar los tests | `pytest` |
-
-Las únicas dependencias son Flask y pytest (constitución P3).
-
----
-
-## 5. Reglas de comportamiento
-
-- **Solo se edita dentro de `staff/diego-molero/asistenciapp/`.**
-- **Pregunta antes de suponer.** Ante una ambigüedad, pregunta o márcala con `[NECESITA ACLARACIÓN]`.
-- **Explica lo que haces.** La persona que trabaja en esta carpeta está aprendiendo SDD: al cerrar cada fase, resume qué se ha hecho, por qué y qué tiene que revisar.
-- **Cambios pequeños.** Mejor varias tareas cortas que una enorme.
-- **Nada de commits ni pushes** sin que la persona que trabaja en esta carpeta lo pida y confirme el mensaje y los archivos conforme al flujo de Git del repositorio.
-- **Para todo lo que arranques.** Si levantas el servidor o `cloudflared` para probar, páralos al terminar y comprueba que el puerto queda libre: `lsof -nP -iTCP:8000 -sTCP:LISTEN` no debe mostrar nada. Ojo: en macOS el proceso aparece como `Python` (con mayúscula). (Incidencia del 2026-10-20 en T12.)
-- **No toques la constitución** salvo para proponer una enmienda, que solo la persona que trabaja en esta carpeta aprueba (constitución §8).
-
----
-
-## 6. Definición de "terminado"
+## 3. Definición de "terminado"
 
 Un cambio está terminado cuando:
 
@@ -126,7 +75,7 @@ Un cambio está terminado cuando:
 
 ---
 
-## 7. Estado actual
+## 4. Estado actual
 
 | Spec | Fase | Notas |
 | --- | --- | --- |
@@ -135,16 +84,7 @@ Un cambio está terminado cuando:
 | `003-activar-el-entorno` | Implementada y comprobada (2026-10-23); entrega autorizada | CA-01 a CA-04 revisados; 77 tests en verde; revisión de compañeros e incorporación a `staging` pendientes |
 | `004-quitar-referencias-personales` | Implementada y comprobada (2026-10-23); entrega autorizada | CA-01 a CA-04 revisados; 80 tests en verde; revisión de compañeros e incorporación a `staging` pendientes |
 | `005-reorganizar-arquitectura` | Implementada y comprobada (2026-10-23); entrega autorizada | CA-01 a CA-09 revisados; 93 tests en verde, incluida compatibilidad de datos; revisión de compañeros e incorporación a `staging` pendientes |
+| `006-simplificar-manual-agente` | Conformidad final recibida y entrega autorizada (2026-10-30) | CA-01 a CA-09 comprobados; 13 pruebas de arquitectura y 93 de la suite en verde; issue #655; revisión de compañeros y merge pendientes |
 | Bot de Discord | Idea futura, sin número | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
-
----
-
-## 8. Cómo se escribe el código
-
-La [arquitectura](docs/ARCHITECTURE.md) fija las responsabilidades. Un módulo abre con una frase que explica qué hace; cada función realiza una tarea.
-
-Las funciones públicas nuevas o modificadas llevan tipos y un docstring con `:param nombre:`, `:return:` y `:rtype:`. Un ejemplo corto `Usage::` muestra cómo llamarlas. Las funciones internas tienen nombres claros y comentarios breves cuando explican una decisión o el cierre de recursos.
-
-Los errores y textos de uso siguen en español. Las funciones conservadas y no modificadas mantienen su documentación hasta que un cambio aprobado las afecte.
