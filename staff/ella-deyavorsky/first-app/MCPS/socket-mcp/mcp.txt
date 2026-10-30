@@ -1,0 +1,29 @@
+https://docs.socket.dev/docs/remote-socket-mcp
+
+Servidor remoto: https://mcp.socket.dev/
+
+Se usa sin iniciar sesión, sin token y sin header. En Cursor, la entrada `socket` de mcp.json lleva solo la URL:
+
+```json
+"socket": {
+  "url": "https://mcp.socket.dev/"
+}
+```
+
+Cada dato del análisis de un paquete de Node sale de la herramienta que lo da:
+
+- Stats: `depscore`. Da las cinco stats, de 0 a 100.
+- Alertas: `alerts`.
+- Campaña: `threat_feed`.
+
+Lo que no puede cada una (revisión del 29 de octubre de 2026, organización `ai-engineering`, plan free):
+
+- `depscore` no lista alertas ni campañas. `eslint@10.13.0` y `prettier@3.9.10` están por encima de 50.
+- `alerts` responde. Con las alertas abiertas la lista viene vacía, también filtrando `eslint`. No es un error: lista alertas de paquetes que la organización ya vigila, no de una versión que todavía no está en el repositorio. Una lista vacía no dice que la versión esté limpia.
+- `threat_feed` responde 403 `threat_feed_not_entitled`. El plan free no incluye el threat feed. Una campaña no se puede leer con esta cuenta.
+
+No se escribe «no consta» sin haber llamado a la herramienta del dato. Si la herramienta no puede contestar, el resumen dice el motivo.
+
+La guía pública solo documenta `depscore`. El servidor también expone `organizations`, `package_files`, `package_file_contents` y `package_file_grep`. No hacen falta para campaña, alerta y stats.
+
+La página https://socket.dev/npm/package/eslint/alerts/10.13.0 no sirve de respaldo desde aquí: `curl` recibe 403 de Cloudflare.
