@@ -72,6 +72,7 @@
 - `templates/pull-request/basic-pull-request.md` es el cuerpo de la
   pull request.
 - `MCPS/github-mcp-server/mcp.txt` es la dirección del MCP de GitHub.
+- `MCPS/socket-mcp/mcp.txt` es la dirección del MCP de Socket.
 - `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada
   fichero.
 - `docs/TREE.md` es el árbol de carpetas y ficheros.

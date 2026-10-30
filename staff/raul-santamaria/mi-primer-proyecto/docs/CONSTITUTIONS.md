@@ -16,6 +16,23 @@ Los paquetes son `openai`, `cli-table3` `0.6.5` y `@colors/colors` `1.6.1`. Se i
 
 Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket.
 
+La referencia del MCP está en `MCPS/socket-mcp/mcp.txt`. La organización
+es `ai-engineering`.
+
+Las stats salen de `depscore`, con la versión exacta. Una stat por debajo
+de 50 puntos se escribe. 50 no baja.
+
+La alerta sale de `alerts`, con `org_slug` `ai-engineering`. Una lista
+vacía es la lista de la organización. No dice que esa versión no tenga
+alerta.
+
+La campaña sale de `threat_feed`. Si responde 403
+`threat_feed_not_entitled`, el resumen dice que la cuenta no tiene threat
+feed. No escribe «no consta».
+
+Si una herramienta no contesta, el resumen dice el motivo. No deja el
+dato en blanco.
+
 ## SDD
 
 Una funcionalidad nueva empieza en `docs/specs/<nombre>/`. `<nombre>` va en inglés y con guiones, igual que el fichero de `logic/`.
