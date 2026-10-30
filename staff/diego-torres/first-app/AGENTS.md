@@ -1,5 +1,7 @@
 # AGENTS.md — first-app
 
+El trabajo de git sigue `agents/git-workflow-agent.md` de esta carpeta. Las paradas son las de «Orden». Ese flujo no las quita.
+
 ## Proyecto
 
 first-app es una app de usuarios para alumnos junior. Se construye con IA siguiendo el sistema SDD.
@@ -11,6 +13,16 @@ La arquitectura está en `docs/CONSTITUCION.md`. Esta guía no la repite. Si una
 Un desarrollo nuevo pasa por `docs/specs/<nombre>/`, con `<nombre>` en kebab-case. Ahí viven `spec.md`, `plan.md` y `tasks.md`.
 
 El directorio de trabajo es `staff/diego-torres/first-app`.
+
+## Orden
+
+Lo primero es el orquestador (`agents/git-workflow-agent.md`). Elige un momento y llama a ese subagente como un agente aparte. El padre no entrevista, no crea la issue y no ejecuta el git ni el MCP de ese momento.
+
+No se crea `docs/specs/<nombre>/` antes de que exista el número de issue. Con la issue escrita, el proceso siguiente escribe `spec.md` y `plan.md`. La spec abre con `Issue: #N`. No toca ningún otro fichero. Ahí se para. Una persona revisa la spec y el plan.
+
+Si la constitución, el código actual y la spec no dicen lo mismo, la pregunta queda al final del plan y no hay `tasks.md`. Si dicen lo mismo y la persona ha revisado, el siguiente proceso escribe `tasks.md`. Ahí se para. No se implementa.
+
+La implementación empieza cuando esa persona lo pide. Ejecuta `tasks.md` y no inventa pasos.
 
 ## Base de datos
 
