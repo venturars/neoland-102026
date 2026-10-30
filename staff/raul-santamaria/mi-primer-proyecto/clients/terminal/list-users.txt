@@ -1,8 +1,0 @@
-# Pega esto en la terminal, con el directorio actual en mi-primer-proyecto
-node --input-type=module <<'EOF'
-import { listUsers } from "./logic/list-users.js";
-
-const result = listUsers();
-
-console.log(result);
-EOF

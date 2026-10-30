@@ -1,2 +1,0 @@
-# Paste this in the terminal, with the current directory set to first-app
-node --input-type=module -e "import { db } from './db/connection.js'; import { updateUser } from './logic/update-user.js'; import { createSqliteStore } from './queries/users.js'; console.log(await updateUser(createSqliteStore(db), '1', { nombre: 'Ana Torres' }));"

@@ -2,6 +2,8 @@
 
 This file tells a coding assistant how to work in this app.
 
+Git work follows `agents/git-workflow-agent.md` in this folder. The stops are the ones in "Order". That flow does not remove them.
+
 ## Project
 
 This is the first app of the AI engineering course for junior students. It is a good app to build with spec-driven development (SDD): write the rules first, then write the code that follows them.
@@ -12,6 +14,20 @@ The database is SQLite through Node's built-in `node:sqlite`. `db/connection.js`
 
 Read this file together with `docs/CONSTITUTIONS.md`. The constitution explains the order of a `logic/` function and the specs. The other topics have one file each: `docs/ARCHITECTURE.md`, `docs/TREE.md`, `docs/DATABASE.md`, `docs/ERRORS.md`, and `docs/STYLE.md`.
 
+## Order
+
+The orchestrator comes first. It picks one moment and calls that subagent as a separate agent. The parent does not interview, does not create the issue and does not run the git or the MCP of that moment.
+
+No `docs/specs/<name>/` folder is created before the issue number exists. `<name>` is kebab-case.
+
+With the issue written, the next process writes `spec.md` and `plan.md`. The spec opens with `Issue: #N`. It touches no other file. It stops there. A person reviews the spec and the plan.
+
+If the constitution, the current code and the spec do not say the same thing, the question goes at the end of the plan and there is no `tasks.md`.
+
+If they say the same thing and the person has reviewed, the next process writes `tasks.md`. It stops there. Nothing is implemented.
+
+Implementation starts when that person asks. It runs `tasks.md` and does not invent steps.
+
 ## Rules
 
 - Read `docs/CONSTITUTIONS.md` and the active spec before changing code.
@@ -19,7 +35,7 @@ Read this file together with `docs/CONSTITUTIONS.md`. The constitution explains 
 - Before writing, look at the code to see which file a new function looks like. The form of each line comes from `docs/STYLE.md`, not from the code that already exists. That code is not rewritten by a task that does not ask for it. A later task can align it. Meanwhile, a new spec does not stop because of that difference.
 - Do not offer code that has not been run.
 - If two sources disagree — the constitution, a spec, or this guide — do not choose. The difference between `docs/STYLE.md` and the current code is not one of these cases. Ask which path to follow before writing code.
-- A request for a new behavior is a new feature. The first work is a folder in `docs/specs/`, with a kebab-case name.
+- A request for a new behavior is a new feature. It starts with the orchestrator and follows "Order". Its folder in `docs/specs/` has a kebab-case name and comes after the issue.
 - Write `spec.md`, then `plan.md`, then `tasks.md`, in that order. Do not write the next file if the previous one does not exist.
 - Do not create or change code until those three files exist. Code includes `logic/`, `queries/`, `db/`, `clients/`, and `package.json`.
 - Follow `tasks.md` from the first step. Do not skip a step and do not start the next feature.

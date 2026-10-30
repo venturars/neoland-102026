@@ -1,2 +1,0 @@
-# Paste this in the terminal, with the current directory set to first-app
-node --input-type=module -e "import { db } from './db/connection.js'; import { createSqliteStore } from './queries/users.js'; createSqliteStore(db); const q = String.fromCharCode(39); console.log(db.prepare('SELECT name FROM sqlite_master WHERE type = ' + q + 'table' + q).all());"

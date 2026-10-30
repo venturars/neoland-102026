@@ -132,6 +132,29 @@ button:disabled { opacity: 0.6; cursor: wait; }
 
 .full { width: 100%; }
 
+/* ---------- modo de la clase (spec 004 · CA-01) ---------- */
+
+fieldset.modes { border: 0; margin: 0 0 1rem; padding: 0; }
+fieldset.modes legend { font-weight: 600; margin-bottom: 0.25rem; padding: 0; }
+
+label.choice {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  font-weight: 400;
+  margin: 0;
+  cursor: pointer;
+}
+
+label.choice input {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: var(--accent);
+}
+
 .actions {
   display: flex;
   flex-wrap: wrap;
@@ -169,6 +192,16 @@ button:disabled { opacity: 0.6; cursor: wait; }
 }
 
 .countdown { text-align: center; }
+
+.meeting-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+  margin: 0.25rem 0 0;
+}
+
+#sync-status .message { margin: 0; }
 
 .link-box {
   display: block;
@@ -230,3 +263,4 @@ button.small, .button.small { min-height: 36px; padding: 0.3rem 0.7rem; font-siz
 }
 
 .badge.closed { background: var(--border); color: var(--muted); }
+.badge.mode { background: transparent; border: 1px solid var(--border); color: var(--muted); }

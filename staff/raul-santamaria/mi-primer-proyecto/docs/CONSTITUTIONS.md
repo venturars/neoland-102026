@@ -1,6 +1,6 @@
 # CONSTITUTIONS.md — mi-primer-proyecto
 
-Base de la app. login con IA para alumnos junior de AI Engineering, en español, con el código en inglés. Node y una sola base SQLite. Sigue SDD.
+Base de la app. login con IA para alumnos junior de AI Engineering, en español, con el código en inglés. Node y una sola base SQLite. Sigue SDD. Un desarrollo nuevo no empieza en el código: pasa por `spec.md`, `plan.md` y `tasks.md`, y un humano lee cada uno antes de seguir. Antes está la issue, escrita por su subagente. La spec abre con `Issue: #N`.
 
 ## Guías
 

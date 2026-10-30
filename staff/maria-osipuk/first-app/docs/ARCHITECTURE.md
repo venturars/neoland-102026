@@ -26,9 +26,21 @@ Los cuadernos se abren con `./scripts/jupyter.sh` desde `first-app`. Usan el Jup
 
 Ninguna capa accede directamente a otra capa que no sea la siguiente del recorrido: `clients/terminal/` o `clients/jupyter/`, `logic/`, `queries/users.js`, `queries/queries/*.sql`, `db/connection.js`, `db/users.sqlite`. El cuaderno de preparar la tabla llama a `createUsersTable`, igual que su cliente de terminal.
 
+## Flujo de git
+
+`agents/git-workflow-agent.md` es el orquestador. Lee lo que pide María, mira la rama y los cambios con `skills/check-status` y elige un solo momento. No ejecuta git ni el MCP por su cuenta: llama a un subagente de `agents/` o a una skill de `skills/`. No hace merge a `staging`.
+
+- Pensar la tarea: `agents/help-me-to-think.md`, que entrevista con `skills/grill-with-docs` si el cambio vive en esta app y con `skills/grill-me` si no.
+- Dejarla escrita: `agents/create-issue.md`, con `skills/create-issue` y `templates/issues/basic_issue.md`.
+- Empezar: `skills/pull-changes` adelanta `staging`. `agents/create-branch.md` abre la rama con `skills/create-branch-from-staging`. `agents/create-commit.md` hace el commit vacío con `skills/create-empty-commit`. `agents/launch-push.md` sube la rama con `skills/launch-push`. `agents/create-pr.md` abre la pull request en draft con `skills/create-pr-base-staging`, `skills/assign-author` y `skills/create-draft`, y `templates/pull-request/basic-pull-request.md`. Por último, el orquestador enlaza la issue con `skills/link-pr-to-issue`, sin cerrarla.
+- Guardar un trozo: `agents/create-commit.md` con `skills/commit-changes`, y `agents/launch-push.md`.
+- Que la revisen: `skills/assign-reviewers` asigna a los revisores que nombra María y saca la pull request de draft.
+
+Las skills que lanzan un script usan los de `tools/`, siempre desde la raíz del repositorio git. `skills/create-branch` abre la rama desde una base que no es `staging`. Las demás hablan con el MCP de GitHub, descrito en `MCPS/github-mcp-server/mcp.txt`.
+
 ## Ficheros
 
-- `AGENTS.md` guarda el proceso SDD, los comandos y el cierre de una tarea. Enlaza a `docs/STYLE.md`.
+- `AGENTS.md` guarda el proceso SDD, los comandos y el cierre de una tarea. Enlaza a `docs/STYLE.md` y al flujo de git de `agents/git-workflow-agent.md`.
 - `.gitignore` deja fuera `node_modules/`, `.env`, los archivos de SQLite, los checkpoints de Jupyter y el log del cliente Jupyter.
 - `.prettierignore` evita que Prettier entre en `.venv/`, `node_modules/` y el archivo de bloqueo generado por pnpm.
 - `package.json` declara los módulos ESM, `packageManager` con `pnpm@10.34.7`, los comandos `pnpm format` y `pnpm lint`, y el control que impide instalar con otro gestor.
@@ -63,6 +75,12 @@ Ninguna capa accede directamente a otra capa que no sea la siguiente del recorri
 - `clients/jupyter/listar-usuarios.ipynb` ejecuta el listado de usuarios.
 - `clients/jupyter/preparar-tabla-usuarios.ipynb` prepara la tabla y explica que no es una acción de usuario.
 - `clients/jupyter/run_logic.py` arranca Node y comunica los cuadernos con las funciones existentes.
+- `agents/` guarda los siete subagentes del flujo de git: el orquestador y los seis que llama.
+- `skills/` guarda una carpeta por skill, cada una con su `SKILL.md`. Dice cuándo se usa, qué argumentos lleva y cómo se leen sus respuestas.
+- `tools/` guarda los siete scripts de git que lanzan las skills. Se ejecutan desde la raíz del repositorio y no admiten force push.
+- `templates/issues/basic_issue.md` es el cuerpo de la issue: qué hay que hacer y cómo probarlo.
+- `templates/pull-request/basic-pull-request.md` es el cuerpo de la pull request, con la sección Issue.
+- `MCPS/github-mcp-server/mcp.txt` es la dirección de la documentación del MCP de GitHub.
 - `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada fichero.
 - `docs/TREE.md` es el árbol.
 - `docs/DATABASE.md` es la base de datos y las queries.

@@ -1,26 +1,77 @@
 # Arquitectura
 
-- `db/` abre la base de datos y no contiene reglas de negocio.
-- `db/connection.js` es la única conexión a la base de datos.
-- `db/users.sqlite` es el único fichero de la base de datos.
-- `queries/queries/` guarda el SQL. Hay un fichero `.sql` por query.
-- `queries/users.js` lee esos ficheros, prepara el SQL y lo ejecuta.
-  No hay reglas de negocio en `queries/`.
-- `logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
+- `src/db/` abre la base de datos y no contiene reglas de negocio.
+- `src/db/connection.js` es la única conexión a la base de datos.
+- `src/db/users.sqlite` es el único fichero de la base de datos.
+- `src/queries/queries/` guarda el SQL. Hay un fichero `.sql` por query.
+- `src/queries/users.js` lee esos ficheros, prepara el SQL y lo ejecuta.
+  No hay reglas de negocio en `src/queries/`.
+- `src/logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
   Una funcionalidad por fichero. No importa la base de datos: recibe el
   almacén. Cuando una funcionalidad existe, no se mueve ni se sustituye.
-- `logic/create-user.js` crea un usuario.
-- `logic/list-users.js` lista los usuarios.
-- `logic/update-user.js` actualiza un usuario.
-- `logic/delete-user.js` borra un usuario.
-- `logic/users-gender-count.js` cuenta los usuarios por género.
-- `clients/terminal/` llama a `logic/` y muestra el resultado. Es el
+- `src/logic/create-user.js` crea un usuario.
+- `src/logic/list-users.js` lista los usuarios.
+- `src/logic/update-user.js` actualiza un usuario.
+- `src/logic/delete-user.js` borra un usuario.
+- `src/logic/users-gender-count.js` cuenta los usuarios por género.
+- `src/clients/terminal/` llama a `src/logic/` y muestra el resultado. Es el
   primer cliente y el test manual de cada funcionalidad.
-- `clients/jupyter/` es el cliente que se abre con el Jupyter de la app.
+- `src/clients/jupyter/` es el cliente que se abre con el Jupyter de la app.
 - `start-jupyter.js` arranca el Jupyter del entorno de la app.
 - `eslint.config.js` aplica las reglas recomendadas de ESLint al
   JavaScript, declara los globals de Node e ignora `.venv` y
   `node_modules`.
+- `agents/git-workflow-agent.md` reconoce el momento y llama al
+  subagente como un agente aparte. El padre no hace ese trabajo.
+- `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la
+  tarea se puede dejar escrita.
+- `agents/create-issue.md` crea la issue con título en inglés y
+  descripción en español, asignada a quien está autenticado.
+- `agents/create-branch.md` crea la rama `número-tipo-descripcion`.
+- `agents/create-commit.md` hace un commit pequeño con ficheros
+  nombrados.
+- `agents/create-pr.md` abre la pull request contra `staging` y la deja
+  en draft, sin enlazar la issue.
+- `agents/launch-push.md` publica `HEAD` en `origin` y deja el upstream
+  puesto.
+- `skills/grill-with-docs/SKILL.md` entrevista cuando el cambio vive en
+  este proyecto.
+- `skills/grill-me/SKILL.md` entrevista cuando el repositorio no
+  responde.
+- `skills/create-issue/SKILL.md` deja la tarea escrita en GitHub.
+- `skills/assign-author/SKILL.md` asigna la issue o la pull request al
+  usuario autenticado.
+- `skills/check-status/SKILL.md` dice la rama, los cambios sin commit y
+  el remoto.
+- `skills/pull-changes/SKILL.md` adelanta `staging` en fast-forward.
+- `skills/create-branch-from-staging/SKILL.md` abre la rama desde
+  `staging`.
+- `skills/create-branch/SKILL.md` abre la rama desde una base que no es
+  `staging`.
+- `skills/create-empty-commit/SKILL.md` hace el commit vacío
+  `chore: open #N`.
+- `skills/commit-changes/SKILL.md` guarda un trozo con ficheros
+  nombrados.
+- `skills/launch-push/SKILL.md` sube la rama actual y fija el upstream.
+- `skills/create-pr-base-staging/SKILL.md` abre la pull request con base
+  `staging`.
+- `skills/create-draft/SKILL.md` deja la pull request en draft.
+- `skills/link-pr-to-issue/SKILL.md` deja el enlace en Development y
+  `Related to #N` en el cuerpo, sin cerrar la issue.
+- `skills/assign-reviewers/SKILL.md` asigna a quienes miran la pull
+  request y la saca de draft.
+- `tools/check-status.sh` escribe la rama, el remoto y los cambios.
+- `tools/pull-changes.sh` adelanta `staging` en fast-forward.
+- `tools/create-branch-from-staging.sh` crea la rama desde `staging`.
+- `tools/create-branch.sh` crea la rama desde otra base.
+- `tools/create-empty-commit.sh` crea el commit vacío de apertura.
+- `tools/commit-changes.sh` guarda los ficheros nombrados.
+- `tools/launch-push.sh` sube la rama y fija el upstream.
+- `templates/issues/basic_issue.md` es el cuerpo de la issue: qué hay
+  que hacer y cómo probarlo.
+- `templates/pull-request/basic-pull-request.md` es el cuerpo de la
+  pull request.
+- `MCPS/github-mcp-server/mcp.txt` es la dirección del MCP de GitHub.
 - `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada
   fichero.
 - `docs/TREE.md` es el árbol de carpetas y ficheros.
