@@ -12,7 +12,7 @@
 
 3. Mueve `queries/` a `src/queries/`.
    Entran `users.js` y la carpeta `queries/` de los `.sql`.
-   `users.js` sigue importando `../DB/connection.js` y leyendo los `.sql` de al lado.
+   `users.js` sigue importando `../db/connection.js` y leyendo los `.sql` de al lado.
    `src/queries/users.js` se puede leer.
 
 4. Mueve `clients/` a `src/clients/`.

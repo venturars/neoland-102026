@@ -13,7 +13,7 @@ Se mueven, enteras, a `src/`:
 - `queries/`
 - `clients/`
 
-Dentro de esas cuatro, los imports no cambian. `logic` sigue importando `../queries/users.js`. `queries/users.js` sigue importando `../DB/connection.js` y lee los `.sql` de la carpeta `queries` que tiene al lado. `db/connection.js` sigue abriendo `users.sqlite` en su misma carpeta. Si ese archivo está ahí, se mueve con `db/`.
+Dentro de esas cuatro, los imports no cambian. `logic` sigue importando `../queries/users.js`. `queries/users.js` sigue importando `../db/connection.js` y lee los `.sql` de la carpeta `queries` que tiene al lado. `db/connection.js` sigue abriendo `users.sqlite` en su misma carpeta. Si ese archivo está ahí, se mueve con `db/`.
 
 Se toca cada `.txt` de `src/clients/terminal/`. El import pasa de `./staff/luis-duque/first-app/logic/...` a `./staff/luis-duque/first-app/src/logic/...`. La línea sigue siendo una, y se tira desde la raíz del repositorio.
 
