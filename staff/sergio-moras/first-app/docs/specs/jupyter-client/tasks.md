@@ -22,27 +22,27 @@ Implementan [plan.md](plan.md), que cumple [spec.md](spec.md). Se ejecutan **en 
 - [x] Probar: con usuarios, y desde una carpeta sin la app (`App not found.`).
 
 ## T4. Crear `clients/jupyter/findUserByEmail.ipynb`
-- [ ] Mismo diseño, con `pedro@gmail.com`.
-- [ ] Probar: email que existe, email que no existe, email vacío.
+- [x] Mismo diseño, con `pedro@gmail.com`.
+- [x] Probar: email que existe, email que no existe, email vacío.
 
 ## T5. Crear `clients/jupyter/createUser.ipynb`
-- [ ] Mismo diseño, con una anotación que avisa de que escribe en la base.
-- [ ] Probar con un usuario temporal: alta correcta, nombre vacío, email vacío, email inválido y email repetido.
+- [x] Mismo diseño, con una anotación que avisa de que escribe en la base.
+- [x] Probar con un usuario temporal: alta correcta, nombre vacío, email vacío, email inválido y email repetido.
 
 ## T6. Crear `clients/jupyter/updateUser.ipynb`
-- [ ] Mismo diseño, con una anotación de que escribe en la base y de que `""` deja el campo sin cambiar.
-- [ ] Probar sobre el usuario temporal: cambiar nombre, cambiar email, id inexistente, id no numérico y sin datos nuevos.
+- [x] Mismo diseño, con una anotación de que escribe en la base y de que `""` deja el campo sin cambiar.
+- [x] Probar sobre el usuario temporal: cambiar nombre, cambiar email, id inexistente, id no numérico y sin datos nuevos.
 
 ## T7. Crear `clients/jupyter/deleteUser.ipynb`
-- [ ] Mismo diseño, con una anotación de que borra al usuario indicado.
-- [ ] Probar borrando el usuario temporal, y con un id inexistente y uno no numérico.
+- [x] Mismo diseño, con una anotación de que borra al usuario indicado.
+- [x] Probar borrando el usuario temporal, y con un id inexistente y uno no numérico.
 
 ## T8. Crear `clients/jupyter/classifyGender.ipynb`
-- [ ] Mismo diseño, con una anotación de que necesita Ollama en marcha.
-- [ ] Probar con Ollama en marcha y con Ollama apagado.
+- [x] Mismo diseño, con una anotación de que necesita Ollama en marcha.
+- [x] Probar con Ollama en marcha y con Ollama apagado.
 
 ## T9. Comprobación final y resumen
-- [ ] Pegar `clients/terminal/listUsers.txt` y comprobar que coincide con la foto inicial de T1.
-- [ ] Comprobar que no queda ningún usuario `tmp-jupyter-*`.
-- [ ] Enseñar un resumen con los archivos creados y lo probado.
-- [ ] Proponer, sin editarla, la línea de la constitución que recoge `clients/jupyter/`.
+- [x] Pegar `clients/terminal/listUsers.txt` y comprobar que coincide con la foto inicial de T1.
+- [x] Comprobar que no queda ningún usuario `tmp-jupyter-*`.
+- [x] Enseñar un resumen con los archivos creados y lo probado.
+- [x] Proponer, sin editarla, la línea de la constitución que recoge `clients/jupyter/`.
