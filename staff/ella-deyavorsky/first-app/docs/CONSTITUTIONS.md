@@ -44,13 +44,17 @@ Every Node package that is added, or whose version is changed, is validated with
 
 ## Specs
 
-A new feature is a new folder in `docs/specs/`. The folder name is kebab-case, like `docs/specs/classifier/`. Each folder has three files, written in this order. No code for a feature is written until its `spec.md`, `plan.md`, and `tasks.md` exist, in that order. If the folder or a file is missing, write the missing file.
+Before the folder there is the issue, written by its subagent, `agents/create-issue.md`. The folder is not created before the issue number exists.
+
+A new feature is a new folder in `docs/specs/`. The folder name is kebab-case, like `docs/specs/classifier/`. Each folder has three files, written in this order. No code for a feature is written until its `spec.md`, `plan.md`, and `tasks.md` exist, in that order. If the folder or a file is missing, write the missing file. A person reviews `spec.md` and `plan.md` before `tasks.md` is written. The steps and the stops are in "Order" in `AGENTS.md`.
 
 ### spec.md
 
 The person who decides the feature writes this file. They say what they want. They do not need to know how the code works.
 
 It says what is asked, who will use it, who has access, examples of use, and what goes wrong. It does not name files, functions, or SQL.
+
+It opens with `Issue: #N`, the number of its issue.
 
 ### plan.md
 
@@ -81,4 +85,4 @@ Rules for the steps:
 - An outside tool the feature needs is made ready before the step that uses it, not after.
 - Group the steps under the task they belong to, in this order: update the constitution, get any outside tool ready, write the query, write the logic, write the client, run it.
 
-This environment is one pass: spec, plan, tasks, code. Do not rewrite the three files once the code works, and do not run the cycle again, unless a person asks. The work stops when the last step is done.
+This environment is one pass: issue, spec, plan, tasks, code. Do not rewrite the three files once the code works, and do not run the cycle again, unless a person asks. The work stops when the last step is done.
