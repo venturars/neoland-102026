@@ -2,6 +2,8 @@
 
 Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [constitución](docs/CONSTITUTION.md) dice **qué reglas** se cumplen. La [arquitectura](docs/ARCHITECTURE.md) dice **cómo se organiza** el código. Este archivo dice **cómo se trabaja** día a día y **cómo se escribe** cada función.
 
+El trabajo de git sigue `agents/git-workflow-agent.md` de esta carpeta.
+
 ---
 
 ## 1. Antes de hacer nada: lectura obligatoria
@@ -18,45 +20,26 @@ Si algo de lo que te piden contradice la constitución, **para y avisa** antes d
 
 ---
 
-## 2. Flujo SDD paso a paso
+## 2. Los únicos momentos del humano
 
-Cada cambio en esta app recorre estas fases **en orden**. Al terminar cada una, el agente **se detiene** y pide la aprobación de la persona que trabaja en esta carpeta. No se avanza sin un "ok" explícito. Esa persona marca el ritmo: el agente no autoavanza de fase.
+La persona que trabaja en esta carpeta interviene solo en estos momentos, **en este orden**. El agente hace **solo el momento pedido**, **se para** al terminarlo y espera el siguiente pedido explícito. **No** encadena un momento con el siguiente y **no** pide ok de más.
 
-Al empezar el cambio, el único fichero nuevo permitido es el `spec.md`. El agente lo enseña y espera el ok. El plan, las tasks y el cambio vienen después.
+1. **Crear la issue** — Si la tarea no se puede escribir todavía, la entrevista es aquí (una pregunta cada vez). Se crea la issue. **No** se abre la rama. **Para.**
+2. **Crear el draft** — Es el «Empezar» de la plantilla, de una vez: adelantar `staging`, crear la rama desde `staging`, commit vacío `chore: open #N`, push, pull request en draft contra `staging` con el autor y el enlace `Closes #N`. **No** se escriben specs. **Para.**
+3. **Crear las specs** — De una vez y en este orden: `spec.md`, `plan.md`, `tasks.md`. La spec abre con el número de issue. Si falta un dato, el agente pregunta; no inventa. **No** se toca código. **Para.**
+4. **Implementar la spec** — Se ejecutan las tasks una detrás de otra, con sus tests o comprobaciones. **No** se hace commit ni push. **Para.**
+5. **La pull request** — Solo lo que se pide en ese momento: subir los cambios (commit de ficheros nombrados y push), pedir revisión (asignar revisores y sacar de draft), u otra petición sobre esa PR. **No** se fusiona en `staging`. **Para.**
 
-| Fase | Archivo | Pregunta que responde | Puerta de salida |
-| --- | --- | --- | --- |
-| 1. Especificar | `spec.md` | ¿**Qué** hay que hacer y **por qué**? | Sin `[NECESITA ACLARACIÓN]` pendientes + aprobación de la persona que trabaja en esta carpeta |
-| 2. Planificar | `plan.md` | ¿**Cómo** lo hacemos? | Pasa la comprobación de la constitución + esa misma aprobación |
-| 3. Desglosar | `tasks.md` | ¿En qué **pasos pequeños** lo hacemos? | Cada tarea apunta a un criterio de aceptación + esa misma aprobación |
-| 4. Implementar | el cambio que digan las tasks | Hacerlo, tarea a tarea. Incluye el README cuando una task lo diga | Criterios verificados |
+Una issue, una rama o una pull request **no autorizan** el cambio de código. El código solo espera al momento 4, y solo si el momento 3 ya dejó los tres ficheros.
 
-### 2.1 Especificar (`spec.md`)
+Commit y push solo en el momento 2 (commit vacío) y en el momento 5, cuando lo piden.
 
-- Habla del usuario y del problema. **Nunca** nombra tecnologías (nada de "SQLite", "endpoint", "fetch").
-- Estructura: Problema · Usuarios · Historias de usuario · Criterios de aceptación (Dado / Cuando / Entonces) · Fuera de alcance · Preguntas abiertas.
-- Cada criterio de aceptación lleva un identificador (`CA-01`, `CA-02`…) para poder enlazarlo desde tareas y tests.
-- Si falta información, escribe `[NECESITA ACLARACIÓN: pregunta concreta]`. **No inventes la respuesta.**
-- Si la spec activa no describe lo pedido, no se reutiliza: se abre `specs/NNN-nombre/spec.md`.
+### 2.1 Forma de las specs
 
-### 2.2 Planificar (`plan.md`)
-
-- Arquitectura, modelo de datos, rutas/API, archivos que se crearán.
-- Sección obligatoria **"Comprobación de la constitución"**: repasa P1–P6 y §5–§6 y di cómo los cumple el plan.
-- Si propones una dependencia externa, justifícala aquí (constitución P3).
-
-### 2.3 Desglosar (`tasks.md`)
-
-- Lista de casillas `- [ ] T01 …` en orden de ejecución.
-- Cada tarea es pequeña (un archivo o una función), tiene un resultado comprobable e indica qué `CA-xx` cubre.
-- Primero el test, luego el código, siempre que sea posible.
-
-### 2.4 Implementar
-
-- Haz **una tarea cada vez**. Al acabarla, márcala `[x]` en `tasks.md`.
-- Ningún fichero de la app se adelanta al spec. Si la spec activa no cubre el pedido, **para**, escribe el spec y espera aprobación.
-- Una issue, una rama o una pull request **no sustituyen** al spec y **no autorizan** a modificar la app sin un spec aprobado.
-- Si durante la implementación descubres que la spec o el plan están mal o incompletos, **para**, propón el cambio en el documento y espera aprobación.
+- `spec.md` habla del usuario y del problema. **Nunca** nombra tecnologías (nada de "SQLite", "endpoint", "fetch"). Estructura: Problema · Usuarios · Historias · Criterios (Dado / Cuando / Entonces) · Fuera de alcance · Preguntas abiertas. Cada criterio lleva `CA-xx`.
+- `plan.md` describe el cómo e incluye **"Comprobación de la constitución"** (P1–P6 y §5–§6). Toda dependencia externa se justifica (P3).
+- `tasks.md` lista casillas `- [ ] T01 …`; cada tarea apunta a un `CA-xx`. Primero el test, luego el código, siempre que sea posible.
+- Al implementar: una tarea cada vez; márcala `[x]` al acabarla. Si la spec o el plan están mal, **para** y propón el cambio en el documento.
 
 ---
 
@@ -93,7 +76,7 @@ Las únicas dependencias son Flask y pytest (constitución P3).
 - **Pregunta antes de suponer.** Ante una ambigüedad, pregunta o márcala con `[NECESITA ACLARACIÓN]`.
 - **Explica lo que haces.** Al cerrar cada fase, resume qué se ha hecho, por qué y qué tiene que revisar la persona que trabaja en esta carpeta.
 - **Cambios pequeños.** Mejor varias tareas cortas que una enorme.
-- **Nada de commits ni pushes** sin que esa persona lo pida.
+- **Commit y push** solo en el momento 2 (commit vacío) y en el momento 5, cuando lo piden (§2).
 - **Para todo lo que arranques.** Si levantas el servidor o `cloudflared` para probar, páralos al terminar y comprueba que el puerto 8000 queda libre. En Windows: `netstat -ano | findstr :8000` no debe mostrar una línea `LISTENING`. En macOS/Linux: `lsof -nP -iTCP:8000 -sTCP:LISTEN` no debe mostrar nada (el proceso puede aparecer como `Python` con mayúscula).
 - **No toques la constitución** (`docs/CONSTITUTION.md`) salvo para proponer una enmienda, que solo aprueba la persona que trabaja en esta carpeta (constitución §8).
 
@@ -123,6 +106,7 @@ Una funcionalidad está terminada cuando:
 | `006-limite-por-ip-publica` | ✅ Implementada (2026-10-26): T01–T11, 102 tests | Límite de intentos de registro por IP y lista de bloqueo |
 | `007-checkin-discord` | ✅ Implementada (2026-10-27): T01–T11 | Check-in con Discord; issue #498 |
 | `008-add-student-manually` | ✅ Implementada (2026-10-27): T01–T06 | Añadir alumno a mano; issue #529 |
+| `009-adapt-git-workflow` | ✅ Implementada (2026-10-30): T01–T11 | Flujo de git + cinco momentos; issue #618 |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
 

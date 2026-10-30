@@ -22,6 +22,11 @@ Las flechas solo van hacia dentro. Una parte de fuera puede llamar a una de dent
 
 ```
 asistenciapp/
+├── agents/                # orquestador y subagentes del flujo de git
+├── skills/                # skills del flujo de git
+├── tools/                 # scripts del flujo de git (desde la raíz del monorepo)
+├── templates/             # plantillas de issue y pull request
+├── MCPS/                  # referencia al MCP de GitHub
 ├── docs/
 │   ├── CONSTITUTION.md    # reglas no negociables
 │   └── ARCHITECTURE.md    # este archivo
@@ -47,6 +52,8 @@ asistenciapp/
 ├── .venv/                 # entorno virtual de Python (no se sube a git)
 └── data/                  # base de datos SQLite (no se sube a git)
 ```
+
+El orquestador (`agents/git-workflow-agent.md`) reconoce el momento (issue, draft, specs, implementar, pull request) y llama al subagente o a la skill que toca. El padre no hace ese trabajo.
 
 ---
 
