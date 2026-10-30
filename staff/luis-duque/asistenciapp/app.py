@@ -17,6 +17,7 @@ from werkzeug.exceptions import HTTPException
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from asistencia import acciones, db
+from asistencia.comprobar_nombre import clasificar, remember
 from asistencia.tunnel import TunnelError, start_tunnel
 
 BASE_DIR = Path(__file__).parent
@@ -29,7 +30,7 @@ UNAUTHORIZED = "Acceso no autorizado. Abre el panel con tu enlace secreto de pro
 GENERIC_ERRORS = {404: "No encontrado.", 405: "Método no permitido."}
 
 
-def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
+def create_app(db_path=DEFAULT_DB, token=None, now=time.time, comprobar=None):
     app = Flask(__name__, static_folder="static", static_url_path="")
     app.json.ensure_ascii = False
     # Detrás del túnel, usar la dirección pública que nos indica (plan §2.10, CA-19).
@@ -39,6 +40,7 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
     db.init_schema(conn)
     app.config["TEACHER_TOKEN"] = token or db.get_or_create_teacher_token(conn)
     conn.close()
+    check_name = remember(comprobar if comprobar is not None else clasificar)
 
     # ---------- utilidades ----------
 
@@ -99,12 +101,20 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
         body = request.get_json(silent=True) or {}
         try:
             result = acciones.register(
-                get_db(), session_id, body.get("name"), body.get("code", ""), now(), now_iso()
+                get_db(),
+                session_id,
+                body.get("name"),
+                body.get("code", ""),
+                now(),
+                now_iso(),
+                check_name,
             )
         except acciones.SessionNotFound:
             abort(404, NOT_FOUND)
         except acciones.SessionClosed:
             return error(409, CLOSED)  # CA-09
+        except acciones.InvalidName as exc:
+            return error(400, str(exc))
         except ValueError as exc:
             return error(400, str(exc))  # CA-08
         except acciones.InvalidCode:

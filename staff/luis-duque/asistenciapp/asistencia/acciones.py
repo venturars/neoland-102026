@@ -4,9 +4,10 @@ Reciben una conexión ya abierta y no conocen la web.
 """
 
 from asistencia import db
+from asistencia.comprobar_nombre import ALIAS, INVALID, REAL, NoSePudoComprobar
 from asistencia.export import to_csv
 from asistencia.reglas.codes import code_for, is_valid_code, seconds_left
-from asistencia.reglas.names import clean_name, name_key
+from asistencia.reglas.names import clean_name, displayed_name, name_key
 
 
 class SessionNotFound(Exception):
@@ -19,6 +20,14 @@ class SessionClosed(Exception):
 
 class InvalidCode(Exception):
     pass
+
+
+class InvalidName(Exception):
+    pass
+
+
+ALIAS_MESSAGE = "El nombre no es válido porque es un alias o un mote."
+INVALID_MESSAGE = "El nombre no es válido."
 
 
 class CheckinNotFound(Exception):
@@ -58,14 +67,23 @@ def public_session(conn, session_id):
     return {"title": session["title"], "open": session["closed_at"] is None}
 
 
-def register(conn, session_id, raw_name, code, now, checked_at):
+def register(conn, session_id, raw_name, code, now, checked_at, comprobar):
     session = _session(conn, session_id)
     if session["closed_at"] is not None:
         raise SessionClosed()
     name = clean_name(raw_name)
     if not is_valid_code(session["secret"], code or "", now):
         raise InvalidCode()
-    row, created = db.add_checkin(conn, session_id, name, name_key(name), checked_at)
+    try:
+        verdict = comprobar(name)
+    except NoSePudoComprobar:
+        verdict = REAL
+    if verdict == ALIAS:
+        raise InvalidName(ALIAS_MESSAGE)
+    if verdict == INVALID:
+        raise InvalidName(INVALID_MESSAGE)
+    shown = displayed_name(name)
+    row, created = db.add_checkin(conn, session_id, shown, name_key(shown), checked_at)
     return {
         "name": row["name"],
         "checkedAt": row["checked_at"],

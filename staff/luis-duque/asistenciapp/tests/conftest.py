@@ -3,6 +3,7 @@
 import pytest
 
 from app import create_app
+from asistencia.comprobar_nombre import REAL
 
 TOKEN = "token-de-prueba"
 
@@ -27,7 +28,7 @@ def clock():
 
 @pytest.fixture
 def app(tmp_path, clock):
-    return create_app(tmp_path / "test.db", token=TOKEN, now=clock)
+    return create_app(tmp_path / "test.db", token=TOKEN, now=clock, comprobar=lambda name: REAL)
 
 
 @pytest.fixture

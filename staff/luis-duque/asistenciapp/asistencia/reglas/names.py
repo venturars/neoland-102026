@@ -24,3 +24,17 @@ def name_key(name: str) -> str:
     decomposed = unicodedata.normalize("NFD", name)
     without_accents = "".join(c for c in decomposed if not unicodedata.combining(c))
     return " ".join(without_accents.casefold().split())
+
+
+def displayed_name(name: str) -> str:
+    """Cada palabra de letras empieza en mayúscula. El resto va en minúscula.
+
+    Un texto con signos, como una etiqueta, se deja tal cual.
+    """
+    words = []
+    for word in name.split():
+        if word.isalpha():
+            words.append(word[:1].upper() + word[1:].lower())
+        else:
+            words.append(word)
+    return " ".join(words)

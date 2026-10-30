@@ -57,7 +57,7 @@ Ese enlace es **tu panel privado**: no lo compartas, porque quien lo tenga puede
 2. Escribe un título (opcional; si no, se usa la fecha y hora) y pulsa **Abrir asistencia**.
 3. **Comparte pantalla** en la llamada: el código se ve en grande, con una cuenta atrás.
 4. Pulsa **Copiar enlace de alumnos** y pégalo en el chat de Discord o Meet.
-5. Cada alumno abre el enlace, escribe su **nombre** y el **código** de tu pantalla, y pulsa **Estoy en clase**. Su nombre aparece en tu lista en un par de segundos.
+5. Cada alumno abre el enlace, escribe su **nombre** y el **código** de tu pantalla, y pulsa **Estoy en clase**. Su nombre aparece en tu lista en un par de segundos. Con Ollama y `nimble-v3` en marcha, un alias no entra en la lista; si no están, el nombre entra igual.
 6. Cuando ya estén todos, pulsa **Cerrar asistencia** y confírmalo. Desde ese momento nadie más puede registrarse.
 7. Pulsa **Descargar lista** para obtener el CSV (columnas *Nombre* y *Hora*).
 
