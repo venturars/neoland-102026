@@ -1,6 +1,6 @@
 # Pega esto en la terminal, con el directorio actual en first-app
 node --input-type=module <<'EOF'
-import { listUsers } from "./logic/list-users.js";
-const result = listUsers();
+import { deleteUser } from "./src/logic/delete-user.js";
+const result = deleteUser(1);
 console.log(result);
 EOF

@@ -1,22 +1,23 @@
 # Árbol
 
 first-app/
-  db/
-    connection.js
-    users.sqlite
-  queries/
+  src/
+    db/
+      connection.js
+      users.sqlite
     queries/
-    users.js
-  logic/
-    create-user.js
-    update-user.js
-    delete-user.js
-    list-users.js
-    find-user-by-email.js
-    find-user-by-id.js
-    users-gender-count.js
-  clients/
-    terminal/
+      queries/
+      users.js
+    logic/
+      create-user.js
+      update-user.js
+      delete-user.js
+      list-users.js
+      find-user-by-email.js
+      find-user-by-id.js
+      users-gender-count.js
+    clients/
+      terminal/
   docs/
     ARCHITECTURE.md
     TREE.md
