@@ -1,7 +1,7 @@
 ### Herramienta: CREATE_BRANCH
 
 - **Descripción**: Úsala cuando hay que abrir la rama `número-tipo-descripcion` desde una base que no es `staging`. Si la base es `staging`, usa `create-branch-from-staging`. No la uses para guardar un commit ni para abrir la pull request.
-- **Comando de Terminal**: `./tools/create-branch.sh "[BASE]" "[NUMERO]" "[TIPO]" "[DESCRIPCION]"`
+- **Comando de Terminal**: `./staff/luis-duque/first-app/tools/create-branch.sh "[BASE]" "[NUMERO]" "[TIPO]" "[DESCRIPCION]"`
 
 El comando se lanza desde el root del repositorio git (la carpeta que contenga el directorio .git).
 

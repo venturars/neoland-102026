@@ -1,7 +1,7 @@
 ### Herramienta: CREATE_EMPTY_COMMIT
 
 - **Descripción**: Úsala única y exclusivamente para el commit vacío de apertura, `chore: open #N`. No la uses para guardar ficheros.
-- **Comando de Terminal**: `./tools/create-empty-commit.sh "[NUMERO]"`
+- **Comando de Terminal**: `./staff/luis-duque/first-app/tools/create-empty-commit.sh "[NUMERO]"`
 
 El comando se lanza desde el root del repositorio git (la carpeta que contenga el directorio .git).
 
