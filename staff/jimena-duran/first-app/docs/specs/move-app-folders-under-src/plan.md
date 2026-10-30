@@ -19,7 +19,7 @@ Rutas relativas a `staff/jimena-duran/first-app`:
 - Mover juntas `db/`, `clients/`, `logic/` y `queries/` a `src/`. Mantener archivos, nombres y capas; `agents/`, `skills/`, `tools/`, `templates/`, `MCPS/`, configuración y documentación permanecen en la raíz.
 - Conservar los imports relativos entre las capas hermanas y la resolución de SQL y SQLite desde sus módulos. No hay firmas, SQL, errores ni reglas nuevos. La base quedará en `src/db/users.sqlite` junto a la conexión existente.
 - Ajustar los nueve ejemplos de terminal: imports `./src/logic/`, `./src/queries/` y `./src/db/`, según corresponda. Mantener sus here-strings y ejecución PowerShell desde first-app.
-- Los notebooks buscan hacia arriba la carpeta que contiene `logic/`: después del traslado encontrarán `src/`. Sus imports internos pueden conservarse. Cambiar únicamente una ruta concreta si la comprobación demuestra que lo necesita; no regenerar outputs ni reescribir sus celdas de negocio.
+- Los notebooks deben identificar exclusivamente `staff/jimena-duran/first-app/src` de este checkout, desde first-app, src o su carpeta Jupyter. No basta encontrar cualquier `logic/`. Ajustar solo la localización y el mensaje de error, conservando los imports internos, las celdas de negocio, los outputs y los metadatos.
 - En `package.json`, anteponer `src/` a los tres patrones de `format`; conservar `lint`, dependencias y lockfile. Actualizar el comando existente de Jupyter en `docs/JUPYTER.md` a `src/clients/jupyter`, sin añadir un lanzador Bash ni recrear entornos.
 - Actualizar las rutas vigentes de `AGENTS.md`, `docs/TREE.md`, `docs/ARCHITECTURE.md`, `docs/DATABASE.md`, `docs/STYLE.md` y `docs/ERRORS.md`; en las demás guías o herramientas, solo referencias realmente afectadas. No modificar `docs/specs/` históricos ni la automatización no afectada.
 
@@ -30,6 +30,8 @@ Antes de mover datos en la implementación, cerrar las conexiones de esta app y 
 Trasladar el directorio completo con PowerShell, incluidos archivos auxiliares presentes; comprobar rutas y ausencia de colisiones antes de mover. No ejecutar clientes contra la base personal para verificar la migración. Comprobar existencia y hashes antes de abrir la app: evitar que SQLite genere una base vacía por faltar el archivo trasladado.
 
 Las reglas globales existentes ya ignoran `*.sqlite`, `*.sqlite-wal`, `*.sqlite-shm` y `*.sqlite-journal` también bajo src. Confirmar con `git check-ignore` y el diff; no añadir SQLite ni cambiar ignore para esconder ChromaDB. En la preparación actual no se mueve ni modifica ningún dato.
+
+El review de #670 se atiende dentro de los criterios 3–5 y T08/T11 existentes: documentar el traslado manual por checkout en DATABASE y enlazarlo desde JUPYTER, sin introducir una migración automática. Git no traslada la base ignorada al actualizar otra máquina. Antes de arrancar, cerrar conexiones, respaldar y mover `db/users.sqlite` y sus auxiliares presentes a `src/db/` solo si el destino no existe; ante dos conjuntos, detenerse sin sobrescribir. No ejecutar este paso sobre los datos personales durante la verificación.
 
 ## Verificación tras autorizar implementación
 

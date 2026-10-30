@@ -20,14 +20,14 @@ Rama: `601-refactor-move-app-folders-under-src`. La pendiente inicial de integra
   Resultado: se conservan las referencias relativas válidas; solo se corrigen rutas afectadas, sin cambiar firmas, consultas o reglas. Criterios: 1, 2 y 5.
 - [x] T07. Ajustar los imports de los nueve ejemplos de `src/clients/terminal/` al prefijo `./src/`.
   Resultado: mantienen sus here-strings PowerShell y su ejecución desde first-app. Criterio: 3.
-- [x] T08. Comprobar la búsqueda de la carpeta logic desde los nueve notebooks trasladados.
-  Resultado: encuentran src; se conservan imports internos y celdas válidos, sin regenerar outputs ni modificar negocio. Criterios: 2, 3 y 5.
+- [x] T08. Comprobar la localización de first-app/src desde los nueve notebooks trasladados.
+  Resultado del review: 63 casos de localización y 9/9 notebooks pasaron usando solo la app de Jimena desde first-app, src o su carpeta; no se selecciona otro logic ni se alteran celdas de negocio. Criterios: 2, 3 y 5.
 - [x] T09. Anteponer src a los tres patrones de format en package.json.
   Resultado: el formato apunta a las nuevas capas; lint, dependencias y lockfile permanecen iguales. Criterio: 5.
 - [x] T10. Actualizar el arranque documentado de Jupyter a `src/clients/jupyter`.
   Resultado: `docs/JUPYTER.md` utiliza las herramientas existentes desde first-app, sin nuevos lanzadores ni entornos. Criterios: 3 y 5.
 - [x] T11. Actualizar las rutas vigentes de AGENTS.md, TREE.md, ARCHITECTURE.md, DATABASE.md, STYLE.md y ERRORS.md.
-  Resultado: guías coherentes con src; otras referencias se ajustan solo si están afectadas y las specs históricas quedan intactas. Criterios: 1 y 5.
+  Resultado: guías coherentes con src; el review añade el traslado manual de SQLite por checkout en DATABASE y su enlace desde JUPYTER. Las specs históricas quedan intactas. Criterios: 1, 4 y 5.
 - [x] T12. Preparar una copia temporal de la app con SQLite desechable en una ruta Windows con espacios.
   Resultado: entorno de comprobación aislado que reutiliza las instalaciones existentes sin acceder a la base personal. Criterios: 3 y 4.
 - [x] T13. Verificar funciones existentes, validaciones y errores sobre la copia temporal.
@@ -45,4 +45,4 @@ Rama: `601-refactor-move-app-folders-under-src`. La pendiente inicial de integra
 
 ## Cierre y publicación comprobada
 
-Implementación y verificaciones completadas en la rama indicada. La reanudación conserva `b62abae3` e incorpora el snapshot de origin/staging `64e3edf5` mediante `db267b51`, sin conflictos. Los 13 archivos operativos de #600 quedaron incorporados y las specs históricas solo recibieron cambios de upstream. La verificación posterior pasó: 41 comprobaciones funcionales, nueve clientes, nueve notebooks, formato y lint. Los tres documentos activos se guardaron en `0b411ac7` y se publicaron mediante push comprobado. La PR #670 está abierta en draft contra staging, asignada a jiji-mena, sin revisores ni merge; `Closes #601` y Development se confirmaron por separado. Esta actualización registra esos resultados reales, sin anticipar otro commit o push documental.
+Implementación y verificaciones completadas en la rama indicada. La reanudación conserva `b62abae3` e incorpora el snapshot de origin/staging `64e3edf5` mediante `db267b51`, sin conflictos. Los 13 archivos operativos de #600 quedaron incorporados y las specs históricas solo recibieron cambios de upstream. La verificación posterior pasó: 41 comprobaciones funcionales, nueve clientes, nueve notebooks, formato y lint. Los tres documentos activos se guardaron en `0b411ac7` y se publicaron mediante push comprobado. En aquella comprobación, #670 estaba abierta en draft contra staging, asignada a jiji-mena, sin revisores ni merge; `Closes #601` y Development se confirmaron por separado. La revisión posterior y su estado remoto se distinguen en verification.md; no se anticipa la publicación de sus correcciones.

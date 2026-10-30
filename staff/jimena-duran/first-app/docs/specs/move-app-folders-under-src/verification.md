@@ -4,9 +4,9 @@ Issue: #601
 
 ## Historial: comprobaciones iniciales anteriores al commit local
 
-T01–T18 implementadas y verificadas en `601-refactor-move-app-folders-under-src`. HEAD permanece en `e7e51b11fe90b748a2cc18ae7669783905e48a34`: no hubo commit, push, PR ni merge y el índice sigue vacío.
+En la comprobación inicial, T01–T18 estaban implementadas y verificadas en `601-refactor-move-app-folders-under-src`. Entonces HEAD era `e7e51b11fe90b748a2cc18ae7669783905e48a34`: todavía no se habían realizado commit, push, PR ni merge, y el índice estaba vacío. Esa descripción histórica no corresponde al estado publicado posteriormente.
 
-Al comenzar se comprobó que #600 seguía abierta en draft, sin integrar. Esta rama conserva su implementación y depende de ella; no se añadieron estos cambios a su rama ni a su PR.
+Al comenzar se comprobó que #600 seguía abierta en draft, sin integrar. En ese momento, esta rama conservaba su implementación y dependía de ella; no se añadieron estos cambios a su rama ni a su PR.
 
 ## Cambios realizados
 
@@ -22,8 +22,8 @@ Al comenzar se comprobó que #600 seguía abierta en draft, sin integrar. Esta r
 Antes del traslado, SQLite permitió abrir un FileStream exclusivo de solo lectura; no se detectó un bloqueo activo. No había archivos auxiliares presentes. Se creó una copia local y un inventario de los 37 archivos antes de moverlos:
 
 ```text
-C:/windows/TEMP/jimena-src-backup-4f113527b40b4142bca2ddb716482386/users.sqlite
-C:/windows/TEMP/jimena-src-backup-4f113527b40b4142bca2ddb716482386/inventory.json
+<TEMP>/jimena-src-backup-4f113527b40b4142bca2ddb716482386/users.sqlite
+<TEMP>/jimena-src-backup-4f113527b40b4142bca2ddb716482386/inventory.json
 ```
 
 Las rutas absolutas de origen y destino se comprobaron dentro de first-app antes de usar Move-Item; no se sobrescribieron destinos existentes. La base personal se trasladó a `src/db/users.sqlite` sin abrirla desde la aplicación ni usarla para las pruebas.
@@ -55,22 +55,22 @@ La copia de pruebas se creó en una ruta Windows con espacios, sin copiar la bas
 
 ## Comandos y herramientas usados
 
-Desde first-app se ejecutaron:
+Desde first-app se ejecutaron formato y lint con pnpm 10.33.0 ya instalado. Los comandos equivalentes, sin la ruta local del ejecutable, son:
 
 ```powershell
-node 'E:/Users/987866/AppData/Local/Temp/jimena-corepack/v1/pnpm/10.33.0/bin/pnpm.cjs' format
-node 'E:/Users/987866/AppData/Local/Temp/jimena-corepack/v1/pnpm/10.33.0/bin/pnpm.cjs' lint
+pnpm format
+pnpm lint
 ```
 
-Las funciones y los ejemplos se ejecutaron con Node v24.22.0 y Windows PowerShell 5.1. Para los scripts se usó `-NoProfile -ExecutionPolicy Bypass` solo en el proceso de prueba, sin cambiar la política global. Los notebooks usaron nbclient desde el Python existente en `E:/Users/987866/AppData/Local/Programs/Python/Python313/python.exe`. No hubo instalaciones ni descargas.
+Las funciones y los ejemplos se ejecutaron con Node v24.22.0 y Windows PowerShell 5.1. Para los scripts se usó `-NoProfile -ExecutionPolicy Bypass` solo en el proceso de prueba, sin cambiar la política global. Los notebooks usaron nbclient con Python 3.13.9 ya instalado. No hubo instalaciones ni descargas.
 
-Se revisaron hashes, `git check-ignore`, `git diff --check`, índice y estado local. Antes de preparar un commit, Git muestra las rutas antiguas eliminadas y src sin seguimiento porque todavía no se han preparado los traslados; no significa que se hayan perdido los archivos.
+Se revisaron hashes, `git check-ignore`, `git diff --check`, índice y estado local. Antes del commit de implementación, Git mostraba las rutas antiguas eliminadas y src sin seguimiento porque los traslados aún no se habían preparado; no se habían perdido los archivos.
 
 ## Historial: límites y pendientes de la fase inicial
 
 - Jupyter emitió avisos de permisos de IPython/ZMQ sin errores de celda. No se probó su interfaz gráfica ni se inició un servidor para navegación; sí se ejecutaron los nueve notebooks reales desde su nueva ubicación.
 - No se repitieron las suites de Git: su código no cambió y se verificó su conservación mediante hashes. Los resultados de aplicación de esta entrega son nuevos; no se atribuyeron pruebas históricas a la reorganización.
-- La copia de seguridad local se conserva para revisión. No se ejecutaron operaciones de escritura ni consultas de la aplicación sobre la base personal.
+- La copia de seguridad local se conservó para revisión. No se ejecutaron operaciones de escritura ni consultas de la aplicación sobre la base personal.
 - En esa fase, la publicación estaba pendiente de autorización y faltaba revisar la integración de #600 y su base. Esta pendiente es histórica y está resuelta: #600 fue mergeada en staging, se integró origin/staging mediante `db267b51` y la autorización de publicación actual se registra al final.
 
 ## Reanudación del 30 de octubre de 2026
@@ -83,7 +83,7 @@ Los 16 archivos propios modificados se respaldaron en `.tmp/601-pre-staging-2026
 
 `git merge --no-commit --no-ff --no-overwrite-ignore origin/staging` terminó sin conflictos. Se verificó que el resultado frente a staging conservaba exclusivamente los 49 archivos de la reorganización original en first-app, sin diferencias fuera de esa app. Se cerró únicamente esa integración autorizada con `db267b516daae8d5906945c7a0a8f189b1ea657e`, padres `b62abae3b10b050f0582f7dced6e97b574fe13db` y `64e3edf51574f1b2f421ccabb6b39fdddf890597`. Los 13 archivos operativos de #600 coincidieron con el respaldo al normalizar finales CRLF/LF, y se recuperaron los tres documentos activos de #601 como cambios locales. No se reescribieron manualmente specs históricas; sus cambios proceden de upstream.
 
-La base personal conservó el SHA256 `67AABFF0965C26E122D924C604C48D9FC9C59EF30B89629C0D5A3F08631626FF` antes y después de la integración. No se hizo ningún nuevo commit de implementación, push, PR ni merge de #601 hacia staging. Los resultados iniciales anteriores se distinguen de la ejecución actual siguiente.
+La base personal conservó el SHA256 `67AABFF0965C26E122D924C604C48D9FC9C59EF30B89629C0D5A3F08631626FF` antes y después de la integración. Durante esa integración no se hizo ningún nuevo commit de implementación, push, PR ni merge de #601 hacia staging. La publicación posterior se registra al final, separada de la ejecución siguiente.
 
 ## Verificación actual después de integrar staging
 
@@ -99,13 +99,13 @@ Se creó `.tmp/601 verification edcf14a31e08402ca6d7e087d4c37073`, en una ruta c
 | Documentación y diff | 26 enlaces locales en 13 documentos vigentes/activos, ninguno roto. `git diff --check` local y contra origin/staging terminaron con código 0. |
 | Historial y alcance | En aquella comprobación, el snapshot de origin/staging `64e3edf5` y b62abae3 eran ancestros de HEAD. No había diferencias fuera de first-app respecto a ese snapshot; solo tres documentos activos de #601 quedaban modificados, con índice vacío. |
 
-Los wrappers `.tmp/verify601-run.ps1` y `.tmp/verify601-format.ps1` se ejecutaron con `powershell.exe -NoProfile -ExecutionPolicy Bypass -File`. Reutilizaron Node, Python/Jupyter, Ollama y `E:/Users/987866/AppData/Local/Temp/jimena-corepack/v1/pnpm/10.33.0/bin/pnpm.cjs` para format/lint. Los registros de funciones, clientes, notebooks, formato y lint, las nueve salidas `.executed.ipynb` y el respaldo original-js están dentro de la copia conservada. No se instalaron dependencias, descargaron modelos ni repitieron suites de Git.
+Los wrappers `.tmp/verify601-run.ps1` y `.tmp/verify601-format.ps1` se ejecutaron con `powershell.exe -NoProfile -ExecutionPolicy Bypass -File`. Reutilizaron Node, Python/Jupyter, Ollama y pnpm 10.33.0 existentes para format/lint. Los registros de funciones, clientes, notebooks, formato y lint, las nueve salidas `.executed.ipynb` y el respaldo original-js están dentro de la copia conservada. No se instalaron dependencias, descargaron modelos ni repitieron suites de Git.
 
-La base personal conserva al terminar el mismo SHA256 anterior y no se abrió desde la aplicación. SQLite y auxiliares permanecen excluidos de Git; no hay bases versionadas de esta app. ChromaDB sigue sin seguimiento, sin cambios de datos ni reglas para ocultarlo. Los avisos de permisos de IPython y de ZMQ/Proactor no causaron fallos; no se cambió configuración para suprimirlos. No se probó la interfaz gráfica de Jupyter. No se ha integrado #601 hacia staging.
+Al terminar aquella verificación, la base personal conservó el mismo SHA256 anterior y no se abrió desde la aplicación. SQLite y auxiliares permanecen excluidos de Git; no hay bases versionadas de esta app. ChromaDB sigue sin seguimiento, sin cambios de datos ni reglas para ocultarlo. Los avisos de permisos de IPython y de ZMQ/Proactor no causaron fallos; no se cambió configuración para suprimirlos. No se probó la interfaz gráfica de Jupyter. No se ha integrado #601 hacia staging.
 
-## Autorización actual de publicación
+## Historial: autorización de publicación
 
-Jimena autoriza el commit selectivo de plan, tareas y verificación de #601, el push de `601-refactor-move-app-folders-under-src` y la creación de una PR draft contra staging, sin revisores ni merge. La dependencia de #600 ya está integrada y no constituye una pendiente actual. Se mantienen separados el commit previo de implementación `b62abae3`, el commit de integración `db267b51` y las verificaciones posteriores descritas arriba.
+Jimena autorizó el commit selectivo de plan, tareas y verificación de #601, el push de `601-refactor-move-app-folders-under-src` y la creación de una PR draft contra staging, sin revisores ni merge. La dependencia de #600 ya estaba integrada. Se mantienen separados el commit previo de implementación `b62abae3`, el commit de integración `db267b51` y las verificaciones posteriores descritas arriba.
 
 El fetch previo a publicar mostró origin/staging en `d7d0e7a88ca0600fd752c3eb62044c320b2fe359`, posterior al snapshot integrado `64e3edf5`. La comparación entre ambos commits no mostró cambios en first-app y el diff completo de la PR contra esa base pasó `git diff --check` con código 0. Estas aclaraciones documentales no necesitan otra integración ni repetir pruebas de código; no se afirma que el nuevo tip de staging sea ancestro de esta rama.
 
@@ -119,4 +119,25 @@ Antes del primer commit documental, la conciliación solo modificaba estos tres 
 - El cuerpo se actualizó mediante el MCP local para incorporar una única referencia `Closes #601`; su relectura confirmó el texto exacto. La lectura con gh verificó Development en ambos sentidos entre #670 y #601 y que la issue #601 sigue abierta. No se confundió el MCP local con GitHub de Apps ni se crearon recursos de prueba.
 - Durante la publicación staging avanzó de nuevo; la base observada de la PR era `dafe8ca6`. Esa lectura no cambia el snapshot integrado `64e3edf5` ni afirma que la rama contenga ese tip posterior. No se hizo otra integración por estas aclaraciones documentales.
 
-Esta actualización de los mismos tres documentos registra únicamente resultados ya comprobados. No se repitieron pruebas de código y no se anticipa otro commit documental ni su push.
+Esa actualización de los mismos tres documentos registró únicamente resultados ya comprobados. No repitió pruebas de código ni anticipó el siguiente commit documental; después se publicó en `4bc3fa9f5de25cbc2f810e8470a78505ce20b898`, cuyo push y head de #670 quedaron comprobados.
+
+## Revisión posterior de #670
+
+La lectura remota comunicada en esta revisión muestra #670 abierta, fuera de draft, sin merge, con head `4bc3fa9f` y revisores solicitados `mglnglxx` y `Dietor878`. Es un estado posterior a la publicación inicial en draft y sin revisores; esta revisión no modifica la PR ni atribuye quién cambió esos campos.
+
+Los comentarios se atendieron dentro de T08/T11: nota de traslado manual de SQLite por checkout, localización exclusiva de first-app/src en los nueve notebooks y corrección de la documentación activa. La nota no ejecuta movimientos de la base ni añade una migración automática. Se retiraron rutas personales de este informe y se contextualizaron los estados anteriores a commit y PR. Jimena autorizó después el commit selectivo y push de estas correcciones, incluidos los nueve notebooks y la documentación afectada, y actualizar la descripción de #670 sin cambiar revisores ni hacer merge.
+
+La verificación de esta corrección se realizó en `.tmp/601 notebook review 3c1ac280a09043aaa87862741f68992f`, con SQLite desechable propia. Los resultados son nuevos y no se sustituyen por las comprobaciones anteriores:
+
+- Pasaron 63 casos de localización, siete por cada notebook: arranque desde first-app, src, la carpeta del notebook y la raíz del repositorio; elección de la app de Jimena aunque el directorio de trabajo pertenezca a otro alumno; y rechazo del repositorio más cercano sin la app propia o con una app incompleta. No se escapó a una app de un repositorio exterior ni se tomó cualquier carpeta logic.
+- Los 9/9 notebooks se ejecutaron sin errores alternando los directorios de trabajo first-app, src y su carpeta Jupyter. Se conservaron el código de negocio, outputs, metadatos y contadores originales; en los nueve archivos versionados solo cambió el bootstrap.
+- Formato y lint terminaron con código 0. Los diez JS conservaron sus bytes originales después de comprobar que el formateador solo normalizaba CRLF/LF.
+- La base personal mantuvo antes y después el SHA256 `67AABFF0965C26E122D924C604C48D9FC9C59EF30B89629C0D5A3F08631626FF`, sin auxiliares presentes. No se abrió desde los notebooks de prueba ni se trasladó durante esta corrección.
+
+La copia conserva los nueve notebooks ejecutados, `summary.json`, los registros de formato/lint y `original-js`. Se usaron los wrappers `.tmp/verify601-review-notebooks.py` y `.tmp/verify601-review-format.ps1` con las herramientas existentes. Los avisos de IPython/ZMQ no causaron fallos. No se añadieron dependencias. Estos resultados preceden a la publicación autorizada de la corrección; no anticipan su commit ni su push.
+
+## Comprobación previa a publicar las correcciones del review
+
+Se inspeccionaron los nueve JSON versionados: todos tienen `outputs: []` y `execution_count: null`, sin rutas personales ni resultados de ejecución. Sus metadatos contienen solo configuración de kernel/lenguaje. Las celdas conservan únicamente ejemplos sintéticos identificados como demo (`Jimena Demo` y `demo.jimena.jupyter@example.com`); no contienen registros extraídos de SQLite personal. No fue necesario limpiar salidas ni modificar nuevamente los notebooks.
+
+La nota de DATABASE.md cubre respaldo fuera de Git, cierre de conexiones, traslado conjunto de SQLite y sus auxiliares WAL/SHM/journal presentes, verificación por hash y detención si ya existe una base o un auxiliar en destino, sin sobrescribirlos. No se mueve ni abre la base personal durante esta comprobación. Esta auditoría no repite las pruebas funcionales de notebooks ya registradas.
