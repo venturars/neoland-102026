@@ -43,6 +43,45 @@ Lo que pide cada herramienta además:
 - **Cursor:** comprueba en *Settings → MCP* que el servidor `github` está activado. El paquete le añade la cabecera `X-MCP-Features: mcp_apps_disable_form_deferral`: sin ella, crear o editar una issue o una pull request abre un formulario sin botón de enviar y la llamada se queda esperando. Cursor pide permiso en cada llamada al MCP y en cada comando de terminal. Si lo abres desde el Dock y no ve `GITHUB_TOKEN`, ábrelo desde la terminal con `cursor .`.
 - **Codex:** Codex solo lee `.codex/config.toml` si el proyecto es de confianza (*trusted*). Acepta la confianza cuando Codex la pida al abrir el proyecto. `/mcp` muestra si el servidor `github` está conectado.
 
+## Repositorio compartido
+
+En un repositorio donde trabajan muchas personas, como el del curso, conviene instalar el paquete una sola vez para todo el repositorio en vez de que cada persona lance su propio `apm install <paquete>` en la raíz. Si cada persona instala por su cuenta, en la raíz quedan ficheros sin seguimiento (`.agents/`, `apm.yml`, `apm.lock.yaml`, `.apm-local/`) y APM toca `.gitignore`. Cada `apm.yml` sale distinto (APM pone el nombre de la carpeta y de quien instala) y cada `apm.lock.yaml` apunta a un commit distinto, así que las pull requests que los incluyan chocan entre sí.
+
+Instalación única, en una sola pull request de quien mantiene el repositorio:
+
+1. En la raíz, instala el paquete desde su carpeta del propio repositorio:
+
+   ```bash
+   apm install ./exercises/git-workflow-agent-template --target claude
+   ```
+
+   `apm.yml` guarda la ruta relativa, así que cada copia del repositorio usa la versión del paquete que tiene en su propia carpeta, sin etiquetas.
+
+2. Añade a `.gitignore` lo que genera cada instalación:
+
+   ```gitignore
+   .claude/
+   .mcp.json
+   .cursor/
+   .codex/
+   .agents/
+   .apm-local/
+   apm_modules/
+   apm.lock.yaml
+   ```
+
+   El lockfile también se ignora: apunta a una carpeta del mismo repositorio y cambia según la herramienta de cada persona, porque guarda los ficheros que instaló en cada una.
+
+3. Haz commit solo de `apm.yml` y de `.gitignore`.
+
+Después, cada persona, al hacer pull, instala para su herramienta sin nombrar el paquete:
+
+```bash
+apm install --target cursor
+```
+
+Con eso no queda nada nuevo para hacer commit. Para actualizar el paquete basta con fusionar sus cambios: el siguiente `apm install` de cada persona los recoge.
+
 ## Uso
 
 Llama al orquestador o pide directamente un momento:
