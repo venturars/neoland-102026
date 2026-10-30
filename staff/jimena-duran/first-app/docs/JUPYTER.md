@@ -9,7 +9,7 @@ escribir código ni rellenar formularios.
 Desde `staff/jimena-duran/first-app`:
 
 ```powershell
-python -m jupyterlab clients/jupyter --ServerApp.ip=127.0.0.1 --port=8899 --IdentityProvider.token= --PasswordIdentityProvider.hashed_password=
+python -m jupyterlab src/clients/jupyter --ServerApp.ip=127.0.0.1 --port=8899 --IdentityProvider.token= --PasswordIdentityProvider.hashed_password=
 ```
 
 Abre `http://127.0.0.1:8899/lab`. Esta demo local no pide token ni contraseña

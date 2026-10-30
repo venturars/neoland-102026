@@ -1,6 +1,6 @@
 # Pega esto en PowerShell desde la carpeta first-app.
 $script = @'
-import { findUserByEmail } from "./logic/find-user-by-email.js";
+import { findUserByEmail } from "./src/logic/find-user-by-email.js";
 
 const result = findUserByEmail("ada@example.com");
 

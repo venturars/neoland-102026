@@ -1,6 +1,6 @@
 # Automatización de Git en first-app
 
-El punto de entrada es [AGENTS.md](../AGENTS.md) y el flujo se coordina desde [git-workflow-agent.md](../agents/git-workflow-agent.md). Las reglas de negocio y los clientes de usuarios mantienen sus carpetas actuales. Esta automatización no reorganiza la aplicación ni añade dependencias de Node.
+El punto de entrada es [AGENTS.md](../AGENTS.md) y el flujo se coordina desde [git-workflow-agent.md](../agents/git-workflow-agent.md). Las reglas de negocio y los clientes de usuarios viven bajo `src/`; las herramientas de Git permanecen en la raíz de first-app. Esta automatización no reorganiza la aplicación ni añade dependencias de Node.
 
 ## Pedir una tarea
 

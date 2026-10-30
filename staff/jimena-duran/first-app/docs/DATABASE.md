@@ -1,6 +1,6 @@
 # Base de datos y consultas
 
-La aplicación utiliza únicamente `db/users.sqlite` y la conexión exportada por `db/connection.js`. No se crean bases ni conexiones alternativas.
+La aplicación utiliza únicamente `src/db/users.sqlite` y la conexión exportada por `src/db/connection.js`. No se crean bases ni conexiones alternativas. El archivo SQLite y sus auxiliares permanecen fuera de Git.
 
 La tabla `users` tiene estas reglas:
 
@@ -11,4 +11,4 @@ La tabla `users` tiene estas reglas:
 
 ## Consultas SQL
 
-El texto SQL no se escribe dentro de la función de lógica que lo utiliza. En `queries/queries/` cada consulta tiene su propio `.sql`, que contiene solo SQL y parámetros nombrados (`:id`, `:name`, `:email`). `queries/users.js` carga esos archivos, prepara las sentencias con `db` y las ejecuta; sus funciones pueden ser llamadas desde `logic/`.
+El texto SQL no se escribe dentro de la función de lógica que lo utiliza. En `src/queries/queries/` cada consulta tiene su propio `.sql`, que contiene solo SQL y parámetros nombrados (`:id`, `:name`, `:email`). `src/queries/users.js` carga esos archivos, prepara las sentencias con `db` y las ejecuta; sus funciones pueden ser llamadas desde `src/logic/`.
