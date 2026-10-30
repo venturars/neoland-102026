@@ -1,4 +1,4 @@
-"""Acciones de pasar lista: abrir, cerrar, listar, exportar, quitar y registrarse.
+"""Acciones de pasar lista: abrir, cerrar, listar, exportar, quitar, añadir y registrarse.
 
 No dibuja pantallas. Pide las reglas a ``domain`` y el guardado a ``storage``.
 
@@ -6,6 +6,7 @@ Usage::
 
   token = prepare(path)
   row, created = check_in(path, session_id, raw_name, code, now, ip)
+  row, created = add_checkin_manual(path, session_id, raw_name, now)
 """
 
 from datetime import datetime, timezone
@@ -229,6 +230,29 @@ def check_in_discord(path, display_name, code, now) -> tuple[dict, bool]:
     return storage.add_checkin(
         path, loaded["id"], name, name_key(name), _iso(now)
     )
+
+
+def add_checkin_manual(path, session_id: str, raw_name, now) -> tuple[dict, bool]:
+    """Añade un registro a mano (profesor). Vale con la clase abierta o cerrada.
+
+    Sin código ni límite por IP.
+
+    :param path: ruta del archivo.
+    :param session_id: id de la clase.
+    :param raw_name: nombre tal como lo escribió el profesor.
+    :param now: función que devuelve el instante Unix actual.
+    :return: el registro y True si se acaba de crear.
+    :rtype: tuple[dict, bool]
+    :raises SessionNotFound: si la clase no existe.
+    :raises ValueError: si el nombre está vacío o es demasiado largo.
+
+    Usage::
+
+      row, created = add_checkin_manual(path, session_id, raw_name, now)
+    """
+    require_session(storage.get_session(path, session_id))
+    name = clean_name(raw_name)
+    return storage.add_checkin(path, session_id, name, name_key(name), _iso(now))
 
 
 def remove_checkin(path, session_id: str, checkin_id: int) -> bool:
