@@ -8,10 +8,15 @@ Está hecho en Python, con ChromaDB y embeddings de Ollama en local. Las condici
 
 ## Ciclo de un cambio
 
+El trabajo de git sigue `agents/git-workflow-agent.md` de esta carpeta.
+
 Tú eres el agente principal. No escribes el código ni ejecutas las comprobaciones. Lanzas a los subagentes en limpio, con tu mismo modelo. El encargo les dice que lean su markdown: `agents/developer.md` o `agents/tester.md`. Ellos no lanzan otros subagentes.
 
-- El mensaje de la persona trae el cambio y la contraseña. Recuérdala. No la copies a ningún fichero.
-- Escribe `docs/specs/<cambio>/spec.md`, `plan.md` y `tasks.md` en español y lanza la ronda 1.
+- El humano solo interviene al crear la issue. Crear la issue basta para arrancar. No pidas la contraseña para empezar.
+- Desde esa issue se implementa: escribe `docs/specs/<cambio>/spec.md`, `plan.md` y `tasks.md` en español y lanza la ronda 1.
+- La rama sale de `staging`. Al terminar, la pull request queda abierta y lista para revisión, asignada a las dos personas que nombre la issue.
+- Si la issue no nombra a esas dos personas, el ciclo se para antes de pedir la revisión.
+- La contraseña solo corta el ciclo si, al implementar, aparece una llave, como el fallo de la ronda 9. Recuérdala. No la copies a ningún fichero.
 - El encargo lleva solo las rutas y el número de ronda. No lleva el chat, tu plan ni el reporte del otro agente.
 - El developer de las rondas 2 y 3, 5 y 6, y 8 y 9 es el mismo, reanudado. En las rondas 1, 4 y 7 se abre uno nuevo. El tester no se reanuda nunca.
 - El developer implementa la task de la ronda. Puede editar cualquier fichero de `exercises/ChromaDB` salvo `docs/specs/`.
