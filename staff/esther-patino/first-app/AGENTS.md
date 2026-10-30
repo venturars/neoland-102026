@@ -34,7 +34,7 @@ Una persona lee lo escrito. El proceso de implementación empieza cuando esa per
 
 ## Validación de paquetes
 
-Cada vez que un plan añade un paquete de Node o cambia su versión, el chequeo es automático. Se hace con el MCP `socket-mcp` de `MCPS/socket-mcp/mcp.txt`, antes de aceptar el plan.
+Cada vez que un plan añade un paquete de Node o cambia su versión, el chequeo es automático. Se hace con el MCP `socket-mcp` de `MCP.md`, antes de aceptar el plan.
 
 Se mira el paquete y la versión: si una campaña lo afecta, si una alerta lo afecta, o si alguna de sus stats está por debajo de 50 puntos.
 
