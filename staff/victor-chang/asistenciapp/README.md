@@ -194,7 +194,7 @@ ruff check        # estilo y errores habituales
 mypy              # tipos
 ```
 
-Cada criterio de aceptación de la spec 001 (`CA-01` a `CA-26`) tiene un test o una verificación manual; la tabla está en [plan.md §6](specs/001-checkin-codigo/plan.md). Los de la spec 004, en su [plan.md §6](specs/004-asistencia-meet/plan.md), y los de la spec 005, en su [plan.md §6](specs/005-adaptar-arquitectura/plan.md). Los tests nunca llaman a Google: usan respuestas de ejemplo con nombres inventados (`tests/fixtures/meet/`).
+Cada criterio de aceptación de la spec 001 (`CA-01` a `CA-26`) tiene un test o una verificación manual; la tabla está en [plan.md §6](specs/001-checkin-codigo/plan.md). Los de la spec 004, en su [plan.md §6](specs/004-asistencia-meet/plan.md), los de la spec 005, en su [plan.md §6](specs/005-adaptar-arquitectura/plan.md), y los de la spec 006 (aspecto), en su [plan.md §5](specs/006-imagen-neoland/plan.md). Los tests nunca llaman a Google: usan respuestas de ejemplo con nombres inventados (`tests/fixtures/meet/`).
 
 El código está organizado por capas según [ARCHITECTURE.md](ARCHITECTURE.md): `attendance/domain/` (reglas), `usecases/` (acciones), `entrypoints/web/` (Flask) y `entrypoints/cli.py` (el atajo `--meet`) e `infra/` (base de datos, CSV, túnel, Google Meet). `app.py` solo arranca la app.
 
@@ -209,3 +209,4 @@ El código está organizado por capas según [ARCHITECTURE.md](ARCHITECTURE.md):
 - Los datos se guardan **solo en tu ordenador** (`data/`, que no se sube a git).
 - Con `--tunel`, el tráfico pasa **cifrado** por Cloudflare, que no lo almacena (constitución P4).
 - La consola de la app no muestra IPs, nombres de alumnos ni respuestas de Google.
+- Las pantallas **no piden nada fuera de la app**: las letras (Montserrat y Roboto, de [Fontsource](https://fontsource.org) 5.3.0, licencia SIL Open Font License 1.1) van dentro, en `static/fonts/` junto a sus licencias (`OFL-*.txt`). El aspecto se inspira en neoland.es, sin usar su logotipo ni sus imágenes (spec 006).
