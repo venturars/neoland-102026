@@ -1,6 +1,6 @@
 # Paste this in the terminal, with first-app as the current folder
 node --input-type=module <<'EOF'
-import { findUserByEmail } from "./logic/find-user-by-email.js";
+import { findUserByEmail } from "./src/logic/find-user-by-email.js";
 
 const result = findUserByEmail({ email: "ado@example.com" });
 

@@ -6,7 +6,7 @@ Cuadernos para probar la aplicación desde el navegador, uno por funcionalidad d
 
 - Cada cuaderno tiene 2 celdas: un texto que explica la función (incluidos los errores posibles y cómo corregirlos) y una celda de código.
 - La celda de código es de Python: lanza Node con `subprocess` desde `first-app`, llama a la función de `logic/` y dibuja el resultado en una tabla con `cli-table3`. No hay archivos auxiliares: las reglas y el SQL siguen en `logic/` y `queries/`.
-- **Los cuadernos usan la base de datos real (`db/users.sqlite`).** Crear, actualizar y eliminar cambian usuarios de verdad y no se pueden deshacer. Los cuadernos de actualizar y eliminar empiezan con `id = 0`, que no existe: ejecutarlos sin cambiar nada no modifica a nadie.
+- **Los cuadernos usan la base de datos real (`src/db/users.sqlite`).** Crear, actualizar y eliminar cambian usuarios de verdad y no se pueden deshacer. Los cuadernos de actualizar y eliminar empiezan con `id = 0`, que no existe: ejecutarlos sin cambiar nada no modifica a nadie.
 
 ## Requisitos
 
@@ -29,7 +29,7 @@ La primera vez crea el entorno `.venv` e instala `notebook` 7.6.3. Las siguiente
 cd staff/ella-deyavorsky/first-app
 test -d .venv || python3 -m venv .venv
 .venv/bin/pip install notebook==7.6.3
-.venv/bin/jupyter notebook --ip=127.0.0.1 --port=8888 clients/jupyter
+.venv/bin/jupyter notebook --ip=127.0.0.1 --port=8888 src/clients/jupyter
 ```
 
 ## Abrir los cuadernos
