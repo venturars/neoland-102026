@@ -5,7 +5,10 @@ Implementa [spec.md](spec.md). Todo respeta [CONSTITUTIONS.md](../../CONSTITUTIO
 ## Decisiones técnicas
 | Tema | Decisión | Motivo |
 |---|---|---|
-| Ejecución | Bloque Python con `subprocess.run(["node", "--no-warnings", "--input-type=module", "-e", code], cwd=app, capture_output=True, text=True, encoding="utf-8")`. El `code` de Node importa la función de `logic/` y dibuja la tabla | Los datos llegan como objetos y se pueden dibujar en tabla. El UTF-8 evita el `UnicodeDecodeError` de `cp1252` en Windows |
+| Ejecución | Bloque Python con `subprocess.run(["node", "--no-warnings", "--input-type=module", "-e", code], cwd=app, capture_output=True, text=True, encoding="utf-8", env=env)`. El `code` de Node importa la función de `logic/` y dibuja la tabla | Los datos llegan como objetos y se pueden dibujar en tabla. El UTF-8 evita el `UnicodeDecodeError` de `cp1252` en Windows |
+| Importar `logic/` | Se importa la función tal cual. Depende de #638: los archivos de `logic/` solo exportan su función | Con el bloque `isRunFromTerminal`, importar desde `node -e` fallaba porque `process.argv[1]` no existe |
+| Colores | `env` es una copia del entorno con `FORCE_COLOR=1` y sin `NO_COLOR` | La salida no va a una terminal, y sin esto Node no pinta el encabezado |
+| Resultado guardado | Cada documento se guarda con la salida de su ejecución | La spec pide que el documento traiga el resultado |
 | Localizar la app | Subir desde `Path.cwd()` hasta la carpeta que contiene `logic/`. Si no se encuentra, `SystemExit("App not found.")` | El documento funciona desde `clients/jupyter/` sin rutas fijas |
 | Errores | Si el programa termina con error, se imprime su salida de error (`Error: <mensaje>`) y no sale la tabla | Se ve el mensaje que ya lanza `logic/` |
 | Tabla | La dibuja Node con `cli-table3` `0.6.5`. El encabezado va en color (`cyan`, `bold`) con `@colors/colors` `1.6.1`. Versiones fijas, instaladas con pnpm | Mismo resultado que el cliente de Ventura. Dependencias aprobadas por el usuario (`AGENTS.md` pide permiso) |
