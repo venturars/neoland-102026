@@ -1,1 +1,0 @@
-node --input-type=module -e "import { createUser } from './staff/luis-duque/first-app/logic/create-user.js'; console.log(await createUser({ name: process.argv[1], email: process.argv[2] }))" "Terminal Client" terminal-client@example.com
