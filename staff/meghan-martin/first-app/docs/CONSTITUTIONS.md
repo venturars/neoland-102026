@@ -103,7 +103,11 @@ Una funcionalidad nueva es un fichero nuevo. Si la constitución, el código y l
 
 ## Paquetes
 
-Un paquete de Node nuevo, o un cambio de su versión, se comprueba con Socket antes de aprobar el plan.
+Un paquete de Node nuevo, o un cambio de su versión, se comprueba con Socket antes de aprobar el plan. Entran la versión exacta y las dependencias, hasta tres capas. El plan trae un resumen: si esa versión está en una campaña, si tiene una alerta y si alguna puntuación baja de 50. Cada dato dice de dónde sale. Si una fuente no puede contestar, el resumen dice el motivo.
+
+Las alertas las decide quien aprueba el plan. No se instala el paquete ni se cambia `package.json` ni el lock antes de que esa persona haya leído la spec y el plan.
+
+Queda fuera un paquete que no es de Node, un paquete cuya versión no cambia, y una dependencia más allá de la tercera capa.
 
 ## Base de datos
 
