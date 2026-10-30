@@ -81,6 +81,34 @@ contracts or provide runtime business functionality.
 - Review dependency upgrades deliberately; do not upgrade packages opportunistically.
 - Exact versions and the lockfile control dependency resolution. They do not guarantee package security.
 
+### Socket access and sources
+
+The [Socket MCP reference](../MCPS/socket-mcp/mcp.txt) documents the remote
+server at `https://mcp.socket.dev/`. The current Codex connection uses OAuth;
+it does not require an additional API key for that MCP. Independent APIs or
+reports may require separate credentials. Do not infer their permissions from
+the MCP session or from the existence of a local token file.
+
+- `organizations` identifies accessible organizations; `neoland` is the slug
+  observed for this account, not a universal setting.
+- `depscore` provides the five scores for an exact version on a 0–100 scale.
+  Report values below 50; missing values remain unknown. Scores do not list
+  alerts or establish absence of campaigns.
+- `alerts` covers the organization's monitored packages. Record filters, states
+  and pagination. An empty result applies only to that query; `cleared` is
+  distinct from `open` and neither establishes exact-version alert coverage.
+- Exact-version alerts still require the verified API or report and coverage
+  checks in [AGENTS.md](../AGENTS.md). Authentication for those sources is
+  independent of MCP OAuth.
+- `threat_feed` has its own coverage and permissions. A 403 with
+  `threat_feed_not_entitled` means the feed is unavailable for that organization,
+  not that threats or campaigns are absent. The feed does not replace the
+  campaign sources; retain their coverage limits and human risk decision.
+
+Record the source and scope of each result, including pagination, missing data
+and error reasons. The detailed three-layer review, unfiltered alert coverage,
+proposal-specific approval and lockfile comparison remain in AGENTS.md.
+
 ## Workflow for new SDD development
 
 Approved transition decision by Miguel on 2026-10-20: public ID lookup has been completed from its reviewed chat plan, before the three-document SDD workflow begins with the classifier. Its separate specification and plan files were removed as authorized. The classifier specification, plan, and tasks are approved. Its implementation is present; actual verification outcomes and any remaining blockers are recorded in `docs/specs/classifier/tasks.md`.

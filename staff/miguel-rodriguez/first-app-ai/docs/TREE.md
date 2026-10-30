@@ -13,7 +13,9 @@ first-app-ai/
 ├── .gitignore
 ├── AGENTS.md
 ├── MCPS/
-│   └── github-mcp-server/
+│   ├── github-mcp-server/
+│   │   └── mcp.txt
+│   └── socket-mcp/
 │       └── mcp.txt
 ├── README.md
 ├── agents/
@@ -57,6 +59,10 @@ first-app-ai/
 │       │   ├── spec.md
 │       │   └── tasks.md
 │       ├── prettier-and-eslint/
+│       │   ├── plan.md
+│       │   ├── spec.md
+│       │   └── tasks.md
+│       ├── socket-mcp-access/
 │       │   ├── plan.md
 │       │   ├── spec.md
 │       │   └── tasks.md
