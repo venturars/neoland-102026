@@ -8,7 +8,7 @@ Proyecto didáctico: base de datos de usuarios en SQLite, con `node:sqlite`. Las
 
 ## Estructura
 ```
-terminal/   .txt con los comandos que el usuario ejecuta a mano
+clients/terminal/   .txt con los comandos que el usuario ejecuta a mano
 logic/      una función por operación: valida datos y llama a queries
 queries/    todo el SQL (users.js); no valida nada
 db/         connection.js (conexión y creación de la tabla) y users.sqlite
@@ -17,25 +17,27 @@ docs/       CONSTITUTIONS.md
 Flujo: `terminal → logic → queries → db/connection.js`.
 
 ## Comandos
-Se ejecutan desde la raíz del proyecto (`first-app/`). El flag `--no-warnings` oculta el aviso experimental de `node:sqlite`.
+Están en `clients/terminal/`, un `.txt` por operación. Se copian y se pegan en la terminal (PowerShell o Git Bash) desde la raíz del proyecto (`first-app/`). Cada uno importa la función de `logic/`, la llama con valores de ejemplo y muestra el resultado o `Error: <mensaje>`. Los valores se cambian editando el comando. El flag `--no-warnings` oculta el aviso experimental de `node:sqlite`.
 ```
-node --no-warnings logic/createUser.js "<name>" "<email>"
-node --no-warnings logic/findUserByEmail.js "<email>"
-node --no-warnings logic/listUsers.js
-node --no-warnings logic/updateUser.js <id> "<name>" "<email>"   # "" = no cambiar ese campo
-node --no-warnings logic/deleteUser.js <id>
+clients/terminal/createUser.txt
+clients/terminal/findUserByEmail.txt
+clients/terminal/listUsers.txt
+clients/terminal/updateUser.txt       # '' = no cambiar ese campo
+clients/terminal/deleteUser.txt
+clients/terminal/classifyGender.txt   # necesita Ollama en marcha
 ```
+Forma de cada comando: `-e "` en la primera línea, el código sangrado debajo y `"` sola en la última. Dentro del código, solo comillas simples y sin `${...}`.
 
 ## Estilo
 - Nombres (archivos, funciones, variables) y mensajes de error/salida: en **inglés**.
 - Comentarios: en **español**, solo donde haya algo no evidente, más un comentario inicial por archivo con su responsabilidad.
 - Código explícito y legible para un junior: sin expresiones condensadas ni trucos de sintaxis.
-- **Plantilla a copiar** para cualquier operación nueva de `logic`: [logic/createUser.js](logic/createUser.js) (comentario inicial, función exportada, bloque `isRunFromTerminal`, errores con `throw new Error`, `process.exit(1)` en la terminal).
+- **Plantilla a copiar** para cualquier operación nueva de `logic`: [logic/createUser.js](logic/createUser.js) (comentario inicial, función exportada, errores con `throw new Error`). `logic/` no lee `process.argv`, no imprime y no llama a `process.exit`: eso lo hace el `.txt` de `clients/terminal/`, con [clients/terminal/createUser.txt](clients/terminal/createUser.txt) como plantilla.
 
 ## Cómo verificar un cambio
 1. Ejecutar los comandos reales de la sección anterior.
 2. Probar también los casos de error: datos que faltan, email inválido o repetido, id inexistente o no numérico.
-3. Probar con usuarios temporales y borrarlos al terminar. Comprobar con `listUsers.js` que los datos existentes siguen intactos.
+3. Probar con usuarios temporales y borrarlos al terminar. Comprobar con `clients/terminal/listUsers.txt` que los datos existentes siguen intactos.
 
 ## Límites
 **Siempre**
