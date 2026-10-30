@@ -11,7 +11,7 @@ def runNode(operation, *args):
     modulePath = Path(__file__)
     resolvedPath = modulePath.resolve()
     parentDirectories = resolvedPath.parents
-    app = parentDirectories[2]
+    app = parentDirectories[3]
     package = app / "package.json"
     try:
         packageText = package.read_text(encoding="utf-8")
@@ -25,14 +25,14 @@ def runNode(operation, *args):
         print("No encuentro la app.")
         return
 
-    connectionPath = app / "db/connection.js"
+    connectionPath = app / "src/db/connection.js"
     connectionExists = connectionPath.is_file()
     connectionIsMissing = not connectionExists
     if connectionIsMissing:
         print("No encuentro la app.")
         return
 
-    listUsersPath = app / "logic/list-users.js"
+    listUsersPath = app / "src/logic/list-users.js"
     listUsersExists = listUsersPath.is_file()
     listUsersIsMissing = not listUsersExists
     if listUsersIsMissing:
@@ -42,7 +42,7 @@ def runNode(operation, *args):
     environment = os.environ.copy()
     environment.pop("NO_COLOR", None)
     environment["FORCE_COLOR"] = "1"
-    runnerPath = app / "clients/jupyter/run-operation.js"
+    runnerPath = app / "src/clients/jupyter/run-operation.js"
     runner = str(runnerPath)
     command = ["node", "--disable-warning=ExperimentalWarning", runner]
     request = {"operation": operation, "args": args}

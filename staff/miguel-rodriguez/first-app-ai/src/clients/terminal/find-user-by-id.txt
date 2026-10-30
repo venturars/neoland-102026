@@ -1,7 +1,7 @@
 # Run from the project directory after separate initialization and creation.
 # Replace the sample ID (1) with an existing contact's ID.
 node --input-type=module <<'NODE'
-import { findUserById } from './logic/find-user-by-id.js';
+import { findUserById } from './src/logic/find-user-by-id.js';
 
 const user = findUserById(1);
 console.log(user);

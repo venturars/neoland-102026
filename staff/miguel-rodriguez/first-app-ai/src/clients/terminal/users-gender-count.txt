@@ -3,7 +3,7 @@
 # Requires the approved openai dependency and local Ollama at http://127.0.0.1:11434
 # with llama3.2 available. Empty data does not contact the model.
 node --input-type=module <<'NODE'
-import { usersGenderCount } from './logic/users-gender-count.js';
+import { usersGenderCount } from './src/logic/users-gender-count.js';
 
 const result = await usersGenderCount();
 console.log(result);

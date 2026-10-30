@@ -1,7 +1,7 @@
 # Run from the project directory after the separate initialization and creation snippets.
 # Replace the sample ID (1) with an existing user's ID.
 node --input-type=module <<'NODE'
-import { updateUser } from './logic/update-user.js';
+import { updateUser } from './src/logic/update-user.js';
 
 const user = updateUser(1, { name: "Ada Lovelace" });
 console.log(user);

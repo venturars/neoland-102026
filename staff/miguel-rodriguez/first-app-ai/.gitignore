@@ -4,6 +4,9 @@ __pycache__/
 clients/jupyter/.ipynb_checkpoints/
 db/*.sqlite
 db/*.sqlite-*
+src/db/*.sqlite
+src/db/*.sqlite-*
+src/clients/jupyter/.ipynb_checkpoints/
 
 # Version only the six approved Cursor agent registrations.
 !.cursor/
