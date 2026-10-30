@@ -19,6 +19,11 @@ mi-primer-proyecto/
   db/
     connection.js
     users.sqlite
+  agents/
+  skills/
+  tools/
+  templates/
+  MCPS/
   docs/
     ARCHITECTURE.md
     TREE.md
