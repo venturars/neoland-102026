@@ -54,5 +54,5 @@ Cómo leer esta lista:
   - *Cubre:* CA-12.
   - *Hecha cuando:* cada paso tiene su comando en los dos grupos de sistemas.
 
-- [x] **T10** · `docs/ARCHITECTURE.md` (fila de `app.py`), nota en la spec 006 y fila 008 en `AGENTS.md` §7.
+- [x] **T10** · `docs/ARCHITECTURE.md` (fila de `app.py`), fila 008 y puntero de la 006 en `AGENTS.md` §7.
   - *Hecha cuando:* `pytest` pasa.

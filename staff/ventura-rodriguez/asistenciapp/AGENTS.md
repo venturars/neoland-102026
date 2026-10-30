@@ -129,7 +129,7 @@ Una funcionalidad está terminada cuando:
 | `003-activar-el-entorno`            | ✅ Implementada (2026-10-22): T01–T04, 77 tests                                | El README separa activar el entorno y arrancar la app           |
 | `004-quitar-referencias-personales` | ✅ Implementada (2026-10-22): T01–T12, 80 tests                                | El README entra con un usuario genérico                         |
 | `005-reorganizar-arquitectura`      | ✅ Implementada (2026-10-22): T01–T12, 87 tests                                | Documentos en `docs/` y código en reglas, acciones y borde      |
-| `006-limite-por-ip-publica`         | ✅ Implementada (2026-10-23): T01–T11, 102 tests                               | Límite de intentos de registro por IP y lista de bloqueo        |
+| `006-limite-por-ip-publica`         | ✅ Implementada (2026-10-23): T01–T11, 102 tests                               | Límite de intentos de registro por IP y lista de bloqueo. El recuento, la duración del bloqueo y la IP con túnel los cambia la 008 |
 | `007-flujo-de-git`                  | ✅ Implementada (2026-10-30): T01–T06                                          | Flujo de git del curso y cinco momentos del humano. Issue #616  |
 | `008-bloqueo-justo-y-reglas-claras` | ✅ Implementada (2026-10-30): T01–T10, 114 tests                               | Solo cuentan los códigos fallados, el bloqueo caduca, IP real con túnel, constitución 4.0 y comandos por sistema. Issue #653 |
 
