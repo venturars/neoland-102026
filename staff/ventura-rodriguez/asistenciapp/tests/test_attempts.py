@@ -22,5 +22,6 @@ def test_banned_says_the_address_is_blocked():
         raise Banned()
     assert (
         str(caught.value)
-        == "Esta dirección queda bloqueada por haber superado los intentos permitidos."
+        == "Esta dirección queda bloqueada 10 minutos por fallar el código demasiadas veces. "
+        "Espera y pide el código actual al profesor."
     )

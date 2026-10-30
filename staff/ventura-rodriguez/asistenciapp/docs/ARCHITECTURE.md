@@ -65,12 +65,12 @@ asistenciapp/
 | `asistencia/domain/codes.py`        | Reglas             | Calcula el código y dice si el que escribió el alumno vale                          |
 | `asistencia/domain/names.py`        | Reglas             | Acepta o rechaza el nombre                                                          |
 | `asistencia/domain/session.py`      | Reglas             | Dice si la clase existe, si sigue abierta y si el código vale ahora                 |
-| `asistencia/domain/attempts.py`     | Reglas             | Decide si los intentos de una IP se han pasado. No abre la base ni dibuja pantallas |
+| `asistencia/domain/attempts.py`     | Reglas             | Decide si los códigos fallados de una IP se han pasado y cuánto dura el bloqueo. No abre la base ni dibuja pantallas |
 | `asistencia/usecases/attendance.py` | Acciones           | Abre, cierra, lista, exporta, quita y registra                                      |
 | `asistencia/storage/sqlite.py`      | Almacén            | Abre `data/asistencia.db`, guarda y lee                                             |
 | `asistencia/export.py`              | Acción de exportar | Da formato CSV a filas que ya están cargadas. No abre la base                       |
 | `asistencia/tunnel.py`              | Borde              | Publica el enlace para que los alumnos entren desde casa. No sabe de asistencia     |
-| `app.py`                            | Pantalla           | Recibe HTTP, llama a una acción y devuelve la respuesta                             |
+| `app.py`                            | Pantalla           | Recibe HTTP, saca la IP de quien se registra (con túnel, `CF-Connecting-IP`), llama a una acción y devuelve la respuesta |
 | `static/`                           | Pantalla           | HTML, CSS y JavaScript. No se enteran de la base                                    |
 
 ---
