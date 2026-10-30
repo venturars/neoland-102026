@@ -1,2 +1,3 @@
-# El lanzador mantiene finales LF para ejecutarse con sh en cualquier sistema.
+# Los scripts conservan finales LF para ejecutarse con Bash o sh también en Windows.
 scripts/*.sh text eol=lf
+tools/*.sh text eol=lf

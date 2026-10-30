@@ -1,0 +1,5 @@
+Servidor público: https://mcp.socket.dev/
+Referencia oficial: https://docs.socket.dev/docs/remote-socket-mcp
+Procedimiento de esta aplicación: ../../docs/SOCKET.md
+
+La conexión pública utiliza OAuth del cliente. El token queda en su almacenamiento privado, fuera de Git. Esta referencia no configura una conexión ni contiene credenciales.

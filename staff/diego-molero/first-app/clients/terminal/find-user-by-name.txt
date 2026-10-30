@@ -1,6 +1,0 @@
-// Busca usuarios por su nombre completo. Ejecución: docs/CONSTITUTIONS.md.
-import { findUserByName } from "./logic/find-user-by-name.js";
-
-const result = findUserByName("Ada");
-
-console.log(result);
