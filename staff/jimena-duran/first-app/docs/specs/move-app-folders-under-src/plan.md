@@ -2,7 +2,7 @@ Issue: #601
 
 # Plan de reorganización bajo src
 
-Estado: spec, plan y T01–T18 aprobados; implementación existente conservada y verificación actual completada tras integrar origin/staging. Al retomar se localizó el commit local existente `b62abae3`, que se conserva sin recrearlo. Resultados y límites en [verification.md](verification.md). Jimena autoriza ahora commit selectivo de los tres documentos activos, push de la rama existente y creación de PR draft contra staging, sin revisores ni merge. Los resultados de publicación se registrarán solo tras comprobarlos.
+Estado: spec, plan y T01–T18 aprobados; implementación existente conservada y verificación posterior completada tras integrar origin/staging. Se distinguen la implementación `b62abae3`, la integración `db267b51` y la conciliación documental publicada en `0b411ac7`. Jimena autorizó commit selectivo de los tres documentos activos, push y PR draft contra staging, sin revisores ni merge. La publicación se comprobó en [#670](https://github.com/venturars/neoland-102026/pull/670); resultados y límites en [verification.md](verification.md).
 
 ## Rama y dependencia
 

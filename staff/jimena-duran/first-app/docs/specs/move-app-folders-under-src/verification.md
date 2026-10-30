@@ -109,4 +109,14 @@ Jimena autoriza el commit selectivo de plan, tareas y verificación de #601, el 
 
 El fetch previo a publicar mostró origin/staging en `d7d0e7a88ca0600fd752c3eb62044c320b2fe359`, posterior al snapshot integrado `64e3edf5`. La comparación entre ambos commits no mostró cambios en first-app y el diff completo de la PR contra esa base pasó `git diff --check` con código 0. Estas aclaraciones documentales no necesitan otra integración ni repetir pruebas de código; no se afirma que el nuevo tip de staging sea ancestro de esta rama.
 
-La conciliación actual solo modifica estos tres documentos; no repite pruebas de código. En este punto aún no se han registrado un nuevo hash documental, push ni URL de PR: los resultados se añadirán únicamente después de completarlos y comprobarlos.
+Antes del primer commit documental, la conciliación solo modificaba estos tres documentos y no repetía pruebas de código. En ese momento no se anticiparon hash, push ni URL de PR. Las operaciones completadas después se registran a continuación.
+
+## Resultados reales de publicación
+
+- El commit selectivo `0b411ac7c76237a4c06e5c4491eccfbdf83e2392` guardó únicamente plan, tareas y verificación de #601. No reemplaza ni confunde la implementación previa `b62abae3`, la integración `db267b51` ni las comprobaciones funcionales posteriores ya registradas.
+- El push de `601-refactor-move-app-folders-under-src` terminó con código 0. La consulta remota confirmó que HEAD, upstream y la rama publicada coincidían en `0b411ac7`.
+- El MCP local de GitHub creó la PR [#670](https://github.com/venturars/neoland-102026/pull/670). La relectura confirmó OPEN, draft, base staging, head de esta misma rama en `0b411ac7` y asignación a `jiji-mena`. No se solicitaron revisores (`reviewRequests: []`) ni se hizo merge.
+- El cuerpo se actualizó mediante el MCP local para incorporar una única referencia `Closes #601`; su relectura confirmó el texto exacto. La lectura con gh verificó Development en ambos sentidos entre #670 y #601 y que la issue #601 sigue abierta. No se confundió el MCP local con GitHub de Apps ni se crearon recursos de prueba.
+- Durante la publicación staging avanzó de nuevo; la base observada de la PR era `dafe8ca6`. Esa lectura no cambia el snapshot integrado `64e3edf5` ni afirma que la rama contenga ese tip posterior. No se hizo otra integración por estas aclaraciones documentales.
+
+Esta actualización de los mismos tres documentos registra únicamente resultados ya comprobados. No se repitieron pruebas de código y no se anticipa otro commit documental ni su push.

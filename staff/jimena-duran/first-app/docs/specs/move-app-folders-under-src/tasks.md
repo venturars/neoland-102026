@@ -2,7 +2,7 @@ Issue: #601
 
 # Tareas — reorganizar la aplicación bajo src
 
-Spec, plan y T01–T18 aprobados, incluida su implementación y verificación. Resultados en [verification.md](verification.md). Se conservan el commit de implementación `b62abae3` y el de integración `db267b51`; las comprobaciones posteriores están registradas por separado. Jimena autoriza ahora commit selectivo de los tres documentos activos, push de la rama existente y creación de PR draft contra staging, sin revisores ni merge. No se anticipan resultados de publicación.
+Spec, plan y T01–T18 aprobados, incluida su implementación y verificación. Resultados en [verification.md](verification.md). Se conservan el commit de implementación `b62abae3` y el de integración `db267b51`; las comprobaciones posteriores están registradas por separado. Jimena autorizó commit selectivo de los tres documentos activos, push y PR draft contra staging, sin revisores ni merge. La conciliación documental se publicó en `0b411ac7` y la PR [#670](https://github.com/venturars/neoland-102026/pull/670) se creó y comprobó en draft.
 
 Rama: `601-refactor-move-app-folders-under-src`. La pendiente inicial de integrar #600 es histórica y está resuelta: #600 fue mergeada en staging y esta rama contiene el snapshot de origin/staging `64e3edf5` mediante `db267b51`. No incorporar esta reorganización a la rama de #600 ni modificar sus entregas históricas. Las rutas siguientes son relativas a first-app.
 
@@ -43,6 +43,6 @@ Rama: `601-refactor-move-app-folders-under-src`. La pendiente inicial de integra
 - [x] T18. Registrar comandos ejecutados, resultados y comprobaciones pendientes junto a los documentos de esta entrega.
   Resultado: evidencia de la reorganización sin atribuirle pruebas históricas ni repetir suites de Git cuyo código no cambió. Criterios: 2, 3, 4 y 5.
 
-## Cierre local
+## Cierre y publicación comprobada
 
-Implementación y verificaciones completadas en la rama indicada. La reanudación conserva `b62abae3` e incorpora origin/staging (`64e3edf5`) mediante el commit de integración autorizado `db267b51`, sin conflictos. Los 13 archivos operativos de #600 quedan incorporados y los tres documentos activos de #601 se conservan como cambios locales; las specs históricas solo reciben los cambios de upstream, sin reescrituras manuales. La verificación posterior pasó: 41 comprobaciones funcionales, nueve clientes, nueve notebooks, formato y lint; resultados y límites en verification.md. Está autorizada la publicación del commit selectivo documental y la creación de PR draft contra staging; su ejecución y comprobación siguen pendientes en este punto. No se autorizan revisores ni merge.
+Implementación y verificaciones completadas en la rama indicada. La reanudación conserva `b62abae3` e incorpora el snapshot de origin/staging `64e3edf5` mediante `db267b51`, sin conflictos. Los 13 archivos operativos de #600 quedaron incorporados y las specs históricas solo recibieron cambios de upstream. La verificación posterior pasó: 41 comprobaciones funcionales, nueve clientes, nueve notebooks, formato y lint. Los tres documentos activos se guardaron en `0b411ac7` y se publicaron mediante push comprobado. La PR #670 está abierta en draft contra staging, asignada a jiji-mena, sin revisores ni merge; `Closes #601` y Development se confirmaron por separado. Esta actualización registra esos resultados reales, sin anticipar otro commit o push documental.
