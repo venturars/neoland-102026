@@ -3,5 +3,7 @@ import { db } from './db/connection.js';
 import { createUsersTable } from './queries/users.js';
 
 createUsersTable();
-console.log(db.prepare("SELECT name FROM sqlite_master WHERE type = 'table'").all());
+const statement = db.prepare("SELECT name FROM sqlite_master WHERE type = 'table'");
+const tables = statement.all();
+console.log(tables);
 NODE

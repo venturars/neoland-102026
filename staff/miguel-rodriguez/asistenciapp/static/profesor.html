@@ -6,9 +6,10 @@
   <meta name="referrer" content="no-referrer">
   <title>Panel del profesor · AsistenciApp</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="race-theme.css">
   <script src="profesor.js" defer></script>
 </head>
-<body>
+<body class="race-ui">
   <main>
     <!-- CA-21: aviso si el panel se abre en local -->
     <p id="local-warning" class="message warn" hidden>
@@ -20,15 +21,16 @@
 
     <!-- Vista: panel (T17) -->
     <section id="panel-view" hidden>
-      <h1>Panel del profesor</h1>
+      <h1>Clases</h1>
 
       <form id="new-session" class="card">
         <label for="session-title">Título de la clase <span class="muted">(opcional)</span></label>
-        <input id="session-title" placeholder="Ej.: Clase 20/10 – SDD" maxlength="100">
+        <input id="session-title" placeholder="Nombre de la clase" maxlength="100">
+        <label style="display:flex;align-items:center;gap:10px;margin:14px 0"><input id="race-mode" type="checkbox" style="width:auto;margin:0"> Carrera de Halloween</label>
         <button type="submit" class="full">Abrir asistencia</button>
       </form>
 
-      <h2>Sesiones anteriores</h2>
+      <h2>Historial</h2>
       <p id="no-sessions" class="muted" hidden>Todavía no has abierto ninguna sesión.</p>
       <ul id="sessions" class="list sessions card"></ul>
     </section>

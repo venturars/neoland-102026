@@ -11,16 +11,30 @@ export function createUser({ name, email }) {
   }
 
   // Store every email in one form: no surrounding spaces, all lower case.
-  const cleanedEmail = email.trim().toLowerCase();
+  const trimmedEmail = email.trim();
+  const cleanedEmail = trimmedEmail.toLowerCase();
+  const emailIsTooLong = cleanedEmail.length >= MAX_EMAIL_LENGTH;
   const emailParts = cleanedEmail.split("@");
   const hasTwoParts = emailParts.length === 2;
-  const bothPartsHaveText =
-    emailParts[0]?.length > 0 && emailParts[1]?.length > 0;
-  if (
-    cleanedEmail.length >= MAX_EMAIL_LENGTH ||
-    hasTwoParts === false ||
-    bothPartsHaveText === false
-  ) {
+  let bothPartsHaveText = false;
+  if (hasTwoParts) {
+    const localPart = emailParts[0];
+    const domainPart = emailParts[1];
+    const hasLocalPart = localPart.length > 0;
+    const hasDomainPart = domainPart.length > 0;
+    if (hasLocalPart) {
+      if (hasDomainPart) {
+        bothPartsHaveText = true;
+      }
+    }
+  }
+  if (emailIsTooLong) {
+    throw new Error("The email is not valid.");
+  }
+  if (hasTwoParts === false) {
+    throw new Error("The email is not valid.");
+  }
+  if (bothPartsHaveText === false) {
     throw new Error("The email is not valid.");
   }
 
@@ -32,7 +46,13 @@ export function createUser({ name, email }) {
   }
 
   // The same email cannot belong to two users.
-  if (existingUser !== undefined && existingUser !== null) {
+  let emailIsUsed = false;
+  if (existingUser !== undefined) {
+    if (existingUser !== null) {
+      emailIsUsed = true;
+    }
+  }
+  if (emailIsUsed) {
     throw new Error("This email is already used.");
   }
 

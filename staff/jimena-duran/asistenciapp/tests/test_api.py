@@ -197,11 +197,11 @@ def test_close_unknown_session(client, teacher):
 
 # ---------- T11 · exportar (CA-14) ----------
 
-def test_export_csv(client, teacher, clock):  # CA-14
+def test_export_csv(client, teacher, clock):  # CA-14 y spec 007 CA-04
     sid = open_session(client, teacher)
     check_in(client, sid, "Luis", current_code(client, teacher, sid))
     clock.advance(5)
-    check_in(client, sid, "Ana García", current_code(client, teacher, sid))
+    check_in(client, sid, "ana García", current_code(client, teacher, sid))
 
     res = client.get(f"/api/sessions/{sid}/export", headers=teacher)
     assert res.status_code == 200
@@ -211,7 +211,18 @@ def test_export_csv(client, teacher, clock):  # CA-14
 
     rows = res.get_data(as_text=True).lstrip("﻿").splitlines()
     assert rows[0] == "Nombre;Hora"
-    assert [r.split(";")[0] for r in rows[1:]] == ["Luis", "Ana García"]
+    assert [r.split(";")[0] for r in rows[1:-1]] == ["ana García", "Luis"]
+    assert rows[-1] == "Total de registros;2"
+
+
+def test_export_empty_session_csv(client, teacher):  # spec 007 CA-04
+    sid = open_session(client, teacher)
+    res = client.get(f"/api/sessions/{sid}/export", headers=teacher)
+    assert res.status_code == 200
+    assert res.mimetype == "text/csv"
+    assert "attachment" in res.headers["Content-Disposition"]
+    assert ".csv" in res.headers["Content-Disposition"]
+    assert res.get_data(as_text=True) == "\ufeffNombre;Hora\r\nTotal de registros;0\r\n"
 
 
 # ---------- T13 · acceso a través del túnel (CA-19) ----------

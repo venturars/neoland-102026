@@ -133,3 +133,4 @@ Todas resueltas el 2026-10-19: se aceptaron las propuestas.
 | 1.0 | 2026-10-19 | Versión inicial aprobada | — |
 | 1.1 | 2026-10-20 | HU-08, CA-19 a CA-21, nuevo requisito no funcional y dos puntos fuera de alcance | Durante la implementación se vio que la spec no decía cómo llegan a la app los alumnos que están en sus casas |
 | 1.2 | 2026-10-20 | HU-09 y HU-10, CA-22 a CA-26; P6 revisada; nuevo punto fuera de alcance | Tras terminar la v1.1, se detecta que un alumno puede registrar a compañeros ausentes con otros nombres |
+| 1.2 (nota) | 2026-10-27 | CA-26 cambia por la spec 007 (RF-22): si el profesor quita un registro, ese navegador puede volver a registrarse. El resto de esta spec no cambia | Spec 007 (issue #539) |

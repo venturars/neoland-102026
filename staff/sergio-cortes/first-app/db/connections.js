@@ -2,9 +2,9 @@ import { dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { fileURLToPath } from "node:url";
 
-const DATABASE_PATH = join(
-  dirname(fileURLToPath(import.meta.url)),
-  "users.sqlite",
-);
+const fileUrl = import.meta.url;
+const filePath = fileURLToPath(fileUrl);
+const directory = dirname(filePath);
+const databasePath = join(directory, "users.sqlite");
 
-export const db = new DatabaseSync(DATABASE_PATH);
+export const db = new DatabaseSync(databasePath);

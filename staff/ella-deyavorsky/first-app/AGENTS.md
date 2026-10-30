@@ -2,6 +2,8 @@
 
 This file tells a coding assistant how to work in this app.
 
+Git work follows `agents/git-workflow-agent.md` in this folder. The stops are the ones in "Order". That flow does not remove them.
+
 ## Project
 
 This is the first app of the AI engineering course for junior students. It is a good app to build with spec-driven development (SDD): write the rules first, then write the code that follows them.
@@ -10,19 +12,34 @@ The app is JavaScript, run by Node.js. `package.json` sets `"type": "module"`, s
 
 The database is SQLite through Node's built-in `node:sqlite`. `db/connection.js` opens `db/users.sqlite` with `DatabaseSync`. No database package is installed.
 
-Read this file together with `docs/CONSTITUTIONS.md`. The constitution explains the folders, the database, the logic, the errors, and the queries.
+Read this file together with `docs/CONSTITUTIONS.md`. The constitution explains the order of a `logic/` function and the specs. The other topics have one file each: `docs/ARCHITECTURE.md`, `docs/TREE.md`, `docs/DATABASE.md`, `docs/ERRORS.md`, and `docs/STYLE.md`.
+
+## Order
+
+The orchestrator comes first. It picks one moment and calls that subagent as a separate agent. The parent does not interview, does not create the issue and does not run the git or the MCP of that moment.
+
+No `docs/specs/<name>/` folder is created before the issue number exists. `<name>` is kebab-case.
+
+With the issue written, the next process writes `spec.md` and `plan.md`. The spec opens with `Issue: #N`. It touches no other file. It stops there. A person reviews the spec and the plan.
+
+If the constitution, the current code and the spec do not say the same thing, the question goes at the end of the plan and there is no `tasks.md`.
+
+If they say the same thing and the person has reviewed, the next process writes `tasks.md`. It stops there. Nothing is implemented.
+
+Implementation starts when that person asks. It runs `tasks.md` and does not invent steps.
 
 ## Rules
 
 - Read `docs/CONSTITUTIONS.md` and the active spec before changing code.
 - Stay close to the plan. Do not invent a new behavior.
-- Before writing, look at the code. If a similar task already exists, follow that style.
+- Before writing, look at the code to see which file a new function looks like. The form of each line comes from `docs/STYLE.md`, not from the code that already exists. That code is not rewritten by a task that does not ask for it. A later task can align it. Meanwhile, a new spec does not stop because of that difference.
 - Do not offer code that has not been run.
-- If two sources disagree — the constitution, the current code, a spec, or this guide — do not choose. Ask which path to follow before writing code.
-- A request for a new behavior is a new feature. The first work is a folder in `docs/specs/`, with a kebab-case name.
+- If two sources disagree — the constitution, a spec, or this guide — do not choose. The difference between `docs/STYLE.md` and the current code is not one of these cases. Ask which path to follow before writing code.
+- A request for a new behavior is a new feature. It starts with the orchestrator and follows "Order". Its folder in `docs/specs/` has a kebab-case name and comes after the issue.
 - Write `spec.md`, then `plan.md`, then `tasks.md`, in that order. Do not write the next file if the previous one does not exist.
 - Do not create or change code until those three files exist. Code includes `logic/`, `queries/`, `db/`, `clients/`, and `package.json`.
 - Follow `tasks.md` from the first step. Do not skip a step and do not start the next feature.
+- If a task adds or removes a file, its spec also updates `docs/TREE.md` and `docs/ARCHITECTURE.md`.
 - A tool change, such as switching the package manager to pnpm, counts as a feature and goes through the same folder.
 
 The active spec is the approved description of the feature you are building now.
@@ -30,31 +47,31 @@ The active spec is the approved description of the feature you are building now.
 ## Commands
 
 - Install dependencies with `pnpm install`.
+- `pnpm format` runs Prettier on the `.js` files of `db/`, `queries/` and `logic/`. The format is the standard one, with no config of its own. `pnpm lint` runs ESLint.
 - There are no execution commands yet. Do not add a `pnpm start` script or another way to run the whole app unless the spec asks for it.
 - There are no tests yet. `pnpm test` only prints that no test is specified, then stops.
-- Format code with Prettier, using Prettier's standard settings. Do not add a custom Prettier config.
 
-## Style and conventions
+## Packages
 
-- File and folder names use kebab-case: lowercase words joined by `-`, as in `create-user.js`, `find-by-email.sql`, and `clients/terminal`.
-- Function names and variable names use camelCase, as in `createUser` and `emailParts`.
-- Import and export by name. In ESM, the import path includes the file extension: `import { createUser } from "./create-user.js"`.
-- In SQL, pass values with a name, as in `:email`. Do not use `?`.
-- A new query is a new `.sql` file in `queries/queries/` plus a function in `queries/users.js`. The names follow `docs/CONSTITUTIONS.md`. The SQL string stays in the `.sql` file.
-- Leave short comments that help a junior developer understand what the code does. Write them in simple words, next to the step they explain. Skip comments that only repeat the line.
-- Before finishing a change in `logic/`, check it against the inputs and errors in `docs/CONSTITUTIONS.md`.
+When you add a Node package or change its version, validate it with the Socket MCP before the plan is accepted. `docs/CONSTITUTIONS.md` says this is required; this is how it is done.
 
-Code must read from top to bottom. Use `if` checks, and names that say what they do.
+1. Check with Socket that the package and that exact version are not affected by a campaign, not affected by an alert, and have no stat below 50 points.
+2. Do not decide an alert yourself. Comment it, and the person who accepts the plan decides.
+3. Check the dependencies of that package with the same criteria, down to 3 layers.
+4. Put a summary of this review in the plan, before the plan is accepted.
 
-Write code a programmer could write without AI. Do not hide the steps. Avoid result wrappers, error classes, generic helpers, and abstractions.
+## Style
 
-What a function in `logic/` must accept, what it returns, and how errors work is written in `docs/CONSTITUTIONS.md`. The query function names and the `.sql` file names are written there too. The file that exports them is `queries/users.js`. Follow that file. Do not invent a second contract, and do not keep a second list of query names in this guide.
+The conventions and the shape of each line are in `docs/STYLE.md`. Follow that file.
+
+Before finishing a change in `logic/`, check it against the inputs in `docs/CONSTITUTIONS.md` and the errors in `docs/ERRORS.md`. The query names and the `.sql` file names are in `docs/DATABASE.md`. Do not invent a second contract, and do not keep a second list of query names in this guide.
 
 ## When a task is done
 
 1. A new feature gets a new file in `clients/terminal/`, named like its logic file (`find-user-by-email.txt` for `logic/find-user-by-email.js`). It is pasted in the terminal with `first-app` as the current folder. It imports the function from `logic/` and prints the result with `console.log`.
 2. Check the change by pasting the matching file in `clients/terminal/`. There is still no `pnpm start`.
-3. Show the result.
-4. Stop.
+3. Run `pnpm format` and `pnpm lint` before showing the result.
+4. Show the result.
+5. Stop.
 
 Do not start the next feature. A task is not done if the code has not been run.

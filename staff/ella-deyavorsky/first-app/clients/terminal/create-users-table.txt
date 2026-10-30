@@ -5,9 +5,10 @@ import { createUsersTable } from "./queries/users.js";
 
 createUsersTable();
 
-const result = db
-  .prepare("SELECT name FROM sqlite_master WHERE type = :type")
-  .all({ type: "table" });
+const statement = db.prepare(
+  "SELECT name FROM sqlite_master WHERE type = :type",
+);
+const result = statement.all({ type: "table" });
 
 console.log(result);
 EOF

@@ -22,6 +22,7 @@ REQUIRED = (
     "asistencia/domain/codes.py",
     "asistencia/domain/names.py",
     "asistencia/domain/session.py",
+    "asistencia/domain/attempts.py",
     "asistencia/usecases/__init__.py",
     "asistencia/usecases/attendance.py",
     "asistencia/storage/__init__.py",
@@ -158,6 +159,7 @@ def test_docs_match_the_structure_and_name_the_deferred_errors():
         "003-aclarar-instrucciones-arranque",
         "004-quitar-referencias-personales",
         "005-reorganizar-documentos-y-arquitectura",
+        "006-limitar-intentos-por-ip",
     ):
         assert spec in agents
 

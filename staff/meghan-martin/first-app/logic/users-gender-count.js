@@ -12,7 +12,11 @@ export async function usersGenderCount() {
     return { women: 0, men: 0, genderUndefined: 0 };
   }
 
-  const model = process.env.OLLAMA_MODEL || "nimble-v3";
+  const configuredModel = process.env.OLLAMA_MODEL;
+  let model = "nimble-v3";
+  if (configuredModel) {
+    model = configuredModel;
+  }
   let women = 0;
   let men = 0;
   let genderUndefined = 0;
@@ -64,13 +68,44 @@ export async function usersGenderCount() {
       continue;
     }
 
-    const answers = data?.answers;
+    let answers;
+    if (data !== undefined) {
+      if (data !== null) {
+        answers = data.answers;
+      }
+    }
+    const answersAreMissing = !answers;
+    const answersAreNotObject = typeof answers !== "object";
+    let missing = false;
+    if (answersAreMissing) {
+      missing = true;
+    }
+    if (answersAreNotObject) {
+      missing = true;
+    }
     const choices = [];
-    let missing = !answers || typeof answers !== "object";
     if (!missing) {
       for (let index = 0; index < names.length; index += 1) {
-        const choice = answers[`name${index}`]?.choice;
-        if (typeof choice !== "string" || choice.trim() === "") {
+        const answer = answers[`name${index}`];
+        let choice;
+        if (answer !== undefined) {
+          if (answer !== null) {
+            choice = answer.choice;
+          }
+        }
+        const choiceIsText = typeof choice === "string";
+        let choiceIsBlank = true;
+        if (choiceIsText) {
+          const trimmedChoice = choice.trim();
+          if (trimmedChoice !== "") {
+            choiceIsBlank = false;
+          }
+        }
+        if (!choiceIsText) {
+          missing = true;
+          break;
+        }
+        if (choiceIsBlank) {
           missing = true;
           break;
         }
@@ -78,7 +113,12 @@ export async function usersGenderCount() {
       }
     }
 
-    if (missing || choices.length !== batch.length) {
+    const choicesDoNotMatch = choices.length !== batch.length;
+    if (missing) {
+      genderUndefined += batch.length;
+      continue;
+    }
+    if (choicesDoNotMatch) {
       genderUndefined += batch.length;
       continue;
     }

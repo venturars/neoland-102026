@@ -42,9 +42,8 @@ const genderSchema = {
 
 async function askGenders(names) {
   // Number the names so the model keeps the order: "1. John", "2. Mary"...
-  const nameList = names
-    .map((name, index) => `${index + 1}. ${name}`)
-    .join("\n");
+  const numberedNames = names.map((name, index) => `${index + 1}. ${name}`);
+  const nameList = numberedNames.join("\n");
 
   let completion;
 
@@ -68,9 +67,26 @@ async function askGenders(names) {
 
   // From here on, Ollama did answer. A bad answer returns null:
   // the caller counts that group as undefined and goes on.
-  const content = completion.choices[0]?.message?.content;
+  const firstChoice = completion.choices[0];
+  let message;
+  if (firstChoice !== undefined) {
+    if (firstChoice !== null) {
+      message = firstChoice.message;
+    }
+  }
+  let content;
+  if (message !== undefined) {
+    if (message !== null) {
+      content = message.content;
+    }
+  }
 
-  if (typeof content !== "string" || content.trim() === "") {
+  const contentIsText = typeof content === "string";
+  if (contentIsText === false) {
+    return null;
+  }
+  const trimmedContent = content.trim();
+  if (trimmedContent === "") {
     return null;
   }
 
@@ -84,14 +100,17 @@ async function askGenders(names) {
   }
 
   // One label per name. Anything else would give a wrong count.
-  if (
-    !Array.isArray(answer.genders) ||
-    answer.genders.length !== names.length
-  ) {
+  const genders = answer.genders;
+  const gendersIsList = Array.isArray(genders);
+  if (gendersIsList === false) {
+    return null;
+  }
+  const sameLength = genders.length === names.length;
+  if (sameLength === false) {
     return null;
   }
 
-  return answer.genders;
+  return genders;
 }
 
 export async function countUsersByGender() {
@@ -111,9 +130,8 @@ export async function countUsersByGender() {
 
   // Take the users 6 at a time. The last group can be smaller.
   for (let start = 0; start < users.length; start += batchSize) {
-    const names = users
-      .slice(start, start + batchSize)
-      .map((user) => user.name);
+    const group = users.slice(start, start + batchSize);
+    const names = group.map((user) => user.name);
 
     const labels = await askGenders(names);
 
@@ -124,7 +142,14 @@ export async function countUsersByGender() {
     }
 
     for (const label of labels) {
-      if (label === "male" || label === "female") {
+      let isKnownLabel = false;
+      if (label === "male") {
+        isKnownLabel = true;
+      }
+      if (label === "female") {
+        isKnownLabel = true;
+      }
+      if (isKnownLabel) {
         counts[label] += 1;
       } else {
         counts.undefined += 1;

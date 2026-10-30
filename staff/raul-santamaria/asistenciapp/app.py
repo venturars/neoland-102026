@@ -22,9 +22,11 @@ from asistencia.domain.attempts import Banned
 from asistencia.domain.session import InvalidCode, SessionClosed, SessionNotFound
 from asistencia.tunnel import TunnelError, start_tunnel
 from asistencia.usecases.attendance import (
+    add_checkin_manual,
     check_in,
     close_session,
     create_session,
+    enable_discord,
     export_csv,
     list_sessions,
     prepare,
@@ -159,6 +161,7 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
                 "open": detail["open"],
                 "openedAt": detail["opened_at"],
                 "closedAt": detail["closed_at"],
+                "discordEnabled": detail["discord_enabled"],
                 "studentUrl": f"{request.host_url}alumno.html?s={session_id}",
                 "total": detail["total"],
                 "checkins": [
@@ -173,11 +176,34 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
 
         return run(action)
 
+    @app.post("/api/sessions/<session_id>/discord")
+    def enable_discord_route(session_id):
+        def action():
+            enable_discord(db_path, session_id, now)
+            return jsonify(ok=True)
+
+        return run(action)
+
     @app.post("/api/sessions/<session_id>/close")
     def close_session_route(session_id):
         def action():
             close_session(db_path, session_id, now)
             return jsonify(ok=True)
+
+        return run(action)
+
+    @app.post("/api/sessions/<session_id>/checkins")
+    def add_checkin_manual_route(session_id):
+        body = request.get_json(silent=True) or {}
+
+        def action():
+            row, created = add_checkin_manual(
+                db_path, session_id, body.get("name"), now
+            )
+            payload = {"name": row["name"], "checkedAt": row["checked_at"]}
+            if not created:
+                return jsonify(already=True, **payload)
+            return jsonify(payload), 201
 
         return run(action)
 

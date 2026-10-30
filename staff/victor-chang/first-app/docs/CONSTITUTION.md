@@ -1,6 +1,6 @@
 # Constitution — first-app
 
-first-app is a small app to manage users (create, read, update, delete). It is built with AI following SDD. New features or functionalities do not start in the code: they go through `spec.md`, `plan.md` and `tasks.md`, and a human reads each one before going on.
+first-app is a small app to manage users (create, read, update, delete). It is built with AI following SDD. No change starts in the code: a feature, a client, a dependency, the configuration or the docs go through `spec.md`, `plan.md` and `tasks.md`, and a human reads each one before going on.
 
 How to write the code (naming, style, commands) is in [AGENTS.md](../AGENTS.md).
 
@@ -28,30 +28,39 @@ first-app/
     validate-email.js
   clients/
     terminal/           First client. It is the manual test of each feature
+    jupyter/            Second client. One notebook per terminal client, for someone who does not code
   docs/
     CONSTITUTION.md     This file
     specs/
       <name>/
-        spec.md         The business of the feature
+        spec.md         The business of the change
         plan.md         What gets built
         tasks.md        The steps to build it
   AGENTS.md             How to write the code
   package.json          The npm dependencies, installed with pnpm
   pnpm-lock.yaml        The exact installed versions
+  .venv/                The Python of the Jupyter client (git-ignored)
+  .prettierignore       What Prettier does not format
 ```
 
 - `db/` opens the database. No business rules.
 - `queries/queries/` holds the SQL in `.sql` files. `queries/users.js` reads and runs them. No business rules.
 - `logic/` is the core of the app. The business rules live here.
 - `clients/terminal/` calls `logic/` and shows the result. It is the first client and the manual test of each feature.
-- `docs/specs/<name>/` is one feature. `<name>` is the feature, in kebab-case, named like its `logic/` file.
+- `clients/jupyter/` calls `logic/` and shows the result in a table. It is for someone who does not code.
+- `docs/specs/<name>/` is one change. `<name>` is in kebab-case; for a feature, it is named like its `logic/` file.
 
 ## Runtime
 
 - Node.js 24+, ES modules (`"type": "module"` in `package.json`).
 - Node built-ins: `node:sqlite`, `node:fs`, `node:url`.
-- One npm dependency, `openai`, to call the local AI (Ollama). Packages are installed with pnpm (`pnpm install`); `node_modules/` is git-ignored, `pnpm-lock.yaml` is committed.
-- Tooling: Prettier, run through `npx`, default config, no config file.
+- npm dependencies: `openai`, to call the local AI (Ollama); `cli-table3` and `@colors/colors`, to draw the tables of the Jupyter client. Exact versions. Packages are installed with pnpm (`pnpm install`); `node_modules/` is git-ignored, `pnpm-lock.yaml` is committed.
+- Python 3, only for the Jupyter client: an app-local `.venv` with `notebook` at an exact version, created by `pnpm jupyter`. The Jupyter installed on the computer is not used.
+- Tooling: Prettier, run through `npx`, default config, no config file. `.prettierignore` only lists `.venv/` (installed Python packages) and `pnpm-lock.yaml` (written by pnpm in its own format).
+
+A new dependency is added here before any plan uses it.
+
+A plan that adds a Node package, or changes the version of one, has a **Socket check** section, and it is not approved without it. The steps are in [AGENTS.md](../AGENTS.md#node-packages).
 
 ## Specs
 
@@ -82,10 +91,11 @@ first-app/
 ## Signature
 ## SQL
 ## Errors
+## Socket check  only when it adds or changes a Node package
 ## Open questions
 ```
 
-A new feature is a new file. If this constitution, the current code and the spec do not say the same thing, the question is written under **Open questions** and work stops there. No tasks and no code until it is answered.
+A new feature is a new file. A heading with nothing to say for the change (for example **Signature** or **SQL** for a new client) says `None.` If this constitution, the current code and the spec do not say the same thing, the question is written under **Open questions** and work stops there. No tasks and no code until it is answered.
 
 **tasks.md is the steps**, in the order a person would do them. Each step opens one place, does one thing and leaves a result you can look at. A step is at most four lines. Tick `[x]` when it is done.
 
@@ -159,6 +169,8 @@ Step 4: if everything works, the function returns the shaped data. If the operat
 
 A new message is added to this list before any spec uses it.
 
+This list is for `logic/`. A client throws nothing and prints the message `logic/` threw. The only message of a client's own is `Cannot find first-app.`, printed by a Jupyter notebook that does not find the app folder.
+
 ## Queries
 
 The SQL does not live inside the function that runs it.
@@ -168,6 +180,10 @@ The SQL does not live inside the function that runs it.
 
 ## Clients
 
+A client calls `logic/` and shows the result. It has no business rules.
+
+### Terminal
+
 After a feature is done, its first client is `clients/terminal/<name>.txt`, named like the `logic/` file. It is the manual test of the feature.
 
 - It is one block to paste into Git Bash, with `first-app` as the current folder.
@@ -175,3 +191,13 @@ After a feature is done, its first client is `clients/terminal/<name>.txt`, name
 - It also shows each failure of the spec that can be reached, printing `error.message`.
 - Each step has a `//` comment saying what it does and what it prints.
 - It uses the real `db/users.sqlite`. A practice user it creates is deleted at the end, so the block can be pasted again.
+
+### Jupyter
+
+`clients/jupyter/<name>.ipynb` is one notebook per `clients/terminal/<name>.txt`, with the same name. It is opened with `pnpm jupyter` from `first-app`.
+
+- The first cell is markdown: what it does, what happens in the database, which `logic/` function it uses, and which failures it can show.
+- The code cell walks up to the folder that has `logic/`, runs `node --no-warnings --input-type=module -e '...'` there, imports the `logic/` function and prints the result as a `cli-table3` table.
+- A failure prints only `error.message`, without the stack trace.
+- It uses the real `db/users.sqlite`. A practice user it creates is deleted at the end, so the cell can be run again. It does not use the id of a real user.
+- The saved output is what really came out when the cell ran.

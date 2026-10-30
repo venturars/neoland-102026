@@ -2,7 +2,21 @@ import { DatabaseError, ValidationError } from "./errors.js";
 import { findByName } from "../queries/user.js";
 
 export function findUserByName(name) {
-  if (typeof name !== "string" || name.trim() === "") {
+  let nameIsEmpty = false;
+
+  if (typeof name !== "string") {
+    nameIsEmpty = true;
+  }
+
+  if (typeof name === "string") {
+    const trimmedName = name.trim();
+
+    if (trimmedName === "") {
+      nameIsEmpty = true;
+    }
+  }
+
+  if (nameIsEmpty) {
     throw new ValidationError("Name is empty");
   }
 
@@ -12,7 +26,7 @@ export function findUserByName(name) {
 
   try {
     rows = findByName(trimmedName);
-  } catch (error) {
+  } catch {
     throw new DatabaseError("Could not find the user");
   }
 

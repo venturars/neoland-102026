@@ -1,0 +1,61 @@
+# Arquitectura
+
+- `eslint.config.js` aplica las reglas recomendadas de ESLint al JavaScript e ignora `.venv`, `node_modules` y los cuadernos Jupyter.
+- `agents/git-workflow-agent.md` reconoce el momento y llama al subagente como un agente aparte. El padre no hace ese trabajo.
+- `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la tarea se puede dejar escrita.
+- `agents/create-issue.md` crea la issue con título en inglés y descripción en español, asignada a quien está autenticado.
+- `agents/create-branch.md` crea la rama `número-tipo-descripcion`.
+- `agents/create-commit.md` hace un commit pequeño con ficheros nombrados.
+- `agents/create-pr.md` abre la pull request contra `staging` y la deja en draft, sin enlazar la issue.
+- `agents/launch-push.md` publica `HEAD` en `origin` y deja el upstream puesto.
+- `skills/grill-with-docs/SKILL.md` entrevista cuando el cambio vive en este proyecto.
+- `skills/grill-me/SKILL.md` entrevista cuando el repositorio no responde.
+- `skills/create-issue/SKILL.md` deja la tarea escrita en GitHub.
+- `skills/assign-author/SKILL.md` asigna la issue o la pull request al usuario autenticado.
+- `skills/check-status/SKILL.md` dice la rama, los cambios sin commit y el remoto.
+- `skills/pull-changes/SKILL.md` adelanta `staging` en fast-forward.
+- `skills/create-branch-from-staging/SKILL.md` abre la rama desde `staging`.
+- `skills/create-branch/SKILL.md` abre la rama desde una base que no es `staging`.
+- `skills/create-empty-commit/SKILL.md` hace el commit vacío `chore: open #N`.
+- `skills/commit-changes/SKILL.md` guarda un trozo con ficheros nombrados.
+- `skills/launch-push/SKILL.md` sube la rama actual y fija el upstream.
+- `skills/create-pr-base-staging/SKILL.md` abre la pull request con base `staging`.
+- `skills/create-draft/SKILL.md` deja la pull request en draft.
+- `skills/link-pr-to-issue/SKILL.md` deja `Related to #N` sin cerrar la issue.
+- `skills/assign-reviewers/SKILL.md` asigna a quienes miran la pull request y la saca de draft.
+- `tools/check-status.sh` escribe la rama, el remoto y los cambios.
+- `tools/pull-changes.sh` adelanta `staging` en fast-forward.
+- `tools/create-branch-from-staging.sh` crea la rama desde `staging`.
+- `tools/create-branch.sh` crea la rama desde otra base.
+- `tools/create-empty-commit.sh` crea el commit vacío de apertura.
+- `tools/commit-changes.sh` guarda los ficheros nombrados.
+- `tools/launch-push.sh` sube la rama y fija el upstream.
+- `templates/issues/basic_issue.md` es el cuerpo de la issue: qué hay que hacer y cómo probarlo.
+- `templates/pull-request/basic-pull-request.md` es el cuerpo de la pull request.
+- `MCPS/github-mcp-server/mcp.txt` es la dirección del MCP de GitHub.
+- `docs/specs/<nombre>/` es donde empieza un desarrollo. `<nombre>` es la funcionalidad, en kebab-case.
+- `db/` abre la base de datos y no contiene reglas de negocio.
+- `db/connections.js` es la única conexión a la base de datos.
+- `db/users.sqlite` es el único fichero de la base de datos.
+- `queries/queries/` guarda el SQL en ficheros `.sql`. Hay un fichero por sentencia.
+- `queries/user.js` lee esos ficheros y los ejecuta. No hay reglas de negocio en `queries/`.
+- `logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
+- `logic/errors.js` exporta las clases de error compartidas. No es una funcionalidad de negocio.
+- `logic/create-user.js` crea un usuario.
+- `logic/update-user.js` actualiza un usuario.
+- `logic/delete-user.js` borra un usuario.
+- `logic/find-user-by-id.js` busca un usuario por id.
+- `logic/find-user-by-email.js` busca un usuario por email.
+- `logic/find-user-by-name.js` busca un usuario por nombre.
+- `logic/list-users.js` lista los usuarios.
+- `logic/user-gender-count.js` cuenta usuarios por género.
+- `clients/terminal/` llama a `logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
+- `scripts/jupyter.sh` prepara `.venv` si hace falta, instala `notebook==7.6.3` y arranca Jupyter en `clients/jupyter/`. Funciona en Mac, Linux y Windows (con `sh`). `package.json` lo invoca con `pnpm jupyter`.
+- `clients/jupyter/` es el cuaderno, uno por cada `.txt` de `clients/terminal/`. El bloque muestra ese texto: arranca `node --input-type=module` y, dentro, los `import` y la llamada quedan igual. El `console.log` se sustituye por la tabla. `cli-table3` y `@colors/colors` pintan esa tabla con colores y encabezados. Si la función falla, se ve ese mensaje. En esa carpeta no hay ficheros `.py` ni `requirements.txt`. Se abre con `pnpm jupyter` desde `first-app`.
+- `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada fichero.
+- `docs/TREE.md` es el árbol de carpetas y ficheros.
+- `docs/DATABASE.md` es la base de datos y las queries.
+- `docs/ERRORS.md` es la lista de errores y cómo usarlos.
+- `docs/STYLE.md` es la forma de cada línea y las convenciones.
+- `docs/CONSTITUTIONS.md` conserva las specs, los paquetes y el contrato de `logic/`. Enlaza a las otras guías.
+- `AGENTS.md` son las reglas del agente; apunta a la constitución y a las guías.

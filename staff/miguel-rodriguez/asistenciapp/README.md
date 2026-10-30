@@ -4,7 +4,7 @@ Pasa lista en una clase online (Discord, Google Meet o cualquier otra plataforma
 
 El profesor abre una sesión y comparte en la llamada un **código de 4 cifras** que cambia cada 30 segundos. Los alumnos abren un enlace, escriben su nombre y el código, y aparecen al momento en la lista del profesor. Al final de la clase, la lista se descarga para Excel o Google Sheets.
 
-> Proyecto hecho con *Spec-Driven Development*. Las reglas están en [CONSTITUTION.md](CONSTITUTION.md), el manual para agentes de IA en [AGENT.md](AGENT.md) y la especificación en [specs/001-checkin-codigo/](specs/001-checkin-codigo/spec.md).
+> Proyecto hecho con *Spec-Driven Development*. Las reglas están en [CONSTITUTION.md](docs/CONSTITUTION.md), el manual para agentes de IA en [AGENTS.md](AGENTS.md), la arquitectura en [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) y la especificación en [specs/001-checkin-codigo/](specs/001-checkin-codigo/spec.md).
 
 ---
 
@@ -13,10 +13,10 @@ El profesor abre una sesión y comparte en la llamada un **código de 4 cifras**
 Necesitas **Python 3.13+** y, para clases online, **Homebrew** (macOS).
 
 ```bash
-cd staff/victor-chang/asistenciapp
+cd staff/<usuario>/asistenciapp
 python3 -m venv .venv                # crea el entorno virtual del proyecto
 source .venv/bin/activate            # lo activa (verás "(.venv)" en el prompt)
-pip install -r requirements.txt      # instala Flask y pytest
+pip install -r requirements.txt      # instala las dependencias del proyecto
 brew install cloudflared             # el túnel para que los alumnos entren desde casa
 ```
 
@@ -27,7 +27,7 @@ brew install cloudflared             # el túnel para que los alumnos entren des
 En cada terminal nueva, primero activa el entorno:
 
 ```bash
-cd staff/victor-chang/asistenciapp
+cd staff/<usuario>/asistenciapp
 source .venv/bin/activate
 ```
 
@@ -119,8 +119,73 @@ Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una 
 
 ## 8. Privacidad
 
-- Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails ni IPs.
-- El límite "un registro por navegador" se guarda **solo en el navegador del alumno**, no en el servidor.
+- En la lista de asistencia solo se guarda **el nombre que escribe** y **la hora**. No se añaden emails ni IPs a esa lista.
+- Para proteger el registro se guardan por separado la dirección de conexión y los intentos del último minuto. Al siguiente intento se eliminan los temporales de 60 segundos o más de todas las direcciones. Las direcciones bloqueadas se guardan permanentemente en local, sin asociarlas a nombres ni clases.
+- En las clases normales, el recordatorio "un registro por navegador" se guarda **solo en el navegador del alumno**. En carrera se guardan plazas y permisos temporales separados, con caducidad máxima de dos horas; la cookie propia no identifica dispositivos entre clases.
 - Quitar un registro lo **borra de verdad** (no queda en ninguna papelera).
 - Los datos se guardan **solo en tu ordenador** (`data/`, que no se sube a git).
 - Con `--tunel`, el tráfico pasa **cifrado** por Cloudflare, que no lo almacena (constitución P4, v2.1).
+
+
+## Protección de los registros
+
+Una dirección puede intentar registrarse como máximo cinco veces en un segundo y veinte en un minuto, contando también los intentos incorrectos y repetidos. Superar cualquiera de los máximos bloquea permanentemente esa dirección para registrar asistencia, incluso tras reiniciar la aplicación. Esperar no elimina el bloqueo; no hay función de desbloqueo en esta versión.
+
+El formulario muestra el motivo del rechazo. Las páginas, consultas y operaciones del profesor siguen disponibles. Personas que comparten una dirección pública comparten los límites: se distingue la conexión, no la identidad de cada alumno.
+
+Con `python app.py` se cuenta la dirección de la conexión directa y se ignoran las cabeceras que intenten sustituirla. Con `python app.py --tunel`, el registro exige la dirección de visitante comunicada por el conector Cloudflare local; si falta o no es válida se rechaza con un aviso, sin inventar una dirección. En ese modo el registro directo por localhost sin el origen del túnel se rechaza, aunque las consultas locales siguen funcionando. La aplicación continúa escuchando únicamente en 127.0.0.1.
+
+
+## Carrera de Halloween
+
+1. En el panel, marca **Carrera de Halloween** antes de abrir la clase. La presentación muestra los quince nombres y sus personajes del ejercicio de Halloween sobre karts distintos.
+2. Comparte esa pantalla. Los alumnos escanean el QR o abren **Abrir entrada**, eligen un nombre libre y pulsan **Entrar**. Aparecer como «Listo» todavía no registra asistencia ni da un puesto.
+3. Cuando estén los participantes previstos, pulsa **Empezar**. No hace falta esperar a los quince. Se cierra la entrada, se fija el grupo y comienza una única cuenta atrás de tres segundos.
+4. Al terminar la cuenta atrás aparece el código de cuatro cifras en la presentación. Cada alumno lo escribe en su teléfono: gana quien confirma primero, no quien escaneó primero. Cada plaza tiene **tres envíos totales, incluido el correcto**. Los códigos rotan cada treinta segundos.
+5. El alumno recibe su confirmación y puesto enseguida. Cuando todos los participantes fijados registran asistencia, se cierra la carrera. Si alguien falta, se desconecta o agota sus intentos, pulsa **Terminar carrera** y confirma el cierre.
+6. Se muestra al ganador dos segundos y después la cuenta 3–2–1: cinco segundos de anticipación en total, con los karts quietos en la salida. Luego los pilotos registrados recorren la pista durante unos ocho segundos, en el orden guardado, y aparecen el podio y la clasificación. La confirmación y el puesto del alumno llegan inmediatamente; no esperan esta secuencia. Con movimiento reducido o al recargar una carrera cerrada, el resultado se muestra directamente. Con uno o dos finalistas se conceden solo esas medallas; sin registros no hay ganadores.
+
+**Descargar asistencia** conserva el CSV de asistencia. **Quitar** retira una asistencia y recalcula los puestos, pero no devuelve intentos ni vuelve a abrir la plaza. El nombre **neoland / kart** de la cabecera vuelve al panel para consultar otras clases; **Pantalla completa** amplía la presentación.
+
+### Acceso e intentos
+
+La entrada compartida no comprueba identidad: alguien puede ocupar nombres ajenos, incluso todos antes de empezar. El profesor puede retirar una ocupación equivocada mientras el lobby está abierto. Después de la salida no se admiten nuevas plazas ni accesos de reemplazo: hay que conservar el mismo navegador y sus cookies. Perder ese acceso impide continuar en esa carrera.
+
+En carrera, compartir Wi-Fi no mezcla los presupuestos: cada plaza tiene tres comprobaciones y las quince suman como máximo cuarenta y cinco. Las clases normales mantienen los límites por dirección descritos arriba. Cambiar de dispositivo, dirección o código no repone oportunidades de la carrera.
+
+Ante una respuesta perdida, la pantalla consulta el resultado. Si ofrece **Reintentar el mismo envío**, conserva su identificador y código; repetirlo no obtiene otra comprobación. Si un envío quedó sin resultado confirmado, su oportunidad permanece gastada y nunca se muestra como éxito. Otro envío requiere una nueva acción del alumno. El acceso privado al propio resultado caduca como máximo dos horas después de preparar la carrera.
+
+### QR y dibujos
+
+El QR se genera en el servidor con **qrcode==8.2**, sin extras de imágenes ni servicio externo. En Windows el paquete declara **colorama** como dependencia de plataforma; no se necesita Pillow. Los quince SVG son adaptaciones originales de los ejercicios: [personajes y referencias](docs/RACE-ASSETS.md).
+
+En la verificación local se decodificó el QR con Apple Vision y se probó su enlace en navegadores independientes. Miguel comprobó después el escaneo con la cámara de su móvil y el recorrido de registro mediante un túnel HTTPS temporal el 2026-10-25.
+
+### Comprobar la carrera
+
+Desde la carpeta del proyecto, con el entorno activado:
+
+```bash
+python -m pytest -q
+python -m pytest -q tests/test_race_qr.py tests/test_race_live_http.py
+```
+
+Los ensayos de navegador, capturas y sus resultados están en [la evidencia de 007](specs/007-carrera-de-asistencia/evidence.md). El backend y sus límites están documentados en [008](specs/008-proteger-el-registro-de-carrera/evidence.md).
+
+
+## Presentación 009
+
+La presentación mantiene los karts en la salida mientras se registran los alumnos; sus puestos se actualizan como texto. El recorrido ocurre una sola vez después del cierre y la anticipación. La escena final muestra hasta quince finalistas en una pantalla de 1366 × 768 sin desplazamiento manual. La clasificación completa sigue debajo del podio.
+
+Recargar una carrera cerrada muestra directamente el resultado. Con movimiento reducido tampoco hay espera de cinco segundos ni recorrido animado. Si el profesor retira una asistencia durante la celebración, esta se interrumpe y se muestra la clasificación corregida. La cuenta atrás inicial para abrir el registro y la cuenta final de la animación son independientes.
+
+Evidencia del diseño, secuencia y regresión: [009](specs/009-refinar-presentacion-de-carrera/evidence.md). El servidor continúa ejecutándose en el ordenador del profesor; `python app.py --tunel` permite que los alumnos entren por HTTPS mientras está encendido.
+
+
+## Alumnos y personajes de las carreras
+
+Al preparar la primera carrera de esta versión se guardan una sola vez los quince alumnos y personajes originales. Las carreras nuevas utilizan ese catálogo local, conservando el orden guardado. Reiniciar la aplicación no vuelve a cargar el grupo inicial. Las carreras anteriores mantienen sus participantes y personajes, aunque el catálogo cambie después.
+
+Si el catálogo preparado está vacío, el panel muestra «No hay alumnos disponibles para preparar la carrera». Si los datos no se pueden cargar o son incoherentes, muestra «No se pudo cargar el catálogo de alumnos». En ambos casos se rechaza la nueva carrera sin reponer alumnos ni alterar carreras anteriores. Un error de conexión no significa que una operación ya confirmada se haya deshecho; revisa el listado antes de volver a preparar una carrera.
+
+El grupo inicial procede de `asistencia/storage/data/initial-students.csv`; después se utiliza la tabla local `students`. Esta versión no incorpora un panel para editar alumnos o gestionar varios grupos. El catálogo no atribuye asistencia: cada alumno sigue entrando al lobby y registrándose con el código.

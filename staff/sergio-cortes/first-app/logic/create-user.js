@@ -5,25 +5,73 @@ export function createUser(input) {
   const name = input.name;
   const email = input.email;
 
-  if (typeof name !== "string" || name.trim() === "") {
+  let nameIsEmpty = false;
+
+  if (typeof name !== "string") {
+    nameIsEmpty = true;
+  }
+
+  if (typeof name === "string") {
+    const trimmedName = name.trim();
+
+    if (trimmedName === "") {
+      nameIsEmpty = true;
+    }
+  }
+
+  if (nameIsEmpty) {
     throw new ValidationError("Name is empty");
   }
 
-  if (typeof email !== "string" || email.includes(" ")) {
+  let emailIsInvalid = false;
+
+  if (typeof email !== "string") {
+    emailIsInvalid = true;
+  }
+
+  if (typeof email === "string") {
+    const hasSpace = email.includes(" ");
+
+    if (hasSpace) {
+      emailIsInvalid = true;
+    }
+  }
+
+  if (emailIsInvalid) {
     throw new ValidationError("Email is invalid");
   }
 
   const atIndex = email.indexOf("@");
   const lastAtIndex = email.lastIndexOf("@");
 
-  if (atIndex <= 0 || atIndex !== lastAtIndex) {
+  let atSignIsInvalid = false;
+
+  if (atIndex <= 0) {
+    atSignIsInvalid = true;
+  }
+
+  if (atIndex !== lastAtIndex) {
+    atSignIsInvalid = true;
+  }
+
+  if (atSignIsInvalid) {
     throw new ValidationError("Email is invalid");
   }
 
   const domain = email.slice(atIndex + 1);
   const dotIndex = domain.lastIndexOf(".");
 
-  if (dotIndex <= 0 || dotIndex === domain.length - 1) {
+  let domainDotIsInvalid = false;
+
+  if (dotIndex <= 0) {
+    domainDotIsInvalid = true;
+  }
+
+  if (dotIndex === domain.length - 1) {
+    domainDotIsInvalid = true;
+  }
+
+  if (domainDotIsInvalid) {
     throw new ValidationError("Email is invalid");
   }
 
@@ -31,7 +79,7 @@ export function createUser(input) {
 
   try {
     owner = findByEmail(email);
-  } catch (error) {
+  } catch {
     throw new DatabaseError("Could not create the user");
   }
 
@@ -43,7 +91,7 @@ export function createUser(input) {
 
   try {
     user = insert({ name, email });
-  } catch (error) {
+  } catch {
     throw new DatabaseError("Could not create the user");
   }
 

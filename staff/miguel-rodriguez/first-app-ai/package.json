@@ -4,5 +4,16 @@
   "type": "module",
   "dependencies": {
     "openai": "7.39.0"
+  },
+  "scripts": {
+    "jupyter": "node scripts/jupyter.js",
+    "format": "prettier --no-config --no-editorconfig --write \"db/**/*.js\" \"queries/**/*.js\" \"logic/**/*.js\" \"clients/jupyter/**/*.js\" \"scripts/**/*.js\" \"eslint.config.js\"",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "cli-table3": "0.6.5",
+    "eslint": "10.13.0",
+    "prettier": "3.9.10"
   }
 }

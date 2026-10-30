@@ -1,12 +1,19 @@
 import { findByEmail } from "../queries/users.js";
 
 export function findUserByEmail(email) {
-  const normalizedEmail = email.trim().toLowerCase();
+  const trimmedEmail = email.trim();
+  const normalizedEmail = trimmedEmail.toLowerCase();
   const parts = normalizedEmail.split("@");
-  const hasSingleAt =
-    parts.length === 2 && parts[0].length > 0 && parts[1].length > 0;
-
-  if (!hasSingleAt || normalizedEmail.length > 64) {
+  if (parts.length !== 2) {
+    throw new Error("Email is invalid");
+  }
+  if (parts[0].length === 0) {
+    throw new Error("Email is invalid");
+  }
+  if (parts[1].length === 0) {
+    throw new Error("Email is invalid");
+  }
+  if (normalizedEmail.length > 64) {
     throw new Error("Email is invalid");
   }
 

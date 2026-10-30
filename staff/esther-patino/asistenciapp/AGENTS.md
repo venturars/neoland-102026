@@ -1,20 +1,26 @@
 # AGENTS.md — Manual de trabajo para agentes de IA
 
-Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [CONSTITUTION.md](docs/CONSTITUTION.md) dice **qué reglas** se cumplen; este archivo dice **cómo se trabaja** día a día.
-
----
-
 ## 1. Antes de hacer nada: lectura obligatoria
 
 Lee en este orden al empezar cualquier tarea:
 
 1. `docs/CONSTITUTION.md`: las reglas no negociables.
 2. `docs/ARCHITECTURE.md`: cómo se organiza el código.
-3. Este archivo (`AGENTS.md`).
-4. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
-5. Su `plan.md` y su `tasks.md`, si ya existen.
+3. `docs/TREE.md`: la estructura de carpetas.
+4. `docs/STYLE.md`: cómo se escribe el código.
+5. Este archivo (`AGENTS.md`).
+6. La spec activa: `specs/NNN-nombre/spec.md` (ver §4 "Estado actual").
+7. Su `plan.md` y su `tasks.md`, si ya existen.
 
-Si algo de lo que te piden contradice la constitución, **para y avisa** antes de escribir nada.
+Si algo de lo que te piden contradice la documentación, **para y pregunta** antes de escribir nada.
+
+- **Solo se edita dentro de la carpeta de este proyecto.**
+- **Pregunta antes de suponer.** Ante una ambigüedad, pregunta o márcala con `[NECESITA ACLARACIÓN]`.
+- **Explica lo que haces.** Quien trabaja en el proyecto está aprendiendo este modo de trabajo: al cerrar cada fase, resume qué se ha hecho, por qué y qué tiene que revisar.
+- **Cambios pequeños.** Mejor varias tareas cortas que una enorme.
+- **Nada de commits ni pushes** sin que lo pida quien trabaja en el proyecto.
+- **Para todo lo que arranques.** Si levantas el servidor o `cloudflared` para probar, páralos al terminar y comprueba que el puerto queda libre: `lsof -nP -iTCP:8000 -sTCP:LISTEN` no debe mostrar nada. Ojo: en macOS el proceso aparece como `Python` (con mayúscula). (Incidencia del 2026-10-20 en T12.)
+- **No toques la constitución** salvo para proponer una enmienda, que la aprueba quien trabaja en el proyecto (constitución §8). El archivo está en `docs/CONSTITUTION.md`.
 
 ---
 
@@ -24,7 +30,7 @@ Cada funcionalidad recorre estas fases **en orden**. Al terminar cada una, el ag
 
 Antes de tocar un fichero de la app:
 
-- No se modifican código, tests, el documento de uso de la app ni otra documentación de uso sin un spec aprobado que cubra ese cambio.
+- **Ningún fichero de la app sin spec aprobado.** No se modifican código, tests, el documento de uso de la app ni otra documentación de uso sin un spec aprobado que cubra ese cambio.
 - Un spec aprobado de otro cambio no cubre este.
 - Una issue, una rama o una pull request no sustituyen a ese spec ni al «ok» de quien trabaja en el proyecto.
 
@@ -44,7 +50,7 @@ Antes de tocar un fichero de la app:
 ### 2.2 Planificar (`plan.md`)
 - Arquitectura, modelo de datos, rutas/API, archivos que se crearán.
 - Sección obligatoria **"Comprobación de la constitución"**: repasa P1–P6 y §5–§6 y di cómo los cumple el plan.
-- Si propones una dependencia externa, justifícala aquí (constitución P3).
+- Si propones una dependencia externa, justifícala aquí, como pide [docs/CONSTITUTION.md](docs/CONSTITUTION.md).
 
 ### 2.3 Desglosar (`tasks.md`)
 - Lista de casillas `- [ ] T01 …` en orden de ejecución.
@@ -57,88 +63,7 @@ Antes de tocar un fichero de la app:
 
 ---
 
-## 3. Estructura de carpetas
-
-```
-asistenciapp/
-├── docs/
-│   ├── CONSTITUTION.md      # reglas no negociables
-│   └── ARCHITECTURE.md      # cómo se organiza el código
-├── AGENTS.md                # este archivo
-├── README.md                # cómo arrancar la app (para humanos)
-├── specs/
-│   └── NNN-nombre/
-│       ├── spec.md          # qué y por qué
-│       ├── plan.md          # cómo
-│       └── tasks.md         # pasos
-├── requirements.txt         # dependencias de Python (Flask, pytest)
-├── pytest.ini               # configuración de pytest
-├── app.py                   # petición del navegador y respuesta
-├── asistencia/
-│   ├── domain/              # reglas
-│   ├── actions/             # acciones de pasar lista
-│   └── infra/               # base, CSV y túnel
-├── static/                  # HTML, CSS y JS del navegador
-├── tests/                   # tests (test_*.py)
-├── .venv/                   # entorno virtual de Python (no se sube a git)
-└── data/                    # base de datos SQLite (no se sube a git)
-```
-
-Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `005-docs-and-architecture`.
-
-### 3.1 Cómo se escribe el código
-
-Cada módulo abre con un texto breve que dice de qué va.
-
-Cada función hace una acción y se lee de arriba abajo.
-
-Cada función pública dice qué hace, qué recibe y qué devuelve:
-
-```python
-def code_for(secret: bytes, t: float) -> str:
-    """Calcula el código de cuatro cifras de este instante.
-
-    :param secret: secreto de la clase.
-    :param t: instante, en segundos.
-    :return: el código de cuatro cifras.
-    """
-```
-
-`:param` es lo que recibe. `:return` es lo que devuelve.
-
----
-
-## 4. Comandos
-
-Ejecutar desde la carpeta de este proyecto:
-
-| Acción | Comando |
-| --- | --- |
-| Preparar el entorno (solo la primera vez) | `python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt` |
-| Activar el entorno (en cada terminal nueva) | `source .venv/bin/activate` |
-| Instalar el túnel (solo la primera vez) | `brew install cloudflared` |
-| Arrancar para una clase online | `python app.py --tunel` (imprime el enlace público del panel) |
-| Arrancar solo en local (desarrollo) | `python app.py` (abre en `http://localhost:8000`) |
-| Ejecutar los tests | `pytest` |
-
-Las únicas dependencias son Flask y pytest (constitución P3).
-
----
-
-## 5. Reglas de comportamiento
-
-- **Ningún fichero de la app sin spec aprobado.** No se modifican código, tests, el documento de uso de la app ni otra documentación de uso sin un spec aprobado que cubra ese cambio. Un spec aprobado de otro cambio no cubre este. Una issue, una rama o una pull request no sustituyen a ese spec ni al «ok» de quien trabaja en el proyecto.
-- **Solo se edita dentro de la carpeta de este proyecto.**
-- **Pregunta antes de suponer.** Ante una ambigüedad, pregunta o márcala con `[NECESITA ACLARACIÓN]`.
-- **Explica lo que haces.** Quien trabaja en el proyecto está aprendiendo este modo de trabajo: al cerrar cada fase, resume qué se ha hecho, por qué y qué tiene que revisar.
-- **Cambios pequeños.** Mejor varias tareas cortas que una enorme.
-- **Nada de commits ni pushes** sin que lo pida quien trabaja en el proyecto.
-- **Para todo lo que arranques.** Si levantas el servidor o `cloudflared` para probar, páralos al terminar y comprueba que el puerto queda libre: `lsof -nP -iTCP:8000 -sTCP:LISTEN` no debe mostrar nada. Ojo: en macOS el proceso aparece como `Python` (con mayúscula). (Incidencia del 2026-10-20 en T12.)
-- **No toques la constitución** salvo para proponer una enmienda, que la aprueba quien trabaja en el proyecto (constitución §8). El archivo está en `docs/CONSTITUTION.md`.
-
----
-
-## 6. Definición de "terminado"
+## 3. Definición de "terminado"
 
 Una funcionalidad está terminada cuando:
 
@@ -150,7 +75,7 @@ Una funcionalidad está terminada cuando:
 
 ---
 
-## 7. Estado actual
+## 4. Estado actual
 
 | Spec | Fase | Notas |
 | --- | --- | --- |
@@ -160,6 +85,8 @@ Una funcionalidad está terminada cuando:
 | `004-impersonal-references` | 4. Implementar · T01 a T04 hechas (2026-10-23) | CA-01, CA-02 y CA-05 leídos. Las specs 001, 002 y 003 no se han tocado. Falta el visto bueno |
 | `005-docs-and-architecture` | 4. Implementar · T01 a T12 hechas (2026-10-23) | Implementada. pytest: 82 passed. Las specs 001 a 004 no están en el diff. Falta el visto bueno |
 | `006-ip-access-control` | 4. Implementar · T01 a T09 hechas (2026-10-24) | pytest: 98 passed. Nadie quita ni cambia una IP de la blacklist. Falta el visto bueno |
+| `007-late-arrivals` | 4. Implementar · T01 a T11 hechas (2026-10-27) | pytest: 107 passed. A 400 px se lee el texto y no hay desplazamiento horizontal. Falta el visto bueno |
+| `008-split-agents-docs` | 4. Implementar · T01 a T09 hechas (2026-10-29) | Implementada. pytest: 115 passed. La arquitectura lista `TREE.md` y `STYLE.md`. Las specs 001 a 007 no están en el diff. Falta el visto bueno |
 
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.

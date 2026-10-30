@@ -1,4 +1,4 @@
-"""Acciones de pasar lista: abrir, cerrar, listar, exportar, quitar y registrarse.
+"""Acciones de pasar lista: abrir, cerrar, listar, exportar, quitar, añadir y registrarse.
 
 No dibuja pantallas. Pide las reglas a ``domain`` y el guardado a ``storage``.
 
@@ -6,6 +6,7 @@ Usage::
 
   token = prepare(path)
   row, created = check_in(path, session_id, raw_name, code, now, ip)
+  row, created = add_checkin_manual(path, session_id, raw_name, now)
 """
 
 from datetime import datetime, timezone
@@ -16,6 +17,18 @@ from asistencia.domain.names import clean_name, name_key
 from asistencia.domain.session import ensure_code, ensure_open, require_session
 from asistencia.export import to_csv
 from asistencia.storage import sqlite as storage
+
+DISCORD_NOT_ENABLED = (
+    "No hay una asistencia abierta con Discord activado. "
+    "Pide al profesor que la active desde el panel."
+)
+
+
+class DiscordNotEnabled(Exception):
+    """No hay sesión abierta con Discord activado."""
+
+    def __init__(self) -> None:
+        super().__init__(DISCORD_NOT_ENABLED)
 
 
 def _iso(now) -> str:
@@ -141,6 +154,7 @@ def teacher_view(path, session_id: str, now) -> dict:
         "open": loaded["closed_at"] is None,
         "opened_at": loaded["opened_at"],
         "closed_at": loaded["closed_at"],
+        "discord_enabled": bool(loaded.get("discord_enabled")),
         "total": len(checkins),
         "checkins": checkins,
     }
@@ -165,6 +179,80 @@ def close_session(path, session_id: str, now) -> None:
     """
     require_session(storage.get_session(path, session_id))
     storage.close_session(path, session_id, _iso(now))
+
+
+def enable_discord(path, session_id: str, now) -> None:
+    """Activa el registro por Discord en una clase abierta.
+
+    :param path: ruta del archivo.
+    :param session_id: id de la clase.
+    :param now: función que devuelve el instante Unix actual (misma firma que otras acciones).
+    :return: None.
+    :rtype: None
+    :raises SessionNotFound: si la clase no existe.
+    :raises SessionClosed: si la clase ya está cerrada.
+
+    Usage::
+
+      enable_discord(path, session_id, now)
+    """
+    _ = now
+    loaded = require_session(storage.get_session(path, session_id))
+    ensure_open(loaded)
+    storage.enable_discord(path, session_id)
+
+
+def check_in_discord(path, display_name, code, now) -> tuple[dict, bool]:
+    """Registra a un alumno por Discord con el nombre visible y el código.
+
+    No cuenta intentos por IP.
+
+    :param path: ruta del archivo.
+    :param display_name: nombre visible de la cuenta de Discord.
+    :param code: código de 4 cifras.
+    :param now: función que devuelve el instante Unix actual.
+    :return: el registro y True si se acaba de crear.
+    :rtype: tuple[dict, bool]
+    :raises DiscordNotEnabled: si no hay clase abierta con Discord activado.
+    :raises InvalidCode: si el código no vale.
+    :raises SessionClosed: si la clase está cerrada.
+
+    Usage::
+
+      row, created = check_in_discord(path, display_name, code, now)
+    """
+    loaded = storage.get_open_discord_session(path)
+    if loaded is None:
+        raise DiscordNotEnabled()
+    ensure_open(loaded)
+    name = clean_name(display_name)
+    ensure_code(loaded["secret"], "" if code is None else code, now())
+    return storage.add_checkin(
+        path, loaded["id"], name, name_key(name), _iso(now)
+    )
+
+
+def add_checkin_manual(path, session_id: str, raw_name, now) -> tuple[dict, bool]:
+    """Añade un registro a mano (profesor). Vale con la clase abierta o cerrada.
+
+    Sin código ni límite por IP.
+
+    :param path: ruta del archivo.
+    :param session_id: id de la clase.
+    :param raw_name: nombre tal como lo escribió el profesor.
+    :param now: función que devuelve el instante Unix actual.
+    :return: el registro y True si se acaba de crear.
+    :rtype: tuple[dict, bool]
+    :raises SessionNotFound: si la clase no existe.
+    :raises ValueError: si el nombre está vacío o es demasiado largo.
+
+    Usage::
+
+      row, created = add_checkin_manual(path, session_id, raw_name, now)
+    """
+    require_session(storage.get_session(path, session_id))
+    name = clean_name(raw_name)
+    return storage.add_checkin(path, session_id, name, name_key(name), _iso(now))
 
 
 def remove_checkin(path, session_id: str, checkin_id: int) -> bool:

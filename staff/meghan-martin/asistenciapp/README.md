@@ -4,7 +4,7 @@ Pasa lista en una clase online (Discord, Google Meet o cualquier otra plataforma
 
 El profesor abre una sesión y comparte en la llamada un **código de 4 cifras** que cambia cada 30 segundos. Los alumnos abren un enlace, escriben su nombre y el código, y aparecen al momento en la lista del profesor. Al final de la clase, la lista se descarga para Excel o Google Sheets.
 
-> Proyecto hecho con *Spec-Driven Development*. Las reglas están en [CONSTITUTION.md](CONSTITUTION.md), el manual para agentes de IA en [AGENT.md](AGENT.md) y la especificación en [specs/001-checkin-codigo/](specs/001-checkin-codigo/spec.md).
+> Proyecto hecho con *Spec-Driven Development*. Las reglas están en [docs/CONSTITUTION.md](docs/CONSTITUTION.md), el reparto del código en [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), el manual para agentes de IA en [AGENTS.md](AGENTS.md) y la especificación en [specs/001-checkin-codigo/](specs/001-checkin-codigo/spec.md).
 
 ---
 
@@ -13,7 +13,7 @@ El profesor abre una sesión y comparte en la llamada un **código de 4 cifras**
 Necesitas **Python 3.13+** y, para clases online, **Homebrew** (macOS).
 
 ```bash
-cd staff/victor-chang/asistenciapp
+cd staff/<usuario>/asistenciapp
 python3 -m venv .venv                # crea el entorno virtual del proyecto
 source .venv/bin/activate            # lo activa (verás "(.venv)" en el prompt)
 pip install -r requirements.txt      # instala Flask y pytest
@@ -22,14 +22,16 @@ brew install cloudflared             # el túnel para que los alumnos entren des
 
 ---
 
-## 2. Arrancar la app
+## 2. Activar el entorno
 
 En cada terminal nueva, primero activa el entorno:
 
 ```bash
-cd staff/victor-chang/asistenciapp
+cd staff/<usuario>/asistenciapp
 source .venv/bin/activate
 ```
+
+## 3. Arrancar la app
 
 | Para… | Comando |
 | --- | --- |
@@ -51,17 +53,19 @@ Ese enlace es **tu panel privado**: no lo compartas, porque quien lo tenga puede
 
 ---
 
-## 3. Pasar lista, paso a paso
+## 4. Pasar lista, paso a paso
 
 1. Abre el **enlace del panel** que aparece en la terminal.
 2. Escribe un título (opcional; si no, se usa la fecha y hora) y pulsa **Abrir asistencia**.
 3. **Comparte pantalla** en la llamada: el código se ve en grande, con una cuenta atrás.
 4. Pulsa **Copiar enlace de alumnos** y pégalo en el chat de Discord o Meet.
-5. Cada alumno abre el enlace, escribe su **nombre** y el **código** de tu pantalla, y pulsa **Estoy en clase**. Su nombre aparece en tu lista en un par de segundos.
+5. Cada alumno abre el enlace, escribe unas letras, **elige su nombre** y el **código** de tu pantalla, y pulsa **Estoy en clase**. Su nombre deja de salir como faltante.
 6. Cuando ya estén todos, pulsa **Cerrar asistencia** y confírmalo. Desde ese momento nadie más puede registrarse.
-7. Pulsa **Descargar lista** para obtener el CSV (columnas *Nombre* y *Hora*).
+7. Pulsa **Descargar lista** para obtener el CSV (columnas *Nombre* y *Hora*). La descarga incluye solo a quien ha pasado lista.
 
-**¿Ves un nombre falso o equivocado?** Pulsa **Quitar** en su fila y confirma con **Sí, quitar**. Desaparece de la lista, del total y de la descarga. Funciona también con la asistencia ya cerrada.
+**¿Quién falta?** Debajo de los presentes está el resto de la clase. Si quitas a alguien, vuelve a salir ahí.
+
+**¿Ves un nombre equivocado?** Pulsa **Quitar** en su fila y confirma con **Sí, quitar**. Desaparece de la lista, del total y de la descarga. Funciona también con la asistencia ya cerrada.
 
 ### Un registro por navegador
 
@@ -69,11 +73,15 @@ Cuando un alumno se registra, su navegador lo recuerda **para esa clase**: si vu
 
 Es un límite **disuasorio**, no una prueba de identidad: se salta con otro navegador, una ventana privada u otro dispositivo. Para lo que se cuele, está el botón **Quitar**. Si quitas a alguien, su navegador sigue mostrando "ya te registraste": tendría que usar otro navegador para registrarse de nuevo.
 
+### Intentos de pasar lista
+
+Un mismo ordenador puede intentar pasar lista **5 veces por segundo** y **20 por minuto**. Si se pasa, queda bloqueado, y el bloqueo sigue aunque cierres la app y la vuelvas a abrir. No hay forma de quitar ese ordenador. El código de 4 cifras no cambia.
+
 Las **sesiones anteriores** aparecen en el panel con su número de asistentes, y puedes volver a verlas o descargarlas cuando quieras.
 
 ---
 
-## 4. Cerrar la app
+## 5. Cerrar la app
 
 Pulsa **Ctrl+C** en la terminal donde está arrancada. Se paran la app y el túnel. Los datos quedan guardados en `data/asistencia.db`.
 
@@ -89,11 +97,11 @@ pkill cloudflared                    # para el túnel, si lo usabas
 
 ---
 
-## 5. Problemas frecuentes
+## 6. Problemas frecuentes
 
 | Mensaje o síntoma | Qué hacer |
 | --- | --- |
-| `El puerto 8000 ya está en uso` | Ya tienes la app abierta en otra terminal: ciérrala (sección 4). O usa otro puerto: `PORT=8001 python app.py --tunel`. |
+| `El puerto 8000 ya está en uso` | Ya tienes la app abierta en otra terminal: ciérrala (sección 5). O usa otro puerto: `PORT=8001 python app.py --tunel`. |
 | `No se encontró cloudflared` | Instálalo: `brew install cloudflared`. |
 | El enlace del túnel no carga | Espera unos 20 segundos y recarga: los túneles nuevos tardan en estar accesibles. |
 | Aviso amarillo en el panel: *"tus alumnos no podrán abrir el enlace"* | Abriste el panel en `localhost`. Para la app y arráncala con `python app.py --tunel`. |
@@ -102,7 +110,7 @@ pkill cloudflared                    # para el túnel, si lo usabas
 
 ---
 
-## 6. Tests
+## 7. Tests
 
 ```bash
 source .venv/bin/activate
@@ -113,9 +121,11 @@ Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una 
 
 ---
 
-## 7. Privacidad
+## 8. Privacidad
 
-- Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails ni IPs.
+- Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails.
+- Del alumno se guarda **el nombre que elige en la lista de la clase** y **la hora**. La lista de la clase está en la app para ver quién falta. Nada de emails ni fotos.
+- La dirección desde la que intenta pasar lista se recuerda **solo** para contar esos intentos y para el bloqueo, en el mismo fichero local. No se guarda junto al nombre ni a la hora. Por el enlace público, cada alumno cuenta como su propia dirección.
 - El límite "un registro por navegador" se guarda **solo en el navegador del alumno**, no en el servidor.
 - Quitar un registro lo **borra de verdad** (no queda en ninguna papelera).
 - Los datos se guardan **solo en tu ordenador** (`data/`, que no se sube a git).

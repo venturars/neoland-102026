@@ -8,7 +8,14 @@ export function findUserById({ id }) {
     throw new Error("The database failed.");
   }
 
-  if (user === undefined || user === null) {
+  let userIsMissing = false;
+  if (user === undefined) {
+    userIsMissing = true;
+  }
+  if (user === null) {
+    userIsMissing = true;
+  }
+  if (userIsMissing) {
     throw new Error("No user was found.");
   }
 

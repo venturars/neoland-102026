@@ -22,55 +22,34 @@ tests/                            # pytest (API + unidades)
 
 ### 1.2 Estado objetivo
 
+Misma lógica de negocio que antes del refactor, reorganizada en capas **funcionales** (funciones y módulos planos; sin ORM ni capas presenter de más).
+
 ```
-app.py                    # create_app(): cableado (inyección) + main()
+app.py                         # create_app, rutas HTTP, main(), --tunel
 asistencia/
-  domain/                 # entidades ligeras + reglas puras (codes, names, export)
-  use_cases/              # casos de uso (orquestación); dependen de domain y ports
-  ports/                  # Protocolos: AttendanceRepository, Clock (opcional)
-  infra/
-    sqlite/               # schema, conexión, implementación del repositorio
-    tunnel.py             # sin cambio de comportamiento
-  web/
-    flask_app.py          # create_app Flask, middleware (token, BD por request)
-    routes/               # blueprints o módulos: public, teacher, pages
-docs/
-  ARCHITECTURE.md         # normas (CA-01, CA-02)
-  CONSTITUTIONS.md        # enmienda 2.3 si hace falta (CA-07)
-AGENTS.md                 # §3 estructura actualizada (CA-06)
+  domain/                      # codes, names, session, attempts (006)
+  usecases/attendance.py       # acciones: prepare, check_in, list_sessions, …
+  storage/sqlite.py            # almacén: path → abre SQLite, guarda y lee
+  infra/sqlite/
+    schema.py                  # DDL compartido
+    connection.py              # connect(path), init_schema(conn)
+  export.py                    # CSV
+  tunnel.py                    # cloudflared
+docs/ARCHITECTURE.md
+static/
 ```
 
-Flujo de una petición (igual semántica que hoy):
+Flujo de una petición:
 
 ```
-HTTP (web/routes) → caso de uso → domain (validación/códigos) → port → infra/sqlite
+HTTP (app.py) → usecases/attendance → domain (reglas)
                               ↓
-                         respuesta JSON / CSV (mapeo en web, sin presenter extra)
+                         storage/sqlite (path)
+                              ↓
+                         infra/sqlite/connection + schema
 ```
 
-Diagrama de dependencias (solo hacia dentro):
-
-```
-        ┌─────────┐
-        │  web    │
-        └────┬────┘
-             │
-        ┌────▼────────┐
-        │ use_cases   │
-        └────┬────────┘
-             │
-    ┌────────┼────────┐
-    │        │        │
-┌───▼──┐ ┌───▼───┐ ┌──▼────┐
-│domain│ │ ports │ │ (no)  │
-└──────┘ └───┬───┘ └───────┘
-             │
-        ┌────▼────┐
-        │  infra  │
-        └─────────┘
-```
-
-**Qué no copiamos del ejemplo:** repositorios en memoria duplicados, `db_models` ORM, loggers genéricos, múltiples `flask_*` apps, tests por cada presenter.
+**Qué no copiamos del ejemplo de arquitectura limpia de la issue:** ORM, PostgreSQL, presenters duplicados, repositorios con clases ni capas vacías.
 
 ---
 
@@ -81,9 +60,9 @@ Contenido mínimo del documento (en español):
 | Sección | Contenido |
 | --- | --- |
 | Propósito | Por qué hay capas en una app pequeña (P2: solo la separación que paga el alquiler). |
-| Capas | `domain`, `use_cases`, `ports`, `infra`, `web` — una frase cada una. |
-| Regla de dependencias | Diagrama como §1.2; prohibido importar `web` o `infra` desde `domain`. |
-| Dónde va cada cosa | Tabla: “regla de código rotatorio” → `domain/codes.py`; “INSERT checkin” → `infra/sqlite`; “401 sin token” → `web`. |
+| Capas | `domain`, `usecases`, `storage`, `infra/sqlite`, borde (`app.py`, `static/`) — una frase cada una. |
+| Regla de dependencias | Diagrama como §1.2; prohibido importar `app.py` ni `storage` desde `domain`. |
+| Dónde va cada cosa | Tabla: código rotatorio → `domain/codes.py`; INSERT check-in → `storage/sqlite.py`; 401 sin token → `app.py`. |
 | Casos de uso listados | Crear sesión, listar, vista profesor, check-in, cerrar, borrar check-in, exportar, info pública. |
 | Testing | Tests de dominio sin Flask; tests API existentes como contrato (CA-08). |
 | Fuera de alcance explícito | ORM, migraciones, microservicios, colas, capa presenter JSON. |
@@ -96,43 +75,39 @@ Referencia al repo ejemplo solo como **inspiración**, con tabla “En el ejempl
 
 ### 3.1 Dominio
 
-- **`domain/session.py`**: tipos simples (`Session`, `Checkin`) como `dataclass` o `TypedDict` documentado — solo campos ya usados (id, title, secret, fechas, open/closed).
-- **`domain/codes.py`**, **`domain/names.py`**, **`domain/export.py`**: mover desde la raíz de `asistencia/` (mismo comportamiento; reexport opcional deprecado una versión interna).
-- Errores de negocio como excepciones pequeñas en `domain/errors.py` (`SessionClosed`, `InvalidCode`, `DuplicateCheckin`, `InvalidName`) para que `web` traduzca a HTTP sin `if` de negocio en rutas.
+- **`domain/codes.py`**, **`domain/names.py`**: reglas puras (código rotatorio, normalización de nombre).
+- **`domain/session.py`**: `require_session`, `ensure_open`, excepciones de negocio (`InvalidCode`, sesión cerrada, etc.) que `app.py` traduce a HTTP.
+- **`domain/attempts.py`** (spec 006): umbrales y `over_limit`; `Banned` con mensaje al alumno.
+- **`export.py`** en raíz de `asistencia/` (CSV), no en `domain/`.
 
-### 3.2 Ports (`ports/repository.py`)
+### 3.2 Almacén (`storage/sqlite.py`)
 
-`AttendanceRepository` con los métodos que hoy expone `db.py` (token profesor, sesiones, check-ins). Firma orientada a dominio, no a filas SQLite crudas si se puede sin inflar el diff.
+Funciones con **`path`** al fichero SQLite (abren/cierran conexión internamente). Incluye asistencia (spec 001) y tablas anti-abuso (spec 006). Usa `infra/sqlite/connection.connect` + `init_schema`.
 
-`Clock` opcional: callable `now: float` inyectado en casos de uso que dependen de códigos (como hoy en `create_app`).
+Reloj inyectable: callable `now` en **`usecases/attendance.py`** y en `create_app` (tests de códigos rotatorios).
 
-### 3.3 Casos de uso (`use_cases/`)
+### 3.3 Casos de uso (`usecases/attendance.py`)
 
-Un módulo por flujo, funciones o clases mínimas:
+Un módulo con funciones planas (`prepare`, `check_in`, `list_sessions`, vista profesor, export, bloqueos 006, …). Orquesta `domain` + `storage`. **Sin import Flask.**
 
-| Caso de uso | Cubre (spec 001) | Notas |
+| Función | Cubre (spec 001 / 006) | Notas |
 | --- | --- | --- |
-| `create_session` | CA-01, CA-02 | Título por defecto con reloj |
-| `list_sessions` | CA-16 | |
-| `get_teacher_session_view` | CA-10, CA-11, CA-13 | Incluye código solo si abierta |
-| `get_public_session` | alumno | Sin filtrar secretos |
-| `check_in` | CA-04–CA-09 | Orquesta names + codes + repo |
-| `close_session` | CA-13 | |
-| `remove_checkin` | CA-24–CA-26 | |
-| `export_session_csv` | CA-14 | Usa `domain/export` |
+| `prepare` | arranque | `init_schema`, token profesor |
+| `check_in` | CA-04–CA-09, 006 | IP bloqueada / intento inválido vía `_after_invalid_code` |
+| `public_session`, vistas profesor | CA-10–CA-16 | |
+| `list_blocked`, `unblock_*` | 006 CA-10–CA-11 | delegan en `storage` |
 
-Cada caso de uso recibe `repo` (+ `now` donde aplique). **Sin import Flask.**
+### 3.4 Infraestructura SQLite
 
-### 3.4 Infraestructura
+- **`infra/sqlite/schema.py`**: DDL (sesiones, check-ins, token, `blocked_ips`, `invalid_code_attempts`).
+- **`infra/sqlite/connection.py`**: `connect(path)`, `init_schema(conn)`.
+- **`tunnel.py`**: raíz de `asistencia/` (sin cambio de comportamiento).
 
-- **`infra/sqlite/`**: `schema.py`, `connection.py`, `attendance_repository.py` — contenido actual de `db.py` reorganizado, misma BD `data/asistencia.db`.
-- **`infra/tunnel.py`**: mover desde raíz de `asistencia/` (mismo API).
+### 3.5 Borde HTTP (`app.py`)
 
-### 3.5 Web (Flask)
-
-- **`web/flask_app.py`**: `create_app(db_path, token, now)` — ProxyFix, `g.db`, teardown, `before_request` token, error handlers JSON para `/api/`.
-- **`web/routes/`**: handlers delgados: parsear JSON → llamar caso de uso → `jsonify` con **mismos nombres de campo** (`checkedAt`, `studentUrl`, etc.) para CA-09.
-- **`app.py`**: reexporta `create_app` desde `web` (o import único) y mantiene `main()` / `--tunel` / `port_in_use` para no romper README ni hábitos.
+- **`app.py`**: `create_app(db_path, token, now)` — ProxyFix, rutas Flask, helper `run(action)` que captura excepciones de `domain/session` y `Banned`; `main()`, `--tunel`, `port_in_use`.
+- Rutas delgadas: JSON → `usecases.attendance` → respuesta con **mismos nombres de campo** (`checkedAt`, `studentUrl`, …) para CA-09.
+- **`static/`**: HTML, CSS y JS (sin cambios funcionales en spec 005).
 
 ---
 
@@ -158,7 +133,7 @@ Sin contradicción: stack sigue Flask + SQLite + static; P3 intacto.
 2. Tras cada bloque (infra → use cases → web), ejecutar `pytest`.
 3. Tests unitarios existentes: actualizar imports (`asistencia.domain.codes`, etc.).
 4. No tocar `static/` salvo que algún import roto (no previsto).
-5. Eliminar o dejar shim en `asistencia/db.py` solo si los tests importan directo — preferible actualizar tests a ports/infra.
+5. Sin `asistencia/db.py` monolítico: tests y app usan `storage/sqlite` + `usecases`.
 
 Comportamiento de túnel, token, CSV (BOM, fórmulas) permanece en dominio/infra ya existente.
 
@@ -169,9 +144,9 @@ Comportamiento de túnel, token, CSV (BOM, fórmulas) permanece en dominio/infra
 | Acción | Ficheros |
 | --- | --- |
 | Crear | `docs/ARCHITECTURE.md` |
-| Crear | `asistencia/domain/*`, `use_cases/*`, `ports/*`, `infra/sqlite/*`, `web/*` |
+| Crear / mantener | `domain/*`, `usecases/attendance.py`, `storage/sqlite.py`, `infra/sqlite/schema.py` + `connection.py`, `export.py`, `tunnel.py`, `app.py` (HTTP) |
 | Modificar | `app.py`, `AGENTS.md`, `docs/CONSTITUTIONS.md`, imports en `tests/` |
-| Eliminar / vaciar | `asistencia/db.py`, `asistencia/codes.py`, … tras mover (sin duplicar lógica) |
+| Eliminar | `asistencia/db.py` monolítico tras mover lógica a `storage/` |
 | Sin tocar | `static/*`, `requirements.txt`, `pytest.ini` (salvo `pythonpath` si hiciera falta) |
 
 ---
@@ -181,9 +156,9 @@ Comportamiento de túnel, token, CSV (BOM, fórmulas) permanece en dominio/infra
 | Principio | Cómo lo cumple este plan |
 | --- | --- |
 | **P1** Plataforma independiente | Dominio y casos de uso no mencionan Discord/Meet; igual que hoy. |
-| **P2** Simplicidad | Sin ORM ni presenters; un repositorio SQLite; casos de uso planos. |
+| **P2** Simplicidad | Sin ORM ni presenters; un módulo `storage/sqlite.py`; `usecases` planos. |
 | **P3** Dependencias mínimas | Solo Flask + pytest; stdlib sqlite3, csv, hmac. |
-| **P4** Privacidad | Repositorio sigue guardando solo nombre + hora; sin IPs. |
+| **P4** Privacidad | Check-ins solo nombre + hora; IPs solo en tablas 006 (constitución v2.4). |
 | **P5** Móvil | Front sin cambios. |
 | **P6** Español | ARCHITECTURE.md y docs en español. |
 | **§4 SDD** | Spec aprobada → este plan → tasks → implementación. |
@@ -199,7 +174,7 @@ Comportamiento de túnel, token, CSV (BOM, fórmulas) permanece en dominio/infra
 | --- | --- |
 | Refactor grande rompe API | Tests API congelados; rutas delegadas solo después de pasar tests. |
 | Diff ilegible | Mover ficheros con `git mv` cuando sea posible; commits por capa en tasks. |
-| Sobre-abstracción | No introducir DTOs duplicados ni factories genéricas; Protocol único para repo. |
+| Sobre-abstracción | No introducir DTOs duplicados ni factories genéricas; un módulo `storage/sqlite.py` basta. |
 
 ---
 

@@ -1,0 +1,3 @@
+# .\staff\esther-patino-141020261\first-app
+Set-Location .\staff\esther-patino-141020261\first-app
+node --input-type=module -e "import { findByEmail } from './src/logic/find-user-by-email.js'; console.log(findByEmail('ada@example.com'));"

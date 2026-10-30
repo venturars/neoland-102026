@@ -69,7 +69,7 @@ Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codi
 
 ## 4. Comandos
 
-Ejecutar desde `staff/Diego-Torres/asistenciapp/`:
+Ejecutar desde `staff/diego-torres/asistenciapp/`:
 
 | Acción | Comando |
 | --- | --- |
@@ -86,7 +86,7 @@ Las únicas dependencias son Flask y pytest (constitución P3).
 
 ## 5. Reglas de comportamiento
 
-- **Solo se edita dentro de `staff/Diego-Torres/asistenciapp/`.**
+- **Solo se edita dentro de `staff/diego-torres/asistenciapp/`.**
 - **Pregunta antes de suponer.** Ante una ambigüedad, pregunta o márcala con `[NECESITA ACLARACIÓN]`.
 - **Explica lo que haces.** Al cerrar cada fase, resume qué se ha hecho, por qué y qué tiene que revisar la persona que trabaja en esta carpeta.
 - **Cambios pequeños.** Mejor varias tareas cortas que una enorme.

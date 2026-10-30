@@ -1,0 +1,6 @@
+.venv/
+node_modules/
+__pycache__/
+clients/jupyter/.ipynb_checkpoints/
+db/*.sqlite
+db/*.sqlite-*

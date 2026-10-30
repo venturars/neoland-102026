@@ -1,15 +1,16 @@
-import { findById } from '../queries/users.js';
+import { findById } from "../queries/users.js";
 
 export function findUserById(id) {
   let user;
   try {
     user = findById(id);
   } catch {
-    throw new Error('Could not find the user');
+    throw new Error("Could not find the user");
   }
 
-  if (!user) {
-    throw new Error('User not found');
+  const userIsMissing = !user;
+  if (userIsMissing) {
+    throw new Error("User not found");
   }
 
   return {

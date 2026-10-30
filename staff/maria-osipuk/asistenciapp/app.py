@@ -8,6 +8,7 @@ Uso: `python app.py` y abrir la URL del panel que se imprime en consola.
 
 import argparse
 import hmac
+import ipaddress
 import os
 import socket
 import sys
@@ -19,6 +20,7 @@ from flask import Flask, Response, jsonify, request
 from werkzeug.exceptions import HTTPException
 from werkzeug.middleware.proxy_fix import ProxyFix
 
+from asistencia.domain.attempts import RegistrationBlocked
 from asistencia.domain.session import InvalidCode, SessionClosed, SessionNotFound
 from asistencia.tunnel import TunnelError, start_tunnel
 from asistencia.usecases.attendance import CheckinNotFound
@@ -33,6 +35,40 @@ NOT_FOUND = "Esta clase no existe. Revisa el enlace."
 UNAUTHORIZED = "Acceso no autorizado. Abre el panel con tu enlace secreto de profesor."
 MISSING_CHECKIN = "Ese registro no existe en esta clase."
 GENERIC_ERRORS = {404: "No encontrado.", 405: "Método no permitido."}
+LOCAL_ADDRESSES = {"127.0.0.1", "::1"}
+
+
+def _one_address(value: str) -> bool:
+    """Dice si el texto es una sola dirección, sin listas ni espacios.
+
+    :param value: Texto ya recortado.
+    :return: True si ipaddress la acepta.
+    :rtype: bool
+    """
+    if not value or "," in value or any(character.isspace() for character in value):
+        return False
+    try:
+        ipaddress.ip_address(value)
+    except ValueError:
+        return False
+    return True
+
+
+def registration_address() -> str:
+    """Dirección que cuenta para el tope de registro.
+
+    En este ordenador, si Cloudflare manda una sola dirección de visitante,
+    esa es la que cuenta. En cualquier otro caso cuenta la conexión.
+
+    :return: Dirección elegida.
+    :rtype: str
+    """
+    remote = request.remote_addr or ""
+    if remote in LOCAL_ADDRESSES:
+        visitor = request.headers.get("CF-Connecting-IP", "").strip()
+        if _one_address(visitor):
+            return visitor
+    return remote
 
 
 def _json_error(status: int, message: str):
@@ -63,6 +99,8 @@ def _from_action(exc: Exception):
         return _json_error(404, MISSING_CHECKIN)
     if isinstance(exc, ValueError):
         return _json_error(400, str(exc))
+    if isinstance(exc, RegistrationBlocked):
+        return _json_error(429, str(exc))
     return None
 
 
@@ -147,9 +185,14 @@ def create_app(
         body = request.get_json(silent=True) or {}
         try:
             record, created = attendance.check_in(
-                db_path, session_id, body.get("name"), body.get("code", ""), now
+                db_path,
+                session_id,
+                body.get("name"),
+                body.get("code", ""),
+                now,
+                registration_address(),
             )
-        except (SessionNotFound, SessionClosed, InvalidCode, ValueError) as exc:
+        except (SessionNotFound, SessionClosed, InvalidCode, ValueError, RegistrationBlocked) as exc:
             return _from_action(exc)
         if not created:
             return jsonify(already=True, name=record["name"], checkedAt=record["checked_at"])
