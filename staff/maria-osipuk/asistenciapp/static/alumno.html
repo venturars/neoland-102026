@@ -4,28 +4,84 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pasar lista · AsistenciApp</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="alumno.js" defer></script>
+  <link rel="stylesheet" href="styles.css?v=013">
+  <script src="alumno.js?v=014" defer></script>
 </head>
-<body>
-  <main>
-    <p class="muted small">Pasar lista</p>
-    <h1 id="title">Cargando…</h1>
+<body class="student-page">
+  <header class="site-header student-header">
+    <a class="brand" href="/" aria-label="AsistenciApp, inicio">
+      <span class="brand-mark" aria-hidden="true">✓</span>
+      <span>Asistenci<span>App</span></span>
+    </a>
+  </header>
 
-    <div id="status" role="status" aria-live="polite"></div>
-
-    <form id="form" class="card" hidden novalidate>
-      <label for="name">Tu nombre</label>
-      <input id="name" name="name" autocomplete="name" maxlength="60" required>
-
-      <div class="field-code">
-        <label for="code">Código de la pantalla del profesor</label>
-        <input id="code" name="code" inputmode="numeric" pattern="[0-9]*"
-               maxlength="4" autocomplete="off" required>
+  <main class="student-shell">
+    <section class="student-illustration" aria-hidden="true">
+      <div class="illustration-orbit illustration-orbit-large"></div>
+      <div class="illustration-orbit illustration-orbit-small"></div>
+      <div class="student-cap">
+        <span>✓</span>
       </div>
+      <p>Tu presencia cuenta</p>
+      <span>Regístrate en menos de 30 segundos</span>
+    </section>
 
-      <button id="submit" type="submit" class="full">Estoy en clase</button>
-    </form>
+    <section class="student-card" aria-labelledby="title">
+      <p class="eyebrow">Pasar lista</p>
+      <h1 id="title">Cargando…</h1>
+      <p class="student-intro">Solo necesitamos tu nombre y el código de la pantalla.</p>
+
+      <ol id="student-steps" class="student-steps" aria-label="Progreso del registro">
+        <li data-step-marker="name" class="active"><span>1</span>Nombre</li>
+        <li data-step-marker="code"><span>2</span>Código</li>
+        <li data-step-marker="done"><span>3</span>Listo</li>
+      </ol>
+
+      <div id="status" role="status" aria-live="polite"></div>
+
+      <form id="form" hidden novalidate>
+        <fieldset id="name-step" class="student-step" data-step="name">
+          <legend class="sr-only">Paso 1: tu nombre</legend>
+          <label for="name">Tu nombre completo</label>
+          <p class="field-help">Escribe el nombre con el que te conoce tu profesor.</p>
+          <input id="name" name="name" autocomplete="name" maxlength="60"
+                 placeholder="Ej.: María García" required>
+          <button id="continue-name" type="button" class="full">
+            Continuar al código <span aria-hidden="true">→</span>
+          </button>
+        </fieldset>
+
+        <fieldset id="code-step" class="student-step" data-step="code" hidden>
+          <legend class="sr-only">Paso 2: código de asistencia</legend>
+          <div class="student-name-summary">
+            <span>Te registras como <strong id="name-summary"></strong></span>
+            <button id="edit-name" type="button">Cambiar</button>
+          </div>
+          <label for="code">Código de la pantalla</label>
+          <p class="field-help">Introduce las cuatro cifras que ves en la clase.</p>
+          <div class="code-input-wrap">
+            <input id="code" name="code" inputmode="numeric" pattern="[0-9]*"
+                   maxlength="4" autocomplete="off" aria-describedby="code-help" required>
+            <span class="code-slots" aria-hidden="true">
+              <i data-code-digit></i><i data-code-digit></i>
+              <i data-code-digit></i><i data-code-digit></i>
+            </span>
+          </div>
+          <p id="code-help" class="sr-only">El código tiene cuatro cifras.</p>
+          <button id="submit" type="submit" class="full">
+            Estoy en clase <span aria-hidden="true">✓</span>
+          </button>
+        </fieldset>
+      </form>
+
+      <section id="done-step" class="student-step done-step" data-step="done" hidden>
+        <div class="success-check" aria-hidden="true">✓</div>
+        <p class="eyebrow centered">Registro completado</p>
+        <h2>¡Estás dentro!</h2>
+        <p id="done-message"></p>
+        <p class="done-detail">Ya puedes volver a la clase. No necesitas hacer nada más.</p>
+      </section>
+    </section>
   </main>
 </body>
 </html>
