@@ -16,11 +16,15 @@ No se crea `docs/specs/<nombre>/` antes de que exista el número de issue. `<nom
 
 Con la issue escrita, el proceso siguiente escribe `spec.md` y `plan.md`. La spec abre con `Issue: #N`. No toca ningún otro fichero. Ahí se para. Una persona revisa la spec y el plan.
 
+Aunque el mismo mensaje pida dejar un fichero, ese proceso solo escribe `spec.md` y `plan.md`. El fichero queda descrito en el plan.
+
 Si la constitución, el código actual y la spec no dicen lo mismo, la pregunta queda al final del plan y no hay `tasks.md`.
 
 Si dicen lo mismo y la persona ha revisado, el siguiente proceso escribe `tasks.md`. Ahí se para. No se implementa.
 
-La implementación empieza cuando esa persona lo pide. Ejecuta `tasks.md` y no inventa pasos.
+Aunque la persona diga que se implemente, si `tasks.md` no existe o no lo ha leído, ese proceso escribe `tasks.md` y se para.
+
+La implementación empieza cuando esa persona ha leído la spec, el plan y las tareas y lo pide. Ejecuta `tasks.md` y no inventa pasos. «Implementa» no escribe las tareas y no las ejecuta en la misma respuesta.
 
 ## Comandos
 
