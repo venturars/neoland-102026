@@ -1,7 +1,7 @@
 ## Comandos
 
 - Ejecutar: no hay comando de arranque.
-- Tests: los `.txt` de `clients/terminal/`. Se pegan en PowerShell desde la raíz del repositorio. El fragmento entra en `first-app` y no captura errores. No hay `npm test`.
+- Tests: los `.txt` de `src/clients/terminal/`. Se pegan en PowerShell desde la raíz del repositorio. El fragmento entra en `first-app` y no captura errores. No hay `npm test`.
 - Lint/formato: `format` lanza Prettier, sin fichero de configuración. `lint` lanza ESLint con `eslint.config.js`.
 
 ## Estilo y convenciones
@@ -22,7 +22,7 @@ El código está en inglés. Lo tiene que poder seguir una persona que empieza, 
 
 Se escribe con `if`, con `throw new Error("...")` y con nombres que dicen la acción: `createUser`, `validateEmail`, `findById`.
 
-Una acción de negocio, un archivo en `logic/`. El SQL, un archivo en `queries/queries/`.
+Una acción de negocio, un archivo en `src/logic/`. El SQL, un archivo en `src/queries/queries/`.
 
 No se añaden capas para esconder un paso: ni clases de error, ni helpers genéricos, ni un objeto que envuelva el resultado.
 
