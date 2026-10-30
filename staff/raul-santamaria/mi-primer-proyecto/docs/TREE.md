@@ -8,22 +8,27 @@ mi-primer-proyecto/
   AGENTS.md
   eslint.config.js
   start-jupyter.js
-  clients/
-    terminal/
-      create-user.txt
-      list-users.txt
-      update-user.txt
-      delete-user.txt
-      users-gender-count.txt
-    jupyter/
-  db/
-    connection.js
-    users.sqlite
-  agents/
-  skills/
-  tools/
-  templates/
-  MCPS/
+  src/
+    clients/
+      terminal/
+        create-user.txt
+        list-users.txt
+        update-user.txt
+        delete-user.txt
+        users-gender-count.txt
+      jupyter/
+    db/
+      connection.js
+      users.sqlite
+    logic/
+      create-user.js
+      list-users.js
+      update-user.js
+      delete-user.js
+      users-gender-count.js
+    queries/
+      users.js
+      queries/
   docs/
     ARCHITECTURE.md
     TREE.md
@@ -36,13 +41,4 @@ mi-primer-proyecto/
         spec.md
         plan.md
         tasks.md
-  logic/
-    create-user.js
-    list-users.js
-    update-user.js
-    delete-user.js
-    users-gender-count.js
-  queries/
-    users.js
-    queries/
 ```
