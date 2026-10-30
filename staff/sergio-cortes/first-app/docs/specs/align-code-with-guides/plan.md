@@ -33,7 +33,7 @@ No se tocan `logic/errors.js`, `logic/delete-user.js`,
 de esos ficheros ya es una llamada o una comprobación simple.
 
 No se tocan los `.sql`, `clients/`, `eslint.config.js`, `package.json`,
-`AGENTS.MD` ni las guías en `docs/`.
+`AGENTS.md` ni las guías en `docs/`.
 
 ## Validación de nombre (create, update, find by name)
 
