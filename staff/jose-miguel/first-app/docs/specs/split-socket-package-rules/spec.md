@@ -1,4 +1,4 @@
-# Spec · Repartir reglas Socket (modelo #650)
+# Spec · Repartir reglas Socket y referencia MCP
 
 Issue: #658
 

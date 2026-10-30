@@ -1,12 +1,10 @@
-# Plan · Repartir reglas Socket (modelo #650)
+# Plan · Repartir reglas Socket y referencia MCP
 
 Issue: #658
 
 ## Visión
 
 Solo documentación. No hay cambios en `src/`, `package.json` ni `pnpm-lock.yaml`.
-
-Referencia de aceptación: [issue #650](https://github.com/venturars/neoland-102026/issues/650).
 
 ## Ficheros
 

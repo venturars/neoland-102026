@@ -1,4 +1,4 @@
-# Tareas · Repartir reglas Socket (modelo #650)
+# Tareas · Repartir reglas Socket y referencia MCP
 
 1. Crear `docs/specs/split-socket-package-rules/` con `spec.md`, `plan.md` y este `tasks.md`.
 
