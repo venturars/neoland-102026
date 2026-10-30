@@ -34,6 +34,24 @@ El código vive en `src/`: `src/db/`, `src/logic/`, `src/queries/` y `src/client
 
 `src/logic/` tiene un fichero por operación. `src/clients/terminal/` tiene un `.txt` por operación: se pega en la terminal con el directorio actual en `first-app`. Importa la función de `src/logic/`, le pasa el almacén y hace `console.log`.
 
+## Paquetes
+
+Al añadir un paquete de Node o cambiar su versión, se comprueba con Socket antes de aceptar el plan. La referencia del MCP está en `MCPS/socket-mcp/mcp.txt`.
+
+Entra el paquete y la versión. También entran las dependencias de ese paquete, hasta 3 capas.
+
+El resumen entra en el plan antes de aceptarlo. Para el paquete y para cada dependencia, el resumen dice si esa versión está en una campaña, si tiene una alerta y si alguna stat está por debajo de 50 puntos. Cada dato dice de dónde sale. Si una fuente no puede contestar, el resumen dice el motivo.
+
+Las alertas se comentan. Quien acepta el plan decide si las acepta.
+
+Queda fuera comprobar paquetes que no son de Node, comprobar un paquete cuya versión no cambia, mirar más de 3 capas y decidir las alertas por la persona.
+
+### Token de Socket
+
+`.mcp.json` lee el token de la variable de entorno `SOCKET_API_TOKEN`. El token no se escribe en ningún fichero del repo. `.mcp.json` está ignorado por git; `.mcp.example.json` es la plantilla sin secretos.
+
+Para empezar, copia `.mcp.example.json` a `.mcp.json` y define `SOCKET_API_TOKEN` en tu entorno. La documentación oficial de Socket describe OAuth (el navegador pide la autenticación la primera vez); la cabecera con token no está en esa documentación y hay que probarla con tu token.
+
 ## Comandos
 
 Desde esta carpeta, Jupyter se abre con `pnpm run jupyter`.
