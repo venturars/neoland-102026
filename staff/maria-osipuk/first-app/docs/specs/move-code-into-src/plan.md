@@ -32,6 +32,33 @@ Se tocan:
 
 No se tocan `eslint.config.js` ni `.prettierignore`: no nombran estas carpetas, y `eslint .` encuentra los ficheros dentro de `src/`.
 
+## AGENTS.md
+
+`AGENTS.md` tiene hoy unas 350 líneas. Cada sección tiene un destino:
+
+| Sección de `AGENTS.md`                                               | Destino                                                                 |
+| -------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Qué va primero, Fuente de verdad, Antes de editar, Forma de trabajar | Se queda en `AGENTS.md`, más corta.                                     |
+| Validación de paquetes con Socket                                    | `docs/CONSTITUTION.md`, sección «Paquetes».                             |
+| Nivel del código, Estilo, Comentarios educativos                     | `docs/STYLE.md`.                                                        |
+| Tipos y formatos                                                     | `docs/DATABASE.md`, sección «Tipos y formatos».                         |
+| Firma de las funciones, Actualizaciones parciales, Respuesta         | `docs/CONSTITUTION.md`, sección «Contrato de las funciones».            |
+| Reglas de implementación, Seguridad                                  | `docs/CONSTITUTION.md`, sección «Reglas de implementación y seguridad». |
+| Sincronización de la documentación                                   | `docs/CONSTITUTION.md`, sección «Sincronización de la documentación».   |
+| Al terminar una tarea, Verificación                                  | Se queda en `AGENTS.md`.                                                |
+
+Qué se resume y qué no:
+
+- Se resume lo que se repite: los ejemplos largos de comentarios, de nombres válidos e inválidos, y las frases que repiten la regla con otras palabras.
+- No se resume ninguna regla con efecto: cada validación, cada límite (64 caracteres del email, 50 puntos de Socket, 3 capas, 6 nombres) y cada parada se conserva.
+- El código de ejemplo imprescindible se conserva: la validación de `id`, el objeto de respuesta y la firma de `updateUser`.
+
+Cambios que acompañan al movimiento:
+
+- `docs/CONSTITUTION.md` dice hoy que `plan.md` «no copia reglas que ya están en `AGENTS.md`». Pasa a decir que no copia reglas que ya están en las guías.
+- `docs/CONSTITUTION.md` y `docs/DATABASE.md` dicen hoy que el procedimiento de Socket y las reglas de tipo están en `AGENTS.md`. Pasan a apuntar a su nueva sección.
+- `docs/STYLE.md` y `docs/CONSTITUTION.md` dejan de duplicar lo que ya dicen: el estilo se une en `docs/STYLE.md` y el orden de una función de negocio se queda una sola vez.
+
 ## Orden
 
 Primero el movimiento, luego los clientes y los scripts, luego las guías, y al final `pnpm format` y `pnpm lint`. Cada paso se comprueba antes del siguiente.
