@@ -2,13 +2,15 @@ Issue: #601
 
 # Plan de reorganización bajo src
 
-Estado: spec, plan y T01–T18 aprobados; implementación y verificaciones realizadas. Resultados y límites en [verification.md](verification.md). Sin autorización de commit, push, PR ni merge.
+Estado: spec, plan y T01–T18 aprobados; implementación existente conservada y verificación actual completada tras integrar origin/staging. Al retomar se localizó el commit local existente `b62abae3`, que se conserva sin recrearlo. Resultados y límites en [verification.md](verification.md). Jimena autoriza ahora commit selectivo de los tres documentos activos, push de la rama existente y creación de PR draft contra staging, sin revisores ni merge. Los resultados de publicación se registrarán solo tras comprobarlos.
 
 ## Rama y dependencia
 
-Se ejecutó `git fetch origin`. La PR #600 sigue abierta en draft y sin integrar. Mediante `tools/create-branch.ps1` se creó `601-refactor-move-app-folders-under-src` desde `origin/jimena-duran-291020262`, commit `e7e51b11fe90b748a2cc18ae7669783905e48a34`, su último commit comprobado. La rama conserva la automatización, incluida la protección de archivos locales sin seguimiento.
+En la preparación inicial se ejecutó `git fetch origin`; entonces la PR #600 estaba abierta en draft y sin integrar. Mediante `tools/create-branch.ps1` se creó `601-refactor-move-app-folders-under-src` desde `origin/jimena-duran-291020262`, commit `e7e51b11fe90b748a2cc18ae7669783905e48a34`, su último commit comprobado en ese momento. La rama conserva la automatización, incluida la protección de archivos locales sin seguimiento.
 
-Esta issue depende de #600: no añadir esta reorganización a su rama ni a su PR. Antes de publicar en una fase posterior, comprobar de nuevo su integración y acordar la base adecuada sin duplicar los cambios de automatización. Ahora no hacer commit, push, PR ni merge.
+Esta issue dependía de #600: la pendiente inicial de integrar esa dependencia es histórica y está resuelta. #600 ya está mergeada en staging y esta rama contiene el snapshot de origin/staging `64e3edf5` mediante `db267b51`, sin duplicar su automatización. La preparación inicial no autorizaba publicación; la autorización actual se limita al commit documental, push y PR draft contra staging, sin revisores ni merge.
+
+El 30 de octubre de 2026, tras comprobar que #600 ya estaba integrada, Jimena autorizó incorporar origin/staging a la rama existente de #601. Los 16 cambios locales propios de la reanudación se respaldaron por bytes, hashes, diff e índice antes de apartarlos temporalmente. La integración de `origin/staging` (`64e3edf5`) terminó sin conflictos y se guardó únicamente con el commit de integración `db267b51`, cuyos padres son `b62abae3` y `64e3edf5`. Los 13 archivos operativos de #600 quedaron incorporados por ese merge, equivalentes al respaldo y conservando src. Los tres documentos activos de #601 se recuperaron como cambios locales; no se reescribieron specs históricas manualmente ni se incluyeron estas notas en el commit de integración.
 
 ## Cambios mínimos previstos
 
