@@ -1,6 +1,6 @@
 # Estilo
 
-El código va en inglés. Los comentarios de `clients/terminal/*.txt` van en español. Esos `.txt` son un bloque `node --input-type=module`. Las acciones de `logic/` importan su función y hacen `console.log`. Crear la tabla importa `createUsersTable` y `db`, y muestra el nombre de la tabla.
+El código va en inglés. Los comentarios de `src/clients/terminal/*.txt` van en español. Esos `.txt` son un bloque `node --input-type=module`. Las acciones de `logic/` importan su función y hacen `console.log`. Crear la tabla importa `createUsersTable` y `db`, y muestra el nombre de la tabla.
 
 Ficheros en kebab-case, funciones y variables en camelCase, exportaciones con nombre e imports ESM con `.js`. El contrato de `logic/` está en [CONSTITUTIONS.md](CONSTITUTIONS.md).
 

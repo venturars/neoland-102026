@@ -1,8 +1,8 @@
 # Base de datos
 
-Hay una sola base: `db/users.sqlite`. Hay una sola conexión: el `db` que exporta `db/connection.js`. Si existe `USERS_DB_PATH`, se usa ese fichero. `db/users.sqlite` existe en disco y no se sube a git.
+Hay una sola base: `src/db/users.sqlite`. Hay una sola conexión: el `db` que exporta `src/db/connection.js`. Si existe `USERS_DB_PATH`, se usa ese fichero. `src/db/users.sqlite` existe en disco y no se sube a git.
 
-El texto SQL vive en `queries/queries/`. Hay un fichero `.sql` por sentencia, con parámetros con nombre (`:id`, `:name`, `:email`). `queries/users.js` lo lee y lo ejecuta. Ahí no se decide si un email es válido.
+El texto SQL vive en `src/queries/queries/`. Hay un fichero `.sql` por sentencia, con parámetros con nombre (`:id`, `:name`, `:email`). `src/queries/users.js` lo lee y lo ejecuta. Ahí no se decide si un email es válido.
 
 Tabla `users`:
 
