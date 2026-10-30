@@ -1,7 +1,7 @@
 ### Herramienta: PULL_CHANGES
 
 - **Descripción**: Úsala única y exclusivamente para adelantar `staging` con un fast-forward de `origin/staging`. El orquestador siempre actualiza `staging`, esté en la rama que esté. No la uses si `staging` exige un merge o un rebase.
-- **Comando de Terminal**: `./tools/pull-changes.sh`
+- **Comando de Terminal**: `staff/ella-deyavorsky/first-app/tools/pull-changes.sh`
 
 El comando se lanza desde el root del repositorio git (la carpeta que contenga el directorio .git).
 

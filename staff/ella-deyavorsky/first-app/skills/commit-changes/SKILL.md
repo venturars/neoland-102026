@@ -1,7 +1,7 @@
 ### Herramienta: COMMIT_CHANGES
 
 - **Descripción**: Úsala única y exclusivamente para guardar un trozo con ficheros nombrados. No la uses para el commit vacío de apertura. No la uses con `git add -A` ni con el directorio entero.
-- **Comando de Terminal**: `./tools/commit-changes.sh "[MENSAJE]" "[FICHERO_1]" "[FICHERO_2]"`
+- **Comando de Terminal**: `staff/ella-deyavorsky/first-app/tools/commit-changes.sh "[MENSAJE]" "[FICHERO_1]" "[FICHERO_2]"`
 
 El comando se lanza desde el root del repositorio git (la carpeta que contenga el directorio .git).
 

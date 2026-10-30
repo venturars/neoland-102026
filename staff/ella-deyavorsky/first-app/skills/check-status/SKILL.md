@@ -2,7 +2,7 @@
 
 - **Descripción**: Úsala única y exclusivamente cuando necesites saber la rama actual, si hay cambios sin commit y si la rama sigue a un remoto.
 
-- **Comando de Terminal**: `./tools/check-status.sh`
+- **Comando de Terminal**: `staff/ella-deyavorsky/first-app/tools/check-status.sh`
 
 El comando se lanza desde el root del repositorio git (la carpeta que contenga el directorio .git).
 

@@ -1,7 +1,7 @@
 ### Herramienta: CREATE_BRANCH_FROM_STAGING
 
 - **Descripción**: Úsala única y exclusivamente cuando empieza el trabajo y hay que abrir la rama desde `staging`. No la uses para guardar un commit ni para abrir la pull request.
-- **Comando de Terminal**: `./tools/create-branch-from-staging.sh "[NUMERO]" "[TIPO]" "[DESCRIPCION]"`
+- **Comando de Terminal**: `staff/ella-deyavorsky/first-app/tools/create-branch-from-staging.sh "[NUMERO]" "[TIPO]" "[DESCRIPCION]"`
 
 El comando se lanza desde el root del repositorio git (la carpeta que contenga el directorio .git).
 
