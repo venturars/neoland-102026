@@ -23,7 +23,7 @@ skills:
 ## 3. Flujo de Trabajo (Paso a Paso)
 
 1. **Recepción:** Toma el título en inglés, la rama que acaba de subirse y la rama base. No hace falta el número de issue.
-2. **Validación:** El cuerpo va en español y rellena la plantilla de la skill `create-pr-base`. La sección Issue se deja vacía.
+2. **Validación:** El cuerpo va en español y rellena la plantilla de la skill `create-pr-base`. La sección Issue se deja con `Closes #` sin número: lo completa `link-pr-to-issue`.
 3. **Procesamiento:** En este orden:
    1. Skill `create-pr-base`
    2. Skill `assign-author`

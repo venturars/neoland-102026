@@ -6,7 +6,7 @@ description: "Crea la issue en GitHub con título en inglés y cuerpo en españo
 ### Herramienta: CREATE_ISSUE
 
 - **Descripción**: Úsala única y exclusivamente para dejar la tarea escrita en GitHub. No la uses para abrir la rama ni la pull request.
-- **MCP**: El servidor MCP `github`, declarado en `apm.yml`. No uses `gh` ni un script.
+- **MCP**: El servidor MCP `github`, declarado en `apm.yml`.
 
 #### Especificación de Argumentos
 

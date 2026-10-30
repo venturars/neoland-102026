@@ -1,5 +1,7 @@
 # AGENTS.md — first-app
 
+El trabajo de git sigue `agents/git-workflow-agent.md` de esta carpeta.
+
 ## Proyecto
 
 first-app es la primera app del curso de IA Engineer creada por una alumna junior. Creada a través de interacción con IA. No es una web. Se usa desde la terminal.

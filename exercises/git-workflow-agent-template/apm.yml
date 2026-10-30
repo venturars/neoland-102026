@@ -13,3 +13,4 @@ dependencies:
       url: https://api.githubcopilot.com/mcp/
       headers:
         Authorization: "Bearer ${GITHUB_TOKEN}"
+        X-MCP-Features: mcp_apps_disable_form_deferral

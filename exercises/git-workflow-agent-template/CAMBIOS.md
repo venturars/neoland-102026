@@ -39,7 +39,9 @@ La plantilla original es la de la pull request [#571](https://github.com/ventura
 Después de #571, `staging` cambió la plantilla. Esos cambios están portados a la nueva estructura:
 
 - **`assign-reviewers`.** Resuelve cada nombre a un login de colaborador del repositorio y no pide revisión a quien no colabora. Igual que en `staging`.
-- **`link-pr-to-issue`.** Además de `Related to #N`, enlaza la issue en Development con `gh api graphql`. Cambia una cosa: ese enlace cierra la issue al fusionar en la rama por defecto, así que solo se hace cuando la rama base es otra (como `staging` en el repositorio del curso). Si la base es la rama por defecto, que es lo normal en un proyecto con solo `main`, deja solo `Related to #N` para no cerrar la issue. Si falta `gh`, también.
+- **`link-pr-to-issue`.** Deja `Closes #N` en el cuerpo (antes `Related to #N`) y enlaza la issue en Development con `gh api graphql`. La issue ya no queda abierta para siempre: GitHub la cierra al fusionar en la rama por defecto del repositorio. Ni la skill ni el orquestador la cierran por su cuenta. La plantilla de pull request trae `Closes #` en la sección Issue.
+- **Cabecera para Cursor.** El servidor `github` lleva `X-MCP-Features: mcp_apps_disable_form_deferral` además de `Authorization`. Sin ella, en Cursor crear o editar una issue o una pull request abre un formulario sin botón de enviar. En `staging` se explica en `MCPS/github-mcp-server/mcp.txt` para añadirla a mano. Aquí va en `apm.yml`, y APM la escribe en las tres herramientas.
+- **`gh` permitido.** `create-issue`, `create-pr-base` y `assign-reviewers` ya no prohíben `gh`, igual que en `staging`.
 - **`help-me-to-think`.** En `staging` pasó a hacer una pregunta y devolverla al orquestador sin esperar la respuesta, porque era un subagente. Aquí es una skill en la conversación principal ([ADR 0001](docs/adr/0001-orquestador-y-entrevista-como-skills.md)), así que sigue esperando cada respuesta. Se incorpora «no escribas ficheros».
 - **`grill-me`.** El cambio de formato de la línea Fuente no aplica: esa línea pasó a ser la de inspiración de `entrevista-libre`.
 

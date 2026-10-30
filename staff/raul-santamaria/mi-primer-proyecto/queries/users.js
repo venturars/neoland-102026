@@ -1,35 +1,41 @@
 import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { db } from "../db/connection.js";
 
-function readSql(fileName) {
-  return readFileSync(
-    new URL(`./queries/${fileName}`, import.meta.url),
-    "utf8",
-  );
-}
+const fileUrl = import.meta.url;
+const filePath = fileURLToPath(fileUrl);
+const directory = dirname(filePath);
 
-const createTableSql = readSql("create-users-table.sql");
-const findByEmailSql = readSql("find-user-by-email.sql");
-const findByIdSql = readSql("find-user-by-id.sql");
-const insertSql = readSql("insert-user.sql");
-const listSql = readSql("list-users.sql");
-const updateSql = readSql("update-user.sql");
-const deleteSql = readSql("delete-user.sql");
+const createUsersTablePath = join(
+  directory,
+  "queries",
+  "create-users-table.sql",
+);
+const createTableSql = readFileSync(createUsersTablePath, "utf8");
+const findByEmailPath = join(directory, "queries", "find-user-by-email.sql");
+const findByEmailSql = readFileSync(findByEmailPath, "utf8");
+const findByIdPath = join(directory, "queries", "find-user-by-id.sql");
+const findByIdSql = readFileSync(findByIdPath, "utf8");
+const insertPath = join(directory, "queries", "insert-user.sql");
+const insertSql = readFileSync(insertPath, "utf8");
+const listPath = join(directory, "queries", "list-users.sql");
+const listSql = readFileSync(listPath, "utf8");
+const updatePath = join(directory, "queries", "update-user.sql");
+const updateSql = readFileSync(updatePath, "utf8");
+const deletePath = join(directory, "queries", "delete-user.sql");
+const deleteSql = readFileSync(deletePath, "utf8");
 
 db.exec(createTableSql);
 
-const findByEmailStatement = db.prepare(findByEmailSql);
-const findByIdStatement = db.prepare(findByIdSql);
-const insertStatement = db.prepare(insertSql);
-const listStatement = db.prepare(listSql);
-const updateStatement = db.prepare(updateSql);
-const deleteStatement = db.prepare(deleteSql);
+export function findByEmail(email) {
+  const statement = db.prepare(findByEmailSql);
+  const row = statement.get(email);
 
-function today() {
-  return new Date().toISOString().slice(0, 10);
-}
+  if (!row) {
+    return undefined;
+  }
 
-function toUser(row) {
   return {
     id: row.id,
     name: row.name,
@@ -39,37 +45,34 @@ function toUser(row) {
   };
 }
 
-export function findByEmail(email) {
-  const row = findByEmailStatement.get(email);
-
-  if (!row) {
-    return undefined;
-  }
-
-  return toUser(row);
-}
-
 export function findById(id) {
-  const row = findByIdStatement.get(id);
+  const statement = db.prepare(findByIdSql);
+  const row = statement.get(id);
 
   if (!row) {
     return undefined;
   }
 
-  return toUser(row);
+  return {
+    id: row.id,
+    name: row.name,
+    email: row.email,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
 }
 
 export function insert(input) {
-  const createdAt = today();
-  const result = insertStatement.run(
-    input.name,
-    input.email,
-    createdAt,
-    createdAt,
-  );
+  const now = new Date();
+  const isoString = now.toISOString();
+  const createdAt = isoString.slice(0, 10);
+  const statement = db.prepare(insertSql);
+  const result = statement.run(input.name, input.email, createdAt, createdAt);
+  const lastInsertRowid = result.lastInsertRowid;
+  const id = Number(lastInsertRowid);
 
   return {
-    id: Number(result.lastInsertRowid),
+    id,
     name: input.name,
     email: input.email,
     createdAt,
@@ -78,25 +81,43 @@ export function insert(input) {
 }
 
 export function list() {
-  const rows = listStatement.all();
+  const statement = db.prepare(listSql);
+  const rows = statement.all();
   const result = [];
 
   for (const row of rows) {
-    result.push(toUser(row));
+    const user = {
+      id: row.id,
+      name: row.name,
+      email: row.email,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+    };
+    result.push(user);
   }
 
   return result;
 }
 
 export function update(input) {
-  const updatedAt = today();
+  const now = new Date();
+  const isoString = now.toISOString();
+  const updatedAt = isoString.slice(0, 10);
+  const statement = db.prepare(updateSql);
+  statement.run(input.name, input.email, updatedAt, input.id);
+  const findStatement = db.prepare(findByIdSql);
+  const row = findStatement.get(input.id);
 
-  updateStatement.run(input.name, input.email, updatedAt, input.id);
-
-  const row = findByIdStatement.get(input.id);
-  return toUser(row);
+  return {
+    id: row.id,
+    name: row.name,
+    email: row.email,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
 }
 
 export function remove(id) {
-  deleteStatement.run(id);
+  const statement = db.prepare(deleteSql);
+  statement.run(id);
 }

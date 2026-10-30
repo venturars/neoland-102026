@@ -8,7 +8,7 @@ Sirve para cualquier proyecto en GitHub, no solo para el repositorio del curso. 
 
 - Un proyecto con git y un remoto `origin` en GitHub.
 - Claude Code, Cursor o Codex.
-- La CLI de GitHub (`gh`) con sesión iniciada (`gh auth login`), para enlazar la pull request con la issue en Development. Sin ella, la pull request solo lleva `Related to #N`.
+- La CLI de GitHub (`gh`) con sesión iniciada (`gh auth login`), para enlazar la pull request con la issue en Development. Sin ella, la pull request lleva `Closes #N` pero no aparece en Development.
 - APM: `brew install apm` (o `curl -sSL https://aka.ms/apm-unix | sh`).
 - Un token de GitHub en la variable `GITHUB_TOKEN` cuando arrancas el editor o el agente. Con la CLI de GitHub:
 
@@ -40,7 +40,7 @@ Haz commit de `apm.yml` y `apm.lock.yaml`. Quien clone el proyecto solo tiene qu
 
 Lo que pide cada herramienta además:
 
-- **Cursor:** comprueba en *Settings → MCP* que el servidor `github` está activado. Cursor pide permiso en cada llamada al MCP y en cada comando de terminal. Si lo abres desde el Dock y no ve `GITHUB_TOKEN`, ábrelo desde la terminal con `cursor .`.
+- **Cursor:** comprueba en *Settings → MCP* que el servidor `github` está activado. El paquete le añade la cabecera `X-MCP-Features: mcp_apps_disable_form_deferral`: sin ella, crear o editar una issue o una pull request abre un formulario sin botón de enviar y la llamada se queda esperando. Cursor pide permiso en cada llamada al MCP y en cada comando de terminal. Si lo abres desde el Dock y no ve `GITHUB_TOKEN`, ábrelo desde la terminal con `cursor .`.
 - **Codex:** Codex solo lee `.codex/config.toml` si el proyecto es de confianza (*trusted*). Acepta la confianza cuando Codex la pida al abrir el proyecto. `/mcp` muestra si el servidor `github` está conectado.
 
 ## Uso
@@ -57,7 +57,7 @@ Llama al orquestador o pide directamente un momento:
 |---|---|---|
 | Pensar la tarea | «Ayúdame a pensar cómo contar usuarios por género» | Una entrevista de una pregunta cada vez y un resumen. |
 | Dejarla escrita | «Crea la issue» | Issue con título en inglés y cuerpo en español. |
-| Empezar | «Empieza la issue 184» | Rama `184-feat-…` desde la rama base, commit `chore: open #184`, push y pull request en draft con `Related to #184`, enlazada en Development si la rama base no es la rama por defecto. |
+| Empezar | «Empieza la issue 184» | Rama `184-feat-…` desde la rama base, commit `chore: open #184`, push y pull request en draft con `Closes #184`, enlazada en Development. La issue se cierra al fusionar en la rama por defecto del repositorio. |
 | Guardar un trozo | «Guarda `src/users.js` con feat: count users by gender» | Commit solo con esos ficheros y push. |
 | Que la revisen | «Que la revisen @ana y @luis» | Revisores asignados y pull request fuera de draft. |
 
@@ -113,7 +113,7 @@ Una prueba de unos diez minutos en un repositorio desechable, para comprobar el 
 
    Para probar una copia local del paquete, pasa su ruta en vez de `venturars/…#staging`.
 
-3. Comprueba que están las piezas: `ls .agents/skills .cursor/agents` (16 skills y 5 subagentes) y `cat .cursor/mcp.json` (servidor `github` con `Bearer ${env:GITHUB_TOKEN}`).
+3. Comprueba que están las piezas: `ls .agents/skills .cursor/agents` (16 skills y 5 subagentes) y `cat .cursor/mcp.json` (servidor `github` con `Bearer ${env:GITHUB_TOKEN}` y `X-MCP-Features`).
 
 4. Abre Cursor desde esa misma terminal, para que herede `GITHUB_TOKEN`: `cursor .`. Si no existe el comando, en Cursor abre la paleta de comandos y elige *Shell Command: Install 'cursor' command*.
 
@@ -125,7 +125,7 @@ Una prueba de unos diez minutos en un repositorio desechable, para comprobar el 
    |---|---|
    | `/check-status` | `Rama base: main` y `Token de GitHub: GITHUB_TOKEN definido`. |
    | «Crea una issue para añadir un fichero hola.txt con un saludo» | Issue #1 con título en inglés, cuerpo en español y asignada a ti. |
-   | «Empieza la issue 1» | Rama `1-feat-…` desde `main`, commit `chore: open #1`, push y pull request en draft con `Related to #1`. |
+   | «Empieza la issue 1» | Rama `1-feat-…` desde `main`, commit `chore: open #1`, push y pull request en draft con `Closes #1`. |
    | Crea `hola.txt` y escribe «Guarda hola.txt con feat: add greeting» | Commit con solo `hola.txt` y push a la misma rama. |
 
    Compruébalo también fuera del chat: `git log --oneline` y `gh pr view --web`.

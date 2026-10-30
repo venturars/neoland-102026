@@ -29,7 +29,7 @@ description: "Orquestador del flujo de git: reconoce el momento (pensar la tarea
      3. El subagente `create-commit` con la skill `create-empty-commit`.
      4. El subagente `launch-push`.
      5. El subagente `create-pr` con `create-pr-base`, `assign-author` y `create-draft`. Este subagente no enlaza la issue.
-     6. La skill `link-pr-to-issue`. El orquestador siempre enlaza la issue. El enlace no cierra la issue.
+     6. La skill `link-pr-to-issue`. El orquestador siempre enlaza la issue.
    - Guardar un trozo: el subagente `create-commit` con los ficheros de ese trozo y el subagente `launch-push`.
    - Que la revisen: el alumno nombra revisores. Se usa la skill `assign-reviewers` y la pull request sale de draft.
 4. **Formateo:** Responde con lo que hizo cada paso: número de issue, nombre de rama, mensaje de commit o URL de la pull request.
@@ -44,7 +44,7 @@ description: "Orquestador del flujo de git: reconoce el momento (pensar la tarea
 - **Subagente `create-pr`:** Crear la pull request. Es el único que las crea.
 - **Skill `check-status`:** Saber la rama, la rama base, si hay token de GitHub y si hay cambios, antes de elegir el momento.
 - **Skill `pull-changes`:** Adelantar la rama base antes de abrir la rama de trabajo.
-- **Skill `link-pr-to-issue`:** Enlazar la pull request con la issue, sin cerrarla. La llama el orquestador, no `create-pr`.
+- **Skill `link-pr-to-issue`:** Enlazar la pull request con la issue y dejar `Closes #N` en el cuerpo. La llama el orquestador, no `create-pr`.
 
 ## 5. Manejo de Errores y Excepciones
 
