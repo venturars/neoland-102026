@@ -1,1 +1,11 @@
-node --no-warnings logic/deleteUser.js 3
+node --no-warnings --input-type=module -e "
+import { deleteUser } from './logic/deleteUser.js';
+
+try {
+  const deletedId = deleteUser(3);
+  console.log('User deleted: id ' + deletedId);
+} catch (error) {
+  console.error('Error: ' + error.message);
+  process.exit(1);
+}
+"

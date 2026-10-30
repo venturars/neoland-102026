@@ -1,6 +1,6 @@
 # Base de datos
 
-Hay una sola base de datos: `db/users.sqlite`. Hay una sola conexión: el `db` que exporta `db/connections.js`. No se abre otra base de datos ni otra conexión.
+Hay una sola base de datos: `src/db/users.sqlite`. Hay una sola conexión: el `db` que exporta `src/db/connections.js`. No se abre otra base de datos ni otra conexión.
 
 La tabla se llama `users`. Su formato es este:
 
@@ -13,6 +13,6 @@ La tabla se llama `users`. Su formato es este:
 
 El SQL no vive dentro de la función que lo ejecuta. Vive aparte.
 
-`queries/queries/` contiene solo SQL agnóstico. Cada sentencia está en su propio `.sql`, sin JavaScript.
+`src/queries/queries/` contiene solo SQL agnóstico. Cada sentencia está en su propio `.sql`, sin JavaScript.
 
-`queries/` contiene la función que llama a ese SQL. En este proyecto es `queries/user.js`: lee el `.sql`, lo guarda en una constante y, al final del fichero, la función exportada lo ejecuta con `run`, `all` o `get`.
+`src/queries/` contiene la función que llama a ese SQL. En este proyecto es `src/queries/user.js`: lee el `.sql`, lo guarda en una constante y, al final del fichero, la función exportada lo ejecuta con `run`, `all` o `get`.

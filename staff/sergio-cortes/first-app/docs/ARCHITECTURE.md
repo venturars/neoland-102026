@@ -34,28 +34,28 @@
 - `templates/pull-request/basic-pull-request.md` es el cuerpo de la pull request.
 - `MCPS/github-mcp-server/mcp.txt` es la dirección del MCP de GitHub.
 - `docs/specs/<nombre>/` es donde empieza un desarrollo. `<nombre>` es la funcionalidad, en kebab-case.
-- `db/` abre la base de datos y no contiene reglas de negocio.
-- `db/connections.js` es la única conexión a la base de datos.
-- `db/users.sqlite` es el único fichero de la base de datos.
-- `queries/queries/` guarda el SQL en ficheros `.sql`. Hay un fichero por sentencia.
-- `queries/user.js` lee esos ficheros y los ejecuta. No hay reglas de negocio en `queries/`.
-- `logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
-- `logic/errors.js` exporta las clases de error compartidas. No es una funcionalidad de negocio.
-- `logic/create-user.js` crea un usuario.
-- `logic/update-user.js` actualiza un usuario.
-- `logic/delete-user.js` borra un usuario.
-- `logic/find-user-by-id.js` busca un usuario por id.
-- `logic/find-user-by-email.js` busca un usuario por email.
-- `logic/find-user-by-name.js` busca un usuario por nombre.
-- `logic/list-users.js` lista los usuarios.
-- `logic/user-gender-count.js` cuenta usuarios por género.
-- `clients/terminal/` llama a `logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
-- `scripts/jupyter.sh` prepara `.venv` si hace falta, instala `notebook==7.6.3` y arranca Jupyter en `clients/jupyter/`. Funciona en Mac, Linux y Windows (con `sh`). `package.json` lo invoca con `pnpm jupyter`.
-- `clients/jupyter/` es el cuaderno, uno por cada `.txt` de `clients/terminal/`. El bloque muestra ese texto: arranca `node --input-type=module` y, dentro, los `import` y la llamada quedan igual. El `console.log` se sustituye por la tabla. `cli-table3` y `@colors/colors` pintan esa tabla con colores y encabezados. Si la función falla, se ve ese mensaje. En esa carpeta no hay ficheros `.py` ni `requirements.txt`. Se abre con `pnpm jupyter` desde `first-app`.
+- `src/db/` abre la base de datos y no contiene reglas de negocio.
+- `src/db/connections.js` es la única conexión a la base de datos.
+- `src/db/users.sqlite` es el único fichero de la base de datos.
+- `src/queries/queries/` guarda el SQL en ficheros `.sql`. Hay un fichero por sentencia.
+- `src/queries/user.js` lee esos ficheros y los ejecuta. No hay reglas de negocio en `src/queries/`.
+- `src/logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
+- `src/logic/errors.js` exporta las clases de error compartidas. No es una funcionalidad de negocio.
+- `src/logic/create-user.js` crea un usuario.
+- `src/logic/update-user.js` actualiza un usuario.
+- `src/logic/delete-user.js` borra un usuario.
+- `src/logic/find-user-by-id.js` busca un usuario por id.
+- `src/logic/find-user-by-email.js` busca un usuario por email.
+- `src/logic/find-user-by-name.js` busca un usuario por nombre.
+- `src/logic/list-users.js` lista los usuarios.
+- `src/logic/user-gender-count.js` cuenta usuarios por género.
+- `src/clients/terminal/` llama a `src/logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
+- `scripts/jupyter.sh` prepara `.venv` si hace falta, instala `notebook==7.6.3` y arranca Jupyter en `src/clients/jupyter/`. Funciona en Mac, Linux y Windows (con `sh`). `package.json` lo invoca con `pnpm jupyter`.
+- `src/clients/jupyter/` es el cuaderno, uno por cada `.txt` de `src/clients/terminal/`. El bloque muestra ese texto: arranca `node --input-type=module` y, dentro, los `import` y la llamada quedan igual. El `console.log` se sustituye por la tabla. `cli-table3` y `@colors/colors` pintan esa tabla con colores y encabezados. Si la función falla, se ve ese mensaje. En esa carpeta no hay ficheros `.py` ni `requirements.txt`. Se abre con `pnpm jupyter` desde `first-app`.
 - `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada fichero.
 - `docs/TREE.md` es el árbol de carpetas y ficheros.
 - `docs/DATABASE.md` es la base de datos y las queries.
 - `docs/ERRORS.md` es la lista de errores y cómo usarlos.
 - `docs/STYLE.md` es la forma de cada línea y las convenciones.
-- `docs/CONSTITUTIONS.md` conserva las specs, los paquetes y el contrato de `logic/`. Enlaza a las otras guías.
+- `docs/CONSTITUTIONS.md` conserva las specs, los paquetes y el contrato de `src/logic/`. Enlaza a las otras guías.
 - `AGENTS.md` son las reglas del agente; apunta a la constitución y a las guías.
