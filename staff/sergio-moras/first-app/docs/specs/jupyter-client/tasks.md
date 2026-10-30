@@ -42,7 +42,7 @@ Implementan [plan.md](plan.md), que cumple [spec.md](spec.md). Se ejecutan **en 
 - [x] Probar con Ollama en marcha y con Ollama apagado.
 
 ## T9. Comprobación final y resumen
-- [x] Pegar `clients/terminal/listUsers.txt` y comprobar que coincide con la foto inicial de T1.
+- [x] Pegar `clients/terminal/listUsers.txt` y comprobar que coincide con la foto inicial de T1, salvo Pedro, que al guardar los resultados se cambia, se borra y se vuelve a crear con otro id.
 - [x] Comprobar que no queda ningún usuario `tmp-jupyter-*`.
 - [x] Enseñar un resumen con los archivos creados y lo probado.
 - [x] Proponer, sin editarla, la línea de la constitución que recoge `clients/jupyter/`.
