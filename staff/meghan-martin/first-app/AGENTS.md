@@ -58,11 +58,15 @@ Prettier sin configuración propia: comillas dobles, punto y coma, coma final, 2
 ## Al terminar una tarea
 ## Paquetes
 
-Antes de aprobar un plan, un paquete de Node nuevo o un cambio de versión se comprueba con el MCP de Socket. Se mira la versión propuesta y sus dependencias, hasta tres capas. En cada capa el criterio es el mismo: si esa versión está en una campaña, si tiene alertas y si alguna puntuación baja de 50.
+La regla está en la sección «Paquetes» de [docs/CONSTITUTIONS.md](docs/CONSTITUTIONS.md). Aquí solo el cómo, al escribir el plan.
 
-El plan lleva un resumen corto de cada paquete y versión. Las alertas se escriben. Quien aprueba el plan decide si las acepta. El agente no decide.
+El servidor es el de `MCPS/socket-mcp/mcp.txt`. La entrada se llama `socket-mcp`.
 
-Queda fuera un paquete que no es de Node, un paquete que ya está y no cambia de versión, y una dependencia más allá de la tercera capa.
+- Las puntuaciones salen de `depscore`, con la versión exacta. Una puntuación por debajo de 50 se escribe. 50 no baja.
+- La alerta sale de `alerts`, con la organización `vibecodingneoland` y el nombre del paquete. Solo cuenta una alerta de esa misma versión. Una lista vacía es la de un paquete vigilado. No dice que no haya alerta.
+- La campaña sale de `threat_feed`. Si responde 403 `threat_feed_not_entitled`, el resumen dice que la cuenta no tiene ese feed.
+
+Si una herramienta no contesta, el resumen dice el motivo. No escribe «no consta» sin haberla llamado. Quien aprueba el plan decide. Esto no es un momento del flujo de git.
 
 ## Al terminar
 

@@ -24,3 +24,4 @@
 - `docs/GIT-AUTOMATION.md` es el flujo de git en la terminal del Mac.
 - `agents/` dice cada momento de git. `agents/git-workflow-agent.md` elige el momento.
 - `skills/` es un paso de git. `tools/` son los scripts de shell. `templates/` es la forma de la issue y de la pull request. `MCPS/` apunta al servidor de GitHub.
+- `MCPS/socket-mcp/mcp.txt` es la dirección del MCP de Socket.
