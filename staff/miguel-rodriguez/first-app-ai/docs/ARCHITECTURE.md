@@ -95,3 +95,20 @@ is defined in [AGENTS.md](../AGENTS.md).
 Socket package validation, guide separation, formatting/lint checks, and alignment
 with the architecture and style guides. Their individual documents
 record the request, approved approach, tasks, decisions, and verification.
+
+## Git workflow
+
+`agents/git-workflow-agent.md` defines the workflow loaded by the principal agent.
+The six other agent documents define task clarification, issue creation, branch
+creation, commits, pushes and pull requests. The principal runs status, staging
+updates, issue linking and reviewer assignment through their respective skills.
+Delegated responsibilities run as real subagents, sequentially, through Codex’s native delegation tools. Each receives the corresponding agent document and explicit task context.
+
+`.cursor/agents/` contains small Cursor registration entries referencing those six
+agent documents. It does not duplicate their procedures. These are optional compatibility entries, not required for Codex. Opening this app as a Cursor project loads them, but requires separate runtime verification. The enclosing NEOLAND repository remains the Git root.
+
+`skills/` describes each action and its inputs/results. The six Bash scripts in
+`tools/` implement local Git operations. `templates/` supplies the issue and PR
+bodies. `MCPS/github-mcp-server/mcp.txt` is a public server documentation reference,
+not an installed connection or credential store. Setup and verification are in
+README.md; workflow permissions and SDD gates remain in AGENTS.md.

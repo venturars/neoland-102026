@@ -2,9 +2,28 @@
 
 ```text
 first-app-ai/
+├── .cursor/
+│   └── agents/
+│       ├── create-branch.md
+│       ├── create-commit.md
+│       ├── create-issue.md
+│       ├── create-pr.md
+│       ├── help-me-to-think.md
+│       └── launch-push.md
 ├── .gitignore
 ├── AGENTS.md
+├── MCPS/
+│   └── github-mcp-server/
+│       └── mcp.txt
 ├── README.md
+├── agents/
+│   ├── create-branch.md
+│   ├── create-commit.md
+│   ├── create-issue.md
+│   ├── create-pr.md
+│   ├── git-workflow-agent.md
+│   ├── help-me-to-think.md
+│   └── launch-push.md
 ├── clients/
 │   ├── jupyter/
 │   │   ├── 01-create-users-table.ipynb
@@ -50,6 +69,10 @@ first-app-ai/
 │       │   ├── plan.md
 │       │   ├── spec.md
 │       │   └── tasks.md
+│       ├── git-workflow-automation/
+│       │   ├── plan.md
+│       │   ├── spec.md
+│       │   └── tasks.md
 │       ├── jupyter-client/
 │       │   ├── plan.md
 │       │   ├── spec.md
@@ -90,6 +113,47 @@ first-app-ai/
 │   │   └── update.sql
 │   └── users.js
 ├── requirements-jupyter.txt
-└── scripts/
-    └── jupyter.js
+├── scripts/
+│   └── jupyter.js
+├── skills/
+│   ├── assign-author/
+│   │   └── SKILL.md
+│   ├── assign-reviewers/
+│   │   └── SKILL.md
+│   ├── check-status/
+│   │   └── SKILL.md
+│   ├── commit-changes/
+│   │   └── SKILL.md
+│   ├── create-branch-from-staging/
+│   │   └── SKILL.md
+│   ├── create-draft/
+│   │   └── SKILL.md
+│   ├── create-empty-commit/
+│   │   └── SKILL.md
+│   ├── create-issue/
+│   │   └── SKILL.md
+│   ├── create-pr-base-staging/
+│   │   └── SKILL.md
+│   ├── grill-me/
+│   │   └── SKILL.md
+│   ├── grill-with-docs/
+│   │   └── SKILL.md
+│   ├── launch-push/
+│   │   └── SKILL.md
+│   ├── link-pr-to-issue/
+│   │   └── SKILL.md
+│   └── pull-changes/
+│       └── SKILL.md
+├── templates/
+│   ├── issues/
+│   │   └── basic_issue.md
+│   └── pull-request/
+│       └── basic-pull-request.md
+└── tools/
+    ├── check-status.sh
+    ├── commit-changes.sh
+    ├── create-branch-from-staging.sh
+    ├── create-empty-commit.sh
+    ├── launch-push.sh
+    └── pull-changes.sh
 ```

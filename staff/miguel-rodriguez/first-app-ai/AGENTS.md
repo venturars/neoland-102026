@@ -20,7 +20,13 @@ Read [the constitution](docs/CONSTITUTIONS.md) and any active feature's document
   Both must succeed; report and resolve failures before claiming completion.
 - Verify executable changes in disposable project copies. Preserve working data, remove temporary files, and report the commands executed and actual results.
 - If instructions, documents, and code conflict, explain the conflict and stop the affected work for a decision. Do not silently choose one version.
-- Leave all Git and publishing actions to Miguel; do not run Git commands or publish.
+- For Git work, the principal follows [the Git workflow](agents/git-workflow-agent.md).
+  Execute only the requested moment, using actual subagents through the active environment’s native delegation tools for its delegated
+  responsibilities. Do not ask for repeated confirmation within that moment; preserve tool
+  confirmations and the separate spec → plan → tasks approvals before implementation.
+- New task branches start from updated staging; PRs target staging from creation. Do not
+  create dependent task branches, merge, close issues through the API or delete branches automatically. PR bodies use Closes #N; merging into staging does not close the issue while main is the default branch.
+  Do not alter commits or PR bases after approvals without an explicit request.
 
 Refer to the constitution for application rules and its links to architecture, tree,
 database, errors, and style. Feature-specific requirements belong in that feature's documents.
