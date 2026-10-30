@@ -85,23 +85,39 @@ export async function usersGenderCount() {
     }
 
     const choice = completion.choices[0];
-    let message;
 
-    if (choice && choice.message) {
-      message = choice.message.content;
+    let missingMessage = false;
+    if (!choice) {
+      missingMessage = true;
     }
-
-    let genders;
-
-    if (message) {
-      try {
-        genders = JSON.parse(message).genders;
-      } catch {
-        genders = undefined;
+    if (choice) {
+      if (!choice.message) {
+        missingMessage = true;
       }
     }
+    if (missingMessage) {
+      result.genderUndefined += names.length;
+      continue;
+    }
 
-    if (!Array.isArray(genders) || genders.length !== names.length) {
+    const text = choice.message.content;
+
+    let genders;
+    try {
+      const parsed = JSON.parse(text);
+      genders = parsed.genders;
+    } catch {
+      genders = undefined;
+    }
+
+    const gendersIsArray = Array.isArray(genders);
+    let sameCount = false;
+    if (gendersIsArray) {
+      const genderCount = genders.length;
+      const batchCount = names.length;
+      sameCount = genderCount === batchCount;
+    }
+    if (!sameCount) {
       result.genderUndefined += names.length;
     } else {
       for (const gender of genders) {

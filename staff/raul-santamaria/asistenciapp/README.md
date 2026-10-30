@@ -98,6 +98,8 @@ Si falta el token, el bot se para con un error claro pidiendo `data/discord_toke
 
 **¿Ves un nombre falso o equivocado?** Pulsa **Quitar** en su fila y confirma con **Sí, quitar**. Desaparece de la lista, del total y de la descarga. Funciona también con la asistencia ya cerrada.
 
+**¿Falta alguien que sí estuvo?** En la vista de la sesión, escribe el nombre en **Añadir alumno a mano** y pulsa **Añadir**. Cuenta igual que un registro normal (lista, total y descarga). También funciona si la asistencia ya está cerrada.
+
 ### Un registro por navegador
 
 Cuando un alumno se registra, su navegador lo recuerda **para esa clase**: si vuelve a abrir el enlace, ve *"Ya te registraste en esta clase como Ana García a las 11:07"* y no puede apuntar a otra persona. En la clase siguiente puede registrarse con normalidad.
@@ -151,7 +153,7 @@ source .venv/bin/activate
 pytest            # o "pytest -v" para ver cada test
 ```
 
-Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una verificación manual; la tabla está en [plan.md §6](specs/001-checkin-codigo/plan.md). El check-in con Discord está en [specs/007-checkin-discord/](specs/007-checkin-discord/spec.md).
+Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una verificación manual; la tabla está en [plan.md §6](specs/001-checkin-codigo/plan.md). El check-in con Discord está en [specs/007-checkin-discord/](specs/007-checkin-discord/spec.md). Añadir alumno a mano: [specs/008-add-student-manually/](specs/008-add-student-manually/spec.md).
 
 ---
 

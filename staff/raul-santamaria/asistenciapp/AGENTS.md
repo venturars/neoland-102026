@@ -122,6 +122,7 @@ Una funcionalidad está terminada cuando:
 | `005-reorganizar-arquitectura` | ✅ Implementada (2026-10-26): T01–T12, 87 tests | Documentos en `docs/`; código en reglas, acciones y borde |
 | `006-limite-por-ip-publica` | ✅ Implementada (2026-10-26): T01–T11, 102 tests | Límite de intentos de registro por IP y lista de bloqueo |
 | `007-checkin-discord` | ✅ Implementada (2026-10-27): T01–T11 | Check-in con Discord; issue #498 |
+| `008-add-student-manually` | ✅ Implementada (2026-10-27): T01–T06 | Añadir alumno a mano; issue #529 |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
 
