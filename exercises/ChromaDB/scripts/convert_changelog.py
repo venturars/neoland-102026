@@ -22,7 +22,9 @@ def convert_changelog(html_dir: Path) -> str:
         if any(title.startswith(prefix) for prefix in CHANGELOG_RELEASES):
             releases.append(convert_block(release, 1))
     if len(releases) == 0:
-        raise RuntimeError(f"No Python {VERSION} releases found in the changelog")
+        raise RuntimeError(
+            f"No Python {VERSION} releases found in the changelog"
+        )
 
     front_matter = [
         "---",
@@ -32,5 +34,10 @@ def convert_changelog(html_dir: Path) -> str:
         "kind: changelog",
         "---",
     ]
-    markdown = "\n".join(front_matter) + "\n\n# Changelog\n\n" + "\n\n".join(releases) + "\n"
+    markdown = (
+        "\n".join(front_matter)
+        + "\n\n# Changelog\n\n"
+        + "\n\n".join(releases)
+        + "\n"
+    )
     return markdown

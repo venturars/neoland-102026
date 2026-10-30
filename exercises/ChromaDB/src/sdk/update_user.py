@@ -1,7 +1,9 @@
 from core.update_user import update_user as core_update_user
 
 
-def update_user(user_id: int | str, name: str, email: str, age: int | str, gender: str) -> dict:
+def update_user(
+    user_id: int | str, name: str, email: str, age: int | str, gender: str
+) -> dict:
     id_text = str(user_id).strip()
     if not id_text.isdecimal():
         raise RuntimeError(f"User id must be a whole number: {user_id}")
@@ -16,4 +18,6 @@ def update_user(user_id: int | str, name: str, email: str, age: int | str, gende
     clean_age = int(age_text)
     clean_gender = gender.strip().lower()
 
-    return core_update_user(clean_id, clean_name, clean_email, clean_age, clean_gender)
+    return core_update_user(
+        clean_id, clean_name, clean_email, clean_age, clean_gender
+    )

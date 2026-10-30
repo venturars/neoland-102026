@@ -5,7 +5,9 @@ def validate_user(name: str, email: str, age: int, gender: str) -> None:
     if name == "":
         raise RuntimeError("Name is required")
     if len(name) > MAX_NAME_LENGTH:
-        raise RuntimeError(f"Name must have at most {MAX_NAME_LENGTH} characters")
+        raise RuntimeError(
+            f"Name must have at most {MAX_NAME_LENGTH} characters"
+        )
 
     if "@" not in email:
         raise RuntimeError(f"Email is not valid: {email}")

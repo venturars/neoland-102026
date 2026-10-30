@@ -24,7 +24,7 @@
      4. `agents/launch-push.md`.
      5. `agents/create-pr.md` con `create-pr-base-staging`, `assign-author` y `create-draft`. Este agente no enlaza la issue.
      6. `skills/link-pr-to-issue`. El orquestador siempre enlaza la issue.
-     7. La implementación es el ciclo de esta carpeta: `spec.md`, `plan.md`, `tasks.md` y las rondas de developer y tester. El orquestador no la escribe él.
+     7. La implementación es el ciclo de `AGENTS.md`. El orquestador no la escribe él. `concept_developer` escribe `spec.md`, `plan.md` y `tasks.md`. En cada ronda entra `code_developer`, con la reanudación que dice `AGENTS.md`. Si al cerrar la documentación quedó desfasada, `concept_developer` vuelve a entrar en esa misma ronda. Después entran `code_tester` y `concept_tester`, cada uno en limpio. `tasks.md` no se borra.
      8. Al terminar la implementación, `agents/create-commit.md` con los ficheros de ese trozo y `agents/launch-push.md`.
      9. Si la issue nombra a dos personas, `skills/assign-reviewers` con esos nombres y la pull request sale de draft.
      10. Si la issue no nombra a dos personas, se para antes de pedir la revisión. La pull request sigue en draft. No se inventan los nombres.
@@ -43,6 +43,10 @@
 - **`skills/pull-changes`:** Adelantar `staging` antes de abrir la rama. Siempre `staging`.
 - **`skills/link-pr-to-issue`:** Enlazar la pull request con la issue y dejar `Closes #N` en el cuerpo. La llama el orquestador, no `create-pr`.
 - **`skills/assign-reviewers`:** Asignar la revisión a las dos personas que nombre la issue y sacar la pull request de draft. Solo si la issue nombra a esas dos personas.
+- **`agents/concept-developer.md`:** Escribe la spec, el plan, las tasks y la documentación del cambio.
+- **`agents/code-developer.md`:** Implementa el código de la ronda.
+- **`agents/code-tester.md`:** Escribe y ejecuta pytest. Siempre nuevo.
+- **`agents/concept-tester.md`:** Comprueba documentación, spec y código. Siempre nuevo. No edita.
 
 ## 5. Manejo de Errores y Excepciones
 
