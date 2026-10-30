@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 3.1 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-30
+> Versión 4.0 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-30
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -31,11 +31,12 @@ El registro de asistencia no depende de una plataforma concreta. Las integracion
 - Se usa la biblioteca estándar de Python (`sqlite3`, `hmac`, `secrets`, `csv`, `unicodedata`…) y el navegador (HTML, CSS y JavaScript sin frameworks).
 - Las únicas dependencias externas permitidas de serie son **Flask** (servidor web) y **pytest** (tests), listadas en `requirements.txt`.
 - Añadir cualquier otra requiere **justificarla por escrito** en el `plan.md` de la feature (qué problema resuelve y por qué no basta lo que ya hay).
+- Herramientas externas que no son de Python, ya justificadas: `cloudflared` para el túnel (spec 001), y `git`, `gh` y el MCP de GitHub para el flujo de git (spec 007). Cualquier otra sigue la regla anterior.
 
 ### P4 · Privacidad mínima
 
 - Del alumno solo se guarda el **nombre que él mismo escribe** y la **hora del registro**.
-- **Prohibido** guardar emails, identificadores de dispositivo o cualquier dato no imprescindible. La IP pública estática es la excepción: se recuerda solo para contar los intentos de registrarse y para la lista de bloqueo. No forma parte del registro del alumno.
+- **Prohibido** guardar emails, identificadores de dispositivo o cualquier dato no imprescindible. La IP de quien intenta registrarse es la excepción (con el túnel, la que da el proveedor del túnel; sin él, la de la conexión). Se recuerda solo para contar los códigos fallados durante un minuto y para la lista de bloqueo, que caduca y se borra. No forma parte del registro del alumno.
 - Los datos se **almacenan** solo en local (SQLite). Ningún servicio de terceros los guarda.
 - Para que los alumnos lleguen a la app desde sus casas, el tráfico puede **pasar cifrado (HTTPS)** por un proveedor de túnel (p. ej. Cloudflare). Ese proveedor no los almacena, pero técnicamente podría verlos en tránsito; por eso solo se envía lo imprescindible (nombre y código).
 
@@ -62,6 +63,9 @@ Interfaz, mensajes de error, documentación y especificaciones se escriben en es
 | Documentos    | `docs/` (esta constitución y `docs/ARCHITECTURE.md`)                              |
 | Frontend      | HTML + CSS + JavaScript sin frameworks, servidos desde `static/`                  |
 | Tests         | `pytest`                                                                          |
+| Túnel         | `cloudflared` (solo con `--tunel`), lanzado desde `asistencia/tunnel.py`          |
+| Flujo de git  | `agents/`, `skills/`, `tools/`, `templates/` y `MCPS/`; usa `git`, `gh` y el MCP de GitHub |
+| Sistemas      | macOS, Linux y Windows. Los scripts de `tools/` piden bash (en Windows, Git Bash) |
 
 El detalle de cómo se relacionan esas carpetas está en `docs/ARCHITECTURE.md`. Cambiar el stack requiere enmendar esta constitución.
 
@@ -69,7 +73,7 @@ El detalle de cómo se relacionan esas carpetas está en `docs/ARCHITECTURE.md`.
 
 ## 4. Desarrollo guiado por especificaciones (SDD)
 
-1. **Ningún fichero de la app se modifica sin spec, plan y tasks que cubran ese cambio.** Entran el código, los tests, el README y el resto de la documentación de uso. Cada cambio nace como `specs/NNN-nombre/spec.md`. Si no cabe en la spec activa, se abre otra. Una issue, una rama o una pull request no autorizan el código: el código espera a las tres specs y a que se pida implementar.
+1. **Ningún fichero de la app se modifica sin spec, plan y tasks que cubran ese cambio.** Entran el código, los tests, el README, el resto de la documentación de uso y el flujo de git (`agents/`, `skills/`, `tools/`, `templates/` y `MCPS/`). Cada cambio nace como `specs/NNN-nombre/spec.md`. Si no cabe en la spec activa, se abre otra. Una issue, una rama o una pull request no autorizan el código: el código espera a las tres specs y a que se pida implementar.
 2. El orden de los ficheros siempre es: **spec → plan → tasks → implementación**. No se salta ningún paso. Quien trabaja en esta carpeta interviene en cinco momentos, y el agente no los encadena: la issue, el draft, las tres specs en la misma pasada, la implementación, y lo que se pida sobre la pull request. No hay un ok entre spec y plan.
 3. La `spec.md` describe el **qué y el porqué**, nunca el cómo (no menciona tecnologías).
 4. El `plan.md` describe el **cómo** e incluye una sección que comprueba que cumple esta constitución.
@@ -87,7 +91,9 @@ El detalle de cómo se relacionan esas carpetas está en `docs/ARCHITECTURE.md`.
 
 ## 6. Seguridad
 
-- Los códigos de asistencia **caducan** y no se pueden adivinar **a mano** antes de caducar. La protección contra ataques automatizados (scripts) no es un requisito.
+- Los códigos de asistencia **caducan** y no se pueden adivinar **a mano** antes de caducar.
+- Contra los scripts que prueban códigos hay un **freno**: se cuentan los códigos fallados de cada IP y, si se pasa, esa IP queda bloqueada **un tiempo**. Los máximos y la duración están en la spec 008.
+- El freno **nunca** puede impedir que la clase pase lista: un registro correcto no cuenta, el bloqueo caduca y cada alumno cuenta con su propia IP.
 - Un mismo alumno no puede registrarse dos veces en la misma sesión.
 - Una sesión cerrada no acepta más registros.
 - Toda entrada del usuario se valida en el servidor y se escapa al mostrarla (sin HTML inyectado).
@@ -117,3 +123,4 @@ El detalle de cómo se relacionan esas carpetas está en `docs/ARCHITECTURE.md`.
 | 2.3     | 2026-10-22 | §3: el código se reparte en `docs/`, `asistencia/domain/`, `asistencia/usecases/`, `asistencia/storage/` y `app.py`. El archivo sigue en `data/` y las pantallas en `static/` | La organización de archivos y carpetas cambió. El propósito, la privacidad y las reglas de pasar lista siguen (spec 005) |
 | 3.0     | 2026-10-23 | P4: la IP pública estática se puede recordar solo para contar los intentos de registrarse y para la lista de bloqueo. No se guarda con el nombre ni con la hora | El límite por IP necesita recordar esa IP. Contradice la prohibición de guardar IPs. Los máximos y la duración de la lista se quedan en la spec 006 |
 | 3.1     | 2026-10-30 | §4: la cabecera pasa de Versión 3.0 a 3.1. El ok del humano son cinco momentos (issue, draft, specs, implementar, pull request). Plan y tasks se escriben con la spec. Una issue, una rama o una pull request siguen sin autorizar el código | Quien trabaja en esta carpeta no quiere parar entre spec, plan y tasks. El flujo de git del curso entra en la carpeta (spec 007) |
+| 4.0     | 2026-10-30 | §6: deja de decir que el freno contra scripts no es un requisito; cuenta solo códigos fallados, caduca y no puede bloquear a la clase. P4: la IP es la de quien intenta registrarse, no una «IP pública estática». P3 y §3: nombran `cloudflared`, `git`, `gh`, el MCP de GitHub y los sistemas. §4.1: el flujo de git también pide spec | La 3.0 contradecía el §6 y nombraba una IP que la app no veía: con el túnel, toda la clase compartía `127.0.0.1` y un bloqueo para siempre la dejaba fuera. Las reglas no nombraban herramientas que ya se usaban (spec 008, issue #653) |

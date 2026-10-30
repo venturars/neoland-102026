@@ -10,26 +10,50 @@ El profesor abre una sesión y comparte en la llamada un **código de 4 cifras**
 
 ## 1. Preparar el entorno (solo la primera vez)
 
-Necesitas **Python 3.13+** y, para clases online, **Homebrew** (macOS).
+Necesitas **Python 3.13+** y, para clases online, **cloudflared** (el túnel para que los alumnos entren desde casa). Funciona en macOS, Linux y Windows.
+
+Primero entra en la carpeta (en cualquier sistema):
 
 ```bash
 cd staff/<usuario>/asistenciapp
+```
+
+**macOS y Linux:**
+
+```bash
 python3 -m venv .venv                # crea el entorno virtual del proyecto
 source .venv/bin/activate            # lo activa (verás "(.venv)" en el prompt)
 pip install -r requirements.txt      # instala Flask y pytest
-brew install cloudflared             # el túnel para que los alumnos entren desde casa
+brew install cloudflared             # solo macOS
 ```
+
+En Linux, instala cloudflared con el paquete de tu distribución o desde [sus descargas](https://github.com/cloudflare/cloudflared/releases).
+
+**Windows (PowerShell):**
+
+```powershell
+py -m venv .venv                     # crea el entorno virtual del proyecto
+.venv\Scripts\Activate.ps1           # lo activa (verás "(.venv)" en el prompt)
+pip install -r requirements.txt      # instala Flask y pytest
+winget install --id Cloudflare.cloudflared
+```
+
+Si PowerShell no deja ejecutar `Activate.ps1`, lánzalo una vez: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
 
 ---
 
 ## 2. Activar el entorno
 
-En cada terminal nueva, primero activa el entorno:
+En cada terminal nueva, primero entra en la carpeta y activa el entorno:
 
 ```bash
 cd staff/<usuario>/asistenciapp
-source .venv/bin/activate
 ```
+
+| Sistema              | Comando                      |
+| -------------------- | ---------------------------- |
+| macOS y Linux        | `source .venv/bin/activate`  |
+| Windows (PowerShell) | `.venv\Scripts\Activate.ps1` |
 
 ---
 
@@ -75,7 +99,9 @@ Es un límite **disuasorio**, no una prueba de identidad: se salta con otro nave
 
 ### Intentos de registrarse
 
-Una misma dirección puede intentar registrarse **5 veces por segundo** y **20 por minuto**. Si se pasa, queda bloqueada para siempre. No hay forma de quitar esa dirección. El código de 4 cifras no cambia.
+Solo cuentan los **códigos fallados**: registrarse con el código correcto nunca cuenta, aunque se apunte la clase entera a la vez. Una misma dirección puede fallar el código **5 veces por segundo** y **20 por minuto**. Si se pasa, queda bloqueada **10 minutos** y luego puede volver a intentarlo. El código de 4 cifras no cambia.
+
+Con `--tunel`, cada alumno cuenta con su propia dirección (la que da Cloudflare): si uno se bloquea, los demás siguen pudiendo registrarse.
 
 Las **sesiones anteriores** aparecen en el panel con su número de asistentes, y puedes volver a verlas o descargarlas cuando quieras.
 
@@ -89,10 +115,20 @@ Pulsa **Ctrl+C** en la terminal donde está arrancada. Se paran la app y el tún
 
 Si ya no encuentras la terminal donde la arrancaste:
 
+**macOS y Linux:**
+
 ```bash
-lsof -nP -iTCP:8000 -sTCP:LISTEN     # muestra el proceso "Python" y su número (PID)
+lsof -nP -iTCP:8000 -sTCP:LISTEN     # muestra el proceso ("Python" en macOS) y su número (PID)
 kill <PID>                           # lo para
 pkill cloudflared                    # para el túnel, si lo usabas
+```
+
+**Windows (PowerShell):**
+
+```powershell
+Get-NetTCPConnection -LocalPort 8000 -State Listen   # la columna OwningProcess es el PID
+Stop-Process -Id <PID>                               # lo para
+Stop-Process -Name cloudflared                       # para el túnel, si lo usabas
 ```
 
 ---
@@ -101,19 +137,21 @@ pkill cloudflared                    # para el túnel, si lo usabas
 
 | Mensaje o síntoma                                                     | Qué hacer                                                                                                              |
 | --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `El puerto 8000 ya está en uso`                                       | Ya tienes la app abierta en otra terminal: ciérrala (sección 5). O usa otro puerto: `PORT=8001 python app.py --tunel`. |
-| `No se encontró cloudflared`                                          | Instálalo: `brew install cloudflared`.                                                                                 |
+| `El puerto 8000 ya está en uso`                                       | Ya tienes la app abierta en otra terminal: ciérrala (sección 5). O usa otro puerto: `PORT=8001 python app.py --tunel` (Windows: `$env:PORT=8001; python app.py --tunel`). |
+| `No se encontró cloudflared`                                          | Instálalo (sección 1). El aviso dice el comando de tu sistema.                                                         |
+| _"Esta dirección queda bloqueada 10 minutos…"_                        | Se falló el código demasiadas veces. Espera 10 minutos y escribe el código que se ve ahora en pantalla.                |
 | El enlace del túnel no carga                                          | Espera unos 20 segundos y recarga: los túneles nuevos tardan en estar accesibles.                                      |
 | Aviso amarillo en el panel: _"tus alumnos no podrán abrir el enlace"_ | Abriste el panel en `localhost`. Para la app y arráncala con `python app.py --tunel`.                                  |
 | _"Enlace del panel no válido"_                                        | Usa el enlace exacto de la terminal, incluido todo lo que va detrás de `#t=`.                                          |
-| `command not found: pytest` o `python` no encuentra Flask             | No has activado el entorno: `source .venv/bin/activate`.                                                               |
+| `command not found: pytest` o `python` no encuentra Flask             | No has activado el entorno (sección 2).                                                                                |
 
 ---
 
 ## 7. Tests
 
+Con el entorno activado (sección 2):
+
 ```bash
-source .venv/bin/activate
 pytest            # o "pytest -v" para ver cada test
 ```
 
@@ -124,8 +162,8 @@ Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una 
 ## 8. Privacidad
 
 - Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails.
-- La dirección desde la que intenta registrarse se recuerda **solo** para contar esos intentos y para la lista de bloqueo, en el mismo archivo local. No se guarda junto al nombre ni a la hora.
+- La dirección desde la que intenta registrarse se recuerda **solo** para contar los códigos fallados (un minuto) y para la lista de bloqueo (10 minutos), en el mismo archivo local. Pasado ese tiempo se borra. No se guarda junto al nombre ni a la hora.
 - El límite "un registro por navegador" se guarda **solo en el navegador del alumno**, no en el servidor.
 - Quitar un registro lo **borra de verdad** (no queda en ninguna papelera).
 - Los datos se guardan **solo en tu ordenador** (`data/`, que no se sube a git).
-- Con `--tunel`, el tráfico pasa **cifrado** por Cloudflare, que no lo almacena (constitución P4, v2.1).
+- Con `--tunel`, el tráfico pasa **cifrado** por Cloudflare, que no lo almacena (constitución P4).

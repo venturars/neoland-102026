@@ -22,7 +22,7 @@ Si algo de lo que te piden contradice la constitución, **para y avisa** antes d
 
 ## 2. Cinco momentos
 
-Quien trabaja en esta carpeta interviene solo en este orden. El agente se para al terminar cada momento y no empieza el siguiente.
+Quien trabaja en esta carpeta interviene solo en este orden. El agente se para al terminar cada momento y no empieza el siguiente. El orquestador de git (`agents/git-workflow-agent.md`) encadena los pasos **de un mismo momento** sin pedir un sí, pero tampoco pasa al siguiente.
 
 1. **Crear la issue.** Si la tarea aún no se puede dejar escrita, la entrevista va aquí, una pregunta cada vez. Luego se crea la issue, con qué hay que hacer y cómo probarlo. No se abre la rama. Ahí se para.
 2. **Crear el draft.** De un tirón: adelantar `staging`, rama desde `staging`, commit vacío `chore: open #N`, push, pull request en draft contra `staging`, autor, y `Closes #N`. No se escriben specs. Ahí se para.
@@ -63,7 +63,7 @@ Una issue, una rama o una pull request no autorizan el código. El código esper
 ### 2.4 Implementar
 
 - Haz **una tarea cada vez**. Al acabarla, márcala `[x]` en `tasks.md`.
-- Ningún fichero de la app se adelanta a las tres specs. Si la spec activa no cubre el pedido, ese pedido recorre los cinco momentos: primero la issue.
+- Ningún fichero de la app se adelanta a las tres specs. «Fichero de la app» es todo lo de esta carpeta, también `agents/`, `skills/`, `tools/`, `templates/` y `MCPS/` (constitución §4.1). Si la spec activa no cubre el pedido, ese pedido recorre los cinco momentos: primero la issue.
 - Si durante la implementación descubres que la spec o el plan están mal o incompletos, dilo y no inventes el cambio.
 
 ---
@@ -80,16 +80,18 @@ Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codi
 
 Ejecutar desde `staff/ventura-rodriguez/asistenciapp/`:
 
-| Acción                                      | Comando                                                                                 |
-| ------------------------------------------- | --------------------------------------------------------------------------------------- |
-| Preparar el entorno (solo la primera vez)   | `python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt` |
-| Activar el entorno (en cada terminal nueva) | `source .venv/bin/activate`                                                             |
-| Instalar el túnel (solo la primera vez)     | `brew install cloudflared`                                                              |
-| Arrancar para una clase online              | `python app.py --tunel` (imprime el enlace público del panel)                           |
-| Arrancar solo en local (desarrollo)         | `python app.py` (abre en `http://localhost:8000`)                                       |
-| Ejecutar los tests                          | `pytest`                                                                                |
+| Acción                                      | macOS y Linux                             | Windows (PowerShell)                         |
+| ------------------------------------------- | ----------------------------------------- | -------------------------------------------- |
+| Crear el entorno (solo la primera vez)      | `python3 -m venv .venv`                   | `py -m venv .venv`                           |
+| Activar el entorno (en cada terminal nueva) | `source .venv/bin/activate`               | `.venv\Scripts\Activate.ps1`                 |
+| Instalar las dependencias (primera vez)     | `pip install -r requirements.txt`         | `pip install -r requirements.txt`            |
+| Instalar el túnel (solo la primera vez)     | macOS: `brew install cloudflared`. Linux: [descargas de cloudflared](https://github.com/cloudflare/cloudflared/releases) | `winget install --id Cloudflare.cloudflared` |
+| Arrancar para una clase online              | `python app.py --tunel`                   | `python app.py --tunel`                      |
+| Arrancar solo en local (desarrollo)         | `python app.py` (`http://localhost:8000`) | `python app.py` (`http://localhost:8000`)    |
+| Arrancar en otro puerto                     | `PORT=8001 python app.py`                 | `$env:PORT=8001; python app.py`              |
+| Ejecutar los tests                          | `pytest`                                  | `pytest`                                     |
 
-Las únicas dependencias son Flask y pytest (constitución P3).
+Las únicas dependencias de Python son Flask y pytest. Las herramientas externas (`cloudflared`, `git`, `gh`, el MCP de GitHub) están en la constitución P3. Los scripts de `tools/` son de bash: en Windows, se lanzan desde Git Bash.
 
 ---
 
@@ -100,7 +102,7 @@ Las únicas dependencias son Flask y pytest (constitución P3).
 - **Explica lo que haces.** Al cerrar cada momento, resume qué se ha hecho y por qué.
 - **Cambios pequeños.** Mejor varias tareas cortas que una enorme.
 - **Commit y push** solo en el momento 2 (el commit vacío) y en el momento 5, cuando se piden. Fuera de eso no hay commits ni pushes.
-- **Para todo lo que arranques.** Si levantas el servidor o `cloudflared` para probar, páralos al terminar y comprueba que el puerto queda libre: `lsof -nP -iTCP:8000 -sTCP:LISTEN` no debe mostrar nada. Ojo: en macOS el proceso aparece como `Python` (con mayúscula). (Incidencia del 2026-10-20 en T12.)
+- **Para todo lo que arranques.** Si levantas el servidor o `cloudflared` para probar, páralos al terminar y comprueba que el puerto queda libre. En macOS y Linux, `lsof -nP -iTCP:8000 -sTCP:LISTEN` no debe mostrar nada (en macOS el proceso aparece como `Python`, con mayúscula). En Windows, `Get-NetTCPConnection -LocalPort 8000 -State Listen` no debe encontrar ninguna conexión. (Incidencia del 2026-10-20 en T12.)
 - **No toques la constitución** (`docs/CONSTITUTION.md`) salvo para proponer una enmienda, que solo aprueba la persona que trabaja en esta carpeta (constitución §8).
 
 ---
@@ -129,6 +131,7 @@ Una funcionalidad está terminada cuando:
 | `005-reorganizar-arquitectura`      | ✅ Implementada (2026-10-22): T01–T12, 87 tests                                | Documentos en `docs/` y código en reglas, acciones y borde      |
 | `006-limite-por-ip-publica`         | ✅ Implementada (2026-10-23): T01–T11, 102 tests                               | Límite de intentos de registro por IP y lista de bloqueo        |
 | `007-flujo-de-git`                  | ✅ Implementada (2026-10-30): T01–T06                                          | Flujo de git del curso y cinco momentos del humano. Issue #616  |
+| `008-bloqueo-justo-y-reglas-claras` | ✅ Implementada (2026-10-30): T01–T10, 114 tests                               | Solo cuentan los códigos fallados, el bloqueo caduca, IP real con túnel, constitución 4.0 y comandos por sistema. Issue #653 |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
 

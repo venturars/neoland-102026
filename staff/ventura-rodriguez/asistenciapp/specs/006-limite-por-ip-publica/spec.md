@@ -2,6 +2,8 @@
 
 > Estado: **Implementada** (2026-10-23) · Creada: 2026-10-23 · Aprobada: 2026-10-23
 
+> Nota (2026-10-30): la [spec 008](../008-bloqueo-justo-y-reglas-claras/spec.md) cambia esta: solo cuentan los códigos fallados, el bloqueo dura 10 minutos y, con el túnel, cuenta la IP de cada alumno.
+
 ---
 
 ## 1. Problema

@@ -10,10 +10,10 @@ Usage::
 
 from datetime import datetime, timezone
 
-from asistencia.domain.attempts import Banned, over_limit
+from asistencia.domain.attempts import BAN_SECONDS, Banned, over_limit
 from asistencia.domain.codes import code_for, seconds_left
 from asistencia.domain.names import clean_name, name_key
-from asistencia.domain.session import ensure_code, ensure_open, require_session
+from asistencia.domain.session import InvalidCode, ensure_code, ensure_open, require_session
 from asistencia.export import to_csv
 from asistencia.storage import sqlite as storage
 
@@ -53,26 +53,7 @@ def public_session(path, session_id: str) -> dict:
     return {"title": loaded["title"], "open": loaded["closed_at"] is None}
 
 
-def check_in(path, session_id: str, raw_name, code, now, ip: str) -> tuple[dict, bool]:
-    """Registra a un alumno si la IP no está bloqueada, la clase está abierta y el código vale.
-
-    :param path: ruta del archivo.
-    :param session_id: id de la clase.
-    :param raw_name: nombre tal como lo escribió el alumno.
-    :param code: código de 4 cifras.
-    :param now: función que devuelve el instante Unix actual.
-    :param ip: IP pública estática del intento.
-    :return: el registro y True si se acaba de crear.
-    :rtype: tuple[dict, bool]
-    :raises Banned: si la IP ya está bloqueada o este intento se pasa del máximo.
-
-    Usage::
-
-      row, created = check_in(path, session_id, raw_name, code, now, ip)
-    """
-    if storage.is_ip_blocked(path, ip):
-        raise Banned()
-    instant = now()
+def _count_failed_code(path, ip: str, instant: float) -> None:
     storage.add_registration_attempt(path, ip, instant)
     storage.prune_registration_attempts(path, instant - 60)
     in_last_second = storage.count_registration_attempts(path, ip, instant - 1)
@@ -80,10 +61,39 @@ def check_in(path, session_id: str, raw_name, code, now, ip: str) -> tuple[dict,
     if over_limit(in_last_second, in_last_minute):
         storage.block_ip(path, ip, _iso(lambda: instant))
         raise Banned()
+
+
+def check_in(path, session_id: str, raw_name, code, now, ip: str) -> tuple[dict, bool]:
+    """Registra a un alumno si la IP no está bloqueada, la clase está abierta y el código vale.
+
+    Solo cuentan para el máximo los códigos fallados. Un bloqueo dura ``BAN_SECONDS``.
+
+    :param path: ruta del archivo.
+    :param session_id: id de la clase.
+    :param raw_name: nombre tal como lo escribió el alumno.
+    :param code: código de 4 cifras.
+    :param now: función que devuelve el instante Unix actual.
+    :param ip: IP de quien intenta registrarse.
+    :return: el registro y True si se acaba de crear.
+    :rtype: tuple[dict, bool]
+    :raises Banned: si la IP está bloqueada o este código fallado se pasa del máximo.
+
+    Usage::
+
+      row, created = check_in(path, session_id, raw_name, code, now, ip)
+    """
+    instant = now()
+    storage.prune_blocked_ips(path, _iso(lambda: instant - BAN_SECONDS))
+    if storage.is_ip_blocked(path, ip):
+        raise Banned()
     loaded = require_session(storage.get_session(path, session_id))
     ensure_open(loaded)
     name = clean_name(raw_name)
-    ensure_code(loaded["secret"], "" if code is None else code, now())
+    try:
+        ensure_code(loaded["secret"], "" if code is None else code, instant)
+    except InvalidCode:
+        _count_failed_code(path, ip, instant)
+        raise
     return storage.add_checkin(path, session_id, name, name_key(name), _iso(now))
 
 

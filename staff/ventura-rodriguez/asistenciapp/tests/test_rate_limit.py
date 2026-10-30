@@ -1,11 +1,16 @@
-"""Límite de intentos de registrarse por IP. CA-01 a CA-07."""
+"""Límite de códigos fallados por IP. Spec 006 CA-01 a CA-07 y spec 008 CA-01 a CA-07."""
 
 import sqlite3
 
-from app import create_app
+from app import client_ip, create_app
+from asistencia.domain.attempts import BAN_SECONDS
+from asistencia.storage import sqlite as storage
 from tests.conftest import TOKEN
 
-BAN = "Esta dirección queda bloqueada por haber superado los intentos permitidos."
+BAN = (
+    "Esta dirección queda bloqueada 10 minutos por fallar el código demasiadas veces. "
+    "Espera y pide el código actual al profesor."
+)
 
 
 def open_session(client, teacher, title="Clase de prueba"):
@@ -143,3 +148,84 @@ def test_a_different_ip_in_the_body_or_headers_does_not_change_the_block(client,
     finally:
         conn.close()
     assert blocked == [real]
+
+
+def test_correct_codes_never_count(client, teacher, clock):  # 008 CA-01
+    sid = open_session(client, teacher)
+    ip = "203.0.113.60"
+    for i in range(25):
+        res = attempt(client, sid, f"Alumno {i}", current_code(client, teacher, sid), ip)
+        assert res.status_code == 201
+        clock.advance(0.1)
+    assert client.get(f"/api/sessions/{sid}", headers=teacher).get_json()["total"] == 25
+
+
+def test_a_correct_code_after_five_failures_is_saved(client, teacher):  # 008 CA-01
+    sid = open_session(client, teacher)
+    ip = "203.0.113.61"
+    for _ in range(5):
+        assert attempt(client, sid, "Ana", "abcd", ip).status_code == 422
+    res = attempt(client, sid, "Ana", current_code(client, teacher, sid), ip)
+    assert res.status_code == 201
+
+
+def test_the_block_expires_after_ten_minutes(client, teacher, clock):  # 008 CA-03
+    sid = open_session(client, teacher)
+    ip = "203.0.113.70"
+    for _ in range(6):
+        attempt(client, sid, "Ana", "abcd", ip)
+
+    clock.advance(BAN_SECONDS - 1)
+    res = attempt(client, sid, "Ana", current_code(client, teacher, sid), ip)
+    assert res.status_code == 429
+
+    clock.advance(2)
+    res = attempt(client, sid, "Ana", current_code(client, teacher, sid), ip)
+    assert res.status_code == 201
+
+
+def test_an_old_permanent_block_is_lifted(client, teacher, app):  # 008 CA-07
+    # Un bloqueo "para siempre" de la spec 006, de hace meses.
+    storage.block_ip(app.config["DB_PATH"], "127.0.0.1", "2026-10-23T09:00:00.000+00:00")
+    sid = open_session(client, teacher)
+    res = attempt(client, sid, "Ana", current_code(client, teacher, sid), "127.0.0.1")
+    assert res.status_code == 201
+    assert storage.is_ip_blocked(app.config["DB_PATH"], "127.0.0.1") is False
+
+
+def test_behind_the_tunnel_each_student_has_their_own_ip(tmp_path, clock, teacher):  # 008 CA-05
+    client = create_app(tmp_path / "tunel.db", token=TOKEN, now=clock, tunnel=True).test_client()
+    sid = open_session(client, teacher)
+    cheater = {"CF-Connecting-IP": "198.51.100.1"}
+    for _ in range(6):
+        res = attempt(client, sid, "Ana", "abcd", "127.0.0.1", headers=cheater)
+    assert res.status_code == 429
+
+    other = attempt(
+        client,
+        sid,
+        "Luis",
+        current_code(client, teacher, sid),
+        "127.0.0.1",
+        headers={"CF-Connecting-IP": "198.51.100.2"},
+    )
+    assert other.status_code == 201
+
+    again = attempt(client, sid, "Ana", current_code(client, teacher, sid), "127.0.0.1", headers=cheater)
+    assert again.status_code == 429
+
+
+def test_client_ip_ignores_the_header_without_tunnel():  # 008 CA-06
+    assert client_ip("127.0.0.1", "198.51.100.1", False) == "127.0.0.1"
+
+
+def test_client_ip_uses_the_header_behind_the_tunnel():  # 008 CA-05
+    assert client_ip("127.0.0.1", " 198.51.100.1 ", True) == "198.51.100.1"
+    assert client_ip("::1", "2001:db8::1", True) == "2001:db8::1"
+
+
+def test_client_ip_ignores_a_bad_header_or_a_remote_connection():  # 008 CA-06
+    assert client_ip("127.0.0.1", "no-es-una-ip", True) == "127.0.0.1"
+    assert client_ip("127.0.0.1", None, True) == "127.0.0.1"
+    assert client_ip("203.0.113.9", "198.51.100.1", True) == "203.0.113.9"
+    assert client_ip(None, None, True) == ""
