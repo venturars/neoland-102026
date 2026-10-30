@@ -50,6 +50,43 @@ first-app/
   eslint.config.js
   package.json
   pnpm-lock.yaml
+  agents/
+    git-workflow-agent.md
+    help-me-to-think.md
+    create-issue.md
+    create-branch.md
+    create-commit.md
+    create-pr.md
+    launch-push.md
+  skills/
+    assign-author/SKILL.md
+    assign-reviewers/SKILL.md
+    check-status/SKILL.md
+    commit-changes/SKILL.md
+    create-branch/SKILL.md
+    create-branch-from-staging/SKILL.md
+    create-draft/SKILL.md
+    create-empty-commit/SKILL.md
+    create-issue/SKILL.md
+    create-pr-base-staging/SKILL.md
+    grill-me/SKILL.md
+    grill-with-docs/SKILL.md
+    launch-push/SKILL.md
+    link-pr-to-issue/SKILL.md
+    pull-changes/SKILL.md
+  tools/
+    check-status.sh
+    commit-changes.sh
+    create-branch.sh
+    create-branch-from-staging.sh
+    create-empty-commit.sh
+    launch-push.sh
+    pull-changes.sh
+  templates/
+    issues/basic_issue.md
+    pull-request/basic-pull-request.md
+  MCPS/
+    github-mcp-server/mcp.txt
   docs/
     ARCHITECTURE.md
     TREE.md

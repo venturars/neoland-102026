@@ -1,5 +1,7 @@
 # Instrucciones del agente
 
+El flujo de trabajo de git de esta app es `agents/git-workflow-agent.md`, entero: pensar una tarea, dejarla escrita, empezar, guardar un trozo y pedir revisión. Ese flujo no quita las paradas de «Desarrollos».
+
 Trabajas en `staff/luis-duque/first-app`. Estas instrucciones son para ti. Léelas antes de cambiar código y síguelas. Escríbelas para que otro agente las entienda sin conocer el historial del chat. No escribas nombres de personas.
 
 El proyecto gestiona usuarios: crear, actualizar, eliminar, listar, buscar por `id`, por email o por nombre, y contar el género de los nombres ya guardados. No hagas otra operación salvo que te la pidan.
