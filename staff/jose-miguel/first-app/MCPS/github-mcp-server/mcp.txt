@@ -1,0 +1,21 @@
+https://github.com/github/github-mcp-server/blob/main/docs/remote-server.md
+
+Servidor remoto: https://api.githubcopilot.com/mcp/
+
+En Cursor, la entrada `github` de mcp.json lleva este header junto a Authorization:
+
+X-MCP-Features: mcp_apps_disable_form_deferral
+
+Sin ese header, crear o editar una issue o una pull request abre un formulario. El botón de enviar no aparece y la llamada se queda esperando. Con el header, la herramienta escribe directo.
+
+```json
+"github": {
+  "url": "https://api.githubcopilot.com/mcp/",
+  "headers": {
+    "Authorization": "Bearer TU_GITHUB_PAT",
+    "X-MCP-Features": "mcp_apps_disable_form_deferral"
+  }
+}
+```
+
+Si la entrada `github` ya existe y le falta el header, añádelo ahí. No borres el token.
