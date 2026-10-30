@@ -21,45 +21,46 @@ first-app/
   .gitignore
   .github/
     pull_request_template.md
-  db/
-    connection.js
-  queries/
-    users.js
+  src/
+    db/
+      connection.js
     queries/
-      create-users-table.sql
-      find-all.sql
-      find-by-email.sql
-      find-by-id.sql
-      insert.sql
-      remove.sql
-      update.sql
-  logic/
-    create-user.js
-    list-users.js
-    update-user.js
-    delete-user.js
-    find-user-by-email.js
-    find-user-by-id.js
-    users-gender-count.js
-  clients/
-    terminal/
-      create-users-table.txt
-      create-user.txt
-      list-users.txt
-      update-user.txt
-      delete-user.txt
-      find-user-by-email.txt
-      find-user-by-id.txt
-      users-gender-count.txt
-    jupyter/
-      create-users-table.ipynb
-      create-user.ipynb
-      list-users.ipynb
-      update-user.ipynb
-      delete-user.ipynb
-      find-user-by-email.ipynb
-      find-user-by-id.ipynb
-      users-gender-count.ipynb
+      users.js
+      queries/
+        create-users-table.sql
+        find-all.sql
+        find-by-email.sql
+        find-by-id.sql
+        insert.sql
+        remove.sql
+        update.sql
+    logic/
+      create-user.js
+      list-users.js
+      update-user.js
+      delete-user.js
+      find-user-by-email.js
+      find-user-by-id.js
+      users-gender-count.js
+    clients/
+      terminal/
+        create-users-table.txt
+        create-user.txt
+        list-users.txt
+        update-user.txt
+        delete-user.txt
+        find-user-by-email.txt
+        find-user-by-id.txt
+        users-gender-count.txt
+      jupyter/
+        create-users-table.ipynb
+        create-user.ipynb
+        list-users.ipynb
+        update-user.ipynb
+        delete-user.ipynb
+        find-user-by-email.ipynb
+        find-user-by-id.ipynb
+        users-gender-count.ipynb
   docs/
     CONSTITUTIONS.md
     GIT-WORKFLOW.md
@@ -79,14 +80,14 @@ first-app/
         tasks.md
 ```
 
-`db/users.sqlite` existe en disco y no se sube a git.
+`src/db/users.sqlite` existe en disco y no se sube a git.
 
-- `db/connection.js` abre la única conexión y la exporta como `db`. No se abre otra base ni otra conexión.
-- `queries/queries/*.sql` son solo sentencias. `queries/users.js` las lee y las ejecuta. Ahí no se decide si un email es válido.
-- `logic/` es la app. Cada acción es su propio fichero, con sus comprobaciones dentro. Un fichero ya creado no se reescribe para meter otra acción. Las reglas no se mueven a queries ni a clients.
-- `clients/terminal/*.txt` no son programas. Se pegan con el directorio actual en `first-app`. Solo ahí se imprime el resultado.
-- `clients/jupyter/*.ipynb` llaman a la misma acción que su `.txt`. Se abren con `npm run jupyter` desde `first-app`. No cambian `logic/`.
-- Una acción nueva es un fichero nuevo en `logic/` y un `.txt` nuevo en `clients/terminal/`.
+- `src/db/connection.js` abre la única conexión y la exporta como `db`. No se abre otra base ni otra conexión.
+- `src/queries/queries/*.sql` son solo sentencias. `src/queries/users.js` las lee y las ejecuta. Ahí no se decide si un email es válido.
+- `src/logic/` es la app. Cada acción es su propio fichero, con sus comprobaciones dentro. Un fichero ya creado no se reescribe para meter otra acción. Las reglas no se mueven a queries ni a clients.
+- `src/clients/terminal/*.txt` no son programas. Se pegan con el directorio actual en `first-app`. Solo ahí se imprime el resultado.
+- `src/clients/jupyter/*.ipynb` llaman a la misma acción que su `.txt`. Se abren con `npm run jupyter` desde `first-app`. No cambian `logic/`.
+- Una acción nueva es un fichero nuevo en `src/logic/` y un `.txt` nuevo en `src/clients/terminal/`.
 
 ## Specs
 
@@ -102,11 +103,15 @@ Una funcionalidad nueva es un fichero nuevo. Si la constitución, el código y l
 
 ## Paquetes
 
-Un paquete de Node nuevo, o un cambio de su versión, se comprueba con Socket antes de aprobar el plan.
+Un paquete de Node nuevo, o un cambio de su versión, se comprueba con Socket antes de aprobar el plan. Entran la versión exacta y las dependencias, hasta tres capas. El plan trae un resumen: si esa versión está en una campaña, si tiene una alerta y si alguna puntuación baja de 50. Cada dato dice de dónde sale. Si una fuente no puede contestar, el resumen dice el motivo.
+
+Las alertas las decide quien aprueba el plan. No se instala el paquete ni se cambia `package.json` ni el lock antes de que esa persona haya leído la spec y el plan.
+
+Queda fuera un paquete que no es de Node, un paquete cuya versión no cambia, y una dependencia más allá de la tercera capa.
 
 ## Base de datos
 
-Hay una sola base: `db/users.sqlite`. Hay una sola conexión: el `db` que exporta `db/connection.js`.
+Hay una sola base: `src/db/users.sqlite`. Hay una sola conexión: el `db` que exporta `src/db/connection.js`.
 
 Tabla `users`:
 

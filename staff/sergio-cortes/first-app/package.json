@@ -7,8 +7,8 @@
     "node": ">=22"
   },
   "scripts": {
-    "jupyter": "test -x .venv/bin/jupyter-notebook || (test -d .venv || python3 -m venv .venv && .venv/bin/pip install notebook==7.6.3) && .venv/bin/jupyter notebook clients/jupyter",
-    "format": "prettier --write \"db/**/*.js\" \"queries/**/*.js\" \"logic/**/*.js\"",
+    "jupyter": "sh scripts/jupyter.sh",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\"",
     "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

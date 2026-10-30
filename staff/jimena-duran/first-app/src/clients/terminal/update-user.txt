@@ -1,0 +1,9 @@
+# Pega esto en PowerShell desde la carpeta first-app.
+$script = @'
+import { updateUser } from "./src/logic/update-user.js";
+
+const result = updateUser(1, { name: "Ada Lovelace" });
+
+console.log(result);
+'@
+$script | node --input-type=module

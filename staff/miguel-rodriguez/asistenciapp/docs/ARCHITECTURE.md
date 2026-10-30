@@ -18,7 +18,9 @@ asistenciapp/
 ├── asistencia/
 │   ├── domain/            # reglas de negocio
 │   ├── usecases/          # coordinación de operaciones
-│   ├── storage/           # conexiones y operaciones SQLite
+│   ├── storage/           # conexiones y operaciones SQLite; roster.py para catálogo
+│   │   ├── queries/roster/ # seis consultas del catálogo
+│   │   └── data/initial-students.csv # grupo inicial de una sola carga
 │   ├── origin.py          # origen fiable de la conexión
 │   ├── race_http.py       # adaptador HTTP de carrera
 │   ├── qr.py              # generación local del QR
@@ -50,9 +52,9 @@ Las reglas vigentes están en [CONSTITUTION.md](CONSTITUTION.md); el proceso y l
 
 ## Correcciones pendientes del código
 
-Los límites anteriores son la referencia para los próximos cambios. El código actual todavía contiene datos concretos del alumnado en `domain/roster.py` y consultas SQL dentro de las funciones de almacenamiento.
+Los límites anteriores son la referencia para los próximos cambios. 012 retira los datos concretos del alumnado de `domain/roster.py`. El código actual todavía contiene consultas SQL antiguas dentro de las funciones de almacenamiento.
 
-Las siguientes refactorizaciones deberán mover los datos del alumnado al almacenamiento y guardar el texto de las consultas en archivos separados. Los casos de uso coordinan dominio y almacenamiento; no construyen respuestas del navegador. No se añaden proveedores intercambiables ni una capa genérica de consultas. La spec 010 documenta estos límites; no modifica todavía esas implementaciones.
+Las siguientes refactorizaciones deberán guardar el texto de las consultas antiguas en archivos separados. Las consultas nuevas del catálogo ya están separadas. Los casos de uso coordinan dominio y almacenamiento; no construyen respuestas del navegador. No se añaden proveedores intercambiables ni una capa genérica de consultas. La spec 010 documenta estos límites; no modifica todavía esas implementaciones.
 
 
 ## Protección 006
@@ -70,7 +72,7 @@ La frontera Cloudflare presupone el conector local controlado por quien ejecuta 
 
 [Issue #328](https://github.com/venturars/neoland-102026/issues/328). Implementación en copia local autorizada; publicación pendiente de sus predecesoras en staging. La presentación, el QR y los dibujos pertenecen a [007](https://github.com/venturars/neoland-102026/issues/325).
 
-- `domain/roster.py` contiene las quince correspondencias de nombre/personaje; `domain/race.py` contiene fases, máximos y resultados.
+- `domain/roster.py` valida y resuelve alumnos recibidos como datos explícitos; `domain/race.py` contiene fases, máximos y resultados. El catálogo actual procede del almacenamiento descrito en 012.
 - `storage/races.py` ejecuta SQL concreto sin commits internos. Sus conexiones activan claves externas y synchronous=FULL, con espera máxima de 500 ms. Las cuatro tablas nuevas son aditivas: races, race_slots, race_access y race_operations. No se modifica el esquema ni los datos previos de asistencia y 006.
 - `usecases/races.py` coordina cada transacción y lee el reloj después de adquirir el bloqueo de escritura. No depende de Flask. El permiso de plaza se guarda como hash; el secreto compartido de entrada solo permanece durante el lobby.
 - `asistencia/race_http.py` traduce las nueve rutas, autentica el acceso del alumno, comprueba origen/CSRF y limita el cuerpo a 2048 bytes. La autorización de profesor sigue en app.py. No ejecuta SQL. Todas las respuestas de carrera, incluidos errores y consultas antiguas identificadas como carrera, llevan Cache-Control: no-store.
@@ -155,3 +157,14 @@ La apertura de conexión y las consultas previas reconocen los códigos SQLite B
 `race-renderer.js` asocia resultados y nodos por clave de plaza del roster y anima desde el origen hacia la meta. Registrar solo actualiza el estado y puesto; CSS no desplaza el kart. Las medidas se recalculan tras resize manteniendo progreso y duraciones. La escena final usa el mismo roster, oculta los no registrados durante el recorrido y conserva la clasificación completa y las acciones del profesor. El podio se dibuja solo con las asistencias vigentes.
 
 El reloj final es local a la presentación, distinto del startsAt compartido del registro. No identifica personas ni concede permisos de comprobar códigos. Evidencia: [009](../specs/009-refinar-presentacion-de-carrera/evidence.md).
+
+
+## Catálogo de alumnos y personajes · 012
+
+`storage/roster.py` lee el catálogo `students`, su indicador `student_catalog_version` en `config`, los datos iniciales de `storage/data/initial-students.csv` y las referencias de SVG locales existentes. Las seis consultas están en `storage/queries/roster/`. El dominio valida registros y resuelve nombres con datos explícitos, sin archivos ni base de datos. `usecases/roster.py` coordina los estados sin confirmar transacciones.
+
+La primera creación de una carrera prepara los quince alumnos originales solo si tabla e indicador están ausentes. La tabla, alumnos, indicador y carrera se confirman en el mismo `BEGIN IMMEDIATE` de `races.prepare`, sin `executescript`. Un catálogo preparado se lee en su orden guardado; no se contrasta ni repone desde el CSV. Vacío produce `catalog_empty`; estado incoherente, datos inválidos o fallo de lectura producen `catalog_unavailable`. No se repara automáticamente. Una respuesta perdida después de confirmar no borra lo confirmado ni permite deducir que falta la preparación.
+
+Cada carrera guarda su propia correspondencia en `race_slots`: cambios del catálogo solo afectan a carreras nuevas. `join` y `release` resuelven contra esas plazas, sin depender del catálogo actual. No se cambian operaciones A/B, credenciales, intentos, vigencia, asistencias ni limpieza de temporales. El catálogo no se enlaza a direcciones de seguridad.
+
+El adaptador traduce los dos motivos a 409/503. El panel muestra el mensaje como texto al crear carreras; 401, fallos de red y clases normales conservan su tratamiento anterior. No hay edición de alumnos, administración multigrupo, API nueva ni dependencia nueva. La separación del SQL antiguo sigue pendiente.

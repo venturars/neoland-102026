@@ -1,0 +1,7 @@
+# Run from the project directory after the separate initialization snippet.
+node --input-type=module <<'NODE'
+import { createUser } from './src/logic/create-user.js';
+
+const user = createUser({ name: "Ada", email: "ada@example.com" });
+console.log(user);
+NODE

@@ -1,1 +1,0 @@
-node --input-type=module -e "import { findUserByEmail } from './logic/find-user-by-email.js'; console.log(findUserByEmail('grace@example.com'))"

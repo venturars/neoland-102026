@@ -27,9 +27,13 @@ El archivo sigue en `data/asistencia.db`. Las tablas siguen siendo `config`, `se
 
 Las reglas producen errores propios para sesión inexistente, cerrada o código inválido. La entrada HTTP los traduce a 404, 409 y 422. La validación de nombre conserva 400.
 
-## Documentos y escritura
+## Documentos de referencia
 
-La [constitución](CONSTITUTION.md) recoge las reglas; el [manual](../AGENTS.md) describe el trabajo diario y cómo documentar las funciones. Cada función pública modificada tiene tipos y explica parámetros, retorno y un ejemplo de uso.
+- La [constitución](CONSTITUTION.md) recoge las reglas del proyecto.
+- El [manual](../AGENTS.md) indica cómo trabaja el agente y cuándo pide aprobación.
+- El [árbol](TREE.md) muestra los archivos y las carpetas de esta copia.
+- El [estilo](STYLE.md) reúne las normas de escritura del código.
+- El [README](../README.md) explica cómo preparar, ejecutar, comprobar y cerrar la aplicación.
 
 ## Límites
 

@@ -42,7 +42,7 @@ asistenciapp/
 │   ├── usecases/          # acciones (`attendance.py`)
 │   ├── storage/           # almacén SQLite (`sqlite.py`)
 │   ├── infra/sqlite/      # schema.py y connection.py
-│   ├── export.py          # CSV
+│   ├── export.py          # informe .xlsx
 │   └── tunnel.py          # cloudflared
 ├── static/                # HTML, CSS y JS del navegador
 ├── tests/                 # tests (`test_*.py`)
@@ -76,7 +76,7 @@ Rutas relativas a `asistenciapp/` salvo donde se indique bajo `asistencia/`.
 | `storage/sqlite.py` | Almacén | Abre `data/asistencia.db`, guarda y lee |
 | `infra/sqlite/schema.py` | DDL | Tablas (compartido con el almacén) |
 | `infra/sqlite/connection.py` | Infra SQLite | `connect`, `init_schema(conn)` |
-| `export.py` | Utilidad | CSV de filas ya cargadas |
+| `export.py` | Utilidad | Informe `.xlsx` de filas ya cargadas |
 | `tunnel.py` | Adaptador | Túnel cloudflared (arrancado desde `app.py`) |
 | `app.py` | Borde HTTP | Factory Flask, rutas JSON, `ProxyFix`, `main()`, IP del check-in vía `request.remote_addr` |
 | `static/` | Borde | Pantallas alumno y profesor |

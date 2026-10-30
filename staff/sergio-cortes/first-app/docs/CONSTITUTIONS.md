@@ -1,6 +1,6 @@
 # Constitución
 
-first-app es una app para aprender los conceptos básicos de login. Se construye con IA siguiendo el sistema SDD. Un desarrollo nuevo no empieza en el código: pasa por `spec.md`, `plan.md` y `tasks.md`, y un humano lee cada uno antes de seguir.
+first-app es una app para aprender los conceptos básicos de login. Se construye con IA siguiendo el sistema SDD. Un desarrollo nuevo no empieza en el código: antes está la issue, escrita por su subagente; después pasa por `spec.md`, `plan.md` y `tasks.md`, y un humano lee cada uno antes de seguir. La spec abre con `Issue: #N`.
 
 ## Guías
 
@@ -25,17 +25,31 @@ Una funcionalidad vive en `docs/specs/<nombre>/`. El nombre va en kebab-case. Ah
 - el SQL nuevo, con los parámetros con nombre (`:id`, `:name`, `:email`)
 - qué mensaje de «Errores» corresponde a cada fallo de la spec
 
-Una funcionalidad nueva es un fichero nuevo en `logic/`. Si la constitución, el código actual y la spec no dicen lo mismo, la pregunta se escribe al final del `plan.md` y ahí se para. No hay `tasks.md` ni código hasta tener la respuesta.
+Una funcionalidad nueva es un fichero nuevo en `src/logic/`. Si la constitución, el código actual y la spec no dicen lo mismo, la pregunta se escribe al final del `plan.md` y ahí se para. No hay `tasks.md` ni código hasta tener la respuesta.
 
-`tasks.md` son los pasos, en el orden en que los haría una persona. Cada paso abre un sitio, hace una cosa y deja un resultado que se puede mirar. Un paso son como mucho cuatro líneas. Si el desarrollo no es una funcionalidad nueva, el grano es el mismo: mirar lo que ya existe, cambiar un sitio, comprobar. Si el desarrollo añade o cambia paquetes de Node, el primer paso de `tasks.md` dice que solo se ejecuta tras aprobación del `spec.md` y del `plan.md` (y de las alertas Socket, si las hubo).
+`tasks.md` son los pasos, en el orden en que los haría una persona. Cada paso abre un sitio, hace una cosa y deja un resultado que se puede mirar. Un paso son como mucho cuatro líneas. Si el desarrollo no es una funcionalidad nueva, el grano es el mismo: mirar lo que ya existe, cambiar un sitio, comprobar. Si el desarrollo añade o cambia paquetes de Node, el primer paso de `tasks.md` dice que solo se ejecuta tras la aprobación de «Paquetes».
 
 ## Paquetes
 
-Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket. Nadie instala ni cambia versiones en `package.json` por un desarrollo hasta que un humano haya leído y aprobado el `spec.md` y el `plan.md` de ese desarrollo. Si el plan propone paquetes, el `plan.md` incluye la validación Socket descrita en `AGENTS.MD` antes de pedir esa aprobación.
+Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket antes de aceptar el plan.
+
+Entra ese paquete en la versión exacta que propone el plan, y sus dependencias hasta 3 capas, cada una con versión concreta.
+
+El plan incluye, antes de pedir aprobación, un resumen por cada paquete revisado: si esa versión está en una campaña, si tiene alerta, las puntuaciones license, maintenance, quality, supplyChain y vulnerability, y si alguna baja de 50.
+
+Las alertas las decide la persona. El agente no las acepta por su cuenta.
+
+Si el resumen no está, o la consulta no se pudo completar, el plan no está listo: la pregunta queda al final del plan y no hay `tasks.md`.
+
+Nadie instala ni cambia `package.json` ni el lock de ese desarrollo hasta que la persona haya aprobado el `spec.md` y el `plan.md`, y haya aceptado las alertas abiertas si las hubo.
+
+Queda fuera un paquete que no es de Node, un paquete cuya versión no cambia, mirar más de 3 capas y que el agente decida las alertas.
+
+El procedimiento para consultar Socket está en `AGENTS.md`.
 
 ## Logic no se reemplaza
 
-Los ficheros de `logic/` no son un adaptador ni una capa intercambiable. No se sustituyen por otra implementación, no se convierten en plugins y no se mueven sus reglas a `queries/` ni a `clients/`.
+Los ficheros de `src/logic/` no son un adaptador ni una capa intercambiable. No se sustituyen por otra implementación, no se convierten en plugins y no se mueven sus reglas a `src/queries/` ni a `src/clients/`.
 
 ## Un fichero logic
 
@@ -47,7 +61,7 @@ Esos nombres son solo ejemplos; no hay que ampliar la lista en cada funcionalida
 
 Si la función usa varios datos, como `name`, `email` e `id`, recibe un solo `input` y lee ahí cada valor. Si el dato es uno solo, como `id`, `email` o `name`, el argumento es ese valor. No se mete en un objeto.
 
-Ningún fichero de `logic/` abre la base. Llaman a `queries/user.js`. Donde hay una fila, devuelven `id`, `name`, `email`, `createdAt` y `updatedAt`.
+Ningún fichero de `src/logic/` abre la base. Llaman a `src/queries/user.js`. Donde hay una fila, devuelven `id`, `name`, `email`, `createdAt` y `updatedAt`.
 
 El cuerpo sigue este orden, y no se mezcla:
 

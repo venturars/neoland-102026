@@ -13,7 +13,6 @@ from werkzeug.serving import make_server, WSGIRequestHandler
 
 from app import create_app
 from asistencia.domain.codes import is_valid_code
-from asistencia.domain.roster import ROSTER
 from asistencia.usecases import races
 
 
@@ -76,7 +75,8 @@ def test_real_http_shared_wifi_attack_and_complete_race(tmp_path, clock, monkeyp
             _, state, _ = call(port, "GET", teacher_path, headers=teacher)
             entry = state["joinUrl"].split("#join=")[1]
             clients = []
-            for ref in ROSTER:
+            assert len(state["roster"]) == 15
+            for ref in state["roster"]:
                 status, own, headers = call(port, "POST", f"/api/races/{sid}/join", {"join_secret": entry, "roster_key": ref["key"]}, {"X-Race-Request": "1"})
                 assert status == 200 and headers["Cache-Control"] == "no-store"
                 parsed = SimpleCookie(headers["Set-Cookie"])

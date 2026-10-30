@@ -1,0 +1,9 @@
+# Pega esto en PowerShell desde la carpeta first-app.
+$script = @'
+import { listUsers } from "./src/logic/list-users.js";
+
+const result = listUsers();
+
+console.log(result);
+'@
+$script | node --input-type=module

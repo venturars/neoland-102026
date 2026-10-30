@@ -14,7 +14,7 @@ from asistencia.domain.attempts import ATTEMPT_RETENTION_SECONDS, Banned, over_l
 from asistencia.domain.codes import code_for, is_valid_code, seconds_left
 from asistencia.domain.names import clean_name, name_key
 from asistencia.domain.session import InvalidCode, ensure_open, require_session
-from asistencia.export import to_csv
+from asistencia.export import report_heading, safe_filename, to_xlsx
 from asistencia.storage import sqlite as storage
 
 
@@ -195,21 +195,24 @@ def remove_checkin(path, session_id: str, checkin_id: int) -> bool:
     return storage.remove_checkin(path, session_id, checkin_id)
 
 
-def export_csv(path, session_id: str) -> tuple[str, str]:
-    """Prepara el CSV de una clase.
+def export_report(path, session_id: str) -> tuple[bytes, str]:
+    """Prepara el informe xlsx de una clase.
 
     :param path: ruta del archivo.
     :param session_id: id de la clase.
-    :return: el texto CSV y el día de apertura, ``AAAA-MM-DD``.
-    :rtype: tuple[str, str]
+    :return: bytes del libro y nombre de archivo con extensión ``.xlsx``.
+    :rtype: tuple[bytes, str]
 
     Usage::
 
-      text, day = export_csv(path, session_id)
+      content, filename = export_report(path, session_id)
     """
     loaded = require_session(storage.get_session(path, session_id))
-    text = to_csv(storage.list_checkins(path, session_id))
-    return text, loaded["opened_at"][:10]
+    opened_date = loaded["opened_at"][:10]
+    heading = report_heading(loaded["title"], opened_date)
+    filename = safe_filename(heading)
+    content = to_xlsx(heading, storage.list_checkins(path, session_id))
+    return content, filename
 
 
 def list_blocked(path) -> list[dict]:

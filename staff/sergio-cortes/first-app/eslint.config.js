@@ -2,7 +2,7 @@ import js from "@eslint/js";
 
 export default [
   {
-    ignores: [".venv/**", "node_modules/**", "clients/jupyter/**"],
+    ignores: [".venv/**", "node_modules/**", "src/clients/jupyter/**"],
   },
   js.configs.recommended,
   {

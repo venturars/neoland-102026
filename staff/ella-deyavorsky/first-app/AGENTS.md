@@ -2,15 +2,31 @@
 
 This file tells a coding assistant how to work in this app.
 
+Git work follows `agents/git-workflow-agent.md` in this folder. The stops are the ones in "Order". That flow does not remove them.
+
 ## Project
 
 This is the first app of the AI engineering course for junior students. It is a good app to build with spec-driven development (SDD): write the rules first, then write the code that follows them.
 
 The app is JavaScript, run by Node.js. `package.json` sets `"type": "module"`, so files use ESM: `import` and `export`. There is no web framework and no TypeScript.
 
-The database is SQLite through Node's built-in `node:sqlite`. `db/connection.js` opens `db/users.sqlite` with `DatabaseSync`. No database package is installed.
+The database is SQLite through Node's built-in `node:sqlite`. `src/db/connection.js` opens `src/db/users.sqlite` with `DatabaseSync`. No database package is installed.
 
 Read this file together with `docs/CONSTITUTIONS.md`. The constitution explains the order of a `logic/` function and the specs. The other topics have one file each: `docs/ARCHITECTURE.md`, `docs/TREE.md`, `docs/DATABASE.md`, `docs/ERRORS.md`, and `docs/STYLE.md`.
+
+## Order
+
+The orchestrator comes first. It picks one moment and calls that subagent as a separate agent. The parent does not interview, does not create the issue and does not run the git or the MCP of that moment.
+
+No `docs/specs/<name>/` folder is created before the issue number exists. `<name>` is kebab-case.
+
+With the issue written, the next process writes `spec.md` and `plan.md`. The spec opens with `Issue: #N`. It touches no other file. It stops there. A person reviews the spec and the plan.
+
+If the constitution, the current code and the spec do not say the same thing, the question goes at the end of the plan and there is no `tasks.md`.
+
+If they say the same thing and the person has reviewed, the next process writes `tasks.md`. It stops there. Nothing is implemented.
+
+Implementation starts when that person asks. It runs `tasks.md` and does not invent steps.
 
 ## Rules
 
@@ -19,9 +35,9 @@ Read this file together with `docs/CONSTITUTIONS.md`. The constitution explains 
 - Before writing, look at the code to see which file a new function looks like. The form of each line comes from `docs/STYLE.md`, not from the code that already exists. That code is not rewritten by a task that does not ask for it. A later task can align it. Meanwhile, a new spec does not stop because of that difference.
 - Do not offer code that has not been run.
 - If two sources disagree — the constitution, a spec, or this guide — do not choose. The difference between `docs/STYLE.md` and the current code is not one of these cases. Ask which path to follow before writing code.
-- A request for a new behavior is a new feature. The first work is a folder in `docs/specs/`, with a kebab-case name.
+- A request for a new behavior is a new feature. It starts with the orchestrator and follows "Order". Its folder in `docs/specs/` has a kebab-case name and comes after the issue.
 - Write `spec.md`, then `plan.md`, then `tasks.md`, in that order. Do not write the next file if the previous one does not exist.
-- Do not create or change code until those three files exist. Code includes `logic/`, `queries/`, `db/`, `clients/`, and `package.json`.
+- Do not create or change code until those three files exist. Code includes everything in `src/` (`logic/`, `queries/`, `db/`, `clients/`) and `package.json`.
 - Follow `tasks.md` from the first step. Do not skip a step and do not start the next feature.
 - If a task adds or removes a file, its spec also updates `docs/TREE.md` and `docs/ARCHITECTURE.md`.
 - A tool change, such as switching the package manager to pnpm, counts as a feature and goes through the same folder.
@@ -31,6 +47,7 @@ The active spec is the approved description of the feature you are building now.
 ## Commands
 
 - Install dependencies with `pnpm install`.
+- `pnpm format` runs Prettier on the `.js` files of `src/db/`, `src/queries/` and `src/logic/`. The format is the standard one, with no config of its own. `pnpm lint` runs ESLint.
 - There are no execution commands yet. Do not add a `pnpm start` script or another way to run the whole app unless the spec asks for it.
 - There are no tests yet. `pnpm test` only prints that no test is specified, then stops.
 
@@ -51,9 +68,10 @@ Before finishing a change in `logic/`, check it against the inputs in `docs/CONS
 
 ## When a task is done
 
-1. A new feature gets a new file in `clients/terminal/`, named like its logic file (`find-user-by-email.txt` for `logic/find-user-by-email.js`). It is pasted in the terminal with `first-app` as the current folder. It imports the function from `logic/` and prints the result with `console.log`.
-2. Check the change by pasting the matching file in `clients/terminal/`. There is still no `pnpm start`.
-3. Show the result.
-4. Stop.
+1. A new feature gets a new file in `src/clients/terminal/`, named like its logic file (`find-user-by-email.txt` for `src/logic/find-user-by-email.js`). It is pasted in the terminal with `first-app` as the current folder. It imports the function from `logic/` and prints the result with `console.log`.
+2. Check the change by pasting the matching file in `src/clients/terminal/`. There is still no `pnpm start`.
+3. Run `pnpm format` and `pnpm lint` before showing the result.
+4. Show the result.
+5. Stop.
 
 Do not start the next feature. A task is not done if the code has not been run.

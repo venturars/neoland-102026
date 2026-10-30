@@ -1,9 +1,0 @@
-# Run from the project directory after separate initialization and creation.
-# Replace the sample ID (1) with an existing disposable user's ID.
-# Deletion is permanent. Successful deletion prints undefined.
-node --input-type=module <<'NODE'
-import { deleteUser } from './logic/delete-user.js';
-
-const result = deleteUser(1);
-console.log(result);
-NODE

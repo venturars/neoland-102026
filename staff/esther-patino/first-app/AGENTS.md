@@ -1,10 +1,12 @@
 # AGENTS.md — first-app
 
+El trabajo de git sigue `agents/git-workflow-agent.md` de esta carpeta.
+
 ## Proyecto
 
 first-app es la primera app del curso de IA Engineer creada por una alumna junior. Creada a través de interacción con IA. No es una web. Se usa desde la terminal.
 
-Está en Node, con módulos ES (`"type": "module"`) y SQLite (`node:sqlite`, fichero `db/users.sqlite`). Los campos del usuario están en `docs/CONSTITUTIONS.md`. Ese documento manda sobre el comportamiento de la app. La arquitectura está en `docs/ARCHITECTURE.md`. Los mensajes de error están en `docs/errors.md`. Los nombres de las funciones están en `docs/style.md`.
+Está en Node, con módulos ES (`"type": "module"`) y SQLite (`node:sqlite`, fichero `src/db/users.sqlite`). Los campos del usuario están en `docs/CONSTITUTIONS.md`. Ese documento manda sobre el comportamiento de la app. La arquitectura está en `docs/ARCHITECTURE.md`. Los mensajes de error están en `docs/errors.md`. Los nombres de las funciones están en `docs/style.md`.
 
 ## Orden
 
@@ -32,15 +34,19 @@ Una persona lee lo escrito. El proceso de implementación empieza cuando esa per
 
 ## Validación de paquetes
 
-Cada vez que un plan añade un paquete de Node o cambia su versión, el chequeo es automático. Se hace con el MCP `socket-mcp` de `MCP.md`, antes de aceptar el plan.
+Cada vez que un plan añade un paquete de Node o cambia su versión, el chequeo es automático. Se hace con el MCP `socket-mcp` de `MCPS/socket-mcp/mcp.txt`, antes de aceptar el plan.
 
-Se mira el paquete y la versión: si una campaña lo afecta, si una alerta lo afecta, o si alguna de sus stats está por debajo de 50 puntos.
+Se mira el paquete y la versión. También se miran las dependencias de ese paquete, hasta 3 capas. El resumen entra en el plan antes de aceptarlo. Separa tres datos. Cada dato dice de dónde sale.
+
+Las stats salen de `depscore`, con la versión exacta. Una stat por debajo de 50 puntos se escribe. 50 no baja.
+
+La alerta sale de `alerts`, con el `org_slug` que devuelve `organizations`. Una lista vacía es la lista de la organización. No dice que esa versión no tenga alerta.
+
+La campaña sale de `threat_feed`, con ese mismo `org_slug`.
+
+Si una de esas herramientas no contesta, el resumen dice el motivo. No escribe que no consta sin haberla consultado.
 
 Las alertas se comentan en el plan. La persona decide si las acepta.
-
-Se miran las dependencias de ese paquete hasta 3 capas. Cada capa sigue los mismos criterios.
-
-El resumen de ese chequeo entra en el plan antes de aceptarlo.
 
 Queda fuera comprobar paquetes que no son de Node, comprobar un paquete cuya versión no cambia, mirar más de 3 capas y decidir las alertas por la persona.
 
@@ -54,7 +60,7 @@ El estilo está en `docs/style.md`.
 
 ## Al terminar una tarea
 
-- Al crear una funcionalidad se crea su primer cliente en `clients/terminal/`, un `.txt` que se pega en la terminal desde la raíz del repositorio. Ese cliente entra en `first-app`, importa la función de `logic/` y hace `console.log` del resultado. Es el test manual.
-- Comprueba que el desarrollo nuevo funciona antes de dar la tarea por terminada. La comprobación es ejecutar ese fragmento de `clients/terminal/`.
+- Al crear una funcionalidad se crea su primer cliente en `src/clients/terminal/`, un `.txt` que se pega en la terminal desde la raíz del repositorio. Ese cliente entra en `first-app`, importa la función de `src/logic/` y hace `console.log` del resultado. Es el test manual.
+- Comprueba que el desarrollo nuevo funciona antes de dar la tarea por terminada. La comprobación es ejecutar ese fragmento de `src/clients/terminal/`.
 - Antes de dar la tarea por terminada se lanza `format`. Aplica Prettier con el formato estándar.
 - Antes de dar la tarea por terminada se lanza `lint`. ESLint avisa de la sintaxis y de las reglas de código.
