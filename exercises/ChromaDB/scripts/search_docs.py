@@ -4,7 +4,9 @@ from embed_texts import embed_texts
 from settings import COLLECTION, DB_DIR
 
 
-def search_docs(query: str, n: int, area: str | None, module: str | None, kind: str | None) -> list[dict]:
+def search_docs(
+    query: str, n: int, area: str | None, module: str | None, kind: str | None
+) -> list[dict]:
     if query.strip() == "":
         raise RuntimeError("The question is empty")
     if n < 1:
@@ -38,10 +40,12 @@ def search_docs(query: str, n: int, area: str | None, module: str | None, kind: 
 
     results = []
     for position in range(len(response["ids"][0])):
-        results.append({
-            "id": response["ids"][0][position],
-            "text": response["documents"][0][position],
-            "metadata": response["metadatas"][0][position],
-            "distance": response["distances"][0][position],
-        })
+        results.append(
+            {
+                "id": response["ids"][0][position],
+                "text": response["documents"][0][position],
+                "metadata": response["metadatas"][0][position],
+                "distance": response["distances"][0][position],
+            }
+        )
     return results

@@ -31,7 +31,9 @@ def convert_page(html_dir: Path, page: str) -> str:
 
     # El módulo sale del id que Sphinx pone a su sección: module-pathlib
     module = ""
-    module_section = body.find(id=lambda value: value is not None and value.startswith("module-"))
+    module_section = body.find(
+        id=lambda value: value is not None and value.startswith("module-")
+    )
     if module_section is not None:
         module = module_section.get("id").removeprefix("module-")
 
@@ -39,7 +41,13 @@ def convert_page(html_dir: Path, page: str) -> str:
     if "pending-removal-in-" in name:
         removal_version = name.split("pending-removal-in-")[1]
 
-    front_matter = ["---", f"page: {page}", f"title: {title}", f"area: {area}", f"kind: {kind}"]
+    front_matter = [
+        "---",
+        f"page: {page}",
+        f"title: {title}",
+        f"area: {area}",
+        f"kind: {kind}",
+    ]
     if module != "":
         front_matter.append(f"module: {module}")
     if removal_version != "":

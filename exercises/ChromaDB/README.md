@@ -4,7 +4,21 @@ RAG basado en [ChromaDB](https://www.trychroma.com/) con la documentación ofici
 
 Todo corre en tu equipo: ChromaDB guarda el índice en `chroma_db/` y [Ollama](https://ollama.com/) convierte los textos en vectores con el modelo `qwen3-embedding:0.6b`.
 
-Los comandos de más abajo se ejecutan desde `exercises/ChromaDB`. Crear y activar el entorno virtual cambia entre macOS y Windows. Con el entorno activo, los comandos que siguen son los mismos en los dos sistemas. El prompt muestra `(.venv)` al principio de la línea.
+Los comandos de más abajo se ejecutan desde `exercises/ChromaDB`. Crear y activar el entorno virtual cambia entre macOS y Windows. Con el entorno activo, los comandos que siguen son los mismos en los dos sistemas. El prompt muestra `(.venv)` al principio de la línea. La lista completa está en `docs/COMMANDS.md`.
+
+## Documentación
+
+Esta página es la guía de instalación. La referencia está en `docs/`:
+
+- `docs/CONSTITUTION.md` — lo que no se negocia
+- `docs/STYLE.md` — estilo, Black y Ruff
+- `docs/TREE.md` — carpetas
+- `docs/ARCHITECTURE.md` — el RAG y las capas del CRUD
+- `docs/DATABASE.md` — Chroma y SQLite
+- `docs/SECURITY.md` — qué no sale del equipo
+- `docs/JUPYTER.md` — notebooks
+- `docs/DEPENDENCIES.md` — dependencias
+- `docs/COMMANDS.md` — comandos
 
 ## Cómo funciona
 
@@ -188,7 +202,7 @@ Las comillas dobles de estos ejemplos valen igual en Terminal y en PowerShell.
 
 `skills/python-docs/SKILL.md` es la skill `python-docs`. Le dice al agente cuándo consultar, qué comando usar y cómo citar la fuente. El fichero empieza por el frontmatter: el `name` es `python-docs`.
 
-`agents/developer.md` le dice al agente que siga esa skill. Hace falta el índice construido y, para las búsquedas por significado, Ollama en marcha.
+`agents/code-developer.md` le dice al agente que siga esa skill. Hace falta el índice construido y, para las búsquedas por significado, Ollama en marcha.
 
 Para usarla fuera de este proyecto, copia la carpeta `skills/python-docs/` a `.cursor/skills/python-docs/`. El nombre de la carpeta tiene que coincidir con el `name` del frontmatter.
 
@@ -222,7 +236,7 @@ Para el servidor antes de lanzar un script que escriba en `chroma_db/`, por ejem
 
 ## CRUD de usuarios con Jupyter
 
-`src/` tiene un CRUD de usuarios (nombre, email, edad y género) sobre SQLite. Es aparte del RAG: no usa ChromaDB ni Ollama. Las capas se explican en `docs/CONSTITUTION.md`.
+`src/` tiene un CRUD de usuarios (nombre, email, edad y género) sobre SQLite. Es aparte del RAG: no usa ChromaDB ni Ollama. Las capas se explican en `docs/ARCHITECTURE.md`.
 
 Desde `exercises/ChromaDB`, con el entorno virtual activo:
 

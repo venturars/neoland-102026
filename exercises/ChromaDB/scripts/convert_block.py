@@ -5,10 +5,29 @@ from bs4 import Comment, NavigableString, Tag
 from convert_inline import convert_inline
 
 HEADINGS = ["h1", "h2", "h3", "h4", "h5", "h6"]
-BLOCKS = ["p", "div", "pre", "ul", "ol", "dl", "table", "section", "blockquote", "aside", "figure", "img"] + HEADINGS
-# Primera clase de un <dl> de Sphinx que documenta una función, clase, opción...
+BLOCKS = [
+    "p",
+    "div",
+    "pre",
+    "ul",
+    "ol",
+    "dl",
+    "table",
+    "section",
+    "blockquote",
+    "aside",
+    "figure",
+    "img",
+] + HEADINGS
+# Primera clase de un <dl> de Sphinx: función, clase u opción.
 DEFINITION_DOMAINS = ["py", "c", "cpp", "js", "std"]
-CODE_LANGUAGES = {"python3": "python", "py": "python", "default": "", "none": "", "text": ""}
+CODE_LANGUAGES = {
+    "python3": "python",
+    "py": "python",
+    "default": "",
+    "none": "",
+    "text": "",
+}
 
 
 def convert_block(element: Tag | NavigableString, level: int) -> str:
@@ -30,7 +49,12 @@ def convert_block(element: Tag | NavigableString, level: int) -> str:
             return "\n\n".join(part for part in parts if part != "")
         heading_level = int(heading.name[1])
         title = convert_inline(heading).strip()
-        parts = [f"<!-- anchor: {element.get('id', '')} | type: section -->\n{'#' * heading_level} {title}"]
+        parts = [
+            (
+                f"<!-- anchor: {element.get('id', '')} | type: section -->\n"
+                f"{'#' * heading_level} {title}"
+            )
+        ]
         for child in element.children:
             if child is heading:
                 continue
@@ -46,7 +70,11 @@ def convert_block(element: Tag | NavigableString, level: int) -> str:
             return f"**{text}**"
         return text
 
-    if name == "div" and len(classes) > 0 and classes[0].startswith("highlight-"):
+    if (
+        name == "div"
+        and len(classes) > 0
+        and classes[0].startswith("highlight-")
+    ):
         language = classes[0].removeprefix("highlight-")
         language = CODE_LANGUAGES.get(language, language)
         code = element.find("pre").get_text().rstrip("\n")
@@ -86,11 +114,19 @@ def convert_block(element: Tag | NavigableString, level: int) -> str:
         signatures = []
         anchor = ""
         for term in element.find_all("dt", recursive=False):
-            signature = re.sub(r"\s+", " ", term.get_text()).replace("¶", "").strip()
+            signature = (
+                re.sub(r"\s+", " ", term.get_text()).replace("¶", "").strip()
+            )
             signatures.append(signature)
             if anchor == "" and term.get("id"):
                 anchor = term.get("id")
-        parts = [f"<!-- anchor: {anchor} | type: {classes[0]} {classes[1]} -->\n{'#' * definition_level} `{signatures[0]}`"]
+        parts = [
+            (
+                "<!-- anchor: "
+                f"{anchor} | type: {classes[0]} {classes[1]} -->\n"
+                f"{'#' * definition_level} `{signatures[0]}`"
+            )
+        ]
         for signature in signatures[1:]:
             parts.append(f"`{signature}`")
         description = element.find("dd", recursive=False)
@@ -104,7 +140,13 @@ def convert_block(element: Tag | NavigableString, level: int) -> str:
         for child in element.find_all(["dt", "dd"], recursive=False):
             if child.name == "dt":
                 term = convert_inline(child).strip()
-                parts.append(f"<!-- anchor: {child.get('id', '')} | type: std term -->\n{'#' * term_level} {term}")
+                parts.append(
+                    (
+                        "<!-- anchor: "
+                        f"{child.get('id', '')} | type: std term -->\n"
+                        f"{'#' * term_level} {term}"
+                    )
+                )
             else:
                 parts.append(convert_block(child, term_level))
         return "\n\n".join(part for part in parts if part != "")
@@ -124,13 +166,17 @@ def convert_block(element: Tag | NavigableString, level: int) -> str:
             cells = []
             for cell in row.find_all(["th", "td"], recursive=False):
                 cell_text = " ".join(convert_block(cell, level).split())
-                # Una definición dentro de una celda se queda solo con su nombre, sin título
-                cell_text = re.sub(r"<!-- anchor: .*? -->\s*#+ ", "", cell_text)
+                # En una celda, la definición se queda con el nombre.
+                cell_text = re.sub(
+                    r"<!-- anchor: .*? -->\s*#+ ", "", cell_text
+                )
                 cells.append(cell_text.replace("|", "\\|"))
             rows.append(cells)
         if len(rows) == 0:
             return ""
-        has_spans = element.find(attrs={"rowspan": True}) or element.find(attrs={"colspan": True})
+        has_spans = element.find(attrs={"rowspan": True}) or element.find(
+            attrs={"colspan": True}
+        )
         same_width = all(len(row) == len(rows[0]) for row in rows)
         caption = element.find("caption")
         lines = []
@@ -138,7 +184,7 @@ def convert_block(element: Tag | NavigableString, level: int) -> str:
             lines.append(f"**{convert_inline(caption).strip()}**")
             lines.append("")
         if has_spans or not same_width:
-            # Una tabla con celdas combinadas no cabe en Markdown: una línea por fila
+            # Una tabla con celdas combinadas no cabe en Markdown.
             for row in rows:
                 lines.append("- " + " | ".join(row))
             return "\n".join(lines)
@@ -151,7 +197,9 @@ def convert_block(element: Tag | NavigableString, level: int) -> str:
     if name == "div" and "admonition" in classes:
         parts = []
         for child in element.children:
-            if isinstance(child, Tag) and "admonition-title" in (child.get("class") or []):
+            if isinstance(child, Tag) and "admonition-title" in (
+                child.get("class") or []
+            ):
                 parts.append(f"**{convert_inline(child).strip()}:**")
                 continue
             parts.append(convert_block(child, level))
@@ -160,11 +208,13 @@ def convert_block(element: Tag | NavigableString, level: int) -> str:
     if element.find(BLOCKS) is None:
         return convert_inline(element).strip()
 
-    # Contenedor (div, li, dd, td...): el texto seguido entre bloques forma un párrafo
+    # Contenedor (div, li, dd, td): el texto seguido forma un párrafo.
     parts = []
     inline_text = ""
     for child in element.children:
-        is_block = isinstance(child, Tag) and (child.name in BLOCKS or child.find(BLOCKS) is not None)
+        is_block = isinstance(child, Tag) and (
+            child.name in BLOCKS or child.find(BLOCKS) is not None
+        )
         if not is_block:
             inline_text = inline_text + convert_inline(child)
             continue
