@@ -55,4 +55,4 @@ Todas las rutas son relativas a staff/jimena-duran/first-app. Cada tarea debe re
 
 ## Parada de revisión
 
-La revisión y autorización de estas tareas ya se realizaron. La restricción a jimena-duran-291020262 solo afecta a esta entrega; no se convierte en una restricción permanente de la automatización. Los resultados de publicación, escritura por gh y vínculo Development, junto al fallo de escritura MCP que sigue sin validar, se detallan en verification.md.
+La revisión y autorización de estas tareas ya se realizaron. La restricción a jimena-duran-291020262 solo afecta a esta entrega; no se convierte en una restricción permanente de la automatización. Los resultados de publicación, escritura por gh, vínculo Development y escritura posterior confirmada mediante el MCP de GitHub configurado en Codex se detallan en verification.md. El fallo MCP anterior se conserva como evidencia histórica.

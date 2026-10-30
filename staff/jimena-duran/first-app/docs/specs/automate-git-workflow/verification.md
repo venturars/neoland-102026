@@ -150,7 +150,7 @@ El intento anterior de actualizar la descripción mediante MCP falló con `403: 
 
 El checkout principal de #601 conserva su rama, el commit local y ChromaDB sin seguimiento. No se modifican sus archivos ni datos. La configuración personal del MCP permanece fuera del alcance del commit. En ese momento estaban pendientes la publicación de los doce archivos revisados, la aplicación de `pr-600-draft.md` y la comprobación de Development. Esas operaciones se completaron después, como registra el estado final siguiente.
 
-## Estado final comprobado tras la publicación
+## Historial: estado comprobado tras la publicación
 
 - Publicados en `jimena-duran-291020262`: `fa1ab9de747dafb99e429a40edbc3c9c1f4cefe1` (doce archivos documentales) y `babacfc1bc650b29b022c62cd3fb143e0d43e0d9` (separación del encabezado). HEAD local y remoto coincidieron en `babacfc1`; el checkout quedó limpio.
 - `gh pr edit` aplicó el cuerpo exacto de `pr-600-draft.md` publicado en `babacfc1` a [#600](https://github.com/venturars/neoland-102026/pull/600); la relectura confirmó el texto y una única línea `Closes #588`. Esta es escritura mediante gh, la alternativa permitida y autorizada, no mediante MCP.
@@ -159,3 +159,12 @@ El checkout principal de #601 conserva su rama, el commit local y ChromaDB sin s
 - El MCP de GitHub falló con `403: Resource not accessible by integration`; su escritura sigue sin validar. El HTTP 200 histórico solo acredita inicialización. La escritura por gh no demuestra que el MCP pueda escribir.
 
 La relectura autenticada anterior al commit de esta corrección documental como `jiji-mena` confirma head `babacfc1`, PR OPEN en draft contra staging, `reviewRequests: []`, `closingIssuesReferences` con #588 e issue OPEN con `closedByPullRequestsReferences` con #600. El checkout de #601 conserva `b62abae3` y ChromaDB sin seguimiento. Esta corrección afecta solo a plan, tareas, verificación y borrador; sus enlaces locales y `git diff --check` pasan, sin repetir suites de código ni anticipar el hash del siguiente commit documental.
+
+## Verificación actual: MCP de GitHub tras corregir la URL
+
+El 30 de octubre de 2026 se comprobó de nuevo #600 antes de editar: los ajustes de autorización, publicación y `Closes #588` ya estaban resueltos en `2cb2920ce2872cf7a7a4ae34ae0443479bb01932`. Solo quedaba actualizar la evidencia de conexión y escritura del MCP en este informe, tareas y borrador de la descripción.
+
+- Se leyó la ruta real `E:/Users/987866/.codex/config.toml`, accesible desde esta sesión de Windows. `[mcp_servers.github]` conserva la URL `https://api.githubcopilot.com/mcp/`, la referencia `GITHUB_PAT_TOKEN` y el header `X-MCP-Features`; no está deshabilitado. No se imprimieron secretos ni se modificó la configuración.
+- `mcp__github__get_me` confirmó la identidad `jiji-mena`. `mcp__github__update_pull_request` actualizó únicamente el cuerpo de #600 para corregir la evidencia obsoleta del MCP. La relectura con `mcp__github__pull_request_read` confirmó el cuerpo exacto, la PR abierta en draft, base `staging` y head `2cb2920c`. Esta operación real autorizada acredita escritura mediante el MCP configurado en Codex, sin usar GitHub de Apps ni crear recursos de prueba.
+- El 403 anterior, el HTTP 200 de inicialización y la publicación mediante gh de las secciones históricas siguen siendo evidencia de sus respectivos momentos; ya no describen una escritura MCP pendiente. El borrador local recoge el cuerpo remoto verificado.
+- Se conserva una única línea `Closes #588`. No se cambiaron revisores, base ni draft y no se hizo merge. El trabajo documental permanece en el checkout de #600, sin modificar #601, ChromaDB, agentes, skills, scripts ni configuración personal. No se repitieron las suites históricas de código por estos cambios documentales.
