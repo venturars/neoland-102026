@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 2.2 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-23
+> Versión 3.1 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-23
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -31,8 +31,9 @@ El registro de asistencia no depende de una plataforma concreta. Las integracion
 - Las **herramientas de desarrollo** (tests, formato, estilo, tipos; p. ej. pytest, ruff, mypy) no cuentan como dependencias de la app ni necesitan esa justificación, siempre que el código de la aplicación no las importe ni las necesite para arrancar. Se listan en `requirements.txt`.
 
 ### P4 · Privacidad mínima
-- Del alumno solo se guarda el **nombre que él mismo escribe** y la **hora del registro**.
-- **Prohibido** guardar emails, IPs, identificadores de dispositivo o cualquier dato no imprescindible.
+- Del alumno solo se guarda su **nombre (y apellidos)** y la **hora del registro**.
+- El nombre viene de lo que **escribe el propio alumno** (modo *código*) **o** de su **nombre en la plataforma de videollamada** (modo *automático*). Quien arranca la app elige un único modo para cada clase.
+- **Prohibido** guardar emails, aunque la plataforma los facilite. Tampoco se guardan IPs, identificadores de dispositivo ni ningún otro dato que no sea el nombre.
 - Los datos se **almacenan** solo en local (SQLite). Ningún servicio de terceros los guarda.
 - Para que los alumnos lleguen a la app desde sus casas, el tráfico puede **pasar cifrado (HTTPS)** por un proveedor de túnel (p. ej. Cloudflare). Ese proveedor no los almacena, pero técnicamente podría verlos en tránsito; por eso solo se envía lo imprescindible (nombre y código).
 
@@ -105,4 +106,5 @@ Cambiar el stack requiere enmendar esta constitución.
 | 1.1 | 2026-10-19 | §6: los códigos no deben poder adivinarse *a mano*; la protección contra scripts deja de ser obligatoria | En una clase el riesgo real es un alumno ausente, no un ataque automatizado. Evita añadir límites de intentos que no aportan al MVP (P2) |
 | 2.0 | 2026-10-20 | §3: stack Node.js → Python (Flask + pytest). P3 pasa de "cero dependencias" a "dependencias mínimas" y permite Flask y pytest | Requisito nuevo: el proyecto debe hacerse en Python. Se elige Flask por ser simple y muy extendido, y pytest por su sintaxis sencilla |
 | 2.1 | 2026-10-20 | P4: distingue *almacenar* (solo en local) de *transitar* (puede pasar cifrado por un proveedor de túnel) | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08) |
-| 2.2 | 2026-10-23 | P3: las herramientas de desarrollo (tests, formato, estilo, tipos) no cuentan como dependencias y se listan en `requirements.txt` | Poder usar herramientas como ruff o mypy para aplicar las reglas de `ARCHITECTURE.md` sin justificarlas una a una; no forman parte de la app. Una sola lista de dependencias mantiene la instalación en un único comando |
+| 3.0 | 2026-10-21 | P4: solo se guarda nombre (y apellidos) y hora; el nombre puede venir de la plataforma de videollamada (modo automático, elegido por clase); prohibido guardar emails | Spec 004: asistencia automática desde Meet sin intervención del alumno. Es versión mayor (§8) porque cambia un principio: el nombre ya no lo escribe siempre el alumno (numerada 2.2 en su día; renumerada el 2026-10-23) |
+| 3.1 | 2026-10-23 | P3: las herramientas de desarrollo (tests, formato, estilo, tipos) no cuentan como dependencias y se listan en `requirements.txt` | Poder usar herramientas como ruff o mypy para aplicar las reglas de `ARCHITECTURE.md` sin justificarlas una a una; no forman parte de la app. Una sola lista de dependencias mantiene la instalación en un único comando |

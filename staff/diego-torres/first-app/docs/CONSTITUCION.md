@@ -6,24 +6,24 @@ Si una tarea y esta constitución chocan, gana la constitución.
 
 | Carpeta o fichero | Qué sabe |
 | --- | --- |
-| `logic/shared.js` | Qué es un nombre y un email válidos |
-| `logic/create-user.js` y el resto, un fichero por operación | Crear, actualizar, eliminar y las tres lecturas |
-| `logic/index.js` | Reexporta la lógica. No exporta SQLite |
-| `queries/queries/*.sql` | Las frases SQL, una por fichero. `create-users-table.sql` es la tabla `users` |
-| `queries/users.js` | El almacén de verdad |
-| `db/connection.js` | La única conexión, a `db/users.sqlite` |
-| `clients/terminal/*.txt` | Un cliente por operación. Se pega en la terminal, le pasa el almacén y hace `console.log` |
-| `logic/users-gender-count.js` | Cuenta usuarios por género del nombre. No guarda nada |
-| `clients/jupyter/*.ipynb` | Cliente que abre Jupyter y llama a las operaciones |
+| `src/logic/shared.js` | Qué es un nombre y un email válidos |
+| `src/logic/create-user.js` y el resto, un fichero por operación | Crear, actualizar, eliminar y las tres lecturas |
+| `src/logic/index.js` | Reexporta la lógica. No exporta SQLite |
+| `src/queries/queries/*.sql` | Las frases SQL, una por fichero. `create-users-table.sql` es la tabla `users` |
+| `src/queries/users.js` | El almacén de verdad |
+| `src/db/connection.js` | La única conexión, a `src/db/users.sqlite` |
+| `src/clients/terminal/*.txt` | Un cliente por operación. Se pega en la terminal, le pasa el almacén y hace `console.log` |
+| `src/logic/users-gender-count.js` | Cuenta usuarios por género del nombre. No guarda nada |
+| `src/clients/jupyter/*.ipynb` | Cliente que abre Jupyter y llama a las operaciones |
 
 
 ## Base de datos
 
-`db/` solo tiene dos cosas: `connection.js` y `users.sqlite`. No hay esquema, SQL ni almacén en esa carpeta.
+`src/db/` solo tiene dos cosas: `connection.js` y `users.sqlite`. No hay esquema, SQL ni almacén en esa carpeta.
 
-`db/connection.js` abre `db/users.sqlite` con `node:sqlite` y exporta `db`. Es la única conexión al fichero. No se abre otra base ni otra conexión para ese fichero.
+`src/db/connection.js` abre `src/db/users.sqlite` con `node:sqlite` y exporta `db`. Es la única conexión al fichero. No se abre otra base ni otra conexión para ese fichero.
 
-`queries/users.js` recibe esa conexión ya abierta. Ejecuta `queries/queries/create-users-table.sql` y prepara el resto de `.sql`.
+`src/queries/users.js` recibe esa conexión ya abierta. Ejecuta `src/queries/queries/create-users-table.sql` y prepara el resto de `.sql`.
 
 Tabla `users`:
 
@@ -36,7 +36,7 @@ Tabla `users`:
 
 Un usuario guardado es `{ id, nombre, email }`.
 
-- `id` es texto (`"1"`, `"2"`). SQLite guarda el entero y `queries/users.js` lo devuelve como texto.
+- `id` es texto (`"1"`, `"2"`). SQLite guarda el entero y `src/queries/users.js` lo devuelve como texto.
 - `nombre` es la columna `name`.
 - `email` es la columna `email`.
 - `createdAt` y `updatedAt` no forman parte del usuario.
@@ -58,11 +58,11 @@ Cualquier almacén ofrece estas funciones `async` y ninguna regla:
 - `findAll()` devuelve un array de copias.
 - `remove(id)` indica si existía.
 
-`queries/users.js` es el almacén de verdad. Un almacén nuevo es un fichero nuevo. No se reescribe SQLite para simular memoria.
+`src/queries/users.js` es el almacén de verdad. Un almacén nuevo es un fichero nuevo. No se reescribe SQLite para simular memoria.
 
 ## Operaciones
 
-Cada operación es un fichero de `logic/`. Estas funciones reciben el almacén como primer argumento:
+Cada operación es un fichero de `src/logic/`. Estas funciones reciben el almacén como primer argumento:
 
 - `createUser(store, data)`
 - `updateUser(store, id, changes)`
@@ -72,7 +72,7 @@ Cada operación es un fichero de `logic/`. Estas funciones reciben el almacén c
 - `findUserByEmail(store, email)`
 - `findUserByName(store, name)`
 
-`usersGenderCount(store)` vive en `logic/users-gender-count.js`. No es una de las operaciones de usuarios. Devuelve `{ women, men, genderUndefined }`. Si no hay usuarios, los tres números son 0 y no llama a la IA.
+`usersGenderCount(store)` vive en `src/logic/users-gender-count.js`. No es una de las operaciones de usuarios. Devuelve `{ women, men, genderUndefined }`. Si no hay usuarios, los tres números son 0 y no llama a la IA.
 
 El orden interno es siempre el mismo: primero lo que se decide con los datos en la mano, después lo que mira el almacén, después guardar o borrar, al final la copia de salida.
 
@@ -86,9 +86,9 @@ Un fallo es `throw new Error`. No hay clases propias. No se añaden mensajes.
 - `Email <email> is already registered`
 - `There is no user with id <id>`
 
-Los tres primeros los lanza `logic/shared.js`. Los dos últimos los lanzan las operaciones.
+Los tres primeros los lanza `src/logic/shared.js`. Los dos últimos los lanzan las operaciones.
 
-`No se han podido clasificar los usuarios` lo lanza `logic/users-gender-count.js` si el almacén no se puede leer o la llamada a la IA falla. No es uno de los mensajes de arriba.
+`No se han podido clasificar los usuarios` lo lanza `src/logic/users-gender-count.js` si el almacén no se puede leer o la llamada a la IA falla. No es uno de los mensajes de arriba.
 
 ## Qué no entra
 
