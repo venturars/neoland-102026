@@ -1,1 +1,0 @@
-node --input-type=module -e "import { updateUser } from './staff/luis-duque/first-app/logic/update-user.js'; const changes = {}; for (const field of process.argv.slice(2)) { const separator = field.indexOf('='); changes[field.slice(0, separator)] = field.slice(separator + 1); } console.log(await updateUser(process.argv[1], changes))" 1 "name=Ada Lovelace" "email=ada@example.com"
