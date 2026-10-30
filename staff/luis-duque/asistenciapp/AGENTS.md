@@ -23,16 +23,17 @@ Cada funcionalidad recorre estas fases **en orden**. Al terminar cada una, el ag
 
 | Fase | Archivo | Pregunta que responde | Puerta de salida |
 | --- | --- | --- | --- |
-| 1. Especificar | `spec.md` | ¿**Qué** hay que construir y **por qué**? | Sin `[NECESITA ACLARACIÓN]` pendientes + aprobación de Victor |
+| 1. Especificar | `spec.md` | ¿**Qué** hay que construir y **por qué**? | Dudas resueltas en el chat y aprobación de Victor |
 | 2. Planificar | `plan.md` | ¿**Cómo** lo construimos? | Pasa la comprobación de la constitución + aprobación de Victor |
 | 3. Desglosar | `tasks.md` | ¿En qué **pasos pequeños** lo hacemos? | Cada tarea apunta a un criterio de aceptación + aprobación de Victor |
 | 4. Implementar | código + tests | Hacerlo, tarea a tarea | `pytest` en verde + criterios verificados |
 
 ### 2.1 Especificar (`spec.md`)
-- Habla del usuario y del problema. **Nunca** nombra tecnologías (nada de "SQLite", "endpoint", "fetch").
-- Estructura: Problema · Usuarios · Historias de usuario · Criterios de aceptación (Dado / Cuando / Entonces) · Fuera de alcance · Preguntas abiertas.
+- Habla del usuario y del problema. Nunca nombra tecnologías (nada de "SQLite", "endpoint", "fetch").
+- Estructura: Problema, historias de usuario, criterios de aceptación y fuera de alcance. Texto plano, sin repetir lo ya dicho y sin historial de cambios.
+- Fuera de alcance no anuncia la tarea siguiente.
 - Cada criterio de aceptación lleva un identificador (`CA-01`, `CA-02`…) para poder enlazarlo desde tareas y tests.
-- Si falta información, escribe `[NECESITA ACLARACIÓN: pregunta concreta]`. **No inventes la respuesta.**
+- Si falta información, pregunta en el chat y espera la respuesta. No la escribas en la spec. No inventes la respuesta.
 
 ### 2.2 Planificar (`plan.md`)
 - Arquitectura, modelo de datos, rutas/API, archivos que se crearán.
@@ -130,5 +131,6 @@ Una funcionalidad está terminada cuando:
 | --- | --- | --- |
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
 | `002-discord-bot` | Idea futura | Fuera del MVP |
+| `006-comprobar-nombres` | Implementada. 91 tests en verde | Issue #569. Falta probarla en la app con Ollama. |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
