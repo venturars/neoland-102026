@@ -1,6 +1,6 @@
 # CONSTITUTIONS.md — mi-primer-proyecto
 
-Base de la app. login con IA para alumnos junior de AI Engineering, en español, con el código en inglés. Node y una sola base SQLite. Sigue SDD.
+Base de la app. login con IA para alumnos junior de AI Engineering, en español, con el código en inglés. Node y una sola base SQLite. Sigue SDD. Un desarrollo nuevo no empieza en el código: pasa por `spec.md`, `plan.md` y `tasks.md`, y un humano lee cada uno antes de seguir. Antes está la issue, escrita por su subagente. La spec abre con `Issue: #N`.
 
 ## Guías
 
@@ -15,6 +15,23 @@ Base de la app. login con IA para alumnos junior de AI Engineering, en español,
 Los paquetes son `openai`, `cli-table3` `0.6.5` y `@colors/colors` `1.6.1`. Se instalan con pnpm. No se usa npm.
 
 Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket.
+
+La referencia del MCP está en `MCPS/socket-mcp/mcp.txt`. La organización
+es `ai-engineering`.
+
+Las stats salen de `depscore`, con la versión exacta. Una stat por debajo
+de 50 puntos se escribe. 50 no baja.
+
+La alerta sale de `alerts`, con `org_slug` `ai-engineering`. Una lista
+vacía es la lista de la organización. No dice que esa versión no tenga
+alerta.
+
+La campaña sale de `threat_feed`. Si responde 403
+`threat_feed_not_entitled`, el resumen dice que la cuenta no tiene threat
+feed. No escribe «no consta».
+
+Si una herramienta no contesta, el resumen dice el motivo. No deja el
+dato en blanco.
 
 ## SDD
 

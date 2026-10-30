@@ -1,6 +1,5 @@
 # Árbol
 
-
 first-app/
   AGENTS.md
   package.json
@@ -10,6 +9,11 @@ first-app/
   db/
     connection.js
     users.sqlite
+  agents/
+  skills/
+  tools/
+  templates/
+  MCPS/
   docs/
     CONSTITUTIONS.md
     specs/

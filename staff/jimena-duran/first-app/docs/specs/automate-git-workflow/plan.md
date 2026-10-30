@@ -2,7 +2,7 @@ Issue: #588
 
 # Plan de adaptación a Windows y Codex
 
-Estado: spec, plan y tareas T01–T23 aprobados por Jimena. Implementación y comprobaciones realizadas; resultados y límites en [verification.md](verification.md). Sin commit, push ni PR en el repositorio personal.
+Estado: spec, plan y tareas T01–T23 aprobados por Jimena. Implementación y comprobaciones realizadas; resultados y límites en [verification.md](verification.md). La PR #600 está publicada; los commits y el estado remoto comprobados se registran en verification.md. Jimena autorizó commit selectivo, push y actualización de esa PR existente, manteniendo draft y base staging, sin merge ni cambios de revisores.
 
 ## Organización y funcionamiento
 
@@ -45,7 +45,7 @@ Usar --no-overwrite-ignore en cambios de rama y merges de avance rápido para pr
 
 Para guardar archivos concretos o hacer un commit vacío, usar un índice temporal desde PowerShell, preservando el índice ajeno y restaurando GIT_INDEX_FILE incluso ante errores. Validar rutas y rechazar directorios, comodines que amplíen el alcance y opciones de incorporación masiva. Bloquear commits y publicaciones en main/staging y comprobar que la rama coincide con la autorizada para la tarea en curso, recibida como parámetro o contexto explícito.
 
-Durante esta entrega no ejecutar los pasos de commit vacío, commit, push ni PR. El flujo habitual puede describirlos, pero la autorización de esta sesión prevalece. La rama jimena-duran-291020262 es una excepción expresamente solicitada al patrón habitual número-tipo-descripción; no renombrarla.
+En la preparación inicial no estaban autorizados commit vacío, commit, push ni PR. Posteriormente Jimena autorizó la publicación y actualización de #600, y la corrección documental actual mediante commit selectivo y push. No crear recursos de prueba ni interpretar estas autorizaciones como permiso de merge o cambio de revisores. La rama jimena-duran-291020262 es una excepción expresamente solicitada al patrón habitual número-tipo-descripción; no renombrarla.
 
 La restricción a jimena-duran-291020262 corresponde únicamente a esta entrega. No fijar ese nombre permanentemente en los scripts, agentes o skills reutilizables. La automatización debe permitir crear y usar otras ramas en futuras tareas, tomando la rama autorizada de los datos de cada tarea. Verificar ese comportamiento con nombres distintos en las pruebas aisladas.
 
@@ -53,7 +53,7 @@ La restricción a jimena-duran-291020262 corresponde únicamente a esta entrega.
 
 Descubrir herramientas realmente disponibles y comprobar identidad y acceso antes de escribir. Preferir el MCP de GitHub si sus capacidades e identidad coinciden con la cuenta de Jimena. Conservar gh como alternativa documentada para este entorno cuando el MCP no sea suficiente o no corresponda a su cuenta; informar del motivo. No asumir que un enlace mcp.txt conecta el servicio ni sobrescribir conexiones existentes.
 
-Buscar issues/PR existentes para evitar duplicados. create-pr es el único rol que abre la PR; el orquestador relaciona la issue sin duplicar el texto. Base staging, estado draft y asignación al usuario comprobado. Conservar el resto del cuerpo y usar Related to #N. Comprobar por separado cualquier enlace Development soportado; no afirmar que existe solo porque se añadió una línea ni prometer cierre automático. No copiar llamadas GraphQL sin verificar su soporte cuando llegue ese paso.
+Buscar issues/PR existentes para evitar duplicados. create-pr es el único rol que abre la PR; retira el marcador `Closes #N` de la plantilla para que el orquestador escriba después una única referencia con el número real. Base staging, estado draft y asignación al usuario comprobado. Conservar el resto del cuerpo, sustituir la referencia anterior de la misma issue y usar `Closes #N`. Conservar y comprobar Development por separado; no afirmar que existe solo porque se añadió una línea. GitHub interpreta la palabra de cierre de una PR únicamente cuando apunta a la rama predeterminada: si esta es main, integrar en staging no cierra la issue. Al promover a la predeterminada, verificar que la PR o commit correspondiente conserve la referencia de cierre. No cerrar issues manualmente ni copiar llamadas GraphQL sin verificar su soporte.
 
 ## Capacidades y límites de Codex
 
@@ -79,4 +79,4 @@ Un AGENTS.md no puede fijar la temperatura del modelo ni conceder permisos del s
 
 Jimena aprobó spec y plan con la aclaración de que la rama indicada corresponde solo a esta entrega y autorizó continuar con las tareas. El AGENTS.md local ya incluye el orden acordado. La adaptación de MCP/gh y la lectura explícita de skills conservan el funcionamiento en Codex. No se añadieron dependencias, por lo que no se activó la revisión de paquetes con Socket. Las reglas existentes de paquetes permanecen.
 
-Tras revisar tasks.md, Jimena autorizó T01–T23, implementación y verificaciones aisladas. También autorizó instalar herramientas faltantes tras buscar las existentes; no fue necesario instalar ni descargar nada. La implementación no amplía la autorización a commit, push ni PR en el repositorio personal.
+Tras revisar tasks.md, Jimena autorizó T01–T23, implementación y verificaciones aisladas. También autorizó instalar herramientas faltantes tras buscar las existentes; no fue necesario instalar ni descargar nada. Esa aprobación inicial de implementación no autorizaba por sí sola commit, push ni PR; las publicaciones posteriores y la corrección documental actual cuentan con autorización expresa separada.

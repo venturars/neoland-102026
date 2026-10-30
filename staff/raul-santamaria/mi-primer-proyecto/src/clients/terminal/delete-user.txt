@@ -1,0 +1,8 @@
+# Pega esto en la terminal, con el directorio actual en mi-primer-proyecto
+node --input-type=module <<'EOF'
+import { deleteUser } from "./src/logic/delete-user.js";
+
+deleteUser({ id: 1 });
+
+console.log("User deleted");
+EOF

@@ -1,0 +1,2 @@
+# Se pega con el directorio actual en first-app.
+node --input-type=module -e "import { findUserByName } from './src/logic/find-user-by-name.js'; console.log(findUserByName('Ada'));"

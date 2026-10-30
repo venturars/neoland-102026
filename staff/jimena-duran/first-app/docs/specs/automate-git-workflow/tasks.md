@@ -2,7 +2,7 @@ Issue: #588
 
 # Tareas de automatización de Git
 
-Spec, plan y T01–T23 aprobados por Jimena, incluidas implementación y verificaciones aisladas. Resultados y límites en [verification.md](verification.md). No se autorizó commit, push ni PR en el repositorio personal.
+Spec, plan y T01–T23 aprobados por Jimena, incluidas implementación y verificaciones aisladas. Resultados y límites en [verification.md](verification.md). La aprobación inicial no autorizaba publicación; Jimena autorizó después commit selectivo, push y actualización de #600, además de esta corrección documental. Se mantienen draft, base staging y las restricciones sobre merge y revisores.
 
 Todas las rutas son relativas a staff/jimena-duran/first-app. Cada tarea debe registrar su resultado y cualquier comprobación pendiente.
 
@@ -33,7 +33,7 @@ Todas las rutas son relativas a staff/jimena-duran/first-app. Cada tarea debe re
 - [x] T13. Crear tools/launch-push.ps1 con validación de rama autorizada y prohibición de force push.
   Resultado: publicación explícita de la rama correcta, con fallos visibles. Criterios: 3, 6 y 7.
 - [x] T14. Crear templates/issues/basic_issue.md y templates/pull-request/basic-pull-request.md.
-  Resultado: cuerpos en español con secciones coherentes y relación Related to #N sin prometer cierre automático. Criterios: 2 y 4.
+  Resultado: cuerpos en español con secciones coherentes y referencia `Closes #N` y comprobación separada de Development; el cierre depende de que la PR apunte a la rama predeterminada. Criterios: 2 y 4.
 - [x] T15. Crear MCPS/github-mcp-server/mcp.txt y docs/GIT-AUTOMATION.md.
   Resultado: referencias y uso en Windows/VS Code/Codex, capacidades reales, autenticación y alternativa gh documentados sin secretos. Criterios: 5, 6 y 8.
 - [x] T16. Integrar orquestación y orden de revisión en el AGENTS.md existente sin duplicar instrucciones.
@@ -51,8 +51,8 @@ Todas las rutas son relativas a staff/jimena-duran/first-app. Cada tarea debe re
 - [x] T22. Localizar pnpm y ejecutar pnpm format y pnpm lint; informar antes de resolver una herramienta ausente.
   Resultado: salidas registradas y cambios de formato revisados; el marcador pnpm test no cuenta como prueba. Criterios: 6 y 8.
 - [x] T23. Revisar diff, sintaxis documental y ausencia de nombres de rama fijados en componentes reutilizables.
-  Resultado: solo cambios aprobados, sin referencias de procedencia, src, Socket nuevo, secretos, commit, push ni PR. Criterios: 7 y 8.
+  Resultado histórico inicial: solo cambios aprobados, sin referencias de procedencia, src, Socket nuevo ni secretos; en esa fase aún no se habían realizado commit, push ni PR. La publicación posterior autorizada está registrada en verification.md. Criterios: 7 y 8.
 
 ## Parada de revisión
 
-La revisión y autorización de estas tareas ya se realizaron. La restricción a jimena-duran-291020262 solo afecta a esta entrega; no se convierte en una restricción permanente de la automatización. Las operaciones remotas y publicaciones pendientes se detallan en verification.md.
+La revisión y autorización de estas tareas ya se realizaron. La restricción a jimena-duran-291020262 solo afecta a esta entrega; no se convierte en una restricción permanente de la automatización. Los resultados de publicación, escritura por gh, vínculo Development y escritura posterior confirmada mediante el MCP de GitHub configurado en Codex se detallan en verification.md. El fallo MCP anterior se conserva como evidencia histórica.

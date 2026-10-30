@@ -17,7 +17,7 @@ La automatización de Git es documentación y herramientas de desarrollo, separa
 
 `agents/git-workflow-agent.md` coordina el momento solicitado y lanza agentes reales con responsabilidades delimitadas: `help-me-to-think` concreta la petición, `create-issue` la registra, `create-branch` prepara la rama, `create-commit` guarda un trozo autorizado, `launch-push` publica cuando se indica y `create-pr` crea la revisión en borrador contra staging. Las preguntas y los errores vuelven al orquestador.
 
-Las skills de `skills/` se leen por su ruta. Definen entrevistas, estado, ramas, commits, publicación, asignaciones y relación de issue con PR. El orquestador enlaza la issue después de create-pr y gestiona las personas revisoras indicadas. No promete cierre automático ni realiza merges implícitos.
+Las skills de `skills/` se leen por su ruta. Definen entrevistas, estado, ramas, commits, publicación, asignaciones y relación de issue con PR. El orquestador escribe `Closes #N` después de create-pr, conserva y verifica Development por separado y gestiona las personas revisoras indicadas. La base sigue siendo staging: la palabra de cierre solo se interpreta cuando la PR apunta a la rama predeterminada. No cierra issues manualmente ni realiza merges implícitos.
 
 Los scripts `.ps1` de `tools/` ejecutan las operaciones de Git en PowerShell. Resuelven la raíz desde su ubicación, comprueban códigos de salida nativos, protegen la rama autorizada de cada tarea y conservan cambios ajenos. Los commits selectivos usan un índice temporal. Las herramientas no fijan nombres de ramas personales ni fuerzan publicaciones.
 

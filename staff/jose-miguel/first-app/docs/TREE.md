@@ -7,29 +7,35 @@ first-app/
   eslint.config.js
   scripts/
     jupyter.sh
-  db/
-    connection.js
-    users.sqlite
-  queries/
-    users.js
+  src/
+    db/
+      connection.js
+      users.sqlite
     queries/
-      create-users-table.sql
-      find-all.sql
-      find-by-email.sql
-      find-by-id.sql
-      insert.sql
-      remove.sql
-      update.sql
-  logic/
-    create-user.js
-    update-user.js
-    delete-user.js
-    list-users.js
-    find-user-by-email.js
-    users-gender-count.js
-  clients/
-    terminal/
-    jupyter/
+      users.js
+      queries/
+        create-users-table.sql
+        find-all.sql
+        find-by-email.sql
+        find-by-id.sql
+        insert.sql
+        remove.sql
+        update.sql
+    logic/
+      create-user.js
+      update-user.js
+      delete-user.js
+      list-users.js
+      find-user-by-email.js
+      users-gender-count.js
+    clients/
+      terminal/
+      jupyter/
+  agents/
+  skills/
+  tools/
+  templates/
+  MCPS/
   docs/
     ARCHITECTURE.md
     TREE.md

@@ -50,12 +50,11 @@ El orden del cuerpo de la función está en `docs/style.md`.
 
 Los errores están en `docs/errors.md`.
 
-
 ## 7. Al terminar una funcionalidad
 
 Cuando se termina de crear una funcionalidad, se crea un cliente.
 
-El cliente es un archivo en `clients/terminal/`. El nombre dice la acción, en kebab-case, y acaba en `.txt`.
+El cliente es un archivo en `src/clients/terminal/`. El nombre dice la acción, en kebab-case, y acaba en `.txt`.
 
 Ese archivo se pega en la terminal desde la raíz del repositorio. Entra en `first-app`, importa la función y hace `console.log` del resultado. No captura el error. Es la prueba manual de esa funcionalidad.
 
@@ -72,7 +71,7 @@ No hay loop. No se vuelve a escribir el ciclo hasta que un test pase.
 `plan.md` es la técnica. Lo lee quien comprueba que el desarrollo cabe en esta constitución. Dice cómo se aplica el negocio:
 
 - qué ficheros se crean y cuáles se tocan
-- a qué fichero de `logic/` se parece, sin pegar su código
+- a qué fichero de `src/logic/` se parece, sin pegar su código
 - la firma: nombre, parámetros y salida
 - el SQL nuevo, si lo hay, con los parámetros con nombre (`:id`, `:name`, `:email`)
 - qué mensaje de «Errores» corresponde a cada fallo de la spec
@@ -80,9 +79,8 @@ No hay loop. No se vuelve a escribir el ciclo hasta que un test pase.
 Si esta constitución, el código actual y la spec no dicen lo mismo, la pregunta se escribe al final del plan. No hay `tasks.md` ni código hasta tener la respuesta.
 
 `tasks.md` son los pasos, en el orden en que los haría una persona. Cada paso abre un sitio, hace una cosa y deja un resultado que se puede mirar. Un paso son como mucho cuatro líneas. Solo se escribe si no hay contradicción.
- No se inventan pasos.
+No se inventan pasos.
 
 ## 9. Validación de paquetes
 
 Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket. El cómo está en `AGENTS.md`.
-
