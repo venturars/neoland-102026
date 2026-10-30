@@ -1,21 +1,21 @@
 # Arquitectura
 
-- `db/` abre la base de datos y no contiene reglas de negocio.
-- `db/connection.js` es la única conexión a la base de datos.
-- `db/users.sqlite` es el único fichero de la base de datos.
-- `queries/queries/` guarda el SQL. Hay un fichero `.sql` por query.
-- `queries/users.js` lee esos ficheros, prepara el SQL y lo ejecuta. No hay reglas de negocio en `queries/`.
-- `logic/` es el núcleo de la app. Aquí viven las reglas de negocio. Una funcionalidad por fichero.
-- `logic/create-user.js` crea un usuario.
-- `logic/update-user.js` actualiza un usuario.
-- `logic/delete-user.js` borra un usuario.
-- `logic/list-users.js` lista los usuarios.
-- `logic/find-user-by-email.js` busca un usuario por email.
-- `logic/users-gender-count.js` cuenta los usuarios por género. Puede usar la librería `openai`.
-- `clients/` no importa SQL ni abre la base de datos. Solo llama a `logic/`.
-- `clients/terminal/` llama a `logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
-- `clients/jupyter/` es un notebook por cada `.txt` de `clients/terminal/`, con el mismo comando `node --input-type=module`. Se abre con `pnpm jupyter` desde `first-app`.
-- `scripts/jupyter.sh` prepara el `.venv` local e inicia Notebook sobre `clients/jupyter/`.
+- `src/db/` abre la base de datos y no contiene reglas de negocio.
+- `src/db/connection.js` es la única conexión a la base de datos.
+- `src/db/users.sqlite` es el único fichero de la base de datos.
+- `src/queries/queries/` guarda el SQL. Hay un fichero `.sql` por query.
+- `src/queries/users.js` lee esos ficheros, prepara el SQL y lo ejecuta. No hay reglas de negocio en `src/queries/`.
+- `src/logic/` es el núcleo de la app. Aquí viven las reglas de negocio. Una funcionalidad por fichero.
+- `src/logic/create-user.js` crea un usuario.
+- `src/logic/update-user.js` actualiza un usuario.
+- `src/logic/delete-user.js` borra un usuario.
+- `src/logic/list-users.js` lista los usuarios.
+- `src/logic/find-user-by-email.js` busca un usuario por email.
+- `src/logic/users-gender-count.js` cuenta los usuarios por género. Puede usar la librería `openai`.
+- `src/clients/` no importa SQL ni abre la base de datos. Solo llama a `src/logic/`.
+- `src/clients/terminal/` llama a `src/logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
+- `src/clients/jupyter/` es un notebook por cada `.txt` de `src/clients/terminal/`, con el mismo comando `node --input-type=module`. Se abre con `pnpm jupyter` desde `first-app`.
+- `scripts/jupyter.sh` prepara el `.venv` local e inicia Notebook sobre `src/clients/jupyter/`.
 - `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca.
 - `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la tarea se puede dejar escrita.
 - `agents/create-issue.md` crea la issue con título en inglés y descripción en español, asignada a quien está autenticado.
