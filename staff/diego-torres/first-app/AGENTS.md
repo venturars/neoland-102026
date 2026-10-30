@@ -1,5 +1,7 @@
 # AGENTS.md — first-app
 
+El trabajo de git sigue `agents/git-workflow-agent.md` de esta carpeta. Las paradas son las de «Orden». Ese flujo no las quita.
+
 ## Proyecto
 
 first-app es una app de usuarios para alumnos junior. Se construye con IA siguiendo el sistema SDD.
@@ -12,6 +14,16 @@ Un desarrollo nuevo pasa por `docs/specs/<nombre>/`, con `<nombre>` en kebab-cas
 
 El directorio de trabajo es `staff/diego-torres/first-app`.
 
+## Orden
+
+Lo primero es el orquestador (`agents/git-workflow-agent.md`). Elige un momento y llama a ese subagente como un agente aparte. El padre no entrevista, no crea la issue y no ejecuta el git ni el MCP de ese momento.
+
+No se crea `docs/specs/<nombre>/` antes de que exista el número de issue. Con la issue escrita, el proceso siguiente escribe `spec.md` y `plan.md`. La spec abre con `Issue: #N`. No toca ningún otro fichero. Ahí se para. Una persona revisa la spec y el plan.
+
+Si la constitución, el código actual y la spec no dicen lo mismo, la pregunta queda al final del plan y no hay `tasks.md`. Si dicen lo mismo y la persona ha revisado, el siguiente proceso escribe `tasks.md`. Ahí se para. No se implementa.
+
+La implementación empieza cuando esa persona lo pide. Ejecuta `tasks.md` y no inventa pasos.
+
 ## Base de datos
 
 El código vive en `src/`: `src/db/`, `src/logic/`, `src/queries/` y `src/clients/`.
@@ -21,6 +33,24 @@ El código vive en `src/`: `src/db/`, `src/logic/`, `src/queries/` y `src/client
 `src/db/connection.js` exporta `db`, la conexión a `src/db/users.sqlite`. No se añade otro fichero en `src/db/`. El esquema es `src/queries/queries/create-users-table.sql`. El almacén es `src/queries/users.js`: recibe la conexión ya abierta y no abre el fichero.
 
 `src/logic/` tiene un fichero por operación. `src/clients/terminal/` tiene un `.txt` por operación: se pega en la terminal con el directorio actual en `first-app`. Importa la función de `src/logic/`, le pasa el almacén y hace `console.log`.
+
+## Paquetes
+
+Al añadir un paquete de Node o cambiar su versión, se comprueba con Socket antes de aceptar el plan. La referencia del MCP está en `MCPS/socket-mcp/mcp.txt`.
+
+Entra el paquete y la versión. También entran las dependencias de ese paquete, hasta 3 capas.
+
+El resumen entra en el plan antes de aceptarlo. Para el paquete y para cada dependencia, el resumen dice si esa versión está en una campaña, si tiene una alerta y si alguna stat está por debajo de 50 puntos. Cada dato dice de dónde sale. Si una fuente no puede contestar, el resumen dice el motivo.
+
+Las alertas se comentan. Quien acepta el plan decide si las acepta.
+
+Queda fuera comprobar paquetes que no son de Node, comprobar un paquete cuya versión no cambia, mirar más de 3 capas y decidir las alertas por la persona.
+
+### Token de Socket
+
+`.mcp.json` lee el token de la variable de entorno `SOCKET_API_TOKEN`. El token no se escribe en ningún fichero del repo. `.mcp.json` está ignorado por git; `.mcp.example.json` es la plantilla sin secretos.
+
+Para empezar, copia `.mcp.example.json` a `.mcp.json` y define `SOCKET_API_TOKEN` en tu entorno. La documentación oficial de Socket describe OAuth (el navegador pide la autenticación la primera vez); la cabecera con token no está en esa documentación y hay que probarla con tu token.
 
 ## Comandos
 
