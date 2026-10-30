@@ -14,11 +14,13 @@ El directorio de trabajo es `staff/diego-torres/first-app`.
 
 ## Base de datos
 
-`db/` solo contiene `connection.js` y `users.sqlite`.
+El código vive en `src/`: `src/db/`, `src/logic/`, `src/queries/` y `src/clients/`.
 
-`db/connection.js` exporta `db`, la conexión a `db/users.sqlite`. No se añade otro fichero en `db/`. El esquema es `queries/queries/create-users-table.sql`. El almacén es `queries/users.js`: recibe la conexión ya abierta y no abre el fichero.
+`src/db/` solo contiene `connection.js` y `users.sqlite`.
 
-`logic/` tiene un fichero por operación. `clients/terminal/` tiene un `.txt` por operación: se pega en la terminal con el directorio actual en `first-app`. Importa la función de `logic/`, le pasa el almacén y hace `console.log`.
+`src/db/connection.js` exporta `db`, la conexión a `src/db/users.sqlite`. No se añade otro fichero en `src/db/`. El esquema es `src/queries/queries/create-users-table.sql`. El almacén es `src/queries/users.js`: recibe la conexión ya abierta y no abre el fichero.
+
+`src/logic/` tiene un fichero por operación. `src/clients/terminal/` tiene un `.txt` por operación: se pega en la terminal con el directorio actual en `first-app`. Importa la función de `src/logic/`, le pasa el almacén y hace `console.log`.
 
 ## Comandos
 
