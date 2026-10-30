@@ -13,8 +13,8 @@ Lee en este orden al empezar cualquier tarea:
 1. `docs/CONSTITUTION.md`: las reglas no negociables.
 2. `docs/ARCHITECTURE.md`: cómo se organiza el código.
 3. Este archivo (`AGENTS.md`).
-4. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
-5. Su `plan.md` y su `tasks.md`, si ya existen.
+4. El historial: `specs/000-historial/specs.md`. Dice cuál es la spec activa. De las specs ya resumidas basta con su resumen, en `specs/000-historial/resumenes/`.
+5. La spec activa: `specs/<issue>-nombre/spec.md`, y su `plan.md` y su `tasks.md`, si ya existen.
 
 Si algo de lo que te piden contradice la constitución, **para y avisa** antes de escribir nada.
 
@@ -22,7 +22,7 @@ Si algo de lo que te piden contradice la constitución, **para y avisa** antes d
 
 ## 2. Cinco momentos
 
-Quien trabaja en esta carpeta interviene solo en este orden. El agente se para al terminar cada momento y no empieza el siguiente. El orquestador de git (`agents/git-workflow-agent.md`) encadena los pasos **de un mismo momento** sin pedir un sí, pero tampoco pasa al siguiente.
+Quien trabaja en esta carpeta interviene solo en este orden. El agente se para al terminar cada momento y no empieza el siguiente.
 
 1. **Crear la issue.** Si la tarea aún no se puede dejar escrita, la entrevista va aquí, una pregunta cada vez. Luego se crea la issue, con qué hay que hacer y cómo probarlo. No se abre la rama. Ahí se para.
 2. **Crear el draft.** De un tirón: adelantar `staging`, rama desde `staging`, commit vacío `chore: open #N`, push, pull request en draft contra `staging`, autor, y `Closes #N`. No se escriben specs. Ahí se para.
@@ -43,10 +43,12 @@ Una issue, una rama o una pull request no autorizan el código. El código esper
 ### 2.1 Especificar (`spec.md`)
 
 - Habla del usuario y del problema. **Nunca** nombra tecnologías (nada de "SQLite", "endpoint", "fetch").
-- Estructura: Problema · Usuarios · Historias de usuario · Criterios de aceptación (Dado / Cuando / Entonces) · Fuera de alcance · Preguntas abiertas.
+- Estructura: Tipo · Para qué sirve (solo funcionalidad) · Problema · Usuarios · Historias de usuario · Criterios de aceptación (Dado / Cuando / Entonces) · Fuera de alcance · Preguntas abiertas.
+- **Tipo**: `funcionalidad` si cambia lo que ven o hacen el profesor o el alumno; si no, `proceso`.
+- **Para qué sirve**: una spec de funcionalidad dice a cuál de los dos objetivos de la constitución §1 sirve: ahorrar tiempo al profesor o dejar constancia de quién asistió. Si no sirve a ninguno, escribe `[NECESITA ACLARACIÓN]`, para y no escribas ni plan ni tareas. Quien trabaja en esta carpeta decide: **descartarla** (se anota en `specs/000-historial/specs.md`), **reformularla** o **enmendar el propósito** (constitución §8, versión mayor).
 - Cada criterio de aceptación lleva un identificador (`CA-01`, `CA-02`…) para poder enlazarlo desde tareas y tests.
 - Si falta información, escribe `[NECESITA ACLARACIÓN: pregunta concreta]`. **No inventes la respuesta.**
-- Si la spec activa no describe lo pedido, no se reutiliza: se abre `specs/NNN-nombre/spec.md`.
+- Si la spec activa no describe lo pedido, no se reutiliza: se abre `specs/<issue>-nombre/spec.md`.
 
 ### 2.2 Planificar (`plan.md`)
 
@@ -63,7 +65,7 @@ Una issue, una rama o una pull request no autorizan el código. El código esper
 ### 2.4 Implementar
 
 - Haz **una tarea cada vez**. Al acabarla, márcala `[x]` en `tasks.md`.
-- Ningún fichero de la app se adelanta a las tres specs. «Fichero de la app» es todo lo de esta carpeta, también `agents/`, `skills/`, `tools/`, `templates/` y `MCPS/` (constitución §4.1). Si la spec activa no cubre el pedido, ese pedido recorre los cinco momentos: primero la issue.
+- Ningún fichero de la app se adelanta a las tres specs. «Fichero de la app» es todo lo de esta carpeta, también `agents/`, `skills/`, `tools/`, `templates/` y `MCPS/` (constitución §4). Si la spec activa no cubre el pedido, ese pedido recorre los cinco momentos: primero la issue.
 - Si durante la implementación descubres que la spec o el plan están mal o incompletos, dilo y no inventes el cambio.
 
 ---
@@ -72,7 +74,11 @@ Una issue, una rama o una pull request no autorizan el código. El código esper
 
 El árbol de carpetas está en [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
-Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-discord-bot`.
+Las specs nuevas se llaman `<issue>-nombre-en-kebab-case`, con el número de la issue que las abre: `679-formato-de-specs-e-historial`. Una issue, una spec. Las specs `001` a `008` conservan su nombre. El orden es `001` a `008` y después por número de issue.
+
+`specs/000-historial/` no es una spec: guarda el historial de specs (`specs.md`), el de enmiendas de la constitución (`enmienda.md`) y los resúmenes (`resumenes/`).
+
+**Resúmenes.** Cuando hay **8 specs sin resumir**, las **4 más antiguas** se resumen en `specs/000-historial/resumenes/<primera>-<última>.md`. No cuentan `000-historial`, los resúmenes ni las specs descartadas. Por cada spec, el resumen dice qué resolvió, qué decisiones siguen vigentes y qué cambió después, con un enlace a la original. Las specs resumidas **no se editan ni se borran**. El resumen lo escribe el agente en el momento 4 de la spec que hace llegar a 8 las specs sin resumir, en la misma pull request.
 
 ---
 
@@ -90,8 +96,6 @@ Ejecutar desde `staff/ventura-rodriguez/asistenciapp/`:
 | Arrancar solo en local (desarrollo)         | `python app.py` (`http://localhost:8000`) | `python app.py` (`http://localhost:8000`)    |
 | Arrancar en otro puerto                     | `PORT=8001 python app.py`                 | `$env:PORT=8001; python app.py`              |
 | Ejecutar los tests                          | `pytest`                                  | `pytest`                                     |
-
-Las únicas dependencias de Python son Flask y pytest. Las herramientas externas (`cloudflared`, `git`, `gh`, el MCP de GitHub) están en la constitución P3. Los scripts de `tools/` son de bash: en Windows, se lanzan desde Git Bash.
 
 ---
 
@@ -115,25 +119,14 @@ Una funcionalidad está terminada cuando:
 - [ ] `pytest` pasa.
 - [ ] Cada `CA-xx` de la spec tiene su test o su verificación manual hecha.
 - [ ] El `README.md` explica cómo usar lo nuevo.
+- [ ] La fila de la spec en `specs/000-historial/specs.md` está al día.
 - [ ] La persona que trabaja en esta carpeta la ha probado y la ha dado por buena.
 
 ---
 
 ## 7. Estado actual
 
-| Spec                                | Fase                                                                           | Notas                                                           |
-| ----------------------------------- | ------------------------------------------------------------------------------ | --------------------------------------------------------------- |
-| `001-checkin-codigo`                | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
-| `002-spec-antes-del-cambio`         | ✅ Implementada (2026-10-22)                                                   | Ningún fichero de la app se toca sin un spec aprobado           |
-| Bot de Discord                      | Idea futura, sin número                                                        | Fuera del MVP                                                   |
-| `003-activar-el-entorno`            | ✅ Implementada (2026-10-22): T01–T04, 77 tests                                | El README separa activar el entorno y arrancar la app           |
-| `004-quitar-referencias-personales` | ✅ Implementada (2026-10-22): T01–T12, 80 tests                                | El README entra con un usuario genérico                         |
-| `005-reorganizar-arquitectura`      | ✅ Implementada (2026-10-22): T01–T12, 87 tests                                | Documentos en `docs/` y código en reglas, acciones y borde      |
-| `006-limite-por-ip-publica`         | ✅ Implementada (2026-10-23): T01–T11, 102 tests                               | Límite de intentos de registro por IP y lista de bloqueo. El recuento, la duración del bloqueo y la IP con túnel los cambia la 008 |
-| `007-flujo-de-git`                  | ✅ Implementada (2026-10-30): T01–T06                                          | Flujo de git del curso y cinco momentos del humano. Issue #616  |
-| `008-bloqueo-justo-y-reglas-claras` | ✅ Implementada (2026-10-30): T01–T10, 114 tests                               | Solo cuentan los códigos fallados, el bloqueo caduca, IP real con túnel, constitución 4.0 y comandos por sistema. Issue #653 |
-
-> El agente actualiza esta tabla cada vez que una spec cambia de fase.
+El estado de cada spec y la spec activa están en [`specs/000-historial/specs.md`](specs/000-historial/specs.md). El agente actualiza esa tabla cada vez que una spec cambia de fase.
 
 ---
 

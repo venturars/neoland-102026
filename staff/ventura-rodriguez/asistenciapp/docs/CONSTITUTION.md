@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 4.0 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-30
+> Versión 4.1 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-30
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -71,32 +71,34 @@ El detalle de cómo se relacionan esas carpetas está en `docs/ARCHITECTURE.md`.
 
 ---
 
-## 4. Desarrollo guiado por especificaciones (SDD)
+## 4. Forma de trabajo: desarrollo guiado por especificaciones (SDD)
 
-1. **Ningún fichero de la app se modifica sin spec, plan y tasks que cubran ese cambio.** Entran el código, los tests, el README, el resto de la documentación de uso y el flujo de git (`agents/`, `skills/`, `tools/`, `templates/` y `MCPS/`). Cada cambio nace como `specs/NNN-nombre/spec.md`. Si no cabe en la spec activa, se abre otra. Una issue, una rama o una pull request no autorizan el código: el código espera a las tres specs y a que se pida implementar.
-2. El orden de los ficheros siempre es: **spec → plan → tasks → implementación**. No se salta ningún paso. Quien trabaja en esta carpeta interviene en cinco momentos, y el agente no los encadena: la issue, el draft, las tres specs en la misma pasada, la implementación, y lo que se pida sobre la pull request. No hay un ok entre spec y plan.
-3. La `spec.md` describe el **qué y el porqué**, nunca el cómo (no menciona tecnologías).
-4. El `plan.md` describe el **cómo** e incluye una sección que comprueba que cumple esta constitución.
-5. Las dudas se marcan como `[NECESITA ACLARACIÓN]` y se resuelven **antes** de implementar. No se inventan requisitos.
+El proyecto se trabaja con **SDD**: primero se escribe **qué** se quiere y **por qué**, después **cómo**, después los **pasos**, y solo entonces se cambia nada.
+
+- **Ningún fichero de esta carpeta cambia sin una spec que lo cubra.**
+- Toda spec sirve al propósito (§1). Si no, no sigue adelante.
+- La spec dice el qué y el porqué; el plan, el cómo, y comprueba esta constitución; las tareas, los pasos.
+- Las dudas se resuelven antes de implementar. No se inventan requisitos.
+
+Cómo se aplica día a día está en `AGENTS.md`.
 
 ---
 
 ## 5. Calidad
 
-- Cada **criterio de aceptación** de una spec tiene al menos **un test** automatizado (o, si es puramente visual, un paso de verificación manual escrito en el plan).
-- `pytest` debe pasar antes de dar una tarea por terminada.
-- Los errores que ve el usuario son claros, en español y dicen qué hacer ("El código ha caducado, pide el nuevo al profesor").
+- Todo lo que pide una spec se comprueba: con un test o, si no se puede automatizar, a mano.
+- Los tests pasan antes de dar algo por terminado.
+- Los errores que ve el usuario son claros y dicen qué hacer.
 
 ---
 
 ## 6. Seguridad
 
 - Los códigos de asistencia **caducan** y no se pueden adivinar **a mano** antes de caducar.
-- Contra los scripts que prueban códigos hay un **freno**: se cuentan los códigos fallados de cada IP y, si se pasa, esa IP queda bloqueada **un tiempo**. Los máximos y la duración están en la spec 008.
-- El freno **nunca** puede impedir que la clase pase lista: un registro correcto no cuenta, el bloqueo caduca y cada alumno cuenta con su propia IP.
+- Hay un **freno** contra quien prueba códigos sin parar: cuenta los fallos y bloquea **un tiempo**. **Nunca** puede impedir que la clase pase lista.
 - Un mismo alumno no puede registrarse dos veces en la misma sesión.
 - Una sesión cerrada no acepta más registros.
-- Toda entrada del usuario se valida en el servidor y se escapa al mostrarla (sin HTML inyectado).
+- Toda entrada del usuario se valida en el servidor y se escapa al mostrarla.
 
 ---
 
@@ -109,18 +111,4 @@ El detalle de cómo se relacionan esas carpetas está en `docs/ARCHITECTURE.md`.
 ## 8. Enmiendas
 
 - Cualquiera (persona o agente) puede **proponer** un cambio, pero solo lo **aprueba** la persona que trabaja en esta carpeta.
-- Cada enmienda sube la versión (1.0 → 1.1 para añadidos, 2.0 si se elimina o contradice un principio) y se anota abajo con fecha y motivo.
-
-### Historial de enmiendas
-
-| Versión | Fecha      | Cambio                                                                                                                                                                                                                                  | Motivo                                                                                                                                                                        |
-| ------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1.0     | 2026-10-19 | Versión inicial                                                                                                                                                                                                                         | Arranque del proyecto                                                                                                                                                         |
-| 1.1     | 2026-10-19 | §6: los códigos no deben poder adivinarse _a mano_; la protección contra scripts deja de ser obligatoria                                                                                                                                | En una clase el riesgo real es un alumno ausente, no un ataque automatizado. Evita añadir límites de intentos que no aportan al MVP (P2)                                      |
-| 2.0     | 2026-10-20 | §3: stack Node.js → Python (Flask + pytest). P3 pasa de "cero dependencias" a "dependencias mínimas" y permite Flask y pytest                                                                                                           | Requisito nuevo: el proyecto debe hacerse en Python. Se elige Flask por ser simple y muy extendido, y pytest por su sintaxis sencilla                                         |
-| 2.1     | 2026-10-20 | P4: distingue _almacenar_ (solo en local) de _transitar_ (puede pasar cifrado por un proveedor de túnel)                                                                                                                                | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08)                                                    |
-| 2.2     | 2026-10-22 | §4: ningún fichero de la app se modifica sin spec aprobado; una issue, una rama o una pull request no sustituyen al spec. §7: la carpeta es `staff/ventura-rodriguez/asistenciapp/`. §8: aprueba la persona que trabaja en esta carpeta | El texto solo frenaba el código de una funcionalidad, así que un cambio de README se escribía sin spec. Las reglas seguían nombrando otra carpeta y a otra persona (spec 002) |
-| 2.3     | 2026-10-22 | §3: el código se reparte en `docs/`, `asistencia/domain/`, `asistencia/usecases/`, `asistencia/storage/` y `app.py`. El archivo sigue en `data/` y las pantallas en `static/` | La organización de archivos y carpetas cambió. El propósito, la privacidad y las reglas de pasar lista siguen (spec 005) |
-| 3.0     | 2026-10-23 | P4: la IP pública estática se puede recordar solo para contar los intentos de registrarse y para la lista de bloqueo. No se guarda con el nombre ni con la hora | El límite por IP necesita recordar esa IP. Contradice la prohibición de guardar IPs. Los máximos y la duración de la lista se quedan en la spec 006 |
-| 3.1     | 2026-10-30 | §4: la cabecera pasa de Versión 3.0 a 3.1. El ok del humano son cinco momentos (issue, draft, specs, implementar, pull request). Plan y tasks se escriben con la spec. Una issue, una rama o una pull request siguen sin autorizar el código | Quien trabaja en esta carpeta no quiere parar entre spec, plan y tasks. El flujo de git del curso entra en la carpeta (spec 007) |
-| 4.0     | 2026-10-30 | §6: deja de decir que el freno contra scripts no es un requisito; cuenta solo códigos fallados, caduca y no puede bloquear a la clase. P4: la IP es la de quien intenta registrarse, no una «IP pública estática». P3 y §3: nombran `cloudflared`, `git`, `gh`, el MCP de GitHub y los sistemas. §4.1: el flujo de git también pide spec | La 3.0 contradecía el §6 y nombraba una IP que la app no veía: con el túnel, toda la clase compartía `127.0.0.1` y un bloqueo para siempre la dejaba fuera. Las reglas no nombraban herramientas que ya se usaban (spec 008, issue #653) |
+- Cada enmienda sube la versión (1.0 → 1.1 para añadidos, 2.0 si se elimina o contradice un principio) y se anota con fecha y motivo en [`specs/000-historial/enmienda.md`](../specs/000-historial/enmienda.md).
