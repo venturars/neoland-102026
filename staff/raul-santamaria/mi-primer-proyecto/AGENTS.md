@@ -1,10 +1,30 @@
 # AGENTS.md — mi-primer-proyecto
 
+El trabajo de git sigue `agents/git-workflow-agent.md` de esta carpeta. Las paradas son las de «Orden». Ese flujo no las quita.
+
 ## Proyecto
 
 Primera app con IA para alumnos junior de AI Engineering. Se construye siguiendo SDD.
 Node, módulos ES y una sola base SQLite en `db/users.sqlite`.
 Las reglas de base están en `docs/CONSTITUTIONS.md`. Esa guía enlaza a la arquitectura, el árbol, la base de datos, los errores y el estilo.
+
+## Orden
+
+Lo primero es el orquestador. Elige un momento y llama a ese subagente como un agente aparte. El padre no entrevista, no crea la issue y no ejecuta el git ni el MCP de ese momento.
+
+No se crea `docs/specs/<nombre>/` antes de que exista el número de issue. `<nombre>` va en kebab-case.
+
+Con la issue escrita, el proceso siguiente escribe `spec.md` y `plan.md`. La spec abre con `Issue: #N`. No toca ningún otro fichero. Ahí se para. Una persona revisa la spec y el plan.
+
+Aunque el mismo mensaje pida dejar un fichero, ese proceso solo escribe `spec.md` y `plan.md`. El fichero queda descrito en el plan.
+
+Si la constitución, el código actual y la spec no dicen lo mismo, la pregunta queda al final del plan y no hay `tasks.md`.
+
+Si dicen lo mismo y la persona ha revisado, el siguiente proceso escribe `tasks.md`. Ahí se para. No se implementa.
+
+Aunque la persona diga que se implemente, si `tasks.md` no existe o no lo ha leído, ese proceso escribe `tasks.md` y se para.
+
+La implementación empieza cuando esa persona ha leído la spec, el plan y las tareas y lo pide. Ejecuta `tasks.md` y no inventa pasos. «Implementa» no escribe las tareas y no las ejecuta en la misma respuesta.
 
 ## Comandos
 
@@ -20,7 +40,9 @@ El contrato de `logic/` está en `docs/CONSTITUTIONS.md`. Los errores están en 
 
 ## Reglas
 
-- Lee `docs/CONSTITUTIONS.md` y la spec activa antes de tocar código.
+- Un cambio del proyecto empieza por el orquestador y sigue «Orden».
+- La implementación empieza cuando una persona ha leído la spec, el plan y las tareas y lo pide. Ese proceso solo ejecuta `tasks.md`.
+- Lee `docs/CONSTITUTIONS.md` y la spec activa antes de tocar código. Si no hay spec para ese cambio, se crea y se para.
 - Temperatura próxima a 0. No inventes. Cíñete al plan y a la spec activa.
 - Antes de escribir, mira el código ya resuelto que se parezca. El código que ya existe sirve para ver a qué fichero se parece una función nueva. La forma de cada línea se copia de `docs/STYLE.md`. Un spec nuevo no se para porque el código ya escrito no tenga esa forma.
 - Si un desarrollo añade o quita un fichero, su spec también actualiza `docs/TREE.md` y `docs/ARCHITECTURE.md`.

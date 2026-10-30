@@ -9,7 +9,7 @@ El código actual no valida paquetes. `package.json` declara dependencias y no
 dice cómo se comprueban.
 
 La constitución no dice que haya que usar Socket. La spec sí. El cómo va en
-`AGENTS.MD` y se escribe tal como pide la spec. La consulta a Socket usa el MCP
+`AGENTS.md` y se escribe tal como pide la spec. La consulta a Socket usa el MCP
 `socket-mcp` del bootcamp (`MCP.md`, namespace `user-socket-mcp`).
 
 ## Ficheros
@@ -17,7 +17,7 @@ La constitución no dice que haya que usar Socket. La spec sí. El cómo va en
 Se tocan:
 
 - `docs/CONSTITUTIONS.md`
-- `AGENTS.MD`
+- `AGENTS.md`
 
 No se toca el `AGENTS.md` de la raíz del repositorio.
 
@@ -31,9 +31,9 @@ Se añade una sección `## Paquetes`, después de `## Specs` y antes de
 
 Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket.
 
-El procedimiento concreto no va en la constitución; está en `AGENTS.MD`.
+El procedimiento concreto no va en la constitución; está en `AGENTS.md`.
 
-## AGENTS.MD
+## AGENTS.md
 
 Se añade una sección `## Paquetes`, después de `## Reglas` y antes de
 `## Comandos`, con este texto:

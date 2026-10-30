@@ -2,9 +2,9 @@
 
 El código se escribe en inglés y está pensado para alumnos hispanohablantes.
 
-Ficheros en kebab-case. Funciones en camelCase. El nombre es la acción. Una función, un propósito. Exportaciones con nombre e imports ESM con extensión `.js`. El SQL usa parámetros con nombre (`:id`, `:name`, `:email`). El contrato de `logic/` está en `docs/CONSTITUTIONS.md`. Cómo usar los errores está en `docs/ERRORS.md`.
+Ficheros en kebab-case. Funciones en camelCase. El nombre es la acción. Una función, un propósito. Exportaciones con nombre e imports ESM con extensión `.js`. El SQL usa parámetros con nombre (`:id`, `:name`, `:email`). El contrato de `src/logic/` está en `docs/CONSTITUTIONS.md`. Cómo usar los errores está en `docs/ERRORS.md`.
 
-Una función por fichero. No hay clases, no hay `this` y no hay métodos, salvo las clases definidas en `logic/errors.js`. Pueden añadirse más clases de error en ese fichero.
+Una función por fichero. No hay clases, no hay `this` y no hay métodos, salvo las clases definidas en `src/logic/errors.js`. Pueden añadirse más clases de error en ese fichero.
 
 Cada línea deja una sola acción en un nombre. Una acción es una llamada o una comprobación. `input.name` y `.trim()` van en líneas distintas. Prettier no las junta.
 

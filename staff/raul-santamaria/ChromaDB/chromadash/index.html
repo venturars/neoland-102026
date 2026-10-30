@@ -1,0 +1,4750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Chroma Dash</title>
+    
+    <style>
+        
+        /* GLOBAL CSS VARIABLES */
+        :root {
+            --theme-text-size: 13px;
+            --theme-text-size-title: 18px;
+            --theme-text-size-small: 12px;
+            --theme-text-font: sans-serif;
+            --theme-text-colour: black; 
+            --theme-text-colour-light: white; 
+            --theme-text-colour-dark: black; 
+            
+            --theme-colour-foreground: #f0f1f7;
+            --theme-colour-middleground: #f7f8fa; 
+            --theme-colour-background: #e6e7eb;
+            --theme-colour-container: #e6e7eb;
+            --theme-colour-content: white;
+    
+            --theme-accent1: #337BF9;
+            --theme-accent2: #FBDB2C;
+            --theme-accent3: #FB6344;
+            --theme-accent4: #8E74AD;
+            --theme-accent5: #2ecc71;
+            
+            --theme-box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+            --theme-border-colour: none;
+            --border-radius: 6px;
+        }
+        
+        
+        /* COMMON EASY SWITCHES FOR IN-LINE AD-HOC STYLES */
+        .floatLeft      {float:left;}
+        .floatRight     {float:right;}
+        .clearFloats    {clear:both;}
+        .show           {display:block;}
+        .hide           {display:none;}
+        
+        
+        /* STANDARDIZE ALL STYLES */
+        * {
+            margin:0px;
+            padding:0px;
+            text-decoration:none;
+            border:none;
+            position:relative;
+            list-style: none;
+            font-family: var(--theme-text-font);
+            color:var(--theme-text-colour);
+            line-height: 1.6;
+        }
+        
+        
+        
+        /* TAG STYLES */
+        html, head, body {
+            width:100%;
+            font-family: inherit;
+        }
+        
+        
+        /* THEME STYLES */    
+        .theme-text-size{font-size: var(--theme-text-size);}
+        .theme-text-size-small{font-size: var(--theme-text-size-small);}
+        .theme-text-bracketed{color: grey; font-style:italic;}
+        .theme-text-font{font-family: var(--theme-text-font);}
+        .theme-text-colour{color: var(--theme-text-colour);}
+        .theme-text-colour-light{color: var(--theme-text-colour-light);}
+        .theme-text-colour-dark{color: var(--theme-text-colour-dark);}
+        
+        .theme-colour-foreground{background: var(--theme-colour-foreground);}
+        .theme-colour-middleground{background: var(--theme-colour-middleground);}
+        .theme-colour-background{background: var(--theme-colour-background);}
+        .theme-colour-container{background: var(--theme-colour-container);}
+        .theme-colour-content{background: var(--theme-colour-content);}
+        
+        .theme-accent1{background: var(--theme-accent1);}
+        .theme-accent2{background: var(--theme-accent2);}
+        .theme-accent3{background: var(--theme-accent3);}
+        .theme-accent4{background: var(--theme-accent4);}
+        .theme-accent5{background: var(--theme-accent5);}
+        .theme-box-shadow{box-shadow: var(--theme-box-shadow);}
+
+        
+        h2{
+            display:inline-block;
+            line-height:150%;
+        }
+        
+        
+        h3{
+            margin-bottom:10px;
+        }
+        
+        h5{
+            display:block;
+            margin-bottom:10px;
+            font-size:15px;
+        }
+        
+        p{
+            padding:20px;
+            font-size:var(--theme-text-size);
+        }
+        
+    
+        button{
+            display:inline-block;    
+            background: silver;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 5px 15px 5px 15px;
+            margin-right:10px;
+            margin-bottom:10px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+        
+        button:hover{
+            filter: brightness(1.1);
+        }
+        
+        button:active{
+            filter: brightness(0.9);
+            transition: all 0.1s ease;
+        }
+        
+        .button-modal{
+            display: block;
+            float:right;
+            margin-left:20px;
+            margin-bottom:20px;
+        }
+        
+        
+        select {
+          appearance: none;
+          background: #fff;
+          border: 1px solid #ddd;
+          border-radius: 5px;
+          padding: 3px 6px;
+          font-size: 16px;
+          color: #333;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          transition: all 0.3s ease;
+          max-width: 400px;
+        }
+
+        select:focus {
+          outline: none;
+          border-color: #007bff;
+          box-shadow: 0 0 0 3px rgba(38, 143, 255, 0.2);
+        }
+
+        select option {
+          padding: 10px;
+        }
+
+        /* Custom arrow */
+        .custom-select-wrapper {
+          position: relative;
+          display: inline-block;
+        }
+
+        .custom-select-wrapper::after {
+          content: '▼';
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          pointer-events: none;
+          color: #007bff;
+        }
+
+        select {
+          padding-right: 30px;
+        }
+
+        
+        input[type="text"],
+        input[type="password"],
+        input[type="email"]{
+          padding: 2px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          font-size: 16px;
+          color: #333;
+          width: 100%; /* Ensure full width in container */
+          box-sizing: border-box; /* Include padding and border in the element's total width and height */
+          transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for border color and box shadow */
+            margin-bottom:10px;
+        }
+
+        /* Focus state */
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        input[type="email"]:focus{
+          border-color: #007bff; /* Change border color on focus */
+          outline: none; /* Remove default outline */
+          box-shadow: 0 0 4px rgba(0, 123, 255, 0.5); /* Add subtle shadow effect */
+        }
+
+        /* Disabled state */
+        input[type="text"]:disabled,
+        input[type="password"]:disabled,
+        input[type="email"]:disabled{
+          background-color: #f9f9f9; /* Light gray background for disabled state */
+          border-color: #ddd; /* Lighter border color for disabled state */
+          color: #aaa; /* Lighter text color */
+          cursor: not-allowed; /* Change cursor to indicate unavailability */
+        }
+
+        /* Placeholder styling */
+        input[type="text"]::placeholder,
+        input[type="password"]::placeholder,
+        input[type="email"]::placeholder{
+          color: #999; /* Gray color for placeholder text */
+          opacity: 1; /* Ensure placeholder text is fully opaque */
+        }
+
+        /* Error state (Optional) */
+        input[type="text"].error,
+        input[type="password"].error,
+        input[type="email"].error{
+          border-color: #dc3545; /* Red border for error state */
+          background-color: #f8d7da; /* Light red background */
+        }
+
+        
+        
+        
+        input[type="number"] {
+          padding: 2px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          font-size: 16px;
+          color: #333;
+          width: 100px; /* Ensure full width in container */
+          box-sizing: border-box; /* Include padding and border in the element's total width and height */
+          transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for border color and box shadow */
+            margin-bottom:10px;
+        }
+
+        /* Focus state */
+        input[type="number"]:focus {
+          border-color: #007bff; /* Change border color on focus */
+          outline: none; /* Remove default outline */
+          box-shadow: 0 0 4px rgba(0, 123, 255, 0.5); /* Add subtle shadow effect */
+        }
+
+        /* Disabled state */
+        input[type="number"]:disabled {
+          background-color: #f9f9f9; /* Light gray background for disabled state */
+          border-color: #ddd; /* Lighter border color for disabled state */
+          color: #aaa; /* Lighter text color */
+          cursor: not-allowed; /* Change cursor to indicate unavailability */
+        }
+
+        /* Placeholder styling */
+        input[type="number"]::placeholder {
+          color: #999; /* Gray color for placeholder text */
+          opacity: 1; /* Ensure placeholder text is fully opaque */
+        }
+
+        /* Error state (Optional) */
+        input[type="number"].error {
+          border-color: #dc3545; /* Red border for error state */
+          background-color: #f8d7da; /* Light red background */
+        }
+        
+        
+        
+        .slider-container{
+            display:block;
+            margin:10px 10px 20px 0px;
+            width:calc(100% - 0px);
+        }
+        
+        .slider-container label{
+            display:inline-block;
+            width:calc(150px - 10px);
+        }
+        
+        input[type="range"] {
+            display: inline-block;
+            width: calc(100% - 150px); 
+        }
+        
+        
+        
+        
+        /* DATE TIME STYLES */
+        input[type="date"],
+        input[type="time"]{
+            width:calc(100% - 20px);
+            padding: 12px;
+            font-size: 16px;
+            color: #333;
+            background-color: #f9f9f9;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+
+        input[type="date"]:hover,
+        input[type="time"]:hover{
+            border-color: #3498db;
+        }
+        
+        input[type="date"]:focus,
+        input[type="time"]:focus{
+            border-color: #3498db;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+            outline: none;
+        }
+        
+
+
+
+
+        /* Container for the table to handle horizontal scrolling */
+        .table-container {
+            width: 100%;
+            overflow-x: auto; /* Allows horizontal scrolling if needed */
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            /* Remove overflow from table to manage scrolling in cells */
+        }
+
+        /* Header styling */
+        thead {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: left;
+        }
+
+        thead th {
+            padding: 5px 5px 5px 15px;
+            background: var(--theme-colour-foreground);
+            border: 1px solid #ccc;
+        }
+
+        /* Body row styling */
+        tbody tr {
+            border: 1px solid #ccc;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: var(--background-color);
+        }
+
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Cell styling with wrapping and scrolling */
+        tbody td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            font-size: var(--theme-text-size);
+            /* Ensure cell contents can wrap */
+            white-space: pre-wrap; /* Allows text to wrap and respect new lines */
+            max-width: 300px; /* Set a max width for the cell */
+            overflow: auto; /* Adds scrollbars if content overflows */
+        }
+        
+        tbody td:nth-child(2) div {
+            overflow: auto;
+            word-wrap: break-word;
+            max-height: 100px;
+        }
+        
+        tbody td:nth-child(3) div {
+            overflow: auto;
+            word-wrap: break-word;
+            max-height: 100px;
+        }
+        
+        tbody td:nth-child(4) div {
+            overflow: auto;
+            word-wrap: break-word;
+            max-height: 100px;
+        }
+        
+        tbody td:nth-child(5) div  {
+            overflow: auto;
+            word-wrap: break-word;
+            max-height: 100px;
+        }
+        
+        tbody td:nth-child(6) div {
+            overflow: auto;
+            word-wrap: break-word;
+            max-height: 100px;
+        }
+        
+        /* Specific styling for the fixed column */
+        tbody td.fixed-col {
+            width: 300px; /* Fixed width for the specific column */
+            white-space: pre-wrap; /* Allow text wrapping */
+            overflow: auto; /* Enables scrolling if content overflows */
+            max-height: 100px; /* Set max-height if you want vertical scrolling */
+        }
+
+        /* Input styling */
+        tbody td input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: var(--border-radius);
+            box-sizing: border-box;
+        }
+
+        tbody td input[type="text"]:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 8px rgba(46, 204, 113, 0.2);
+        }
+
+        /* Fixed column width 
+        .fixed-col {
+            width: 150px; 
+        }
+
+        */        
+        
+        
+        
+        
+        /* ===============================*/
+        /* WEB APP STYLES */
+        /* ===============================*/
+        
+        /* TITLE BAR STYLES */
+        #title-bar{
+            position:fixed;
+            z-index:1001;
+            user-select: none;
+        }
+        
+        #title-bar, #title-bar-spacer {
+            width:calc(100% - 20px);
+            height:calc(60px - 20px);
+            padding:10px; 
+        }
+        
+        #title-bar img{
+            height:calc(40px - 0px);
+            margin-right:20px;
+            float:left;
+        }
+        
+        
+        #title-bar-documentation-api-docs{
+            top:5px;
+        }
+        
+        
+        #app-title{
+            display: inline-block;
+            line-height: 40px;
+            margin-right:20px;
+            font-size:20px;
+            font-weight:600;
+            float:left;
+        }
+        
+        
+        #loading-icon-wrap{
+            width:calc(40px - 10px);
+            height:calc(40px - 10px);
+            padding:5px;
+            float:right;
+        }
+        
+        #loading-icon-wrap img{
+            top:-2px;
+            width:100%;
+            height:100%;
+        }
+        
+
+        #app-version {
+            display: block;
+            line-height: 46px;
+            float:left;
+            font-size:11px;
+        }
+        
+        #section-login{
+            z-index: 1010;
+        }
+        
+        #login_button_Titlebar{
+            display:none;
+        }
+        
+        .connection-status-icon{
+            position:absolute;
+            right:0px;
+
+        }
+        
+        
+
+        
+        
+        /* SIDE BAR STYLES */
+        #side-bar {
+            position:fixed;
+            user-select: none;
+            z-index: 1000;
+            width:50px;
+            height:calc(100% - 60px);  
+            overflow-x:hidden;
+            overflow-y:scroll;
+            scrollbar-width: none;
+            transition: all 0.3s ease;
+        }
+        
+        #side-bar:hover {
+            width:320px;   
+        }
+        
+        #side-bar:hover .side-bar-group{
+            opacity:100%;   
+        }
+              
+        .side-bar-group{
+            opacity:0%; 
+            width:calc(100% - 40px);
+            max-height:150px;
+            overflow-y:scroll;
+            padding:10px;
+            margin:10px 0px 10px 10px;
+            border-radius:10px;
+            scrollbar-width: none;
+            transition: all 0.3s ease;
+        }
+        
+            /* Menu item styling */
+            .image-menu-item{
+                position: absolute;
+                width:calc(30px - 0px);
+                height:calc(30px - 0px);
+                margin-right:10px;
+            }
+
+            .menu-item label{
+                margin-left:40px;
+            }
+
+            .menu-item {
+                padding: 10px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                font-weight: bold;
+            }
+
+            .menu-item:hover {
+                background-color: #f0f0f0;
+            }
+
+            /* Submenu items are hidden by default */
+            .menu-subitem {
+                padding: 5px;
+                margin-left:40px;
+                text-indent:-30px;
+                display: none;  /* Hidden initially */
+                font-weight: normal;
+            }
+        
+            .menu-subitem:hover {
+                background:#e1e2e6;
+            }
+
+            /* When the menu-item is expanded, show the submenu */
+            .menu-item.active .menu-subitem {
+                display: block;
+            }
+        
+            .menu-item label:active{
+                color:var(--theme-accent1);
+            }
+            
+            .menu-subitem:active{
+                background:var(--theme-accent1);
+            }
+        
+            .menu-subitem:active label{ 
+                color:white;
+            }
+        
+        
+        
+            #side-bar-connection-status-wrap{
+                display:block
+                padding: 10px;
+                margin-left:10px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                font-weight: bold;
+            }
+        
+            #side-bar-connection-status-wrap label{
+                margin-left:40px;
+            }
+        
+        
+            #side-bar-connection-status-wrap select{
+                width:calc(100% - 77px);
+                height:30px;
+                margin-left:55px;
+                border:solid 1px grey;
+                font-size:12px;
+            }
+        
+
+        
+            #connection_status_sqllite{
+                padding: 5px;
+                margin-left:40px;
+                text-indent:-30px;
+                display: block;  
+                font-weight: normal;
+            }
+        
+            #connection_status_sqllite_value{
+                color:red;
+            }
+        
+        
+            #connection_status_endpoint{
+                padding: 5px;
+                margin-left:40px;
+                text-indent:-30px;
+                display: block; 
+                font-weight: normal;
+            }
+        
+            #connection_status_endpoint_value{
+                color:red;
+            }
+        
+        
+            #side-bar-select-current-collection{
+                width:calc(50px - 0px);
+                margin-left: 50px;
+            }
+        
+            #btnQuickConnect{
+                display:inline-block;
+                width:calc(100% - 77px);
+                margin-left:55px;
+            }
+
+            #btnQuickDisconnect{
+                display:none;
+                width:calc(100% - 77px);
+                margin-left:55px;
+            }
+        
+            #btnQuickRefresh{
+                display:inline-block;
+                width:calc(100% - 77px);
+                margin-left:55px;
+            }
+        
+        
+        
+        #body-container {
+            width:calc(100% - 90px);
+            left:50px;
+            padding:20px;
+        }
+        
+        
+        .body-content {
+            width:calc(100% - 20px);
+            padding:10px;
+            border-radius:var(--border-radius);
+            margin-bottom:10px;
+        }
+        
+
+        
+        
+        
+        
+        /* SECTIONING AND LAYOUT STYLES */ 
+        .panel-20{
+            display:inline-block;
+            width:calc(20% - 17px);
+            padding:0px;
+            margin:3px 3px 3px 3px;
+            border-radius:var(--border-radius);
+            border:solid 1px var(--theme-border-colour);
+            font-size: var(--theme-text-size);
+            /*box-shadow:var(--theme-box-shadow);*/
+        }
+        
+        
+        .panel-25{
+            display:inline-block;
+            width:calc(25% - 17px);
+            padding:0px;
+            margin:3px 3px 3px 3px;
+            border-radius:var(--border-radius);
+            border:solid 1px var(--theme-border-colour);
+            font-size: var(--theme-text-size);
+            /*box-shadow:var(--theme-box-shadow);*/
+        }
+        
+        .panel-33{
+            display:inline-block;
+            width:calc(33% - 14px);
+            padding:0px;
+            margin:3px 3px 3px 3px;
+            border-radius:var(--border-radius);
+            border:solid 1px var(--theme-border-colour);
+            font-size: var(--theme-text-size);
+            /*box-shadow:var(--theme-box-shadow);*/
+        }
+        
+        .panel-50{
+            display:inline-block;
+            width:calc(50% - 17px);
+            padding:0px;
+            margin:3px 3px 3px 3px;
+            border-radius:var(--border-radius);
+            border:solid 1px var(--theme-border-colour);
+            font-size: var(--theme-text-size);
+            /*box-shadow:var(--theme-box-shadow);*/
+        }
+        
+        .panel-75{
+            display:inline-block;
+            width:calc(75% - 19px);
+            padding:0px;
+            margin:3px 3px 3px 3px;
+            border-radius:var(--border-radius);
+            border:solid 1px var(--theme-border-colour);
+            font-size: var(--theme-text-size);
+            /*box-shadow:var(--theme-box-shadow);*/
+        }
+        
+        .panel-100{
+            display:inline-block;
+            width:calc(100% - 19px);
+            padding:0px;
+            margin:3px 3px 3px 3px;
+            border-radius:var(--border-radius);
+            border:solid 1px var(--theme-border-colour);
+            font-size: var(--theme-text-size);
+            /*box-shadow:var(--theme-box-shadow);*/
+        }
+        
+        
+        
+        
+        
+        #modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+            z-index:1005;
+        }
+
+        #modal-overlay.on {
+            visibility:visible;
+            opacity: 1; /* Fully visible */
+            transition: opacity 0.4s ease;
+            z-index:1005;
+        }
+
+        #modal-overlay.off {
+            visibility:hidden;
+            opacity: 0; /* Invisible, but still in DOM */
+            transition: opacity 0s ease;
+            z-index:0;
+        }
+        
+        
+        #modal-dialog {
+            position:fixed;
+            z-index:1006;
+            min-width:300px;
+            max-width:600px;
+            min-height:100px;
+            background:var(--theme-colour-background);
+            border-radius:var(--border-radius);
+            box-shadow:var(--theme-box-shadow);
+            /* Center the modal */
+            opacity: 0;
+            top: 27%;
+            left: 50%;
+            transform: translate(-50%, -25%);
+            overflow:hidden;
+            transition: opacity 0.3s ease, top 0.3s ease;
+        }
+        
+        #modal-dialog.on {
+            z-index:1006;
+            top: 25%;
+            opacity: 1;
+            visibility:visible;
+        }
+        
+        #modal-dialog.off {
+            top: 27%;
+            opacity: 0;
+            z-index:1;
+            visibility:hidden;
+        }
+        
+        .modal-titlebar{
+            position:relative;
+            z-index:1003;
+            width:100%;
+            padding:5px 10px 5px 10px;
+            background:var(--theme-color-foreground);
+        }
+        
+        .modal-title{
+            font-size:var(--theme-text-size-title);
+            font-weight:600;
+        }
+        
+        .modal-message{
+            max-height:350px;
+            width:calc(100% - 30px);
+            padding:10px 20px 10px 20px;
+            font-size:var(--theme-text-size);
+            overflow-y:scroll;
+            scrollbar-width: none;
+            background:var(--theme-color-background);
+            
+            /* New properties to preserve text formatting */
+            white-space: pre-wrap; /* Preserve whitespace and line breaks */
+            word-wrap: break-word; /* Break long words onto a new line if needed */
+        }
+        
+        
+        .modal-buttongroup{
+            min-height:30px;
+            padding:20px;
+            /*box-shadow:0px -1px 15px 2px rgba(0, 0, 0, 0.1);*/
+            background:var(--theme-color-foreground);
+        }
+        
+        
+      
+        /* Add Document Modal */
+        #modal-add-document {
+            position: fixed;
+            z-index: 1006;
+            width:calc(710px - 40px);
+            height:calc(420px - 40px);
+            background: var(--theme-colour-background);
+            border-radius: var(--border-radius);
+            box-shadow: var(--theme-box-shadow);
+            opacity: 0;
+            top: 300px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            overflow: hidden;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            font-size:13px;
+        }
+
+        #modal-add-document.on {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%);
+        }
+
+        #modal-add-document.off {
+            opacity: 0;
+            visibility: hidden;
+            transform: translate(-50%, -45%);
+        }
+
+        
+        
+        
+        .add-document-group{
+            display: inline-block;
+            padding:0px 30px 5px 30px;
+            border-radius:var(--theme-border-radius);
+        }
+        
+        #add-document-id{
+            width:calc(100% - 125px);
+            display:inline-block;
+            font-size:12px;
+            padding: 5px;
+        }
+        
+        
+        #btn-generate-id{ 
+            display:inline-block;
+            margin:0px 0px 0px 10px;
+        } 
+        
+        
+        #add-document-uri{
+            width:calc(100% - 125px);
+            display:inline-block;
+            font-size:12px;
+            padding: 5px;
+            margin-right:10px;
+        }
+        
+        /*
+
+        
+        #add-document-uri-label{
+            margin-left:25px;
+        }
+        
+        
+        
+        #add-document-content{
+            min-width:250px;
+            padding:10px;
+            max-width:calc(400px - 40px);
+            height:100px;
+        }
+        
+        
+        
+        #add-document-metadata{
+            min-width:250px;
+            padding:10px;
+            max-width:calc(400px - 40px);
+            height:100px;
+        }
+        
+        
+        #add-document-embedding{
+            width:calc(200px - 0px);
+        }
+        */
+        
+        
+
+        
+        #notification-container {
+          position: fixed;
+          right: 10px; /* Always align container to the right */
+          z-index: 10000;
+        }
+
+        .notification {
+          position: relative;
+          margin: 10px 0; /* Adjust margin based on stacking direction */
+          padding: 15px;
+          border-radius: 8px;
+          color: white;
+          font-size: 12px;
+          line-height: 1.5;
+          overflow: hidden;
+          opacity: 0;
+          transform: translateY(-20px);
+          transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .notification.show {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        .notification.hide {
+          opacity: 0;
+          transform: translateY(10px);
+          transition: opacity 1s ease, transform 1s ease;
+        }
+
+    
+
+        
+        
+        
+        
+        #connection-status-wrap{
+            display:block
+            padding: 10px;
+            margin-left:10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: bold;
+        }
+
+        #connection-status-wrap label{
+            margin-left:40px;
+        }
+
+
+        #connection-status-wrap select{
+            width:calc(100% - 57px);
+            height:30px;
+            margin-left:40px;
+            border:solid 1px grey;
+            font-size:12px;
+        }
+        
+        
+        
+        
+        
+        .metadata-json-add{
+            width:calc(100% - 40px);
+            min-height:calc(120px - 0px);
+            white-space: pre;
+            padding:20px;
+            border:solid 1px silver;
+            background:var(--theme-colour-background);
+        }
+        
+        
+        
+        
+        #select-current-collection{
+            width:calc(100% - 10px);
+        }
+        
+        
+        
+        .response-output-collection-add{
+            width:calc(100% - 40px);
+            white-space: pre;
+            padding:20px;
+            border:solid 1px silver;
+            background:var(--theme-colour-background);
+        }
+        
+        
+        
+        
+        
+        .page-counter-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        
+        #counter{
+            width:50px;
+            margin-right:10px;
+        }
+        
+        
+        
+        
+        .data-textarea{
+            border:solid 1px silver;
+            width:calc(100% - 0px);
+            min-height:150px;
+            /*display:inline-block;*/
+        }
+        
+        
+        
+        
+        .collection-view-attribute-label{
+            
+        }
+        
+        
+        
+        
+        #showAndOrSelect{
+            display:none;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            
+            .panel-20{
+                width:calc(50% - 56px);
+            }
+            
+            .panel-25{
+                width:calc(50% - 56px);
+            }
+
+            .panel-33{
+                width:calc(50% - 59px);
+            }
+
+            .panel-50{
+                width:calc(100% - 57px);
+            }
+
+            .panel-75{
+                width:calc(100% - 59px);
+            }
+
+            .panel-100{
+                width:calc(100% - 59px);
+            } 
+        }
+        
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h5{
+                display:block;
+            }
+            
+            .panel-20{
+                width:calc(100% - 59px);
+            }
+
+            .panel-25{
+                width:calc(100% - 59px);
+            }
+
+            .panel-33{
+                width:calc(100% - 59px);
+            }
+
+            .panel-50{
+                width:calc(100% - 59px);
+            }
+
+            .panel-75{
+                width:calc(100% - 59px);
+            }
+
+            .panel-100{
+                width:calc(100% - 59px);
+            } 
+            
+            input[type="range"] {
+                display: block;
+                width: calc(100% - 0px); 
+            }
+            
+            
+            form, table {
+                width: 100%;
+            }
+
+            tbody td input[type="text"] {
+                width: 100%;
+            }
+        }
+        
+        
+        
+    </style>
+</head>
+<body class="theme-colour-background">
+    
+    <!-- Title Bar -->
+    <div id="title-bar" class="theme-colour-foreground theme-box-shadow">
+        
+        <img id="image-logo" class="image-logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAxkAAAIACAMAAADZk1EqAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAG/UExURQAAAAYQIAwgQA8nUBIvYBk/gB9PnyJXryVfvwkYMBAGBCANCDATDUAZEVAfFmAlGoAyI58/K69FML9LNL9SM7+mIp+LHIBvF2BTEkA4DDAqCSAcBhY3cChmzytu3zJ+/3ArHpA5KM9ROd9XPf9kRv9zQ//eLd/CKHBhFFBFDwMIEBAOAy927+9eQe/QKq+YH8+0JR1HkN/CJyxu338yI2BTESBPnxk/fxMvYG9hFM9ROBY4b28sHkMhId9YPSNXr2V40MxqdD999LJui39vF5lxovJlUeVnXRxHj0x76NlpaaZvlylm0M+0JHJ2xVh53BMwX4xyrlBFDplxo0A4C79sf499GZ+KHBAnUDAqCH90uSBPoF9UEWV40SNXsJB9Gj9889lpaFh53RxHkL9sgClmz7CZH3J1xRY4cLNuix9PoP97Qf+CQP+KPv+SPP+hOf+wNv+/M//PMP/XL/+aO//HMf+4NSZfv/+pOP9sRA8oUCJXsBIwYIBvFhU4cJB9GSxv3ylnz+/QK3BhE6+ZH9C0Jf/HMmBUEKCKHFAnFNBSOd9YPu9eQp8/LKCLHL+nIihnz1BGDiAcBVAfFf///9Dr+00AAAABdFJOUwBA5thmAAAAAWJLR0SUf2dKFQAAAAd0SU1FB+gIGhAJB2qXQu8AABmoSURBVHja7Z3rf1TXeYU1g4QuIEtClSYg2UAwI3lEhRCWoUlbHKe5uGkupWobNb2kJUlT27GTmNJAMGoVmd5cY+J/uDOSiCQ40uxzzt577f2u9Xwy/sT8WM9v7/dyzhkYEEIIIYQQQgghhBBCCCGEEEIIIYQQQghhnkajeWJwcGho6GSX4ZF9en/u/u/BwWZztIH+W4Zh7NTp8ZcmJiYnJ6e6nJnu8nszO8x2abVaX/jC2bPn5tB/TRGPxujg/NDJ4ZdfOe/MK11XhuZPNPOX5NT4xIWLU9NfvPRqAZfbRSx0XWktvnZWklila8TQyTI+FDsyPDTY7KB/S2lOvTRxcarYh35mHHRktvXa2SX0bxHeaPSUuFJPicNceXl46MQo+ne5MHa6q8Sl33/VhX5m7LE8c7X12jn0DxO16JyYP1nzlDiOrh8J37BOvTR55pKTEuXM2GPl6qLOjxzpnLg27PWcOPL8GBk6kZoepyYuTrudE9XN2GH1akt6ZEQz6ElRxPXh+Sb6V+8yNn7hTHkpqprx7PTQ5Sp5Os1rI1GOigJGroFr87GXLk5Xk6KWGbvFR+ss+t9eHEXPCpAUB+3A/PiuFV+sYUVdM3aQHSkyOg87K16wYz5222r89TpnhTczemfH1TXdrNKhc+JkKlbscf2NE7EuVmMTUxXrihBm9FidfQ2dCNGlMQ+/QhUzMh++ZXXay2Hh2YweV9c0M4fSvJGoFru8fC3kvWr8YqlxRVQzuswsSg4QzRuRe7NVuB6oJB+/6OkOFcyMLiuSIz6jOWjxTA7fJ0cALYKYITli00n7ElUgh8ea49Trfi9RYc3oXatUc8ShM5iZFruM3PTRrRq74LHkjmRGl6vqVgWneS2xBq07V96oW3KMV9iGSsKMXitXB0dAOql2aF25frP6rWrs9ZBahDaj3btVafkwDBkfFweoeHCMh7tFxTKj3V7WweGf7I+Lfa6XrjiCHxeRzNg5ONBJskXnhoXjYt+NN8pcqsL0aEFmdCuOP9DB4YummeNiH+dLVYRrVFwzuuhS5QWLXvR4+Wb/3z524UuxvIhpRvdSpX31mnTmr6MTHI7rfdyIU15AzOheqlRw1MBYeVHkxtEFR2QvYpshN6pj3osdN24UuxHdi/hmyI1qUHhxlBsALxBmyI3y0HhR5AbEC4wZcqMcVF7surH/40FeoMyQGyX4MpkXO27s9algXuDMkBuONA33afu68YcwL5BmdN3QfKMfVud6Tm780R/jvMCaobl4Hxq30OkE8uZXkF6gzZAbx0BXeB/kra9ivcCb0V79E3QCE+UmsRfnv/Z1tBh4M1SKF8JcYJx/8xtoLdIwQ1eqF+h8Ex1OIG+DC4yUzGi3daU6iC5SCZCIGbpS7dOgvkj9KdqI1MzQleoZ1B2pb6F9SNEMHRs9mn+GTieQJCrvBM1ot7/NfmxQV974EUa6ZrBX4qw7Ujt8J5HKO1Ez2qu8x4YOjKRIzQzeY2OU+cBIqsJI1QzSY+PL6HACSakllbIZ7eVFdEyjQz3D+G56B0aiZvDNNr5HPMM4/+doB3Iyo716Gx3WiFCX3olsSWVjBlMhzl16J9arzcAMmkKc8QUIvyPF0jt5Mzi2RTon0eEEkuxNKnEzGG5UDeqbVJI9qSzMMH+jou5J/QU6+zmb0V5dR4c3JMw9qbf+Eh39vM2wfKOinu69nfRNKgsz2rNGPw5L3axNbbE2SzOMFhsqMRInAzNMFhs30OEEkt7Gea5m2Cs2uKcYybwEwYAZxtRoMD/snX7tnZUZ7auG6nDu8V76tXdeZhiqw5vMtXeiK+c5m2FGje+hw4kkh6ZUdma0l020qJibUimv1uZsRrtt4ClYZjHy6NZmaUb+LSrmbu1beXRr8zQjczU6t9DpBJJLtzZTM9p/hU53HTE0xsiI3Mxo/zU635XRfC8rsjOjPZPpzI96vpefGBma0V7JUg1qMdJ815o5M7JUg1uMXDZCcjcjQzUkRnZkaUZ2myISIz/yNKO9mtWpITEyJFMzsrpQUYuRYVcqbzMyUkNiZEm2ZmSjRkdiZEm+ZrRX0Jl3E0OT7zzJ2Iw8FkX0urVMydmMHNTQ2nmuZG1G+kvpzA8qnU/5GwDWzUhdDWoxcnq01Z4ZaT8Ay/wl45xehmDSjHbCn7r8PjqcEoPZjOUNtABH0WB+r9R30MGWGcluF1KPvnNdljJlRqLbhRp9Z44BM9ozaAuKuIVOJ5C3DIhhwowUXyhC3a9N/RN8PGak17tVvzZ7bJjRTuyVt6PocCLJ53XnDGYsJ9Wgom5LvY2OtMw4RFINKmoxLFTflsxoX0XrsM830elEkvV+rUkz0lkuVPVtAjtmpFKFN9DhRPI36DzLjALSqMK5q+/8l0IsmpHGg+E/QKcTiInZt0UzUpiFU8++M39WybAZ7b9Fi6Eiwwy2zECXGioy7GDLDHSpwVxknLdUZNgzA1tqaJJhCGtmIKca1I+3volOsszoA3CBirrIMHaXMmgGboGKumH7VXSQZUZ/QI8xqWFrC4NmgFq3ukvZwqAZmDcm6C5lDItmIO5TuktZw6QZgPuU7lLWMGlG/PuU7lLmsGlG7PuU7lL2MGpG5PuU7lL2MGpG3PuU7lIGsWpGzO9qUO9LfRedYJlRkuV4+1PaPbeIWTPi7aPfRIcTibXdcwYzou2jU5ff6PzKjApEKsJVftvEsBlxhhoaZRjFshlRinCV30axbEaMIpy6/DbypQxCM9rhv4hMXX5bPjKMmxG8CKc+MgyX3+bNCN255X7zGjq7MqMGq2HNoP6GjO0jw7oZYTu31B3bv0NHV2bUImjnVh1bw1g3o93SkREEy0M+DjMCHho6Mixj3oxw475RdDiRmD8yCMxoh3rwdQSdTiTmjwwGM2bDiNFEhxOJ/SODwYxAh4aODNswmBHk0NCRYRwGM4IcGjoyjENhRoBDQ0eGdSjMCHBo6MiwDocZ3g8Njb/Nw2FG2/cgXONv85CY4Xl7SkeGfUjM8Lw9RX1kfAWdWZnhE6+HBvWRYf25DDYzvB4aevkaASxmeH24T09/E0BjhsfXiOiFIQzQmOHxNSLMRwZJy5bKDG+HhhZDKOAxw9uKCHXLlubIYDLDU+NWLVsOiMzw1LgdQqcTCU39TWWGp8Ytc/1N07IlM8NLDf59dDqR8NTfXGZ4adz+PTqdSHjqbzIz/qG+GKq/WaAyw0MNrvk3C1RmtG/XNoO5/v7h19FplRmhqF2Da/5NA5cZtZ96pZ5/kzyyxGlG3Tk482WKaZjBZ8a364lBPcww/Y1jejNqjjSoL1P/iM6qzAhJrZFGBx1OJP+EjqrMCMpyHTOohxnfQkdVZoSlznVKmyFE0JlR4zqlyxQTdGbUuE7pMsUEnRk1rlPUlymyzhSjGdWvU1fQ6QRCNuajNKPydUpjPir4zKh8naIe83HtTJGaUXV3SjtTVBCaUXEVXQvoXBCaUXEV/Q46nUh+hM6pzIhBtbfr/BidTiRUT/PxmvGTKmLo1QhkMJpRqW+rATgZjGZU6ttS92zpBuCsZlQZgzP3bH+ITqnMiESFvu0oOp1I/hmdUpkRi/J925+i04mE6g1s3GaUfyOb9mzZ4DSjfKGhPVs2OM1YUZlRAsoyg9SM0oWGygw6SM0oW2iozKCD1IyyhYamGXSQmlFyoqGlKT5IzSj5jRnqB12/hs6ozIhJudUp6mcz+B50pTaj3DMaI+h0IiF8NoPZjNlSZqDDiYTu5YTkZqyWEUNzPkJYzSg169NTS4TQmlGmBFcBTgitGWVKcBXghNCaUaYE16ItIbRmlCjBqQtw0gk4sRklSnBNwBnhNeOcsxlD6HQi+RE6oTIjNmvOZmgFnRFeM9wX0anf24kOqMyIjvs7PNHhRMK6G8JshnNzSq0pSnjNcG5OUX84g+8rZDKjPedoBvXbEVi3pqjNcH1LgramKCE2w3VzinprirZpy2yG6+aUmraUEJvh2rZFhxMJ7T4htRmObdsOOp1IeJu2zGa03cygbtoSfu1YZri2bbVpywmzGW7bttTjjH9B51NmIHDbttU4gxNmM9wGGtpB54TZDLc9dOpB3zfQ+ZQZCNxGfRr0ccJshtuoj/nFIaSfzqA3Y8XJDHQ6kfA+t8RthtMQXB+VIYXZDKchOPUTfaxve6Y3w+WpPi2HkEJthst6iJZDSKE2w2U9hPoLATKDFJcvBWhtihRqM1wWp6hf3SkzSJEZfSBeKJQZ/XgHnU6ZITOi05IZMkNmyIzyEC+hc5vhsoauJXRSqM1wWUOXGaTIDJkhM2SGzCgH6xePZYbMOB50OmWGzEgTdDplBgiXx11lBinUZsw4mHEdnU6ZITNkRmqg0ykzEjZDtylSZIbMkBkyQ2bIDJnhgLq2MuNI3kWnU2YkDDqdSN5Dp1NmJAw6nTIjYTOoPxKATqfMSNgM6ieX0OmUGSD0TJ/MOJKfodMpMxIGnU4k76PTmboZ1G/VQadTZoBw+VCfzCDlA3Q6kbi8b4r67Z3odMoMELcdzKB+4zM6nUh+jk4nEpc3PlN/JQCdTpmRsBnUX5ZBpxPJL9DpROLyZRnq7/Sh0ykzQLh8jUxmkPJLdDqROIjB/dVjdDqRfIhOJxCnrx4PXEHHU2ZAQKcTyYqTGcyvSECnEwj1I30uD7tyP6CBjicQ6lVblyV07pVCdDyBaNW2L3fQ8ZQZCO6i04nEZaGQe3EKHU8gWpvqC/PiFDqeQLQc0pdRdDxlBgKNwPvCPARHxxPIv6LTicRJDOpRHzqeQNDhRLLiaAbxqA8dTxwa9DlA/MYpdD5xUA/6XL4G3oN4oIHOJw69H8EB4oEGOp84NM5wgPh5V3Q+cdxDpxPJOUcziNu26HziUNPWBd62LTqfONDhRLLibMaP0QGVGbGh/qyMa9OWeQ8dHVAY1Dvork1b5uYUOqAw1JpSc0pmFHEPnU4krq0p5uYUOqAw1JpSc0pmFIEOJxL31tTAwL+hEyoz4kLdmvpJCTNoN6fQCUWhrSlHaB94RScUxa/Q6UTi9qjrLrQPvKITikKPuqoElxlFoMOJpEwBzluCoxMKQgW4SnCZUYQKcJXgMqMIvWvKGdYpODqiIDQBd4f0/SHoiGK4jw4nEvcV9F1IF9HRGcWgFfQSkC6iozOKgXrO576CTl1ooDOKQXO+MnDO+tAZhUBdZqyUFYP0RYXokELQ6wlVaMiMIlRmqNCQGUWozFChITMKoC4zyk4zelBONNApRUA9zXD7qOthKFen0ClFoKWpknTQKZUZcfglOp1AliuIwfmMBjqlAPRsRmmG0DGVGTG4i04nkrVKZjTRMZUZMaDu2c5VMoOxb4uOaXzUs60A4SOv6JzGRw+66jolM4q4h04nEvdXPR+mw3edQuc0Ph+i0wlkoaIYjGNwdE6joz3bSvCNwdFBjY4G4LpOyYwimAfg1S9ThGNwdFBjQ32Zmq1hxgN0UmVGWHSZ0nVKZhShy1RV2LpT6KRGhvrRjOqdqR5swz50VCNDfZmqOubbg+w6hY5qXKh3plbqicG2O4XOalyod6aqLaDTXqfQWY2LFtDrwDXSQGc1KpfR4URSdQF9H64n+9BhjcoH6HQiqXuZYntRAjqsUdEwQ9cpmVGANkNqQlWDo9MaE+phRu36uwfTSAOd1oio/q4NUw2OjmtENMyoDdNaITquEVH9XZ9fo/MqM/xDvUzoo/7uQVSDo/MaD82/fcDTuEXnNRrU9bevI2Ng4CE6sDLDN9Qt2zoP8x2GpwZHBzYW1EeGr/q7B03jFp3YWKhlq0NDZhShlq0ODZlRgI4Mb7B8Axkd2UhQHxneWra7kEz70JGNA/WR4a9luwvJtA+d2ThoyucTjmkfOrNR0IMZOjRkRhE6MnRoyIwCdGTo0JAZRVAvhgQ4MjgODXRqI0C9GBLiyOA4NNCxjYCqDB0aMqMAVRk6NGRGEToydGjIjAL0kGsQ7G9PoYMbHG1MhcH8NwPQwQ0N9cbUR+HEsP+cBjq5oaE+MpYCmmH+OQ10cgNDfWT4fS6D7dBARzcsl6mPjKBiDAw8QmdXZlTnV+h0Igl7ZAxY79yisxsU7YUExfa4Dx3eoGiVUIeGzCiAuvzeDC/GQMNyEY5Ob0ioy+8IR4btzi06vQHR9yqD0/l3dH5lRnkuf4hOJ5DQHdtnGC7C0fkNh8rvGNxCB1hmlEXldxTsFuHoAAeDuvwOujB1GLOTcHSAQ6HyOxZWhxroBAdC0+9ojKIjLDPKQH2XilZ+72J0qIGOcBh0l4rJf6BDLDNcob5LzcQWw+h9Ch3iIDC/LmQr8l2qh8n7FDrEIbiLTieS38QXw+Z9Cp3iAFDfpbYRYpi8T6FjHAD1peJjcN6HjrF/1JdCYG/eh86xd6jvUnFnfAextz+FDrJv7usuheEhOsky43io3xayjhPD3us80Un2DPXueciXdfbH2vN96Cj7hfrNax9DxRgYGLVVaqCz7JfH6HQCQRYZu9hq3aKz7BU1bLH8AJ1mmVEM9UdksEXGLqZKDXSaPaIiA46lqQY6zh5hFgNfZOxiaKqBjrM/NMlIATtTDXSevUG9ep5CkbGHmQUqdKB9Qb0uFe/1Uv1pWKnC0Yn2JQZ1kRHx9VL9sTLwQ0faE4/R6USKkUj1/QwjVTg60n6grr7PoVV4HhuPhaMz7QXq2Tfkwe/jMTELR4faB5p9J0bHwhsT0Kn2APWHMjBvROiHhQYVOtYexFBbKj0MrImgc10bPd6aJPl/jAkd7NrcQ6cTCOJ9hK5k37tFB7su6temSu69W3Sya0Ldr/1PdPhNq4GOtsSoTIr92kPkPdZAZ7sWelNI2mStBjrcdXgXHU6JcTxZT/zQ6a4jBvOE77/QqTevBjre1aEefechRtZqoPNdXQzmCV8a70NwId89EXTAJUYVMRLdCTGlBjrhEsO2GPmqgY64xDAuRrZqoDMuMayLkasa6JBLDPNiZKoGOuUSw74YXTUybN6iYy4xSjGTpRhZzjXQOS/Nu8xi5DLgK1Aju3cXooNeWgxNvjMlt/VCdNJL8jNmMXJYIjyGzJ7XQEe9HFo7z5m81EBnvRTUDyol+MY102qgwy4x3NhK/NFWNx5m9LIddNpL8HN0OpFiJP0yBHdG85n5oePuzP1foNMJJN33SpUln3E4OvCuUM/3PjYjRkbjcHTiHeGe72U6+D6CTD7lh468G+9rjGGIPFpU6Mw7wdyUstCtfZ4HObSo0KF34D5zU2rBSFPqMDnU4ejY9+fyY3Q6gViqvQ+pcQsd/PzNeI+59t60VXsfJPliAx38ftxFhxOJwRJjnweJ36jQyT8e7hJjHR3esCRebKCzfyzU470ZoyXGAZKebKDDfxzUU4xNdGxj8Cjh9i06/Udzn/lzSlvGb1LPSPhGhc7/kVA3awluUs9I9kaFFuAo7jLfpMztgxzHw0SPDbQBxagnRUSiUz+0A4VQT/eMbda68AhtQS5mUJfeJp5qLUuKhTjaghd59zE6nUCISu/DpLcsgvbgBZjXQbZMr4McT3LHBlqE57jM/LQ37YGxS2LHBlqFw3xA3KtlPjB2SevYQLtwEFUY7KS0LYK2YR/ubZA1dCjToPEOWoj0zKCeYRh+QqksyYzE0ULscf8eOpxA2Ibex9NJpBJHK7EL85bUFtWWlAuNX6OtSMWM9x6j0wlkW5X3i6RwpUJb8eqrl++hwwnkY12kihmCd6nQXtzXCEMUAe9SgcV4n7gjtfWROlLHAS43oF5M//cCOp44VGD0BfriHaAX/zPe/fFrpG7MqMBwAViKw7z434m9H8/ohrxwBuYGyItPJsd+99uXPiJzY+E2Om5ZAXID7kWPOSY3FrQiVRaIGwl40YPGDXlRCYAbSXjRg8INeVGZ6G4k4kWPud8Yd2NG9UUdIrsR1YvpiT4/3nKfSv2o2jRHbJoxPe7w49dW0AmWFwkTcWckmhf/5+JFj/VP0Sn2ztZHmnf7ovHTSJeqOFocV168yNynpi5VC9qP8svDKJeqGF5MT5TxoseSnYJD16gANN4Jf3CEPy4uul6jDmPiUqV12lB0gh8coY+LC2WPi33mcj84Zm7Li4AEPjhSPC72Wf90Cx3vqui4iMCD4RzNmB6vflzss7T2BJ3xKlrMqrqIQyPYrSqUFjVuUc8zl9uMY2ZNx0VEGo8+y8WM6clTnn/8xmY2JcfMorSITgg5MtBilyzkkBYwGo88X6vy0GKXjc2kr1XSAkzj4bDHd/H4s+ITn7XFUcwlWpBvzaq2SIKmt1auJy0uXfTSiXJh6WlqyyMrm+pEJYSno8PPYRHyDlXExmIqR4cOiyRpPhqpa0dtKybrTvOqst5C27G1vbiBjoA4kpp21Dsrol2hilnq2gEaksuKLBh9+E7Vfm7VumLqwmn0r95jfXE7cstqZXPtt+hfLZzpNB8NV9CjkhTgo+JFuofHdpSyfGF2cV11RYZ09bhT7nJV6vr0pQSl2Gcp6OmxNbO5tiEp8ma0hB/uTnweuwFVjY2nrW2/xcfC9ubiU12f7NAZfdAV5LMrdcz45NKZqQsTp9M9J45iaf1pa/ZJvRNka2VHCZ0TVumMNgeH7gyPfPaKqxmXLk1PTU1OfJ6hEc+ztLG+1trcfrLifIosLDyZ3WytyQgqOo3RZnNwcGho6M7JHiMjI9PTZ6Z2mJycnJj4fPz0qfx1KGbpt+vrT9fWWq3W5myPJz22d/5zs9VaXFt7ur4hHYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEfx/5kqB6CqlKfMAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDI0LTA4LTI2VDE2OjA5OjA3KzAwOjAw2mk6uwAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyNC0wOC0yNlQxNjowOTowNyswMDowMKs0ggcAAAAodEVYdGRhdGU6dGltZXN0YW1wADIwMjQtMDgtMjZUMTY6MDk6MDcrMDA6MDD8IaPYAAAAAElFTkSuQmCC" alt="Base64 Image"/>
+
+        <div id="app-title">Chroma Dash</div>
+        
+        <div id="loading-icon-wrap" class="hide">
+            <img src="images/loading.gif"/>
+        </div>
+        <button id="title-bar-documentation-api-docs" class="theme-accent5 floatLeft" onclick="gotoSwaggerAPIDocs();">FastAPI</button>
+        <button id="title-bar-documentation-api-docs" class="theme-accent1 floatLeft" onclick="gotoPageViewCollections();">Collections</button>
+        <button id="title-bar-documentation-api-docs" class="theme-accent1 floatLeft" onclick="gotoPageViewDocuments();">Documents</button>
+    </div>
+    <div id="title-bar-spacer" class=""></div>
+    
+    
+    
+    
+    
+    
+    <!-- Side Bar -->
+    <div id="side-bar" class="theme-colour-middleground theme-box-shadow" onmouseleave="collapseAllSideBarMenus();">
+        
+        <div class="side-bar-group">
+            <h3></h3>
+        </div>
+        
+        <div id="side-bar-connection-status-wrap" class=""><img id="side-bar-status-img-dot" class="image-menu-item" src="images/status_disconnected.png"/><label>Status</label> 
+            <div id="connection_status_endpoint" class="" ><label id="side-bar-connection_status_endpoint_value">Disconnected</label></div> 
+            <button id="btnQuickConnect" class="theme-accent5" onclick="quickConnect();">Connect</button>
+            <button id="btnQuickDisconnect" class="theme-accent3" onclick="quickDisconnect();">Stop</button>
+            <button id="btnQuickRefresh" class="theme-accent5" onclick="getAllCollections();">Refresh</button>
+            <select id="side-bar-select-current-collection" onchange="syncCollectionChoice(event); getCollectionDetails();">
+              <option disabled selected>Connect to ChromaDB First</option>
+            </select>
+            <Br>
+            <br>
+            <br>
+        </div> 
+        
+        <div class="">
+            <!-- <div class="menu-item" data-target="section-default"><img class="image-menu-item" src="images/sidenavicon_dashboard.png"/><label>Dashboard</label></div>   -->
+            
+            <div class="menu-item" data-target="section-connection"><img class="image-menu-item" src="images/sidenavicon_connection.png"/><label>Connect</label></div>  
+
+            <div class="menu-item"><img class="image-menu-item" src="images/sidenavicon_data.png"/><label>Data</label>
+                <div class="menu-subitem" data-target="section-collections-add" id="side-bar-option-collection-add"><label>Collections - Create</label></div> 
+                <div class="menu-subitem" data-target="section-collections-view" id="side-bar-option-collection-view"><label>Collections - View</label></div> 
+                <div class="menu-subitem" data-target="section-documents-view" id="side-bar-option-document-view" onclick="getCollectionDocuments();"><label>Documents - View</label></div> 
+                <div class="menu-subitem" data-target="section-documents-add" id="side-bar-option-document-add" onclick="generateUUID1();"><label>Documents - Add</label></div> 
+                <!-- <div class="menu-subitem" data-target="section-embedding-generate" id="side-bar-option-document-add" onclick="generateUUID1();"><label>Embedding - Generate</label></div>  -->
+            </div>  
+            
+            <!--
+            <div class="menu-item"><img class="image-menu-item" src="images/search_icon.png"/><label>Search</label>
+                <div class="menu-subitem" data-target="section-search-text"><label>Text Search</label></div> 
+                 <div class="menu-subitem" data-target="section-search-vector"><label>Vector Search</label></div> 
+            </div>  
+            -->
+            
+            <!--
+            <div class="menu-item" data-target="section-settings"><img class="image-menu-item" src="images/sidenavicon_settings.png"/><label>Settings</label></div> 
+            -->
+            
+            <div class="menu-item"><img class="image-menu-item" src="images/sidenavicon_help.png"/><label>Help</label>
+                <!-- <div class="menu-subitem" data-target="section-getting-started"><label>Getting Started</label></div>   -->
+                <div class="menu-subitem" data-target="section-otherguis"><label>Other GUI's</label></div> 
+                <div class="menu-subitem" data-target="section-documentation"><label>Documentation</label></div> 
+                <!--<div class="menu-subitem" data-target="section-troubleshooting"><label>Troubleshooting</label></div> -->
+                <!-- <div class="menu-subitem" data-target="section-faqs"><label>FAQ's</label></div> -->
+                <div class="menu-subitem" data-target="section-about"><label>About</label></div>  
+            </div>  
+        </div>
+        
+        
+        <!--
+        <div class="side-bar-group">
+            Browse the Web App <br>
+            This is just a demo<Br>
+            You can replace this text with images<Br>
+            or other content.<Br>
+        </div>
+        -->
+        
+        <div  class="side-bar-group">
+            <label id="app-version">Version: 2.0.0.58</label> 
+        </div>
+            
+    </div>
+
+      
+            
+            
+            
+    <!-- Body Container -->
+    <div id="body-container" class="theme-colour-container">
+        
+        
+
+        
+        <div id="section-default" class="section body-content theme-colour-content">
+            <h3>Dashboard</h3>
+            <br>
+        </div>
+        
+        
+        
+
+        
+        
+        
+        <div id="section-connection" class="section body-content theme-colour-content">
+            <h3>Connect</h3>
+            <div class="panel-25">
+                <button id="helpBtn_Connection" class="theme-accent1" onclick="">Help</button>
+            </div>
+            <Br>
+            
+            <div class="panel-100">
+                <div id="connection-status-wrap" class="">
+                    <img id="connection-status-img-dot" class="image-menu-item" src="images/status_disconnected.png"/>
+                    <label>Status</label>
+                    <label id="connection_status_endpoint_value">Disconnected</label>
+                </div> 
+            </div>
+            <Br>
+                
+            <div class="panel-25"></div>
+            <div class="panel-25">
+                <button id="btn_ConnectionStop" class="theme-accent3" onclick="quickDisconnect();">Stop</button>
+                <button id="btn_ConnectionStart" class="theme-accent5" onclick="quickConnect();">Connect</button>
+            </div> 
+            <br>
+            <br>
+               
+            <h5>Test Connection:</h5>
+            <div class="panel-25"><button id="helpBtn_TestConnection" class="theme-accent1" onclick="">Help</button></div>
+            <br>  
+            <br>
+            <div style="font-size:13px; color:#e74c3c">
+                Ensure you have environment variable <b style="font-size:13px; color:#e74c3c">CHROMA_SERVER_CORS_ALLOW_ORIGINS</b> set to <b style="font-size:13px; color:#e74c3c"> ["*"]</b><br>
+                Including the square brakcets "[" "]" <Br>
+                </div>
+            <br>
+            <br>
+                
+            <div class="panel-25"><label for="connection-endpoint-chroma-server">Endpoint Address:</label></div>
+            <div class="panel-25"><input type="text" id="connection-endpoint-chroma-server" placeholder="" value="http://localHost:8000" data="Endpoint Address"></div>   
+            <div class="panel-25"><button id="Connection_SetDefaultEndpoint" class="theme-accent4">Default Endpoint</button> <button id="copyBtn_EndpointAddress" class="theme-accent1" onclick="copyToClipboard('connection-endpoint-chroma-server')">Copy</button> </div>
+            <Br>
+            
+            <div class="panel-25"><label for="connection_endpoint_testResults">Endpoint Test Response:</label></div>
+            <div class="panel-25"><input type="text" id="connection_endpoint_testResults" placeholder="Endpoint Test Results" readonly></div>
+            <div class="panel-25"><button id="Connection_TestEndpointBtn" class="theme-accent5">Endpoint Test</button></div>
+            <br>
+                
+            <div class="panel-25"><label for="connection-preflight-checks">Pre-Flight Checks:</label></div>
+            <div class="panel-25"><input type="text" id="connection-preflight-checks" placeholder="Pre-Flight Check Results" readonly></div>
+            <div class="panel-25"><button id="Connection_TestPreflightBtn" class="theme-accent5">Pre-Flight Test</button></div> 
+            <br>
+            <br>
+            <Br>
+                
+            <h5>HTTP Responses:</h5>   
+            <div class="panel-100"> <div id="connection-response-message-output" class="response-output-collection-add"></div> </div>
+            <br>
+        </div>
+                
+        
+                
+                
+                
+                
+                
+                
+                
+                
+                  
+            
+        <div id="section-collections-add" class="section body-content theme-colour-content">
+            <h3>Collections - Create</h3>
+            <div class="panel-25">
+                <button id="helpBtn_CollectionAdd" class="theme-accent1" onclick="helpBtn_addCollection();">Help</button>
+                <button id="" class="theme-accent1" onclick="gotoPageViewCollections();">View Collections</button>
+            </div>
+            <Br>
+            <br>
+                
+            <h5>Details:</h5>
+            <div class="panel-25"> <label class="collection-view-attribute-label">Collection Name:</label> </div>
+            <div class="panel-25"> <input type="text" id="collection-add-name" placeholder="Enter a Collection Name"> </div>
+            <br>
+            <br>
+                
+            <h5>Collection Configuration: <i class="theme-text-bracketed">(optional)</i></h5>
+            <b style="color:red; font-size:11px;">WARNING: These settings CANNOT be changed after the Collection is created.</b>
+            <Br>
+            <br>
+            <button class="theme-accent1" id="helpBtn_CollectionAddConfig" onclick="">Help</button>
+            <button class="theme-accent4" onclick="promptAddCollectionDefaultConfig();">Defaults</button>       
+            <button class="theme-accent3" onclick="promptAddCollectionClearConfig();">Clear</button>  
+            <br>
+            <div class="panel-25"> <label class="collection-view-attribute-label">Space:</label> </div>
+            <div class="panel-25"> 
+                <select id="collection-add-space" onchange="">
+                  <option selected>l2</option>
+                  <option>ip</option>
+                  <option>cosine</option>
+                </select>
+            </div>
+            <br>
+                
+            <div class="panel-25"> <label class="collection-view-attribute-label">EF Construction:</label> </div>
+            <div class="panel-25"> <input type="text" id="collection-add-efconstruction" placeholder="Blank will Auto-Generate"> </div>
+            <br>
+                
+            <div class="panel-25"> <label class="collection-view-attribute-label">EF Search:</label> </div>
+            <div class="panel-25"> <input type="text" id="collection-add-efsearch" placeholder="Blank will Auto-Generate"> </div>
+            <br>
+                
+            <div class="panel-25"> <label class="collection-view-attribute-label">Number of Threads:</label> </div>
+            <div class="panel-25"> <input type="text" id="collection-add-numofthreads" placeholder="Blank will Auto-Generate"> </div>
+            <br>
+                
+            <div class="panel-25"> <label class="collection-view-attribute-label">M:</label> </div>
+            <div class="panel-25"> <input type="text" id="collection-add-m" placeholder="Blank will Auto-Generate"> </div>
+            <br>
+                
+            <div class="panel-25"> <label class="collection-view-attribute-label">Resize Factor:</label> </div>
+            <div class="panel-25"> <input type="text" id="collection-add-resizefactor" placeholder="Blank will Auto-Generate"> </div>
+            <br>
+                
+            <div class="panel-25"> <label class="collection-view-attribute-label">Batch Size:</label> </div>
+            <div class="panel-25"> <input type="text" id="collection-add-batchsize" placeholder="Blank will Auto-Generate"> </div>
+            <br>
+                
+            <div class="panel-25"> <label class="collection-view-attribute-label">Sync Threshold Factor:</label> </div>
+            <div class="panel-25"> <input type="text" id="collection-add-syncthreshold" placeholder="Blank will Auto-Generate"> </div>
+            <Br>
+            <Br>
+            
+            <h5>Collection Metadata - JSON: <i class="theme-text-bracketed">(optional)</i></h5>
+            <div class="panel-25"> <button id="copyBtn_CollectionAddMetadata" class="theme-accent1" onclick="copyToClipboard('collection-add-metadatajson')">Copy</button> </div>
+            <br>
+            <div class="panel-25">
+                <label>
+                    <input type="checkbox" id="include-metadata" />
+                    Include Metadata <br>
+                    <b style="color:red; font-size:11px;">WARNING: Existing MetaData will be overwritten</b>
+                </label>
+            </div>
+            <div class="panel-25">
+                <button id="helpBtn_CollectionAddIncludeMetadata" class="theme-accent1" onclick="">Help</button>
+            </div>
+            <div class="panel-100" > 
+                <textarea type="text" id="collection-add-metadatajson" class="metadata-json-add" value='' data="Collection Add Metadata">
+{
+    "testKey1":"testValue1", 
+    "testKey2":"testValue2"
+}
+                </textarea> 
+            </div>
+            <br>
+            <br>
+            
+            <div class="panel-25"> </div>
+            <div class="panel-25"> <button id="" class="theme-accent5" onclick="addCollection();">Add Collection</button> </div>
+            <Br>
+                
+            <h5>HTTP Responses:</h5>
+            <div class="panel-25"> <button id="copyBtn_CollectionAddHTTPResponses" class="theme-accent1" onclick="copyToClipboard('outputAddCollectionHTTPResponses')">Copy</button> </div>  
+            <div class="panel-100"> <div id="outputAddCollectionHTTPResponses" class="response-output-collection-add" data="Collection Add HTTP Responses"></div> </div>
+            <br>
+        </div>
+                
+                
+                
+                
+                
+                
+
+      
+        <div id="section-collections-view" class="section body-content theme-colour-content">
+            <h3>Collections - View</h3>
+            <div class="panel-25">
+                <button id="helpBtn_CollectionView" class="theme-accent1" onclick="">Help</button>
+            </div>
+            <Br>
+            <br>
+            
+            <h5>Collection List:</h5>
+            <div class="panel-25"> 
+                <select id="select-current-collection" onchange="getCollectionDetails();">
+                  <option disabled selected>Connect to ChromaDB First</option>
+                </select>
+            </div>
+            <div class="panel-25"> 
+                <button class="theme-accent5" onclick="getAllCollections();">Refresh</button> 
+                <button class="theme-accent5" onclick="gotoPageAddCollection();">Create New Collection</button> 
+            </div>
+            <br>
+            <br>
+            <Br> 
+                
+            <h5>Collection Attributes:</h5>
+            <button class="theme-accent5" onclick="getCollectionDetails();">Refresh Attrributes</button>
+            <button class="theme-accent3" onclick="promptViewCollectionDelete();">Delete Collection</button>  
+            <br>
+                
+            <div class="panel-25"> <label class="collection-view-attribute-label">ID:</label> </div>
+            <div class="panel-25"> <label id="collection-view-attribute-id" class="collection-view-attribute-label" data="Collection ID">?</label> <button id="copyBtn_CollectionID" class="theme-accent1 button-modal" onclick="copyToClipboard('collection-view-attribute-id')">Copy</button> </div>
+            
+            <br>
+                
+            <div class="panel-25"> <label class="collection-view-attribute-label">Name:</label> </div>
+            <div class="panel-25"> <label id="collection-view-attribute-name" class="collection-view-attribute-label" data="Collection Name">?</label> <button id="copyBtn_CollectionName" class="theme-accent1 button-modal" onclick="copyToClipboard('collection-view-attribute-name')">Copy</button> </div>
+            <br>
+                
+            <div class="panel-25"> <label class="collection-view-attribute-label">Tenant:</label> </div>
+            <div class="panel-25"> <label id="collection-view-attribute-tenant" class="collection-view-attribute-label">?</label> </div>
+            <br>
+                
+            <div class="panel-25"> <label class="collection-view-attribute-label">Database:</label> </div>
+            <div class="panel-25"> <label id="collection-view-attribute-database" class="collection-view-attribute-label">?</label> </div>
+            <br>
+                
+            <div class="panel-25"> <label class="collection-view-attribute-label">Dimension:</label> </div>
+            <div class="panel-25"> <label id="collection-view-attribute-dimension" class="collection-view-attribute-label">?</label> </div>
+            <br>
+            <br>
+            <Br>  
+                
+                
+            <div class="panel-25">  <h5>Documents:</h5> </div>
+            <div class="panel-25"> 
+                <button id="" class="theme-accent1" onclick="gotoPageViewDocuments();">View Documents</button> 
+                <button id="" class="theme-accent5" onclick="gotoPageAddDocuments();">Add Document</button>
+            </div>
+            <br>
+            <div class="panel-25"> <label class="collection-view-attribute-label">Count:</label> </div>
+            <div class="panel-25"> <label id="collection-view-documents-count" class="collection-view-attribute-label">?</label> </div>
+            <Br>
+            <br>
+            <br>
+                
+            <h5>Collection Configuration:</h5>
+            <div class="panel-25"> <label class="collection-view-attribute-label">Space:</label> </div>
+            <div class="panel-25"> <label id="collection-view-attribute-space" class="collection-view-attribute-label">?</label> </div>
+            <br>
+                
+            <div class="panel-25"> <label class="collection-view-attribute-label">EF Construction:</label> </div>
+            <div class="panel-25"> <label id="collection-view-attribute-efconstruction" class="collection-view-attribute-label">?</label> </div>
+            <br>
+                
+            <div class="panel-25"> <label class="collection-view-attribute-label">EF Search:</label> </div>
+            <div class="panel-25"> <label id="collection-view-attribute-efsearch" class="collection-view-attribute-label">?</label> </div>
+            <br>
+                
+            <div class="panel-25"> <label class="collection-view-attribute-label">Number of Threads:</label> </div>
+            <div class="panel-25"> <label id="collection-view-attribute-numofthreads" class="collection-view-attribute-label">?</label> </div>
+            <br>
+                
+            <div class="panel-25"> <label class="collection-view-attribute-label">M:</label> </div>
+            <div class="panel-25"> <label id="collection-view-attribute-m" class="collection-view-attribute-label">?</label> </div>
+            <br>
+                
+            <div class="panel-25"> <label class="collection-view-attribute-label">Resize Factor:</label> </div>
+            <div class="panel-25"> <label id="collection-view-attribute-resizefactor" class="collection-view-attribute-label">?</label> </div>
+            <br>
+                
+            <div class="panel-25"> <label class="collection-view-attribute-label">Batch Size:</label> </div>
+            <div class="panel-25"> <label id="collection-view-attribute-batchsize" class="collection-view-attribute-label">?</label> </div>
+            <br>
+                
+            <div class="panel-25"> <label class="collection-view-attribute-label">Sync Threshold Factor:</label> </div>
+            <div class="panel-25"> <label id="collection-view-attribute-syncthreshold" class="collection-view-attribute-label">?</label> </div>
+            <br>
+            <br>
+            <Br> 
+
+            <h5>Collection Metadata - JSON:</h5>
+            <div class="panel-25"> <button id="copyBtn_CollectionMetadata" class="theme-accent1" onclick="copyToClipboard('collection-view-metadata')">Copy</button> </div>
+            <br>
+            <div class="panel-100"> <div id="collection-view-metadata" class="metadata-json-add" data="Collection View Metadata"></div> </div>  
+            <br>
+            <br>
+            
+            <h5>HTTP Responses:</h5>
+            <div class="panel-25"> <button id="copyBtn_CollectionViewHTTPResponses" class="theme-accent1" onclick="copyToClipboard('outputViewCollectionHTTPResponses')">Copy</button> </div>    
+            <div class="panel-100"> <div id="outputViewCollectionHTTPResponses" class="response-output-collection-add" data="Collection View HTTP Respopnses"></div> </div>
+            <br>
+        </div>
+        
+            
+                
+                
+                
+                
+                
+                
+                
+   
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+        <div id="section-documents-view" class="section body-content theme-colour-content">
+            <h3>Documents - View</h3>
+            
+            <div class="panel-100">
+                <div class="panel-75">
+                    <button id="btn_documentsRefresh" class="theme-accent1" onclick="getCollectionDocuments();">Refresh</button>
+                    <button id="btn_documentsAdd" class="theme-accent5" onclick="gotoPageAddDocuments();">Add</button>
+                    &nbsp; <b><label class="collection-view-attribute-label">NAME: </label></b> <label id="view-document-collectionname-label" class="collection-view-attribute-label">?</label>
+                    &nbsp;&nbsp;<B><label class="collection-view-attribute-label">COUNT:</label></b> <label id="add-document-count-label" class="collection-view-attribute-label">?</label>
+                    &nbsp;&nbsp; <button id="" class="theme-accent3" onclick="deleteAllDocuments();">Delete all Docs</button>
+                </div>
+                <!--
+                <div class="panel-25">
+                    <div class="page-counter-container">
+                        <button id="far-left"><<</button>
+                        <button id="left"><</button>
+                        <input type="number" id="counter" min="1" value="1" />
+                        <button id="right">></button>
+                        <button id="far-right">>></button>
+                    </div>
+                </div>
+                -->
+            </div>
+            <table id="documents-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th class="fixed-col">Embedding</th>
+                        <th>Metadata</th>
+                        <th>Document</th>
+                        <th>URIs</th>
+                        <th>Data</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be populated here -->
+                </tbody>
+            </table>
+        </div>
+                
+                
+                
+                
+                
+                
+                
+        <div id="section-documents-add" class="section body-content theme-colour-content">
+            <h3>Documents - Add</h3>
+            <div class="panel-25">
+                <button id="helpBtn_DocumentsAdd" class="theme-accent1" onclick="">Help</button>
+            </div>
+            <Br>
+            <br>
+            
+            
+            <h5>Adding Document To:</h5>
+            <div class="panel-25"> <label class="collection-view-attribute-label">Collection Name: </label> </div>
+            <div class="panel-25"> 
+                <label id="add-document-collectionname-label" class="collection-view-attribute-label">?</label>
+            </div>
+            <Br>
+                
+            <div class="panel-25"> <label class="collection-view-attribute-label">Document Count: </label> </div>
+            <div class="panel-25"> 
+                <label id="add-document-collection-doccount" class="collection-view-attribute-label">?</label> 
+            </div>
+            <Br>
+            <div class="panel-25"> </div>
+            <div class="panel-25"> 
+                <button id="btn_AddDocumentViewExisting" class="theme-accent1" onclick="gotoPageViewDocuments();">View Documents</button> 
+                <button id="" class="theme-accent1" onclick="gotoPageViewCollections();">View Collection</button> 
+            </div>
+            <Br>
+            <br>
+            <Br>
+
+                
+            <h5>Details:</h5>
+            <div class="panel-25">
+                <button id="btn_AddDocumentResetForm" class="theme-accent3" onclick="">Reset</button>
+            </div>
+            <br>
+            <div class="panel-25"> <label class="collection-view-attribute-label">Document ID: <i style="color:red">(Required)</i></label> </div>
+            <div class="panel-25"> 
+                <input type="text" id="add-document-id" placeholder="Enter a Document ID" required>  
+                <button type="button" id="btn-generate-id" class="theme-accent2" onclick="generateUUID2()">Auto-generate</button></div>
+            <br>
+                
+            <div class="panel-25"> <label class="collection-view-attribute-label">URI / Path: <i class="theme-text-bracketed">(optional)</i></label> </div>
+            <div class="panel-25"> 
+                <input type="text" id="add-document-uri" placeholder="Enter URI or Path to Original Document"> 
+                <button type="button" id="helpBtn_addDocumentURIPath" class="theme-accent1" onclick="">Help</button>
+            </div>
+            <br>
+            <Br>
+                
+            <div class="panel-25"> <label class="collection-view-attribute-label floatLeft">Document Content:</label> </div>
+            <br>
+            <div class="panel-100"> <textarea type="text" id="add-document-content" placeholder="Document Content" class="data-textarea"> </textarea> </div>
+            <br>
+            <br>
+            <Br>
+                
+            <h5>Document Metadata: <i class="theme-text-bracketed">(optional)</i></h5>
+            <div class="panel-25"> <button id="copyBtn_CollectionAddMetadata" class="theme-accent1" onclick="copyToClipboard('collection-add-metadatajson')">Copy</button> </div>
+            <br>
+            <div class="panel-25">
+                <label>
+                    <input type="checkbox" id="include-metadata" />
+                    Include Metadata <br>
+                    <!-- <b style="color:red; font-size:11px;">WARNING: Existing MetaData will be overwritten</b> -->
+                </label>
+            </div>
+            <div class="panel-25">
+                <button id="helpBtn_CollectionAddIncludeMetadata" class="theme-accent1" onclick="">Help</button>
+            </div>
+            <br>
+            <div class="panel-100" > 
+                <textarea type="text" id="add-document-metadata" class="metadata-json-add" value='' data="Add Document Metadata" style="height:250px;">
+{
+    "document_code": "MyDoc_001",
+    "chunk_total": 100,
+    "chunk_num": 1,
+    "date_added": "2024-09-08",
+    "file_name": "MyDoc.txt",
+    "file_type": "text",
+    "file_ext": "txt",
+    "file_datecreated": "2001-01-01"
+}
+                </textarea> 
+            </div>
+            <br>
+            <br>
+            <br>
+         
+            <h5>Document Embedding: <i class="theme-text-bracketed">(optional)</i></h5>
+            <div class="panel-25"> <button id="copyBtn_CollectionAddMetadata" class="theme-accent1" onclick="copyToClipboard('collection-add-metadatajson')">Copy</button> </div>
+            <br>
+            <div class="panel-25">
+                <label>
+                    <input type="checkbox" id="include-metadata" />
+                    Include Embedding <br>
+                </label>
+            </div>
+            <div class="panel-25">
+                <button id="helpBtn_CollectionAddIncludeMetadata" class="theme-accent1" onclick="">Help</button>
+            </div>
+            <br>
+            <div class="panel-100" > 
+                <textarea type="text" id="add-document-embedding" class="metadata-json-add" value='' data="Add Document Embedding"></textarea> 
+            </div>
+            <br>
+            <br>
+                
+            <div class="panel-25"> </div>
+            <div class="panel-25"> <button id="" class="theme-accent5" onclick="addDocument();">Add Document</button> </div>
+            <Br>
+                
+            <h5>HTTP Responses:</h5>
+            <div class="panel-25"> <button id="copyBtn_DocumentAddHTTPResponses" class="theme-accent1" onclick="copyToClipboard('outputAddDocumentHTTPResponses')">Copy</button> </div>  
+            <div class="panel-100"> <div id="outputAddDocumentHTTPResponses" class="response-output-collection-add" data="Document Add HTTP Responses"></div> </div>
+            <br>
+        </div>
+                
+            
+                
+                
+                
+                
+                
+                
+        
+                
+                
+                
+            
+        <div id="section-embedding-generate" class="section body-content theme-colour-content">
+            <h3>Embedding - Generate</h3>
+            <Br>
+            
+            <h5 style="display: inline-block">Embedding Model Endpoint:</h5>
+            <br>
+            <div class="panel-25"> <input type="text" id="embedding-generate-testconnection" class="response-output-collection-add" placeholder="Endpoint Address for Embedding Model - Local LLM, or OpenAI" value="http://localhost:1234/v1/embeddings"></textarea>  </div>
+            <div class="panel-25"> <button type="button" id="btn-embedding-test-endpoint" class="theme-accent5" onclick="testConnectionEmbeddings();">Test Connection</button> </div>
+            <br>
+            <br>
+            
+            <h5 style="display: inline-block">Text to Embed:</h5>  <i style="color:red">(Required)</i>
+            <Br>
+            <div class="panel-100"> <textarea id="embedding-generate-textcontent" class="response-output-collection-add" placeholder="Enter the text you want to embed..." required></textarea>  </div>
+            <div class="panel-25"> <button type="button" id="btn-embedding-generate" class="theme-accent5" onclick="generateEmbedding();">Generate Embedding</button> </div>
+            <br>
+            <Br>
+              
+            <h5>Embedding:</h5>
+            <div class="panel-100"> <textarea type="text" id="embedding-generate-embedding-response" class="response-output-collection-add" placeholder=""></textarea>  </div>
+            <br>
+            <Br>
+                
+            <h5>HTTP Response:</h5>
+            <div class="panel-100"> <textarea type="text" id="embedding-generate-httpresponse" class="response-output-collection-add" placeholder=""></textarea>  </div>
+            <br>
+            <Br>
+        </div>
+        
+            
+            
+            
+            
+            
+                
+                
+                
+                
+                
+        <div id="section-search-text" class="section body-content theme-colour-content">
+            <h3>Text Search</h3>
+                
+            <button id="" class="theme-accent1" onclick="">Help</button>
+            <button id="" class="theme-accent5" onclick="addNewFilter();">Add Filter</button>
+            <button id="remove-all-filters" class="theme-accent3" onclick="removeAllFilters();">Remove All Filters</button>
+            <button id="" class="theme-accent4" onclick="runSearchText();">Search</button>
+            <br>
+            
+            <h5>If Document:</h5>
+            <div class="panel-25"> 
+                <select id="search-text-select-contains" onchange="">
+                  <option selected>contains</option>
+                  <option >not contains</option>
+                </select>
+            </div>
+            <div class="panel-50"> <input type="text" id="search-text-querystring" placeholder="Enter a Search Term"> </div>
+            <br>
+            
+            <div id="showAndOrSelect" class="panel-25">
+                <select id="search-text-select-and-or">
+                    <option selected value="$and">AND</option>
+                    <option value="$or">OR</option>
+                </select>
+            </div>
+            <br>
+            
+            <div id="search-text-filtergroup">
+                <!-- html will be populated here at runtime -->
+            </div>
+            <Br>
+             
+            <h5>Search Results:</h5>
+            <table id="search-text-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Embeddings</th>
+                        <th>Metadata</th>
+                        <th>Document</th>
+                        <th>URIs</th>
+                        <th>Data</th>
+                        <th>Distance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be populated here -->
+                </tbody>
+            </table>
+            <Br>
+            <br>
+            
+            <h5>Payload Sent to API:</h5>
+            <div class="panel-25"> <button id="" class="theme-accent1" onclick="copyToClipboard('outputSearchTextHTTPResponses')">Copy</button> </div>  
+            <div class="panel-100"> <div id="outputSearchTextHTTPResponses" class="response-output-collection-add" data="Search Text HTTP Responses"></div> </div>
+            <br>
+        </div>
+        
+            
+            
+            
+            
+                
+                
+        <div id="section-search-vector" class="section body-content theme-colour-content">
+            <h3>Vector Search</h3>
+            <br>
+        </div>
+                
+                
+                
+                
+                
+            
+        <div id="section-settings" class="section body-content theme-colour-content">
+            <h3>Settings</h3>
+            <Br>
+        </div>
+        
+                
+        <!--   
+        <div id="section-getting-started" class="section body-content theme-colour-content">
+            <h3>Getting Started</h3>
+            <br>
+        </div>
+        -->        
+                
+            
+            
+            
+                
+            
+        <div id="section-about" class="section body-content theme-colour-content">
+            <h3>About</h3>
+            <br>
+            
+            <div class="panel-25"> <label>ChromaDB Server Version:</label> </div>
+            <div class="panel-25"> <input type="text" id="chroma-server-version"/> </div>
+            <div class="panel-25"> <button class="theme-accent5" onclick="getChromaServerVersion();">Get</button> </div> 
+            <div class="panel-25"></div>
+        </div>
+        
+            
+            
+            
+            
+            
+            
+                
+        <div id="section-documentation" class="section body-content theme-colour-content">
+            <h3>Documentation</h3>
+            <br>
+            
+            <div class="panel-50"> 
+                <label for="gettingStartedBtn">Chroma Dash </label> <Br>
+                <i class="theme-text-size-small theme-text-bracketed">Documentation for <b class="theme-text-bracketed">THIS</b> Application.</i> 
+            </div>
+            <div class="panel-50"> <button id="gettingStartedBtn" class="theme-accent1 floatLeft" onclick="showSection('section-getting-started');">Getting Started</button> </div>
+            <br>
+            <br>
+            
+            <div class="panel-50"> 
+                <label for="gettingStartedBtn">Mutable.AI - Chroma Core Project</label> <Br>
+                <i class="theme-text-size-small theme-text-bracketed">Mutable.AI auto generates a wiki from any URL repository, so this link points to the Core ChromaDB Github project. Not only can you look through wiki pages it generates, but it has a chat option so you can interact with an AI chatbot thats effectively a an expert on the subject. This can be INVALUEABLE when other documentation is ambiguous, uncomprehensive, or contradictive.</i> 
+            </div>
+            <div class="panel-50"> <button id="troubleshooting-mutableai" class="theme-accent4 floatLeft" onclick="gotoMutableAIChromaWiki();">Mutable AI</button> </div>
+            <br>
+            <br>
+                
+            <div class="panel-50"> 
+                <label for="documentation-api-docs">Chroma FastAPI (swagger)</label> <Br>
+                <i class="theme-text-size-small theme-text-bracketed">Navigates to the built-in Swagger API that comes with ChromaDB, by appending "/api/v2/docs" to your Chroma Server Endpoint.</i> 
+            </div>
+            <div class="panel-50"> <button id="documentation-api-docs" class="theme-accent5 floatLeft" onclick="gotoSwaggerAPIDocs();">FastAPI</button> </div>
+            <br>
+            <br>
+                
+                
+            <div class="panel-50"> 
+                <label for="documentation-chroma-docs">Chroma Docs</label>  <Br>
+                <i class="theme-text-size-small theme-text-bracketed">Navigates to "Chroma Docs" website, providing documentation for writing your own clients in a range of languages such as python, Node.JS, .NET, etc.</i> 
+            </div>
+            <div class="panel-50"> <button id="documentation-chroma-docs" class="theme-accent1 floatLeft" onclick="gotoChromaDocs();">Chroma Docs</button> </div>
+            <br>
+            <br>
+                
+                
+            <div class="panel-50"> 
+                <label for="documentation-chroma-cookbook">Chroma DB CookBook</label>  <Br>
+                <i class="theme-text-size-small theme-text-bracketed">Navigates to "Cookbook Chroma" website - the unoffical guide to ChromaDB. Also provides documentation on writing your own clients in other languages.</i> 
+            </div>
+            <div class="panel-50"> <button id="documentation-chroma-cookbook" class="theme-accent1 floatLeft" onclick="gotoChromaCookbook();">Chroma CookBoook</button> </div>
+            <br>
+            <br>
+                
+        </div>
+        
+                
+      
+                
+                
+                
+                
+        <div id="section-otherguis" class="section body-content theme-colour-content">
+            <h3>Other GUI's</h3>
+            <br>
+            
+            <div class="panel-50"> 
+                <label for="gettingStartedBtn">Chroma UI</label> <Br>
+                <i class="theme-text-size-small theme-text-bracketed">Github and Direct link to hosted application that can let you view collections quickly and easily, and add, delete or edit your documents. Works on local ChromaDB instances. It's just a basic viewer, but its a convenient tool.</i> 
+            </div>
+            <div class="panel-50"> 
+                <button id="otherguis-chromaui-app" class="theme-accent5 floatLeft" onclick="gotoChromaUIApp();">Chroma UI App</button>
+                <button id="otherguis-chromaui-github" class="theme-accent4 floatLeft" onclick="gotoChromaUIGitHub();">Git Hub</button>
+            </div>
+            <br>
+            <br>
+            
+            
+            <div class="panel-50"> 
+                <label for="otherguis-chromapeek-github">Chroma Peek</label> <Br>
+                <i class="theme-text-size-small theme-text-bracketed">Github page for a python GUI Client, but you have to install it and compile yourself and requires python plus other dependancies in order to work.</i> 
+            </div>
+            <div class="panel-50"> <button id="otherguis-chromapeek-github" class="theme-accent4 floatLeft" onclick="gotoChromaPeekGitHub();">Git Hub</button> </div>
+            <br>
+            <br>
+                
+            
+            <div class="panel-50"> 
+                <label for="documentation-chroma-docs">Chromagraphic</label>  <Br>
+                <i class="theme-text-size-small theme-text-bracketed">Github page for a python GUI Client, but you have to install it and compile yourself and requires python plus other dependancies in order to work. It also forces the use of OpenAI's API for embeddings, whereas ChromaDB by default uses the Sentence Transformers all-MiniLM-L6-v2 model ran locally on your machine.</i> 
+            </div>
+            <div class="panel-50"> <button id="otherguis-chromagraphic-github" class="theme-accent4 floatLeft" onclick="gotoChromagraphicGitHub();">Git Hub</button> </div>
+            <br>
+            <br>
+                
+                
+            <div class="panel-50"> 
+                <label for="">Vector Admin</label> <Br>
+                <i class="theme-text-size-small theme-text-bracketed">Website and GitHub page for Vector Admin. Although they have a paid solution, they also open-source a local instance you can host yourself.
+                    However, its a nightmare to get working on windows unless you're willing to use Docker (which has its own issues) - luckily Mac OS and Linux have easier installs.
+                    Their aim is to be a universal Vector Database GUI IDE solution, and ChromaDB is one they currently support. This might be a good choice for you, maybe not. 
+                </i> 
+            </div>
+            <div class="panel-50"> 
+                <button id="otherguis-vectoradmin-website" class="theme-accent1 floatLeft" onclick="gotoVectorAdminSite();">Website</button>
+                <button id="otherguis-vectoradmin-github" class="theme-accent4 floatLeft" onclick="gotoVectorAdminGitHub();">Git Hub</button>
+            </div>
+            <br>
+            <br>
+   
+        </div>
+                
+               
+                
+                
+                
+                
+                
+        <div id="section-troubleshooting" class="section body-content theme-colour-content">
+            <h3>Troubleshooting</h3>
+            <br>
+            
+            <div class="panel-50"> 
+                <label for="gettingStartedBtn">Mutable.AI - Chroma Core Project</label> <Br>
+                <i class="theme-text-size-small theme-text-bracketed">Mutable.AI auto generates a wiki from any URL repository, so this link points to the Core ChromaDB Github project. Not only can you look through wiki pages it generates, but it has a chat option so you can interact with an AI chatbot thats effectively a an expert on the subject. This can be INVALUEABLE when other documentation is ambiguous, uncomprehensive, or contradictive.</i> 
+            </div>
+            <div class="panel-50"> <button id="troubleshooting-mutableai" class="theme-accent4 floatLeft" onclick="gotoMutableAIChromaWiki();">Mutable AI</button> </div>
+            <br>
+            <br>
+        </div>
+                
+            
+            
+            
+            
+            
+            
+            
+        <div id="section-faqs" class="section body-content theme-colour-content">
+            <h3>FAQ's</h3>
+            <br>
+            
+            <div class="panel-100"> 
+                <label for="gettingStartedBtn">Question</label> <Br>
+                <i class="theme-text-size-small theme-text-bracketed">Adding documents via the fastAPI doesnt auto generate the embeddings - i thought its supposed to?</i> 
+            </div>
+            <div class="panel-100"> 
+                <label for="gettingStartedBtn">Answer</label> <Br>
+                <i class="theme-text-size-small theme-text-bracketed">When adding documents via the FastAPI, embeddings are not automatically generated. The FastAPI routes for adding embeddings (/api/v2/tenants/default_tenant/databases/default_database/collections/{collection_id}/add) expect the embeddings to be provided explicitly in the request body.<br>
+                Therefore, you need to provide the embeddings explicitly when adding documents via the FastAPI. If you want to auto-generate embeddings from documents, you would need to implement that logic separately, possibly by using an embedding function before making the API call.</i> 
+            </div>
+            <br>
+            <br>
+            <br>
+                
+            <div class="panel-100"> 
+                <label for="gettingStartedBtn">Question</label> <Br>
+                <i class="theme-text-size-small theme-text-bracketed">Do only the python and node.js libraries contain the embedding functions you need to use before sending the "add document" API call to the rest API? Is that what the documentation means by "it embeds documents for you automatically?" But only if done using a chroma library?</i> 
+            </div>
+            <div class="panel-100"> 
+                <label for="gettingStartedBtn">Answer</label> <Br>
+                <i class="theme-text-size-small theme-text-bracketed">Yes, the Python and JavaScript (Node.js) client libraries for Chroma contain the embedding functions needed to embed documents before sending the "add document" API call to the REST API. This is indicated by the classes such as OpenAIEmbeddingFunction, CohereEmbeddingFunction, and DefaultEmbeddingFunction in the JavaScript client, and similar functionality in the Python client.<Br>
+The documentation implies that these client libraries handle the embedding of documents automatically when you use them, which means that if you use the Chroma client libraries, the documents will be embedded for you before being sent to the REST API. This automatic embedding does not occur if you make a direct REST API call without using the Chroma client libraries.
+Refer to the JavaScript Client and Python Client sections for more details</i> 
+            </div>
+            <br>
+            <br>
+            <br>
+        </div>
+            
+            
+    </div>  <!-- Closes id="body-container" -->
+
+    
+    
+    
+            
+            
+                
+                
+                
+                
+    <!-- Modal for Messages -->
+    <div id="modal-dialog" class="off">
+        <div class="modal-titlebar">
+            <div id="modal-dialog-title" class="modal-title"> </div>
+        </div>
+        <div id="modal-dialog-message" class="modal-message">
+            Message_Text_Here 
+        </div>
+        <div id="modal-buttongroup" class="modal-buttongroup">
+            <button id="modal-button-ok" class="button-modal theme-accent5">OK</button>
+            <button id="modal-button-yes" class="button-modal theme-accent1">Yes</button>
+            <button id="modal-button-no" class="button-modal theme-accent1">No</button>
+            <button id="modal-button-cancel" class="button-modal theme-accent3" onclick="toggleModalOverlay(false)">Cancel</button>
+        </div>
+        
+    </div>
+    
+                
+                
+                
+
+                
+    <!-- Modal for Adding Document NO LONGER NEEDED - CREATED DEDICATED PAGE INSTEAD -->
+    <!--
+    <div id="modal-add-document" class="off">
+        <div class="modal-titlebar">
+            <div id="modal-add-document-title" class="modal-title">Add Document</div>
+        </div>
+        <div>
+        <Br>
+            
+            <div class="add-document-group">
+                <label for="add-document-id">ID:</label>
+                <input type="text" id="add-document-id" name="document-id" required>
+                <button type="button" id="btn-generate-id" class="theme-accent2" onclick="generateUUID2()">Auto-generate</button> 
+            </div>
+            
+            <div class="add-document-group">
+                <label id="add-document-uri-label" for="document-uri">URI / Path:</label>
+                <input type="text" id="add-document-uri" name="document-uri" required>
+            </div>
+            <Br>
+               
+            <div class="add-document-group">   
+                <label for="document-content">Document Content:</label>
+                <br>
+                <textarea id="add-document-content" name="document-content" required></textarea>
+            </div>
+               
+            <div class="add-document-group">  
+                <label for="document-metadata">Metadata:</label>
+                <br>
+                <textarea id="add-document-metadata" name="document-content"></textarea>
+            </div> 
+            
+            <div class="add-document-group">  
+                <label for="document-embedding">Embedding:</label>
+                <input type="text" id="add-document-embedding" name="document-embedding">
+            </div>
+        </div>
+        <div id="modal-buttongroup" class="modal-buttongroup">
+            <button id="modal-button-cancel" class="button-modal theme-accent3" onclick="toggleAddDocumentModal(false)">Cancel</button>
+            <button id="modal-button-ok" class="button-modal theme-accent5" onclick="submitForm()">OK</button>
+        </div>
+    </div>
+    -->        
+
+                
+    <!-- Modal Overlay -->
+    <div id="modal-overlay" class="off"></div>
+    
+                
+    <!-- Popup Notification Bubble -->       
+    <div id="notification-container"></div>           
+            
+                
+<script>
+    
+    // ===========================================================
+    // GLOBAL VARIABLES
+    // ===========================================================
+    var endpointChromaServer = document.getElementById('connection-endpoint-chroma-server').value;
+    var masterAPIKey = "ABC123";    // not actually needed for chroma, but included in the http request structure as a formality, can be anything, its ignored, but must be present.
+    
+    var connectionStatus_main = document.getElementById('connection_status_endpoint_value');
+    var connectionStatus_sideBar = document.getElementById('side-bar-connection_status_endpoint_value');
+    
+    let intervalId;                     // to keep track of the interval ID for the connection Status timer. 
+    var networkCheckInterval = 20000;   // in milliseconds
+    
+    // Global variable to store the collection ID
+    let selectedCollectionId = null;
+    
+    // Global Variable for trakcing how many "text filters" are on screen 
+    let filterCounter = 0;
+    
+    
+    
+    
+    
+    // ===========================================================
+    // MODAL FUNCTIONS 
+    // ===========================================================
+    
+    // Hide / Show Modal 
+    function toggleModalOverlay(show) {
+        const overlay = document.getElementById('modal-overlay');
+        const dialog = document.getElementById('modal-dialog');
+
+        if (show) {
+            overlay.classList.remove('off');
+            overlay.classList.add('on');
+            dialog.classList.remove('off');
+            dialog.classList.add('on');
+        } else {
+            overlay.classList.remove('on');
+            overlay.classList.add('off');
+            dialog.classList.remove('on');
+            dialog.classList.add('off');
+        }
+    }
+    
+    
+    
+    function setModalMessage(passedMessage, optionalTitle = '', buttonLayout = 1, callback = null, buttonToAttachCallback = 'ok') {
+        return new Promise((resolve) => {
+            toggleModalOverlay(true);
+
+            // Set the modal message
+            const dialog = document.getElementById('modal-dialog-message');
+            if (passedMessage) {
+                dialog.textContent = passedMessage;
+            } else {
+                dialog.textContent = "JSON is currently Empty";
+            }
+
+            // Set the modal title if provided
+            if (optionalTitle) {
+                const titleElement = document.getElementById('modal-dialog-title');
+                if (titleElement) {
+                    titleElement.textContent = optionalTitle;
+                }
+            }
+
+            // Select buttons by their ids
+            const okButton = document.getElementById('modal-button-ok');
+            const yesButton = document.getElementById('modal-button-yes');
+            const noButton = document.getElementById('modal-button-no');
+            const cancelButton = document.getElementById('modal-button-cancel');
+
+            // Hide all buttons initially
+            okButton.style.display = 'none';
+            yesButton.style.display = 'none';
+            noButton.style.display = 'none';
+            cancelButton.style.display = 'none';
+
+            // Remove any previously attached click event listeners
+            okButton.onclick = null;
+            yesButton.onclick = null;
+            noButton.onclick = null;
+            cancelButton.onclick = null;
+
+            // Set up button click handlers
+            okButton.onclick = () => { resolve('ok'); toggleModalOverlay(false); };
+            yesButton.onclick = () => { resolve('yes'); toggleModalOverlay(false); };
+            noButton.onclick = () => { resolve('no'); toggleModalOverlay(false); };
+            cancelButton.onclick = () => { resolve('cancel'); toggleModalOverlay(false); };
+
+            // Show buttons based on the buttonLayout argument
+            switch (buttonLayout) {
+                case 1: // OK only
+                    okButton.style.display = 'inline-block';
+                    break;
+                case 2: // OK and Cancel
+                    okButton.style.display = 'inline-block';
+                    cancelButton.style.display = 'inline-block';
+                    break;
+                case 3: // Yes and No
+                    yesButton.style.display = 'inline-block';
+                    yesButton.classList.add('theme-accent5');
+                    noButton.style.display = 'inline-block';
+                    noButton.classList.add('theme-accent3');
+                    break;
+                case 4: // Yes, No, and Cancel
+                    yesButton.style.display = 'inline-block';
+                    yesButton.classList.add('theme-accent5');
+                    noButton.style.display = 'inline-block';
+                    noButton.classList.add('theme-accent3');
+                    cancelButton.style.display = 'inline-block';
+                    break;
+                default:
+                    // Default to OK only if an unrecognized buttonLayout value is provided
+                    okButton.style.display = 'inline-block';
+                    break;
+            }
+
+            // Attach the callback function to the specified button
+            if (callback && typeof callback === 'function') {
+                switch (buttonToAttachCallback.toLowerCase()) {
+                    case 'ok':
+                        okButton.onclick = callback;
+                        break;
+                    case 'yes':
+                        yesButton.onclick = callback;
+                        break;
+                    case 'no':
+                        noButton.onclick = callback;
+                        break;
+                    case 'cancel':
+                        cancelButton.onclick = callback;
+                        break;
+                    default:
+                        // Default to attaching to the OK button if an unrecognized button name is provided
+                        okButton.onclick = callback;
+                        break;
+                }
+            }
+        });
+    }
+    
+    
+    function closeModal(){
+        // needed this function that accepts no arguments so it could be used in a callback
+        toggleModalOverlay(false);
+    }
+    
+    
+    function testModal(){
+        toggleModalOverlay(true);
+        setModalMessage("Test - Message_Text_Here", "Test Title", 1, closeModal, "ok");
+    }
+    
+    
+    
+    
+    
+    
+    // ===========================================================
+    // NOTIFICATION BUBBLE FUNCTIONS 
+    // ===========================================================
+    
+    function showNotification({ 
+      message, 
+      backgroundColor = "#333", 
+      opacity = 100, 
+      duration = 3000, 
+      stackFromTop = true 
+    }) {
+      const container = document.getElementById('notification-container');
+
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.className = 'notification';
+      notification.style.backgroundColor = backgroundColor;
+      notification.style.opacity = opacity / 100;
+      notification.innerHTML = message;
+
+      // Apply stacking direction
+      if (stackFromTop) {
+        // Stack from top-right
+        container.style.top = '10px';
+        container.style.bottom = 'auto';
+        notification.style.marginTop = '10px'; // Margin for spacing
+        container.prepend(notification); // Add new notification to the top
+      } else {
+        // Stack from bottom-right
+        container.style.bottom = '10px';
+        container.style.top = 'auto';
+        notification.style.marginBottom = '10px'; // Margin for spacing
+        container.append(notification); // Add new notification to the bottom
+      }
+
+      // Trigger the show animation
+      setTimeout(() => notification.classList.add('show'), 10);
+
+      // Automatically hide the notification after the duration
+      setTimeout(() => {
+        notification.classList.add('hide');
+        notification.addEventListener('transitionend', () => notification.remove());
+      }, duration);
+    }
+
+    /*
+    // Example usage
+    showNotification({
+      message: "This is a top-right notification!",
+      backgroundColor: "#3498db",
+      opacity: 90,
+      duration: 4000,
+      stackFromTop: false
+    });
+    */
+    
+    
+    
+    
+    // ===========================================================
+    // TITLE BAR FUNCTIONS 
+    // ===========================================================
+    
+    function showLoading(show){
+        if (show){
+                document.getElementById("loading-icon-wrap").style.display = 'block';
+        } else {
+                document.getElementById("loading-icon-wrap").style.display = 'none';
+        }   
+    }
+    
+    
+    
+    
+    
+    
+    
+    // ===========================================================
+    // SIDE NAV FUNCTIONS 
+    // ===========================================================
+    
+    function showSideNav(show){
+        const sideNavElem = document.getElementById('side-bar');
+        if (show) {
+            sideNavElem.style.display = 'block';
+        } else {
+            sideNavElem.style.display = 'none';
+        }
+    }
+    
+    // Expand Sub Menu Item 
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', function() {
+            // Toggle active class on the clicked menu item
+            this.classList.toggle('active');
+
+            // Toggle the visibility of submenu items under this menu item
+            const subitems = this.querySelectorAll('.menu-subitem');
+            subitems.forEach(subitem => {
+                if (subitem.style.display === 'block') {
+                    subitem.style.display = 'none';
+                } else {
+                    subitem.style.display = 'block';
+                }
+            });
+        });
+    });
+    
+    
+    // Collapse all submenus when mouse leaves the sidebar
+    function collapseAllSideBarMenus() {
+        // Remove active class and hide all submenus
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.classList.remove('active');
+            item.querySelectorAll('.menu-subitem').forEach(subitem => {
+                subitem.style.display = 'none';
+            });
+        });
+    }
+
+
+    // Add event listener to the entire sidebar to use event delegation
+    document.getElementById('side-bar').addEventListener('click', function(e) {
+        const target = e.target.closest('.menu-item, .menu-subitem');
+        if (target) {
+            const targetSection = target.getAttribute('data-target');
+            if (targetSection) {
+                showSection(targetSection);
+            }
+            // Prevent bubbling of events so submenu clicks don't trigger parent menu items
+            e.stopPropagation();
+        }
+    });
+    
+    
+    
+    
+    function syncCollectionChoice(event){
+        
+        var tempElem = document.getElementById(event.target.id);
+        tempElem.value = document.getElementById('side-bar-select-current-collection').value;
+        tempValue = tempElem.value 
+
+        document.getElementById('side-bar-select-current-collection').value = tempValue;
+        document.getElementById('select-current-collection').value = tempValue;
+                
+        
+        /*
+        // Get the id of the select element
+        alert(idOfSelectTag);
+
+        // Get the selected option's inner text from the 'side-bar-select-current-collection' select
+        var selectedOptionText = document.getElementById('side-bar-select-current-collection').options[
+            document.getElementById('side-bar-select-current-collection').selectedIndex
+        ].innerText;
+
+        // Assign the selected option's inner text to the other select element
+        document.getElementById(idOfSelectTag).value = selectedOptionText;
+*/
+        
+        /*
+        showNotification({
+          message: 'Changed Collection To: ' + document.getElementById('select-current-collection').value,
+          backgroundColor: '#2ecc71',
+          opacity: 80,
+          duration: 4000,
+          stackFromTop: false
+        });
+        */
+        
+        //getCollectionDetails();
+        //countCollectionDocs();
+        
+    }
+    
+    
+    
+    
+    function quickConnect(){
+        connectToEndpoint();
+        document.getElementById('btnQuickConnect').style.display = 'none';
+        document.getElementById('btnQuickDisconnect').style.display = 'inline-block';
+    }
+    
+    
+    function quickDisconnect(){
+        stopConnection();
+        document.getElementById('btnQuickConnect').style.display = 'inline-block';
+        document.getElementById('btnQuickDisconnect').style.display = 'none';
+    }
+    
+    
+    
+    
+    
+    
+    // ===========================================================
+    // MAIN CONTENT FUNCTIONS 
+    // ===========================================================
+
+    // Function to show the selected section and hide others
+    function showSection(sectionId) {
+        // Hide all sections
+        document.querySelectorAll('.body-content').forEach(section => {
+            section.style.display = 'none';
+        });
+
+        // Show the selected section
+        document.getElementById(sectionId).style.display = 'block';
+    }
+
+    
+    
+    function capitalizeFirstLetter(str) {
+      return str[1].toUpperCase() + str.slice(2);
+    }
+
+    
+    
+    
+    function copyToClipboard(elementId) {
+        // Get the element using the provided ID
+        var elem = document.getElementById(elementId);
+
+        if (!elem) {
+            console.error('Element not found');
+            return;
+        }
+
+        var textToCopy = '';
+
+        // Check if the element has a value (e.g., for input or textarea)
+        if (elem.value && elem.value.trim() !== '') {
+            textToCopy = elem.value;
+        } 
+        // If not, use the element's text content (this will strip HTML tags)
+        else if (elem.textContent && elem.textContent.trim() !== '') {
+            textToCopy = elem.textContent;
+        } 
+        // If neither value nor text content is available, return an error
+        else {
+            console.error('No value or text content to copy');
+            
+            showNotification({
+              message: 'No value or text content to copy',
+              backgroundColor: '#e74c3c',
+              opacity: 80,
+              duration: 4000,
+              stackFromTop: false
+            });
+            
+            return;
+        }
+
+        // Get the 'data' attribute from the element
+        var dataAttr = elem.getAttribute('data');
+
+        // Use the Clipboard API to copy text
+        navigator.clipboard.writeText(textToCopy).then(function() {
+            var message = dataAttr ? `Copied to Clipboard - ${dataAttr}` : 'Copied to Clipboard';
+            console.log(message);
+
+            showNotification({
+              message: message,
+              backgroundColor: '#9b59b6',
+              opacity: 80,
+              duration: 4000,
+              stackFromTop: false
+            });
+
+        }).catch(function(error) {
+            console.error('Error copying text: ', error);
+        });
+    }
+
+    
+    
+    // Function to send API call with optional method and payload
+    async function sendAPICall(endpoint, apiKey, method = 'GET', payload = null) {
+        try {
+            showLoading(true);
+            const options = {
+                method: method,
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            if (payload) {
+                options.body = JSON.stringify(payload);
+            }
+
+            const response = await fetch(endpoint, options);
+
+            if (!response.ok) {
+                throw new Error(`Network response was not ok. Status: ${response.status}`);
+            }
+
+            // Return the response object (or response data if needed)
+            showLoading(false);
+            return response;
+        } catch (error) {
+            // Throw the error to handle it in the calling function
+            throw new Error(`Error: ${error.message}`);
+            showLoading(false);
+        }
+    }
+
+    
+    
+    
+    
+    
+    
+    // ===========================================================
+    // CONNECT FUNCTIONS
+    // ===========================================================
+
+    
+    async function connectToEndpoint() {
+        const responseOutput = document.getElementById('connection-response-message-output');
+
+        // Define a function that checks the connection and updates the UI
+        async function checkConnection() {
+            console.log("Interval triggered - checking connection...");
+            showLoading(true);
+            try {
+                var connected = await testHeartbeat();
+                if (connected) {
+                    setUI_Connected();
+                    showLoading(false);
+                    responseOutput.innerHTML = "";
+                } else {
+                    showLoading(true);
+                    setUI_Disconnected();
+                    responseOutput.innerHTML = 'Connection Failed - Ensure ChromaDB Server is running,\nand CORS is configured to allow your host, or allow all hosts ["*"]';
+                    showNotification({
+                      message: 'Connection Failed - Ensure ChromaDB Server is running - OR STOP THE NETWORK CHECK',
+                      backgroundColor: '#e74c3c',
+                      opacity: 80,
+                      duration: 4000,
+                      stackFromTop: false
+                    });
+                }
+            } catch (error) {
+                console.error("Error checking connection:", error);
+                setUI_Disconnected(); // Handle error by setting to disconnected state
+            }
+        }
+
+        // Perform an initial connection check immediately
+        //setModalMessage("Network Check Started\nEnsure ChromaDB Server is running.", "Started Connection Check", 1, closeModal, "ok");
+
+        showNotification({
+          message: "Network Check Started - Ensure ChromaDB Server is running",
+          backgroundColor: '#34495e',
+          opacity: 80,
+          duration: 4000,
+          stackFromTop: false
+        });
+
+        console.log("Checking connection initially...");
+        await checkConnection();
+
+        // Clear any existing interval before setting a new one
+        if (intervalId) {
+            clearInterval(intervalId);
+            console.log("Cleared existing interval with ID:", intervalId);
+        }
+
+        // Set an interval to check the connection
+        intervalId = setInterval(checkConnection, networkCheckInterval);
+        console.log("Interval set with ID:", intervalId);
+    }
+
+    
+    // Function to stop the repeated connection checks
+    function stopConnection() {
+        if (intervalId) {
+            clearInterval(intervalId); // Stops the interval
+            console.log("Interval cleared with ID:", intervalId);
+            intervalId = null; // Reset the interval ID
+            setUI_Disconnected();
+            //setModalMessage("Network Check Stopped Successfully", "Stopped Connection Check", 1, closeModal, "ok");
+
+            showNotification({
+              message: "Network Check Stopped",
+              backgroundColor: '#e74c3c',
+              opacity: 80,
+              duration: 4000,
+              stackFromTop: false
+            });
+            showLoading(false);
+        }
+    }
+    
+    
+    function setUI_Connected(){
+        // Set Text
+        var textString = 'Connected'
+        connectionStatus_main.textContent = textString;
+        connectionStatus_sideBar.textContent = textString;
+        
+        // Set Colour
+        connectionStatus_main.style.color = 'green';
+        connectionStatus_sideBar.style.color = 'green';
+        
+        // Set Icon Dot 
+        document.getElementById('connection-status-img-dot').src = "images/status_connected.png";
+        document.getElementById('side-bar-status-img-dot').src = "images/status_connected.png";
+    }
+    
+    
+    function setUI_Disconnected(){
+        // Set Text
+        var textString = 'Disconnected'
+        connectionStatus_main.textContent = textString;
+        connectionStatus_sideBar.textContent = textString;
+        
+        // Set Colour
+        connectionStatus_main.style.color = 'red';
+        connectionStatus_sideBar.style.color = 'red';
+        
+        // Set Icon Dot 
+        document.getElementById('connection-status-img-dot').src = "images/status_disconnected.png";
+        document.getElementById('side-bar-status-img-dot').src = "images/status_disconnected.png";
+    }
+    
+    
+    
+    // Function to test heartbeat
+    async function testHeartbeat() {
+        showLoading(true);
+        const endpointAndMethod = endpointChromaServer + '/api/v2/heartbeat';
+        const apiKey = masterAPIKey;
+        try {
+            const response = await sendAPICall(endpointAndMethod, apiKey);
+
+            if (response.ok) { // 'ok' is true for response status in the range 200-299
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            return false;
+        }
+        showLoading(false);
+    }
+    
+    
+
+    // Test Endpoint Button
+    document.getElementById('Connection_TestEndpointBtn').addEventListener('click', async function() {
+        const labelConnectionResult = document.getElementById('connection_endpoint_testResults');
+        const responseOutput = document.getElementById('connection-response-message-output');
+        responseOutput.innerHTML = "";
+        showLoading(true);
+        
+        try {
+            labelConnectionResult.value = "Please Wait...";
+            
+            // Use testHeartbeat to check the connection
+            const isSuccessful = await testHeartbeat();
+
+            if (isSuccessful) {
+                labelConnectionResult.value = 'Success --- ' + new Date().toString();
+                    showNotification({
+                      message: 'Success',
+                      backgroundColor: '#2ecc71',
+                      opacity: 80,
+                      duration: 4000,
+                      stackFromTop: false
+                    });
+            } else {
+                labelConnectionResult.value = 'Failed - Confirm ChromaServer is running\n - Ensure CORS (Cross-Origin Resource Sharing) allows your host(s)';
+                showNotification({
+                  message: 'Test connection failed - Confirm ChromaServer is running\n - Ensure CORS (Cross-Origin Resource Sharing) allows your host(s)',
+                  backgroundColor: '#e74c3c',
+                  opacity: 80,
+                  duration: 4000,
+                  stackFromTop: false
+                });
+            }
+        } catch (error) {
+            var tempMsg = `${error.message}\n\n Check the Following:\n  - Confirm ChromaServer is running\n  - Ensure CORS (Cross-Origin Resource Sharing) allows your host(s)`;
+            labelConnectionResult.value = tempMsg;
+        }
+        showLoading(false);
+    });
+
+    
+    
+
+    
+    // Test Preflight Checks Button
+    document.getElementById('Connection_TestPreflightBtn').addEventListener('click', async function() {
+        const labelPreFlightResult = document.getElementById('connection-preflight-checks');
+        const endpoint = document.getElementById('connection-endpoint-chroma-server').value + '/api/v2/pre-flight-checks';
+        const apiKey = masterAPIKey;
+        const responseOutput = document.getElementById('connection-response-message-output');
+        responseOutput.innerHTML = "";
+        showLoading(true);
+        
+        try {
+            labelPreFlightResult.value = "Please Wait...";
+            const response = await fetch(endpoint, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`
+                }
+            });
+            const data = await response.json();
+            responseOutput.innerHTML = JSON.stringify(data);
+            labelPreFlightResult.value = 'Get PreFlight Checks Successful --- ' + new Date().toString();
+                showNotification({
+                  message: 'Success',
+                  backgroundColor: '#2ecc71',
+                  opacity: 80,
+                  duration: 4000,
+                  stackFromTop: false
+                });
+        } catch (error) {
+            labelPreFlightResult.value = `Error: ${error.message}\n\n Check the Following:\n  - Confirm ChromaServer is running\n  - Ensure CORS (Cross-Origin Resource Sharing) allows your host(s)`;
+            showNotification({
+              message: `Error: ${error.message}\n\n Check the Following:\n  - Confirm ChromaServer is running\n  - Ensure CORS (Cross-Origin Resource Sharing) allows your host(s)`,
+              backgroundColor: '#e74c3c',
+              opacity: 80,
+              duration: 4000,
+              stackFromTop: false
+            });
+        }
+        showLoading(false);
+    });
+    
+    
+    
+    
+    
+
+    
+    
+    
+    // ===========================================================
+    // DATA - COLLECTIONS FUNCTIONS 
+    // ===========================================================
+    
+    function selectThisCollection(passedValue) {
+        setTimeout(function() {
+            document.getElementById('select-current-collection').value = passedValue;
+            getCollectionDetails();
+        }, 800);
+    }
+    
+    
+    // Function to get all collections from ChromaDB and populate the dropdown
+    async function getAllCollections(){
+        showLoading(true);
+        const selectElement = document.getElementById('select-current-collection');
+        const selectElementSideBar = document.getElementById('side-bar-select-current-collection');
+        const endpoint = document.getElementById('connection-endpoint-chroma-server').value + '/api/v2/tenants/default_tenant/databases/default_database/collections'; // Update the endpoint if needed
+        const apiKey = masterAPIKey;
+
+        try {
+            // Fetch collections
+            const response = await sendAPICall(endpoint, apiKey);
+            if (!response.ok) {
+                throw new Error(`Network response was not ok. Status: ${response.status}`);
+            }
+            const data = await response.json();
+
+            // Directly use the data as it is an array of collection objects
+            const collections = Array.isArray(data) ? data : [];
+            const collectionNames = collections.map(collection => collection.name);
+
+            // Sort collection names alphabetically
+            collectionNames.sort((a, b) => a.localeCompare(b));
+
+            // Clear previous options
+            selectElement.innerHTML = '';
+            selectElementSideBar.innerHTML = '';
+            
+            // Add options to the select element
+            if (collectionNames.length > 0) {
+                collectionNames.forEach(name => {
+                    const option = document.createElement('option');
+                    option.value = name;
+                    option.textContent = name;
+                    selectElement.appendChild(option);
+                });
+            } else {
+                const option = document.createElement('option');
+                option.textContent = 'No Collections Available';
+                selectElement.appendChild(option);
+            }
+
+            // Show success notification
+            showNotification({
+                message: 'Collections List Refreshed Successfully.',
+                backgroundColor: '#2ecc71',
+                opacity: 80,
+                duration: 4000,
+                stackFromTop: false
+            });
+            showLoading(false);
+        } catch (error) {
+            // Show error notification
+            showNotification({
+                message: `Error: ${error.message}\n\n Check the Following:\n  - Confirm ChromaDB server is running\n  - Ensure CORS (Cross-Origin Resource Sharing) allows your host(s)`,
+                backgroundColor: '#e74c3c',
+                opacity: 80,
+                duration: 4000,
+                stackFromTop: false
+            });
+            showLoading(false);
+        }
+
+        selectElementSideBar.innerHTML = selectElement.innerHTML;
+        
+        selectElementSideBar.value = selectElement.value;
+        
+        showLoading(false);
+        
+        getCollectionDetails();
+        
+        var selectedCollectionName = document.getElementById('select-current-collection').value;
+        fetchCollectionIdByName(selectedCollectionName);
+    }
+
+    
+    
+    
+    
+    
+    async function getCollectionDetails() {
+        try {        
+            showLoading(true);
+            
+            showNotification({
+              message: 'Changed Collection To: ' + document.getElementById('select-current-collection').value,
+              backgroundColor: '#2ecc71',
+              opacity: 80,
+              duration: 4000,
+              stackFromTop: false
+            });
+            
+            // Get the selected collection name from the dropdown
+            const selectedCollectionName = document.getElementById('select-current-collection').value;
+            const selectElementSideBar = document.getElementById('side-bar-select-current-collection').value = selectedCollectionName;
+
+            // Define the API endpoint using the selected collection name
+            const endpoint = `${endpointChromaServer}/api/v2/tenants/default_tenant/databases/default_database/collections/${selectedCollectionName}`;
+
+            // Make the API call to get the collection details
+            const response = await sendAPICall(endpoint, masterAPIKey);
+
+            if (!response.ok) {
+                throw new Error(`API call failed with status ${response.status}`);
+            }
+
+            const collectionData = await response.json();
+
+            // Helper function to set innerText with null check
+            function setText(elementId, value) {
+                document.getElementById(elementId).innerText = value === null ? "null" : (value || "?");
+            }
+
+            // Populate the HTML fields with the response data
+            setText('collection-view-attribute-id', collectionData.id);
+            setText('collection-view-attribute-name', collectionData.name);
+            setText('view-document-collectionname-label', collectionData.name);  // also update the collection name label on the view documents page
+            setText('add-document-collectionname-label', collectionData.name);  // also update the collection name label on the add documents page
+            setText('collection-view-attribute-tenant', collectionData.tenant);
+            setText('collection-view-attribute-database', collectionData.database);
+            setText('collection-view-attribute-dimension', collectionData.dimension);
+            
+            // Display the Document Count for the Selected Collection
+            var docCount = await countCollectionDocs();
+            if (docCount > 0) {
+                getCollectionDocuments();
+            } else {
+                clearDocumentTable();
+            }
+
+            // Populate the configuration fields from the hnsw_configuration part of the JSON
+            const config = collectionData.configuration_json?.hnsw_configuration || {};
+
+            setText('collection-view-attribute-space', config.space);
+            setText('collection-view-attribute-efconstruction', config.ef_construction);
+            setText('collection-view-attribute-efsearch', config.ef_search);
+            setText('collection-view-attribute-numofthreads', config.num_threads);
+            setText('collection-view-attribute-m', config.M);
+            setText('collection-view-attribute-resizefactor', config.resize_factor);
+            setText('collection-view-attribute-batchsize', config.batch_size);
+            setText('collection-view-attribute-syncthreshold', config.sync_threshold);
+
+            // Handle metadata if it exists and populate JSON format
+            const metadataDiv = document.querySelector('.metadata-json-add');
+            if (collectionData.metadata) {
+                metadataDiv.innerText = JSON.stringify(collectionData.metadata, null, 2);
+            } else {
+                metadataDiv.innerText = "{}"; // Show empty object if no metadata
+            }
+
+            // Optionally, display the raw API response (HTTP Responses section)
+            document.getElementById('outputViewCollectionHTTPResponses').innerText = JSON.stringify(collectionData, null, 2);
+            
+            /*
+            showNotification({
+                message: `Displaying Collection Details`,
+                backgroundColor: '#2ecc71',
+                opacity: 80,
+                duration: 4000,
+                stackFromTop: false
+            });
+            */
+        
+            showLoading(false);
+            
+        } catch (error) {
+            console.error("Error fetching collection details:", error);
+            //alert('Error fetching collection details: ' + error.message);
+            showNotification({
+                message: 'Error fetching collection details: ' + error.message,
+                backgroundColor: '#e74c3c',
+                opacity: 80,
+                duration: 4000,
+                stackFromTop: false
+            });
+            showLoading(false);
+        }
+    }
+    
+   
+    
+    async function countCollectionDocs() {
+        showLoading(true);
+        
+        // Get the selected collection name
+        const selectElement = document.getElementById('select-current-collection');
+        const collectionName = selectElement.value;
+        console.log('selected Collection Name:', collectionName);
+
+        try {
+            // Step 1: Get the collection ID
+            const collectionEndpoint = `${endpointChromaServer}/api/v2/tenants/default_tenant/databases/default_database/collections/${collectionName}`;
+            const collectionResponse = await sendAPICall(collectionEndpoint, masterAPIKey);
+
+            if (!collectionResponse.ok) {
+                throw new Error(`Failed to fetch collection ID for collection: ${collectionName}`);
+            }
+
+            const collectionData = await collectionResponse.json();
+            const collectionId = collectionData.id;
+            console.log('selected Collection ID:', collectionData.id);
+
+            // Step 2: Get the document count using the collection ID
+            const countEndpoint = `${endpointChromaServer}/api/v2/tenants/default_tenant/databases/default_database/collections/${collectionId}/count`;
+            const countResponse = await sendAPICall(countEndpoint, masterAPIKey);
+            console.log('Attempting Endpoint: ', countEndpoint);
+
+            if (!countResponse.ok) {
+                throw new Error(`Failed to fetch document count for collection ID: ${collectionId}`);
+            }
+
+            const documentCount = await countResponse.json();
+
+            // Log the response to debug its structure
+            console.log('Document Count: ', documentCount);
+
+            // Step 3: Update the HTML element with the count
+            document.getElementById('collection-view-documents-count').textContent = documentCount;
+            document.getElementById('add-document-count-label').textContent = documentCount;
+            document.getElementById('add-document-collection-doccount').textContent = documentCount;
+            
+            generateUUID1();
+            showLoading(false);
+            return documentCount;
+        
+        } catch (error) {
+            console.error(error.message);
+            document.getElementById('collection-view-documents-count').textContent = '?';
+            document.getElementById('add-document-count-label').textContent = '?';
+            alert("Failed to retrieve document count. Please try again.");
+            showLoading(false);
+            return 0;
+        }
+    }
+
+    
+    
+    
+    async function addCollectionSetDefaultConfig() {
+        // Populate the HTML fields
+        document.getElementById('collection-add-space').value = "l2";
+        document.getElementById('collection-add-efconstruction').value = "100";
+        document.getElementById('collection-add-efsearch').value = "10";
+        document.getElementById('collection-add-numofthreads').value = "16";
+        document.getElementById('collection-add-m').value = "16";
+        document.getElementById('collection-add-resizefactor').value = "1.2";
+        document.getElementById('collection-add-batchsize').value = "100";
+        document.getElementById('collection-add-syncthreshold').value = "1000";
+        closeModal();
+    }
+    
+
+    
+    async function addCollectionClearConfig() {    
+        // Populate the HTML fields
+        document.getElementById('collection-add-space').value = "";
+        document.getElementById('collection-add-efconstruction').value = "";
+        document.getElementById('collection-add-efsearch').value = "";
+        document.getElementById('collection-add-numofthreads').value = "";
+        document.getElementById('collection-add-m').value = "";
+        document.getElementById('collection-add-resizefactor').value = "";
+        document.getElementById('collection-add-batchsize').value = "";
+        document.getElementById('collection-add-syncthreshold').value = "";
+        closeModal();
+    }
+    
+    
+    function promptAddCollectionDefaultConfig(){
+          setModalMessage("Use Default Settings?", "Question", 2, addCollectionSetDefaultConfig, "ok");
+    }
+    
+            
+    function promptAddCollectionClearConfig(){
+          setModalMessage("Clear Fields?", "Question", 2, addCollectionClearConfig, "ok");
+    }
+    
+    
+    
+    async function addCollection() {
+        showLoading(true);
+        
+        // Gather values from the form inputs
+        const name = document.getElementById('collection-add-name').value || '';
+
+        // Validate collection name
+        if (!name) {
+            showNotification({
+                message: `"Collection Name" Required!`,
+                backgroundColor: '#e74c3c',
+                opacity: 80,
+                duration: 4000,
+                stackFromTop: false
+            });
+
+            // Get the input element
+            const nameInput = document.getElementById('collection-add-name');
+
+            // Scroll to the element
+            nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // Focus the element and select its content
+            nameInput.focus();
+            nameInput.select();
+
+            showLoading(false);
+            return;
+        }
+
+        if (name.includes(" ")) {
+            showNotification({
+                message: `Invalid Collection Name - Spaces are Not Allowed!`,
+                backgroundColor: '#e74c3c',
+                opacity: 80,
+                duration: 4000,
+                stackFromTop: false
+            });
+            setModalMessage("Invalid Collection Name\nSpaces are Not Allowed!\n\nUse Underscores or hyphens instead", "Error - Invalid Collection Name", 1, closeModal, "ok");
+            
+            // Get the input element
+            const nameInput = document.getElementById('collection-add-name');
+
+            // Scroll to the element
+            nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // Focus the element and select its content
+            nameInput.focus();
+            nameInput.select();
+            
+            showLoading(false);
+            return;
+        }
+
+        // Construct the configuration object
+        const configuration = {
+            hnsw_configuration: {
+                space: document.getElementById('collection-add-space').value || 'l2',
+                ef_construction: parseInt(document.getElementById('collection-add-efconstruction').value) || 100,
+                ef_search: parseInt(document.getElementById('collection-add-efsearch').value) || 10,
+                num_threads: parseInt(document.getElementById('collection-add-numofthreads').value) || 16,
+                M: parseInt(document.getElementById('collection-add-m').value) || 16,
+                resize_factor: parseFloat(document.getElementById('collection-add-resizefactor').value) || 1.2,
+                batch_size: parseInt(document.getElementById('collection-add-batchsize').value) || 100,
+                sync_threshold: parseInt(document.getElementById('collection-add-syncthreshold').value) || 1000,
+                _type: 'HNSWConfigurationInternal'
+            },
+            _type: 'CollectionConfigurationInternal'
+        };
+
+        // Determine if metadata should be included
+        let metadata = null;
+        const includeMetadata = document.getElementById('include-metadata').checked;
+
+        if (includeMetadata) {
+            const metadataJson = document.getElementById('collection-add-metadatajson').value.trim();
+            try {
+                metadata = JSON.parse(metadataJson);
+            } catch (error) {
+                showNotification({
+                    message: 'Invalid JSON format in Metadata.',
+                    backgroundColor: '#e74c3c',
+                    opacity: 80,
+                    duration: 4000,
+                    stackFromTop: false
+                });
+                showLoading(false);
+                return;
+            }
+        }
+
+        // Construct the payload
+        const payload = {
+            name: name,
+            configuration_json: configuration,
+            metadata: metadata,  // Set to either parsed JSON or null
+            get_or_create: false
+        };
+          
+
+        // Update the HTML element with the payload
+        document.getElementById('outputAddCollectionHTTPResponses').textContent = JSON.stringify(payload, null, 2);
+
+        // Endpoint URL
+        const endpoint = endpointChromaServer + '/api/v2/tenants/default_tenant/databases/default_database/collections'; 
+        const apiKey = masterAPIKey; 
+
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                console.log('Collection added successfully:', responseData);
+                
+                showNotification({
+                    message: 'Collection added successfully:',
+                    backgroundColor: '#2ecc71',
+                    opacity: 80,
+                    duration: 4000,
+                    stackFromTop: false
+                });
+                
+                getAllCollections(); 
+                selectThisCollection(name);
+                gotoPageViewCollections();
+                
+                
+            } else {
+                const errorText = await response.text();
+                console.error('Failed to add collection:', errorText);
+                
+                showNotification({
+                    message: 'Failed to add collection:',
+                    backgroundColor: '#e74c3c',
+                    opacity: 80,
+                    duration: 4000,
+                    stackFromTop: false
+                });
+            }
+            showLoading(false);
+            
+        } catch (error) {
+            console.error('Error:', error.message);
+            
+            showNotification({
+                message: 'Error:\n' +  error.message,
+                backgroundColor: '#e74c3c',
+                opacity: 80,
+                duration: 4000,
+                stackFromTop: false
+            });
+            showLoading(false);
+            
+        }
+
+        getAllCollections();
+        selectThisCollection(name);
+        
+    }
+
+
+    
+    
+    
+    async function promptViewCollectionDelete() {
+        var selectElement = document.getElementById('select-current-collection');
+        var selectedCollection = selectElement.value;
+        var confirmation = await setModalMessage(
+            `Are you sure you want to delete:\n${selectedCollection}`,
+            "Delete Collection?",
+            3
+        );
+
+        console.log("Delete Collection? Button Clicked:", confirmation);
+        if (confirmation === 'yes' || confirmation === 'ok'){
+            viewCollectionDelete();
+        }
+    }
+    
+    
+
+    async function viewCollectionDelete() {
+        // Get the selected collection name from the dropdown
+        var selectElement = document.getElementById('select-current-collection');
+        var selectedCollection = selectElement.value;
+
+        // Check if a collection is selected
+        if (selectedCollection === null || selectedCollection === "" || selectedCollection === "Connect to ChromaDB First") {
+            alert("Please select a valid collection to delete.");
+            return;
+        }
+
+        // Store the previous selection (the collection before the current one, if available)
+        var previousIndex = selectElement.selectedIndex > 0 ? selectElement.selectedIndex - 1 : null;
+        var previousCollection = previousIndex !== null ? selectElement.options[previousIndex].value : null;
+
+        // Construct the endpoint URL using the selected collection name
+        var endpoint = `${endpointChromaServer}/api/v2/tenants/default_tenant/databases/default_database/collections/${selectedCollection}`;
+
+        try {
+            // Make the DELETE API call
+            const response = await fetch(endpoint, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${masterAPIKey}`
+                }
+            });
+
+            // Check if the deletion was successful
+            if (response.ok) {
+                setModalMessage("Collection:\n" + selectedCollection + "\n\nDeleted Successfully", "Delete Successful", 1, closeModal, "ok");
+                
+                showNotification({
+                    message: "Collection:\n" + selectedCollection + "\n\nDeleted Successfully",
+                    backgroundColor: '#2ecc71',
+                    opacity: 80,
+                    duration: 4000,
+                    stackFromTop: false
+                });
+                
+                // Optionally, refresh the collection list or UI
+                await getAllCollections();
+
+                // After refreshing, reselect the previous collection if it exists
+                if (previousCollection) {
+                    selectElement.value = previousCollection;
+                }
+            } else {
+                const responseText = await response.text();
+                setModalMessage("Failed to delete collection. Server responded with:\n" + responseText, "Delete Failed", 1, closeModal, "ok");
+                
+                showNotification({
+                    message: "Failed to delete collection. Server responded with:\n" + responseText,
+                    backgroundColor: '#2ecc71',
+                    opacity: 80,
+                    duration: 4000,
+                    stackFromTop: false
+                });
+            }
+        } catch (error) {
+            setModalMessage("An error occurred:\n" + error.message, "Delete Failed", 1, closeModal, "ok");
+        }
+    }
+
+
+
+
+
+
+    
+    
+    
+    // ===========================================================
+    // DATA - DOCUMENTS VIEW FUNCTIONS
+    // ===========================================================
+    
+    // Function to fetch and display documents for the selected collection
+    async function getCollectionDocuments() {
+        showLoading(true);
+        
+        const selectElement = document.getElementById('select-current-collection');
+        const selectedCollection = selectElement.value;
+
+        // Ensure a collection is selected
+        if (!selectedCollection || selectedCollection === 'Connect to ChromaDB First' || selectedCollection === 'No Collections Available') {
+            showNotification({
+                message: 'No valid collection selected. Please select a collection.',
+                backgroundColor: '#e74c3c',
+                opacity: 80,
+                duration: 4000,
+                stackFromTop: false
+            });
+            showLoading(false);
+            return;
+        }
+
+        const endpointBase = document.getElementById('connection-endpoint-chroma-server').value;
+        const apiKey = masterAPIKey;
+
+        // Fetch the collection ID by querying all collections and matching the name
+        try {
+            const collectionsResponse = await sendAPICall(`${endpointBase}/api/v2/tenants/default_tenant/databases/default_database/collections`, apiKey);
+            if (!collectionsResponse.ok) {
+                throw new Error(`Failed to fetch collections. Status: ${collectionsResponse.status}`);
+            }
+            const collectionsData = await collectionsResponse.json();
+            const collection = collectionsData.find(c => c.name === selectedCollection);
+
+            if (!collection) {
+                throw new Error('Selected collection not found.');
+            }
+
+            const collectionId = collection.id;
+
+            // Now fetch the documents for this collection using the collection ID
+            const endpoint = `${endpointBase}/api/v2/tenants/default_tenant/databases/default_database/collections/${collectionId}/get`;
+            const payload = {
+                "offset": 0,
+                "include": ["metadatas", "documents", "embeddings", "uris"]
+            };
+
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch documents. Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            populateDocumentsTable(data);
+
+            showNotification({
+                message: 'Documents fetched and displayed successfully.',
+                backgroundColor: '#2ecc71',
+                opacity: 80,
+                duration: 4000,
+                stackFromTop: false
+            });
+            
+            // Wrap the contents of the second <td> in a <div>
+            document.querySelectorAll('tbody td:nth-child(2)').forEach(function(td) {
+                // Create a new div element
+                const div = document.createElement('div');
+                // Move the current content into the div
+                div.appendChild(td.firstChild);
+                // Append the div back into the <td>
+                td.appendChild(div);
+            });
+            
+            
+            // Wrap the contents of the second <td> in a <div>
+            document.querySelectorAll('tbody td:nth-child(3)').forEach(function(td) {
+                // Create a new div element
+                const div = document.createElement('div');
+                // Move the current content into the div
+                div.appendChild(td.firstChild);
+                // Append the div back into the <td>
+                td.appendChild(div);
+            });
+            
+            
+            // Wrap the contents of the second <td> in a <div>
+            document.querySelectorAll('tbody td:nth-child(4)').forEach(function(td) {
+                // Create a new div element
+                const div = document.createElement('div');
+                // Move the current content into the div
+                div.appendChild(td.firstChild);
+                // Append the div back into the <td>
+                td.appendChild(div);
+            });
+            
+            
+            // Wrap the contents of the second <td> in a <div>
+            document.querySelectorAll('tbody td:nth-child(5)').forEach(function(td) {
+                // Create a new div element
+                const div = document.createElement('div');
+                // Move the current content into the div
+                div.appendChild(td.firstChild);
+                // Append the div back into the <td>
+                td.appendChild(div);
+            });
+            
+            // Wrap the contents of the second <td> in a <div>
+            document.querySelectorAll('tbody td:nth-child(6)').forEach(function(td) {
+                // Create a new div element
+                const div = document.createElement('div');
+                // Move the current content into the div
+                div.appendChild(td.firstChild);
+                // Append the div back into the <td>
+                td.appendChild(div);
+            });
+            
+            showLoading(false);
+        } catch (error) {
+            showNotification({
+                message: `Error: ${error.message}`,
+                backgroundColor: '#e74c3c',
+                opacity: 80,
+                duration: 4000,
+                stackFromTop: false
+            });
+            showLoading(false);
+        }
+        
+        fetchCollectionIdByName(selectedCollection);
+    }
+
+    
+    
+    // Function to fetch collection ID based on the collection name
+    async function fetchCollectionIdByName(collectionName) {
+        try {
+            showLoading(true);
+            const endpoint = `${document.getElementById('connection-endpoint-chroma-server').value}/api/v2/tenants/default_tenant/databases/default_database/collections`;
+            const apiKey = masterAPIKey;
+
+            const response = await sendAPICall(endpoint, apiKey, 'GET');
+
+            const collections = await response.json();
+            const selectedCollection = collections.find(collection => collection.name === collectionName);
+
+            if (selectedCollection) {
+                selectedCollectionId = selectedCollection.id;
+                return selectedCollectionId;
+            } else {
+                throw new Error('Collection not found.');
+            }
+            showLoading(false);
+        } catch (error) {
+            showNotification({
+                message: `Error fetching collection ID: ${error.message}`,
+                backgroundColor: '#e74c3c',
+                opacity: 80,
+                duration: 4000,
+                stackFromTop: false
+            });
+            showLoading(false);
+        }
+    }
+
+    
+function populateDocumentsTable(data) {
+    showLoading(true);
+    
+    const tableBody = document.querySelector('#documents-table tbody');
+    tableBody.innerHTML = '';  // Clear previous data
+
+    // Destructure the data
+    const { ids, embeddings, metadatas, documents, uris, data: responseData } = data;
+
+    // Combine all data into a single array of objects to sort together
+    const combinedData = ids.map((id, index) => ({
+        id: id,
+        embedding: embeddings[index],
+        metadata: metadatas[index],
+        document: documents[index],
+        uri: uris ? uris[index] : null,
+        responseData: responseData ? responseData[index] : null
+    }));
+
+    // Sort combined data by id numerically
+    combinedData.sort((a, b) => a.id - b.id);
+
+    // Loop through all sorted data and populate rows
+    combinedData.forEach(item => {
+        const row = document.createElement('tr');
+
+        const idCell = document.createElement('td');
+        idCell.textContent = item.id || 'N/A';
+
+        const embeddingCell = document.createElement('td');
+        embeddingCell.textContent = item.embedding ? JSON.stringify(item.embedding) : 'N/A';
+        embeddingCell.style.width = "100px";
+
+        const metadataCell = document.createElement('td');
+        metadataCell.innerHTML = item.metadata ? JSON.stringify(item.metadata) : 'N/A';
+        metadataCell.setAttribute('contentEditable', false);
+
+        const documentCell = document.createElement('td');
+        documentCell.textContent = item.document || 'N/A';
+        documentCell.setAttribute('contentEditable', false);
+
+        const uriCell = document.createElement('td');
+        uriCell.textContent = item.uri ? item.uri : 'N/A';
+        uriCell.setAttribute('contentEditable', false);
+
+        const dataCell = document.createElement('td');
+        dataCell.textContent = item.responseData ? JSON.stringify(item.responseData) : 'N/A';
+
+        const actionsCell = document.createElement('td');
+
+        // Create Edit button
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Edit';
+        editButton.className = 'edit-button theme-accent1';
+        editButton.onclick = () => editRow(row, documentCell, metadataCell, uriCell, editButton, item.id);
+
+        // Create Delete button
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.className = 'delete-button theme-accent3';
+        deleteButton.onclick = () => deleteRow(row, item.id);
+
+        // Append buttons to Actions cell
+        actionsCell.appendChild(editButton);
+        actionsCell.appendChild(deleteButton);
+
+        // Append all cells to the row
+        row.appendChild(idCell);
+        row.appendChild(embeddingCell);
+        row.appendChild(metadataCell);
+        row.appendChild(documentCell);
+        row.appendChild(uriCell);
+        row.appendChild(dataCell);
+        row.appendChild(actionsCell);
+
+        // Append the row to the table body
+        tableBody.appendChild(row);
+    });
+    showLoading(false);
+}
+    
+    
+    // Function to enable editing of document, metadata, and URIs cells, and save changes
+    async function editRow(row, documentCell, metadataCell, uriCell, editButton, documentId) {
+        if (!selectedCollectionId) {
+            showNotification({
+                message: 'Collection ID is not set. Please select a collection first.',
+                backgroundColor: '#e74c3c',
+                opacity: 80,
+                duration: 4000,
+                stackFromTop: false
+            });
+            return;
+        }
+
+        if (editButton.textContent === 'Edit') {
+            // Enable editing
+            documentCell.setAttribute('contentEditable', true);
+            metadataCell.setAttribute('contentEditable', true);
+            uriCell.setAttribute('contentEditable', true);
+
+            // Change button to Save
+            editButton.textContent = 'Save';
+            editButton.className = 'save-button theme-accent5';
+        } else {
+            // Collect the updated values
+            const updatedDocument = documentCell.textContent.trim();
+            const updatedMetadata = metadataCell.textContent.trim() ? JSON.parse(metadataCell.textContent.trim()) : null;
+            const updatedURI = uriCell.textContent.trim();
+
+            // Create payload for the update API call
+            const payload = {
+                documents: [updatedDocument || null],
+                metadatas: [updatedMetadata],
+                uris: [updatedURI || null],
+                ids: [documentId]
+            };
+
+            // Send update API request
+            try {
+                const endpoint = `${document.getElementById('connection-endpoint-chroma-server').value}/api/v2/tenants/default_tenant/databases/default_database/collections/${selectedCollectionId}/update`;
+                const apiKey = masterAPIKey;
+                await sendAPICall(endpoint, apiKey, 'POST', payload);
+
+                // Show success notification
+                showNotification({
+                    message: 'Document updated successfully.',
+                    backgroundColor: '#2ecc71',
+                    opacity: 80,
+                    duration: 4000,
+                    stackFromTop: false
+                });
+            } catch (error) {
+                // Show error notification
+                showNotification({
+                    message: `Error updating document: ${error.message}`,
+                    backgroundColor: '#e74c3c',
+                    opacity: 80,
+                    duration: 4000,
+                    stackFromTop: false
+                });
+                return;
+            }
+
+            // Disable editing after saving
+            documentCell.setAttribute('contentEditable', false);
+            metadataCell.setAttribute('contentEditable', false);
+            uriCell.setAttribute('contentEditable', false);
+
+            // Change button back to Edit
+            editButton.textContent = 'Edit';
+            editButton.className = 'edit-button theme-accent1';
+        }
+    }
+
+    
+    
+    // Function to delete a row after confirmation
+    async function deleteRow(row, documentId) {
+        if (!selectedCollectionId) {
+            showNotification({
+                message: 'Collection ID is not set. Please select a collection first.',
+                backgroundColor: '#e74c3c',
+                opacity: 80,
+                duration: 4000,
+                stackFromTop: false
+            });
+            return;
+        }
+
+        const confirmed = confirm(`Are you sure you want to delete the document with ID ${documentId}?`);
+        if (confirmed) {
+            // Create payload for the delete API call
+            const payload = {
+                ids: [documentId]
+            };
+
+            // Send delete API request
+            try {
+                const endpoint = `${document.getElementById('connection-endpoint-chroma-server').value}/api/v2/tenants/default_tenant/databases/default_database/collections/${selectedCollectionId}/delete`;
+                const apiKey = masterAPIKey;
+                await sendAPICall(endpoint, apiKey, 'POST', payload);
+
+                // Remove the row from the table
+                row.remove();
+
+                // Show success notification
+                showNotification({
+                    message: `Document with ID ${documentId} deleted successfully.`,
+                    backgroundColor: '#2ecc71',
+                    opacity: 80,
+                    duration: 4000,
+                    stackFromTop: false
+                });
+                getCollectionDetails();
+            } catch (error) {
+                // Show error notification
+                showNotification({
+                    message: `Error deleting document: ${error.message}`,
+                    backgroundColor: '#e74c3c',
+                    opacity: 80,
+                    duration: 4000,
+                    stackFromTop: false
+                });
+            }
+        }
+    }
+
+    
+    
+    function clearDocumentTable(){
+        const tableBody = document.querySelector('#documents-table tbody');
+        tableBody.innerHTML = '';  // Clear previous data
+    }
+    
+
+    
+    
+    
+    async function deleteAllDocuments() {
+        
+        // Show a confirmation dialog
+        var userConfirmed = confirm("Delete All Documents From the Collection? Are you Sure?");
+
+        // If the user clicks "Cancel", return early and stop execution
+        if (!userConfirmed) {
+            return;
+        }
+        
+        // Get the selected collection name from the dropdown
+        var selectElement = document.getElementById('select-current-collection');
+        var selectedCollection = selectElement.value;
+
+        // Check if a collection is selected
+        if (selectedCollection === null || selectedCollection === "" || selectedCollection === "Connect to ChromaDB First") {
+            alert("Please select a valid collection.");
+            
+            return;
+        }
+
+        try {
+            // Fetch the collection ID by the collection name
+            const collectionId = await fetchCollectionIdByName(selectedCollection);
+
+            if (!collectionId) {
+                throw new Error('Failed to retrieve collection ID.');
+            }
+
+            // Get all documents in the collection
+            const endpointGetDocuments = `${endpointChromaServer}/api/v2/tenants/default_tenant/databases/default_database/collections/${collectionId}/get`;
+            const response = await fetch(endpointGetDocuments, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${masterAPIKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "offset": 0,
+                    "include": ["documents", "metadatas"] // Ensure to include document IDs
+                })
+            });
+
+            const responseData = await response.json();
+
+            // Check if there are any documents
+            if (!responseData.ids || responseData.ids.length === 0) {
+                alert("No documents found in the collection.");
+                return;
+            }
+
+            // Extract all document IDs
+            const documentIds = responseData.ids;
+
+            // Loop through each document ID and delete the document one by one
+            for (let i = 0; i < documentIds.length; i++) {
+                const documentId = documentIds[i];
+                const endpointDeleteDocument = `${endpointChromaServer}/api/v2/tenants/default_tenant/databases/default_database/collections/${collectionId}/delete`;
+
+                const deletePayload = {
+                    "ids": [documentId], // Send each document ID in its own delete request
+                };
+
+                const deleteResponse = await fetch(endpointDeleteDocument, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${masterAPIKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(deletePayload)
+                });
+
+                if (!deleteResponse.ok) {
+                    const responseText = await deleteResponse.text();
+                    console.warn(`Failed to delete document with ID: ${documentId}. Server responded with: ${responseText}`);
+                } else {
+                    console.log(`Successfully deleted document with ID: ${documentId}`);
+                    
+                }
+            }
+
+            alert("All documents have been deleted successfully.");
+
+            // After deletions, reselect the same collection
+            selectThisCollection(selectedCollection);
+
+            // Optionally, refresh the collection data or UI
+            getAllCollections();
+        } catch (error) {
+            console.error("Error during document deletion:", error);
+            alert(`An error occurred: ${error.message}`);
+        }
+    }
+
+
+
+
+
+
+    
+    
+    
+    
+
+    // ===========================================================
+    // DATA - DOCUMENTS ADD FUNCTIONS
+    // ===========================================================
+    
+    function gotoPageAddDocuments(){
+        // for some weird reason, it bugs out unless you view the "view documents page" first !? god knows why, but this shim gets around it. 
+        document.getElementById('side-bar-option-document-view').click();
+        
+        // now actually go to the page you want
+        document.getElementById('side-bar-option-document-add').click();
+        // Scroll to the top of the page
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // Optional: Adds a smooth scrolling effect
+        });
+        generateUUID1();
+        collapseAllSideBarMenus();
+    }
+    
+    function gotoPageViewDocuments(){
+        document.getElementById('side-bar-option-document-view').click();
+        collapseAllSideBarMenus();
+    }
+    
+    
+    function gotoPageViewCollections(){
+        document.getElementById('side-bar-option-collection-view').click();
+        // Scroll to the top of the page
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // Optional: Adds a smooth scrolling effect
+        });
+        collapseAllSideBarMenus();
+    }
+    
+    
+    function gotoPageAddCollection(){
+        document.getElementById('side-bar-option-collection-add').click();
+        collapseAllSideBarMenus();
+    }
+    
+    
+    // Function to auto-generate a unique ID by checking the existing documents
+    async function generateUUID1() {
+        var docCount = document.getElementById('add-document-count-label').textContent;
+
+        // Calculate the new ID
+        var newId = parseInt(docCount) + 1;
+
+        // Get the input field for document ID
+        var documentIdField = document.getElementById('add-document-id');
+
+        // Temporarily clear the field to force UI refresh
+        documentIdField.value = "";
+
+        // Set a small timeout to allow the UI to refresh
+        setTimeout(function() {
+            // Set the new ID in the form field after the refresh
+            documentIdField.value = newId;
+        }, 50); // A short delay of 50ms
+    }
+
+    
+    
+     // for the "Add Document" modal Form 
+    function generateUUID2() {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
+        }
+        document.getElementById('add-document-id').value = s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+    }
+
+    
+
+    async function addDocument(){
+        showLoading(true);
+        
+        // Collect form data
+        const id = document.getElementById('add-document-id').value.trim();
+        const uri = document.getElementById('add-document-uri').value.trim() || null;
+        const content = document.getElementById('add-document-content').value.trim();
+        const metadata = document.getElementById('add-document-metadata').value.trim() ? JSON.parse(document.getElementById('add-document-metadata').value.trim()) : {};
+        const embedding = document.getElementById('add-document-embedding').value.trim() || '';
+           
+        // Validate the inputs
+        if (!id) {
+            showNotification({
+                message: '"ID" required.',
+                backgroundColor: '#e74c3c',
+                opacity: 80,
+                duration: 4000,
+                stackFromTop: false
+            });   
+
+            // Get the ID element
+            const intput = document.getElementById('add-document-id');
+
+            // Scroll to the element
+            intput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // Focus the element and select its content
+            intput.focus();
+            intput.select();
+
+            showLoading(false);
+            return
+        }
+        
+        // Validate the inputs
+        if (!content) {
+            showNotification({
+                message: '"Document Content" required.',
+                backgroundColor: '#e74c3c',
+                opacity: 80,
+                duration: 4000,
+                stackFromTop: false
+            });   
+
+            // Get the ID element
+            const intput = document.getElementById('add-document-content');
+
+            // Scroll to the element
+            intput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // Focus the element and select its content
+            intput.focus();
+            intput.select();
+
+            showLoading(false);
+            return
+        }
+        
+
+        // Chroma 1.x requires "embeddings" (a list of number lists) and does not generate them on the server
+        let embeddingVector = null;
+        try {
+            embeddingVector = embedding ? JSON.parse(embedding) : null;
+        } catch (e) {
+            embeddingVector = null;
+        }
+        if (!Array.isArray(embeddingVector) || embeddingVector.length === 0) {
+            showNotification({
+                message: '"Embedding" required: a JSON array of numbers, e.g. [0.1, 0.2, ...]. It must match the collection dimension (384 for the default model).',
+                backgroundColor: '#e74c3c',
+                opacity: 80,
+                duration: 6000,
+                stackFromTop: false
+            });
+            showLoading(false);
+            return;
+        }
+
+        // Create payload for the API call
+        const payload = {
+            documents: [content],
+            uris: [uri],
+            metadatas: [metadata],
+            embeddings: [embeddingVector],
+            ids: [id]
+        };
+
+        
+        // Send API request to add the document
+        try {
+            const endpoint = `${document.getElementById('connection-endpoint-chroma-server').value}/api/v2/tenants/default_tenant/databases/default_database/collections/${selectedCollectionId}/add`;
+            const apiKey = masterAPIKey;
+
+            var httpResponse = await sendAPICall(endpoint, apiKey, 'POST', payload);
+            document.getElementById('outputAddDocumentHTTPResponses').innerHTML = httpResponse.responseText;
+            
+            // Show success notification
+            showNotification({
+                message: 'Document added successfully.',
+                backgroundColor: '#2ecc71',
+                opacity: 80,
+                duration: 4000,
+                stackFromTop: false
+            });
+
+            // Optionally, refresh the document list in the UI or reset the form
+            document.getElementById('add-document-id').value = '';
+            document.getElementById('add-document-uri').value = '';
+            document.getElementById('add-document-content').value = '';
+            document.getElementById('add-document-embedding').value = '';
+            getCollectionDetails();
+            
+            // Focus on the Document Content Input
+            const intput = document.getElementById('add-document-content');
+
+            // Scroll to the element
+            intput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // Focus the element and select its content
+            intput.focus();
+            intput.select();
+
+            showLoading(false);
+            
+        } catch (error) {
+            // Show error notification
+            showNotification({
+                message: `Error adding document: ${error.message}`,
+                backgroundColor: '#e74c3c',
+                opacity: 80,
+                duration: 4000,
+                stackFromTop: false
+            });
+            showLoading(false);
+        }
+
+
+    }
+    
+    
+    
+    
+    
+    
+    
+    // Function to reset the add document form
+    function resetAddDocumentForm() {
+        document.getElementById('add-document-id').value = '';
+        document.getElementById('add-document-uri').value = '';
+        document.getElementById('add-document-content').value = '';
+        document.getElementById('add-document-metadata').value = '';
+        document.getElementById('add-document-embedding').value = '';
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // ===========================================================
+    // SEARCH - TEXT - FUNCTIONS
+    // ===========================================================
+    
+    /*
+    function addNewFilter() {
+        var searchFilterGroupElem = document.getElementById('search-text-filtergroup');
+
+        // Create the panel-25 container
+        var panel25Div = document.createElement('div');
+        panel25Div.className = 'panel-25';
+        panel25Div.setAttribute('data', '1');
+
+        // Create the select element
+        var selectElement = document.createElement('select');
+        selectElement.className = 'search-text-select';
+        selectElement.innerHTML = `
+            <option>And</option>
+            <option>Or</option>
+        `;
+
+        // Create the delete button
+        var deleteButton = document.createElement('button');
+        deleteButton.className = 'theme-accent3';
+        deleteButton.textContent = 'X';
+        deleteButton.onclick = function(event) {
+            deleteFilter(event);
+        };
+
+        // Append select and button to panel25Div
+        panel25Div.appendChild(selectElement);
+        
+        // Add 3 non-breaking spaces
+        var nbsp = document.createTextNode('\u00A0\u00A0\u00A0');
+        panel25Div.appendChild(nbsp);
+        
+        panel25Div.appendChild(deleteButton);
+
+        // Create the panel-75 container
+        var panel75Div = document.createElement('div');
+        panel75Div.className = 'panel-75';
+        panel75Div.setAttribute('data', '2');
+
+        // Create the input element
+        var inputElement = document.createElement('input');
+        inputElement.type = 'text';
+        inputElement.className = 'search-text-input';
+        inputElement.placeholder = 'Enter a Search Term';
+
+        // Append input to panel75Div
+        panel75Div.appendChild(inputElement);
+
+        // Append both panels to the search filter group
+        searchFilterGroupElem.appendChild(panel25Div);
+        searchFilterGroupElem.appendChild(panel75Div);
+    }
+    
+    */
+    
+    
+    function deleteFilter(event){
+        var elemDataPanel1 = event.target.parentNode;
+        var elemDataPanel2 = event.target.parentNode.nextElementSibling;
+        elemDataPanel1.remove();
+        elemDataPanel2.remove();
+    }
+    
+    
+    
+    function addNewFilter() {
+        
+        document.getElementById('showAndOrSelect').style.display = 'block';
+        
+        filterCounter++;
+        const filterGroup = document.getElementById('search-text-filtergroup');
+
+        const newFilter = document.createElement('div');
+        newFilter.setAttribute('id', `filter-group-${filterCounter}`);
+        newFilter.setAttribute('class', 'filter-group');
+        newFilter.style.marginBottom = '10px';  // Optional: Add some spacing between filter groups
+
+        newFilter.innerHTML = `
+            <div class="panel-25"> 
+                <select id="filter-logic-${filterCounter}">
+                    <option selected value="$contains">contains</option>
+                    <option value="$not_contains">not contains</option>
+                </select>
+            </div>
+            <div class="panel-50">
+                <input type="text" id="filter-value-${filterCounter}" placeholder="Enter a Search Term">
+            </div>
+            <div class="panel-25">
+                <button class="theme-accent3" onclick="removeFilter(${filterCounter});">Remove</button>
+            </div>
+            <br>
+        `;
+
+        filterGroup.appendChild(newFilter);
+    }
+    
+    
+
+    function removeFilter(filterId) {
+        //alert("Filter ID: " + filterId);
+        
+        const filterGroup = document.getElementById(`filter-group-${filterId}`);
+        if (filterGroup) {
+            filterGroup.remove();
+            filterCounter --;
+        }
+        
+        if (filterCounter == 0) {
+            document.getElementById('showAndOrSelect').style.display = 'none';
+        }
+    }
+    
+    
+    
+    function removeAllFilters() {
+        const filterGroup = document.getElementById('search-text-filtergroup');
+        filterGroup.innerHTML = ''; // Clears all the child elements
+        filterCounter = 0; // Reset the filter counter
+    }
+    
+    
+    
+    
+    
+    async function runSearchText() {
+        const collectionName = document.getElementById('select-current-collection').value;
+        const defaultConnector = document.getElementById('search-text-select-and-or').value || "$and"; // Default connector if not specified
+
+        try {
+            // Fetch the collection ID by the collection name
+            const collectionId = await fetchCollectionIdByName(collectionName);
+
+            if (!collectionId) {
+                throw new Error('Failed to retrieve collection ID.');
+            }
+
+            const endpoint = `${endpointChromaServer}/api/v2/tenants/default_tenant/databases/default_database/collections/${collectionId}/get`;
+
+            const filters = [];
+            const defaultFilterLogic = document.getElementById('search-text-select-contains').value;
+            const defaultSearchTerm = document.getElementById('search-text-querystring').value;
+
+            // Map filter logic to the correct format
+            const logicMapping = {
+                "contains": "$contains",
+                "not contains": "$not_contains"
+            };
+
+            // Handle the default filter logic
+            if (defaultSearchTerm) {
+                filters.push({ [logicMapping[defaultFilterLogic]]: defaultSearchTerm });
+            }
+
+
+            // Add additional filters
+            for (let i = 1; i <= filterCounter; i++) {
+                const logicElement = document.getElementById(`filter-logic-${i}`);
+                const valueElement = document.getElementById(`filter-value-${i}`);
+
+                const logic = logicElement ? logicElement.value.trim() : null;
+                const value = valueElement ? valueElement.value.trim() : null;
+
+                // Ensure logic and value are defined and valid
+                if (logic && value) {
+                    var logicClean = logic.replace("$", " ").replace("_", " ").trim();
+                    filters.push({ [logicMapping[logicClean]]: value });
+                } else if (!logic || !value) {
+                    // Log an error or handle undefined cases
+                    console.warn(`Filter ${i} is missing logic or value.`);
+                }
+            }
+
+            // Construct the `where_document` field based on filters
+            const whereDocument = {};
+            if (filters.length > 1) {
+                whereDocument[defaultConnector] = filters;
+            } else if (filters.length === 1) {
+                whereDocument[Object.keys(filters[0])[0]] = Object.values(filters[0])[0];
+            }
+
+
+            const payload = {
+                "where_document": whereDocument,
+                "offset": 0,
+                "include": ["metadatas", "documents"]
+            };
+
+            // Convert payload to a JSON string for displaying in div at bottom of page
+            document.getElementById('outputSearchTextHTTPResponses').innerHTML = JSON.stringify(payload, null, 2);
+
+            // Make the API call with the constructed payload
+            const response = await sendAPICall(endpoint, masterAPIKey, 'POST', payload);
+            const responseData = await response.json();
+
+            // Log the response data to inspect its structure
+            console.log("Response Data:", responseData);
+
+            // Process and populate the data in the table
+            populateSearchResults(responseData);
+        } catch (error) {
+            console.error("Error during search:", error);
+
+            // Display a notification if there's an error
+            showNotification({
+                message: `Error during search: ${error.message}`,
+                backgroundColor: '#e74c3c',
+                opacity: 80,
+                duration: 4000,
+                stackFromTop: false
+            });
+        }
+    }
+
+
+
+    
+
+    
+    
+    function populateSearchResults(data) {
+        const tbody = document.querySelector('#search-text-table tbody');
+        tbody.innerHTML = ''; // Clear existing rows
+
+        // Check if 'ids' and 'documents' arrays exist and are of the same length
+        if (data.ids && data.documents && data.ids.length === data.documents.length) {
+            data.ids.forEach((id, index) => {
+                const row = document.createElement('tr');
+
+                const metadata = data.metadatas && data.metadatas[index] ? JSON.stringify(data.metadatas[index]) : '';
+                const documentText = data.documents[index] || ''; // Renamed to documentText
+                const uri = data.uris && data.uris[index] ? data.uris[index] : '';
+                const embeddings = data.embeddings && data.embeddings[index] ? JSON.stringify(data.embeddings[index]) : '';
+                const dataField = data.data && data.data[index] ? JSON.stringify(data.data[index]) : '';
+                const distance = data.distance && data.distance[index] ? data.distance[index] : '';
+
+                row.innerHTML = `
+                    <td>${id || ''}</td>
+                    <td>${embeddings || ''}</td>
+                    <td>${metadata || ''}</td>
+                    <td>${documentText || ''}</td> <!-- Changed to documentText -->
+                    <td>${uri || ''}</td>
+                    <td>${dataField || ''}</td>
+                    <td>${distance || ''}</td>
+                `;
+
+                tbody.appendChild(row);
+            });
+        } else {
+            console.error("Unexpected response format or data mismatch:", data);
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    // ===========================================================
+    
+    // EMBEDDING GENERATE FUNCTIONS
+    // ===========================================================
+    
+   async function testConnectionEmbeddings() {
+        // Get the endpoint from the input field
+        const endpoint = document.getElementById("embedding-generate-testconnection").value;
+
+        // Ensure the endpoint field is filled
+        if (!endpoint) {
+            alert("Please enter the embedding model endpoint.");
+            return;
+        }
+
+        try {
+            // Send a GET request to the endpoint to test the connection
+            const response = await fetch(endpoint, {
+                method: "GET"
+            });
+
+            // Check if the connection is successful
+            if (response.ok) {
+                document.getElementById("embedding-generate-httpresponse").value = "Connection successful!";
+            } else {
+                document.getElementById("embedding-generate-httpresponse").value = `Connection failed with status: ${response.status} - ${response.statusText}`;
+            }
+        } catch (error) {
+            // Display the error message if something goes wrong
+            document.getElementById("embedding-generate-httpresponse").value = `Error: ${error.message}`;
+        }
+    }
+    
+    
+    
+    
+    
+    
+    async function generateEmbedding() {
+        // Get the values from the textareas and inputs
+        const endpoint = document.getElementById("embedding-generate-testconnection").value;
+        const textToEmbed = document.getElementById("embedding-generate-textcontent").value;
+        const model = "nomic-ai embed text v1 5 Q8_0 gguf";  // Model identifier
+
+        // Ensure that the required fields are filled
+        if (!endpoint || !textToEmbed) {
+            alert("Please enter both the endpoint and the text to embed.");
+            return;
+        }
+
+        // Construct the payload
+        const payload = {
+            input: textToEmbed,
+            model: model
+        };
+
+        try {
+            // Send a POST request to the endpoint
+            const response = await fetch(endpoint, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+
+            // Parse the JSON response
+            const data = await response.json();
+
+            // Display the embedding in the textarea
+            document.getElementById("embedding-generate-embedding-response").value = JSON.stringify(data, null, 2);
+
+            // Display the HTTP response details in the textarea
+            document.getElementById("embedding-generate-httpresponse").value = `
+                Status: ${response.status} ${response.statusText}
+                Headers: ${JSON.stringify([...response.headers], null, 2)}
+                Full Response: ${JSON.stringify(data, null, 2)}
+            `;
+
+        } catch (error) {
+            // If there is an error, display it in the HTTP response textarea
+            document.getElementById("embedding-generate-httpresponse").value = `Error: ${error.message}`;
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    // ===========================================================
+    // DOCUMENTATION FUNCTIONS
+    // ===========================================================
+    
+   async function gotoSwaggerAPIDocs(){ 
+       showLoading(true);
+        var serverRunning = await testHeartbeat();
+        if (serverRunning){
+                var url = endpointChromaServer + '/docs';
+                window.open(url, '_blank'); // Opens the URL in a new tab
+        } else {
+                setModalMessage("Error - Check you're:\n  A.) Running Chroma Server\n  B.) Have Loaded a Profile\n  C.) Configured CORS (Cross-Origin-Resource-Sharing)", "Error", 1, closeModal, "ok");
+        }
+       showLoading(false);
+    }
+    
+    
+    
+    function gotoChromaDocs(){
+        window.open('https://docs.trychroma.com/', '_blank').focus();
+    }
+    
+    
+    function gotoChromaCookbook(){
+        window.open('https://cookbook.chromadb.dev/', '_blank').focus();
+    }
+        
+    
+    function gotoChromaUIApp(){
+        window.open('https://chroma-ui.vercel.app/', '_blank').focus();
+    }
+        
+    
+    function gotoChromaUIGitHub(){
+        window.open('https://github.com/thakkaryash94/chroma-ui?tab=readme-ov-file', '_blank').focus();
+    }
+    
+        
+    function gotoChromaPeekGitHub(){
+        window.open('https://github.com/Pawandeep-prog/chroma-peek', '_blank').focus();
+    }
+        
+    
+    function gotoChromagraphicGitHub(){
+        window.open('https://github.com/msteele3/chromagraphic', '_blank').focus();
+    }    
+    
+    function gotoVectorAdminSite(){
+        window.open('https://vectoradmin.com/', '_blank').focus();
+    }
+        
+    
+    function gotoVectorAdminGitHub(){
+        window.open('https://github.com/Mintplex-Labs/vector-admin', '_blank').focus();
+    }
+    
+    
+    function gotoMutableAIChromaWiki(){
+        window.open('https://wiki.mutable.ai/chroma-core/chroma', '_blank').focus();
+    }
+    
+    
+
+    
+    
+    // Get Version Button
+    async function getChromaServerVersion() {
+        var serverVersionTextField = document.getElementById('chroma-server-version');
+        const endpointAndMethod = endpointChromaServer + '/api/v2/version';
+        const apiKey = masterAPIKey;
+        showLoading(true);
+        try {
+            // Await the fetch request
+            const response = await fetch(endpointAndMethod, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`
+                }
+            });
+
+            // Await the text extraction from the response
+            const responseText = await response.text();
+
+            if (response.ok) { // 'ok' is true for response status in the range 200-299
+                serverVersionTextField.value = responseText;
+            } else {
+                serverVersionTextField.value = `Get Version failed. Status: ${response.status}, Response: ${responseText}`;
+            }
+
+        } catch (error) {
+            serverVersionTextField.value = 'Error: ' + error.message;
+        }
+        showLoading(false);
+    }
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    // ===========================================================
+    // HELP BUTTON FUNCTIONS
+    // ===========================================================    
+    
+    function helpBtn_addCollection(){
+        
+        var tempString = "\nFind more information here:\n" + 
+                        "https://cookbook.chromadb.dev/core/configuration/#examples";
+
+        setModalMessage(tempString, "Help - Collection Add", 1, closeModal, "ok");        
+    }
+        
+    
+    
+    
+    
+    
+    
+    // =========================================================
+    // SCRIPT START
+    // =========================================================
+    
+    // WHEN DOM HAS FINISHED LOADING
+    document.addEventListener("DOMContentLoaded", function() {
+        
+        // Set the Default Start Page to the Dashboard, hide all the other pages
+        showSection('section-documents-view'); 
+        showSideNav(true);
+        
+        // Attempt to connect to default endpoint 
+        quickConnect();
+        
+        // Populate the Select Tag with Collection Names
+        getAllCollections();
+                
+    });
+    
+    
+</script>
+
+</body>
+</html>
+
+    
+        
+                
+                
+<!--
+
+add the logic for the include metadata and include embedding for adding a document 
+
+ALSO fix the fact that the copy buttons for metadata and embeddings are both copying the metadata value!!
+
+add notices about the embedding, and shouldnt be included here really, unless you want ot use your own generated embeddings 
+
+
+add all the help button contents 
+
+add a "collections - Delete" page, to delete collections on mass rather than one at a time. 
+present them all in a table with checkboxes on each row, for select all, deselect all, delete selected, etc. 
+this also doubles up as giving you a visual overview of how many collections you have 
+
+add a "collections - Update" page that basically mimics the Creat colelction page, but oinly with the fields you can safely edit on the fly
+also give messages / warning about why the other fiedls cannot be changed 
+
+add a "Collection Clone" section as well 
+then at this point, convert "data" into "collections" own section 
+then split and have "documents" as its own section too. 
+
+
+add a Documents - delete section OR a delete all documents button on the document view page 
+
+
+add the showLoading functions to all neeccessary functions again, some are missed. 
+
+
+MAYBE on the view collections page
+have a field that shows the emebbing function - if it was created using either the python or node.js library 
+just to see if its able to at least retireve that data, as i know the FastAPI doesnt support setitng the embedding function when creating your collection 
+
+
+add a "reset Database" function on the about page 
+
+
+add a check to the start of EVERY api calling function for the conncetion status,
+if it says disconnected then dont run and abort function early 
+this is becasue if you click the stop button to stop the monior, the functions are hard coded with the endpoint from the api call 
+so if the server is still actually running it will get a response - making it look like the stop isnt working 
+when, its not really a true disconnect, its just a stop and start of the timer interval for real time status reports. 
+so artificually block unless youre "connected" so to speak. 
+
+
+seperate the javascript into files that control each page for managability 
+
+add a count down to next connection check interval when it fails or chroma serveris not running. 
+
+
+after trying to enter an invliad colleciton name, add another prompt that asks if you wnat it to replace spaces with underscores? 
+
+when deleting a collcetion, check if it has documents - if so, give a 2nd confirmation just to be safe 
+
+build in a daul ability in the add collection button, that if if finds a match already exiists, prompts user asking if they want to update? 
+
+
+on documents page
+have a limiter for how many rows are displayed,
+have a page flicker in there somehere 
+add a basic keyword filter - allow for wildcards 
+
+
+add an FAQ section 
+
+add a Turoiral Section 
+
+add a troubleshooting section
+
+explain the pains ive gone through and clarify the limitations of the REST API 
+better to use a client, but i still had to go through this to know that, 
+because i have createed somethign that mkaes it easier to view and grasp whats what 
+
+
+
+show all the inputs and outputs going on in the background 
+including all the endpoint moethods and payloads sent
+and all of the http responses coming back and the payload strcutures. 
+
+
+-->

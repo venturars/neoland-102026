@@ -1,6 +1,5 @@
 # Árbol
 
-
 first-app/
   AGENTS.md
   package.json

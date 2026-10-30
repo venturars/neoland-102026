@@ -11,7 +11,7 @@ La app tiene dos comandos en `package.json`:
 
 Prettier usa la configuración por defecto, como ya dice `docs/STYLE.md`. No hay `.prettierrc`.
 
-Al cerrar un desarrollo, quien trabaja con IA ejecuta esos comandos. Los pasos quedan escritos en `AGENTS.MD`, en **## Al terminar una tarea**.
+Al cerrar un desarrollo, quien trabaja con IA ejecuta esos comandos. Los pasos quedan escritos en `AGENTS.md`, en **## Al terminar una tarea**.
 
 ## Quién lo usa
 

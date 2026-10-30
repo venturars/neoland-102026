@@ -30,7 +30,7 @@
    Añadir «Guías», el bullet nuevo del `plan.md` y las frases en «Un fichero logic».
    Specs, Paquetes, Logic no se reemplaza y los cuatro pasos siguen igual.
 
-7. Abrir `AGENTS.MD` de first-app.
+7. Abrir `AGENTS.md` de first-app.
    El proyecto, el estilo y las reglas quedan como dice el plan.
    Orden, Paquetes, Comandos y «Al terminar una tarea» siguen igual.
    No se toca el `AGENTS.md` de la raíz del bootcamp.

@@ -6,8 +6,8 @@ No es una funcionalidad nueva. No hay fichero nuevo en `logic/`. No hay firma
 ni SQL nuevo.
 
 `docs/STYLE.md` ya dice que el formato es Prettier por defecto, sin fichero de
-configuración. `AGENTS.MD` dice que no hay script de formato. Este desarrollo
-añade los scripts y la configuración mínima de ESLint, y actualiza `AGENTS.MD`
+configuración. `AGENTS.md` dice que no hay script de formato. Este desarrollo
+añade los scripts y la configuración mínima de ESLint, y actualiza `AGENTS.md`
 para que no contradiga la spec.
 
 ## Ficheros
@@ -19,7 +19,7 @@ Se crea:
 Se tocan:
 
 - `package.json` y `pnpm-lock.yaml`
-- `AGENTS.MD`
+- `AGENTS.md`
 - `docs/TREE.md`
 - `docs/ARCHITECTURE.md`
 
@@ -61,7 +61,7 @@ En la raíz de `first-app/`, junto a `package.json`:
 Una línea que diga que `eslint.config.js` aplica las reglas recomendadas de
 ESLint al JavaScript e ignora `.venv`, `node_modules` y los cuadernos Jupyter.
 
-## `AGENTS.MD`
+## `AGENTS.md`
 
 En **## Comandos**, sustituir la línea de lint/formato por:
 

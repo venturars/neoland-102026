@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 3.0 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-23
+> Versión 3.1 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-30
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -69,8 +69,8 @@ El detalle de cómo se relacionan esas carpetas está en `docs/ARCHITECTURE.md`.
 
 ## 4. Desarrollo guiado por especificaciones (SDD)
 
-1. **Ningún fichero de la app se modifica sin un spec aprobado que cubra ese cambio.** Entran el código, los tests, el README y el resto de la documentación de uso. Cada cambio nace como `specs/NNN-nombre/spec.md`. Si no cabe en la spec activa, se abre otra. La persona que trabaja en esta carpeta la aprueba antes de pasar al plan.
-2. El orden siempre es: **spec → plan → tasks → implementación**. No se salta ningún paso. Al terminar el spec, el agente lo enseña y espera el ok. No escribe el plan, las tasks ni el cambio hasta entonces.
+1. **Ningún fichero de la app se modifica sin spec, plan y tasks que cubran ese cambio.** Entran el código, los tests, el README y el resto de la documentación de uso. Cada cambio nace como `specs/NNN-nombre/spec.md`. Si no cabe en la spec activa, se abre otra. Una issue, una rama o una pull request no autorizan el código: el código espera a las tres specs y a que se pida implementar.
+2. El orden de los ficheros siempre es: **spec → plan → tasks → implementación**. No se salta ningún paso. Quien trabaja en esta carpeta interviene en cinco momentos, y el agente no los encadena: la issue, el draft, las tres specs en la misma pasada, la implementación, y lo que se pida sobre la pull request. No hay un ok entre spec y plan.
 3. La `spec.md` describe el **qué y el porqué**, nunca el cómo (no menciona tecnologías).
 4. El `plan.md` describe el **cómo** e incluye una sección que comprueba que cumple esta constitución.
 5. Las dudas se marcan como `[NECESITA ACLARACIÓN]` y se resuelven **antes** de implementar. No se inventan requisitos.
@@ -116,3 +116,4 @@ El detalle de cómo se relacionan esas carpetas está en `docs/ARCHITECTURE.md`.
 | 2.2     | 2026-10-22 | §4: ningún fichero de la app se modifica sin spec aprobado; una issue, una rama o una pull request no sustituyen al spec. §7: la carpeta es `staff/ventura-rodriguez/asistenciapp/`. §8: aprueba la persona que trabaja en esta carpeta | El texto solo frenaba el código de una funcionalidad, así que un cambio de README se escribía sin spec. Las reglas seguían nombrando otra carpeta y a otra persona (spec 002) |
 | 2.3     | 2026-10-22 | §3: el código se reparte en `docs/`, `asistencia/domain/`, `asistencia/usecases/`, `asistencia/storage/` y `app.py`. El archivo sigue en `data/` y las pantallas en `static/` | La organización de archivos y carpetas cambió. El propósito, la privacidad y las reglas de pasar lista siguen (spec 005) |
 | 3.0     | 2026-10-23 | P4: la IP pública estática se puede recordar solo para contar los intentos de registrarse y para la lista de bloqueo. No se guarda con el nombre ni con la hora | El límite por IP necesita recordar esa IP. Contradice la prohibición de guardar IPs. Los máximos y la duración de la lista se quedan en la spec 006 |
+| 3.1     | 2026-10-30 | §4: la cabecera pasa de Versión 3.0 a 3.1. El ok del humano son cinco momentos (issue, draft, specs, implementar, pull request). Plan y tasks se escriben con la spec. Una issue, una rama o una pull request siguen sin autorizar el código | Quien trabaja en esta carpeta no quiere parar entre spec, plan y tasks. El flujo de git del curso entra en la carpeta (spec 007) |

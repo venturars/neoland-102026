@@ -3,8 +3,8 @@
 ## Names
 
 - Code is written in English.
-- Comments in the terminal files (`clients/terminal/`) are written in Spanish.
-- File and folder names use kebab-case: lowercase words joined by `-`, as in `create-user.js`, `find-by-email.sql`, and `clients/terminal`.
+- Comments in the terminal files (`src/clients/terminal/`) are written in Spanish.
+- File and folder names use kebab-case: lowercase words joined by `-`, as in `create-user.js`, `find-by-email.sql`, and `src/clients/terminal`.
 - Function names and variable names use camelCase, as in `createUser` and `emailParts`.
 
 ## Constants

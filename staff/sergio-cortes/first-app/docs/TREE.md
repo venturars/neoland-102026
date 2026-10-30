@@ -1,9 +1,14 @@
 # Árbol
 
 first-app/
-  AGENTS.MD
+  AGENTS.md
   eslint.config.js
   package.json
+  agents/
+  skills/
+  tools/
+  templates/
+  MCPS/
   scripts/
     jupyter.sh
   docs/
@@ -18,40 +23,41 @@ first-app/
         spec.md
         plan.md
         tasks.md
-  db/
-    connections.js
-    users.sqlite
-  queries/
+  src/
+    db/
+      connections.js
+      users.sqlite
     queries/
-    user.js
-  logic/
-    errors.js
-    create-user.js
-    update-user.js
-    delete-user.js
-    find-user-by-id.js
-    find-user-by-email.js
-    find-user-by-name.js
-    list-users.js
-    user-gender-count.js
-  clients/
-    terminal/
-      create-user-table.txt
-      create-user.txt
-      update-user.txt
-      delete-user.txt
-      find-user-by-id.txt
-      find-user-by-email.txt
-      find-user-by-name.txt
-      list-users.txt
-      user-gender-count.txt
-    jupyter/
-      create-user-table.ipynb
-      create-user.ipynb
-      update-user.ipynb
-      delete-user.ipynb
-      find-user-by-id.ipynb
-      find-user-by-email.ipynb
-      find-user-by-name.ipynb
-      list-users.ipynb
-      user-gender-count.ipynb
+      queries/
+      user.js
+    logic/
+      errors.js
+      create-user.js
+      update-user.js
+      delete-user.js
+      find-user-by-id.js
+      find-user-by-email.js
+      find-user-by-name.js
+      list-users.js
+      user-gender-count.js
+    clients/
+      terminal/
+        create-user-table.txt
+        create-user.txt
+        update-user.txt
+        delete-user.txt
+        find-user-by-id.txt
+        find-user-by-email.txt
+        find-user-by-name.txt
+        list-users.txt
+        user-gender-count.txt
+      jupyter/
+        create-user-table.ipynb
+        create-user.ipynb
+        update-user.ipynb
+        delete-user.ipynb
+        find-user-by-id.ipynb
+        find-user-by-email.ipynb
+        find-user-by-name.ipynb
+        list-users.ipynb
+        user-gender-count.ipynb

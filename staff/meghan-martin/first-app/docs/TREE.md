@@ -18,6 +18,22 @@ first-app/
       users-gender-count.js
     clients/
       terminal/
+    users.js
+  logic/
+    create-user.js
+    update-user.js
+    delete-user.js
+    list-users.js
+    find-user-by-email.js
+    find-user-by-id.js
+    users-gender-count.js
+  clients/
+    terminal/
+  agents/
+  skills/
+  tools/
+  templates/
+  MCPS/
   docs/
     ARCHITECTURE.md
     TREE.md
@@ -26,6 +42,7 @@ first-app/
     STYLE.md
     CONSTITUTIONS.md
     GIT-WORKFLOW.md
+    GIT-AUTOMATION.md
     specs/
       <nombre>/
         spec.md

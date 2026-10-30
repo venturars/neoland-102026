@@ -21,3 +21,6 @@
 - `docs/STYLE.md` es la forma del código.
 - `docs/CONSTITUTIONS.md` guarda cómo se escriben spec, plan y tasks, y los cuatro pasos. Enlaza las otras guías.
 - `docs/specs/<nombre>/` es un cambio. `<nombre>` va en kebab-case. Ahí están su spec, su plan y sus tareas.
+- `docs/GIT-AUTOMATION.md` es el flujo de git en la terminal del Mac.
+- `agents/` dice cada momento de git. `agents/git-workflow-agent.md` elige el momento.
+- `skills/` es un paso de git. `tools/` son los scripts de shell. `templates/` es la forma de la issue y de la pull request. `MCPS/` apunta al servidor de GitHub.
