@@ -60,6 +60,9 @@
   `Related to #N` en el cuerpo, sin cerrar la issue.
 - `skills/assign-reviewers/SKILL.md` asigna a quienes miran la pull
   request y la saca de draft.
+- `skills/validate-node-package/SKILL.md` consulta el MCP de Socket al
+  escribir un plan que añade o cambia un paquete npm (`depscore`,
+  `alerts`, `threat_feed` según la constitución).
 - `tools/check-status.sh` escribe la rama, el remoto y los cambios.
 - `tools/pull-changes.sh` adelanta `staging` en fast-forward.
 - `tools/create-branch-from-staging.sh` crea la rama desde `staging`.
@@ -79,7 +82,7 @@
 - `docs/DATABASE.md` es la base de datos y las queries.
 - `docs/ERRORS.md` es la lista de errores.
 - `docs/STYLE.md` es el estilo y las convenciones.
-- `docs/CONSTITUTIONS.md` conserva las specs, los paquetes y el
-  contrato de `logic/`. Enlaza a las otras guías.
+- `docs/CONSTITUTIONS.md` conserva las reglas SDD, los paquetes (contrato
+  MCP de Socket) y el contrato de `src/logic/`. Enlaza a las otras guías.
 - `docs/specs/<nombre>/` es un desarrollo. `<nombre>` va en kebab-case.
   Ahí viven su spec, su plan y sus tareas.
