@@ -1,7 +1,7 @@
 # Paste this in the terminal, with first-app as the current folder
 node --input-type=module <<'EOF'
-import { db } from "./db/connection.js";
-import { createUsersTable } from "./queries/users.js";
+import { db } from "./src/db/connection.js";
+import { createUsersTable } from "./src/queries/users.js";
 
 createUsersTable();
 

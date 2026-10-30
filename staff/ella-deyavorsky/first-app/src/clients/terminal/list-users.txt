@@ -1,6 +1,6 @@
 # Paste this in the terminal, with first-app as the current folder
 node --input-type=module <<'EOF'
-import { listUsers } from "./logic/list-users.js";
+import { listUsers } from "./src/logic/list-users.js";
 
 const result = listUsers();
 

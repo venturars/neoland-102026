@@ -1,8 +1,8 @@
 # Paste this in the terminal, with first-app as the current folder
 node --input-type=module <<'EOF'
-import { createUser } from "./logic/create-user.js";
+import { countUsersByGender } from "./src/logic/count-users-by-gender.js";
 
-const result = createUser({ name: "Ady", email: "ady@example.com" });
+const result = await countUsersByGender();
 
 console.log(result);
 EOF

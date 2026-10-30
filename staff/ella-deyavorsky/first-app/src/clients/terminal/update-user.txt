@@ -1,6 +1,6 @@
 # Paste this in the terminal, with first-app as the current folder
 node --input-type=module <<'EOF'
-import { updateUser } from "./logic/update-user.js";
+import { updateUser } from "./src/logic/update-user.js";
 
 const result = updateUser({ id: 9, name: "Adi", email: "ado@example.com" });
 

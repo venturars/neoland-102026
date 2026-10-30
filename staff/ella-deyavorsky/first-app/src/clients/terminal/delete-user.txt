@@ -1,8 +1,8 @@
 # Paste this in the terminal, with first-app as the current folder
 node --input-type=module <<'EOF'
-import { findUserById } from "./logic/find-user-by-id.js";
+import { deleteUser } from "./src/logic/delete-user.js";
 
-const result = findUserById({ id: 9 });
+const result = deleteUser({ id: 7 });
 
 console.log(result);
 EOF
