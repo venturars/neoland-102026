@@ -2,6 +2,10 @@
 
 Este archivo contiene solo instrucciones de trabajo. La constitución define las reglas del producto, la arquitectura explica el código y el README contiene los comandos de uso.
 
+## Regla principal de redacción
+
+Usa roles generales y rutas de documentación relativas a la aplicación. Evita nombres personales, comparaciones con otras copias y apartados de punto de partida basados en ramas o commits concretos. Los comandos ejecutables conservan las rutas reales necesarias desde la raíz del repositorio.
+
 ## 1. Fuentes de verdad
 
 Lee estos documentos antes de editar, en este orden:
@@ -17,13 +21,21 @@ La arquitectura es la fuente para `domain/`, `usecases/attendance.py`, `storage/
 
 Si una petición contradice la constitución, detente y explica el conflicto antes de escribir.
 
-## 2. Nueva tarea: Git Flow
+## 2. Flujo Git
 
-Toda tarea nueva sigue `docs/GIT-WORKFLOW.md` en la raíz de `neoland-102026`: issue, rama desde `staging` y pull request en draft hacia `staging`.
+El trabajo de Git sigue el [orquestador local](agents/git-workflow-agent.md). Según la petición, el orquestador llama al subagente o a la skill correspondiente para pensar una tarea, dejarla escrita, empezar, guardar cambios o pedir revisión.
 
-Cuando un mensaje describe una tarea nueva, abre solo `neoland-102026/docs/skills/create-issue/SKILL.md`, `.github/issue_template.md` y `scripts/new-issue.sh`. Enseña la persona asignada y el título, y espera autorización antes de crear la issue.
+Una tarea nueva queda registrada en una issue asignada a la cuenta autenticada, una rama desde `staging` y una pull request en borrador hacia `staging`. Antes de elegir la operación se consulta el estado con [check-status](skills/check-status/SKILL.md). Una operación ya autorizada se ejecuta dentro del alcance de esa autorización.
 
-Nombrar un archivo no autoriza a modificarlo. La issue tampoco sustituye a la spec de esta app.
+Las [plantillas de issues](templates/issues/) y las [plantillas de PR](templates/pull-request/) son la fuente de la forma del título, el cuerpo y el tipo de rama. Se utiliza la correspondiente al tipo de tarea o la más cercana, sin duplicar sus reglas.
+
+El agente `create-pr` crea la pull request. Después, el orquestador llama a [link-pr-to-issue](skills/link-pr-to-issue/SKILL.md) para dejar `Closes #N` y el enlace Development. La issue permanece abierta hasta la fusión que permita su cierre automático; no se cierra a mano.
+
+Los comandos de las siete skills de terminal incluyen la ruta de sus scripts y se ejecutan desde la raíz del repositorio. Los argumentos que nombran archivos también son relativos a esa raíz.
+
+La [guía MCP](MCPS/github-mcp-server/mcp.txt) documenta la conexión remota y su header. Sus ejemplos usan un marcador de credenciales. Configurar una conexión externa o modificar una configuración personal requiere una petición que cubra ese cambio.
+
+El flujo Git respeta las aprobaciones del apartado 3 y la constitución. Una issue, una rama o una PR no sustituyen a la spec local ni autorizan una fase del SDD pendiente. Nombrar un archivo tampoco autoriza a modificarlo.
 
 ## 3. Desarrollo guiado por especificaciones
 
