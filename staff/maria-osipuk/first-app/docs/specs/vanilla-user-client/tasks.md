@@ -2,44 +2,61 @@ Issue: #702
 
 # Tareas del cliente de usuarios
 
-- [ ] Revisión explícita de `spec.md`, `plan.md` y `tasks.md` pendiente antes de modificar código.
+- [x] Revisión de `spec.md`, `plan.md` y `tasks.md` confirmada; implementación autorizada.
 
-## 1. Conectar las operaciones al servidor local
+## 1. [x] Conectar las operaciones al servidor local
 
 Crear el cliente de `src/clients/http/` con una función por archivo y añadir `pnpm start`.
 Dejar las cuatro rutas de usuarios conectadas a lógica existente y servir únicamente los archivos públicos declarados.
 
-## 2. Comprobar las peticiones HTTP
+## 2. [x] Comprobar las peticiones HTTP
 
 Crear `tests/http-client.test.js` y activar `node --test` en `package.json`.
 Dejar comprobados usuarios, validación, persistencia, errores y archivos privados con servidor y base temporales; cerrar los recursos.
 
-## 3. Construir la selección de usuario
+## 3. [x] Construir la selección de usuario
 
 Crear `index.html`, `styles.css` y las funciones correspondientes en `src/clients/web/`.
 Dejar una lista con id, nombre y email, selección sin contraseña y estados vacíos y de error, sin frameworks.
 
-## 4. Construir el menú y la navegación
+## 4. [x] Construir el menú y la navegación
 
 Añadir el menú del usuario seleccionado y los botones de volver, modificar e «Ir a notas».
 Dejar navegación entre las tres pantallas y «Ir a notas» visible y deshabilitada, sin pantalla ni petición asociada.
 
-## 5. Añadir la edición y el borrado de usuario
+## 5. [x] Añadir la edición y el borrado de usuario
 
 Crear las funciones del formulario para guardar nombre y email y confirmar el borrado del usuario.
 Dejar cancelaciones sin cambios, errores que conserven los campos y bloqueo de envíos duplicados, con comentarios en inglés sencillo.
 
-## 6. Revisar las pantallas y los clientes existentes
+## 6. [x] Revisar las pantallas y los clientes existentes
 
 Recorrer los casos de la spec en navegador con teclado y ancho móvil, usando datos temporales.
 Comprobar terminal y Jupyter desde una copia temporal, sin modificar su catálogo ni la base real.
 
-## 7. Actualizar las guías del comportamiento implementado
+## 7. [x] Actualizar las guías del comportamiento implementado
 
 Añadir el arranque y uso en `README.md` y actualizar árbol y arquitectura en `docs/`.
 Ajustar alcance y recorrido de la constitución al cliente de navegador, manteniendo sus reglas de trabajo y el almacenamiento actual.
 
-## 8. Comprobar y guardar el resultado
+## 8. [x] Comprobar y guardar el resultado
 
 Ejecutar `pnpm test`, `pnpm format` y `pnpm lint`; revisar comentarios, alcance y archivos modificados.
 Registrar los resultados reales en estas tareas y en el PR, y guardar únicamente los cambios de este pedido.
+
+## Resultados comprobados
+
+| Comprobación                | Resultado                                                                                                                               |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm test`                 | Prueba de integración correcta: usuarios, validación, persistencia, borrado, errores y recursos públicos.                               |
+| `pnpm format` y `pnpm lint` | Correctos.                                                                                                                              |
+| Cliente de terminal         | Ocho ejemplos correctos y entrada incorrecta rechazada, con bases temporales.                                                           |
+| Puente Jupyter              | Operaciones existentes correctas en una copia temporal.                                                                                 |
+| Navegador                   | Selección, menú, guardado, errores, volver sin guardar y cancelar o confirmar el borrado comprobados.                                   |
+| Conexión y lista vacía      | Mensajes diferenciados y recuperación tras reiniciar el servidor comprobados.                                                           |
+| Teclado y móvil             | Navegación, foco y ancho de 390 px comprobados; sin desbordamiento horizontal.                                                          |
+| Presentación                | Lila, tipografía local, título reducido, espacios, flecha interior y fondo continuo revisados.                                          |
+| Código nuevo                | Una función por archivo, comentarios educativos y ausencia de clases comprobados.                                                       |
+| Datos y alcance             | Los 35 archivos existentes de código, clientes y base conservan su contenido; sin cambios de esquema, dependencias o reglas de trabajo. |
+
+La implementación se publica en el mismo PR en borrador. La revisión final del PR queda pendiente; no se solicita ni se realiza la fusión automáticamente.

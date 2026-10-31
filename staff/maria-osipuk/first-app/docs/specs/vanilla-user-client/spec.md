@@ -4,7 +4,7 @@ Issue: #702
 
 ## Qué se pide
 
-Usar la aplicación desde el navegador mediante tres pantallas: selección de usuario, menú y edición de usuario. Los textos visibles están en español.
+Usar la aplicación desde el navegador mediante tres pantallas: selección de usuario, menú y edición de usuario. Los textos visibles están en español. El color principal es lila y el fondo es continuo, con matices lilas y rosados.
 
 Se elige un usuario existente de una lista que muestra su id, nombre y email. No se introduce una contraseña. Si no hay usuarios, se explica que la lista está vacía; este cliente no permite dar de alta usuarios.
 

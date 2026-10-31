@@ -5,29 +5,60 @@ first-app/
 ├── AGENTS.md
 ├── .gitignore
 ├── .prettierignore
+├── README.md
 ├── eslint.config.js
 ├── package.json
 ├── pnpm-lock.yaml
-│
 ├── scripts/
 │   └── jupyter.sh
-│
 ├── src/
+│   ├── clients/
+│   │   ├── http/
+│   │   │   ├── create-http-server.js
+│   │   │   ├── handle-request.js
+│   │   │   ├── handle-users.js
+│   │   │   ├── read-json-body.js
+│   │   │   ├── send-http-error.js
+│   │   │   ├── send-json.js
+│   │   │   ├── serve-public-file.js
+│   │   │   └── start-http-server.js
+│   │   ├── jupyter/
+│   │   │   ├── actualizar-usuario.ipynb
+│   │   │   ├── bienvenida.ipynb
+│   │   │   ├── borrar-usuario.ipynb
+│   │   │   ├── buscar-usuario-por-email.ipynb
+│   │   │   ├── buscar-usuario-por-id.ipynb
+│   │   │   ├── contar-usuarios-por-genero.ipynb
+│   │   │   ├── crear-usuario.ipynb
+│   │   │   ├── listar-usuarios.ipynb
+│   │   │   ├── preparar-tabla-usuarios.ipynb
+│   │   │   └── run_logic.py
+│   │   ├── terminal/
+│   │   │   ├── count-users-by-gender.txt
+│   │   │   ├── create-user.txt
+│   │   │   ├── create-users-table.txt
+│   │   │   ├── delete-user.txt
+│   │   │   ├── find-user-by-email.txt
+│   │   │   ├── find-user-by-id.txt
+│   │   │   ├── list-users.txt
+│   │   │   └── update-user.txt
+│   │   └── web/
+│   │       ├── delete-selected-user.js
+│   │       ├── index.html
+│   │       ├── load-user-selection.js
+│   │       ├── main.js
+│   │       ├── navigate.js
+│   │       ├── open-user-editor.js
+│   │       ├── save-user.js
+│   │       ├── select-user.js
+│   │       ├── show-message.js
+│   │       ├── show-screen.js
+│   │       ├── show-user-menu.js
+│   │       ├── state.js
+│   │       └── styles.css
 │   ├── db/
 │   │   ├── connection.js
 │   │   └── users.sqlite
-│   │
-│   ├── queries/
-│   │   ├── queries/
-│   │   │   ├── create-users-table.sql
-│   │   │   ├── delete.sql
-│   │   │   ├── find-by-email.sql
-│   │   │   ├── find-by-id.sql
-│   │   │   ├── insert.sql
-│   │   │   ├── list.sql
-│   │   │   └── update.sql
-│   │   └── users.js
-│   │
 │   ├── logic/
 │   │   ├── count-users-by-gender.js
 │   │   ├── create-user.js
@@ -36,29 +67,16 @@ first-app/
 │   │   ├── find-user-by-id.js
 │   │   ├── list-users.js
 │   │   └── update-user.js
-│   │
-│   └── clients/
-│       ├── jupyter/
-│       │   ├── actualizar-usuario.ipynb
-│       │   ├── bienvenida.ipynb
-│       │   ├── borrar-usuario.ipynb
-│       │   ├── buscar-usuario-por-email.ipynb
-│       │   ├── buscar-usuario-por-id.ipynb
-│       │   ├── contar-usuarios-por-genero.ipynb
-│       │   ├── crear-usuario.ipynb
-│       │   ├── listar-usuarios.ipynb
-│       │   ├── preparar-tabla-usuarios.ipynb
-│       │   └── run_logic.py
-│       └── terminal/
-│           ├── count-users-by-gender.txt
-│           ├── create-users-table.txt
-│           ├── create-user.txt
-│           ├── delete-user.txt
-│           ├── find-user-by-email.txt
-│           ├── find-user-by-id.txt
-│           ├── list-users.txt
-│           └── update-user.txt
-│
+│   └── queries/
+│       ├── queries/
+│       │   ├── create-users-table.sql
+│       │   ├── delete.sql
+│       │   ├── find-by-email.sql
+│       │   ├── find-by-id.sql
+│       │   ├── insert.sql
+│       │   ├── list.sql
+│       │   └── update.sql
+│       └── users.js
 ├── agents/
 │   ├── create-branch.md
 │   ├── create-commit.md
@@ -67,7 +85,6 @@ first-app/
 │   ├── git-workflow-agent.md
 │   ├── help-me-to-think.md
 │   └── launch-push.md
-│
 ├── skills/
 │   ├── assign-author/
 │   │   └── SKILL.md
@@ -99,7 +116,6 @@ first-app/
 │   │   └── SKILL.md
 │   └── pull-changes/
 │       └── SKILL.md
-│
 ├── tools/
 │   ├── check-status.sh
 │   ├── commit-changes.sh
@@ -108,7 +124,6 @@ first-app/
 │   ├── create-empty-commit.sh
 │   ├── launch-push.sh
 │   └── pull-changes.sh
-│
 ├── templates/
 │   ├── issues/
 │   │   ├── chore_issue.md
@@ -124,57 +139,62 @@ first-app/
 │       ├── fix-pull-request.md
 │       ├── refactor-pull-request.md
 │       └── test-pull-request.md
-│
 ├── MCPS/
 │   └── github-mcp-server/
 │       └── mcp.txt
-│
-└── docs/
-    ├── ARCHITECTURE.md
-    ├── CONSTITUTION.md
-    ├── DATABASE.md
-    ├── ERRORS.md
-    ├── STYLE.md
-    ├── TREE.md
-    └── specs/
-        ├── adapt-git-workflow/
-        │   ├── spec.md
-        │   ├── plan.md
-        │   └── tasks.md
-        ├── align-code-with-guides/
-        │   ├── spec.md
-        │   ├── plan.md
-        │   └── tasks.md
-        ├── classifier/
-        │   ├── spec.md
-        │   ├── plan.md
-        │   └── tasks.md
-        ├── gestor-pnpm/
-        │   ├── spec.md
-        │   ├── plan.md
-        │   └── tasks.md
-        ├── jupyter-client/
-        │   ├── spec.md
-        │   ├── plan.md
-        │   └── tasks.md
-        ├── jupyter-script/
-        │   ├── spec.md
-        │   ├── plan.md
-        │   └── tasks.md
-        ├── move-code-into-src/
-        │   ├── spec.md
-        │   ├── plan.md
-        │   └── tasks.md
-        ├── prettier-and-eslint/
-        │   ├── spec.md
-        │   ├── plan.md
-        │   └── tasks.md
-        ├── split-sdd-guides/
-        │   ├── spec.md
-        │   ├── plan.md
-        │   └── tasks.md
-        └── update-git-workflow-template/
-            ├── spec.md
-            ├── plan.md
-            └── tasks.md
+├── docs/
+│   ├── specs/
+│   │   ├── adapt-git-workflow/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── align-code-with-guides/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── classifier/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── gestor-pnpm/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── jupyter-client/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── jupyter-script/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── move-code-into-src/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── prettier-and-eslint/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── split-sdd-guides/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── update-git-workflow-template/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   └── vanilla-user-client/
+│   │       ├── plan.md
+│   │       ├── spec.md
+│   │       └── tasks.md
+│   ├── ARCHITECTURE.md
+│   ├── CONSTITUTION.md
+│   ├── DATABASE.md
+│   ├── ERRORS.md
+│   ├── STYLE.md
+│   ├── TREE.md
+│   └── WEB-CLIENT-GUIDE.md
+└── tests/
+    └── http-client.test.js
 ```

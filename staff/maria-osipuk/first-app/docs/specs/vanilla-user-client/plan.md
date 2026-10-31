@@ -4,7 +4,7 @@ Issue: #702
 
 ## Estado y decisión técnica
 
-Propuesta pendiente de revisión. Solo se preparan estos tres documentos; todavía no se modifica código ni constitución.
+Diseño revisado e implementación autorizada. Se desarrolla el alcance de usuarios descrito en la spec; la opción de notas queda deshabilitada.
 
 Se usará HTML, CSS y JavaScript del navegador, sin frameworks. Un servidor local con `node:http` servirá los archivos públicos y adaptará las peticiones a las funciones de usuarios existentes. Se conserva SQLite sin modificar tablas, conexión, consultas ni contratos de negocio. No hay migración ni borrado en cascada nuevo.
 
@@ -62,6 +62,8 @@ Solo se sirven los archivos declarados del cliente web. Ninguna ruta permite des
 
 ## Pantallas
 
+El tema visual usa lila como color principal, fondo continuo con matices lilas y rosados y tarjetas claras. Los colores compartidos se definen al principio de `styles.css` con variables CSS para poder ajustarlos en un solo sitio.
+
 `index.html` mantiene las tres secciones y muestra una cada vez. La selección vive en memoria. La lista muestra id, nombre y email como texto, mediante `textContent`, nunca como HTML interpretado.
 
 Los formularios usan etiquetas, botones y validación HTML básica; la lógica sigue validando en el servidor. El formulario utiliza `type="email"` y `maxlength="64"`. Los errores se muestran en una zona anunciable y no borran los campos. Los botones de envío se desactivan mientras se guarda y se recuperan al acabar.
@@ -76,6 +78,6 @@ La revisión en navegador recorre el caso de negocio, errores de carga y guardad
 
 Se ejecutan los ejemplos existentes de terminal con una base temporal. El puente de Jupyter fuerza la ruta predeterminada: sus comprobaciones se harán desde una copia temporal de la aplicación, con datos ficticios, para que tampoco toque la base real. No se cambia ese puente ni su catálogo.
 
-Después de implementar, se actualizan `docs/TREE.md` y `docs/ARCHITECTURE.md`. `README.md` indica Node 24, `pnpm start`, URL local, base usada y cómo partir de usuarios existentes sin crear ejemplos automáticamente. Se actualiza únicamente el alcance y recorrido real de `docs/CONSTITUTION.md` para reflejar el cliente de navegador, sin cambiar las reglas del proceso. `docs/DATABASE.md` y `docs/ERRORS.md` se revisan; no se cambia el esquema ni se añaden errores de negocio.
+Después de implementar, se actualizan `docs/TREE.md` y `docs/ARCHITECTURE.md`. `docs/WEB-CLIENT-GUIDE.md` explica el código añadido, archivo por archivo. `README.md` indica Node 24, `pnpm start`, URL local, base usada y cómo partir de usuarios existentes sin crear ejemplos automáticamente. Se actualiza únicamente el alcance y recorrido real de `docs/CONSTITUTION.md` para reflejar el cliente de navegador, sin cambiar las reglas del proceso. `docs/DATABASE.md` y `docs/ERRORS.md` se revisan; no se cambia el esquema ni se añaden errores de negocio.
 
 Se ejecutan `pnpm test`, `pnpm format` y `pnpm lint`, y se comprueba que los cambios se limitan a esta tarea. El PR sigue en borrador hasta que corresponda pedir revisión de la implementación.

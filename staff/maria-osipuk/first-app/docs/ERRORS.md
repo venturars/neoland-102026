@@ -39,3 +39,11 @@ try {
   throw new Error("Unable to find user");
 }
 ```
+
+## Cliente HTTP
+
+`src/clients/http/send-http-error.js` traduce los mensajes conocidos a frases en español. Conserva los errores de negocio existentes: no añade clases ni códigos a `src/logic/`.
+
+Los errores de validación o de JSON usan 400, un usuario inexistente 404, un email ocupado 409 y los fallos de operación 500. Un recurso no disponible usa 404, un método no permitido 405 y un cuerpo mayor de 64 KiB 413. El cliente recibe `{ error }` con el mensaje; nunca recibe rutas internas ni detalles de SQLite.
+
+El navegador muestra un mensaje de conexión si no puede completar una petición y conserva los campos editados cuando falla un guardado. Una lista vacía solo se muestra después de una carga correcta sin usuarios.
