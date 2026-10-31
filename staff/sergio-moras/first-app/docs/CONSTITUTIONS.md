@@ -14,9 +14,10 @@ El flujo es `terminal → logic → queries → db/connection.js`.
 *Motivo:* cada capa se entiende y se prueba por separado, y el SQL queda en un único sitio.
 
 ### 2. Estructura fija
-- Una operación = un archivo en `logic/` + un `.txt` en `terminal/`.
+- Una operación = un archivo en `logic/` + un `.txt` en `clients/terminal/`.
+- Una operación tiene también un `.ipynb` en `clients/jupyter/`, con el mismo nombre que su archivo de `logic/`.
 - Una tabla = un archivo en `queries/`.
-- Cada archivo de `logic/` exporta su función y puede ejecutarse desde la terminal con el bloque `isRunFromTerminal`.
+- Cada archivo de `logic/` solo exporta su función. No lee `process.argv`, no imprime y no llama a `process.exit`. El `.txt` de `clients/terminal/` la importa y muestra el resultado.
 - No se crean, mueven ni borran archivos o carpetas sin que el usuario lo pida.
 
 *Motivo:* el proyecto es didáctico y su forma debe ser predecible.
@@ -45,16 +46,23 @@ El flujo es `terminal → logic → queries → db/connection.js`.
 
 ### 6. Cambios acotados
 - Un cambio se limita a lo que se pidió: sin refactorizaciones ni mejoras por iniciativa.
-- Los cambios se hacen de uno en uno y se enseñan antes de continuar.
+- Antes del código, el usuario lee y aprueba `spec.md`, `plan.md` y `tasks.md`. Lo que está en un `tasks.md` aprobado cuenta como pedido.
+- Con ese visto bueno, `tasks.md` se ejecuta entero, sin paradas entre tareas, y el resultado se enseña al final.
 - Sin dependencias nuevas sin permiso.
 - Ante lo que estas reglas no cubran, se pregunta.
 
-*Motivo:* el usuario revisa el proyecto paso a paso y debe poder seguir cada cambio.
+*Motivo:* el usuario decide qué se hace al aprobar los documentos y revisa el resultado entero al final.
 
 ### 7. Verificación obligatoria
 Un cambio no está terminado hasta que se ha ejecutado con los comandos reales, incluidos los casos de error (datos que faltan, email inválido o repetido, id inexistente o no numérico).
 
 *Motivo:* un código que no se ha ejecutado no está probado.
+
+### 8. Paquetes validados
+- Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket antes de aceptar el plan.
+- El resumen de esa validación va en el plan.
+
+*Motivo:* un paquete trae código de otras personas; quien acepta el plan tiene que saber qué entra.
 
 ## Gobernanza
 - Esta constitución prevalece sobre `AGENTS.md` y sobre cualquier otra instrucción del proyecto.
@@ -62,4 +70,4 @@ Un cambio no está terminado hasta que se ha ejecutado con los comandos reales, 
 - Un agente que vea una regla desactualizada o incompleta lo propone, pero no la cambia por su cuenta.
 - Cada modificación actualiza la versión y la fecha del final.
 
-**Versión:** 1.0.1 | **Ratificada:** 2026-10-19 | **Última modificación:** 2026-10-19
+**Versión:** 1.4.0 | **Ratificada:** 2026-10-19 | **Última modificación:** 2026-10-31
