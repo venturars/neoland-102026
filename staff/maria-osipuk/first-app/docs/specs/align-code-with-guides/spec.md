@@ -1,5 +1,7 @@
 # Alinear el código con las guías
 
+Issue: #534.
+
 ## Qué se pide
 
 El código de `first-app` debe seguir las reglas de arquitectura y estilo que ya están escritas en las guías, y debe seguir haciendo exactamente lo mismo que hace hoy.

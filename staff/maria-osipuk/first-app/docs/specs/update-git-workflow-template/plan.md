@@ -2,7 +2,7 @@
 
 Issue: #690.
 
-Estado: borrador para revisión. Este plan no autoriza la implementación.
+Estado: implementado y comprobado, tras la autorización expresa. La spec de esta tarea se conserva sin cambios.
 
 ## Fuente
 
@@ -63,9 +63,24 @@ La pull request conserva su enlace actual durante la revisión de estos document
 
 - `AGENTS.md` fija la regla de redacción general y expresa la aprobación mediante el rol de la persona responsable, conservando las mismas paradas.
 - Las specs anteriores solo reciben correcciones de redacción: se eliminan nombres y comparaciones con otras copias, se expresan las rutas respecto al proyecto y se sustituyen referencias concretas a ramas o commits por las guías correspondientes.
-- `docs/TREE.md` sustituye las dos plantillas básicas por las doce nuevas y añade `docs/specs/update-git-workflow-template/` con estos tres documentos.
+- `docs/TREE.md` sustituye las dos plantillas básicas por las doce nuevas y recoge todas las carpetas de specs existentes, incluidas las que faltaban en el índice.
 - `docs/ARCHITECTURE.md` actualiza las referencias a las plantillas, el enlace de issues y la finalidad del documento MCP. No cambia la descripción de las capas de la aplicación.
 - Se revisa `docs/CONSTITUTION.md` al terminar y se registra si necesita ajustarse. Solo se modifica si el cambio deja alguna descripción vigente incorrecta, de acuerdo con su sección de sincronización.
+
+## Regularización de las referencias históricas
+
+Se añaden únicamente las referencias de issue a las seis specs que no las tenían. Sus requisitos no cambian:
+
+| Spec                     | Referencia verificada                      |
+| ------------------------ | ------------------------------------------ |
+| `align-code-with-guides` | Issue #534                                 |
+| `jupyter-client`         | Issue #375                                 |
+| `jupyter-script`         | Issue #456                                 |
+| `prettier-and-eslint`    | Issue #484                                 |
+| `classifier`             | Issue #690, como regularización documental |
+| `gestor-pnpm`            | Issue #690, como regularización documental |
+
+Las dos referencias de regularización vinculan la corrección a esta tarea; no se presentan como issues originales de esas funcionalidades. La spec de esta tarea queda intacta.
 
 ## Paquetes y límites
 
@@ -80,3 +95,14 @@ No se añaden ni se cambian paquetes. No hace falta una validación nueva de Soc
 5. Ejecutar `pnpm format` y `pnpm lint` desde `first-app`, y `git diff --check`. Si el formato cambia archivos ajenos, separar esos cambios y conservar únicamente los de esta tarea, sin descartar los cambios previos.
 6. Comprobar que la redacción no incluye nombres personales, carpetas de otras personas ni una rama o un commit concretos como punto de partida.
 7. Revisar el diff final: solo incluye esta spec, las correcciones de redacción y los cambios previstos del flujo de Git y sus guías. Registrar los resultados reales; no dar por probada una integración externa que no se haya ejecutado.
+
+## Resultados de la comprobación
+
+- Los 42 archivos del template coinciden con la adaptación local al normalizar el prefijo de las rutas de scripts y el formato. Hay doce plantillas por tipo y se retiraron las dos básicas.
+- Los siete scripts conservan el permiso de ejecución y pasan `bash -n`. Las seis pruebas de entradas incorrectas de los scripts de ramas terminan con el rechazo esperado antes de acceder al remoto. El script de estado termina correctamente.
+- `pnpm format`, `pnpm lint` y `git diff --check` terminan sin errores.
+- Las diez specs tienen referencia de issue. En las seis que faltaban se conservan los requisitos; cuatro referencias corresponden a issues originales verificadas y dos se identifican expresamente como regularización documental de esta tarea.
+- El árbol incluye todas las carpetas de specs existentes, las doce plantillas y los cuatro archivos de configuración y arranque revisados.
+- La spec de esta tarea conserva exactamente el mismo contenido que antes de la implementación. La autorización y el estado de ejecución se registran en el plan y las tareas.
+- Se revisó la constitución: no necesita cambios porque no se modifican el alcance de la aplicación, sus capas, sus contratos, la base de datos ni los paquetes.
+- No se crearon ramas, issues ni pull requests de prueba. El header de Cursor se incorpora como documentación del template; no se afirma haber validado una configuración personal distinta.
