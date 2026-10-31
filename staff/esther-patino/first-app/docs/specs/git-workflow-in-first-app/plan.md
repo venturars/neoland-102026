@@ -110,7 +110,7 @@ En `docs/ARCHITECTURE.md`, antes de `docs/`, se añaden estos puntos. El resto s
 - `skills/launch-push/SKILL.md` sube la rama actual y fija el upstream.
 - `skills/create-pr-base-staging/SKILL.md` abre la pull request con base `staging`.
 - `skills/create-draft/SKILL.md` deja la pull request en draft.
-- `skills/link-pr-to-issue/SKILL.md` deja `Related to #N` sin cerrar la issue.
+- `skills/link-pr-to-issue/SKILL.md` deja `Closes #N` y cierra la issue al enlazar.
 - `skills/assign-reviewers/SKILL.md` asigna a quienes miran la pull request y la saca de draft.
 - `tools/check-status.sh` escribe la rama, el remoto y los cambios.
 - `tools/pull-changes.sh` adelanta `staging` en fast-forward.
