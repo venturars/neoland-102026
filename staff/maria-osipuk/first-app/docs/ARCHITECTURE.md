@@ -81,6 +81,7 @@ Las skills que lanzan un script usan los de `tools/`, siempre desde la raíz del
 - `templates/issues/basic_issue.md` es el cuerpo de la issue: qué hay que hacer y cómo probarlo.
 - `templates/pull-request/basic-pull-request.md` es el cuerpo de la pull request, con la sección Issue.
 - `MCPS/github-mcp-server/mcp.txt` es la dirección de la documentación del MCP de GitHub.
+- `MCPS/socket-mcp/mcp.txt` es la dirección de la documentación del MCP de Socket.
 - `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada fichero.
 - `docs/TREE.md` es el árbol.
 - `docs/DATABASE.md` es la base de datos, las queries y los tipos y formatos de cada campo.
