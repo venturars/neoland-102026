@@ -28,13 +28,13 @@ Ninguna capa accede directamente a otra capa que no sea la siguiente del recorri
 
 ## Flujo de git
 
-`agents/git-workflow-agent.md` es el orquestador. Lee lo que pide María, mira la rama y los cambios con `skills/check-status` y elige un solo momento. No ejecuta git ni el MCP por su cuenta: llama a un subagente de `agents/` o a una skill de `skills/`. No hace merge a `staging`.
+`agents/git-workflow-agent.md` es el orquestador. Lee lo que pide la persona responsable, mira la rama y los cambios con `skills/check-status` y elige un solo momento. No ejecuta git ni el MCP por su cuenta: llama a un subagente de `agents/` o a una skill de `skills/`. No hace merge a `staging`.
 
 - Pensar la tarea: `agents/help-me-to-think.md`, que entrevista con `skills/grill-with-docs` si el cambio vive en esta app y con `skills/grill-me` si no.
 - Dejarla escrita: `agents/create-issue.md`, con `skills/create-issue` y `templates/issues/basic_issue.md`.
 - Empezar: `skills/pull-changes` adelanta `staging`. `agents/create-branch.md` abre la rama con `skills/create-branch-from-staging`. `agents/create-commit.md` hace el commit vacío con `skills/create-empty-commit`. `agents/launch-push.md` sube la rama con `skills/launch-push`. `agents/create-pr.md` abre la pull request en draft con `skills/create-pr-base-staging`, `skills/assign-author` y `skills/create-draft`, y `templates/pull-request/basic-pull-request.md`. Por último, el orquestador enlaza la issue con `skills/link-pr-to-issue`, sin cerrarla.
 - Guardar un trozo: `agents/create-commit.md` con `skills/commit-changes`, y `agents/launch-push.md`.
-- Que la revisen: `skills/assign-reviewers` asigna a los revisores que nombra María y saca la pull request de draft.
+- Que la revisen: `skills/assign-reviewers` asigna a los revisores que nombra la persona responsable y saca la pull request de draft.
 
 Las skills que lanzan un script usan los de `tools/`, siempre desde la raíz del repositorio git. `skills/create-branch` abre la rama desde una base que no es `staging`. Las demás hablan con el MCP de GitHub, descrito en `MCPS/github-mcp-server/mcp.txt`.
 

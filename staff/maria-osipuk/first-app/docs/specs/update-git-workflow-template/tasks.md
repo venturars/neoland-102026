@@ -2,12 +2,12 @@
 
 Issue: #690.
 
-Estado: pendientes. Se ejecutan después de que María revise y autorice estos tres documentos.
+Estado: pendientes. Se ejecutan después de que la persona responsable revise y autorice estos tres documentos.
 
 ## 1. Confirmar la fuente
 
-Abrir el template compartido y comparar su versión con la indicada en el plan.
-Confirmar la rama de #690 y el alcance; si hay novedades que lo cambien, ajustar el plan antes de copiar.
+Comparar el template compartido vigente con la adaptación local del proyecto.
+Confirmar que se trabaja en la rama de la tarea y revisar el alcance; si hay novedades que lo cambien, ajustar el plan antes de copiar.
 
 ## 2. Incorporar las plantillas por tipo
 
@@ -52,7 +52,7 @@ Incorporar la versión del template y comprobar que sigue resolviendo los reviso
 ## 10. Retirar las plantillas básicas
 
 Buscar referencias en `agents/` y `skills/` y confirmar que usan las plantillas por tipo.
-Eliminar esas dos plantillas; las specs históricas no se reescriben.
+Eliminar esas dos plantillas; los requisitos de las specs históricas se conservan.
 
 ## 11. Actualizar el árbol
 
@@ -72,9 +72,9 @@ Comprobar sintaxis y permisos de los siete scripts, y ejecutar `tools/check-stat
 ## 14. Aplicar formato y comprobar el proyecto
 
 Desde `first-app`, ejecutar `pnpm format` y `pnpm lint`; ejecutar también `git diff --check`.
-Revisar cualquier cambio de formato ajeno antes de conservarlo; no descartar trabajo previo de María.
+Revisar cualquier cambio de formato ajeno antes de conservarlo; no descartar los cambios previos.
 
 ## 15. Revisar y registrar el resultado
 
-Comparar con el template según el plan y revisar las paradas SDD, las guías y la constitución.
+Comparar con el template según el plan; revisar las paradas SDD y la redacción general de las guías y specs.
 Registrar las comprobaciones reales y las limitaciones, y comprobar que el diff solo incluye el alcance de #690.

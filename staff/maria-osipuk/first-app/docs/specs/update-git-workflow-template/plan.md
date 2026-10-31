@@ -4,13 +4,11 @@ Issue: #690.
 
 Estado: borrador para revisión. Este plan no autoriza la implementación.
 
-## Punto de partida
+## Fuente
 
-La rama es `690-chore-update-git-workflow-template` y la pull request es #691, en borrador hacia `staging`. La adaptación inicial de #586 ya está integrada.
+La fuente es el template compartido en `exercises/git-workflow-agent-template/`. Antes de copiar, se compara su versión vigente con la adaptación local para identificar las novedades que corresponden a esta tarea.
 
-La fuente es `exercises/git-workflow-agent-template/`, comprobada en `staging` `0a762177a4cfc74f267d48dd49fad0041b1fa16a`. Las novedades corresponden a los commits `30149d6118c3f42362deff9ecec73bf92f14412f` y `25208d23157626954906ffe7da32757c58d9a66e`.
-
-Todas las rutas siguientes parten de `staff/maria-osipuk/first-app/`. Antes de copiar, se comprueba si el template recibió novedades que cambien este alcance.
+Todas las rutas de archivos de la aplicación que se citan a continuación son relativas a la raíz de `first-app`.
 
 ## Recorrido y contratos
 
@@ -33,7 +31,7 @@ Se retiran `templates/issues/basic_issue.md` y `templates/pull-request/basic-pul
 
 ## Archivos existentes que se actualizan
 
-Son trece archivos. Se toma el contenido del template y se conservan las adaptaciones de rutas necesarias:
+Son trece archivos del template. Las correcciones de redacción se detallan en «Documentación». Se conserva la adaptación de las rutas necesarias:
 
 | Responsabilidad                              | Archivos                                                                                                                                                                  |
 | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -47,11 +45,11 @@ Los dos scripts de ramas dejan de validar el tipo contra una lista fija, tal com
 
 ## Adaptaciones que se conservan
 
-Las siete skills que lanzan scripts siguen usando `staff/maria-osipuk/first-app/tools/` desde la raíz del repositorio: `check-status`, `pull-changes`, `create-branch-from-staging`, `create-branch`, `create-empty-commit`, `commit-changes` y `launch-push`.
+Las siete skills que lanzan scripts conservan la ruta de `tools/` de la aplicación, relativa a la raíz del repositorio: `check-status`, `pull-changes`, `create-branch-from-staging`, `create-branch`, `create-empty-commit`, `commit-changes` y `launch-push`.
 
 Cinco de ellas solo difieren del template por esa ruta y no requieren cambios. En las dos skills de ramas se actualizan las instrucciones y se conserva la ruta local.
 
-`AGENTS.md` sigue siendo la fuente de las paradas SDD. No necesita cambios en esta tarea. La spec de #586 conserva la regla anterior como historial; esta nueva spec define la actualización solicitada.
+`AGENTS.md` conserva las paradas SDD y añade la regla principal de redacción general. Las instrucciones usan roles y las guías del propio proyecto como referencia. Las specs anteriores mantienen sus requisitos y decisiones, con correcciones de redacción que eliminan referencias personales y comparaciones con otras copias.
 
 ## Enlace y conexión de GitHub
 
@@ -59,23 +57,26 @@ La skill de enlace incorpora `Closes #N` y la asociación en Development, sin ll
 
 El documento del MCP incorpora el header `X-MCP-Features: mcp_apps_disable_form_deferral` y el ejemplo del template con un marcador de credencial. No se edita ningún `mcp.json` personal, no se introduce un token real y no se cambia la configuración del conector de Codex. El header documentado para Cursor no se considera una solución al error de permisos 403 observado en el conector de Codex.
 
-La PR #691 conserva su enlace actual durante la revisión de estos documentos. La incorporación de la regla nueva a su descripción se comprueba después de implementar, siguiendo la skill actualizada.
+La pull request conserva su enlace actual durante la revisión de estos documentos. La incorporación de la regla nueva a su descripción se comprueba después de implementar, siguiendo la skill actualizada.
 
 ## Documentación
 
+- `AGENTS.md` fija la regla de redacción general y expresa la aprobación mediante el rol de la persona responsable, conservando las mismas paradas.
+- Las specs anteriores solo reciben correcciones de redacción: se eliminan nombres y comparaciones con otras copias, se expresan las rutas respecto al proyecto y se sustituyen referencias concretas a ramas o commits por las guías correspondientes.
 - `docs/TREE.md` sustituye las dos plantillas básicas por las doce nuevas y añade `docs/specs/update-git-workflow-template/` con estos tres documentos.
 - `docs/ARCHITECTURE.md` actualiza las referencias a las plantillas, el enlace de issues y la finalidad del documento MCP. No cambia la descripción de las capas de la aplicación.
 - Se revisa `docs/CONSTITUTION.md` al terminar y se registra si necesita ajustarse. Solo se modifica si el cambio deja alguna descripción vigente incorrecta, de acuerdo con su sección de sincronización.
 
 ## Paquetes y límites
 
-No se añaden ni se cambian paquetes. No hace falta una validación nueva de Socket. No se modifican `src/`, `scripts/jupyter.sh`, `package.json`, el lockfile, las specs anteriores, AsistenciApp ni archivos ajenos a esta aplicación.
+No se añaden ni se cambian paquetes. No hace falta una validación nueva de Socket. No se modifican `src/`, `scripts/jupyter.sh`, `package.json`, el lockfile, AsistenciApp ni archivos ajenos a esta aplicación. Los requisitos y decisiones de las specs anteriores se conservan.
 
 ## Comprobación
 
-1. Comparar agentes, skills, scripts, plantillas y MCP con la fuente indicada. Al comparar las skills, normalizar solo el prefijo local de `tools/` para distinguir la adaptación de una diferencia pendiente.
+1. Comparar agentes, skills, scripts, plantillas y MCP con el template compartido vigente. Al comparar las skills, normalizar solo el prefijo local de `tools/` para distinguir la adaptación de una diferencia pendiente.
 2. Comprobar las doce plantillas y la ausencia de las dos básicas. Buscar referencias antiguas en las instrucciones y guías vigentes, excluyendo las specs históricas.
-3. Comprobar sintaxis con `bash -n` y permisos de ejecución de los siete scripts. Ejecutar `tools/check-status.sh` desde la raíz del repositorio.
+3. Comprobar sintaxis con `bash -n` y permisos de ejecución de los siete scripts. Ejecutar el script `tools/check-status.sh` con la ruta de la aplicación desde la raíz del repositorio.
 4. Revisar las instrucciones de tipos, títulos, enlace y MCP. Revisar que `AGENTS.md` mantiene las paradas SDD. No crear ni cerrar issues, ramas o PR de prueba.
-5. Ejecutar `pnpm format` y `pnpm lint` desde `first-app`, y `git diff --check`. Si el formato cambia archivos ajenos, separar esos cambios y conservar únicamente los de esta tarea, sin descartar trabajo previo de María.
-6. Revisar el diff final: solo incluye esta spec y los cambios previstos del flujo de Git y sus guías. Registrar los resultados reales; no dar por probada una integración externa que no se haya ejecutado.
+5. Ejecutar `pnpm format` y `pnpm lint` desde `first-app`, y `git diff --check`. Si el formato cambia archivos ajenos, separar esos cambios y conservar únicamente los de esta tarea, sin descartar los cambios previos.
+6. Comprobar que la redacción no incluye nombres personales, carpetas de otras personas ni una rama o un commit concretos como punto de partida.
+7. Revisar el diff final: solo incluye esta spec, las correcciones de redacción y los cambios previstos del flujo de Git y sus guías. Registrar los resultados reales; no dar por probada una integración externa que no se haya ejecutado.

@@ -12,7 +12,7 @@ Además, `AGENTS.md` se acorta. Hoy mezcla el proceso de trabajo con las reglas 
 
 ## A quién obliga
 
-A María y al agente que trabaja con ella en `first-app`.
+A las personas y agentes que trabajan en `first-app`.
 
 ## La regla
 
