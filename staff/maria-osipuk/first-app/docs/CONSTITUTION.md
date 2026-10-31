@@ -131,6 +131,14 @@ Al añadir un paquete de Node o cambiar su versión, se comprueba ese paquete y 
 - tienen alguna alerta;
 - tienen alguna stat por debajo de 50 puntos.
 
+Cada dato se escribe con la herramienta de `socket-mcp` que le corresponde:
+
+- Las stats salen de `depscore`, con la versión exacta. Una stat por debajo de 50 se escribe. 50 no baja.
+- La alerta sale de `alerts`, con el `org_slug` que devuelve `organizations`. Una lista vacía es la lista de la organización: no dice que esa versión no tenga alerta.
+- La campaña sale de `threat_feed`, con ese mismo `org_slug`.
+
+Si una herramienta no puede contestar, el resumen dice el motivo que devolvió. No se escribe «no consta» sin haberla llamado.
+
 Las dependencias de ese paquete se revisan, hasta 3 capas, con los mismos criterios.
 
 Las alertas se comentan en el plan y las decide quien acepta el plan. El plan lleva un resumen con el paquete, la versión, lo encontrado en cada capa y las alertas que quedan por decidir. Sin ese resumen, el plan no se acepta.

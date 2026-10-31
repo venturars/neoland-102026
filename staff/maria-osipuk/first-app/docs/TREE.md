@@ -116,7 +116,9 @@ first-app/
 │       └── basic-pull-request.md
 │
 ├── MCPS/
-│   └── github-mcp-server/
+│   ├── github-mcp-server/
+│   │   └── mcp.txt
+│   └── socket-mcp/
 │       └── mcp.txt
 │
 └── docs/
@@ -152,6 +154,10 @@ first-app/
         │   ├── plan.md
         │   └── tasks.md
         ├── prettier-and-eslint/
+        │   ├── spec.md
+        │   ├── plan.md
+        │   └── tasks.md
+        ├── socket-mcp-reference/
         │   ├── spec.md
         │   ├── plan.md
         │   └── tasks.md
