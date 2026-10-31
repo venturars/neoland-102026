@@ -1,6 +1,6 @@
 # Plan técnico 008 · Flujo de trabajo compartido
 
-> Estado: **Borrador, pendiente de aprobación** · Spec: [spec.md](spec.md), aprobada el 2026-10-31 · Issue: #692 · Pull request: #693
+> Estado: **Aprobado** (2026-10-31) · Spec: [spec.md](spec.md), aprobada el 2026-10-31 · Issue: #692 · Pull request: #693
 
 Este plan concreta la incorporación del flujo compartido del curso. La spec conserva sus requisitos. Las tareas se redactarán después de aprobar este documento y la implementación comenzará después de aprobar las tareas.
 
@@ -160,6 +160,6 @@ No se añade una suite que reproduzca el contenido del template. La comparación
 ## 9. Estado de la fase
 
 - Spec aprobada el 2026-10-31.
-- Plan redactado y pendiente de aprobación.
-- Tareas pendientes de redacción tras aprobar el plan.
+- Plan aprobado el 2026-10-31.
+- Tareas redactadas y pendientes de aprobación.
 - Incorporación del template y cambios en los documentos de trabajo pendientes de la aprobación de las tareas.
