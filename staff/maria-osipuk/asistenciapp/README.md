@@ -137,3 +137,18 @@ Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una 
 - El límite "un registro por navegador" se guarda **solo en el navegador del alumno**, no en el servidor.
 - Los datos se guardan **solo en tu ordenador** (`data/`, que no se sube a git).
 - Con `--tunel`, el tráfico pasa **cifrado** por Cloudflare, que no lo almacena (constitución P4, v2.1).
+
+---
+
+## 9. Desarrollo
+
+El [manual de trabajo](AGENTS.md) explica las reglas de AsistenciApp y el [orquestador Git](agents/git-workflow-agent.md) coordina las operaciones del repositorio.
+
+Cada cambio se desarrolla en este orden: **spec → aprobación → plan → aprobación → tareas → aprobación → implementación**. La issue, la rama y la PR en borrador permiten preparar el trabajo, y cada fase del SDD conserva su aprobación.
+
+- Las [plantillas de issues](templates/issues/) y las [plantillas de PR](templates/pull-request/) indican la forma de cada tipo de tarea.
+- Las [skills](skills/) describen las operaciones. Los siete scripts están en `tools/`; se ejecutan desde la raíz del repositorio con el comando indicado en cada skill. Los argumentos de archivos también son relativos a esa raíz.
+- La [comprobación de estado](skills/check-status/SKILL.md) muestra la rama, el remoto y los cambios pendientes antes de elegir una operación.
+- La [guía MCP](MCPS/github-mcp-server/mcp.txt) explica la conexión con GitHub y el header utilizado. El marcador del ejemplo se completa en la configuración local; las credenciales quedan fuera del repositorio.
+
+La descripción de estos recursos está en [arquitectura](docs/ARCHITECTURE.md). Las especificaciones se guardan en `specs/` dentro de esta aplicación.
