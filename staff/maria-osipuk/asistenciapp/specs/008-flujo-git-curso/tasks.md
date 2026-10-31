@@ -1,6 +1,6 @@
 # Tareas 008 · Flujo de trabajo compartido
 
-> Estado: **Implementación comprobada; publicación en curso** · Spec, plan y tareas aprobados: 2026-10-31 · Issue: #692 · Pull request: #693
+> Estado: **Implementadas, pendientes de aprobación final** (2026-10-31) · Spec, plan y tareas aprobados: 2026-10-31 · Issue: #692 · Pull request: #693
 
 Referencias: [spec.md](spec.md) y [plan.md](plan.md). Estas tareas se ejecutan después de aprobar esta lista, en orden y una responsabilidad cada vez. Una casilla se marca solo cuando su resultado se ha comprobado.
 
@@ -39,13 +39,13 @@ Las rutas de archivos de este documento son relativas a AsistenciApp. La fuente 
 - [x] **T12 · Comprobar los scripts sin modificar el trabajo.** Ejecutar la comprobación de sintaxis de los siete scripts y el script de estado desde la raíz. Comprobar entradas inválidas de los dos scripts de ramas que se rechacen antes de acceder al remoto, y verificar que no cambian la rama, el índice ni los archivos. **Cubre:** CA-03 y CA-08.
 - [x] **T13 · Comprobar la issue y la PR existentes.** Consultar la asignación, los estados abiertos, el borrador, la base, la apertura de la rama, el commit vacío, una única línea `Closes #N` y Development. Consultar la rama por defecto y registrar el resultado, sin crear demostraciones remotas, cerrar la issue ni fusionar la PR. **Cubre:** CA-01 y CA-04.
 - [x] **T14 · Ejecutar las pruebas de la aplicación.** Ejecutar pytest con el entorno virtual existente y datos temporales. Registrar el resultado real; comprobar que el código del producto, los tests, las dependencias y la constitución permanecen sin cambios. **Cubre:** CA-10.
-- [ ] **T15 · Registrar el resultado y publicar el trabajo comprobado.** Completar la tabla de criterios y las limitaciones, revisar `git diff --check` y actualizar los estados de la spec, el plan y las tareas según lo realizado. Publicar solo los archivos de esta tarea en la PR existente y mantener la aprobación final como pendiente cuando corresponda. **Cubre:** CA-05, CA-06, CA-09 y CA-10.
+- [x] **T15 · Registrar el resultado y publicar el trabajo comprobado.** Completar la tabla de criterios y las limitaciones, revisar `git diff --check` y actualizar los estados de la spec, el plan y las tareas según lo realizado. Publicar solo los archivos de esta tarea en la PR existente y mantener la aprobación final como pendiente cuando corresponda. **Cubre:** CA-05, CA-06, CA-09 y CA-10.
 
 ---
 
 ## Registro de comprobaciones
 
-Resultados de la implementación y sus comprobaciones. La publicación y el cierre documental se registran al completar T15.
+Resultados de la implementación y sus comprobaciones. Las quince tareas están completadas y el trabajo de implementación está publicado en la PR existente; la aprobación final sigue pendiente.
 
 | Criterio | Resultado | Evidencia o límite |
 | --- | --- | --- |

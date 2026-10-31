@@ -1,6 +1,6 @@
 # Plan técnico 008 · Flujo de trabajo compartido
 
-> Estado: **Aprobado** (2026-10-31) · Spec: [spec.md](spec.md), aprobada el 2026-10-31 · Issue: #692 · Pull request: #693
+> Estado: **Implementado, pendiente de aprobación final** (2026-10-31) · Spec: [spec.md](spec.md), aprobada el 2026-10-31 · Issue: #692 · Pull request: #693
 
 Este plan concreta la incorporación del flujo compartido del curso. La spec conserva sus requisitos. Las tareas se redactarán después de aprobar este documento y la implementación comenzará después de aprobar las tareas.
 
@@ -149,7 +149,7 @@ No se añade una suite que reproduzca el contenido del template. La comparación
 | P4 · Privacidad mínima | Los datos de asistencia y el control de intentos permanecen intactos. No se publican credenciales ni se modifican datos reales. |
 | P5 · Accesible y usable en móvil | No se modifica la interfaz. |
 | P6 · Español | Las instrucciones y los documentos se redactan en español; se conservan los identificadores y formatos técnicos del flujo compartido. |
-| §4 · SDD | Se conserva una aprobación explícita entre spec, plan, tareas e implementación. Este plan no crea todavía `tasks.md`. |
+| §4 · SDD | Se conserva una aprobación explícita entre spec, plan, tareas e implementación. Las tareas se redactan después de aprobar el plan. |
 | §5 · Calidad | La tabla del apartado 7 asigna una comprobación a cada CA. Se registran los resultados automáticos y la revisión documental; pytest debe pasar antes del cierre. |
 | §6 · Seguridad | No se modifican la caducidad de códigos, el registro único, el cierre de sesiones, la validación de entradas ni el acceso del profesor. |
 | §7 · Alcance | Todos los cambios del repositorio quedan dentro de AsistenciApp. La fuente compartida y las demás aplicaciones no se editan. |
@@ -159,7 +159,8 @@ No se añade una suite que reproduzca el contenido del template. La comparación
 
 ## 9. Estado de la fase
 
-- Spec aprobada el 2026-10-31.
-- Plan aprobado el 2026-10-31.
-- Tareas redactadas y pendientes de aprobación.
-- Incorporación del template y cambios en los documentos de trabajo pendientes de la aprobación de las tareas.
+- Spec, plan y tareas aprobados por separado el 2026-10-31.
+- Implementación completada y comprobada: 42 recursos incorporados y tres documentos de trabajo actualizados.
+- La suite completa aprueba 112 pruebas; las comprobaciones de scripts, referencias y enlaces están registradas en `tasks.md`.
+- El trabajo de implementación está publicado en la PR existente. La constitución, los archivos del producto y las especificaciones anteriores conservan su contenido.
+- Aprobación final pendiente; la PR permanece en borrador.
