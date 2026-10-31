@@ -1,6 +1,6 @@
 # Spec 008 · Flujo de trabajo compartido
 
-> Estado: **Borrador, pendiente de aprobación** · Issue: #692 · Pull request: #693
+> Estado: **Aprobada** (2026-10-31) · Issue: #692 · Pull request: #693
 
 ## 1. Problema
 
