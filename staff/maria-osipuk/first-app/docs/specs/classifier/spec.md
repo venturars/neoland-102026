@@ -1,5 +1,7 @@
 # Users gender count
 
+Issue: #690. Regularización documental; no se ha identificado una issue original.
+
 ## Qué se pide
 
 Contar los usuarios ya guardados según el género de su nombre.
@@ -53,4 +55,3 @@ Unable to classify names
 ```
 
 Un nombre que el modelo no clasifica no es un fallo: suma en `undefined`.
-

@@ -1,5 +1,7 @@
 # Script de Jupyter
 
+Issue: #456.
+
 ## Qué se pide
 
 El arranque de Jupyter no se guarda como script del paquete. Se guarda en un script de shell en la raíz del proyecto.
