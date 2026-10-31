@@ -43,10 +43,11 @@ Forma de cada comando: `-e "` en la primera línea, el código sangrado debajo y
 
 ## Límites
 **Siempre**
-- Hacer cambios pequeños, de un archivo cada vez, y enseñar el resultado antes de seguir.
+- Antes del código, enseñar `spec.md`, `plan.md` y `tasks.md` y esperar el visto bueno. Después, ejecutar `tasks.md` entero y enseñar el resultado al final.
 - Mantener el comportamiento actual salvo que se pida lo contrario.
 
 **Preguntar antes**
+- Lo que está en un `tasks.md` aprobado ya está pedido. Lo demás de esta lista necesita permiso.
 - Crear, mover o borrar archivos o carpetas.
 - Cambiar el esquema de la tabla o añadir una tabla.
 - Añadir dependencias.
