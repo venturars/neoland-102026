@@ -1,5 +1,7 @@
 # Alinear el código con las guías
 
+Issue: #534.
+
 ## Qué se pide
 
 El código de `first-app` debe seguir las reglas de arquitectura y estilo que ya están escritas en las guías, y debe seguir haciendo exactamente lo mismo que hace hoy.
@@ -18,9 +20,9 @@ No entran los SQL, los clientes de terminal, los cuadernos Jupyter ni `run_logic
 
 - El comportamiento no cambia: mismas entradas, mismas salidas, mismos errores y mismos mensajes.
 - Cada línea hace una sola acción, como pide la guía de estilo.
-- Una comprobación con varias condiciones se escribe en pasos visibles, con un nombre para cada paso. Se usan banderas e `if` anidados, sin `&&`, `||` ni ternarios dentro de una condición, con la misma forma que la `first-app` de Ventura Rodríguez.
+- Una comprobación con varias condiciones se escribe en pasos visibles, con un nombre para cada paso. Se usan banderas e `if` anidados, sin `&&`, `||` ni ternarios dentro de una condición.
 - La validación del `id` se queda como está hoy, con `!Number.isInteger(id) || id <= 0`. Es la única excepción a la regla anterior.
-- Solo se copia la forma. Las validaciones, los mensajes de error y las firmas de María no cambian.
+- Solo cambia la forma. Las validaciones, los mensajes de error y las firmas actuales no cambian.
 - Las constantes se escriben en mayúsculas.
 - Los exports son con nombre.
 - El formato es el estándar de Prettier y la comprobación estática pasa.

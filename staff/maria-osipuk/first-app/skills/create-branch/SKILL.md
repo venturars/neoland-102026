@@ -1,6 +1,6 @@
 ### Herramienta: CREATE_BRANCH
 
-- **Descripción**: Úsala cuando hay que abrir la rama `número-tipo-descripcion` desde una base que no es `staging`. Si la base es `staging`, usa `create-branch-from-staging`. No la uses para guardar un commit ni para abrir la pull request.
+- **Descripción**: Úsala cuando hay que abrir la rama desde una base que no es `staging`. Si la base es `staging`, usa `create-branch-from-staging`. No la uses para guardar un commit ni para abrir la pull request.
 - **Comando de Terminal**: `staff/maria-osipuk/first-app/tools/create-branch.sh "[BASE]" "[NUMERO]" "[TIPO]" "[DESCRIPCION]"`
 
 El comando se lanza desde el root del repositorio git (la carpeta que contenga el directorio .git).
@@ -9,10 +9,8 @@ El comando se lanza desde el root del repositorio git (la carpeta que contenga e
 
 1. **BASE** _(Obligatorio)_: La rama de partida. Puede ser local (`main`) o remota (`origin/main`). No uses `staging`: para esa base está la otra skill.
 2. **NUMERO** _(Obligatorio)_: El número de la issue, solo dígitos.
-3. **TIPO** _(Obligatorio)_: Uno de `feat`, `fix`, `docs`, `refactor`, `test` o `chore`.
-4. **DESCRIPCION** _(Obligatorio)_: Palabras en inglés, en minúsculas, separadas por guiones. Sin espacios.
-
-El nombre resultante es `número-tipo-descripcion`.
+3. **TIPO** _(Obligatorio)_: El tipo de la plantilla.
+4. **DESCRIPCION** _(Obligatorio)_: La descripción de la rama.
 
 #### Reglas de Invocación Críticas
 

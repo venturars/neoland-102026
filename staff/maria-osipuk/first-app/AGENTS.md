@@ -1,12 +1,18 @@
 # Instrucciones para el agente
 
+## Regla principal de redacción
+
+Redacta las reglas, las especificaciones, los ejemplos y las respuestas en términos generales. Usa roles como «la persona responsable» y evita nombres o referencias personales a quienes trabajan en el repositorio.
+
+Las guías del proyecto y los templates compartidos son las referencias de trabajo. No uses las carpetas o copias de otras personas como modelo ni describas un punto de partida ligado a una rama o a commits concretos. Expresa las rutas de la documentación respecto a la raíz del proyecto.
+
 ## Qué va primero
 
-El trabajo de git sigue `agents/git-workflow-agent.md` de esta carpeta, aunque el mensaje no nombre ese fichero ni diga «issue». Esta sección va antes que el resto de este manual.
+El trabajo de git sigue `agents/git-workflow-agent.md` de esta carpeta, aunque el mensaje no nombre ese fichero ni diga «issue». Esta sección organiza el flujo de Git.
 
 Una tarea es una issue, una rama desde `staging` y una pull request en draft hacia `staging`. El orquestador elige el momento y llama al subagente o a la skill que toca.
 
-Ese flujo no quita las paradas de este manual. Antes de crear la issue se enseñan la persona asignada y el título, y se espera el sí. No se toca código hasta que existe `docs/specs/<nombre>/` y María dice de forma explícita que la revisión está hecha.
+Ese flujo no quita las paradas de este manual. Antes de crear la issue se enseñan la persona asignada y el título, y se espera el sí. No se toca código hasta que existe `docs/specs/<nombre>/` y la persona responsable confirma de forma explícita que la revisión está hecha.
 
 Nombrar el fichero de destino no autoriza a editarlo. Un mensaje que a la vez describe la tarea y pide escribir ficheros cabe en dos momentos: se pregunta cuál es y se espera. No se elige editar.
 
@@ -24,7 +30,7 @@ Si el código contradice esas guías, explica la contradicción y espera una dec
 
 ## Antes de editar
 
-Cuando el pedido sea una funcionalidad o una forma de trabajar, crea primero `docs/specs/<nombre-en-kebab-case>/` con `spec.md`, `plan.md` y `tasks.md`. No toques código, consultas, clientes ni la constitución hasta que esa carpeta exista y María diga de forma explícita que la revisión está hecha.
+Cuando el pedido sea una funcionalidad o una forma de trabajar, crea primero `docs/specs/<nombre-en-kebab-case>/` con `spec.md`, `plan.md` y `tasks.md`. No toques código, consultas, clientes ni la constitución hasta que esa carpeta exista y la persona responsable confirme de forma explícita que la revisión está hecha.
 
 Una petición de explicación, revisión, comparación o planificación no autoriza cambios. Crear o reescribir esos tres ficheros tampoco autoriza cambios de código.
 
