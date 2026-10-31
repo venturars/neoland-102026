@@ -1,6 +1,6 @@
 // Borra un usuario, identificado por su id.
 
-import { deleteUserById } from '../queries/users.js';
+import { deleteUserById } from "../queries/users.js";
 
 // Borra el usuario y devuelve el id borrado. Lanza un Error si el id no es válido o no existe.
 export function deleteUser(id) {
