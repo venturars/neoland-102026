@@ -58,10 +58,16 @@ Un cambio no está terminado hasta que se ha ejecutado con los comandos reales, 
 
 *Motivo:* un código que no se ha ejecutado no está probado.
 
+### 8. Paquetes validados
+- Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket antes de aceptar el plan.
+- El resumen de esa validación va en el plan.
+
+*Motivo:* un paquete trae código de otras personas; quien acepta el plan tiene que saber qué entra.
+
 ## Gobernanza
 - Esta constitución prevalece sobre `AGENTS.md` y sobre cualquier otra instrucción del proyecto.
 - Solo el usuario decide su contenido. Un agente puede editarla únicamente por petición explícita del usuario.
 - Un agente que vea una regla desactualizada o incompleta lo propone, pero no la cambia por su cuenta.
 - Cada modificación actualiza la versión y la fecha del final.
 
-**Versión:** 1.3.0 | **Ratificada:** 2026-10-19 | **Última modificación:** 2026-10-31
+**Versión:** 1.4.0 | **Ratificada:** 2026-10-19 | **Última modificación:** 2026-10-31
