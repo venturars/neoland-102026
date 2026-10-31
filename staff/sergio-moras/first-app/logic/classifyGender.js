@@ -1,8 +1,6 @@
 // Cuenta cuántos usuarios parecen hombres, mujeres o de género no definido.
 // Solo mira el nombre de cada usuario y se lo pregunta a un modelo de IA local (Ollama).
-// Uso desde la terminal: node logic/classifyGender.js
 
-import { pathToFileURL } from 'node:url';
 import { selectAllUsers } from '../queries/users.js';
 
 const OLLAMA_URL = 'http://localhost:11434/v1/systemone';
@@ -137,22 +135,5 @@ export async function classifyGender() {
     return await countGenders(users);
   } catch (error) {
     throw new Error(`Users could not be classified: ${error.message}`);
-  }
-}
-
-// Este bloque solo se ejecuta cuando el archivo se lanza directamente con node,
-// no cuando otro archivo lo importa.
-const isRunFromTerminal = import.meta.url === pathToFileURL(process.argv[1]).href;
-
-if (isRunFromTerminal) {
-  try {
-    const counts = await classifyGender();
-    console.log(`Men: ${counts.men}`);
-    console.log(`Women: ${counts.women}`);
-    console.log(`Undefined: ${counts.undefinedGender}`);
-  } catch (error) {
-    console.error(`Error: ${error.message}`);
-    // Código 1 = el comando terminó con error.
-    process.exit(1);
   }
 }

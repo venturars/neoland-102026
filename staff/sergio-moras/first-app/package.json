@@ -1,5 +1,9 @@
 {
   "name": "data-base",
   "version": "1.0.0",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@colors/colors": "1.6.1",
+    "cli-table3": "0.6.5"
+  }
 }
