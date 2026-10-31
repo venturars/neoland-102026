@@ -5,7 +5,7 @@ El trabajo de git sigue [agents/git-workflow-agent.md](agents/git-workflow-agent
 Proyecto didáctico: base de datos de usuarios en SQLite, con `node:sqlite`. Las reglas inamovibles están en [docs/CONSTITUTIONS.md](docs/CONSTITUTIONS.md); si algo de este archivo la contradice, manda la constitución.
 
 ## Stack
-- Node 24 (mínimo 22.5), módulos ESM (`import`/`export`), sin dependencias externas.
+- Node 24 (mínimo 22.5), módulos ESM (`import`/`export`), dependencias en `package.json`, con versión fija e instaladas con pnpm.
 - Base de datos: `db/users.sqlite`, tabla `users` (`id`, `name`, `email` único, `created_at`, `updated_at`).
 
 ## Estructura
@@ -30,6 +30,12 @@ clients/terminal/classifyGender.txt   # necesita Ollama en marcha
 ```
 Forma de cada comando: `-e "` en la primera línea, el código sangrado debajo y `"` sola en la última. Dentro del código, solo comillas simples y sin `${...}`.
 
+Formato y revisión del JavaScript de la app, desde `first-app/`:
+```
+pnpm format   # Prettier sobre los .js de logic/, queries/ y db/, y eslint.config.js
+pnpm lint     # ESLint con las reglas recomendadas
+```
+
 ## Estilo
 - Nombres (archivos, funciones, variables) y mensajes de error/salida: en **inglés**.
 - Comentarios: en **español**, solo donde haya algo no evidente, más un comentario inicial por archivo con su responsabilidad.
@@ -40,6 +46,7 @@ Forma de cada comando: `-e "` en la primera línea, el código sangrado debajo y
 1. Ejecutar los comandos reales de la sección anterior.
 2. Probar también los casos de error: datos que faltan, email inválido o repetido, id inexistente o no numérico.
 3. Probar con usuarios temporales y borrarlos al terminar. Comprobar con `clients/terminal/listUsers.txt` que los datos existentes siguen intactos.
+4. Lanzar `pnpm format` y `pnpm lint`. `pnpm lint` no da errores.
 
 ## Límites
 **Siempre**
