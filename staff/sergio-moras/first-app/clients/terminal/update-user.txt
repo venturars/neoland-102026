@@ -2,7 +2,7 @@ node --no-warnings --input-type=module -e "
 import { updateUser } from './logic/update-user.js';
 
 try {
-  const user = updateUser(3, 'Pedro Garcia', 'pedro@gmail.com');
+  const user = updateUser(13, 'Pedro Garcia', 'pedro@gmail.com');
   console.log('User updated:', user);
 } catch (error) {
   console.error('Error: ' + error.message);
@@ -14,7 +14,7 @@ node --no-warnings --input-type=module -e "
 import { updateUser } from './logic/update-user.js';
 
 try {
-  const user = updateUser(3, 'Pedro Garcia', '');
+  const user = updateUser(13, 'Pedro Garcia', '');
   console.log('User updated:', user);
 } catch (error) {
   console.error('Error: ' + error.message);
@@ -26,7 +26,7 @@ node --no-warnings --input-type=module -e "
 import { updateUser } from './logic/update-user.js';
 
 try {
-  const user = updateUser(3, '', 'pedro.garcia@gmail.com');
+  const user = updateUser(13, '', 'pedro.garcia@gmail.com');
   console.log('User updated:', user);
 } catch (error) {
   console.error('Error: ' + error.message);
