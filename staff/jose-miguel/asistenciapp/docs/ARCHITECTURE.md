@@ -4,6 +4,8 @@ Este documento dice **cómo se organiza el código**.
 
 La forma es una arquitectura por capas: las reglas no saben dónde se guardan los datos ni cómo se dibuja la pantalla.
 
+El flujo de git vive junto al código. `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca. El detalle de cada momento está en `AGENTS.md`.
+
 ---
 
 ## 1. Tres partes
@@ -22,6 +24,11 @@ Las flechas solo van hacia dentro. Una parte de fuera puede llamar a una de dent
 
 ```
 asistenciapp/
+├── agents/                # orquestador y subagentes del flujo de git
+├── skills/                # skills invocadas por los agentes
+├── tools/                 # scripts de git (desde la raíz del repo)
+├── templates/             # plantillas de issue y pull request
+├── MCPS/                  # referencia del MCP de GitHub
 ├── docs/
 │   ├── CONSTITUTION.md    # reglas no negociables
 │   └── ARCHITECTURE.md    # este archivo
