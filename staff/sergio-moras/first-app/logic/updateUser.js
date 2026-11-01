@@ -1,8 +1,6 @@
 // Modifica el nombre y/o el email de un usuario, identificado por su id.
-// Uso desde la terminal: node logic/updateUser.js <id> "<name>" "<email>"
 // Para dejar un campo sin cambiar, se pasa "" en su lugar.
 
-import { pathToFileURL } from 'node:url';
 import { selectUserByEmail, updateUserById } from '../queries/users.js';
 
 // Forma mínima de un email: algo@algo.algo, sin espacios.
@@ -44,21 +42,4 @@ export function updateUser(id, name, email) {
   }
 
   return updatedUser;
-}
-
-// Este bloque solo se ejecuta cuando el archivo se lanza directamente con node,
-// no cuando otro archivo lo importa.
-const isRunFromTerminal = import.meta.url === pathToFileURL(process.argv[1]).href;
-
-if (isRunFromTerminal) {
-  try {
-    // Los argumentos del comando empiezan en la posición 2 de process.argv.
-    const [id, name, email] = process.argv.slice(2);
-    const user = updateUser(id, name, email);
-    console.log('User updated:', user);
-  } catch (error) {
-    console.error(`Error: ${error.message}`);
-    // Código 1 = el comando terminó con error.
-    process.exit(1);
-  }
 }
