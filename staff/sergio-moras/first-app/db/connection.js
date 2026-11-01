@@ -2,12 +2,12 @@
 // Es el único punto de acceso al archivo users.sqlite: cualquier otro archivo
 // que necesite la base de datos importa esta conexión.
 
-import { DatabaseSync } from 'node:sqlite';
-import { fileURLToPath } from 'node:url';
+import { DatabaseSync } from "node:sqlite";
+import { fileURLToPath } from "node:url";
 
 // Ruta absoluta a users.sqlite, calculada a partir de la ubicación de este archivo.
 // Así funciona igual aunque ejecutes el comando desde otra carpeta.
-const databasePath = fileURLToPath(new URL('./users.sqlite', import.meta.url));
+const databasePath = fileURLToPath(new URL("./users.sqlite", import.meta.url));
 
 // Si users.sqlite no existe, SQLite lo crea vacío.
 const connection = new DatabaseSync(databasePath);

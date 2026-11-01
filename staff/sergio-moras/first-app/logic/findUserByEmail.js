@@ -1,6 +1,6 @@
 // Busca un usuario por su email.
 
-import { selectUserByEmail } from '../queries/users.js';
+import { selectUserByEmail } from "../queries/users.js";
 
 // Devuelve el usuario encontrado. Lanza un Error si falta el email o no existe el usuario.
 export function findUserByEmail(email) {
@@ -8,7 +8,7 @@ export function findUserByEmail(email) {
   const normalizedEmail = email?.trim().toLowerCase();
 
   if (!normalizedEmail) {
-    throw new Error('Email is required.');
+    throw new Error("Email is required.");
   }
 
   const user = selectUserByEmail(normalizedEmail);
