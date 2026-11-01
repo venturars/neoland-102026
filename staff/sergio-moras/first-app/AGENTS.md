@@ -12,26 +12,26 @@ Antes de tocar código se leen la constitución y la guía del tema:
 - [docs/STYLE.md](docs/STYLE.md): nombres, líneas y formato.
 
 ## Comandos
-Los comandos de la app están en `clients/terminal/`, un `.txt` por operación. Se copian y se pegan en la terminal (PowerShell o Git Bash) desde la raíz del proyecto (`first-app/`). Los valores de ejemplo se cambian editando el comando. El flag `--no-warnings` oculta el aviso experimental de `node:sqlite`.
+Los comandos de la app están en `src/clients/terminal/`, un `.txt` por operación. Se copian y se pegan en la terminal (PowerShell o Git Bash) desde la raíz del proyecto (`first-app/`). Los valores de ejemplo se cambian editando el comando. El flag `--no-warnings` oculta el aviso experimental de `node:sqlite`.
 ```
-clients/terminal/create-user.txt
-clients/terminal/find-user-by-email.txt
-clients/terminal/list-users.txt
-clients/terminal/update-user.txt       # '' = no cambiar ese campo
-clients/terminal/delete-user.txt
-clients/terminal/classify-gender.txt   # necesita Ollama en marcha
+src/clients/terminal/create-user.txt
+src/clients/terminal/find-user-by-email.txt
+src/clients/terminal/list-users.txt
+src/clients/terminal/update-user.txt       # '' = no cambiar ese campo
+src/clients/terminal/delete-user.txt
+src/clients/terminal/classify-gender.txt   # necesita Ollama en marcha
 ```
 
 Formato y revisión del JavaScript de la app, desde `first-app/`:
 ```
-pnpm format   # Prettier sobre los .js de logic/, queries/ y db/, y eslint.config.js
+pnpm format   # Prettier sobre los .js de src/logic/, src/queries/ y src/db/, y eslint.config.js
 pnpm lint     # ESLint con las reglas recomendadas
 ```
 
 ## Cómo verificar un cambio
 1. Ejecutar los comandos reales de la sección anterior.
 2. Probar también los casos de error: datos que faltan, email inválido o repetido, id inexistente o no numérico.
-3. Probar con usuarios temporales y borrarlos al terminar. Comprobar con `clients/terminal/list-users.txt` que los datos existentes siguen intactos.
+3. Probar con usuarios temporales y borrarlos al terminar. Comprobar con `src/clients/terminal/list-users.txt` que los datos existentes siguen intactos.
 4. Lanzar `pnpm format` y `pnpm lint`. `pnpm lint` no da errores.
 
 ## Límites

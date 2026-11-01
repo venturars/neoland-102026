@@ -11,7 +11,7 @@
 
 ## Módulos
 - Imports ESM con la extensión `.js`.
-- Exportaciones con nombre. La única exportación por defecto es la conexión de `db/connection.js`.
+- Exportaciones con nombre. La única exportación por defecto es la conexión de `src/db/connection.js`.
 - Sin clases.
 
 ## Líneas
@@ -36,5 +36,5 @@ const normalizedEmail = trimmedEmail.toLowerCase();
 - Se lanza con `pnpm format`. `pnpm lint` revisa el código con ESLint.
 
 ## Plantillas
-- Para un fichero de `logic/`: `logic/create-user.js`.
-- Para un cliente de terminal: `clients/terminal/create-user.txt`.
+- Para un fichero de `logic/`: `src/logic/create-user.js`.
+- Para un cliente de terminal: `src/clients/terminal/create-user.txt`.

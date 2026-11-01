@@ -1,8 +1,8 @@
 # Base de datos
 
 ## Fichero y conexión
-- El fichero es `db/users.sqlite` (principio 4 de [CONSTITUTIONS.md](CONSTITUTIONS.md)). No está en git.
-- Hay una sola conexión: la que exporta `db/connection.js`, con `node:sqlite`.
+- El fichero es `src/db/users.sqlite` (principio 4 de [CONSTITUTIONS.md](CONSTITUTIONS.md)). No está en git.
+- Hay una sola conexión: la que exporta `src/db/connection.js`, con `node:sqlite`.
 - La tabla se crea al abrir la conexión, si no existe.
 
 ## Tabla `users`
@@ -19,7 +19,7 @@
 - Las fechas se guardan como texto `YYYY-MM-DD HH:MM:SS`.
 
 ## SQL
-- Todo el SQL vive en `queries/users.js`. No hay SQL fuera de `queries/`.
+- Todo el SQL vive en `src/queries/users.js`. No hay SQL fuera de `queries/`.
 - Los valores van como parámetros `?`, nunca pegados al texto del SQL.
 - `queries/` no valida ni decide mensajes.
 

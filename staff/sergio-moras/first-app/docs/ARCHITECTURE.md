@@ -1,6 +1,8 @@
 # Arquitectura
 
 ## Capas
+El código de la app está en `src/`. El resto de `first-app/` es documentación, configuración y flujo de git.
+
 El flujo es `clients → logic → queries → db`. Cada capa solo llama a la siguiente.
 
 | Capa | Hace | No hace |
@@ -13,23 +15,23 @@ El flujo es `clients → logic → queries → db`. Cada capa solo llama a la si
 La base de datos está en [DATABASE.md](DATABASE.md). El árbol completo, en [TREE.md](TREE.md).
 
 ## Ficheros
-- `db/connection.js`: la única conexión a `db/users.sqlite`. Crea la tabla `users` si no existe.
-- `queries/users.js`: todo el SQL de la tabla `users`. Exporta `insertUser`, `selectUserByEmail`, `selectAllUsers`, `updateUserById` y `deleteUserById`.
-- `logic/create-user.js`: crea un usuario.
-- `logic/find-user-by-email.js`: busca un usuario por su email.
-- `logic/list-users.js`: lista los usuarios por id.
-- `logic/update-user.js`: cambia el nombre, el email o los dos de un usuario.
-- `logic/delete-user.js`: borra un usuario.
-- `logic/classify-gender.js`: cuenta hombres, mujeres y no definidos con un modelo de Ollama. Exporta también `countGenders`, que hace el conteo sobre una lista.
-- `clients/terminal/<operación>.txt`: el comando que se pega en la terminal.
-- `clients/jupyter/<operación>.ipynb`: el documento que se ejecuta en Jupyter.
+- `src/db/connection.js`: la única conexión a `src/db/users.sqlite`. Crea la tabla `users` si no existe.
+- `src/queries/users.js`: todo el SQL de la tabla `users`. Exporta `insertUser`, `selectUserByEmail`, `selectAllUsers`, `updateUserById` y `deleteUserById`.
+- `src/logic/create-user.js`: crea un usuario.
+- `src/logic/find-user-by-email.js`: busca un usuario por su email.
+- `src/logic/list-users.js`: lista los usuarios por id.
+- `src/logic/update-user.js`: cambia el nombre, el email o los dos de un usuario.
+- `src/logic/delete-user.js`: borra un usuario.
+- `src/logic/classify-gender.js`: cuenta hombres, mujeres y no definidos con un modelo de Ollama. Exporta también `countGenders`, que hace el conteo sobre una lista.
+- `src/clients/terminal/<operación>.txt`: el comando que se pega en la terminal.
+- `src/clients/jupyter/<operación>.ipynb`: el documento que se ejecuta en Jupyter.
 
 ## Una operación
 Una operación tiene, con el mismo nombre:
 1. Un fichero en `logic/` que exporta su función.
-2. Una función en `queries/users.js`, si usa la base.
-3. Un `.txt` en `clients/terminal/`.
-4. Un `.ipynb` en `clients/jupyter/`.
+2. Una función en `src/queries/users.js`, si usa la base.
+3. Un `.txt` en `src/clients/terminal/`.
+4. Un `.ipynb` en `src/clients/jupyter/`.
 
 Una operación nueva es un fichero nuevo en `logic/`. Un fichero de `logic/` ya creado no se reemplaza para encajar otra operación.
 
