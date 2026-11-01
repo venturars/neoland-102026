@@ -113,6 +113,7 @@ Una funcionalidad está terminada cuando:
 | `003-activar-el-entorno` | ✅ Implementada (2026-11-01) | El README separa activar el entorno de arrancar la app |
 | `004-quitar-referencias-personales` | ✅ Implementada (2026-11-01) | Documentación sin nombres personales; rutas con `staff/<usuario>/asistenciapp` |
 | `005-reorganizar-arquitectura` | ✅ Implementada (2026-11-01) | Documentos en `docs/`; código en `domain/`, `use_cases/`, `infra/` y `app.py` |
+| `006-limite-intentos-por-ip` | ✅ Implementada (2026-11-01) | 5 intentos/s y 20/min por IP, bloqueo permanente; constitución 3.0 |
 | Integración con Discord | Idea, sin número asignado | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.

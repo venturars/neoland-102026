@@ -37,7 +37,22 @@ CREATE TABLE IF NOT EXISTS checkins (
   checked_at  TEXT NOT NULL,
   UNIQUE (session_id, name_key)
 );
+
+-- Intentos de registro por IP del último minuto. Separados de checkins: la IP
+-- nunca se guarda junto al nombre.
+CREATE TABLE IF NOT EXISTS attempts (
+  ip  TEXT NOT NULL,
+  at  REAL NOT NULL
+);
+CREATE INDEX IF NOT EXISTS attempts_ip_at ON attempts (ip, at);
+
+CREATE TABLE IF NOT EXISTS blocked_ips (
+  ip          TEXT PRIMARY KEY,
+  blocked_at  TEXT NOT NULL
+);
 """
+
+ATTEMPT_RETENTION_SECONDS = 60
 
 
 @contextmanager
@@ -251,3 +266,60 @@ def remove_checkin(conn: sqlite3.Connection, session_id: str, checkin_id: int) -
             "DELETE FROM checkins WHERE id = ? AND session_id = ?", (checkin_id, session_id)
         )
     return cursor.rowcount == 1
+
+
+def is_blocked(conn: sqlite3.Connection, ip: str) -> bool:
+    """Dice si la IP está en la lista de bloqueo.
+
+    :param conn: conexión abierta.
+    :param ip: IP de quien intenta registrarse.
+    :return: ``True`` si está bloqueada.
+    :rtype: bool
+
+    Usage::
+
+      >>> is_blocked(conn, "203.0.113.7")
+      False
+    """
+    return conn.execute("SELECT 1 FROM blocked_ips WHERE ip = ?", (ip,)).fetchone() is not None
+
+
+def block_ip(conn: sqlite3.Connection, ip: str, blocked_at: str) -> None:
+    """Añade la IP a la lista de bloqueo. Si ya estaba, no cambia nada.
+
+    :param conn: conexión abierta.
+    :param ip: IP que se bloquea.
+    :param blocked_at: hora del bloqueo en ISO UTC.
+
+    Usage::
+
+      >>> block_ip(conn, "203.0.113.7", "2026-11-01T10:00:00+00:00")
+    """
+    with conn:
+        conn.execute(
+            "INSERT INTO blocked_ips (ip, blocked_at) VALUES (?, ?) ON CONFLICT (ip) DO NOTHING",
+            (ip, blocked_at),
+        )
+
+
+def record_attempt(conn: sqlite3.Connection, ip: str, t: float) -> list[float]:
+    """Apunta un intento de registro y devuelve los anteriores de esa IP.
+
+    De paso borra los intentos de todas las IPs con más de un minuto, para no
+    guardar IPs más tiempo del necesario.
+
+    :param conn: conexión abierta.
+    :param ip: IP de quien intenta registrarse.
+    :param t: instante del intento en segundos Unix.
+    :return: instantes de los intentos anteriores de esa IP en el último minuto.
+    :rtype: list[float]
+
+    Usage::
+
+      >>> previous = record_attempt(conn, "203.0.113.7", time.time())
+    """
+    with conn:
+        conn.execute("DELETE FROM attempts WHERE at <= ?", (t - ATTEMPT_RETENTION_SECONDS,))
+        rows = conn.execute("SELECT at FROM attempts WHERE ip = ?", (ip,)).fetchall()
+        conn.execute("INSERT INTO attempts (ip, at) VALUES (?, ?)", (ip, t))
+    return [row["at"] for row in rows]

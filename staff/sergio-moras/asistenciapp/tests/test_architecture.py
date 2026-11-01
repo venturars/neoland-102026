@@ -101,6 +101,6 @@ def test_links_point_to_new_locations(doc):  # CA-04
 
 def test_constitution_names_new_folders():  # CA-10
     text = (ROOT / "docs" / "CONSTITUTION.md").read_text(encoding="utf-8")
-    assert "Versión 2.3" in text
+    assert "Versión 3.0" in text
     for folder in ("asistencia/domain/", "asistencia/use_cases/", "asistencia/infra/", "docs/"):
         assert folder in text

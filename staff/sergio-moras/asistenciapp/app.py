@@ -9,6 +9,7 @@ Uso: `python app.py` y abrir la URL del panel que se imprime en consola.
 
 import argparse
 import hmac
+import ipaddress
 import os
 import socket
 import sys
@@ -16,10 +17,11 @@ import time
 from pathlib import Path
 from typing import Callable
 
-from flask import Flask, Response, jsonify, request
+from flask import Flask, Request, Response, jsonify, request
 from werkzeug.exceptions import HTTPException
 from werkzeug.middleware.proxy_fix import ProxyFix
 
+from asistencia.domain.attempts import Blocked
 from asistencia.domain.names import InvalidName
 from asistencia.domain.rules import InvalidCode, SessionClosed, SessionNotFound
 from asistencia.infra.tunnel import TunnelError, start_tunnel
@@ -38,17 +40,50 @@ ERROR_STATUS = {
     SessionClosed: 409,
     InvalidCode: 422,
     InvalidName: 400,
+    Blocked: 429,
 }
 
 
+def client_ip(req: Request, behind_tunnel: bool) -> str:
+    """Devuelve la IP pública de quien hace la petición.
+
+    Con el túnel, ``cloudflared`` conecta desde este mismo ordenador y Cloudflare
+    pone la IP real en ``CF-Connecting-IP`` (sustituyendo cualquier valor que
+    mande el cliente). Solo se confía en esa cabecera en modo túnel, si la
+    conexión es local y el valor es una IP válida.
+
+    :param req: petición de Flask.
+    :param behind_tunnel: ``True`` si la app se arrancó con ``--tunel``.
+    :return: la IP que cuenta para el límite de intentos.
+    :rtype: str
+
+    Usage::
+
+      >>> client_ip(request, behind_tunnel=True)
+      '203.0.113.7'
+    """
+    connection_ip = req.remote_addr or ""
+    if behind_tunnel and connection_ip in ("127.0.0.1", "::1"):
+        forwarded = req.headers.get("CF-Connecting-IP", "").strip()
+        try:
+            return str(ipaddress.ip_address(forwarded))
+        except ValueError:
+            pass
+    return connection_ip
+
+
 def create_app(
-    db_path: str | Path = DEFAULT_DB, token: str | None = None, now: Callable[[], float] = time.time
+    db_path: str | Path = DEFAULT_DB,
+    token: str | None = None,
+    now: Callable[[], float] = time.time,
+    behind_tunnel: bool = False,
 ) -> Flask:
     """Construye la aplicación web.
 
     :param db_path: ruta del archivo SQLite.
     :param token: token del profesor; si no se da, se usa el guardado (o se crea).
     :param now: reloj que devuelve el instante en segundos Unix.
+    :param behind_tunnel: ``True`` si los alumnos llegan por el túnel (ver ``client_ip``).
     :return: la aplicación Flask lista para servir.
     :rtype: Flask
 
@@ -59,8 +94,9 @@ def create_app(
     """
     app = Flask(__name__, static_folder="static", static_url_path="")
     app.json.ensure_ascii = False
-    # Detrás del túnel, usar la dirección pública que nos indica.
-    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+    # Detrás del túnel, usar la dirección pública que nos indica. x_for=0: la IP de
+    # la conexión no se sustituye por X-Forwarded-For, que el cliente puede inventar.
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=0, x_proto=1, x_host=1)
     stored_token = teacher.prepare(db_path)
     app.config["TEACHER_TOKEN"] = token or stored_token
 
@@ -100,7 +136,12 @@ def create_app(
     def check_in(session_id):
         body = request.get_json(silent=True) or {}
         row, created = student.check_in(
-            db_path, session_id, body.get("name"), body.get("code", ""), now()
+            db_path,
+            session_id,
+            body.get("name"),
+            body.get("code", ""),
+            now(),
+            client_ip(request, behind_tunnel),
         )
         if not created:
             return jsonify(already=True, name=row["name"], checkedAt=row["checked_at"])
@@ -204,7 +245,7 @@ def main() -> None:
             f"  Ciérrala con Ctrl+C, o arranca en otro puerto: PORT={port + 1} python app.py"
         )
     DEFAULT_DB.parent.mkdir(exist_ok=True)
-    app = create_app()
+    app = create_app(behind_tunnel=args.tunel)
 
     tunnel, base_url = None, f"http://localhost:{port}"
     if args.tunel:

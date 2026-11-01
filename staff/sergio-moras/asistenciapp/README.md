@@ -73,6 +73,18 @@ Cuando un alumno se registra, su navegador lo recuerda **para esa clase**: si vu
 
 Es un límite **disuasorio**, no una prueba de identidad: se salta con otro navegador, una ventana privada u otro dispositivo. Para lo que se cuele, está el botón **Quitar**. Si quitas a alguien, su navegador sigue mostrando "ya te registraste": tendría que usar otro navegador para registrarse de nuevo.
 
+### Intentos de registro
+
+Para que nadie acierte el código probando combinaciones con un script, cada conexión puede intentar registrarse como mucho **5 veces por segundo** y **20 por minuto**. Quien se pasa ve *"Esta conexión ha quedado bloqueada por demasiados intentos de registro. Habla con el profesor."* y queda bloqueado **para siempre**, en todas las clases. Un alumno que escribe el código a mano no llega nunca a esos números.
+
+- Con `--tunel` se cuenta la IP pública de cada alumno. Sin túnel, la del propio ordenador.
+- **Conexión compartida:** los alumnos que salen a internet por la misma red (por ejemplo, la wifi del aula) cuentan como una sola conexión. Si 6 envían el código en el mismo segundo, esa red queda bloqueada para todos.
+- **Desbloquear** (no hay botón): con la app parada, desde esta carpeta,
+  ```bash
+  sqlite3 data/asistencia.db "SELECT ip, blocked_at FROM blocked_ips;"
+  sqlite3 data/asistencia.db "DELETE FROM blocked_ips WHERE ip = 'LA_IP';"
+  ```
+
 Las **sesiones anteriores** aparecen en el panel con su número de asistentes, y puedes volver a verlas o descargarlas cuando quieras.
 
 ---
@@ -102,6 +114,7 @@ pkill cloudflared                    # para el túnel, si lo usabas
 | El enlace del túnel no carga | Espera unos 20 segundos y recarga: los túneles nuevos tardan en estar accesibles. |
 | Aviso amarillo en el panel: *"tus alumnos no podrán abrir el enlace"* | Abriste el panel en `localhost`. Para la app y arráncala con `python app.py --tunel`. |
 | *"Enlace del panel no válido"* | Usa el enlace exacto de la terminal, incluido todo lo que va detrás de `#t=`. |
+| Un alumno ve *"Esta conexión ha quedado bloqueada…"* | Su conexión superó los intentos permitidos. Mira «Intentos de registro» (sección 4) para desbloquearla. |
 | `command not found: pytest` o `python` no encuentra Flask | No has activado el entorno: `source .venv/bin/activate`. |
 
 ---
@@ -119,7 +132,8 @@ Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una 
 
 ## 8. Privacidad
 
-- Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails ni IPs.
+- Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails.
+- La IP de quien intenta registrarse se guarda **aparte**, solo para el límite de intentos: la del último minuto se borra sola y la de las conexiones bloqueadas se queda en la lista de bloqueo. Nunca va junto al nombre ni sale en la lista ni en el CSV (constitución P4, v3.0).
 - El límite "un registro por navegador" se guarda **solo en el navegador del alumno**, no en el servidor.
 - Quitar un registro lo **borra de verdad** (no queda en ninguna papelera).
 - Los datos se guardan **solo en tu ordenador** (`data/`, que no se sube a git).

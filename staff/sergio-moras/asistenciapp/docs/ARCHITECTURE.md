@@ -37,12 +37,13 @@ La idea viene de [python-clean-architecture-example](https://github.com/claudios
 | `asistencia/domain/codes.py` | Reglas | Calcula el código de 4 cifras de cada ventana de 30 s y dice si uno es válido |
 | `asistencia/domain/names.py` | Reglas | Limpia y valida el nombre del alumno, y calcula la clave para detectar duplicados |
 | `asistencia/domain/rules.py` | Reglas | Errores de la clase (no existe, cerrada, código no válido) y las funciones que los lanzan |
+| `asistencia/domain/attempts.py` | Reglas | Límite de intentos de registro por IP (5 por segundo, 20 por minuto) y el error `Blocked` |
 | `asistencia/use_cases/teacher.py` | Casos de uso | Preparar la app, abrir, listar, ver, cerrar, quitar un registro y exportar |
 | `asistencia/use_cases/student.py` | Casos de uso | Ver la clase y registrarse |
-| `asistencia/infra/sqlite_store.py` | Infraestructura | Abrir `data/asistencia.db`, crear las tablas, guardar y leer |
+| `asistencia/infra/sqlite_store.py` | Infraestructura | Abrir `data/asistencia.db`, crear las tablas, guardar y leer (clases, registros, intentos y lista de bloqueo) |
 | `asistencia/infra/csv_export.py` | Infraestructura | Convertir filas ya leídas en un CSV para Excel o Google Sheets |
 | `asistencia/infra/tunnel.py` | Infraestructura | Lanzar `cloudflared` y obtener el enlace público |
-| `app.py` | Entrada HTTP | Rutas Flask, permiso del profesor, arranque y traducción de errores a respuestas |
+| `app.py` | Entrada HTTP | Rutas Flask, permiso del profesor, IP de quien llama (`client_ip`), arranque y traducción de errores a respuestas |
 | `static/` | Entrada HTTP | Pantallas del profesor y del alumno (HTML, CSS y JS) |
 | `asistencia/hack-etico.sh` | Fuera de las piezas | Demo de fuerza bruta. Solo habla con la app por HTTP |
 

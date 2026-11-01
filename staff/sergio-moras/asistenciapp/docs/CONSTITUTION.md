@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 2.3 · Ratificada: 2026-10-19 · Última enmienda: 2026-11-01
+> Versión 3.0 · Ratificada: 2026-10-19 · Última enmienda: 2026-11-01
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -32,6 +32,7 @@ El registro de asistencia no depende de una plataforma concreta. Las integracion
 ### P4 · Privacidad mínima
 - Del alumno solo se guarda el **nombre que él mismo escribe** y la **hora del registro**.
 - **Prohibido** guardar emails, IPs, identificadores de dispositivo o cualquier dato no imprescindible.
+- **Única excepción:** la IP de quien intenta registrarse se guarda solo para frenar ataques automáticos (§6): en los intentos del último minuto, que se borran después, y en la lista de bloqueo. Nunca junto al nombre ni a la hora del registro, ni en la lista ni en el CSV.
 - Los datos se **almacenan** solo en local (SQLite). Ningún servicio de terceros los guarda.
 - Para que los alumnos lleguen a la app desde sus casas, el tráfico puede **pasar cifrado (HTTPS)** por un proveedor de túnel (p. ej. Cloudflare). Ese proveedor no los almacena, pero técnicamente podría verlos en tránsito; por eso solo se envía lo imprescindible (nombre y código).
 
@@ -82,7 +83,8 @@ Cómo se relacionan esas piezas está en `docs/ARCHITECTURE.md`. Cambiar el stac
 
 ## 6. Seguridad
 
-- Los códigos de asistencia **caducan** y no se pueden adivinar **a mano** antes de caducar. La protección contra ataques automatizados (scripts) no es un requisito.
+- Los códigos de asistencia **caducan** y no se pueden adivinar **a mano** antes de caducar.
+- **Los intentos automáticos se frenan:** cada IP puede intentar registrarse como mucho 5 veces por segundo y 20 por minuto. Si se pasa, recibe un aviso y queda bloqueada para siempre. El código no se complica para ello.
 - Un mismo alumno no puede registrarse dos veces en la misma sesión.
 - Una sesión cerrada no acepta más registros.
 - Toda entrada del usuario se valida en el servidor y se escapa al mostrarla (sin HTML inyectado).
@@ -110,3 +112,4 @@ Cómo se relacionan esas piezas está en `docs/ARCHITECTURE.md`. Cambiar el stac
 | 2.1 | 2026-10-20 | P4: distingue *almacenar* (solo en local) de *transitar* (puede pasar cifrado por un proveedor de túnel) | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08) |
 | 2.2 | 2026-11-01 | §4: la spec es obligatoria para cualquier fichero de la app (no solo código) y se aclara que issue, rama y PR no la sustituyen. §7 y §8: la carpeta es `staff/sergio-moras/asistenciapp/` y aprueba quien trabaja en ella | Las reglas copiadas dejaban fuera README, tests y documentación, y apuntaban a otro proyecto (spec 002) |
 | 2.3 | 2026-11-01 | §3: la tabla nombra dónde vive cada pieza: `app.py`, `asistencia/domain/`, `asistencia/use_cases/`, `asistencia/infra/` y `docs/`, y remite a `docs/ARCHITECTURE.md` | El código se reorganiza por responsabilidades y la constitución pasa a `docs/`. Propósito, principios y reglas no cambian (spec 005) |
+| 3.0 | 2026-11-01 | P4: excepción para guardar la IP solo en los intentos del último minuto y en la lista de bloqueo, nunca con el registro. §6: la protección contra scripts pasa a ser obligatoria (5/s y 20/min por IP, bloqueo permanente) | Un script puede probar los 10.000 códigos en segundos (demo `hack-etico.sh`). Se cambia un principio y se invierte la decisión 1.1, por eso es versión mayor (spec 006) |
