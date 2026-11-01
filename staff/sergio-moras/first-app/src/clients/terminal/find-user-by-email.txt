@@ -1,5 +1,5 @@
 node --no-warnings --input-type=module -e "
-import { findUserByEmail } from './logic/find-user-by-email.js';
+import { findUserByEmail } from './src/logic/find-user-by-email.js';
 
 try {
   const user = findUserByEmail('pedro@gmail.com');

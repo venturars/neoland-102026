@@ -1,5 +1,5 @@
 node --no-warnings --input-type=module -e "
-import { updateUser } from './logic/update-user.js';
+import { updateUser } from './src/logic/update-user.js';
 
 try {
   const user = updateUser(13, 'Pedro Garcia', 'pedro@gmail.com');
@@ -11,7 +11,7 @@ try {
 "
 
 node --no-warnings --input-type=module -e "
-import { updateUser } from './logic/update-user.js';
+import { updateUser } from './src/logic/update-user.js';
 
 try {
   const user = updateUser(13, 'Pedro Garcia', '');
@@ -23,7 +23,7 @@ try {
 "
 
 node --no-warnings --input-type=module -e "
-import { updateUser } from './logic/update-user.js';
+import { updateUser } from './src/logic/update-user.js';
 
 try {
   const user = updateUser(13, '', 'pedro.garcia@gmail.com');

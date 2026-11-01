@@ -1,5 +1,5 @@
 node --no-warnings --input-type=module -e "
-import { classifyGender } from './logic/classify-gender.js';
+import { classifyGender } from './src/logic/classify-gender.js';
 
 try {
   const counts = await classifyGender();

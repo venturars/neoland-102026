@@ -1,5 +1,5 @@
 node --no-warnings --input-type=module -e "
-import { createUser } from './logic/create-user.js';
+import { createUser } from './src/logic/create-user.js';
 
 try {
   const user = createUser('Pedro', 'pedro@gmail.com');
