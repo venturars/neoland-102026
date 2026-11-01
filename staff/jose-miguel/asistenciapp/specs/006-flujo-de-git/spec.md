@@ -1,6 +1,6 @@
 # Spec 006 · Flujo de git y cinco momentos
 
-> Estado: **Aprobada** (2026-11-01) · Creada: 2026-11-01
+> Estado: **Implementada** (2026-11-01) · Creada: 2026-11-01
 
 Issue: #712.
 
