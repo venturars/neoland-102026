@@ -16,9 +16,10 @@ La base de datos está en [DATABASE.md](DATABASE.md). El árbol completo, en [TR
 
 ## Ficheros
 - `src/db/connection.js`: la única conexión a `src/db/users.sqlite`. Crea la tabla `users` si no existe.
-- `src/queries/users.js`: todo el SQL de la tabla `users`. Exporta `insertUser`, `selectUserByEmail`, `selectAllUsers`, `updateUserById` y `deleteUserById`.
+- `src/queries/users.js`: todo el SQL de la tabla `users`. Exporta `insertUser`, `selectUserByEmail`, `selectAllUsers`, `selectUsersByName`, `updateUserById` y `deleteUserById`.
 - `src/logic/create-user.js`: crea un usuario.
 - `src/logic/find-user-by-email.js`: busca un usuario por su email.
+- `src/logic/find-user-by-name.js`: busca los usuarios con un nombre exacto, por id.
 - `src/logic/list-users.js`: lista los usuarios por id.
 - `src/logic/update-user.js`: cambia el nombre, el email o los dos de un usuario.
 - `src/logic/delete-user.js`: borra un usuario.

@@ -20,6 +20,7 @@ first-app/
       create-user.js
       delete-user.js
       find-user-by-email.js
+      find-user-by-name.js
       list-users.js
       update-user.js
     clients/

@@ -16,6 +16,7 @@ Los comandos de la app estÃ¡n en `src/clients/terminal/`, un `.txt` por operaciÃ
 ```
 src/clients/terminal/create-user.txt
 src/clients/terminal/find-user-by-email.txt
+src/clients/terminal/find-user-by-name.txt
 src/clients/terminal/list-users.txt
 src/clients/terminal/update-user.txt       # '' = no cambiar ese campo
 src/clients/terminal/delete-user.txt
