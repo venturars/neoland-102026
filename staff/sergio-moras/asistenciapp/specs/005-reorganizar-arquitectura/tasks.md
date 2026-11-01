@@ -44,8 +44,8 @@ Una tarea cada vez, en orden. Al acabarla se marca `[x]`. Después de cada tarea
 
 - [x] **T08 · `infra/`.** Mover `db.py` → `infra/sqlite_store.py` (con `open_db`), `export.py` → `infra/csv_export.py` y `tunnel.py` → `infra/tunnel.py`. Documentarlos y ajustar imports de `app.py`, `test_export.py` y `test_tunnel.py`.
   - Cubre: CA-06.
-  - Terminada cuando: la suite pasa y los ficheros viejos no existen.
-  - Nota: al pasar de `connect` a `open_db`, `app.py` dejó de arrancar hasta T10; en T08 se comprobaron solo los tests de los módulos (40 en verde) y la suite completa volvió a verde en T10.
+  - Terminada cuando: los tests de los módulos (`test_codes`, `test_names`, `test_rules`, `test_export`, `test_tunnel`) pasan y los ficheros viejos no existen. La suite completa vuelve a verde en T10, porque `app.py` deja de arrancar al cambiar `connect` por `open_db`.
+  - *Enmendada el 2026-11-01* (ver historial de la spec).
 
 ## Fase E · Casos de uso y app
 

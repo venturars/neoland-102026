@@ -89,3 +89,4 @@ Ninguna.
 | 0.1 | 2026-11-01 | Borrador |
 | 1.0 | 2026-11-01 | Aprobada |
 | 1.1 | 2026-11-01 | Implementada: T01–T13, 108 tests en verde y demo de hack ético comprobada contra la app |
+| 1.2 | 2026-11-01 | Enmienda de la task T08: su criterio pasa de «la suite pasa» a «los tests de los módulos pasan; la suite completa vuelve a verde en T10». Aprobada después de implementarla: el agente no paró a pedir el ok al detectar que el criterio no se podía cumplir (`AGENTS.md` §2.4) |
