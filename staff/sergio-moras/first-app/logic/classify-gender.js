@@ -32,10 +32,13 @@ const FEW_SHOT_EXAMPLES = [
 
 // Texto que describe la tarea al modelo, con los ejemplos incluidos.
 function buildState() {
-  const examples = FEW_SHOT_EXAMPLES.map(
-    (example) => `${example.name} -> ${example.gender}`,
-  );
-  return `Classify the most likely gender of each first name. Examples: ${examples.join("; ")}.`;
+  const examples = [];
+  for (const example of FEW_SHOT_EXAMPLES) {
+    examples.push(`${example.name} -> ${example.gender}`);
+  }
+  const examplesText = examples.join("; ");
+
+  return `Classify the most likely gender of each first name. Examples: ${examplesText}.`;
 }
 
 // Pregunta al modelo por una lista de nombres (una sola petición).
@@ -46,27 +49,31 @@ async function askModelForGenders(names) {
   // Cada nombre es una pregunta con su propia clave (q1, q2...), así cada
   // respuesta queda ligada a su nombre sin depender del orden.
   const questions = {};
-  names.forEach((name, index) => {
+  for (let index = 0; index < names.length; index += 1) {
+    const name = names[index];
     questions[`q${index + 1}`] = {
       type: "choice",
       instructions: `Is the first name '${name}' most likely male or female?`,
       criteria: GENDER_CRITERIA,
     };
-  });
+  }
 
+  const state = buildState();
   const requestBody = {
     model: MODEL_NAME,
-    state: buildState(),
+    state,
     questions,
   };
+  const body = JSON.stringify(requestBody);
+  const signal = AbortSignal.timeout(REQUEST_TIMEOUT_MS);
 
   let response;
   try {
     response = await fetch(OLLAMA_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requestBody),
-      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+      body,
+      signal,
     });
   } catch (error) {
     throw new Error(`the model did not respond (${error.message})`, {
@@ -79,23 +86,29 @@ async function askModelForGenders(names) {
   }
 
   // A partir de aquí el modelo sí ha respondido: cualquier problema es una respuesta no válida.
-  let answers;
+  let answers = {};
   try {
     const data = await response.json();
-    answers = data.answers;
+    if (data.answers) {
+      answers = data.answers;
+    }
   } catch {
-    answers = undefined;
+    answers = {};
   }
 
   const genders = [];
-  names.forEach((name, index) => {
-    const answer = answers?.[`q${index + 1}`];
-    if (answer && ALLOWED_GENDERS.includes(answer.choice)) {
-      genders.push(answer.choice);
-    } else {
-      genders.push("undefined");
+  for (let index = 0; index < names.length; index += 1) {
+    const answer = answers[`q${index + 1}`];
+
+    let gender = "undefined";
+    if (answer) {
+      const isAllowed = ALLOWED_GENDERS.includes(answer.choice);
+      if (isAllowed) {
+        gender = answer.choice;
+      }
     }
-  });
+    genders.push(gender);
+  }
 
   return genders;
 }
@@ -112,8 +125,13 @@ export async function countGenders(users) {
 
   // Se procesa de BATCH_SIZE en BATCH_SIZE usuarios, una petición por grupo y en secuencia.
   for (let start = 0; start < users.length; start += BATCH_SIZE) {
-    const group = users.slice(start, start + BATCH_SIZE);
-    const names = group.map((user) => user.name);
+    const end = start + BATCH_SIZE;
+    const group = users.slice(start, end);
+
+    const names = [];
+    for (const user of group) {
+      names.push(user.name);
+    }
 
     const genders = await askModelForGenders(names);
 
@@ -136,7 +154,8 @@ export async function countGenders(users) {
 export async function classifyGender() {
   try {
     const users = selectAllUsers();
-    return await countGenders(users);
+    const counts = await countGenders(users);
+    return counts;
   } catch (error) {
     throw new Error(`Users could not be classified: ${error.message}`, {
       cause: error,

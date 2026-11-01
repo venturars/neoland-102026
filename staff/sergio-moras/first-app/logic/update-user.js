@@ -8,38 +8,66 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // Actualiza el usuario y lo devuelve ya modificado. Lanza un Error si algún dato no es válido.
 export function updateUser(id, name, email) {
-  // Desde la terminal el id llega como texto, así que se convierte a número.
+  // Desde la terminal el id puede llegar como texto, así que se convierte a número.
   const userId = Number(id);
 
   // Un texto vacío cuenta como "no cambiar este campo", y se representa con null.
-  // Si no se recibió el dato (undefined), trim() no se ejecuta y también queda null.
-  const trimmedName = name?.trim() || null;
-  const normalizedEmail = email?.trim().toLowerCase() || null;
+  let trimmedName = "";
+  if (typeof name === "string") {
+    trimmedName = name.trim();
+  }
+  let newName = null;
+  if (trimmedName !== "") {
+    newName = trimmedName;
+  }
 
-  if (!Number.isInteger(userId) || userId <= 0) {
+  let trimmedEmail = "";
+  if (typeof email === "string") {
+    trimmedEmail = email.trim();
+  }
+  const lowerCaseEmail = trimmedEmail.toLowerCase();
+  let newEmail = null;
+  if (lowerCaseEmail !== "") {
+    newEmail = lowerCaseEmail;
+  }
+
+  const isWholeNumber = Number.isInteger(userId);
+  if (!isWholeNumber) {
     throw new Error(`Invalid id: ${id}`);
   }
-  if (!trimmedName && !normalizedEmail) {
+  if (userId <= 0) {
+    throw new Error(`Invalid id: ${id}`);
+  }
+  if (newName === null && newEmail === null) {
     throw new Error("Provide a new name, a new email, or both.");
   }
 
-  if (normalizedEmail) {
-    if (!EMAIL_PATTERN.test(normalizedEmail)) {
-      throw new Error(`Invalid email: ${normalizedEmail}`);
+  if (newEmail !== null) {
+    const isValidEmail = EMAIL_PATTERN.test(newEmail);
+    if (!isValidEmail) {
+      throw new Error(`Invalid email: ${newEmail}`);
     }
 
     // El email no puede pertenecer a otro usuario.
     // Si pertenece al mismo usuario que se está modificando, se permite.
-    const userWithSameEmail = selectUserByEmail(normalizedEmail);
-    if (userWithSameEmail && userWithSameEmail.id !== userId) {
-      throw new Error(`Email already exists: ${normalizedEmail}`);
+    const userWithSameEmail = selectUserByEmail(newEmail);
+    if (userWithSameEmail) {
+      if (userWithSameEmail.id !== userId) {
+        throw new Error(`Email already exists: ${newEmail}`);
+      }
     }
   }
 
-  const updatedUser = updateUserById(userId, trimmedName, normalizedEmail);
+  const updatedUser = updateUserById(userId, newName, newEmail);
   if (!updatedUser) {
     throw new Error(`User not found: id ${userId}`);
   }
 
-  return updatedUser;
+  return {
+    id: updatedUser.id,
+    name: updatedUser.name,
+    email: updatedUser.email,
+    createdAt: updatedUser.created_at,
+    updatedAt: updatedUser.updated_at,
+  };
 }
