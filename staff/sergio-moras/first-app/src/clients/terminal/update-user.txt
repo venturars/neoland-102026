@@ -1,0 +1,35 @@
+node --no-warnings --input-type=module -e "
+import { updateUser } from './src/logic/update-user.js';
+
+try {
+  const user = updateUser(13, 'Pedro Garcia', 'pedro@gmail.com');
+  console.log('User updated:', user);
+} catch (error) {
+  console.error('Error: ' + error.message);
+  process.exit(1);
+}
+"
+
+node --no-warnings --input-type=module -e "
+import { updateUser } from './src/logic/update-user.js';
+
+try {
+  const user = updateUser(13, 'Pedro Garcia', '');
+  console.log('User updated:', user);
+} catch (error) {
+  console.error('Error: ' + error.message);
+  process.exit(1);
+}
+"
+
+node --no-warnings --input-type=module -e "
+import { updateUser } from './src/logic/update-user.js';
+
+try {
+  const user = updateUser(13, '', 'pedro.garcia@gmail.com');
+  console.log('User updated:', user);
+} catch (error) {
+  console.error('Error: ' + error.message);
+  process.exit(1);
+}
+"
