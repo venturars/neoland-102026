@@ -1,5 +1,5 @@
 node --no-warnings --input-type=module -e "
-import { deleteUser } from './logic/deleteUser.js';
+import { deleteUser } from './logic/delete-user.js';
 
 try {
   const deletedId = deleteUser(3);
