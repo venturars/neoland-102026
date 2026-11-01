@@ -1,1 +1,0 @@
-node --no-warnings logic/findUserByEmail.js "pedro@gmail.com"
