@@ -1,50 +1,47 @@
 # AGENTS.md
 
-Proyecto didáctico: base de datos de usuarios en SQLite, con `node:sqlite`. Las reglas inamovibles están en [docs/CONSTITUTIONS.md](docs/CONSTITUTIONS.md); si algo de este archivo la contradice, manda la constitución.
+El trabajo de git sigue [agents/git-workflow-agent.md](agents/git-workflow-agent.md) de esta carpeta.
 
-## Stack
-- Node 24 (mínimo 22.5), módulos ESM (`import`/`export`), sin dependencias externas.
-- Base de datos: `db/users.sqlite`, tabla `users` (`id`, `name`, `email` único, `created_at`, `updated_at`).
+Proyecto didáctico: base de datos de usuarios en SQLite, con `node:sqlite` y Node 24 (mínimo 22.5). Las reglas inamovibles están en [docs/CONSTITUTIONS.md](docs/CONSTITUTIONS.md); si algo de este archivo la contradice, manda la constitución.
 
-## Estructura
-```
-terminal/   .txt con los comandos que el usuario ejecuta a mano
-logic/      una función por operación: valida datos y llama a queries
-queries/    todo el SQL (users.js); no valida nada
-db/         connection.js (conexión y creación de la tabla) y users.sqlite
-docs/       CONSTITUTIONS.md
-```
-Flujo: `terminal → logic → queries → db/connection.js`.
+Antes de tocar código se leen la constitución y la guía del tema:
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): capas, ficheros, operaciones y clientes.
+- [docs/TREE.md](docs/TREE.md): el árbol de ficheros.
+- [docs/DATABASE.md](docs/DATABASE.md): la tabla y el SQL.
+- [docs/ERRORS.md](docs/ERRORS.md): los mensajes de error.
+- [docs/STYLE.md](docs/STYLE.md): nombres, líneas y formato.
 
 ## Comandos
-Están en `terminal/`, un `.txt` por operación. Se copian y se pegan en la terminal (PowerShell o Git Bash) desde la raíz del proyecto (`first-app/`). Cada uno importa la función de `logic/`, la llama con valores de ejemplo y muestra el resultado o `Error: <mensaje>`. Los valores se cambian editando el comando. El flag `--no-warnings` oculta el aviso experimental de `node:sqlite`.
+Los comandos de la app están en `src/clients/terminal/`, un `.txt` por operación. Se copian y se pegan en la terminal (PowerShell o Git Bash) desde la raíz del proyecto (`first-app/`). Los valores de ejemplo se cambian editando el comando. El flag `--no-warnings` oculta el aviso experimental de `node:sqlite`.
 ```
-terminal/createUser.txt
-terminal/findUserByEmail.txt
-terminal/listUsers.txt
-terminal/updateUser.txt       # '' = no cambiar ese campo
-terminal/deleteUser.txt
-terminal/classifyGender.txt   # necesita Ollama en marcha
+src/clients/terminal/create-user.txt
+src/clients/terminal/find-user-by-email.txt
+src/clients/terminal/find-user-by-name.txt
+src/clients/terminal/list-users.txt
+src/clients/terminal/update-user.txt       # '' = no cambiar ese campo
+src/clients/terminal/delete-user.txt
+src/clients/terminal/classify-gender.txt   # necesita Ollama en marcha
 ```
-Forma de cada comando: `-e "` en la primera línea, el código sangrado debajo y `"` sola en la última. Dentro del código, solo comillas simples y sin `${...}`.
 
-## Estilo
-- Nombres (archivos, funciones, variables) y mensajes de error/salida: en **inglés**.
-- Comentarios: en **español**, solo donde haya algo no evidente, más un comentario inicial por archivo con su responsabilidad.
-- Código explícito y legible para un junior: sin expresiones condensadas ni trucos de sintaxis.
-- **Plantilla a copiar** para cualquier operación nueva de `logic`: [logic/createUser.js](logic/createUser.js) (comentario inicial, función exportada, errores con `throw new Error`). `logic/` no lee `process.argv`, no imprime y no llama a `process.exit`: eso lo hace el `.txt` de `terminal/`, con [terminal/createUser.txt](terminal/createUser.txt) como plantilla.
+Formato y revisión del JavaScript de la app, desde `first-app/`:
+```
+pnpm format   # Prettier sobre los .js de src/logic/, src/queries/ y src/db/, y eslint.config.js
+pnpm lint     # ESLint con las reglas recomendadas
+```
 
 ## Cómo verificar un cambio
 1. Ejecutar los comandos reales de la sección anterior.
 2. Probar también los casos de error: datos que faltan, email inválido o repetido, id inexistente o no numérico.
-3. Probar con usuarios temporales y borrarlos al terminar. Comprobar con `terminal/listUsers.txt` que los datos existentes siguen intactos.
+3. Probar con usuarios temporales y borrarlos al terminar. Comprobar con `src/clients/terminal/list-users.txt` que los datos existentes siguen intactos.
+4. Lanzar `pnpm format` y `pnpm lint`. `pnpm lint` no da errores.
 
 ## Límites
 **Siempre**
-- Hacer cambios pequeños, de un archivo cada vez, y enseñar el resultado antes de seguir.
+- Antes del código, enseñar `spec.md`, `plan.md` y `tasks.md` y esperar el visto bueno. Después, ejecutar `tasks.md` entero y enseñar el resultado al final.
 - Mantener el comportamiento actual salvo que se pida lo contrario.
 
 **Preguntar antes**
+- Lo que está en un `tasks.md` aprobado ya está pedido. Lo demás de esta lista necesita permiso.
 - Crear, mover o borrar archivos o carpetas.
 - Cambiar el esquema de la tabla o añadir una tabla.
 - Añadir dependencias.
@@ -52,6 +49,15 @@ Forma de cada comando: `-e "` en la primera línea, el código sangrado debajo y
 - Editar `docs/CONSTITUTIONS.md`: solo se modifica si el usuario lo pide de forma explícita. Si el agente detecta una regla desactualizada, la propone pero no la cambia por su cuenta.
 
 **Nunca**
-- Escribir SQL fuera de `queries/`.
-- Borrar, reiniciar o sobrescribir `db/users.sqlite`, ni dejar usuarios de prueba dentro.
+- Saltarse las reglas de la base de datos de [docs/DATABASE.md](docs/DATABASE.md) y del principio 4 de la constitución.
 - Refactorizar o "mejorar" código que no se ha pedido tocar.
+
+## Paquetes
+Al añadir un paquete de Node o cambiar su versión, se comprueba con Socket antes de aceptar el plan. La referencia está en [MCPS/socket-mcp/mcp.txt](MCPS/socket-mcp/mcp.txt).
+- Entran el paquete, su versión exacta y sus dependencias hasta 3 capas. Las dependencias salen de `npm view`.
+- Las puntuaciones salen de `depscore`. Una por debajo de 50 se escribe.
+- Las alertas salen de `alerts`, con el `org_slug` de `organizations`. Una lista vacía es la lista de la organización: el resumen lo dice así y no escribe que esa versión no tenga alertas.
+- Las campañas salen de `threat_feed`. Si responde `403 threat_feed_not_entitled`, el resumen dice que la cuenta no tiene esa fuente.
+- Si una herramienta no contesta, el resumen dice el motivo. No deja el dato en blanco.
+- El resumen va en el plan. Quien acepta el plan decide si acepta las alertas.
+- Queda fuera: paquetes que no son de Node, un paquete cuya versión no cambia y más de 3 capas.
