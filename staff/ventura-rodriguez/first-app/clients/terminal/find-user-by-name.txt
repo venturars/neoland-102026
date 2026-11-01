@@ -1,8 +1,0 @@
-# Pega esto en la terminal, con el directorio actual en first-app
-node --input-type=module <<'EOF'
-import { findUserByName } from "./logic/find-user-by-name.js";
-
-const result = findUserByName("Ada");
-
-console.log(result);
-EOF

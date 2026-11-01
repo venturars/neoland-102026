@@ -1,7 +1,9 @@
 node_modules/
 .env
-db/*.sqlite
-db/*.sqlite-journal
-db/*.sqlite-wal
-db/*.sqlite-shm
+src/db/*.sqlite
+src/db/*.sqlite-journal
+src/db/*.sqlite-wal
+src/db/*.sqlite-shm
+.ipynb_checkpoints/
+src/clients/jupyter/jupyter-client.log
 .DS_Store

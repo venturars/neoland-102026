@@ -1,0 +1,3 @@
+flask
+pytest
+discord.py==2.7.1

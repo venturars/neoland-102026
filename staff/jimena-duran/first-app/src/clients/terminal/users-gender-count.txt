@@ -1,0 +1,9 @@
+# Pega esto en PowerShell desde la carpeta first-app.
+$script = @'
+import { usersGenderCount } from "./src/logic/users-gender-count.js";
+
+const result = await usersGenderCount();
+
+console.log(result);
+'@
+$script | node --input-type=module

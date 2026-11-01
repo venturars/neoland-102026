@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pasar lista · AsistenciApp</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="alumno.js" defer></script>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">Pasar lista</p>
+    <h1 id="title">Cargando…</h1>
+
+    <div id="status" role="status" aria-live="polite"></div>
+
+    <form id="form" class="card" hidden novalidate>
+      <label for="name">Tu nombre</label>
+      <input id="name" name="name" autocomplete="name" maxlength="60" required>
+
+      <div class="field-code">
+        <label for="code">Código de la pantalla del profesor</label>
+        <input id="code" name="code" inputmode="numeric" pattern="[0-9]*"
+               maxlength="4" autocomplete="off" required>
+      </div>
+
+      <button id="submit" type="submit" class="full">Estoy en clase</button>
+    </form>
+
+    <!-- spec 007: sesión con grupo. 1) código, 2) elegir el nombre -->
+    <form id="code-step" class="card" hidden novalidate>
+      <div class="field-code">
+        <label for="g-code">Código de la pantalla del profesor</label>
+        <input id="g-code" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" required>
+      </div>
+      <button type="submit" class="full">Ver la lista</button>
+    </form>
+
+    <section id="name-step" class="card" hidden>
+      <p id="timer" class="timer muted small" aria-live="off"></p>
+      <label for="search">Busca tu nombre y tócalo</label>
+      <input id="search" type="search" autocomplete="off" placeholder="Escribe unas letras">
+      <ul id="roster" class="roster" aria-label="Alumnos de la clase"></ul>
+      <p id="no-match" class="muted small" hidden>Ningún nombre coincide.</p>
+      <button id="not-listed" type="button" class="secondary full">No estoy en la lista</button>
+
+      <form id="new-form" hidden novalidate>
+        <label for="new-name" class="spaced">Escribe tu nombre</label>
+        <input id="new-name" autocomplete="name" maxlength="60" required>
+        <button type="submit" class="full">Registrarme</button>
+      </form>
+
+      <div id="similar" class="message warn" hidden>
+        <p id="similar-text"></p>
+        <div class="actions">
+          <button id="similar-yes" type="button" class="small"></button>
+          <button id="similar-no" type="button" class="secondary small">No, seguir como nuevo</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

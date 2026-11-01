@@ -1,0 +1,7 @@
+# Run from the project directory after separate initialization and creation.
+node --input-type=module <<'NODE'
+import { findUserByEmail } from './src/logic/find-user-by-email.js';
+
+const user = findUserByEmail("ada@example.com");
+console.log(user);
+NODE

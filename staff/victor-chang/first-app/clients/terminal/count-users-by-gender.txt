@@ -1,0 +1,17 @@
+# Feature: countUsersByGender — logic/count-users-by-gender.js
+# Paste this whole block into Git Bash, with first-app as the current folder.
+# It only reads the real database, db/users.sqlite.
+# Run `pnpm install` once, so the openai package is in node_modules.
+# Ollama must be running (`ollama serve`) with llama3.2 downloaded (`ollama pull llama3.2`).
+
+node --no-warnings --input-type=module -e '
+import { countUsersByGender } from "./logic/count-users-by-gender.js";
+
+// 1. Count the users by gender: prints { women, men, genderUndefined }
+//    With Ollama stopped it prints "Could not classify the users"
+try {
+  console.log(await countUsersByGender());
+} catch (error) {
+  console.log(error.message);
+}
+'

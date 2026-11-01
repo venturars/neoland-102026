@@ -1,0 +1,25 @@
+{
+  "name": "first-app",
+  "version": "0.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\"",
+    "lint": "eslint ."
+  },
+  "keywords": [],
+  "author": "Ella Deyavorsky",
+  "license": "ISC",
+  "description": "Small user management app — logic first",
+  "type": "module",
+  "packageManager": "pnpm@12.14.0",
+  "dependencies": {
+    "cli-table3": "0.6.5",
+    "openai": "^7.43.0"
+  },
+  "devDependencies": {
+    "prettier": "3.9.10",
+    "eslint": "10.13.0",
+    "@eslint/js": "10.0.1"
+  }
+}

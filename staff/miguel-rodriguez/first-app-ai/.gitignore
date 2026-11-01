@@ -1,0 +1,21 @@
+.venv/
+node_modules/
+__pycache__/
+clients/jupyter/.ipynb_checkpoints/
+db/*.sqlite
+db/*.sqlite-*
+src/db/*.sqlite
+src/db/*.sqlite-*
+src/clients/jupyter/.ipynb_checkpoints/
+
+# Version only the six approved Cursor agent registrations.
+!.cursor/
+.cursor/*
+!.cursor/agents/
+.cursor/agents/*
+!.cursor/agents/help-me-to-think.md
+!.cursor/agents/create-issue.md
+!.cursor/agents/create-branch.md
+!.cursor/agents/create-commit.md
+!.cursor/agents/launch-push.md
+!.cursor/agents/create-pr.md

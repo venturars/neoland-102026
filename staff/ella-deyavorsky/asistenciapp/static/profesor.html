@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Panel del profesor · AsistenciApp</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="profesor.js" defer></script>
+</head>
+<body>
+  <main>
+    <!-- CA-21: aviso si el panel se abre en local -->
+    <p id="local-warning" class="message warn" hidden>
+      Estás usando una dirección que solo funciona en este ordenador: <strong>tus alumnos no podrán abrir el enlace de alumnos</strong>.
+      Para una clase online, para la app (Ctrl+C) y arráncala con <code>python app.py --tunel</code>.
+    </p>
+
+    <div id="status" role="status" aria-live="polite"></div>
+
+    <!-- Vista: panel (T17) -->
+    <section id="panel-view" hidden>
+      <h1>Panel del profesor</h1>
+
+      <form id="new-session" class="card">
+        <label for="session-title">Título de la clase <span class="muted">(opcional)</span></label>
+        <input id="session-title" placeholder="Ej.: Clase 20/10 – SDD" maxlength="100">
+        <!-- spec 007, RF-8: grupo o sesión rápida -->
+        <label for="session-group">Lista</label>
+        <select id="session-group">
+          <option value="">Sesión rápida (cada alumno escribe su nombre)</option>
+        </select>
+        <button type="submit" class="full">Abrir asistencia</button>
+        <div id="open-error" class="message error" hidden>
+          <p id="open-error-text"></p>
+          <div class="actions">
+            <a id="open-error-edit" class="button secondary small" href="#">Añadir alumnos</a>
+            <button id="open-quick" type="button" class="secondary small">Abrir sesión rápida</button>
+          </div>
+        </div>
+      </form>
+
+      <!-- spec 007: grupos del profesor -->
+      <div class="section-head">
+        <h2>Grupos</h2>
+        <a id="new-group" class="button secondary small" href="#">Nuevo grupo</a>
+      </div>
+      <p id="no-groups" class="muted" hidden>Todavía no tienes grupos.</p>
+      <ul id="groups" class="list sessions card"></ul>
+      <p><button id="toggle-archived" type="button" class="secondary small">Ver archivados</button></p>
+      <ul id="archived-groups" class="list sessions card" hidden></ul>
+
+      <h2>Sesiones anteriores</h2>
+      <p id="no-sessions" class="muted" hidden>Todavía no has abierto ninguna sesión.</p>
+      <ul id="sessions" class="list sessions card"></ul>
+    </section>
+
+    <!-- Vista: grupo (spec 007, RF-1 a RF-3) -->
+    <section id="group-view" hidden>
+      <p><a id="group-back" href="#">← Volver al panel</a></p>
+      <h1 id="g-title">Nuevo grupo</h1>
+
+      <div class="card">
+        <label for="g-name">Nombre del grupo</label>
+        <div class="field-row">
+          <input id="g-name" maxlength="60" placeholder="Ej.: SDD 2º A">
+          <button id="g-rename" type="button" class="secondary" hidden>Guardar nombre</button>
+        </div>
+      </div>
+
+      <div id="g-students-card" class="card" hidden>
+        <p id="g-count" class="total"></p>
+        <ol id="g-students" class="list"></ol>
+      </div>
+
+      <!-- spec 007 v1.3, RF-1 y RF-2: una casilla por alumno; «Subir lista» revisa y guarda -->
+      <form id="g-add" class="card">
+        <h2 id="g-add-title" class="card-title">Alumnos</h2>
+        <p class="muted small">Un nombre en cada casilla. Intro pasa a la siguiente; si pegas varios nombres, cada uno va a su casilla.</p>
+        <ol id="g-boxes" class="boxes"></ol>
+        <div class="actions">
+          <button id="g-add-box" type="button" class="secondary small">+ Añadir alumno</button>
+        </div>
+        <div id="g-preview" aria-live="polite"></div>
+        <button id="g-save" type="submit" class="full">Subir lista</button>
+      </form>
+
+      <!-- RF-1b: «Revisar» lleva los nombres del CSV a las casillas -->
+      <form id="g-csv" class="card">
+        <h2 class="card-title">O sube un CSV <span class="muted small">(primera columna: el nombre)</span></h2>
+        <p class="muted small">Los nombres del archivo pasan a las casillas de arriba, para que los revises antes de subir la lista.</p>
+        <label for="g-file">Archivo</label>
+        <input id="g-file" type="file" accept=".csv,text/csv">
+        <button type="submit" class="secondary">Revisar</button>
+      </form>
+    </section>
+
+    <!-- Vista: sesión en vivo (T18) -->
+    <section id="session-view" hidden>
+      <p><a id="back" href="#">← Volver al panel</a></p>
+      <h1 id="s-title"></h1>
+
+      <div id="code-card" class="card dark">
+        <p class="eyebrow">Código para pasar lista</p>
+        <p id="s-code" class="code" aria-live="polite"></p>
+        <p id="s-countdown" class="countdown muted"></p>
+
+        <label for="s-link">Enlace para los alumnos</label>
+        <output id="s-link" class="link-box"></output>
+        <div class="actions">
+          <button id="copy" type="button" class="secondary">Copiar enlace de alumnos</button>
+        </div>
+      </div>
+
+      <p id="s-closed" class="message warn" hidden>Asistencia cerrada: ya no se aceptan registros.</p>
+
+      <div class="card">
+        <p id="s-total" class="total" aria-live="polite"></p>
+        <ol id="s-list" class="list"></ol>
+      </div>
+
+      <!-- spec 007, RF-18 a RF-20: nuevos y ausentes de una sesión con grupo -->
+      <div id="s-new-card" class="card" hidden>
+        <h2 class="card-title">Nuevos <span class="muted small">(no estaban en la lista)</span></h2>
+        <p id="s-new-msg" class="message error" hidden></p>
+        <ol id="s-new" class="list"></ol>
+      </div>
+      <div id="s-absent-card" class="card" hidden>
+        <h2 class="card-title" id="s-absent-title">Faltan</h2>
+        <ol id="s-absent" class="list"></ol>
+      </div>
+
+      <div class="actions">
+        <button id="download" type="button" class="secondary">Descargar lista</button>
+        <button id="close" type="button" class="danger">Cerrar asistencia</button>
+      </div>
+
+      <!-- Confirmación dentro de la página, sin confirm() (plan §5) -->
+      <div id="confirm-close" class="message warn" hidden>
+        <p><strong>¿Cerrar la asistencia?</strong> Nadie más podrá registrarse en esta clase.</p>
+        <div class="actions">
+          <button id="confirm-yes" type="button" class="danger-solid">Sí, cerrar</button>
+          <button id="confirm-no" type="button" class="secondary">Cancelar</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

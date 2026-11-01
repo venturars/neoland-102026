@@ -1,0 +1,20 @@
+{
+  "static/alumno.html": "65c5038fa28f22579ea60cfb21bc1c096cf07d3dabb3346d266ca0ac70ee7542",
+  "static/alumno.js": "cbbd41d807ad45c0cde7ccf0888a6f80e3033931c16e1f5f4db0f8b4963bd16f",
+  "static/index.html": "e290966d4f51c9bdde8fe171d1cf43f7fe93beb69a77055cd17bb362199ab79d",
+  "static/profesor.html": "cdd208e5bda4302cc761db7ddf6105f353d32c569f0e3ae49b547a5da14f19df",
+  "static/profesor.js": "5460809cde3f91c790a107b67625d5e975dab7dc856e56cc05df6ff8957f0e51",
+  "static/styles.css": "3a06e19af4e0de52b5436bc13a79030402c6b773d79b7cffaa581574465d7b7b",
+  "specs/001-checkin-codigo/plan.md": "2a34371026ba29bd8573e0a595095aea4da576914e222e4250849f33032124c9",
+  "specs/001-checkin-codigo/spec.md": "a98973e10b5ae5af3a242f63d970d7501b5e310bf01f1f62ff1263e93930f49e",
+  "specs/001-checkin-codigo/tasks.md": "bdb761af609baf66bf475befc380f53b877bb2d70c60bd8e3f0decbc85c46ee3",
+  "specs/002-spec-antes-del-cambio/plan.md": "b1e19a5affb3aa21b32cdba496e4cefb5672cfa418ce61254b205dc8236d050d",
+  "specs/002-spec-antes-del-cambio/spec.md": "6b1aecdd0206c16033ed2f8cf6a14eed36578ffe1f468692779655844349ef83",
+  "specs/002-spec-antes-del-cambio/tasks.md": "333cf9bfd1a607b14440559d9cfc2ad9c63461eff778f47db6b34d0c182e7b33",
+  "specs/003-activar-el-entorno/plan.md": "7b5991c59c685f7979b5e6058c4ed04ad5545b246ee6b559f248f0aaf7eb165a",
+  "specs/003-activar-el-entorno/spec.md": "a25c8259c11d1bd0019fc9d1d33d44c771940fd8ebd2c09d4a5648fef3044e39",
+  "specs/003-activar-el-entorno/tasks.md": "1296e1b4a7789fe36e68c7aff11a17ded27ac8f3a8d1f1c272756f78da2e521c",
+  "specs/004-quitar-referencias-personales/plan.md": "00ac518c0d64716e3ad73464eb8e83256760961377e45503b610bda0659ba178",
+  "specs/004-quitar-referencias-personales/spec.md": "3a85e3d26e95534400921c345e3828c0e9500078e344ea95c799880ca70e22fa",
+  "specs/004-quitar-referencias-personales/tasks.md": "bb0faeb007976a5a500f2a7d61e542c6b33c9c9d54eebf8a9b2a4ec5ba5dc325"
+}

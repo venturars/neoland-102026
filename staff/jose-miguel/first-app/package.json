@@ -1,0 +1,24 @@
+{
+  "name": "first-app",
+  "version": "1.0.0",
+  "description": "Gestión de usuarios: logic, queries, db y clients",
+  "type": "module",
+  "main": "src/logic/create-user.js",
+  "scripts": {
+    "jupyter": "sh scripts/jupyter.sh",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\"",
+    "lint": "eslint ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "openai": "^7.39.0"
+  },
+  "devDependencies": {
+    "prettier": "3.9.10",
+    "eslint": "10.13.0",
+    "@eslint/js": "10.0.1"
+  }
+}

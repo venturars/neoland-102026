@@ -77,9 +77,20 @@ __pycache__/
 .venv/
 venv/
 .pytest_cache/
+.ipynb_checkpoints/
 
-# SQLite generada en local (cualquier carpeta). *.sqlite se versiona en first-app.
+# Jupyter: checkpoints locales y junto a los notebooks
+.ipynb_checkpoints/
+
+# SQLite generada en local (cualquier carpeta)
 *.db
 *.db-journal
 *.db-wal
 *.db-shm
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+
+# AsistenciApp: data/ guarda nombres de alumnos y el token del profesor.
+**/asistenciapp/data/

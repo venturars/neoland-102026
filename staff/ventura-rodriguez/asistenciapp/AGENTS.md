@@ -2,6 +2,8 @@
 
 Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [constitución](docs/CONSTITUTION.md) dice **qué reglas** se cumplen. [ARCHITECTURE.md](docs/ARCHITECTURE.md) dice **cómo se organiza** el código. Este archivo dice **cómo se trabaja** día a día y **cómo se escribe** cada función.
 
+El trabajo de git sigue `agents/git-workflow-agent.md` de esta carpeta. Quien trabaja aquí interviene solo en los cinco momentos del apartado 2. El agente elige un momento y no lo encadena con el siguiente.
+
 ---
 
 ## 1. Antes de hacer nada: lectura obligatoria
@@ -18,18 +20,25 @@ Si algo de lo que te piden contradice la constitución, **para y avisa** antes d
 
 ---
 
-## 2. Flujo SDD paso a paso
+## 2. Cinco momentos
 
-Cada cambio en esta app recorre estas fases **en orden**. Al terminar cada una, el agente **se detiene** y pide la aprobación de la persona que trabaja en esta carpeta. No se avanza sin un "ok" explícito.
+Quien trabaja en esta carpeta interviene solo en este orden. El agente se para al terminar cada momento y no empieza el siguiente.
 
-Al empezar el cambio, el único fichero nuevo permitido es el `spec.md`. El agente lo enseña y espera el ok. El plan, las tasks y el cambio vienen después.
+1. **Crear la issue.** Si la tarea aún no se puede dejar escrita, la entrevista va aquí, una pregunta cada vez. Luego se crea la issue, con qué hay que hacer y cómo probarlo. No se abre la rama. Ahí se para.
+2. **Crear el draft.** De un tirón: adelantar `staging`, rama desde `staging`, commit vacío `chore: open #N`, push, pull request en draft contra `staging`, autor, y `Closes #N`. No se escriben specs. Ahí se para.
+3. **Crear las specs.** En la misma pasada, sin parar entre ellas: `spec.md`, `plan.md` y `tasks.md`. La spec abre con el número de la issue. Si falta un dato, se pregunta aquí y no se inventa. No se toca el código. Ahí se para.
+4. **Implementar la spec.** Se ejecutan las tasks. No hay commit ni push. Ahí se para.
+5. **La pull request.** Solo lo que se pida entonces: subir los ficheros nombrados, pedir revisión, u otra cosa sobre esa pull request. No se fusiona a `staging`. Ahí se para.
 
-| Fase           | Archivo                       | Pregunta que responde                                             | Puerta de salida                                                                              |
-| -------------- | ----------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| 1. Especificar | `spec.md`                     | ¿**Qué** hay que hacer y **por qué**?                             | Sin `[NECESITA ACLARACIÓN]` pendientes + aprobación de la persona que trabaja en esta carpeta |
-| 2. Planificar  | `plan.md`                     | ¿**Cómo** lo hacemos?                                             | Pasa la comprobación de la constitución + esa misma aprobación                                |
-| 3. Desglosar   | `tasks.md`                    | ¿En qué **pasos pequeños** lo hacemos?                            | Cada tarea apunta a un criterio de aceptación + esa misma aprobación                          |
-| 4. Implementar | el cambio que digan las tasks | Hacerlo, tarea a tarea. Incluye el README cuando una task lo diga | Criterios verificados                                                                         |
+Una issue, una rama o una pull request no autorizan el código. El código espera al momento 4, con las tres specs ya escritas.
+
+| Momento         | Qué queda escrito                          | Qué no se hace        |
+| --------------- | ------------------------------------------ | --------------------- |
+| 1. Issue        | Qué hay que hacer y cómo probarlo          | Rama, specs, código   |
+| 2. Draft        | Rama, commit vacío y pull request en draft | Specs y código        |
+| 3. Specs        | `spec.md`, `plan.md`, `tasks.md`           | Código, commit y push |
+| 4. Implementar  | El cambio de las tasks                     | Commit y push         |
+| 5. Pull request | Lo que se pida sobre esa pull request      | Merge a `staging`     |
 
 ### 2.1 Especificar (`spec.md`)
 
@@ -54,8 +63,8 @@ Al empezar el cambio, el único fichero nuevo permitido es el `spec.md`. El agen
 ### 2.4 Implementar
 
 - Haz **una tarea cada vez**. Al acabarla, márcala `[x]` en `tasks.md`.
-- Ningún fichero de la app se adelanta al spec. Si la spec activa no cubre el pedido, **para**, escribe el spec y espera aprobación.
-- Si durante la implementación descubres que la spec o el plan están mal o incompletos, **para**, propón el cambio en el documento y espera aprobación.
+- Ningún fichero de la app se adelanta a las tres specs. Si la spec activa no cubre el pedido, ese pedido recorre los cinco momentos: primero la issue.
+- Si durante la implementación descubres que la spec o el plan están mal o incompletos, dilo y no inventes el cambio.
 
 ---
 
@@ -88,9 +97,9 @@ Las únicas dependencias son Flask y pytest (constitución P3).
 
 - **Solo se edita dentro de `staff/ventura-rodriguez/asistenciapp/`.**
 - **Pregunta antes de suponer.** Ante una ambigüedad, pregunta o márcala con `[NECESITA ACLARACIÓN]`.
-- **Explica lo que haces.** Al cerrar cada fase, resume qué se ha hecho, por qué y qué tiene que revisar la persona que trabaja en esta carpeta.
+- **Explica lo que haces.** Al cerrar cada momento, resume qué se ha hecho y por qué.
 - **Cambios pequeños.** Mejor varias tareas cortas que una enorme.
-- **Nada de commits ni pushes** sin que esa persona lo pida.
+- **Commit y push** solo en el momento 2 (el commit vacío) y en el momento 5, cuando se piden. Fuera de eso no hay commits ni pushes.
 - **Para todo lo que arranques.** Si levantas el servidor o `cloudflared` para probar, páralos al terminar y comprueba que el puerto queda libre: `lsof -nP -iTCP:8000 -sTCP:LISTEN` no debe mostrar nada. Ojo: en macOS el proceso aparece como `Python` (con mayúscula). (Incidencia del 2026-10-20 en T12.)
 - **No toques la constitución** (`docs/CONSTITUTION.md`) salvo para proponer una enmienda, que solo aprueba la persona que trabaja en esta carpeta (constitución §8).
 
@@ -118,6 +127,8 @@ Una funcionalidad está terminada cuando:
 | `003-activar-el-entorno`            | ✅ Implementada (2026-10-22): T01–T04, 77 tests                                | El README separa activar el entorno y arrancar la app           |
 | `004-quitar-referencias-personales` | ✅ Implementada (2026-10-22): T01–T12, 80 tests                                | El README entra con un usuario genérico                         |
 | `005-reorganizar-arquitectura`      | ✅ Implementada (2026-10-22): T01–T12, 87 tests                                | Documentos en `docs/` y código en reglas, acciones y borde      |
+| `006-limite-por-ip-publica`         | ✅ Implementada (2026-10-23): T01–T11, 102 tests                               | Límite de intentos de registro por IP y lista de bloqueo        |
+| `007-flujo-de-git`                  | ✅ Implementada (2026-10-30): T01–T06                                          | Flujo de git del curso y cinco momentos del humano. Issue #616  |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
 

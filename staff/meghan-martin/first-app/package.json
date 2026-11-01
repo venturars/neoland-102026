@@ -4,10 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node --test tests/*.test.js"
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"eslint.config.js\"",
+    "lint": "eslint .",
+    "jupyter": "test -x .venv/bin/jupyter-notebook || (test -d .venv || python3 -m venv .venv && .venv/bin/pip install notebook==7.6.3) && .venv/bin/jupyter notebook src/clients/jupyter"
   },
   "keywords": [],
   "author": "Meghan Martin",
   "license": "MIT",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@colors/colors": "1.6.1",
+    "cli-table3": "0.6.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.13.0",
+    "prettier": "3.9.10"
+  }
 }

@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "socket-mcp": {
+      "type": "http",
+      "url": "https://mcp.socket.dev/",
+      "headers": {
+        "Authorization": "Bearer ${SOCKET_API_TOKEN}"
+      }
+    }
+  }
+}

@@ -1,0 +1,154 @@
+# AsistenciApp
+
+Pasa lista en una clase online (Discord, Google Meet o cualquier otra plataforma) en menos de un minuto.
+
+El profesor abre una sesión y comparte en la llamada un **código de 4 cifras** que cambia cada 30 segundos. Los alumnos abren un enlace, escriben su nombre y el código, y aparecen al momento en la lista del profesor. Al final de la clase, la lista se descarga para Excel o Google Sheets.
+
+> Proyecto hecho con *Spec-Driven Development*. Las reglas están en [CONSTITUTION.md](docs/CONSTITUTION.md), la arquitectura en [ARCHITECTURE.md](docs/ARCHITECTURE.md), el manual para agentes de IA en [AGENTS.md](AGENTS.md) y la especificación en [specs/001-checkin-codigo/](specs/001-checkin-codigo/spec.md).
+
+---
+
+## 1. Preparar el entorno (solo la primera vez)
+
+Necesitas **Python 3.13+** y, para clases online, **Homebrew** (macOS).
+
+```bash
+cd staff/<usuario>/asistenciapp
+python3 -m venv .venv                # crea el entorno virtual del proyecto
+source .venv/bin/activate            # lo activa (verás "(.venv)" en el prompt)
+pip install -r requirements.txt      # instala Flask y pytest
+brew install cloudflared             # el túnel para que los alumnos entren desde casa
+```
+
+---
+
+## 2. Activar el entorno (en cada terminal nueva)
+
+En cada terminal nueva, primero activa el entorno:
+
+```bash
+cd staff/<usuario>/asistenciapp
+source .venv/bin/activate
+```
+
+---
+
+## 3. Arrancar la app
+
+| Para… | Comando |
+| --- | --- |
+| **Una clase online** (alumnos en sus casas) | `python app.py --tunel` |
+| Probar solo en tu ordenador | `python app.py` |
+
+Al arrancar verás algo así:
+
+```
+  Abriendo el túnel público (puede tardar unos segundos)...
+
+  Panel del profesor: https://palabras-al-azar.trycloudflare.com/profesor.html#t=…
+```
+
+Ese enlace es **tu panel privado**: no lo compartas, porque quien lo tenga puede ver y cerrar tus listas.
+
+- Con `--tunel`, la dirección **cambia cada vez** que arrancas, y puede tardar **unos 20 segundos** en funcionar.
+- La app solo funciona **mientras tu ordenador esté encendido** y la app arrancada.
+
+---
+
+## 4. Pasar lista, paso a paso
+
+1. Abre el **enlace del panel** que aparece en la terminal.
+2. Escribe un título (opcional; si no, se usa la fecha y hora) y pulsa **Abrir asistencia**.
+3. **Comparte pantalla** en la llamada: el código se ve en grande, con una cuenta atrás.
+4. Pulsa **Copiar enlace de alumnos** y pégalo en el chat de Discord o Meet.
+5. Cada alumno abre el enlace, escribe su **nombre** y el **código** de tu pantalla, y pulsa **Estoy en clase**. Su nombre aparece en tu lista en un par de segundos.
+6. Cuando ya estén todos, pulsa **Cerrar asistencia** y confírmalo. Desde ese momento nadie más puede registrarse.
+7. Pulsa **Descargar lista** para obtener el CSV (columnas *Nombre* y *Hora*).
+
+### Apariencia
+
+AsistenciApp utiliza un único **tema oscuro** para mantener la misma identidad visual en el panel, Aula en directo y el registro del alumno. No hay que configurar nada.
+
+### Aula en directo
+
+Cuando la sesión esté abierta, pulsa **Entrar en Aula en directo**. Esta vista está preparada para compartir pantalla: enseña el título, el código, la cuenta atrás, el total y los alumnos que van llegando, sin mostrar las acciones privadas de gestión.
+
+- Si el navegador lo permite, Aula en directo ocupa la pantalla completa.
+- Para salir, pulsa **Salir de Aula en directo** o la tecla **Esc**.
+- Al volver al panel normal recuperas los botones para cerrar la asistencia y descargar la lista.
+
+### Un registro por navegador
+
+Cuando un alumno se registra, su navegador lo recuerda **para esa clase**: si vuelve a abrir el enlace, ve *"Ya te registraste en esta clase como Ana García a las 11:07"* y no puede apuntar a otra persona. En la clase siguiente puede registrarse con normalidad.
+
+Es un límite **disuasorio**, no una prueba de identidad: se puede saltar con otro navegador, una ventana privada u otro dispositivo.
+
+Las **sesiones anteriores** aparecen en el panel con su número de asistentes, y puedes volver a verlas o descargarlas cuando quieras.
+
+---
+
+## 5. Cerrar la app
+
+Pulsa **Ctrl+C** en la terminal donde está arrancada. Se paran la app y el túnel. Los datos quedan guardados en `data/asistencia.db`.
+
+> **"Cerrar asistencia"** (el botón del panel) solo cierra los registros de *esa clase*; la app sigue funcionando. **Ctrl+C** apaga la app entera.
+
+Si ya no encuentras la terminal donde la arrancaste:
+
+```bash
+lsof -nP -iTCP:8000 -sTCP:LISTEN     # muestra el proceso "Python" y su número (PID)
+kill <PID>                           # lo para
+pkill cloudflared                    # para el túnel, si lo usabas
+```
+
+---
+
+## 6. Problemas frecuentes
+
+| Mensaje o síntoma | Qué hacer |
+| --- | --- |
+| `El puerto 8000 ya está en uso` | Ya tienes la app abierta en otra terminal: ciérrala (sección 5). O usa otro puerto: `PORT=8001 python app.py --tunel`. |
+| `No se encontró cloudflared` | Instálalo: `brew install cloudflared`. |
+| El enlace del túnel no carga | Espera unos 20 segundos y recarga: los túneles nuevos tardan en estar accesibles. |
+| Aviso amarillo en el panel: *"tus alumnos no podrán abrir el enlace"* | Abriste el panel en `localhost`. Para la app y arráncala con `python app.py --tunel`. |
+| *"Enlace del panel no válido"* | Usa el enlace exacto de la terminal, incluido todo lo que va detrás de `#t=`. |
+| `command not found: pytest` o `python` no encuentra Flask | No has activado el entorno: `source .venv/bin/activate`. |
+
+---
+
+## 7. Tests
+
+```bash
+source .venv/bin/activate
+pytest            # o "pytest -v" para ver cada test
+```
+
+Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una verificación manual; la tabla está en [plan.md §6](specs/001-checkin-codigo/plan.md).
+
+---
+
+## 8. Privacidad
+
+- Del alumno, en la asistencia, solo se guarda **el nombre que escribe** y **la hora**.
+- Para el tope de intentos también se guarda la **dirección de red**, solo para contar esos intentos y para la lista de bloqueo. No va junto al nombre ni a la hora.
+- Sin túnel, esa dirección es la de la conexión a este ordenador. Quien se registra aquí comparte el contador.
+- Con `--tunel`, la conexión sigue siendo la de este ordenador. Si Cloudflare envía una sola dirección de visitante (`CF-Connecting-IP`), esa es la que cuenta. Si falta o no es una sola dirección, cuenta la conexión local. Una conexión que no sea la de este ordenador no usa esa cabecera.
+- Varios alumnos pueden compartir una dirección pública: el bloqueo es de ese grupo, no de toda la clase por usar el túnel. Un programa en este ordenador puede presentar otra dirección. La aplicación no identifica para siempre a una persona ni comprueba si la dirección es fija.
+- El límite "un registro por navegador" se guarda **solo en el navegador del alumno**, no en el servidor.
+- Los datos se guardan **solo en tu ordenador** (`data/`, que no se sube a git).
+- Con `--tunel`, el tráfico pasa **cifrado** por Cloudflare, que no lo almacena (constitución P4, v2.1).
+
+---
+
+## 9. Desarrollo
+
+El [manual de trabajo](AGENTS.md) explica las reglas de AsistenciApp y el [orquestador Git](agents/git-workflow-agent.md) coordina las operaciones del repositorio.
+
+Cada cambio se desarrolla en este orden: **spec → aprobación → plan → aprobación → tareas → aprobación → implementación**. La issue, la rama y la PR en borrador permiten preparar el trabajo, y cada fase del SDD conserva su aprobación.
+
+- Las [plantillas de issues](templates/issues/) y las [plantillas de PR](templates/pull-request/) indican la forma de cada tipo de tarea.
+- Las [skills](skills/) describen las operaciones. Los siete scripts están en `tools/`; se ejecutan desde la raíz del repositorio con el comando indicado en cada skill. Los argumentos de archivos también son relativos a esa raíz.
+- La [comprobación de estado](skills/check-status/SKILL.md) muestra la rama, el remoto y los cambios pendientes antes de elegir una operación.
+- La [guía MCP](MCPS/github-mcp-server/mcp.txt) explica la conexión con GitHub y el header utilizado. El marcador del ejemplo se completa en la configuración local; las credenciales quedan fuera del repositorio.
+
+La descripción de estos recursos está en [arquitectura](docs/ARCHITECTURE.md). Las especificaciones se guardan en `specs/` dentro de esta aplicación.
