@@ -69,7 +69,7 @@ Una issue, una rama o una pull request no autorizan el código. El código esper
 
 El árbol de carpetas está en [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
-Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-spec-antes-del-cambio`, `003-activar-entorno-no-es-arrancar-app`, `004-quitar-referencias-personales`, `005-reorganizar-arquitectura`, `006-flujo-de-git`.
+Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-spec-antes-del-cambio`, `003-activar-entorno-no-es-arrancar-app`, `004-quitar-referencias-personales`, `005-reorganizar-arquitectura`, `006-flujo-de-git`, `007-plantillas-por-tipo`.
 
 ---
 
@@ -124,6 +124,7 @@ Una funcionalidad está terminada cuando:
 | `004-quitar-referencias-personales` | Implementada (2026-10-25) | Las reglas y el README no nombran a una persona ni su carpeta |
 | `005-reorganizar-arquitectura` | Implementada (2026-10-26): T01–T12 | Documentos en `docs/` y código en reglas, acciones y borde |
 | `006-flujo-de-git` | Implementada (2026-11-01): T01–T06 | Flujo de git del curso y cinco momentos del humano |
+| `007-plantillas-por-tipo` | Implementada (2026-11-01): T01–T05 | Plantillas por tipo, reglas solo en plantillas, tests de paridad |
 | Discord | Idea futura | Fuera del MVP, sin número de spec |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.

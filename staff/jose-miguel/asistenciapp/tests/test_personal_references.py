@@ -5,6 +5,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SPEC_004 = ROOT / "specs" / "004-quitar-referencias-personales"
 SPEC_006 = ROOT / "specs" / "006-flujo-de-git"
+SPEC_007 = ROOT / "specs" / "007-plantillas-por-tipo"
 GIT_WORKFLOW_TOP = {"agents", "skills", "tools", "templates", "MCPS"}
 GENERIC_PATH = "staff/<usuario>/asistenciapp"
 
@@ -22,6 +23,8 @@ def test_markdown_has_no_personal_name_outside_spec_004():
         if SPEC_004 in path.parents or path.parent == SPEC_004:
             continue
         if SPEC_006 in path.parents or path.parent == SPEC_006:
+            continue
+        if SPEC_007 in path.parents or path.parent == SPEC_007:
             continue
         if relative.parts and relative.parts[0] in GIT_WORKFLOW_TOP:
             continue

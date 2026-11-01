@@ -27,7 +27,7 @@ asistenciapp/
 ├── agents/                # orquestador y subagentes del flujo de git
 ├── skills/                # skills invocadas por los agentes
 ├── tools/                 # scripts de git (desde la raíz del repo)
-├── templates/             # plantillas de issue y pull request
+├── templates/             # seis plantillas de issue y seis de PR (feat…chore); reglas de título y rama en comentarios HTML
 ├── MCPS/                  # referencia del MCP de GitHub
 ├── docs/
 │   ├── CONSTITUTION.md    # reglas no negociables
