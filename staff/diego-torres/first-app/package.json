@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "jupyter": "if not exist .venv\\Scripts\\jupyter.exe (if not exist .venv py -3 -m venv .venv & .venv\\Scripts\\pip.exe install notebook==7.6.3) & .venv\\Scripts\\jupyter.exe notebook src/clients/jupyter",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "jupyter": "node scripts/jupyter.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\"",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "Diego Torres",
@@ -15,5 +17,10 @@
     "@colors/colors": "1.6.1",
     "cli-table3": "0.6.5",
     "openai": "7.39.0"
+  },
+  "devDependencies": {
+    "prettier": "3.9.10",
+    "eslint": "10.13.0",
+    "@eslint/js": "10.0.1"
   }
 }
