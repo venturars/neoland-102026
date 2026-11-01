@@ -26,7 +26,5 @@
 ## Campos que devuelve `logic/`
 Lo que devuelve `logic/` usa camelCase: `id`, `name`, `email`, `createdAt` y `updatedAt`. La traducción desde `created_at` y `updated_at` la hace `logic/`. Las columnas de la tabla no cambian.
 
-Hoy `logic/` todavía devuelve `created_at` y `updated_at`. Lo alinea la tarea que aplica las guías al código.
-
 ## Pruebas
 Cómo se prueba sin tocar los datos: principio 4 de [CONSTITUTIONS.md](CONSTITUTIONS.md).
