@@ -2,24 +2,17 @@
 
 El trabajo de git sigue [agents/git-workflow-agent.md](agents/git-workflow-agent.md) de esta carpeta.
 
-Proyecto didáctico: base de datos de usuarios en SQLite, con `node:sqlite`. Las reglas inamovibles están en [docs/CONSTITUTIONS.md](docs/CONSTITUTIONS.md); si algo de este archivo la contradice, manda la constitución.
+Proyecto didáctico: base de datos de usuarios en SQLite, con `node:sqlite` y Node 24 (mínimo 22.5). Las reglas inamovibles están en [docs/CONSTITUTIONS.md](docs/CONSTITUTIONS.md); si algo de este archivo la contradice, manda la constitución.
 
-## Stack
-- Node 24 (mínimo 22.5), módulos ESM (`import`/`export`), dependencias en `package.json`, con versión fija e instaladas con pnpm.
-- Base de datos: `db/users.sqlite`, tabla `users` (`id`, `name`, `email` único, `created_at`, `updated_at`).
-
-## Estructura
-```
-clients/terminal/   .txt con los comandos que el usuario ejecuta a mano
-logic/      una función por operación: valida datos y llama a queries
-queries/    todo el SQL (users.js); no valida nada
-db/         connection.js (conexión y creación de la tabla) y users.sqlite
-docs/       CONSTITUTIONS.md
-```
-Flujo: `terminal → logic → queries → db/connection.js`.
+Antes de tocar código se leen la constitución y la guía del tema:
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): capas, ficheros, operaciones y clientes.
+- [docs/TREE.md](docs/TREE.md): el árbol de ficheros.
+- [docs/DATABASE.md](docs/DATABASE.md): la tabla y el SQL.
+- [docs/ERRORS.md](docs/ERRORS.md): los mensajes de error.
+- [docs/STYLE.md](docs/STYLE.md): nombres, líneas y formato.
 
 ## Comandos
-Están en `clients/terminal/`, un `.txt` por operación. Se copian y se pegan en la terminal (PowerShell o Git Bash) desde la raíz del proyecto (`first-app/`). Cada uno importa la función de `logic/`, la llama con valores de ejemplo y muestra el resultado o `Error: <mensaje>`. Los valores se cambian editando el comando. El flag `--no-warnings` oculta el aviso experimental de `node:sqlite`.
+Los comandos de la app están en `clients/terminal/`, un `.txt` por operación. Se copian y se pegan en la terminal (PowerShell o Git Bash) desde la raíz del proyecto (`first-app/`). Los valores de ejemplo se cambian editando el comando. El flag `--no-warnings` oculta el aviso experimental de `node:sqlite`.
 ```
 clients/terminal/createUser.txt
 clients/terminal/findUserByEmail.txt
@@ -28,19 +21,12 @@ clients/terminal/updateUser.txt       # '' = no cambiar ese campo
 clients/terminal/deleteUser.txt
 clients/terminal/classifyGender.txt   # necesita Ollama en marcha
 ```
-Forma de cada comando: `-e "` en la primera línea, el código sangrado debajo y `"` sola en la última. Dentro del código, solo comillas simples y sin `${...}`.
 
 Formato y revisión del JavaScript de la app, desde `first-app/`:
 ```
 pnpm format   # Prettier sobre los .js de logic/, queries/ y db/, y eslint.config.js
 pnpm lint     # ESLint con las reglas recomendadas
 ```
-
-## Estilo
-- Nombres (archivos, funciones, variables) y mensajes de error/salida: en **inglés**.
-- Comentarios: en **español**, solo donde haya algo no evidente, más un comentario inicial por archivo con su responsabilidad.
-- Código explícito y legible para un junior: sin expresiones condensadas ni trucos de sintaxis.
-- **Plantilla a copiar** para cualquier operación nueva de `logic`: [logic/createUser.js](logic/createUser.js) (comentario inicial, función exportada, errores con `throw new Error`). `logic/` no lee `process.argv`, no imprime y no llama a `process.exit`: eso lo hace el `.txt` de `clients/terminal/`, con [clients/terminal/createUser.txt](clients/terminal/createUser.txt) como plantilla.
 
 ## Cómo verificar un cambio
 1. Ejecutar los comandos reales de la sección anterior.
@@ -62,8 +48,7 @@ pnpm lint     # ESLint con las reglas recomendadas
 - Editar `docs/CONSTITUTIONS.md`: solo se modifica si el usuario lo pide de forma explícita. Si el agente detecta una regla desactualizada, la propone pero no la cambia por su cuenta.
 
 **Nunca**
-- Escribir SQL fuera de `queries/`.
-- Borrar, reiniciar o sobrescribir `db/users.sqlite`, ni dejar usuarios de prueba dentro.
+- Saltarse las reglas de la base de datos de [docs/DATABASE.md](docs/DATABASE.md) y del principio 4 de la constitución.
 - Refactorizar o "mejorar" código que no se ha pedido tocar.
 
 ## Paquetes
