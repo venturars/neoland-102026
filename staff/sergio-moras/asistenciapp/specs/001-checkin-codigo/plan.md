@@ -252,7 +252,7 @@ Detalles de la interfaz:
 
 ---
 
-## 8. Decisiones tomadas por Victor
+## 8. Decisiones aprobadas
 
 1. **Límite de intentos** (2026-10-19): no. Se enmienda la constitución a v1.1 (§6) en lugar de dejar una excepción (§2.7).
 2. **Separador del CSV** (2026-10-19): `;` (§2.6).
