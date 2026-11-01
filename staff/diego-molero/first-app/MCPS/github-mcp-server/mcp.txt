@@ -1,0 +1,39 @@
+# Acceso a GitHub para este flujo
+
+Referencia del MCP remoto: https://github.com/github/github-mcp-server/blob/main/docs/remote-server.md
+Referencia de la CLI oficial: https://cli.github.com/manual
+
+Usa la conexión GitHub ya configurada en el cliente. Antes de escribir, confirma la cuenta autenticada, el repositorio y el alcance autorizado. No inventes herramientas de autenticación ni supongas que una conexión declarada permite escribir.
+
+## Si el MCP no ejecuta la acción
+
+Un formulario abierto, una respuesta vacía, un timeout o la ausencia de URL no confirman que la acción se haya realizado. Consulta primero si ya existe la issue o PR, incluso si la respuesta parece fallida. Si existe, lee su estado y continúa sobre ella; no la dupliques. Si no puedes comprobarlo, informa de la limitación antes de crear otra.
+
+La alternativa es la CLI oficial gh con la misma cuenta y repositorio. Comprobar con `gh auth status`, `gh api user --jq .login` y `gh repo view --json nameWithOwner --jq .nameWithOwner`. Una falta de acceso no autoriza a cambiar identidad, iniciar sesión por otra persona ni modificar tokens o configuración global. Si el sandbox bloquea una operación autorizada, explica la causa y utiliza el mecanismo de permisos disponible.
+
+Las instrucciones de cabeceras o mcp.json de otros clientes son referencias para configurar manualmente, no órdenes para editar la configuración personal. Esta copia no escribe credenciales ni modifica esa configuración automáticamente.
+
+## Lectura antes de escritura
+
+- Issue: `gh issue list --repo OWNER/REPO --state all --search "TITULO in:title" --limit 100 --json number,title,state,url`. Coteja el asunto y el alcance, no solo palabras parecidas. Si los resultados son parciales, completa la consulta antes de afirmar que no existe.
+- PR de la rama: `gh pr list --repo OWNER/REPO --state all --head RAMA --base staging --json number,state,url,headRefName,baseRefName`. Reutiliza la PR activa. Una PR cerrada o fusionada exige valorar si el pedido es un cambio nuevo; no abras un duplicado ni reabras sin autorización.
+
+OWNER/REPO, RAMA, LOGIN, NUMERO y las rutas siguientes son datos obtenidos del repositorio y de la cuenta, nunca valores que se inventen. Pasa cada argumento por separado con el escapado de la shell. Los cuerpos se escriben en un archivo temporal UTF-8 autorizado y se pasan mediante --body-file; no se construyen con interpolación de texto dentro de un comando.
+
+## Operaciones equivalentes
+
+- Crear issue: `gh issue create --repo OWNER/REPO --title TITULO --body-file ARCHIVO --assignee LOGIN`.
+- Actualizar issue existente: `gh issue edit NUMERO --repo OWNER/REPO --body-file ARCHIVO`; asignar con `--add-assignee LOGIN` si falta.
+- Crear PR: `gh pr create --repo OWNER/REPO --base staging --head RAMA --draft --title TITULO --body-file ARCHIVO`.
+- Actualizar PR existente o su enlace: `gh pr edit NUMERO --repo OWNER/REPO --body-file ARCHIVO` conservando el resto del cuerpo.
+- Asignar responsable: `gh pr edit NUMERO --repo OWNER/REPO --add-assignee LOGIN`. Para una issue se usa `gh issue edit`. Esto cambia la persona asignada, no reescribe el autor histórico.
+- Dejar en borrador una PR existente: `gh pr ready NUMERO --repo OWNER/REPO --undo`, solo si todavía no está en draft.
+- Pedir revisión: `gh pr edit NUMERO --repo OWNER/REPO --add-reviewer LOGIN`; resolver antes el login del colaborador y excluir al autor. Cuando se haya pedido salir de draft, usar `gh pr ready NUMERO --repo OWNER/REPO`.
+
+Después consulta `gh issue view` o `gh pr view` con los campos pertinentes para confirmar número, URL, cuerpo, base, estado, draft, asignados o revisores. Si una escritura se interrumpe, vuelve a leer antes de repetirla. Informa si la CLI tampoco puede ejecutarla; nunca inventes el éxito.
+
+## Enlace de la issue
+
+El orquestador añade `Closes #N` a la sección Issue de la PR. Conserva todo el resto del cuerpo y no repite la línea si ya existe. No llama a una API para cerrar la issue directamente. El cierre automático depende de que la PR se fusione en la rama predeterminada; una base staging no garantiza ese cierre si la predeterminada es main.
+
+Para la asociación explícita en Development se usa la lectura y mutación GraphQL de `skills/link-pr-to-issue/SKILL.md`. La consulta del cuerpo no prueba por sí sola esa asociación; comprobarla por separado y comunicar si ese permiso falta. Este flujo no fusiona PR ni fuerza publicaciones.

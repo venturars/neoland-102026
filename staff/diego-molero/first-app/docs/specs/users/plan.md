@@ -1,5 +1,7 @@
 # Plan — gestión de usuarios
 
+> Ubicaciones vigentes desde el 2026-10-30: las capas citadas en esta iteración se han trasladado a `src/`. Los contratos se conservan; las rutas actuales están en [TREE](../../TREE.md), [arquitectura](../../ARCHITECTURE.md) y el [plan de traslado](../move-layers-under-src/plan.md). El contenido y la evidencia de esta iteración se mantienen como registro.
+
 Aplican las reglas de la [constitución](../../CONSTITUTIONS.md).
 Esta iteración cambia los resultados de validación por excepciones y devuelve
 los datos directamente, conservando las validaciones y su orden.
