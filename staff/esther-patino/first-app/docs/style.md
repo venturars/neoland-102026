@@ -1,6 +1,6 @@
 ## Comandos
 
-- Ejecutar: no hay comando de arranque.
+- Ejecutar: `pnpm start` desde `first-app`. El servidor escucha en `127.0.0.1:3000`.
 - Tests: los `.txt` de `src/clients/terminal/`. Se pegan en PowerShell desde la raíz del repositorio. El fragmento entra en `first-app` y no captura errores. No hay `npm test`.
 - Lint/formato: `format` lanza Prettier, sin fichero de configuración. `lint` lanza ESLint con `eslint.config.js`.
 
