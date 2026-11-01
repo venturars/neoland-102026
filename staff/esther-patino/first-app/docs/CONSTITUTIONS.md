@@ -2,7 +2,7 @@
 
 ## 1. Qué hace la app
 
-first-app guarda usuarios. No es una web. Se usa desde la terminal, con Node. El CEO también valida esas funcionalidades desde los documentos de Jupyter.
+first-app guarda usuarios. No es una web. Se usa desde la terminal, con Node. También se elige, se cambia y se borra un usuario desde el navegador, en tres pantallas. El CEO también valida esas funcionalidades desde los documentos de Jupyter.
 
 Se puede crear un usuario, listarlos, buscar uno, cambiarlo y borrarlo.
 
@@ -57,6 +57,8 @@ Cuando se termina de crear una funcionalidad, se crea un cliente.
 El cliente es un archivo en `src/clients/terminal/`. El nombre dice la acción, en kebab-case, y acaba en `.txt`.
 
 Ese archivo se pega en la terminal desde la raíz del repositorio. Entra en `first-app`, importa la función y hace `console.log` del resultado. No captura el error. Es la prueba manual de esa funcionalidad.
+
+El cliente de una funcionalidad nueva sigue siendo ese archivo. Este cambio añade el cliente de navegador y no añade un `.txt`.
 
 ## 8. Cómo se hace un desarrollo
 
