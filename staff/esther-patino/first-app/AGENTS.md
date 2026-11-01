@@ -34,15 +34,19 @@ Una persona lee lo escrito. El proceso de implementación empieza cuando esa per
 
 ## Validación de paquetes
 
-Cada vez que un plan añade un paquete de Node o cambia su versión, el chequeo es automático. Se hace con el MCP `socket-mcp` de `MCP.md`, antes de aceptar el plan.
+Cada vez que un plan añade un paquete de Node o cambia su versión, el chequeo es automático. Se hace con el MCP `socket-mcp` de `MCPS/socket-mcp/mcp.txt`, antes de aceptar el plan.
 
-Se mira el paquete y la versión: si una campaña lo afecta, si una alerta lo afecta, o si alguna de sus stats está por debajo de 50 puntos.
+Se mira el paquete y la versión. También se miran las dependencias de ese paquete, hasta 3 capas. El resumen entra en el plan antes de aceptarlo. Separa tres datos. Cada dato dice de dónde sale.
+
+Las stats salen de `depscore`, con la versión exacta. Una stat por debajo de 50 puntos se escribe. 50 no baja.
+
+La alerta sale de `alerts`, con el `org_slug` que devuelve `organizations`. Una lista vacía es la lista de la organización. No dice que esa versión no tenga alerta.
+
+La campaña sale de `threat_feed`, con ese mismo `org_slug`.
+
+Si una de esas herramientas no contesta, el resumen dice el motivo. No escribe que no consta sin haberla consultado.
 
 Las alertas se comentan en el plan. La persona decide si las acepta.
-
-Se miran las dependencias de ese paquete hasta 3 capas. Cada capa sigue los mismos criterios.
-
-El resumen de ese chequeo entra en el plan antes de aceptarlo.
 
 Queda fuera comprobar paquetes que no son de Node, comprobar un paquete cuya versión no cambia, mirar más de 3 capas y decidir las alertas por la persona.
 

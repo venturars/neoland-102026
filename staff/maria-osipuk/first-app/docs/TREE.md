@@ -12,51 +12,52 @@ first-app/
 ├── scripts/
 │   └── jupyter.sh
 │
-├── db/
-│   ├── connection.js
-│   └── users.sqlite
-│
-├── queries/
+├── src/
+│   ├── db/
+│   │   ├── connection.js
+│   │   └── users.sqlite
+│   │
 │   ├── queries/
-│   │   ├── create-users-table.sql
-│   │   ├── delete.sql
-│   │   ├── find-by-email.sql
-│   │   ├── find-by-id.sql
-│   │   ├── insert.sql
-│   │   ├── list.sql
-│   │   └── update.sql
-│   └── users.js
-│
-├── logic/
-│   ├── count-users-by-gender.js
-│   ├── create-user.js
-│   ├── delete-user.js
-│   ├── find-user-by-email.js
-│   ├── find-user-by-id.js
-│   ├── list-users.js
-│   └── update-user.js
-│
-├── clients/
-│   ├── jupyter/
-│   │   ├── actualizar-usuario.ipynb
-│   │   ├── bienvenida.ipynb
-│   │   ├── borrar-usuario.ipynb
-│   │   ├── buscar-usuario-por-email.ipynb
-│   │   ├── buscar-usuario-por-id.ipynb
-│   │   ├── contar-usuarios-por-genero.ipynb
-│   │   ├── crear-usuario.ipynb
-│   │   ├── listar-usuarios.ipynb
-│   │   ├── preparar-tabla-usuarios.ipynb
-│   │   └── run_logic.py
-│   └── terminal/
-│       ├── count-users-by-gender.txt
-│       ├── create-users-table.txt
-│       ├── create-user.txt
-│       ├── delete-user.txt
-│       ├── find-user-by-email.txt
-│       ├── find-user-by-id.txt
-│       ├── list-users.txt
-│       └── update-user.txt
+│   │   ├── queries/
+│   │   │   ├── create-users-table.sql
+│   │   │   ├── delete.sql
+│   │   │   ├── find-by-email.sql
+│   │   │   ├── find-by-id.sql
+│   │   │   ├── insert.sql
+│   │   │   ├── list.sql
+│   │   │   └── update.sql
+│   │   └── users.js
+│   │
+│   ├── logic/
+│   │   ├── count-users-by-gender.js
+│   │   ├── create-user.js
+│   │   ├── delete-user.js
+│   │   ├── find-user-by-email.js
+│   │   ├── find-user-by-id.js
+│   │   ├── list-users.js
+│   │   └── update-user.js
+│   │
+│   └── clients/
+│       ├── jupyter/
+│       │   ├── actualizar-usuario.ipynb
+│       │   ├── bienvenida.ipynb
+│       │   ├── borrar-usuario.ipynb
+│       │   ├── buscar-usuario-por-email.ipynb
+│       │   ├── buscar-usuario-por-id.ipynb
+│       │   ├── contar-usuarios-por-genero.ipynb
+│       │   ├── crear-usuario.ipynb
+│       │   ├── listar-usuarios.ipynb
+│       │   ├── preparar-tabla-usuarios.ipynb
+│       │   └── run_logic.py
+│       └── terminal/
+│           ├── count-users-by-gender.txt
+│           ├── create-users-table.txt
+│           ├── create-user.txt
+│           ├── delete-user.txt
+│           ├── find-user-by-email.txt
+│           ├── find-user-by-id.txt
+│           ├── list-users.txt
+│           └── update-user.txt
 │
 ├── agents/
 │   ├── create-branch.md
@@ -110,9 +111,19 @@ first-app/
 │
 ├── templates/
 │   ├── issues/
-│   │   └── basic_issue.md
+│   │   ├── chore_issue.md
+│   │   ├── docs_issue.md
+│   │   ├── feat_issue.md
+│   │   ├── fix_issue.md
+│   │   ├── refactor_issue.md
+│   │   └── test_issue.md
 │   └── pull-request/
-│       └── basic-pull-request.md
+│       ├── chore-pull-request.md
+│       ├── docs-pull-request.md
+│       ├── feat-pull-request.md
+│       ├── fix-pull-request.md
+│       ├── refactor-pull-request.md
+│       └── test-pull-request.md
 │
 ├── MCPS/
 │   └── github-mcp-server/
@@ -150,11 +161,19 @@ first-app/
         │   ├── spec.md
         │   ├── plan.md
         │   └── tasks.md
+        ├── move-code-into-src/
+        │   ├── spec.md
+        │   ├── plan.md
+        │   └── tasks.md
         ├── prettier-and-eslint/
         │   ├── spec.md
         │   ├── plan.md
         │   └── tasks.md
-        └── split-sdd-guides/
+        ├── split-sdd-guides/
+        │   ├── spec.md
+        │   ├── plan.md
+        │   └── tasks.md
+        └── update-git-workflow-template/
             ├── spec.md
             ├── plan.md
             └── tasks.md

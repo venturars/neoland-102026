@@ -1,5 +1,7 @@
 # Cliente Jupyter
 
+Issue: #375.
+
 ## Qué se pide
 
 Un cliente para probar la aplicación en el navegador, con Jupyter Notebook en el propio ordenador. La interfaz es Notebook, no JupyterLab. No hace falta programar.

@@ -33,6 +33,7 @@
 - `templates/issues/basic_issue.md` es el cuerpo de la issue: qué hay que hacer y cómo probarlo.
 - `templates/pull-request/basic-pull-request.md` es el cuerpo de la pull request.
 - `MCPS/github-mcp-server/mcp.txt` es la dirección del MCP de GitHub.
+- `MCPS/socket-mcp/mcp.txt` es la dirección del MCP de Socket.
 - `docs/specs/<nombre>/` es donde empieza un desarrollo. `<nombre>` es la funcionalidad, en kebab-case.
 - `src/db/` abre la base de datos y no contiene reglas de negocio.
 - `src/db/connections.js` es la única conexión a la base de datos.

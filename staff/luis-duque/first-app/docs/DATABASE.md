@@ -14,6 +14,6 @@ Las consultas no revisan los datos. Cada una ejecuta un solo SQL:
 
 # queries
 
-`db` abre `users.sqlite` y no ejecuta SQL. Ahí está el archivo de la base. No hay otro.
+`src/db` abre `users.sqlite` y no ejecuta SQL. Ahí está el archivo de la base. No hay otro.
 
-`queries` es la única carpeta que lee y ejecuta el SQL. El texto de cada consulta está en `queries/queries`, un archivo por operación. `queries` no revisa los datos: inserta, modifica, borra o lee, y crea la tabla si no existe. Ni `logic` ni los clientes escriben SQL ni abren la base.
+`src/queries` es la única carpeta que lee y ejecuta el SQL. El texto de cada consulta está en `src/queries/queries`, un archivo por operación. `src/queries` no revisa los datos: inserta, modifica, borra o lee, y crea la tabla si no existe. Ni `src/logic` ni los clientes escriben SQL ni abren la base.

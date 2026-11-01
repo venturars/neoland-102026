@@ -1,11 +1,11 @@
 # Architecture
 
-Each layer has one job. The files of each layer are listed in [TREE.md](TREE.md).
+Each layer has one job. The files of each layer are listed in [TREE.md](TREE.md). The layers `logic/`, `queries/`, `db/` and `clients/` are folders inside `src/`.
 
 ## Layers
 
-- `logic/` decides if an action is allowed. It does not contain SQL. It calls the functions exported by `queries/users.js`. It never reads a `.sql` file.
-- `queries/` talks to the database. It does not decide if a name or an email is valid. The SQL text lives in `queries/queries/`.
+- `logic/` decides if an action is allowed. It does not contain SQL. It calls the functions exported by `src/queries/users.js`. It never reads a `.sql` file.
+- `queries/` talks to the database. It does not decide if a name or an email is valid. The SQL text lives in `src/queries/queries/`.
 - `db/` opens the database and stores it.
 - `clients/` runs the logic by hand. A client imports a function from `logic/` and prints the result. It has no rules.
 - `scripts/` holds the helper that starts the notebooks.
@@ -13,7 +13,7 @@ Each layer has one job. The files of each layer are listed in [TREE.md](TREE.md)
 - `skills/` holds one skill per git or GitHub step. The subagents call them.
 - `tools/` holds the shell scripts that the skills run from the root of the repository.
 - `templates/` holds the body of the issue and the body of the pull request.
-- `MCPS/` holds the address of the GitHub MCP server that the skills use.
+- `MCPS/` holds the address of the GitHub MCP server that the skills use, and the address of the Socket MCP server that checks Node packages.
 - `docs/` explains the app.
 
 The rules in `logic/` stay even if the database changes, or if a notebook or a web page is added later. The queries and the clients can be replaced. The logic cannot.
@@ -24,7 +24,7 @@ The rules in `logic/` stay even if the database changes, or if a notebook or a w
 
 - `eslint.config.js` applies ESLint's recommended rules to the JavaScript and ignores `.venv` and `node_modules`.
 
-### logic/
+### src/logic/
 
 One file per action. Each file exports one function. The order inside the function is in [CONSTITUTIONS.md](CONSTITUTIONS.md).
 
@@ -36,19 +36,19 @@ One file per action. Each file exports one function. The order inside the functi
 - `delete-user.js` removes a user.
 - `count-users-by-gender.js` returns how many users are male, female, or undefined, using the classifier.
 
-### queries/
+### src/queries/
 
-- `users.js` reads each `.sql` file and exports one function per file. It uses the one connection from `db/connection.js`. It contains no SQL string. Importing it does not create the table.
-- `queries/*.sql` holds one statement per file. The file names and the functions are in [DATABASE.md](DATABASE.md).
+- `users.js` reads each `.sql` file and exports one function per file. It uses the one connection from `src/db/connection.js`. It contains no SQL string. Importing it does not create the table.
+- `src/queries/*.sql` holds one statement per file. The file names and the functions are in [DATABASE.md](DATABASE.md).
 
-A new query is a new `.sql` file in `queries/queries/` and a new function in `queries/users.js`.
+A new query is a new `.sql` file in `src/queries/queries/` and a new function in `src/queries/users.js`.
 
-### db/
+### src/db/
 
 - `connection.js` is the only file that opens the database. No other file creates a second connection.
 - `users.sqlite` stores the users.
 
-### clients/
+### src/clients/
 
 - `terminal/` has one `.txt` file per feature, named like its logic file. You paste it into the terminal while `first-app` is the current folder. `create-users-table.txt` prepares the table.
 - `jupyter/` has one notebook per feature, plus `prepare-database.ipynb`, `00-welcome-and-index.ipynb` and a `README.md`. They open in the browser with `scripts/jupyter.sh`.
@@ -105,6 +105,7 @@ One folder per skill, each with a `SKILL.md`. A skill that runs a script names i
 ### MCPS/
 
 - `github-mcp-server/mcp.txt` is the address of the GitHub MCP and the header that lets it write directly.
+- `socket-mcp/mcp.txt` is the address of the Socket MCP, what each of its tools answers, and what each one cannot answer.
 
 ### docs/
 

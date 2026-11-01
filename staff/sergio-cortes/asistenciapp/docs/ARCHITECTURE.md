@@ -1,6 +1,6 @@
 # Arquitectura de AsistenciApp
 
-> Versión 1.5 · 2026-10-26
+> Versión 1.6 · 2026-10-30
 
 Este documento dice **cómo se organiza el código** y **dónde vive cada cosa** en el repo de la app. La [constitución](CONSTITUTIONS.md) fija reglas de producto; aquí van las capas y la estructura de carpetas.
 
@@ -24,6 +24,11 @@ Raíz de trabajo: `staff/sergio-cortes/asistenciapp/` (en el diagrama, `asistenc
 
 ```
 asistenciapp/
+├── agents/                # orquestador y subagentes del flujo de git
+├── skills/                # skills de ese flujo
+├── tools/                 # scripts de terminal
+├── templates/             # plantillas de issue y de pull request
+├── MCPS/                  # nota del servidor de GitHub
 ├── docs/
 │   ├── CONSTITUTIONS.md   # reglas no negociables
 │   └── ARCHITECTURE.md    # este documento
@@ -55,6 +60,7 @@ asistenciapp/
 | Carpeta / fichero | Rol |
 | --- | --- |
 | `docs/`, `specs/`, `AGENTS.md` | Gobernanza y SDD; no se importan en tiempo de ejecución. |
+| `agents/`, `skills/`, `tools/`, `templates/`, `MCPS/` | Flujo de git del curso. No se importan en tiempo de ejecución. El orquestador `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca. |
 | `README.md` | Instrucciones para personas; el agente usa `AGENTS.md` y la constitución. |
 | `requirements.txt`, `pytest.ini` | Herramientas de desarrollo (constitución P3). |
 | `static/` | Front estático; el servidor lo sirve desde Flask en `app.py`. |
@@ -92,3 +98,4 @@ Rutas relativas a `asistenciapp/` salvo donde se indique bajo `asistencia/`.
 | 1.2 | 2026-10-26 | `usecases/`, `storage/sqlite.py`; DDL en `infra/sqlite/`. |
 | 1.3 | 2026-10-26 | IP del check-in: `request.remote_addr`; `ProxyFix` con `x_for=0`. |
 | 1.4 | 2026-10-26 | Árbol completo del repo en ARCHITECTURE; AGENTS remite aquí. |
+| 1.6 | 2026-10-30 | Árbol: `agents/`, `skills/`, `tools/`, `templates/` y `MCPS/` (spec 008). |

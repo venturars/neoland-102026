@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Crea número-tipo-descripcion desde la base indicada.
+# Crea la rama desde la base indicada.
 
 set -euo pipefail
 
@@ -33,14 +33,6 @@ if [[ ! "$number" =~ ^[0-9]+$ ]]; then
   echo "El número de issue tiene que ser dígitos." >&2
   exit 1
 fi
-
-case "$type" in
-  feat|fix|docs|refactor|test|chore) ;;
-  *)
-    echo "El tipo tiene que ser feat, fix, docs, refactor, test o chore." >&2
-    exit 1
-    ;;
-esac
 
 if [[ ! "$description" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
   echo "La descripción va en minúsculas y con guiones." >&2

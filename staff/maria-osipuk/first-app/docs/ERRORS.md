@@ -1,6 +1,6 @@
 # Errores
 
-Los errores se gestionan en `logic/`, cerca de la regla de negocio que puede fallar.
+Los errores se gestionan en `src/logic/`, cerca de la regla de negocio que puede fallar.
 
 Cuando una entrada o una regla de negocio no es válida, la función lanza un `Error` con un mensaje claro en inglés:
 
@@ -18,7 +18,7 @@ Mensajes de referencia para esta aplicación:
 - `User email is already registered`;
 - `User does not exist`.
 
-Los errores internos de SQLite nunca llegan directamente al cliente. `logic/` los captura y lanza un nuevo error que identifica la operación que no pudo completarse.
+Los errores internos de SQLite nunca llegan directamente al cliente. `src/logic/` los captura y lanza un nuevo error que identifica la operación que no pudo completarse.
 
 Mensajes de referencia para errores de operación:
 

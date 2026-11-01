@@ -6,9 +6,14 @@ export function findUserById(id) {
     throw new Error("User ID is invalid");
   }
   const user = findById(id);
-  if (!user) throw new Error("User not found");
+  if (!user) {
+    throw new Error("User not found");
+  }
   return {
-    id: user.id, name: user.name, email: user.email,
-    createdAt: user.createdAt, updatedAt: user.updatedAt,
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
   };
 }

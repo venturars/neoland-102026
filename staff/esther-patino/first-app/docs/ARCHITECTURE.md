@@ -31,7 +31,7 @@
 - `skills/launch-push/SKILL.md` sube la rama actual y fija el upstream.
 - `skills/create-pr-base-staging/SKILL.md` abre la pull request con base `staging`.
 - `skills/create-draft/SKILL.md` deja la pull request en draft.
-- `skills/link-pr-to-issue/SKILL.md` deja `Related to #N` sin cerrar la issue.
+- `skills/link-pr-to-issue/SKILL.md` deja `Closes #N` y cierra la issue al enlazar.
 - `skills/assign-reviewers/SKILL.md` asigna a quienes miran la pull request y la saca de draft.
 - `tools/check-status.sh` escribe la rama, el remoto y los cambios.
 - `tools/pull-changes.sh` adelanta `staging` en fast-forward.
@@ -40,9 +40,20 @@
 - `tools/create-empty-commit.sh` crea el commit vacío de apertura.
 - `tools/commit-changes.sh` guarda los ficheros nombrados.
 - `tools/launch-push.sh` sube la rama y fija el upstream.
-- `templates/issues/basic_issue.md` es el cuerpo de la issue: qué hay que hacer y cómo probarlo.
-- `templates/pull-request/basic-pull-request.md` es el cuerpo de la pull request.
+- `templates/issues/feat_issue.md` es el cuerpo de la issue de tipo feat.
+- `templates/issues/fix_issue.md` es el cuerpo de la issue de tipo fix.
+- `templates/issues/docs_issue.md` es el cuerpo de la issue de tipo docs.
+- `templates/issues/refactor_issue.md` es el cuerpo de la issue de tipo refactor.
+- `templates/issues/test_issue.md` es el cuerpo de la issue de tipo test.
+- `templates/issues/chore_issue.md` es el cuerpo de la issue de tipo chore.
+- `templates/pull-request/feat-pull-request.md` es el cuerpo de la pull request de tipo feat.
+- `templates/pull-request/fix-pull-request.md` es el cuerpo de la pull request de tipo fix.
+- `templates/pull-request/docs-pull-request.md` es el cuerpo de la pull request de tipo docs.
+- `templates/pull-request/refactor-pull-request.md` es el cuerpo de la pull request de tipo refactor.
+- `templates/pull-request/test-pull-request.md` es el cuerpo de la pull request de tipo test.
+- `templates/pull-request/chore-pull-request.md` es el cuerpo de la pull request de tipo chore.
 - `MCPS/github-mcp-server/mcp.txt` es la dirección del MCP de GitHub.
+- `MCPS/socket-mcp/mcp.txt` es la dirección del MCP de Socket.
 
 - `docs/` guarda la constitución y las specs.
   - `docs/CONSTITUTIONS.md` manda el comportamiento de la app.
