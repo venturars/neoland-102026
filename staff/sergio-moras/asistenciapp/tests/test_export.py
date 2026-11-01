@@ -1,10 +1,10 @@
-"""Tests de asistencia/export.py · CA-14."""
+"""Tests de asistencia/infra/csv_export.py · CA-14."""
 
 from datetime import timezone
 
 import pytest
 
-from asistencia.export import to_csv
+from asistencia.infra.csv_export import to_csv
 
 
 def rows(*pairs):

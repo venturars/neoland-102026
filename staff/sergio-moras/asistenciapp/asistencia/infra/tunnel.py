@@ -1,4 +1,10 @@
-"""Túnel público con cloudflared para que los alumnos entren desde casa (plan §2.10)."""
+"""Túnel público con cloudflared para que los alumnos entren desde casa.
+
+Usage::
+
+  >>> process, url = start_tunnel(8000)
+  >>> process.terminate()
+"""
 
 import queue
 import re
@@ -10,17 +16,38 @@ TUNNEL_URL = re.compile(r"https://[a-z0-9-]+\.trycloudflare\.com")
 
 
 class TunnelError(Exception):
-    pass
+    """No se pudo abrir el túnel. El mensaje dice qué hacer."""
 
 
 def find_tunnel_url(line: str) -> str | None:
-    """Devuelve la URL pública si la línea de cloudflared la contiene."""
+    """Busca la URL pública en una línea de la salida de cloudflared.
+
+    :param line: línea de la salida.
+    :return: la URL, o ``None`` si la línea no la contiene.
+    :rtype: str | None
+
+    Usage::
+
+      >>> find_tunnel_url("INF |  https://abc-def.trycloudflare.com  |")
+      'https://abc-def.trycloudflare.com'
+    """
     match = TUNNEL_URL.search(line)
     return match.group(0) if match else None
 
 
 def start_tunnel(port: int, timeout: float = 30) -> tuple[subprocess.Popen, str]:
-    """Lanza cloudflared y espera a que anuncie su URL. Devuelve (proceso, url)."""
+    """Lanza cloudflared y espera a que anuncie su URL pública.
+
+    :param port: puerto local donde escucha la app.
+    :param timeout: segundos máximos de espera.
+    :return: el proceso de cloudflared y la URL pública.
+    :rtype: tuple[subprocess.Popen, str]
+    :raises TunnelError: si cloudflared no está instalado o no da la URL a tiempo.
+
+    Usage::
+
+      >>> process, url = start_tunnel(8000)
+    """
     executable = shutil.which("cloudflared")
     if executable is None:
         raise TunnelError("No se encontró cloudflared. Instálalo con: brew install cloudflared")

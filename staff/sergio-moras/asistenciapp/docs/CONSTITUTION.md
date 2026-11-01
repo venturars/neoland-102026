@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 2.2 · Ratificada: 2026-10-19 · Última enmienda: 2026-11-01
+> Versión 2.3 · Ratificada: 2026-10-19 · Última enmienda: 2026-11-01
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -49,12 +49,15 @@ Interfaz, mensajes de error, documentación y especificaciones se escriben en es
 | Capa | Tecnología |
 | --- | --- |
 | Runtime | Python 3.13+, en un entorno virtual `.venv/` (no se sube a git) |
-| Servidor | Flask |
-| Base de datos | SQLite vía `sqlite3` (biblioteca estándar), archivo en `data/` (no se sube a git) |
+| Servidor | Flask, solo en `app.py` (entrada HTTP) |
+| Reglas | `asistencia/domain/` (solo biblioteca estándar) |
+| Casos de uso | `asistencia/use_cases/` (lo que hacen el profesor y el alumno) |
+| Infraestructura | `asistencia/infra/`: SQLite vía `sqlite3` con el archivo en `data/` (no se sube a git), CSV y túnel |
+| Documentos | `docs/` (esta constitución y `docs/ARCHITECTURE.md`) |
 | Frontend | HTML + CSS + JavaScript sin frameworks, servidos desde `static/` |
 | Tests | `pytest` |
 
-Cambiar el stack requiere enmendar esta constitución.
+Cómo se relacionan esas piezas está en `docs/ARCHITECTURE.md`. Cambiar el stack requiere enmendar esta constitución.
 
 ---
 
@@ -106,3 +109,4 @@ Cambiar el stack requiere enmendar esta constitución.
 | 2.0 | 2026-10-20 | §3: stack Node.js → Python (Flask + pytest). P3 pasa de "cero dependencias" a "dependencias mínimas" y permite Flask y pytest | Requisito nuevo: el proyecto debe hacerse en Python. Se elige Flask por ser simple y muy extendido, y pytest por su sintaxis sencilla |
 | 2.1 | 2026-10-20 | P4: distingue *almacenar* (solo en local) de *transitar* (puede pasar cifrado por un proveedor de túnel) | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08) |
 | 2.2 | 2026-11-01 | §4: la spec es obligatoria para cualquier fichero de la app (no solo código) y se aclara que issue, rama y PR no la sustituyen. §7 y §8: la carpeta es `staff/sergio-moras/asistenciapp/` y aprueba quien trabaja en ella | Las reglas copiadas dejaban fuera README, tests y documentación, y apuntaban a otro proyecto (spec 002) |
+| 2.3 | 2026-11-01 | §3: la tabla nombra dónde vive cada pieza: `app.py`, `asistencia/domain/`, `asistencia/use_cases/`, `asistencia/infra/` y `docs/`, y remite a `docs/ARCHITECTURE.md` | El código se reorganiza por responsabilidades y la constitución pasa a `docs/`. Propósito, principios y reglas no cambian (spec 005) |

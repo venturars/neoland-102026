@@ -1,6 +1,6 @@
-# AGENT.md — Manual de trabajo para agentes de IA
+# AGENTS.md — Manual de trabajo para agentes de IA
 
-Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [CONSTITUTION.md](CONSTITUTION.md) dice **qué reglas** se cumplen; este archivo dice **cómo se trabaja** día a día.
+Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [constitución](docs/CONSTITUTION.md) dice **qué reglas** se cumplen y [ARCHITECTURE.md](docs/ARCHITECTURE.md) **cómo se organiza** el código. Este archivo dice **cómo se trabaja** día a día y **cómo se escribe** el código (§8).
 
 ---
 
@@ -8,10 +8,11 @@ Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en 
 
 Lee en este orden al empezar cualquier tarea:
 
-1. `CONSTITUTION.md`: las reglas no negociables.
-2. Este archivo (`AGENT.md`).
-3. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
-4. Su `plan.md` y su `tasks.md`, si ya existen.
+1. `docs/CONSTITUTION.md`: las reglas no negociables.
+2. `docs/ARCHITECTURE.md`: qué pieza del código hace qué y quién puede importar a quién.
+3. Este archivo (`AGENTS.md`).
+4. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
+5. Su `plan.md` y su `tasks.md`, si ya existen.
 
 Si algo de lo que te piden contradice la constitución, **para y avisa** antes de escribir nada.
 
@@ -56,25 +57,7 @@ Lo primero que se escribe es siempre `spec.md`. Ningún otro fichero se toca has
 
 ## 3. Estructura de carpetas
 
-```
-asistenciapp/
-├── CONSTITUTION.md        # reglas no negociables
-├── AGENT.md               # este archivo
-├── README.md              # cómo arrancar la app (para humanos)
-├── specs/
-│   └── NNN-nombre/
-│       ├── spec.md        # qué y por qué
-│       ├── plan.md        # cómo
-│       └── tasks.md       # pasos
-├── requirements.txt       # dependencias de Python (Flask, pytest)
-├── pytest.ini             # configuración de pytest
-├── app.py                 # aplicación Flask y punto de entrada
-├── asistencia/            # lógica del servidor (paquete de Python)
-├── static/                # HTML, CSS y JS del navegador
-├── tests/                 # tests (test_*.py)
-├── .venv/                 # entorno virtual de Python (no se sube a git)
-└── data/                  # base de datos SQLite (no se sube a git)
-```
+El árbol y qué va en cada carpeta están en [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Si un cambio añade o mueve ficheros, se actualiza allí.
 
 Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-discord-bot`.
 
@@ -105,7 +88,7 @@ Las únicas dependencias son Flask y pytest (constitución P3).
 - **Cambios pequeños.** Mejor varias tareas cortas que una enorme.
 - **Nada de commits ni pushes** sin que lo pida quien trabaja en esta carpeta.
 - **Para todo lo que arranques.** Si levantas el servidor o `cloudflared` para probar, páralos al terminar y comprueba que el puerto queda libre: `lsof -nP -iTCP:8000 -sTCP:LISTEN` no debe mostrar nada. Ojo: en macOS el proceso aparece como `Python` (con mayúscula). (Incidencia del 2026-10-20 en T12.)
-- **No toques la constitución** salvo para proponer una enmienda, que solo aprueba quien trabaja en esta carpeta (constitución §8).
+- **No toques la constitución** (`docs/CONSTITUTION.md`) salvo para proponer una enmienda, que solo aprueba quien trabaja en esta carpeta (constitución §8).
 
 ---
 
@@ -129,6 +112,46 @@ Una funcionalidad está terminada cuando:
 | `002-spec-antes-del-cambio` | ✅ Implementada (2026-11-01) | Cualquier cambio de la app necesita spec aprobada |
 | `003-activar-el-entorno` | ✅ Implementada (2026-11-01) | El README separa activar el entorno de arrancar la app |
 | `004-quitar-referencias-personales` | ✅ Implementada (2026-11-01) | Documentación sin nombres personales; rutas con `staff/<usuario>/asistenciapp` |
+| `005-reorganizar-arquitectura` | ✅ Implementada (2026-11-01) | Documentos en `docs/`; código en `domain/`, `use_cases/`, `infra/` y `app.py` |
 | Integración con Discord | Idea, sin número asignado | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
+
+---
+
+## 8. Cómo se escribe el código
+
+Se sigue la forma de [requests/api.py](https://github.com/psf/requests/blob/main/src/requests/api.py): quien abre un fichero entiende cada función sin leer su cuerpo.
+
+- **Cada módulo** empieza con un docstring de una frase que dice para qué sirve.
+- **Cada función pública** lleva tipos en la firma y un docstring con:
+  - una frase de qué hace;
+  - `:param nombre:` por cada parámetro;
+  - `:return:` qué devuelve y `:rtype:` de qué tipo;
+  - `:raises Error:` si lanza un error que quien la llama debe tratar;
+  - `Usage::` con un ejemplo corto, si se llama desde otro módulo.
+- **Las funciones privadas** (`_nombre`) pueden ir sin docstring si el nombre basta.
+- **Una función, una tarea.** Si hace falta la palabra «y» para describirla, probablemente son dos.
+- **Cada fichero en su pieza** (ver `docs/ARCHITECTURE.md` §2). Si un import rompe esa tabla, `tests/test_architecture.py` falla.
+- Los mensajes que ve el usuario van en español; los nombres del código pueden ir en inglés (constitución P6).
+
+Ejemplo:
+
+```python
+def is_valid_code(secret: bytes, code: str, t: float) -> bool:
+    """Dice si el código escrito por el alumno vale en el instante ``t``.
+
+    Se acepta el de la ventana actual y el de la anterior.
+
+    :param secret: secreto de la sesión.
+    :param code: código que escribió el alumno.
+    :param t: instante en segundos Unix.
+    :return: ``True`` si el código vale.
+    :rtype: bool
+
+    Usage::
+
+      >>> is_valid_code(secret, "0427", time.time())
+      True
+    """
+```
