@@ -17,4 +17,22 @@ export default defineConfig([
       "no-unused-vars": "error",
     },
   },
+  {
+    files: ["src/clients/web/**/*.js"],
+    languageOptions: {
+      globals: {
+        document: "readonly",
+        window: "readonly",
+        fetch: "readonly",
+      },
+    },
+  },
+  {
+    files: ["tests/**/*.js"],
+    languageOptions: {
+      globals: {
+        fetch: "readonly",
+      },
+    },
+  },
 ]);

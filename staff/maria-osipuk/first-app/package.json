@@ -7,7 +7,8 @@
     "preinstall": "node -e \"const agent = process.env.npm_config_user_agent || ''; if (!agent.startsWith('pnpm/')) { console.error('Use pnpm. npm and npx are not allowed in this project.'); process.exit(1); }\"",
     "format": "prettier --write .",
     "lint": "eslint .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test",
+    "start": "node src/clients/http/start-http-server.js"
   },
   "keywords": [],
   "author": "",
