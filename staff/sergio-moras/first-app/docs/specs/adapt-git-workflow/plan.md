@@ -5,7 +5,7 @@ Implementa [spec.md](spec.md). Respeta [CONSTITUTIONS.md](../../CONSTITUTIONS.md
 ## Decisiones técnicas
 | Tema | Decisión | Motivo |
 |---|---|---|
-| Origen | Se copian tal cual las 5 carpetas de `exercises/git-workflow-agent-template` en la versión de `staging`: `agents/` (7), `skills/` (15), `tools/` (7), `templates/` (12) y `MCPS/` (1). 42 ficheros | Es la versión más nueva, con plantillas de issue y de pull request por tipo. El profe y los compañeros copiaron una versión anterior |
+| Origen | Se copian tal cual las 5 carpetas de `exercises/git-workflow-agent-template` en la versión de `staging`: `agents/` (7), `skills/` (15), `tools/` (7), `templates/` (12) y `MCPS/` (1). 42 ficheros | Es la versión más nueva de la plantilla, con plantillas de issue y de pull request por tipo |
 | Cómo se copian | Con git, desde la plantilla, para que los 7 scripts de `tools/` conserven el permiso de ejecución (`100755`) | En Windows, copiar con el explorador pierde ese permiso |
 | Paradas | Sin paradas, como la plantilla: el orquestador llama y continúa | Decisión del usuario |
 | `AGENTS.md` | Se añade una sola línea, después del título: `El trabajo de git sigue [agents/git-workflow-agent.md](agents/git-workflow-agent.md) de esta carpeta.` | Es lo que hace que el agente use el flujo. Una sola línea evita conflictos con #638 y #381, que también tocan `AGENTS.md` |
