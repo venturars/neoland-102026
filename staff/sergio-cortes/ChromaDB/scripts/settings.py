@@ -15,6 +15,7 @@ COLLECTION = "python_docs"
 if VERSION != "":
     COLLECTION = "python_" + VERSION.replace(".", "_") + "_docs"
 MODEL = "qwen3-embedding:0.6b"
+CHAT_MODEL = "llama3.1:8b"
 
 # Carpetas de la documentación que entran enteras (menos su index.html)
 AREAS = [
