@@ -6,7 +6,7 @@ Crear o recuperar la rama de la tarea conservando su trabajo. No hacer commit, p
 
 ## Procedimiento
 
-1. Recibir issue, tipo, descripción, base y nombre explícito si se ha autorizado uno. El patrón habitual es `numero-tipo-descripcion`; no fijar una rama personal en este archivo ni en los scripts.
+1. Recibir issue, tipo, descripción, base y nombre explícito si se ha autorizado uno. Las reglas editoriales están en la plantilla del tipo en `templates/issues/`; si el tipo no tiene plantilla, usar la más cercana. No fijar una rama personal en este archivo ni en los scripts.
 2. Leer `skills/check-status/SKILL.md` y comprobar la rama y cambios locales antes de actuar.
 3. Para staging, leer `skills/create-branch-from-staging/SKILL.md` y usar `tools/create-branch-from-staging.ps1 -Issue N -Type tipo -Description slug`. Añadir `-BranchName nombre` solo si ese nombre fue autorizado expresamente.
 4. Para otra base expresamente indicada, usar `skills/create-branch/SKILL.md` y `tools/create-branch.ps1 -Base base -Issue N -Type tipo -Description slug`, con la misma opción de nombre explícito.

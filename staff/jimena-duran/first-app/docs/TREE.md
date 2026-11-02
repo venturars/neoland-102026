@@ -21,7 +21,9 @@ first-app/
     tests/                comprobación aislada del flujo de Git
   templates/
     issues/
+      {feat,fix,docs,refactor,test,chore}_issue.md
     pull-request/
+      {feat,fix,docs,refactor,test,chore}-pull-request.md
   MCPS/github-mcp-server/
   AGENTS.md
   docs/
