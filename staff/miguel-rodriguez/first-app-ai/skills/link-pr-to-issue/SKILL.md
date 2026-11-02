@@ -26,10 +26,10 @@ El enlace:
 gh api graphql -f query='mutation($issueId:ID!,$pullRequestId:ID!) { addCloseIssueReferences(input:{issueId:$issueId, pullRequestIds:[$pullRequestId]}) { issue { number } } }' -f issueId=ID_DE_LA_ISSUE -f pullRequestId=ID_DE_LA_PULL_REQUEST
 ```
 
-La base de estas pull request es `staging`. La rama por defecto del repositorio es `main`. Fusionar en `staging` no cierra la issue.
+La base de estas pull request sigue siendo `staging`. Consulta la rama predeterminada real del repositorio: GitHub cierra la issue al fusionar la PR con el enlace de cierre en esa rama. Si es staging, fusionar allí permite el cierre automático; si es otra, no prometas cierre al fusionar en staging. No cambies la base ni la rama predeterminada para provocar el cierre.
 
 - **Si falla**: Comunica el error. No inventes el enlace.
 
-Confirma primero que el repositorio tiene main como rama por defecto y que la PR apunta a staging. Lee el enlace existente antes de mutar y verifica por lectura posterior el número de issue, la PR relacionada y el estado abierto. Si ya está relacionado, no dupliques la operación. Si falta una capacidad, informa de cuál de los dos enlaces quedó pendiente.
+Consulta primero la rama predeterminada real y confirma que la PR apunta a staging, sin exigir main. Lee el enlace existente antes de mutar y verifica por lectura posterior el número de issue, la PR relacionada y el estado abierto. Si ya está relacionado, no dupliques la operación. Si falta una capacidad, informa de cuál de los dos enlaces quedó pendiente.
 
 Si la herramienta exige confirmación, espera a que se complete por su interfaz. Una tarjeta inaccesible o un permiso ausente es un bloqueo; no sustituyas MCP por gh ni desactives confirmaciones. La única excepción de herramienta prevista es el enlace Development por gh descrito en su skill.

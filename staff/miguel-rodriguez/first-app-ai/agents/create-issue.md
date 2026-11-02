@@ -10,7 +10,7 @@ Recibe del principal petición, raíz de la app, raíz Git, estado relevante y n
 
 ## Procedimiento
 
-Usa el resumen recibido, la plantilla de issue y create-issue. Busca coincidencias antes de crear. Título inglés de menos de 72 caracteres; cuerpo español. Usa assign-author para el usuario autenticado y verifica el resultado. No abras una rama ni PR.
+Selecciona feat, fix, docs, refactor, test o chore según la tarea. Si el tipo recibido no tiene plantilla, elige el tipo admitido más cercano y comunica la elección; conserva ese mismo tipo para la plantilla de issue, la rama y la plantilla de PR. No renombres ramas existentes. Usa el resumen recibido, templates/issues/<tipo>_issue.md y create-issue. Busca coincidencias antes de crear. Título inglés de menos de 72 caracteres, empezando por un verbo; cuerpo español. Usa assign-author para el usuario autenticado y verifica el resultado. No abras una rama ni PR.
 
 ## Herramientas
 

@@ -25,7 +25,7 @@ Read [the constitution](docs/CONSTITUTIONS.md) and any active feature's document
   responsibilities. Do not ask for repeated confirmation within that moment; preserve tool
   confirmations and the separate spec → plan → tasks approvals before implementation.
 - New task branches start from updated staging; PRs target staging from creation. Do not
-  create dependent task branches, merge, close issues through the API or delete branches automatically. PR bodies use Closes #N; merging into staging does not close the issue while main is the default branch.
+  create dependent task branches, merge, close issues through the API or delete branches automatically. PR bodies use Closes #N; automatic issue closure on merge follows the repository’s actual default branch. Keep the PR base staging. When requesting review, follow the verified-checklist procedure in skills/assign-reviewers/SKILL.md.
   Do not alter commits or PR bases after approvals without an explicit request.
 
 Refer to the constitution for application rules and its links to architecture, tree,
