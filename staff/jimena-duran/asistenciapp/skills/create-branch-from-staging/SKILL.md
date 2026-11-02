@@ -1,8 +1,17 @@
----
-name: create-branch-from-staging
-description: Crea o recupera la rama desde staging actualizado.
----
+### Herramienta: CREATE_BRANCH_FROM_STAGING
 
-# create-branch-from-staging
+- **Descripción**: Úsala única y exclusivamente cuando empieza el trabajo y hay que abrir la rama desde `staging`. No la uses para guardar un commit ni para abrir la pull request.
+- **Comando de Terminal**: `./staff/jimena-duran/asistenciapp/tools/create-branch-from-staging.sh "[NUMERO]" "[TIPO]" "[DESCRIPCION]"`
 
-La ejecuta agents/create-branch.md con issue real, tipo y descripción. Consulta la plantilla del tipo de templates/issues/ o la más cercana. Desde AsistenciApp: `& .\tools\create-branch-from-staging.ps1 -Issue $issueNumber -Type $type -Description $description`. Solo añade `-BranchName $branchName` si ese nombre fue autorizado. Usa argumentos separados; comprueba la rama real y conserva sus commits existentes. No commit, push ni PR.
+El comando se lanza desde el root del repositorio git (la carpeta que contenga el directorio .git).
+
+#### Especificación de Argumentos
+
+1. **NUMERO** _(Obligatorio)_: El número de la issue, solo dígitos.
+2. **TIPO** _(Obligatorio)_: El tipo de la plantilla.
+3. **DESCRIPCION** _(Obligatorio)_: La descripción de la rama.
+
+#### Reglas de Invocación Críticas
+
+- **Escapado de caracteres**: Si un argumento contiene comillas dobles (`"`), escápalas como `\"`.
+- **Procesamiento de respuestas**: El script escribe el nombre de la rama. Si el código de salida no es 0, lee el error. Si la rama ya existía, el script se queda en ella: sigue desde ahí.

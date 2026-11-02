@@ -1,10 +1,15 @@
----
-name: assign-reviewers
-description: Solicita revisión solo a las personas expresamente indicadas.
----
+### Herramienta: ASSIGN_REVIEWERS
 
-# assign-reviewers
+- **Descripción**: Úsala cuando el alumno nombra a quienes tienen que mirar la pull request. Resuelve el login dentro de este repositorio, asigna esos logins y sácala de draft. No la uses para asignar al autor.
+- **MCP**: El servidor remoto descrito en `MCPS/github-mcp-server/mcp.txt`.
 
-La ejecuta el orquestador en el quinto momento autorizado. Resuelve identidades y acceso dentro del repositorio, excluye a la autora y conserva revisores existentes. Si no puedes verificar una cuenta, informa antes de asignar. Alternativa gh: `gh pr edit $number --repo $repository --add-reviewer $reviewerLogin`. Solo tras completar las asignaciones autorizadas, y si se pidió revisión, usa la operación compatible o `gh pr ready $number --repo $repository`. Relee revisores y draft por separado. No merge.
+#### Especificación de Argumentos
 
-Lee docs/GIT-AUTOMATION.md: identidad, repositorio, autorizaciones y relectura del estado remoto antes de reintentar. Prefiere MCP compatible; si no sirve, explica el motivo y usa gh autenticado sin cambiar credenciales. No imprimas secretos ni inventes resultados.
+1. **Pull request** _(Obligatorio)_: El número o la URL.
+2. **Revisores** _(Obligatorio)_: Los nombres que dijo el alumno, separados por comas.
+
+#### Reglas de Invocación Críticas
+
+- **Login**: Cada nombre se resuelve dentro de este repositorio. Primero un colaborador cuyo login o nombre coincida. Si no coincide, el login de quien hace commits aquí con ese nombre o ese correo. No elijas un usuario público que no colabora.
+- **Si no hay login de colaborador**: Dilo y no pidas la revisión de ese nombre.
+- **Procesamiento de respuestas**: Quita al autor de la lista si aparece. Deja la pull request lista para revisión. Si el MCP falla, comunica el error y no marques la revisión como pedida.

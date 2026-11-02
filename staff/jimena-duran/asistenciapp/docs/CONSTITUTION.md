@@ -65,33 +65,21 @@ Cambiar el stack requiere enmendar esta constitución.
 
 ## 4. Desarrollo guiado por especificaciones (SDD)
 
-Cada momento requiere su autorización y termina en una pausa humana. Una autorización limitada no permite encadenar el siguiente ni realizar operaciones prohibidas.
+1. Todo cambio de código, tests, README u otra documentación de uso requiere una spec aprobada que lo cubra. Ningún fichero de la app se modifica sin spec, plan y tasks que cubran el cambio y la petición de implementar. Si la spec activa no cubre el pedido, se abre una spec nueva. Una issue, una rama o una pull request no sustituyen la spec aprobada.
+2. El orden es spec → plan → tasks → implementación. La persona interviene en cinco momentos y el agente se detiene al terminar cada uno:
 
-1. Issue: crear o reutilizar la issue y detenerse, sin abrir rama.
+   - Issue: crear o reutilizar la issue; sin abrir rama.
+   - Draft: adelantar staging, preparar rama, commit vacío, push, PR draft contra staging, autor y enlace de issue; sin specs.
+   - Specs: escribir spec, plan y tasks en la misma pasada y en ese orden; revisión conjunta antes de implementar.
+   - Implementar: ejecutar las tareas aprobadas y presentar resultados; sin commit ni push.
+   - Pull request: realizar solo lo solicitado; sin merge.
 
-2. Rama y PR draft: solo con autorización expresa, adelantar staging por avance rápido, crear o recuperar rama, commit de apertura si corresponde, push y PR draft contra staging, con autor y enlace de issue. Sin specs todavía. Detenerse.
+   No se encadena un momento con el siguiente sin autorización expresa. No se pide otro ok entre spec y plan ni entre plan y tasks.
+3. La spec describe qué y por qué, sin tecnologías.
+4. El plan explica cómo y comprueba esta constitución.
+5. Las dudas se resuelven antes de implementar; no se inventan requisitos.
 
-3. Documentos: con autorización, escribir spec, plan y tasks juntos, en ese orden, con el siguiente número disponible y sin sobrescribir specs anteriores. Detenerse para revisión conjunta.
-
-4. Implementación: con documentos revisados y autorización expresa, ejecutar solo las tareas aprobadas. Detenerse con resultados, sin commit ni push.
-
-5. Publicación o revisión: realizar solo las operaciones, archivos y revisores expresamente autorizados. Sin merge implícito. Detenerse.
-
-Todo cambio de código, tests, README u otra documentación de uso requiere una spec aprobada que lo cubra.
-
-Si la spec activa no cubre el pedido, se abre una spec nueva.
-
-Una issue, una rama o una pull request no sustituyen la spec aprobada.
-
-No se encadena un momento con el siguiente sin autorización expresa.
-
-Si cambian los documentos o falta una decisión, detenerse y pedir revisión; no inventar requisitos.
-
-La spec describe qué y por qué, sin tecnologías; el plan explica cómo y comprueba esta constitución. Registrar la aprobación en la propia spec forma parte de su ciclo SDD. Los documentos siguen el orden spec, plan y tasks, preparados juntos en el tercer momento; el código espera su revisión y la autorización del cuarto.
-
-El segundo momento solo permite las operaciones de apertura expresamente autorizadas. En el quinto, pedir revisión no autoriza publicar archivos no indicados ni hacer merge. Los ensayos con commits y push en repositorios desechables requieren permiso explícito limitado a esos ensayos, que no autoriza publicaciones del repositorio de trabajo.
-
-La sustitución del proceso requiere enmienda aprobada según §8. La entrega 008 aplica esta enmienda con aprobación explícita de spec, plan, tareas e implementación; no obliga a recrear su rama ni a publicar una PR.
+El SDD local de AsistenciApp prevalece sobre cualquier indicación del template de continuar automáticamente.
 
 ---
 
@@ -138,4 +126,4 @@ La sustitución del proceso requiere enmienda aprobada según §8. La entrega 00
 
 | 3.0 | 2026-10-23 | P4: excepción limitada para IPs de recuento y bloqueo, separadas de la asistencia | Enmienda de privacidad de la spec 006 aprobada por Jimena Durán |
 
-| 3.1 | 2026-11-02 | §4: cinco momentos humanos para issue, draft, documentos conjuntos, implementación y publicación o revisión autorizada | Separar decisiones y operaciones del proceso sin cambiar los principios ni el producto |
+| 3.1 | 2026-11-02 | §4: cinco momentos de AsistenciApp, documentos juntos y prioridad del SDD local al integrar el flujo original | Mantener el proceso del proyecto y sus principios; sin pausas entre spec, plan y tasks |

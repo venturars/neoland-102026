@@ -1,10 +1,13 @@
----
-name: assign-author
-description: Asigna la cuenta autenticada y autorizada a la issue o PR.
----
+### Herramienta: ASSIGN_AUTHOR
 
-# assign-author
+- **Descripción**: Úsala única y exclusivamente para asignar la issue o la pull request al usuario autenticado en el MCP. No la uses para asignar revisores.
+- **MCP**: El servidor remoto descrito en `MCPS/github-mcp-server/mcp.txt`.
 
-La llama el agente de issue o PR tras el alta si falta la asignación. Relee asignaciones y añade solo la cuenta comprobada, conservando las existentes. Alternativa gh: `gh issue edit $number --repo $repository --add-assignee $login` o `gh pr edit $number --repo $repository --add-assignee $login`. Relee el resultado. No usa permisos de escritura para probar acceso.
+#### Especificación de Argumentos
 
-Lee docs/GIT-AUTOMATION.md: identidad, repositorio, autorizaciones y relectura del estado remoto antes de reintentar. Prefiere MCP compatible; si no sirve, explica el motivo y usa gh autenticado sin cambiar credenciales. No imprimas secretos ni inventes resultados.
+1. **Objetivo** _(Obligatorio)_: El número de la issue o de la pull request.
+2. **Persona** _(Obligatorio)_: El login del usuario autenticado. No escribas otro nombre.
+
+#### Reglas de Invocación Críticas
+
+- **Procesamiento de respuestas**: Confirma el login que quedó asignado. Si el MCP falla, comunica el error y no inventes el autor.

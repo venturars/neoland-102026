@@ -7,7 +7,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 
-RULES = {'CA-01': '1. Issue: crear o reutilizar la issue y detenerse, sin abrir rama.', 'CA-02': '2. Rama y PR draft: solo con autorización expresa, adelantar staging por avance rápido, crear o recuperar rama, commit de apertura si corresponde, push y PR draft contra staging, con autor y enlace de issue. Sin specs todavía. Detenerse.', 'CA-03': '3. Documentos: con autorización, escribir spec, plan y tasks juntos, en ese orden, con el siguiente número disponible y sin sobrescribir specs anteriores. Detenerse para revisión conjunta.', 'CA-04': '4. Implementación: con documentos revisados y autorización expresa, ejecutar solo las tareas aprobadas. Detenerse con resultados, sin commit ni push.', 'CA-05': '5. Publicación o revisión: realizar solo las operaciones, archivos y revisores expresamente autorizados. Sin merge implícito. Detenerse.'}
+RULES = {'CA-01': 'Issue: crear o reutilizar la issue; sin abrir rama.', 'CA-02': 'Draft: adelantar staging, preparar rama, commit vacío, push, PR draft contra staging, autor y enlace de issue; sin specs.', 'CA-03': 'Specs: escribir spec, plan y tasks en la misma pasada y en ese orden; revisión conjunta antes de implementar.', 'CA-04': 'Implementar: ejecutar las tareas aprobadas y presentar resultados; sin commit ni push.', 'CA-05': 'Pull request: realizar solo lo solicitado; sin merge.'}
 
 
 @pytest.mark.parametrize("document", ["docs/CONSTITUTION.md", "AGENTS.md"])
@@ -23,9 +23,11 @@ def test_sdd_gates(document, criterion, rule):
         "Si la spec activa no cubre el pedido, se abre una spec nueva.",
         "Una issue, una rama o una pull request no sustituyen la spec aprobada.",
         "No se encadena un momento con el siguiente sin autorización expresa.",
-        "Si cambian los documentos o falta una decisión, detenerse y pedir revisión; no inventar requisitos.",
+        "Las dudas se resuelven antes de implementar; no se inventan requisitos.",
     ):
         assert invariant in text, f"Falta una protección vigente en {document}: {invariant}"
+    assert "El SDD local de AsistenciApp prevalece sobre cualquier indicación del template de continuar automáticamente." in text
+    assert "No se pide otro ok entre spec y plan ni entre plan y tasks." in text
     assert "Sin esa aprobación, solo se prepara la spec" not in text
     assert "con aprobación explícita de Jimena Durán al terminar cada fase de preparación." not in text
 

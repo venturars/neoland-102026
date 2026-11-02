@@ -1,101 +1,119 @@
 Issue: #751
 
-# Plan de automatización y SDD de cinco momentos
+# Plan de corrección: integrar el flujo original
 
-Estado: spec, plan y T01–T55 aprobados; implementación, enmienda 3.1 y publicación completadas con autorización expresa. [PR draft #756](https://github.com/venturars/neoland-102026/pull/756) contra staging, sin revisores ni merge. Resultados en [verification.md](verification.md).
+Estado: spec, plan y C01–C20 aprobados conjuntamente; implementación y comprobaciones locales completadas, incluido §4 y enmienda 3.1. Resultados en [verification-original-gitflow.md](verification-original-gitflow.md). C19 autorizado para commits y push exclusivamente en repositorios desechables con remoto local, sin otro permiso. Rutas relativas a AsistenciApp salvo la fuente indicada.
 
-## Estado inicial y alcance
+## Referencias fijadas y estado inicial
 
-Rama exclusiva: `751-chore-asistenciapp-git-five-stages`, desde `50094711`. Fuente: `exercises/git-workflow-agent-template` en ese commit de origin/staging; última modificación del template: `25208d23`. No actualizar esta referencia silenciosamente durante la implementación.
+- Fuente de verdad: `exercises/git-workflow-agent-template` en `origin/staging`, commit `6db669aac7c0811c966ba7ba9bc4fc7e3ae6e953`, consultado tras fetch.
+- Último commit que modifica el template: `25208d23157626954906ffe7da32757c58d9a66e`. No hay cambios del template entre la anterior referencia `50094711` y la actual: el desvío está en la adaptación.
+- Entrega revisada: `25a2858920c3eda5f46a199c7b9d11cfeee031c6`, rama existente `751-chore-asistenciapp-git-five-stages`. La PR #756 está abierta y lista para revisión; no se cambia su estado remoto en esta preparación.
+- La referencia documental de AsistenciApp se contrastó en el mismo commit: cinco momentos en AGENTS y §4 de la constitución 3.1. Se compara también con la constitución local 3.0 anterior a esta entrega, conservando los principios propios.
+- Git Bash instalado: Bash 5.3.15. Se comprobó con `bash --version`; no se instaló software ni se ejecutaron las herramientas de la entrega.
 
-Al preparar el plan faltaban agents, skills, tools, templates y MCPS. Esos componentes y la documentación necesaria ya están incorporados y adaptados al entorno actual. El código de asistencia, las pantallas, las pruebas funcionales, las specs anteriores y los datos permanecen intactos. No cambian modelo de datos, tablas, rutas HTTP, API, dependencias, credenciales o configuración personal.
+La revisión completa comprende los 53 archivos de la PR: 44 en las cinco carpetas de automatización y 9 entre instrucciones, documentación, prueba SDD y documentos de la 008.
 
-Las rutas siguientes son relativas a AsistenciApp. El código de referencia son los siete scripts del template; las comprobaciones existentes del proceso están en `tests/test_sdd_rules.py`.
+| Componente | Diferencia frente a la fuente fijada | Corrección propuesta |
+| --- | --- | --- |
+| `tools/` | Faltan los siete originales; hay ocho herramientas propias y un ensayo PowerShell | Incorporar los siete originales y retirar los nueve archivos propios |
+| `agents/` | Los siete archivos fueron reescritos | Restaurar originales; añadir solo referencias necesarias al SDD local |
+| `skills/` | Las quince skills fueron reescritas | Restaurar originales; adaptar únicamente las siete rutas de comandos |
+| `templates/` | Las doce plantillas coinciden en sus blobs Git | Conservarlas |
+| `MCPS/` | La referencia fue sustituida por texto propio | Restaurar el original; documentar las condiciones locales fuera de él |
+| `AGENTS.md`, constitución y arquitectura | Cinco momentos compatibles en intención, con redacción y reglas propias extensas | Mantener el SDD de AsistenciApp y reducir la integración al contenido necesario |
+| `docs/GIT-AUTOMATION.md` | Describe una interfaz y garantías PowerShell ajenas al original | Sustituir por uso de los originales mediante Git Bash y sus límites reales |
+| `tests/test_sdd_rules.py` | Fija literalmente la redacción extensa de esta entrega | Ajuste mínimo si cambia esa redacción; conservar cobertura e invariantes |
+| Documentos de la 008 | Describen como objetivo la implementación equivalente | Estos tres documentos proponen su corrección; evidencia anterior intacta |
 
-## Archivos afectados
+## Copia de los originales y diferencias permitidas
 
-| Archivos                              | Cambio previsto                                                                                                                                                                                                                                                                                                                                      |
-| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AGENTS.md`                           | Integrar entrada al orquestador, cinco momentos, lectura explícita de skills, límites de autorización y estado de la 008. Conservar reglas de código y del producto; sustituir solo las instrucciones incompatibles del proceso.                                                                                                                     |
-| `docs/CONSTITUTION.md`                | Proponer y, solo tras autorización, aplicar la enmienda de §4 y su versión; conservar P1–P6 y el resto de obligaciones.                                                                                                                                                                                                                              |
-| `docs/ARCHITECTURE.md`                | Añadir agents, skills, tools, templates y MCPS al árbol y explicar su separación de la aplicación.                                                                                                                                                                                                                                                   |
-| `docs/GIT-AUTOMATION.md`              | Nueva guía breve de PowerShell, autorizaciones, seguridad, MCP con alternativa gh y limitaciones de verificación. No modificar el README funcional.                                                                                                                                                                                                  |
-| `agents/`                             | Incorporar `git-workflow-agent.md`, `help-me-to-think.md`, `create-issue.md`, `create-branch.md`, `create-commit.md`, `launch-push.md` y `create-pr.md`.                                                                                                                                                                                             |
-| `skills/<nombre>/SKILL.md`            | Incorporar las quince skills del template: assign-author, assign-reviewers, check-status, commit-changes, create-branch, create-branch-from-staging, create-draft, create-empty-commit, create-issue, create-pr-base-staging, grill-me, grill-with-docs, launch-push, link-pr-to-issue y pull-changes. Adaptar comandos y límites al flujo aprobado. |
-| `tools/`                              | Crear los equivalentes `.ps1` de check-status, pull-changes, create-branch-from-staging, create-branch, create-empty-commit, commit-changes y launch-push; compartir únicamente los controles necesarios en `git-common.ps1`.                                                                                                                        |
-| `templates/issues/`                   | Incorporar `{feat,fix,docs,refactor,test,chore}_issue.md`, iguales a la fuente fijada.                                                                                                                                                                                                                                                               |
-| `templates/pull-request/`             | Incorporar `{feat,fix,docs,refactor,test,chore}-pull-request.md`, iguales a la fuente fijada.                                                                                                                                                                                                                                                        |
-| `MCPS/github-mcp-server/mcp.txt`      | Referencia de conexión y capacidades, sin tokens ni instrucciones que sobrescriban configuración personal o presupongan otro cliente.                                                                                                                                                                                                                |
-| `tests/test_sdd_rules.py`             | Ajustar únicamente las verificaciones de las puertas SDD y de la versión constitucional; conservar cobertura, ámbito personal e integridad de specs y sus casos de saltos de línea.                                                                                                                                                                  |
-| `tools/tests/test-git-automation.ps1` | Comprobaciones específicas de esta automatización, aisladas de los datos de la aplicación y sin mutaciones remotas de prueba.                                                                                                                                                                                                                        |
-| `specs/008-flujo-git-cinco-momentos/` | Mantener aprobación y estados; preparar tasks solo después de aprobar este plan. Registrar resultados reales en `verification.md` durante la implementación autorizada.                                                                                                                                                                              |
+Copiar desde el objeto Git fijado, sin convertir extensiones ni editar el código:
 
-## Flujo y enmienda propuesta
+- `tools/check-status.sh`
+- `tools/pull-changes.sh`
+- `tools/create-branch-from-staging.sh`
+- `tools/create-branch.sh`
+- `tools/create-empty-commit.sh`
+- `tools/commit-changes.sh`
+- `tools/launch-push.sh`
 
-La enmienda prevista es 3.0 → 3.1: modifica el proceso de §4, sin eliminar ni contradecir principios del producto. Actualizar versión y fecha de aplicación y añadir únicamente el motivo de esta enmienda según §8; conservar las entradas existentes, sin añadir nombres ajenos, rutas personales ni historial de incidencias.
+Cada archivo conservará contenido LF, nombre y estructura originales. La fuente tiene modo Git `100755`; se conservará al preparar una publicación autorizada. En Windows puede invocarse Bash explícitamente sin alterar el índice para esta preparación.
 
-El nuevo §4 y AGENTS expresarán las mismas cinco puertas:
+Retirar `tools/{check-status,pull-changes,create-branch-from-staging,create-branch,create-empty-commit,commit-changes,launch-push,git-common}.ps1` y `tools/tests/test-git-automation.ps1`. No conservar un helper o ensayo propio como sustituto del original.
 
-1. **Issue:** concretar, crear o reutilizar y detenerse, sin abrir rama.
-2. **Rama y draft:** con autorización expresa del momento y de sus operaciones de publicación, actualizar staging por avance rápido, crear o recuperar rama, preparar el commit de apertura cuando corresponda, publicar y crear o reutilizar PR draft contra staging, asignar autor y enlazar issue. Detenerse sin specs.
-3. **Documentos:** con autorización, escribir spec, plan y tasks en la misma pasada, en ese orden, usando el siguiente número disponible; detenerse para su revisión conjunta.
-4. **Implementación:** exigir documentos revisados y autorización expresa; ejecutar solo las tareas aprobadas y detenerse con resultados, sin commit ni push.
-5. **Publicación o revisión:** realizar únicamente las operaciones, archivos y revisores autorizados; no implica merge ni otro momento.
+Restaurar los siete agentes, las quince skills y `MCPS/github-mcp-server/mcp.txt` desde la misma fuente. El texto original será la base; no se reescribirá para reproducir el comportamiento anterior. Cambios permitidos:
 
-Se conservan la spec aprobada antes de modificar código o pruebas, una nueva spec para alcance no cubierto, la prohibición de inventar requisitos y la obligación de detenerse si cambian los documentos. Issue, rama y PR no autorizan implementación. No habrá un permiso global implícito de commit o push.
+1. En las siete skills de terminal, sustituir únicamente `./tools/` por `./staff/jimena-duran/asistenciapp/tools/`; los comandos se ejecutan desde la raíz Git.
+2. En el orquestador, añadir una referencia breve a `../AGENTS.md`, `../docs/CONSTITUTION.md` y la guía local, que delimitan el momento solicitado y el SDD propio. Las rutas de agents y skills se resuelven dentro de esta aplicación.
+3. Documentar Git Bash ya disponible y la alternativa gh cuando MCP no tenga la capacidad o identidad adecuada. La referencia MCP y sus ejemplos no autorizan instalar skills, modificar conexiones, headers, tokens o configuración personal.
 
-**Transición de esta entrega:** se revisaron spec, plan y tareas por separado bajo el SDD anterior. Después se autorizó expresamente implementar y aplicar la enmienda 3.1, ahora vigente. La autorización de ensayos permitió commits y push solo en repositorios desechables con remoto local. La publicación del repositorio de trabajo se autorizó después y se realizó en la rama existente, sin recrear documentos: PR draft contra staging, sin revisores ni merge.
+Las doce plantillas y el fichero MCP quedarán iguales a la fuente. No se fijan OWNER/REPO ni se amplían reglas de tipos. No se trasladan a los originales los controles extra de las herramientas retiradas.
 
-## Adaptación a PowerShell y seguridad
+## SDD propio y enmienda
 
-- Compatibilidad con Windows PowerShell 5.1. Resolver la ubicación con `$PSScriptRoot` y la raíz con `git rev-parse`; invocaciones desde raíz o aplicación, rutas literales y argumentos separados, incluidos arrays reales de archivos. UTF-8 y comprobación explícita de `$LASTEXITCODE`; restaurar directorio y variables temporales incluso al fallar. No depender de Bash ni instalar herramientas.
-- Interfaz prevista: `create-branch-from-staging.ps1 -Issue -Type -Description`, `create-branch.ps1 -Base -Issue -Type -Description`, `create-empty-commit.ps1 -Issue -ExpectedBranch`, `commit-changes.ps1 -Message -Paths -ExpectedBranch` y `launch-push.ps1 -ExpectedBranch`. Estado y actualización de staging no requieren parámetros. Un nombre explícito autorizado puede pasarse con `-BranchName`.
-- Tipos y forma editorial remiten a las plantillas. Si falta una, usar la más cercana, sin imponer una lista fija, exigir plantillas para generar un nombre ni introducir reglas de renombrado. Mantener validación del número, descripción y referencia Git, y la regla independiente de mensajes convencionales de commit.
-- Antes de mutar, comprobar rama, índice, cambios versionados, conflictos, operaciones pendientes y otros worktrees. Los archivos sin seguimiento no bloquean por sí solos; conservarlos y dejar que Git rechace colisiones reales. Usar `--no-overwrite-ignore` al cambiar de rama o avanzar staging.
-- Adelantar staging solo tras comprobar ascendencia, preservando la rama actual. Si staging está en otro worktree, hay divergencia o colisión, informar y detenerse. Sustituir el avance forzado del template por una actualización condicional al valor anterior, tras verificar el avance rápido. Recuperar ramas existentes sin reemplazar sus commits; no integrar otras ramas automáticamente.
-- Commits selectivos mediante índice temporal y lista explícita de archivos relativos a la raíz; rechazar directorios, opciones y comodines. Conservar el índice ajeno y bloquear hooks activos para revisión, sin ejecutarlos ni desactivarlos. Commits y publicación verifican `-ExpectedBranch` y bloquean main/staging. Nunca reset destructivo, clean, stash automático ni push forzado.
-- Un proceso con `-ExecutionPolicy Bypass` solo se usará si es necesario y está permitido; no cambiar la política global ni eludir una política administrada. La autorización de implementación incluyó commits y push exclusivamente en repositorios desechables con remoto local para comprobar esta automatización; el permiso no se extiende al repositorio de trabajo ni a GitHub.
+La enmienda 3.0 → 3.1 de esta entrega ya fue autorizada y aplicada en su rama. Se ha autorizado corregir su redacción dentro de esa misma entrega, sin cambiar P1–P6, stack, calidad, seguridad, ámbito o aprobación de enmiendas.
 
-## Agentes, plantillas y acceso remoto
+El contraste con la referencia de AsistenciApp muestra que bastan las reglas de §4 siguientes, junto con los cinco momentos en AGENTS:
 
-El orquestador transmite momento, issue, rama, archivos permitidos y prohibiciones a agentes reales. Lee las skills por ruta, sin asumir su autodetección; si no puede delegar, informa y se detiene. Las preguntas vuelven a la persona responsable y cada momento termina antes de iniciar el siguiente.
+1. Ningún fichero de la app se modifica sin spec, plan y tareas que cubran el cambio. La issue, rama o PR no autorizan por sí solas implementar; un cambio no cubierto requiere su spec.
+2. Orden spec → plan → tareas → implementación. La persona interviene en issue, draft, los tres documentos juntos, implementación y lo solicitado sobre la PR. No se encadenan momentos ni se pide otro ok entre spec y plan o entre plan y tareas.
+3. La spec describe qué y por qué, sin tecnologías.
+4. El plan explica cómo y comprueba la constitución.
+5. Las dudas se resuelven antes de implementar; no se inventan requisitos.
 
-Las doce plantillas mantienen comentarios y reglas editoriales. Create-pr usa el título de la issue, base staging, draft y casillas sin marcar; retira el marcador `Closes #` antes del alta. El orquestador escribe después una única línea con el número real, conserva el resto del cuerpo y relee Development por separado. Comprueba la rama predeterminada y no promete cierre al fusionar en staging si no es la predeterminada.
+AGENTS conservará esos cinco momentos: issue sin rama; apertura del draft sin specs; documentos juntos para revisión; implementación sin commit ni push; actuación expresamente solicitada sobre la PR sin merge. El flujo original se lee desde una referencia breve en las instrucciones, sin trasplantar otro SDD ni crear pausas adicionales. Se conservan las reglas de código y del producto ajenas a esta corrección.
 
-Comprobar identidad y repositorio a partir de origin antes de escribir; preferir MCP compatible y conservar gh autenticado como alternativa, explicando el motivo. Buscar recursos existentes y, ante respuesta incierta, releer el estado remoto antes de reintentar o cambiar de vía. Usar archivos temporales UTF-8 para cuerpos con gh; no interpolar el contenido como código. En Windows comprobar acceso al almacén de credenciales antes de interpretar un 401 como credencial inválida, sin imprimir secretos.
+Se mantienen versión 3.1 y fecha real local de su aplicación; no se copia la fecha ni la historia de otro proyecto. Solo se ajustaría §4 y el texto necesario de su entrada de enmienda. No se añade una nueva entrada constitucional por iniciativa del agente.
 
-No copiar instrucciones de configuración personal ni llamadas GraphQL del template sin verificar su contrato y soporte. Conservar vínculos existentes y verificar cuerpo y Development de forma independiente; si falta capacidad, informar del límite sin inventar un enlace. Asignar revisores solo cuando se indiquen y nunca cerrar issues ni hacer merge implícito.
+En `tests/test_sdd_rules.py` solo cambiarán las expectativas de texto afectadas por esta redacción. Se mantendrán comprobaciones de cinco momentos y orden, documentos antes de código, cambio no cubierto, ausencia de autorización implícita, dudas e integridad del proceso. Ámbito, integridad histórica, casos de saltos de línea y todas las pruebas funcionales se conservarán.
+
+## Clasificación de todos los comentarios
+
+Se leyeron dos comentarios generales, tres revisiones y ocho hilos inline, sin páginas pendientes. Las categorías siguientes describen el resultado esperado de la corrección, no conversaciones resueltas en GitHub.
+
+| Comentario | Clasificación | Contraste y tratamiento propuesto |
+| --- | --- | --- |
+| General [6583764639](https://github.com/venturars/neoland-102026/pull/756#issuecomment-6583764639): herramientas originales | Aplicable todavía | Recuperar los siete archivos originales, sin traducción |
+| General [6584384168](https://github.com/venturars/neoland-102026/pull/756#issuecomment-6584384168): copia fiel, rutas y SDD del proyecto | Aplicable todavía | Corrección de las cinco carpetas y enmienda mínima descritas arriba |
+| Revisión [5739893617](https://github.com/venturars/neoland-102026/pull/756#pullrequestreview-5739893617): extensión de herramientas | Aplicable todavía | Incorporar originales `.sh`, no renombrar los `.ps1` |
+| Revisión [5739152733](https://github.com/venturars/neoland-102026/pull/756#pullrequestreview-5739152733): resumen de ocho observaciones | Aplicable todavía | Sus ocho puntos quedan desglosados a continuación; no añade un noveno problema |
+| Revisión [5739302593](https://github.com/venturars/neoland-102026/pull/756#pullrequestreview-5739302593): aprobación de la versión revisada | Aplicable todavía como estado de revisión | No pide cambio de código ni acredita aprobación de esta propuesta |
+| Inline [4444399101](https://github.com/venturars/neoland-102026/pull/756#discussion_r4444399101): URL con credenciales | Resuelto al retirar código propio | `check-status.sh` muestra upstream y contadores, no la URL de origin |
+| Inline [4444399187](https://github.com/venturars/neoland-102026/pull/756#discussion_r4444399187): directorio versionado eliminado | Presente también en la fuente | `commit-changes.sh` solo comprueba `-d` sobre el árbol de trabajo; un directorio ya borrado puede pasar y seleccionar descendientes |
+| Inline [4444399296](https://github.com/venturars/neoland-102026/pull/756#discussion_r4444399296): carrera en avance de staging | Presente también en la fuente | Comprueba ascendencia con referencias y después usa `git branch -f staging origin/staging`; no fija y compara los mismos SHA |
+| Inline [4444399373](https://github.com/venturars/neoland-102026/pull/756#discussion_r4444399373): variables Git heredadas en el ensayo | Resuelto al retirar código propio | Se retira ese ensayo; no se afirma que los originales aíslen todas esas variables |
+| Inline [4444399445](https://github.com/venturars/neoland-102026/pull/756#discussion_r4444399445): revisores antes de salir de draft | Presente también en la fuente | La skill original dice asignar logins y sacar de draft, sin imponer la transición previa solicitada en el comentario |
+| Inline [4444399524](https://github.com/venturars/neoland-102026/pull/756#discussion_r4444399524): fallo después del commit al sincronizar borrado preparado | Presente también en la fuente | El original termina con `git add -- "$@"`; una ruta eliminada de HEAD y del índice puede fallar igualmente, aunque no use `git restore` |
+| Inline [4444399596](https://github.com/venturars/neoland-102026/pull/756#discussion_r4444399596): etiquetas implícitas en push | Presente también en la fuente | `git push -u origin HEAD` no desactiva `push.followTags` |
+| Inline [4444399653](https://github.com/venturars/neoland-102026/pull/756#discussion_r4444399653): colisiones mezcladas en ensayo | Resuelto al retirar código propio | Se retira el ensayo propio; no se conserva esa afirmación como prueba de los originales |
+
+Los cinco puntos presentes en la fuente se señalan antes de cualquier divergencia. Se propone incorporar los originales sin arreglarlos localmente. La retirada de código propio tampoco equivale a haber validado las garantías de su sustituto. No se responderá a comentarios ni se resolverán hilos durante esta preparación.
+
+## Archivos de la corrección y comprobaciones previstas
+
+Al implementar se tocarían las cinco carpetas indicadas, `AGENTS.md`, `docs/CONSTITUTION.md`, `docs/ARCHITECTURE.md`, `docs/GIT-AUTOMATION.md` y solo las expectativas SDD necesarias de `tests/test_sdd_rules.py`. Sin cambios en app.py, asistencia, static, README funcional, dependencias, datos, specs anteriores ni otros proyectos.
+
+1. Comparar los siete scripts con los blobs fijados, comprobar LF y nombres; modo ejecutable y blobs de los siete scripts comprobados antes del commit de publicación. Pasar `bash -n` sobre los siete.
+2. Contrastar agentes, quince skills, doce plantillas y MCP; cada diferencia debe corresponder exclusivamente a las rutas y referencias enumeradas. Recorrer selección y alternativa de plantilla en lectura.
+3. Ejecutar `check-status.sh` mediante Git Bash desde la raíz y desde una copia temporal con ruta con espacios. No ejecutar scripts de mutación sobre el repositorio de trabajo.
+4. Proponer ensayos de los contratos originales en repositorios desechables con remoto local: actualización por avance rápido y divergencia; recuperación de ramas local/remota y otra base; apertura vacía; commit selectivo con índice ajeno; push y upstream. Sin exigir controles extra ausentes de la fuente. C19 ya está autorizado, incluidos commits y push exclusivamente en esos repositorios desechables con remoto local; no necesita otra aprobación.
+5. Ejecutar únicamente las comprobaciones SDD afectadas con el intérprete existente: `python -m pytest tests/test_sdd_rules.py -k "sdd_gates or constitution_amendment"`. Conservar y no repetir pruebas funcionales ajenas al cambio.
+6. Comprobar diff, espacios, hashes protegidos y referencias de la rama pausada. Registrar evidencia nueva en `verification-original-gitflow.md` dentro de esta spec, separada de `verification.md`, que permanece intacto.
+
+Los resultados de las verificaciones de los originales se registran en [verification-original-gitflow.md](verification-original-gitflow.md). Los resultados PowerShell anteriores no se trasladan a Bash ni demuestran corrección de los puntos señalados en la fuente.
 
 ## Comprobación de la constitución
 
-- **P1:** no se modifican integraciones ni independencia de la plataforma de clase.
-- **P2:** adaptación localizada del template, sin reorganizar ni abstraer la aplicación.
-- **P3:** ninguna dependencia nueva ni cambio de versión; usar Git, PowerShell, pytest y herramientas ya disponibles. No instalar nada automáticamente.
-- **P4:** no abrir bases personales ni transmitir datos de asistencia. Repositorios y datos de ensayo son desechables.
-- **P5:** no se modifica la interfaz ni su accesibilidad.
-- **P6:** documentación, cuerpos y mensajes dirigidos a la persona en español; títulos y convenciones de Git según los comentarios de las plantillas.
-- **§5:** cada CA tiene comprobación indicada abajo. Ejecutar pytest solo sobre las pruebas del SDD afectadas y comprobar la automatización; las pruebas funcionales inalteradas no se repiten por el alcance solicitado. No afirmar que se ejecutó la suite completa.
-- **§6:** autenticación de la aplicación, códigos, sesiones, entradas y seguridad de asistencia permanecen intactos.
-- **§4 y §8:** la preparación respetó las aprobaciones separadas vigentes. La enmienda 3.1 se aplicó después de autorizar expresamente su implementación; la aprobación de documentos no equivale a publicar.
-- **§7:** todos los cambios de esta entrega permanecen dentro de AsistenciApp.
+- P1, P4 y P5: producto, privacidad, datos e interfaz sin cambios.
+- P2: copia de la fuente, sin nueva implementación ni abstracciones.
+- P3: Git Bash ya existe; ninguna instalación, dependencia o cambio de versión.
+- P6: documentación del proyecto en español y convenciones originales de Git conservadas.
+- §4 y §8: ajuste mínimo de la enmienda expresamente aprobado para su aplicación; se mantienen los cinco momentos propios.
+- §5: comprobaciones específicas de lo afectado, sin presentar revisión estática ni pruebas anteriores como ejecución de los originales.
+- §6: seguridad funcional intacta; las limitaciones del flujo original se declaran sin inventar garantías.
+- §7: corrección limitada a los archivos enumerados de AsistenciApp.
 
-## Comprobaciones tras autorizar tareas e implementación
+## Pausa
 
-| Criterios          | Comprobación prevista                                                                                                                                                                                                                                                                                                                                    |
-| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| CA-01–CA-05, CA-08 | Adaptar `test_sdd_gates` para verificar las cinco puertas, su orden, pausas y permisos en AGENTS y constitución. Conservar las invariantes que siguen vigentes: spec aprobada para implementar, nueva numeración, dudas y ausencia de autorización implícita. Recorrer los agentes en lectura; diferenciar esa revisión estática de una ejecución real.  |
-| CA-06              | Comparar contenido de las doce plantillas con la fuente fijada; verificar selección para seis tipos y uno sin plantilla, secciones, casillas y retirada del marcador. Buscar referencias genéricas y reglas editoriales duplicadas en componentes operativos, sin reescribir specs anteriores.                                                           |
-| CA-07              | Parser de los `.ps1`, ejecución de estado desde raíz y aplicación y ruta con espacios. Generar nombres con tipo sin plantilla y nombre explícito; rechazar números, descripciones y referencias inseguros y ramas protegidas. Comprobar controles de índice, hooks, worktrees y códigos nativos.                                                         |
-| CA-07              | Ensayar avance rápido, divergencia, ramas existentes, colisiones con archivos ignorados y sin seguimiento y conservación del índice en repositorios temporales con remoto local. La autorización de implementación incluyó los commits y push exclusivamente en esos repositorios desechables. No se ejecutan contra el repositorio de trabajo o GitHub. |
-| CA-08–CA-09        | Ajustar `test_constitution_amendment` para la versión aprobada y su nueva entrada, conservando las entradas e invariantes anteriores. No borrar, saltar ni relajar verificaciones para obtener verde. Mantener intactos los tests de ámbito e integridad histórica y todas las pruebas funcionales.                                                      |
-| CA-10              | Revisar diff y hashes contra la base de archivos funcionales, pruebas funcionales, specs anteriores y datos locales; no ejecutar ejemplos ni abrir bases reales. Solo los archivos previstos pueden cambiar.                                                                                                                                             |
-
-Ejecutar las comprobaciones de SDD afectadas mediante el intérprete existente del entorno de la aplicación: `python -m pytest tests/test_sdd_rules.py -k "sdd_gates or constitution_amendment"`. Ampliar esa selección únicamente para casos nuevos del SDD previstos en las tareas, conservando las comprobaciones restantes sin volver a ejecutarlas si son ajenas al cambio.
-
-El ensayo específico de PowerShell vivirá en `tools/tests/test-git-automation.ps1`; separará comprobaciones de lectura y validación de las mutaciones limitadas a repositorios desechables, incluidas en la autorización de implementación. No creará issues, PR ni solicitudes de revisión para probar el flujo. Antes de publicar realmente se verificará el estado remoto, solo cuando exista autorización para esa publicación.
-
-Revisar formato de los documentos afectados, enlaces y `git diff --check`, incluidos archivos nuevos. Registrar comandos, resultados, límites y pendientes en `verification.md`, sin reutilizar resultados de otras entregas como evidencia de esta. La evidencia de implementación se registra separando pruebas ejecutadas y revisión estática; no se presentan escrituras remotas o recorridos reales de agentes no realizados como comprobados.
-
-## Revisión pendiente
-
-Implementación, enmienda 3.1 y publicación autorizada completadas. El diff se limita a los 53 archivos aprobados de AsistenciApp; los archivos y datos protegidos no cambiaron. La PR permanece en draft contra staging, con cuerpo y Development verificados por relectura, sin revisores ni merge. Los resultados y límites se registran sin repetir pruebas satisfactorias.
+Presentar comparación, pruebas y pendientes al terminar la implementación aprobada. No corregir localmente los cinco puntos presentes en la fuente. Publicación selectiva de la corrección autorizada en la misma rama y PR #756, con siete scripts en modo Git 100755 y blobs idénticos a la fuente. Conservar Closes #751 y Development; sin respuestas a comentarios, resolución de conversaciones, cambios de revisores ni merge.

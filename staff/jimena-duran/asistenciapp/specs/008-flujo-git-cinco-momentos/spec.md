@@ -1,43 +1,47 @@
 Issue: #751
 
-# Flujo de cambios con cinco momentos humanos
+# Integración del flujo de Git original en AsistenciApp
 
-Estado: spec, plan y T01–T55 aprobados; implementación, enmienda 3.1 y publicación completadas con autorización expresa. [PR draft #756](https://github.com/venturars/neoland-102026/pull/756) contra staging, sin revisores ni merge. Resultados en [verification.md](verification.md).
+Estado: spec, plan y C01–C20 aprobados conjuntamente. Corrección implementada y comprobada localmente, incluido el ajuste de §4 y enmienda 3.1; pendiente revisión humana. Trabajo independiente pausado e intacto; resultados nuevos por separado.
 
 ## Problema
 
-La persona responsable necesita gestionar los cambios de AsistenciApp mediante cinco momentos separados, con control explícito sobre la preparación, la implementación y la publicación. Actualmente se exige aprobar la spec, después el plan y después las tareas por separado, y esta copia todavía no incorpora la automatización del flujo de trabajo.
+La entrega incorporó herramientas e instrucciones reescritas en lugar del flujo de referencia. Se necesita integrar los originales, manteniendo el proceso propio de AsistenciApp y mostrando las diferencias que realmente requiere su ubicación.
 
-El cambio propuesto debe evitar publicaciones no autorizadas, documentos contradictorios y pérdida de datos o trabajos ajenos. Esta actualización conserva las reglas actuales hasta aprobar y aplicar su sustitución.
+La evidencia anterior corresponde a la implementación publicada; no acredita las herramientas originales que ahora se propone incorporar.
 
 ## Usuarios
 
-- Persona responsable: decide cuándo avanzar, qué se implementa y qué se publica o se envía a revisión.
-- Agente: ejecuta únicamente el momento autorizado y presenta su resultado antes de continuar.
+- Persona responsable: revisa la comparación y autoriza la corrección antes de implementarla.
+- Agente: integra la fuente fijada y explica sus límites sin introducir mejoras propias.
 
 ## Historias de usuario
 
-- HU-01: Como responsable, quiero intervenir en cinco momentos para separar el registro del trabajo, su preparación, su implementación y su publicación.
-- HU-02: Como agente, quiero instrucciones y plantillas coherentes para preparar cada tarea sin repetir reglas ni inventar autorizaciones.
-- HU-03: Como responsable, quiero conservar el comportamiento de la aplicación, sus pruebas y mis datos mientras cambia el proceso de trabajo.
+- HU-01: Como responsable, quiero conservar los cinco momentos de AsistenciApp sin nuevas pausas entre los documentos.
+- HU-02: Como responsable, quiero reconocer el flujo original y sus archivos, con una adaptación mínima y verificable.
+- HU-03: Como responsable, quiero conservar la aplicación, sus datos, pruebas, evidencias y trabajos independientes.
 
 ## Criterios de aceptación
 
-- **CA-01 (HU-01)** — Dada una tarea nueva, cuando se autoriza el primer momento, entonces se crea o reutiliza su issue y se detiene el flujo, sin abrir la rama ni encadenar el siguiente momento. Si hace falta concretarla, las preguntas se resuelven aquí.
-- **CA-02 (HU-01)** — Dada una issue y la autorización expresa del segundo momento, cuando se prepara el trabajo, entonces se actualiza staging solo por avance rápido, se crea o recupera la rama y se abre o reutiliza su PR draft contra staging con la persona asignada y una única referencia de cierre real. Se realizan únicamente las operaciones de publicación comprendidas en esa autorización, sin specs todavía, y se detiene el flujo.
-- **CA-03 (HU-01)** — Dado el borrador y la autorización del tercer momento, cuando se preparan los documentos, entonces se escriben spec, plan y tareas juntos, en ese orden y sin pausas intermedias, y se presentan para revisión. Se utiliza el siguiente número disponible, sin sobrescribir specs anteriores ni implementar.
-- **CA-04 (HU-01)** — Dados los tres documentos revisados y la autorización del cuarto momento, cuando se implementa, entonces se ejecuta solo el alcance aprobado y se presentan resultados y pendientes sin commit ni push. Si los documentos requieren un cambio, se detiene la implementación para revisarlo.
-- **CA-05 (HU-01)** — Dada la autorización expresa del quinto momento, cuando se publica o se pide revisión, entonces se realizan únicamente las operaciones solicitadas sobre los archivos y las personas indicadas, sin merge implícito. No se encadena otro momento automáticamente.
-- **CA-06 (HU-02)** — Dada una tarea de cualquier tipo, cuando se prepara su issue o PR, entonces se usa la plantilla actual de ese tipo o, si no existe, la más cercana. Las doce plantillas actuales son la fuente de las reglas editoriales; la PR conserva las casillas sin marcar mientras corresponde al borrador y nunca publica marcadores pendientes.
-- **CA-07 (HU-02, HU-03)** — Dados cambios locales, datos o una operación bloqueada, cuando actúa la automatización, entonces conserva el trabajo ajeno y los datos, valida la rama autorizada y comunica errores, colisiones o divergencias sin descartar, ocultar ni forzar cambios. Funciona desde el entorno habitual de trabajo sin modificar credenciales ni configuración personal; comprueba identidad y acceso y permite una alternativa autenticada cuando la vía preferida no sirve.
-- **CA-08 (HU-02)** — Dada la sustitución aprobada del proceso, cuando se aplica la enmienda correspondiente, entonces la constitución, la guía de agentes y la documentación necesaria describen los mismos cinco momentos y sus límites. Los principios del producto se conservan y las reglas del proceso anterior no quedan vigentes en paralelo.
-- **CA-09 (HU-03)** — Dadas las comprobaciones que fijan el flujo anterior y la versión de la constitución, cuando se autoriza su adaptación, entonces se ajustan únicamente las pruebas del SDD y de esa versión para verificar el proceso aprobado, conservando su cobertura y sin eliminar comprobaciones para hacerlas pasar. Las pruebas funcionales permanecen intactas.
-- **CA-10 (HU-03)** — Dada esta actualización del proceso, cuando se revisa su alcance, entonces las funcionalidades, las pruebas funcionales, los datos, las specs anteriores y los trabajos independientes mantienen su contenido. Solo se comprueba lo afectado por este cambio, sin desarrollar una funcionalidad nueva ni repetir pruebas ajenas.
+- **CA-01 (HU-01)** — Dada una tarea nueva, cuando se prepara la issue, entonces se concreta y registra el trabajo y se termina ese momento sin abrir rama.
+- **CA-02 (HU-01)** — Dado el momento de preparar el draft, cuando se autoriza su apertura, entonces se completa la secuencia de actualización, rama, apertura, publicación, borrador, asignación y enlace, sin escribir specs ni pedir permisos intermedios no previstos.
+- **CA-03 (HU-01)** — Dado el momento de documentos, cuando se preparan, entonces se escriben spec, plan y tareas en ese orden y en la misma pasada, se usa el siguiente número disponible para tareas nuevas y se presentan juntos para revisión, sin implementar.
+- **CA-04 (HU-01)** — Dados los documentos que cubren el cambio y la petición de implementar, cuando se ejecutan las tareas, entonces se entrega el resultado sin commit ni push.
+- **CA-05 (HU-01)** — Dado el momento de la pull request, cuando se pide actuar sobre ella, entonces se realiza solo lo solicitado; el proceso no implica merge ni encadena otro momento.
+- **CA-06 (HU-02)** — Dada una issue o PR, cuando se prepara su contenido, entonces se usan las doce plantillas originales actuales, su selección por tipo y la alternativa más cercana definida por la fuente, sin duplicar sus reglas editoriales.
+- **CA-07 (HU-02)** — Dada la fuente fijada, cuando se integra el flujo, entonces se conservan su estructura, nombres y herramientas originales y se retiran la implementación propia y sus ensayos. Los agentes, skills y referencia de conexión proceden de los originales; las diferencias se limitan a rutas, referencias y documentación necesarias del proyecto.
+- **CA-08 (HU-01)** — Dada la enmienda de esta entrega, cuando se corrige su redacción, entonces mantiene el SDD de AsistenciApp: issue, draft, tres documentos juntos, implementación y actuación solicitada sobre la PR. Conserva los principios del producto y no añade puertas, reglas o un SDD de otro proyecto.
+- **CA-09 (HU-03)** — Dadas las comprobaciones del SDD, cuando su redacción deba acompañar el ajuste aprobado, entonces se modifica solo lo necesario para mantener cobertura de los cinco momentos y sus invariantes, sin eliminar comprobaciones para obtener un resultado satisfactorio. Las pruebas funcionales siguen intactas.
+- **CA-10 (HU-03)** — Dada esta corrección, cuando se revise su alcance, entonces se conservan funcionalidades, datos, pruebas funcionales, specs anteriores y trabajos independientes. No se instala nada ni se modifica configuración personal.
+- **CA-11 (HU-02)** — Dados los comentarios de revisión, cuando se comparan con la fuente, entonces cada uno queda clasificado como resuelto al retirar código propio, aplicable todavía o presente también en la fuente. Lo presente en la fuente se comunica antes de introducir cualquier divergencia; esta propuesta no introduce tales arreglos.
+- **CA-12 (HU-03)** — Dadas las evidencias anteriores, cuando se comprueba la corrección, entonces permanecen intactas y los nuevos resultados se registran por separado, distinguiendo comparación, revisión estática y ejecución real.
 
 ## Fuera de alcance
 
-Cambios funcionales, pantallas, almacenamiento, datos locales, dependencias, credenciales, configuración personal y otras aplicaciones. No se reescriben specs anteriores ni se aplican las reglas de otro proyecto. La implementación se limita a los agentes, herramientas, instrucciones, documentación y comprobaciones SDD aprobados; las funcionalidades y pruebas funcionales se conservan.
+Cambios de producto, almacenamiento, dependencias, credenciales, configuración personal y otros proyectos. Mejoras de las herramientas originales, traducciones o implementaciones equivalentes, ensayos propios permanentes, respuestas o resolución de conversaciones y publicaciones no autorizadas.
 
-## Preguntas abiertas
+## Preguntas abiertas y pausa
 
-Ninguna sobre el alcance. Spec, plan y tareas, incluido CA-09, y la aplicación de la enmienda 3.1 se aprobaron expresamente. Implementación, comprobaciones y publicación selectiva completadas. La PR draft y Development se verificaron por relectura; el resultado queda para revisión, sin revisores ni merge.
+No hay una propuesta de divergencia respecto del código original. El plan señala las limitaciones presentes en la fuente para su revisión.
+
+Implementación y C19 autorizados: commits y push de ensayo exclusivamente en repositorios desechables con remoto local, sin otro permiso para esos ensayos. La publicación selectiva de la corrección está autorizada en la misma rama y PR #756. Se conserva Closes #751 y Development; sin respuestas a comentarios, resolución de conversaciones, cambios de revisores ni merge.

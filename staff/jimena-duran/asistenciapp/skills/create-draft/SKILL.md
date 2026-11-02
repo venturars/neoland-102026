@@ -1,10 +1,12 @@
----
-name: create-draft
-description: Comprueba o conserva el borrador autorizado.
----
+### Herramienta: CREATE_DRAFT
 
-# create-draft
+- **Descripción**: Úsala desde el agente `create-pr`, si la pull request ya existe se pasa a draft. No la uses para crearla ni para pedir revisión.
+- **MCP**: El servidor remoto descrito en `MCPS/github-mcp-server/mcp.txt`.
 
-La ejecuta agents/create-pr.md. Lee el estado y no repitas una transición ya aplicada. Si debe convertirse una PR existente a draft, usa MCP compatible o `gh pr ready $number --repo $repository --undo`. No la marques lista para revisión. Relee isDraft y base.
+#### Especificación de Argumentos
 
-Lee docs/GIT-AUTOMATION.md: identidad, repositorio, autorizaciones y relectura del estado remoto antes de reintentar. Prefiere MCP compatible; si no sirve, explica el motivo y usa gh autenticado sin cambiar credenciales. No imprimas secretos ni inventes resultados.
+1. **Pull request** : El número o la URL de la pull request de la rama actual.
+
+#### Reglas de Invocación Críticas
+
+- **Procesamiento de respuestas**: Si ya está en draft, no la cambies. Si está lista para revisión, devuélvela a draft. Si no existe, dilo y no crees una.

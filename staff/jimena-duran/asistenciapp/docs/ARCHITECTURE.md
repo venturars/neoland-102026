@@ -39,8 +39,8 @@ asistenciapp/
   specs/
 ```
 
-Estas carpetas contienen el flujo de desarrollo, separado de app.py, asistencia/, static/ y data/. El orquestador reconoce el momento autorizado, coordina agentes reales y lee las skills por ruta. Las herramientas PowerShell calculan la raíz del repositorio y comprueban estado, permisos y resultados nativos; no acceden al almacenamiento de asistencia.
+Estas carpetas contienen el flujo original de desarrollo, separado de app.py, asistencia/, static/ y data/. El orquestador llama al subagente o skill del momento solicitado. Los siete scripts Bash se conservan sin cambios; no acceden al almacenamiento de asistencia.
 
-Las doce plantillas por tipo son la fuente editorial de issues y PR. El agente de PR prepara el borrador contra staging sin marcador de cierre; el orquestador enlaza después la issue y verifica Development por separado. MCP es la vía preferida cuando su identidad y capacidades corresponden; gh autenticado es la alternativa. Las conexiones existentes no se modifican.
+Las doce plantillas originales son la fuente editorial de issues y PR. MCP y la alternativa gh se describen en [GIT-AUTOMATION.md](GIT-AUTOMATION.md), junto con la ejecución desde Git Bash y los límites de la copia.
 
-Los cinco momentos y sus pausas se definen en CONSTITUTION.md y AGENTS.md. La guía [GIT-AUTOMATION.md](GIT-AUTOMATION.md) explica las invocaciones y los límites. Los ensayos viven en tools/tests/ y usan repositorios desechables con remoto local; no reutilizan las bases ni los recursos de la aplicación.
+El SDD local definido en AGENTS.md y CONSTITUTION.md prevalece sobre las indicaciones de continuar automáticamente del template. La integración no incorpora ensayos propios permanentes en tools/tests/; las comprobaciones de la entrega se realizan en repositorios desechables con remoto local y resultados separados.

@@ -1,8 +1,14 @@
----
-name: launch-push
-description: Publica exclusivamente la rama autorizada sin fuerza.
----
+### Herramienta: LAUNCH_PUSH
 
-# launch-push
+- **Descripción**: Úsala única y exclusivamente para subir la rama actual a `origin` y fijar el upstream. No la uses para hacer commit. No la uses con force push.
+- **Comando de Terminal**: `./staff/jimena-duran/asistenciapp/tools/launch-push.sh`
 
-La ejecuta agents/launch-push.md con permiso expreso. Desde AsistenciApp: `& .\tools\launch-push.ps1 -ExpectedBranch $branchName`. Comprueba origin y commits salientes, bloquea main/staging y ramas distintas, no usa force. Verifica upstream y SHA con lectura remota; ante resultado incierto consulta antes de repetir. No crea commit ni PR.
+El comando se lanza desde el root del repositorio git (la carpeta que contenga el directorio .git).
+
+#### Especificación de Argumentos
+
+No recibe argumentos. Equivale a `git push -u origin HEAD`.
+
+#### Reglas de Invocación Críticas
+
+- **Procesamiento de respuestas**: Si el código de salida es 0, la rama ya está en el remoto. Si no es 0, comunica el rechazo. No vuelvas a lanzarla con `--force` ni con `-f`.

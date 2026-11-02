@@ -17,19 +17,17 @@ Si algo de lo que te piden contradice la constitución, **para y avisa** antes d
 
 ---
 
-## 2. Flujo SDD: cinco momentos humanos
+## 2. Cinco momentos de AsistenciApp
 
-El punto de entrada es [agents/git-workflow-agent.md](agents/git-workflow-agent.md). El orquestador lee skills por ruta, delega roles a agentes reales y devuelve preguntas a la persona responsable. Si no puede delegar, informa y se detiene; no presenta una simulación como agente. La guía de herramientas está en [docs/GIT-AUTOMATION.md](docs/GIT-AUTOMATION.md).
+El flujo de Git se lee en [agents/git-workflow-agent.md](agents/git-workflow-agent.md). Las rutas de agents y skills de esa copia se resuelven dentro de AsistenciApp. La [guía local](docs/GIT-AUTOMATION.md) explica cómo ejecutarlo.
 
-1. Issue: crear o reutilizar la issue y detenerse, sin abrir rama.
+El SDD local de AsistenciApp prevalece sobre cualquier indicación del template de continuar automáticamente. Al terminar cada momento, el agente se detiene. No se pide otro ok entre spec y plan ni entre plan y tasks.
 
-2. Rama y PR draft: solo con autorización expresa, adelantar staging por avance rápido, crear o recuperar rama, commit de apertura si corresponde, push y PR draft contra staging, con autor y enlace de issue. Sin specs todavía. Detenerse.
-
-3. Documentos: con autorización, escribir spec, plan y tasks juntos, en ese orden, con el siguiente número disponible y sin sobrescribir specs anteriores. Detenerse para revisión conjunta.
-
-4. Implementación: con documentos revisados y autorización expresa, ejecutar solo las tareas aprobadas. Detenerse con resultados, sin commit ni push.
-
-5. Publicación o revisión: realizar solo las operaciones, archivos y revisores expresamente autorizados. Sin merge implícito. Detenerse.
+1. Issue: crear o reutilizar la issue; sin abrir rama.
+2. Draft: adelantar staging, preparar rama, commit vacío, push, PR draft contra staging, autor y enlace de issue; sin specs.
+3. Specs: escribir spec, plan y tasks en la misma pasada y en ese orden; revisión conjunta antes de implementar.
+4. Implementar: ejecutar las tareas aprobadas y presentar resultados; sin commit ni push.
+5. Pull request: realizar solo lo solicitado; sin merge.
 
 Todo cambio de código, tests, README u otra documentación de uso requiere una spec aprobada que lo cubra.
 
@@ -39,11 +37,9 @@ Una issue, una rama o una pull request no sustituyen la spec aprobada.
 
 No se encadena un momento con el siguiente sin autorización expresa.
 
-Si cambian los documentos o falta una decisión, detenerse y pedir revisión; no inventar requisitos.
+Las dudas se resuelven antes de implementar; no se inventan requisitos.
 
-Implementar no autoriza commits ni push del repositorio de trabajo. Los ensayos desechables con remoto local solo pueden hacer esas mutaciones si están expresamente autorizadas. No hay permiso de escritura en GitHub por ejecutar pruebas. La rama, archivos y operaciones autorizados se reciben para cada tarea; no se fijan nombres de ramas personales en componentes reutilizables.
-
-Las reglas editoriales de issue y PR se consultan en las plantillas por tipo; si no existe la del tipo recibido, se usa la más cercana. No se exige una plantilla existente para generar un nombre de rama. Registrar la aprobación en la propia spec forma parte de su ciclo SDD.
+El código espera a spec, plan y tasks revisados y a la petición de implementar. Registrar la aprobación en la spec forma parte del SDD.
 
 ### 2.1 Especificar (`spec.md`)
 - Habla del usuario y del problema. **Nunca** nombra tecnologías (nada de "SQLite", "endpoint", "fetch").
@@ -152,7 +148,7 @@ Una funcionalidad está terminada cuando:
 
 | `006-limite-por-ip-publica` | Implementación aprobada el 2026-10-23; validación en curso | Límites por dirección de conexión y bloqueo persistente; sin commit, push ni PR |
 
-| `008-flujo-git-cinco-momentos` | Implementada, verificada y publicada con autorización expresa | Enmienda 3.1 aplicada; [PR draft #756](https://github.com/venturars/neoland-102026/pull/756) contra staging, sin revisores ni merge |
+| `008-flujo-git-cinco-momentos` | Corrección del flujo original implementada y comprobada localmente; pendiente revisión | SDD propio y enmienda 3.1; evidencia nueva separada; publicación selectiva de la corrección autorizada en la PR existente |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
 

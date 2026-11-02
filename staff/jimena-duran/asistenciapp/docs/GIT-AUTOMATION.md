@@ -1,52 +1,39 @@
-# Automatización de Git en AsistenciApp
+# Flujo de Git en AsistenciApp
 
-El flujo entra por [AGENTS.md](../AGENTS.md) y [agents/git-workflow-agent.md](../agents/git-workflow-agent.md). Sus cinco momentos y autorizaciones siguen [CONSTITUTION.md](CONSTITUTION.md). Cada momento termina antes del siguiente; implementación y publicación son decisiones separadas.
+El punto de entrada es [AGENTS.md](../AGENTS.md) y el orquestador está en [agents/git-workflow-agent.md](../agents/git-workflow-agent.md). El SDD local de AsistenciApp prevalece sobre cualquier indicación del template de continuar automáticamente. Se mantienen sus cinco momentos, sin permisos intermedios entre spec, plan y tasks.
 
-## PowerShell
+## Fuente y ejecución en Windows
 
-Desde AsistenciApp, la lectura de estado es `& .\tools\check-status.ps1`. Desde la raíz Git usa `& (Join-Path $appRoot 'tools/check-status.ps1')`, donde `$appRoot` es el directorio de esta aplicación comprobado en la sesión, sin una ruta personal fija. Los scripts resuelven su ubicación con `$PSScriptRoot` y `git rev-parse` y funcionan con rutas que contienen espacios.
+La copia procede de `exercises/git-workflow-agent-template` en `6db669aac7c0811c966ba7ba9bc4fc7e3ae6e953`. Los siete scripts son los originales, sin traducción ni cambios de código. Git Bash ya está instalado; no se necesita instalarlo ni cambiar PowerShell.
 
-Solo cuando la operación correspondiente está autorizada:
+Desde Git Bash, en la raíz Git, y solo para la operación solicitada:
 
-```powershell
-& .\tools\pull-changes.ps1
-& .\tools\create-branch-from-staging.ps1 -Issue $issueNumber -Type $type -Description $description
-& .\tools\create-branch.ps1 -Base $base -Issue $issueNumber -Type $type -Description $description
-& .\tools\create-empty-commit.ps1 -Issue $issueNumber -ExpectedBranch $branchName
-& .\tools\commit-changes.ps1 -Message $message -Paths $filePaths -ExpectedBranch $branchName
-& .\tools\launch-push.ps1 -ExpectedBranch $branchName
+```bash
+./staff/jimena-duran/asistenciapp/tools/check-status.sh
+./staff/jimena-duran/asistenciapp/tools/pull-changes.sh
+./staff/jimena-duran/asistenciapp/tools/create-branch-from-staging.sh NUMERO TIPO DESCRIPCION
+./staff/jimena-duran/asistenciapp/tools/create-branch.sh BASE NUMERO TIPO DESCRIPCION
+./staff/jimena-duran/asistenciapp/tools/create-empty-commit.sh NUMERO
+./staff/jimena-duran/asistenciapp/tools/commit-changes.sh "tipo: description" "ruta/al/archivo"
+./staff/jimena-duran/asistenciapp/tools/launch-push.sh
 ```
 
-`$filePaths` es un array real de archivos relativos a la raíz Git; no una cadena de nombres separados por comas. `-BranchName` solo permite un nombre explícito autorizado. Verifica los parámetros con Get-Help antes de adaptar una invocación.
+También puede invocarse el intérprete como `bash ruta/al/script.sh`. Las rutas de archivos del commit parten de la raíz Git; cada archivo es un argumento. Las siete skills de terminal contienen la ruta de esta aplicación. Los parámetros y resultados son los del original; no existen `-ExpectedBranch`, `-Paths` ni un nombre de rama explícito añadido por esta copia.
 
-Si una política local bloquea scripts, puede usarse un proceso `powershell.exe -NoProfile -ExecutionPolicy Bypass -File` para ese script cuando está permitido. No cambiar políticas globales ni eludir una política administrada. PowerShell 5.1 requiere comprobar códigos de salida nativos; las herramientas los comprueban y propagan fallos.
+Las doce plantillas originales definen forma y reglas editoriales. Agentes y skills seleccionan la del tipo o la más cercana, como indica la fuente.
 
-## Conservación y seguridad
+## SDD y acceso remoto
 
-Staging solo avanza por ascendencia comprobada; se conserva la rama actual y se bloquea un staging abierto en otro worktree. No se sustituyen commits de ramas existentes. Los cambios versionados y operaciones pendientes bloquean cambios de rama; los archivos sin seguimiento no colisionantes permanecen visibles y no se ocultan ni añaden para permitir la operación. Git rechaza colisiones reales y `--no-overwrite-ignore` protege archivos ignorados.
+Las cinco decisiones humanas están en AGENTS y §4 de la constitución. Una indicación del template de continuar sin esperar no autoriza encadenar momentos ni publicar durante la implementación. Los permisos y prohibiciones de la tarea concreta se conservan.
 
-Commits selectivos usan un índice temporal y archivos explícitos. Se preserva el índice ajeno, se rechazan ampliaciones de alcance y se detiene el commit ante hooks activos para revisión. No se ejecutan ni desactivan hooks a escondidas. La rama esperada se comprueba antes de commit o push; main y staging están bloqueadas. No hay reset destructivo, clean, stash automático ni push forzado.
+MCP es la vía de las skills originales cuando la identidad y las capacidades corresponden a la cuenta autorizada. gh autenticado es la alternativa si MCP no resulta suficiente; explicar el motivo y verificar identidad, repositorio y resultado. La skill original de enlace utiliza gh para Development y distingue ese enlace de `Closes #N`.
 
-## Plantillas y enlace
+El fichero MCP y los enlaces de instalación de las skills son referencias. Esta integración no instala skills ni modifica tokens, headers, conexiones o configuración personal. OWNER y REPO se obtienen del repositorio comprobado, sin fijar una cuenta en los componentes.
 
-Templates contiene seis plantillas de issue y seis de PR. Agentes y skills usan la del tipo o la más cercana. Sus comentarios definen título, tipo, forma de rama, cuerpo y comportamiento del draft; no se duplican esas reglas en los ejecutores ni se restringen tipos mediante una lista fija.
+## Límites de la copia original
 
-Create-pr retira la línea `Closes #` antes de crear el borrador. El orquestador deja después una única referencia real en Issue, conservando el resto del cuerpo y los vínculos existentes. Cuerpo y Development se releen por separado. Se comprueba la rama predeterminada: fusionar en staging no cierra por sí solo la issue si staging no es esa rama. No se cierran issues manualmente ni se hace merge implícito.
+Los scripts conservan exactamente su comportamiento de origen. Esta copia no añade los controles de las herramientas PowerShell retiradas. Se han señalado en el plan de la 008 cinco problemas también presentes en la fuente: directorios borrados, actualización de staging con referencias cambiantes, orden de revisores y draft, sincronización de borrados preparados y etiquetas implícitas al hacer push. No se corrigen localmente ni se afirma que estén cubiertos por garantías ausentes del original.
 
-## Identidad, acceso y reintentos
+La sintaxis y los contratos se comprueban sobre copias desechables. Commits y push de ensayo requieren autorización limitada a repositorios temporales con remoto local y no autorizan escrituras en GitHub o publicaciones del repositorio de trabajo.
 
-Comprobar herramientas disponibles, cuenta autorizada, acceso y repositorio a partir de origin. Preferir MCP compatible; si no soporta la operación o la identidad no corresponde, explicar el motivo y usar gh autenticado. La referencia de MCPS no conecta el servicio ni concede permisos. No modificar conexiones, credenciales o configuración personal, ni guardar tokens.
-
-Lecturas de gh: `gh api user --jq .login` y metadatos del repositorio comprobado. Un 401 dentro del sandbox de Windows puede deberse al acceso al almacén de credenciales; comprobar ese acceso con los permisos necesarios sin imprimir tokens antes de concluir que la sesión es inválida. No renovar autenticación automáticamente.
-
-Para toda escritura fallida o con respuesta incierta, consultar el estado remoto antes de reintentar o cambiar de vía. Buscar issues por tarea en todos los estados y PR por rama y repositorio; releer campos afectados y conservar datos ajenos. Reutilizar lo ya aplicado; reintentar solo lo confirmado como no aplicado. Si no puede determinarse, informar y detenerse. Cambiar de vía para leer no autoriza repetir una escritura.
-
-Los cuerpos enviados por gh usan archivo temporal UTF-8 con --body-file, nunca interpolación como código. Las consultas con parámetros usan variables; no se copian mutaciones GraphQL sin verificar contrato, soporte y autorización. Si Development no puede verificarse, se comunica pendiente. No se solicitan revisores salvo indicación expresa de personas y operación.
-
-## Comprobaciones
-
-`tools/tests/test-git-automation.ps1` crea repositorios desechables con remoto exclusivamente local y datos ficticios. Requiere autorización expresa para los commits y push locales de ensayo; no opera sobre el repositorio de trabajo ni GitHub. Conserva los repositorios para inspección y restaura sus variables de entorno temporales. Las autorizaciones concretas de ensayo y publicación y su estado se registran en los documentos de cada entrega.
-
-Los casos afectados del SDD se comprueban con el intérprete existente: `python -m pytest tests/test_sdd_rules.py -k "sdd_gates or constitution_amendment"`. Las pruebas funcionales y de integridad histórica se conservan; no se repiten si son ajenas al cambio.
-
-Registrar en los documentos de cada entrega las pruebas realmente ejecutadas, revisión estática, límites y pendientes por separado. No considerar un recorrido en lectura como ejecución integral de agentes o prueba de una escritura remota.
+Los resultados nuevos se registran en `specs/008-flujo-git-cinco-momentos/verification-original-gitflow.md`. La evidencia anterior permanece intacta y no valida estos scripts.
