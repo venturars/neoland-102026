@@ -18,7 +18,7 @@ first-app/
 Con `git mv`, para conservar el historial: `clients/`, `logic/`, `queries/` y `db/connection.js` pasan a `src/`.
 
 ## La base de datos
-`users.sqlite` no está en git. Como hacen maria-osipuk y jimena-duran:
+`users.sqlite` no está en git, así que se mueve a mano y con copia de seguridad:
 1. Copia de seguridad de `db/users.sqlite` en el scratchpad, fuera del repositorio, y su huella SHA-256.
 2. `mv` a mano de `db/users.sqlite` a `src/db/users.sqlite`, y de `users.sqlite-journal`, `-wal` y `-shm` si existen.
 3. Antes de ejecutar nada, la huella de `src/db/users.sqlite` coincide con la de la copia.
