@@ -82,8 +82,8 @@ Queda fuera comprobar paquetes que no son de Node, comprobar un paquete cuya ver
 ## Comandos
 
 - Ejecutar: pegar el contenido de `clients/terminal/` en la terminal, con el directorio actual en `first-app`.
-- Jupyter: `pnpm jupyter` desde `first-app` (abre Notebook sobre `clients/jupyter/`; la primera vez crea `.venv` e instala Notebook).
-- Tests: no hay tests automatizados. El script `test` de `package.json` es el placeholder de npm. El test manual son los `.txt` de `clients/terminal/` o sus notebooks en `clients/jupyter/`.
+- Jupyter: `pnpm jupyter` o `pnpm run jupyter` desde `first-app` (ejecuta `node scripts/start-jupyter.js`; abre Notebook sobre `src/clients/jupyter/`; la primera vez crea `.venv` e instala Notebook).
+- Tests: no hay tests automatizados. El script `test` de `package.json` es el placeholder de npm. El test manual son los `.txt` de `src/clients/terminal/` o sus notebooks en `src/clients/jupyter/`.
 - Lint/formato: `pnpm format` lanza Prettier. El formato es el estándar, sin configuración propia. `pnpm lint` lanza ESLint.
 - Dependencias: se instalan con pnpm, no con npm.
 

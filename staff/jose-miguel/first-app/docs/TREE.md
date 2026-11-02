@@ -6,7 +6,7 @@ first-app/
   package.json
   eslint.config.js
   scripts/
-    jupyter.sh
+    start-jupyter.js
   src/
     db/
       connection.js
@@ -55,6 +55,10 @@ first-app/
         plan.md
         tasks.md
       user-lookup-clients/
+        spec.md
+        plan.md
+        tasks.md
+      jupyter-cross-platform/
         spec.md
         plan.md
         tasks.md
