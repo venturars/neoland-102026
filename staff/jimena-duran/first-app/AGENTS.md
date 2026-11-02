@@ -2,6 +2,8 @@
 
 El flujo de Git entra por [agents/git-workflow-agent.md](agents/git-workflow-agent.md). La guía de uso está en [docs/GIT-AUTOMATION.md](docs/GIT-AUTOMATION.md). Las autorizaciones y las pausas de esta app prevalecen sobre cualquier secuencia automática.
 
+Las plantillas por tipo de `templates/issues/` y `templates/pull-request/` definen la forma de las issues y PR. Los agentes y skills usan la del tipo o, si no existe, la más cercana; las reglas editoriales se consultan en sus comentarios.
+
 ## Orden
 
 1. El orquestador reconoce el momento y lanza al subagente correspondiente como agente real, con las instrucciones de su archivo. El padre coordina; no sustituye al agente de ese momento. Si no hay delegación disponible, informa y se detiene para acordar cómo continuar.

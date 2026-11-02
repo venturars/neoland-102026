@@ -5,7 +5,7 @@ description: Crea o recupera una rama desde una base distinta de staging solo cu
 
 # Rama desde otra base
 
-La ejecuta `agents/create-branch.md`. Usa `create-branch-from-staging` para staging; esta skill exige una base distinta autorizada, una issue existente, tipo y descripción kebab-case.
+La ejecuta `agents/create-branch.md`. Usa `create-branch-from-staging` para staging; esta skill exige una base distinta autorizada, una issue existente, tipo y descripción. Las reglas editoriales están en la plantilla del tipo en `templates/issues/`; si el tipo no tiene plantilla, usa la más cercana.
 
 Desde la raíz:
 

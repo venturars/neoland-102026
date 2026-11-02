@@ -8,19 +8,21 @@ Puedes pedir pensar una tarea, dejarla escrita, empezar, guardar un trozo, abrir
 
 El orden es issue, spec y plan, revisión humana, tareas, revisión humana e implementación autorizada. La spec abre con `Issue: #N`. No se crea su carpeta antes de que exista la issue. Aprobar código no autoriza automáticamente commits, push, PR o merge. Las restricciones de una entrega concreta se mantienen en su documentación y contexto, sin fijar una rama personal en los scripts reutilizables.
 
-Las ramas habituales siguen `numero-tipo-descripcion`. Se admite un nombre explícito autorizado con `-BranchName`. Las tareas futuras pueden usar ramas diferentes. El script verifica la rama recibida en `-ExpectedBranch` antes de hacer commit o publicar, y bloquea main y staging para esas acciones.
+La forma del título, el tipo y el nombre habitual de rama se consultan en los comentarios de la plantilla seleccionada. Se admite un nombre explícito autorizado con `-BranchName`. Las tareas futuras pueden usar ramas diferentes. El script verifica la rama recibida en `-ExpectedBranch` antes de hacer commit o publicar, y bloquea main y staging para esas acciones.
+
+Las issues y PR tienen plantillas por tipo en `templates/issues/` y `templates/pull-request/`. Agentes y skills usan la del tipo; si no existe, usan la más cercana. Los scripts de ramas no exigen que el tipo tenga plantilla y conservan las validaciones de seguridad de Git.
 
 ## Carpetas
 
-| Ruta | Responsabilidad |
-| --- | --- |
-| `agents/` | Orquestador y roles delimitados de cada momento. |
-| `skills/` | Instrucciones reutilizables que los roles leen por ruta. |
-| `tools/` | Comandos PowerShell que comprueban Git y su resultado. |
-| `templates/issues/` | Cuerpo de issue en español. |
-| `templates/pull-request/` | Cuerpo de PR en español. |
-| `MCPS/github-mcp-server/mcp.txt` | Referencia de conexión del MCP de GitHub. |
-| `docs/specs/<nombre>/` | Spec, plan, tareas y evidencia del cambio. |
+| Ruta                             | Responsabilidad                                           |
+| -------------------------------- | --------------------------------------------------------- |
+| `agents/`                        | Orquestador y roles delimitados de cada momento.          |
+| `skills/`                        | Instrucciones reutilizables que los roles leen por ruta.  |
+| `tools/`                         | Comandos PowerShell que comprueban Git y su resultado.    |
+| `templates/issues/`              | Seis plantillas de issue por tipo, con cuerpo en español. |
+| `templates/pull-request/`        | Seis plantillas de PR por tipo, con cuerpo en español.    |
+| `MCPS/github-mcp-server/mcp.txt` | Referencia de conexión del MCP de GitHub.                 |
+| `docs/specs/<nombre>/`           | Spec, plan, tareas y evidencia del cambio.                |
 
 ## PowerShell y VS Code
 
@@ -95,7 +97,7 @@ gh api user --jq .login
 
 En Windows, gh puede requerir acceso al almacén de credenciales fuera del sandbox de Codex. Un 401 dentro del sandbox no demuestra por sí solo que la credencial sea inválida. Comprobar identidad y acceso con los permisos necesarios sin imprimir tokens, antes de concluir que hace falta renovar la sesión. Para renovarla, `gh auth login --hostname github.com --git-protocol https --web` requiere que la persona complete la autorización en GitHub.
 
-Buscar issues y PR existentes antes de crear otras. El título va en inglés y el cuerpo en español. Las PR usan base staging y estado draft. La plantilla contiene el marcador `Closes #N`; create-pr lo retira al preparar el cuerpo y el orquestador escribe después una única referencia con el número real, conservando el resto del texto. Al actualizar una PR, sustituir la referencia anterior de esa misma issue y mantener los vínculos existentes en Development. El texto y Development se comprueban por separado; no cerrar issues manualmente.
+Buscar issues y PR existentes antes de crear otras. Las reglas editoriales están en los comentarios de la plantilla del tipo. La PR conserva el título de la issue y sigue las indicaciones del draft de su plantilla. Las PR usan base staging y estado draft. La plantilla contiene el marcador `Closes #`; create-pr retira esa línea al preparar el cuerpo y el orquestador escribe después una única referencia con el número real, conservando el resto del texto. Al actualizar una PR, sustituir la referencia anterior de esa misma issue y mantener los vínculos existentes en Development. El texto y Development se comprueban por separado; no cerrar issues manualmente.
 
 GitHub interpreta las palabras de cierre de una PR únicamente cuando esta apunta a la rama predeterminada. Si la predeterminada es main, fusionar una PR con base staging no cierra la issue ni crea automáticamente el vínculo a partir de `Closes #N`. Al promover el cambio a la rama predeterminada, conservar y verificar la referencia de cierre en la PR o commit correspondiente. La [documentación de GitHub](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue) explica estas condiciones; no prometer el cierre solo por añadir la palabra en staging.
 
