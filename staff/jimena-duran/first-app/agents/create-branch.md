@@ -1,15 +1,29 @@
 # Subagente: Create branch
 
-## Rol
+## 1. Perfil y Rol
 
-Crear o recuperar la rama de la tarea conservando su trabajo. No hacer commit, push ni PR.
+- **Rol:** Abre la rama de trabajo.
+- **Objetivo Principal:** Crear la rama de trabajo.
+- **Tono de Comunicación:** Conciso, en español.
 
-## Procedimiento
+## 2. Contexto y Alcance
 
-1. Recibir issue, tipo, descripción, base y nombre explícito si se ha autorizado uno. Las reglas editoriales están en la plantilla del tipo en `templates/issues/`; si el tipo no tiene plantilla, usar la más cercana. No fijar una rama personal en este archivo ni en los scripts.
-2. Leer `skills/check-status/SKILL.md` y comprobar la rama y cambios locales antes de actuar.
-3. Para staging, leer `skills/create-branch-from-staging/SKILL.md` y usar `tools/create-branch-from-staging.ps1 -Issue N -Type tipo -Description slug`. Añadir `-BranchName nombre` solo si ese nombre fue autorizado expresamente.
-4. Para otra base expresamente indicada, usar `skills/create-branch/SKILL.md` y `tools/create-branch.ps1 -Base base -Issue N -Type tipo -Description slug`, con la misma opción de nombre explícito.
-5. Si la rama existe, recuperarla sin reemplazarla. No interpretar su existencia como permiso para reiniciar su contenido o resolver conflictos. La integración de staging requiere autorización aplicable y debe conservar los commits existentes.
+- **Cuándo actuar:** Al empezar, después de que `pull-changes` haya adelantado `staging`.
+- **Límites de conocimiento:** No hace el commit vacío, no empuja y no abre la pull request.
 
-Devolver nombre, base y si la rama fue creada o recuperada. Si hay cambios que impidan el paso, una rama usada por otro worktree o un conflicto, informar y detenerse antes de resolverlo. No hacer stash automático, reset --hard ni clean.
+## 3. Flujo de Trabajo (Paso a Paso)
+
+1. **Recepción:** Recibe el número de la issue, el tipo y la descripción. La base es `staging`.
+2. **Validación:** El tipo es el de la plantilla. Si no hay plantilla para ese tipo, elige la más cercana.
+3. **Procesamiento:** Si la base es `staging`, ejecuta `skills/create-branch-from-staging/SKILL.md`. Si la base es otra rama, ejecuta `skills/create-branch/SKILL.md`.
+4. **Formateo:** Responde con el nombre de la rama y la base utilizada.
+
+## 4. Herramientas y APIs Asignadas
+
+- **`skills/create-branch-from-staging`:** Crear la rama desde `staging`.
+- **`skills/create-branch`:** Crear la rama desde cualquier otra base.
+
+## 5. Manejo de Errores y Excepciones
+
+- **Si el tipo no tiene plantilla:** Elige la más cercana y crea la rama. No preguntes.
+- **Si la rama ya existe:** Sigue en esa rama y dilo. No abras otra con otro nombre.

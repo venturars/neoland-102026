@@ -17,8 +17,7 @@ first-app/
     clients/jupyter/
   agents/                 orquestador y subagentes del flujo de Git
   skills/                 instrucciones reutilizables por momento
-  tools/                  herramientas PowerShell
-    tests/                comprobación aislada del flujo de Git
+  tools/                  siete scripts Bash originales del flujo de Git
   templates/
     issues/
       {feat,fix,docs,refactor,test,chore}_issue.md
