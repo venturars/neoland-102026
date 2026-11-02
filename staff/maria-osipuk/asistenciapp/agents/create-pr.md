@@ -30,5 +30,5 @@
 
 ## 5. Manejo de Errores y Excepciones
 
-- **Si la pull request de esta rama ya existe:** Actualiza cuerpo, autor y draft. No toques el enlace con la issue. No abras otra.
+- **Si la pull request de esta rama ya existe:** Reutilízala. Actualiza cuerpo o asignación solo si la petición lo cubre. Conserva su estado de revisión y el enlace con la issue; no la devuelvas a draft ni abras otra sin autorización para ese cambio.
 - **Si el MCP no devuelve la URL:** Di el error y no inventes el enlace.
