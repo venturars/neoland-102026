@@ -5,72 +5,206 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
   <title>Panel del profesor · AsistenciApp</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="profesor.js" defer></script>
+  <link rel="stylesheet" href="styles.css?v=013">
+  <script src="profesor.js?v=014" defer></script>
 </head>
-<body>
-  <main>
-    <!-- CA-21: aviso si el panel se abre en local -->
-    <p id="local-warning" class="message warn" hidden>
-      Estás usando una dirección que solo funciona en este ordenador: <strong>tus alumnos no podrán abrir el enlace de alumnos</strong>.
-      Para una clase online, para la app (Ctrl+C) y arráncala con <code>python app.py --tunel</code>.
-    </p>
+<body class="teacher-page">
+  <p id="local-warning" class="message warn local-warning" hidden>
+    Estás usando una dirección que solo funciona en este ordenador: <strong>tus alumnos no podrán abrir el enlace de alumnos</strong>.
+    Para una clase online, para la app (Ctrl+C) y arráncala con <code>python app.py --tunel</code>.
+  </p>
 
-    <div id="status" role="status" aria-live="polite"></div>
+  <div id="status" class="global-status" role="status" aria-live="polite"></div>
 
-    <!-- Vista: panel (T17) -->
-    <section id="panel-view" hidden>
-      <h1>Panel del profesor</h1>
+  <section id="panel-view" class="teacher-layout" hidden>
+    <aside class="teacher-sidebar">
+      <a class="brand" href="#" id="brand-home" aria-label="AsistenciApp, inicio del panel">
+        <span class="brand-mark" aria-hidden="true">✓</span>
+        <span>Asistenci<span>App</span></span>
+      </a>
 
-      <form id="new-session" class="card">
-        <label for="session-title">Título de la clase <span class="muted">(opcional)</span></label>
-        <input id="session-title" placeholder="Ej.: Clase 20/10 – SDD" maxlength="100">
-        <button type="submit" class="full">Abrir asistencia</button>
-      </form>
+      <nav id="teacher-navigation" class="teacher-navigation" aria-label="Panel del profesor">
+        <a class="nav-item active" href="#dashboard-section" data-scroll-to="dashboard-section">
+          <span aria-hidden="true">⌂</span> Inicio
+        </a>
+        <button class="nav-item" type="button" id="nav-live" disabled>
+          <span aria-hidden="true">▶</span> Clase en directo
+        </button>
+        <a class="nav-item" href="#history-section" data-scroll-to="history-section">
+          <span aria-hidden="true">◷</span> Historial
+        </a>
+      </nav>
 
-      <h2>Sesiones anteriores</h2>
-      <p id="no-sessions" class="muted" hidden>Todavía no has abierto ninguna sesión.</p>
-      <ul id="sessions" class="list sessions card"></ul>
-    </section>
+      <div class="sidebar-note">
+        <span class="live-dot" aria-hidden="true"></span>
+        <p><strong>Todo permanece local</strong><br>La lista se guarda en este ordenador.</p>
+      </div>
+    </aside>
 
-    <!-- Vista: sesión en vivo (T18) -->
-    <section id="session-view" hidden>
-      <p><a id="back" href="#">← Volver al panel</a></p>
-      <h1 id="s-title"></h1>
-
-      <div id="code-card" class="card">
-        <p class="muted small" style="text-align:center;margin:0">Código para pasar lista</p>
-        <p id="s-code" class="code" aria-live="polite"></p>
-        <p id="s-countdown" class="countdown muted"></p>
-
-        <label for="s-link">Enlace para los alumnos</label>
-        <output id="s-link" class="link-box"></output>
-        <div class="actions">
-          <button id="copy" type="button" class="secondary">Copiar enlace de alumnos</button>
+    <main class="teacher-main">
+      <header class="teacher-topbar">
+        <div>
+          <p class="eyebrow">Panel del profesor</p>
+          <h1>Tu aula está lista</h1>
         </div>
+      </header>
+
+      <section id="dashboard-section" class="dashboard-section" tabindex="-1">
+        <form id="new-session" class="new-session-card">
+          <div class="new-session-copy">
+            <span class="new-session-icon" aria-hidden="true">✓</span>
+            <div>
+              <p class="eyebrow">Nueva sesión</p>
+              <h2>Empieza una nueva clase</h2>
+              <p>Comparte el código y observa la asistencia en tiempo real.</p>
+            </div>
+          </div>
+          <div class="new-session-fields">
+            <label for="session-title">Título de la clase <span class="muted">(opcional)</span></label>
+            <div class="inline-form">
+              <input id="session-title" placeholder="Ej.: Introducción a la IA" maxlength="100">
+              <button type="submit">Abrir asistencia <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+        </form>
+
+        <div id="dashboard-stats" class="stats-grid" aria-label="Resumen de asistencia">
+          <article class="stat-card">
+            <span class="stat-icon stat-icon-violet" aria-hidden="true">◈</span>
+            <div><strong id="stat-sessions">0</strong><span>clases</span></div>
+          </article>
+          <article class="stat-card">
+            <span class="stat-icon stat-icon-cyan" aria-hidden="true">●</span>
+            <div><strong id="stat-average">0</strong><span>media de alumnos</span></div>
+          </article>
+          <article class="stat-card">
+            <span class="stat-icon stat-icon-coral" aria-hidden="true">▲</span>
+            <div><strong id="stat-open">0</strong><span>sesiones abiertas</span></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="history-section" class="content-section" tabindex="-1">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Historial</p>
+            <h2>Sesiones recientes</h2>
+          </div>
+          <span class="muted small">La más reciente aparece primero</span>
+        </div>
+        <p id="no-sessions" class="empty-state" hidden>
+          <span aria-hidden="true">✦</span>
+          Todavía no has abierto ninguna sesión. La primera aparecerá aquí.
+        </p>
+        <ul id="sessions" class="list sessions session-history"></ul>
+      </section>
+
+    </main>
+  </section>
+
+  <section id="session-view" class="session-page" hidden>
+    <header class="session-header">
+      <a class="brand" id="back" href="#">
+        <span class="brand-mark" aria-hidden="true">✓</span>
+        <span>Asistenci<span>App</span></span>
+      </a>
+      <a class="back-link" id="back-label" href="#">← Volver al panel</a>
+    </header>
+
+    <main class="session-main">
+      <div class="session-title-row">
+        <div>
+          <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span> Sesión de asistencia</p>
+          <h1 id="s-title"></h1>
+        </div>
+        <button id="enter-live" type="button">Presentar Aula en directo <span aria-hidden="true">↗</span></button>
+      </div>
+
+      <div id="code-card" class="session-grid">
+        <article class="code-panel card">
+          <p class="eyebrow centered">Código para pasar lista</p>
+          <div class="code-ring compact-ring">
+            <div>
+              <p id="s-code" class="code" aria-live="polite"></p>
+              <p id="s-countdown" class="countdown muted"></p>
+            </div>
+          </div>
+        </article>
+
+        <article class="share-panel card">
+          <span class="share-icon" aria-hidden="true">↗</span>
+          <h2>Invita a tus alumnos</h2>
+          <p class="muted">Comparte este enlace en el chat de tu clase. El código se muestra por separado.</p>
+          <label for="s-link">Enlace para los alumnos</label>
+          <output id="s-link" class="link-box"></output>
+          <button id="copy" type="button" class="secondary full">Copiar enlace de alumnos</button>
+        </article>
       </div>
 
       <p id="s-closed" class="message warn" hidden>Asistencia cerrada: ya no se aceptan registros.</p>
 
-      <div class="card">
-        <p id="s-total" class="total" aria-live="polite"></p>
-        <ol id="s-list" class="list"></ol>
-      </div>
+      <article class="attendance-card card">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">En tiempo real</p>
+            <h2>Alumnos presentes</h2>
+          </div>
+          <p id="s-total" class="total" aria-live="polite"></p>
+        </div>
+        <p id="empty-checkins" class="empty-state">
+          <span aria-hidden="true">⌛</span>
+          Esperando al primer alumno…
+        </p>
+        <ol id="s-list" class="list attendance-list"></ol>
+      </article>
 
-      <div class="actions">
+      <div class="session-actions">
         <button id="download" type="button" class="secondary">Descargar lista</button>
         <button id="close" type="button" class="danger">Cerrar asistencia</button>
       </div>
 
-      <!-- Confirmación dentro de la página, sin confirm() (plan §5) -->
-      <div id="confirm-close" class="message warn" hidden>
+      <div id="confirm-close" class="message warn confirm-box" hidden>
         <p><strong>¿Cerrar la asistencia?</strong> Nadie más podrá registrarse en esta clase.</p>
         <div class="actions">
           <button id="confirm-yes" type="button" class="danger-solid">Sí, cerrar</button>
           <button id="confirm-no" type="button" class="secondary">Cancelar</button>
         </div>
       </div>
-    </section>
-  </main>
+    </main>
+  </section>
+
+  <section id="live-classroom" class="live-classroom" aria-label="Aula en directo" hidden>
+    <header class="live-header">
+      <div class="brand live-brand">
+        <span class="brand-mark" aria-hidden="true">✓</span>
+        <span>Asistenci<span>App</span></span>
+      </div>
+      <p id="live-title" class="live-title"></p>
+      <div class="live-header-actions">
+        <span class="live-status"><span class="live-dot" aria-hidden="true"></span> En directo</span>
+        <button id="exit-live" type="button" class="live-exit">Salir <span aria-hidden="true">✕</span></button>
+      </div>
+    </header>
+
+    <div class="live-stage">
+      <div id="live-code-ring" class="code-ring live-code-ring">
+        <div>
+          <p class="live-code-label">Código de asistencia</p>
+          <p id="live-code" class="live-code" aria-live="polite"></p>
+          <p id="live-countdown" class="live-countdown"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="live-attendance">
+      <div class="live-attendance-heading">
+        <h2>Alumnos presentes</h2>
+        <p id="live-total" aria-live="polite">0</p>
+      </div>
+      <div id="live-students" class="live-students"></div>
+    </div>
+
+    <div id="arrival-toast" class="arrival-toast" role="status" aria-live="polite" hidden></div>
+  </section>
 </body>
 </html>

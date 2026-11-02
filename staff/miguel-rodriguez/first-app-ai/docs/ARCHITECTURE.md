@@ -2,12 +2,12 @@
 
 ## Storage and business operations
 
-- `db/connection.js` owns the single database connection. Its file location and
+- `src/db/connection.js` owns the single database connection. Its file location and
   initialization behavior are defined in [DATABASE.md](DATABASE.md).
-- `queries/queries/` contains one SQL file per query. `queries/users.js` loads and
+- `src/queries/queries/` contains one SQL file per query. `src/queries/users.js` loads and
   executes those statements; it performs no business validation or printing.
   [DATABASE.md](DATABASE.md) defines each query's parameters and return value.
-- `logic/` contains the public business operations. It validates input, checks
+- `src/logic/` contains the public business operations. It validates input, checks
   business conditions, calls queries, and constructs ordinary returned data.
   It does not manage the connection or print results. The
   [constitution](CONSTITUTIONS.md#public-business-operations) defines the contracts;
@@ -15,26 +15,26 @@
 
 | Business file | Responsibility |
 | --- | --- |
-| `logic/create-user.js` | Creates a contact. |
-| `logic/list-users.js` | Lists saved contacts. |
-| `logic/update-user.js` | Updates an existing contact. |
-| `logic/delete-user.js` | Deletes an existing contact. |
-| `logic/find-user-by-name.js` | Finds all contacts with the supplied full name. |
-| `logic/find-user-by-email.js` | Finds a contact by email. |
-| `logic/find-user-by-id.js` | Finds a contact by ID. |
-| `logic/users-gender-count.js` | Counts name-based classification guesses through the existing AI client. |
+| `src/logic/create-user.js` | Creates a contact. |
+| `src/logic/list-users.js` | Lists saved contacts. |
+| `src/logic/update-user.js` | Updates an existing contact. |
+| `src/logic/delete-user.js` | Deletes an existing contact. |
+| `src/logic/find-user-by-name.js` | Finds all contacts with the supplied full name. |
+| `src/logic/find-user-by-email.js` | Finds a contact by email. |
+| `src/logic/find-user-by-id.js` | Finds a contact by ID. |
+| `src/logic/users-gender-count.js` | Counts name-based classification guesses through the existing AI client. |
 
 ## Clients and startup
 
-`clients/terminal/` contains copyable `node --input-type=module` heredocs. They call
+`src/clients/terminal/` contains copyable `node --input-type=module` heredocs. They call
 the corresponding operations and print their results. Their usage is described
 in the [constitution](CONSTITUTIONS.md#terminal-examples).
 
-`clients/jupyter/` provides nine independent notebooks for those same operations
+`src/clients/jupyter/` provides nine independent notebooks for those same operations
 and explicit table initialization. Initialization calls a query; it is not a new
 public business operation.
 
-| Terminal file in `clients/terminal/` | Notebook in `clients/jupyter/` |
+| Terminal file in `src/clients/terminal/` | Notebook in `src/clients/jupyter/` |
 | --- | --- |
 | `create-users-table.txt` | `01-create-users-table.ipynb` |
 | `create-user.txt` | `02-create-user.ipynb` |
@@ -46,9 +46,9 @@ public business operation.
 | `delete-user.txt` | `08-delete-user.ipynb` |
 | `users-gender-count.txt` | `09-users-gender-count.ipynb` |
 
-- `clients/jupyter/client.py` sends an operation and arguments as JSON to a Node
+- `src/clients/jupyter/client.py` sends an operation and arguments as JSON to a Node
   subprocess in this project copy and displays its output.
-- `clients/jupyter/run-operation.js` selects an explicitly supported operation,
+- `src/clients/jupyter/run-operation.js` selects an explicitly supported operation,
   awaits the classifier when needed, and presents returned values as tables or
   displays client messages and errors. It does not replace business operations.
 - `scripts/jupyter.js` prepares the existing project-local environment, registers
@@ -59,7 +59,7 @@ public business operation.
   startup and development-check commands, and dependency declarations. `pnpm-lock.yaml` records the
   resolved packages. Version and package rules remain in the
   [constitution](CONSTITUTIONS.md#dependencies-and-package-management).
-- `.gitignore` excludes generated local artifacts. `db/users.sqlite`, `.venv/`,
+- `.gitignore` excludes generated local artifacts. `src/db/users.sqlite`, `.venv/`,
   dependency installations and caches are runtime files, not source inventory.
 - `README.md` explains how to start and use the Jupyter client.
 
@@ -95,3 +95,25 @@ is defined in [AGENTS.md](../AGENTS.md).
 Socket package validation, guide separation, formatting/lint checks, and alignment
 with the architecture and style guides. Their individual documents
 record the request, approved approach, tasks, decisions, and verification.
+
+## Git workflow
+
+`agents/git-workflow-agent.md` defines the workflow loaded by the principal agent.
+The six other agent documents define task clarification, issue creation, branch
+creation, commits, pushes and pull requests. The principal runs status, staging
+updates, issue linking and reviewer assignment through their respective skills.
+Delegated responsibilities run as real subagents, sequentially, through Codex’s native delegation tools. Each receives the corresponding agent document and explicit task context.
+
+`.cursor/agents/` contains small Cursor registration entries referencing those six
+agent documents. It does not duplicate their procedures. These are optional compatibility entries, not required for Codex. Opening this app as a Cursor project loads them, but requires separate runtime verification. The enclosing NEOLAND repository remains the Git root.
+
+`skills/` describes each action and its inputs/results. The six Bash scripts in
+`tools/` implement local Git operations. `templates/` supplies the issue and PR
+bodies. `MCPS/github-mcp-server/mcp.txt` is a public server documentation reference,
+not an installed connection or credential store. Setup and verification are in
+README.md; workflow permissions and SDD gates remain in AGENTS.md.
+
+[MCPS/socket-mcp/mcp.txt](../MCPS/socket-mcp/mcp.txt) is the public Socket MCP
+documentation reference, alongside the GitHub reference. It is not an installed
+connection or credential store. The constitution explains access and source
+coverage; AGENTS.md retains the detailed dependency-validation procedure.

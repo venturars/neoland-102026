@@ -1,6 +1,6 @@
 # Arquitectura
 
-Aplicación de gestión de usuarios. Permite crear, actualizar, eliminar, listar y buscar usuarios con `id`, `name` y `email`. También cuenta el género de los nombres ya guardados, sin pedir nombres nuevos y sin modificar los datos. No tiene pantalla propia ni servidor propio. La entrada es una llamada a una función de `logic`, un archivo de `clients/terminal` ejecutado desde la terminal, o un documento de `clients/jupyter`. La salida de crear, actualizar y eliminar se guarda en SQLite. El recuento de género solo se muestra.
+Aplicación de gestión de usuarios. Permite crear, actualizar, eliminar, listar y buscar usuarios con `id`, `name` y `email`. También cuenta el género de los nombres ya guardados, sin pedir nombres nuevos y sin modificar los datos. No tiene pantalla propia ni servidor propio. La entrada es una llamada a una función de `src/logic`, un archivo de `src/clients/terminal` ejecutado desde la terminal, o un documento de `src/clients/jupyter`. La salida de crear, actualizar y eliminar se guarda en SQLite. El recuento de género solo se muestra.
 
 El `id` lo asigna la base de datos. El email se guarda en minúsculas y no se puede repetir. `package.json` incluye la dependencia `openai` `7.39.0` y declara pnpm `12.15.0` como gestor de paquetes. pnpm escribe `pnpm-lock.yaml`.
 

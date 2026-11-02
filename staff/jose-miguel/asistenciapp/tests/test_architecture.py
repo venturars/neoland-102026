@@ -66,6 +66,7 @@ def test_app_does_not_open_the_database():  # CA-06
 
 def test_constitution_names_the_new_folders():  # CA-09
     text = _text("docs/CONSTITUTION.md")
+    assert "3.2" in text
     assert "3.1" in text
     for folder in (
         "docs/",

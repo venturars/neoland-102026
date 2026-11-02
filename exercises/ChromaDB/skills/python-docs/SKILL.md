@@ -1,5 +1,4 @@
 ---
-
 name: python-docs
 description: >-
   Look up the official Python documentation in a local RAG before writing,
@@ -8,7 +7,6 @@ description: >-
   or command-line option exists in that version and how it behaves, and to
   find what is new, changed or deprecated in it.
 allowed-tools: Bash
-
 ---
 
 # Python docs
@@ -66,14 +64,14 @@ PY exercises/ChromaDB/scripts/get_doc.py NAME
 
 `NAME` is the full name used in the docs:
 
-| What                     | Name                                     |
-| ------------------------ | ---------------------------------------- |
-| Python function or class | `pathlib.Path.read_text`, `json.dumps`   |
-| Built-in                 | `open`, `str.split`, `dict.get`          |
-| C API                    | `c.PyList_New`                           |
-| Command-line option      | `cmdoption-c`, `cmdoption-X`             |
-| Environment variable     | `envvar-PYTHONPATH`                      |
-| Glossary term            | `term-generator`                         |
+| What                     | Name                                   |
+| ------------------------ | -------------------------------------- |
+| Python function or class | `pathlib.Path.read_text`, `json.dumps` |
+| Built-in                 | `open`, `str.split`, `dict.get`        |
+| C API                    | `c.PyList_New`                         |
+| Command-line option      | `cmdoption-c`, `cmdoption-X`           |
+| Environment variable     | `envvar-PYTHONPATH`                    |
+| Glossary term            | `term-generator`                       |
 
 Take the names from the `source:` line that `search.py` prints.
 

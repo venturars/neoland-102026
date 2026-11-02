@@ -16,12 +16,21 @@ Las flechas solo van hacia dentro. Una parte de fuera puede llamar a una de dent
 
 `app.py` no abre la base. El almacén no decide reglas ni dibuja pantallas.
 
+No entran PostgreSQL, SQLAlchemy ni Alembic, ni una segunda base, ni una interfaz de almacén, ni una entrada de línea de comandos, ni `.env`, ni pre-commit, ni documentación generada.
+
 ---
 
 ## 2. Estructura de carpetas
 
+El flujo de git vive junto al código. `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca. El detalle de cada momento está en `AGENTS.md`.
+
 ```
 asistenciapp/
+├── agents/                # orquestador y subagentes del flujo de git
+├── skills/                # skills de ese flujo
+├── tools/                 # scripts de git
+├── templates/             # cuerpo de la issue y de la pull request
+├── MCPS/                  # dirección del MCP de GitHub
 ├── docs/
 │   ├── CONSTITUTION.md    # reglas no negociables
 │   └── ARCHITECTURE.md    # este archivo

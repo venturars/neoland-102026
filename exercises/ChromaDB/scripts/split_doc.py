@@ -20,10 +20,19 @@ def split_doc(md_path: Path) -> list[dict]:
     for group in groups:
         first = group[0]
         page_info = first["page_info"]
-        breadcrumb = " > ".join(title.replace("`", "") for title in first["breadcrumb"])
-        body = "\n\n".join((unit["heading"] + "\n\n" + unit["content"]).strip() for unit in group)
+        breadcrumb = " > ".join(
+            title.replace("`", "") for title in first["breadcrumb"]
+        )
+        body = "\n\n".join(
+            (unit["heading"] + "\n\n" + unit["content"]).strip()
+            for unit in group
+        )
         anchors = [unit["anchor"] for unit in group if unit["anchor"] != ""]
-        symbols = [unit["anchor"] for unit in group if unit["type"] not in GUIDE_TYPES and unit["anchor"] != ""]
+        symbols = [
+            unit["anchor"]
+            for unit in group
+            if unit["type"] not in GUIDE_TYPES and unit["anchor"] != ""
+        ]
 
         kind = page_info["kind"]
         if kind == "guide" and first["type"] not in GUIDE_TYPES:
@@ -46,18 +55,20 @@ def split_doc(md_path: Path) -> list[dict]:
             metadata["module"] = page_info["module"]
         if "removal_version" in page_info:
             metadata["removal_version"] = page_info["removal_version"]
-        # En el changelog, el segundo título es la release: Changelog > Python 3.15.0 alpha 1 > ...
+        # En el changelog, el segundo título es la release.
         if kind == "changelog" and len(first["breadcrumb"]) > 1:
             metadata["release"] = first["breadcrumb"][1]
 
         for piece in split_unit(body):
-            # El id es estable: página, ancla y número de parte dentro de esa ancla
+            # El id es estable: página, ancla y número de parte.
             key = f"{page_info['page']}#{first['anchor']}"
             number = used_ids.get(key, 0)
             used_ids[key] = number + 1
-            chunks.append({
-                "id": f"{key}:{number}",
-                "text": breadcrumb + "\n\n" + piece,
-                "metadata": metadata,
-            })
+            chunks.append(
+                {
+                    "id": f"{key}:{number}",
+                    "text": breadcrumb + "\n\n" + piece,
+                    "metadata": metadata,
+                }
+            )
     return chunks

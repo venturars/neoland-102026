@@ -1,3 +1,0 @@
-# .\staff\esther-patino-141020261\first-app
-Set-Location .\staff\esther-patino-141020261\first-app
-node --input-type=module -e "import { db } from './db/connection.js'; db.close();"

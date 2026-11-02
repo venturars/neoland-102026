@@ -1,5 +1,7 @@
 # Formato y comprobación del código
 
+Issue: #484.
+
 ## Qué se pide
 
 Al terminar una tarea, el código de `first-app` debe quedar con un formato común y pasar una comprobación estática antes de darse por terminado.

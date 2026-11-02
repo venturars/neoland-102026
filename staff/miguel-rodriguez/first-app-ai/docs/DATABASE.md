@@ -2,12 +2,12 @@
 
 ## Connection and SQL files
 
-`db/connection.js` opens one module-relative `db/users.sqlite` file using
+`src/db/connection.js` opens one module-relative `src/db/users.sqlite` file using
 `dirname(fileURLToPath(import.meta.url))` and `join(directory, 'users.sqlite')`
 and exports one connection as `db`. SQLite creates the database file when needed;
 opening the connection does not initialize the users table.
 
-`queries/queries/*.sql` contain only SQL statements. `queries/users.js` reads each
+`src/queries/queries/*.sql` contain only SQL statements. `src/queries/users.js` reads each
 SQL file once at module load with `readFileSync`, UTF-8 encoding, and paths built
 with `dirname(fileURLToPath(import.meta.url))` and `join()`. It executes concrete
 queries, using named parameters where values are supplied.
@@ -44,7 +44,7 @@ Queries perform no business validation or printing. The ID query is reused by pu
 
 ## SQL file for each query
 
-Paths below are relative to `queries/queries/`.
+Paths below are relative to `src/queries/queries/`.
 
 | Query | SQL file | Named parameters |
 | --- | --- | --- |

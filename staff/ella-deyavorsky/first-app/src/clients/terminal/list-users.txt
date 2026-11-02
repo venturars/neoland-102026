@@ -1,0 +1,8 @@
+# Paste this in the terminal, with first-app as the current folder
+node --input-type=module <<'EOF'
+import { listUsers } from "./src/logic/list-users.js";
+
+const result = listUsers();
+
+console.log(result);
+EOF

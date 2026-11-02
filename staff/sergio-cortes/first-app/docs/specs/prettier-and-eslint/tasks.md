@@ -23,7 +23,7 @@ ejecutan con `spec.md` y `plan.md` aprobados (validación Socket ya en el plan).
    aplica las reglas recomendadas de ESLint al JavaScript e ignora `.venv`,
    `node_modules` y los cuadernos Jupyter.
 
-7. Abre [AGENTS.MD](../../../AGENTS.MD). En **## Comandos**, sustituye la línea de
+7. Abre [AGENTS.md](../../../AGENTS.md). En **## Comandos**, sustituye la línea de
    lint/formato por formato (`pnpm run format`) y lint (`pnpm run lint`) como en
    el plan. En **## Al terminar una tarea**, después del cliente terminal, añade
    ejecutar `pnpm run format` sobre el código tocado y `pnpm run lint` corrigiendo

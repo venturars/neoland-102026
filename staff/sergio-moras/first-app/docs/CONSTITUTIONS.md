@@ -16,7 +16,7 @@ El flujo es `terminal → logic → queries → db/connection.js`.
 ### 2. Estructura fija
 - Una operación = un archivo en `logic/` + un `.txt` en `terminal/`.
 - Una tabla = un archivo en `queries/`.
-- Cada archivo de `logic/` exporta su función y puede ejecutarse desde la terminal con el bloque `isRunFromTerminal`.
+- Cada archivo de `logic/` solo exporta su función. No lee `process.argv`, no imprime y no llama a `process.exit`. El `.txt` de `terminal/` la importa y muestra el resultado.
 - No se crean, mueven ni borran archivos o carpetas sin que el usuario lo pida.
 
 *Motivo:* el proyecto es didáctico y su forma debe ser predecible.
@@ -62,4 +62,4 @@ Un cambio no está terminado hasta que se ha ejecutado con los comandos reales, 
 - Un agente que vea una regla desactualizada o incompleta lo propone, pero no la cambia por su cuenta.
 - Cada modificación actualiza la versión y la fecha del final.
 
-**Versión:** 1.0.1 | **Ratificada:** 2026-10-19 | **Última modificación:** 2026-10-19
+**Versión:** 1.1.0 | **Ratificada:** 2026-10-19 | **Última modificación:** 2026-10-30

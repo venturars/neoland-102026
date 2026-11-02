@@ -50,4 +50,4 @@ if [ ! -e "$jupyter_exe" ]; then
   "$env_python" -m pip install --force-reinstall --no-deps "notebook==7.6.3" || exit
 fi
 
-PYTHONUTF8=1 exec "$jupyter_exe" clients/jupyter --ip=127.0.0.1
+PYTHONUTF8=1 exec "$jupyter_exe" src/clients/jupyter --ip=127.0.0.1

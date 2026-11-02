@@ -1,1 +1,13 @@
-node --no-warnings logic/classifyGender.js
+node --no-warnings --input-type=module -e "
+import { classifyGender } from './logic/classifyGender.js';
+
+try {
+  const counts = await classifyGender();
+  console.log('Men: ' + counts.men);
+  console.log('Women: ' + counts.women);
+  console.log('Undefined: ' + counts.undefinedGender);
+} catch (error) {
+  console.error('Error: ' + error.message);
+  process.exit(1);
+}
+"

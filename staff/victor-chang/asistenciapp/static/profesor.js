@@ -1,4 +1,4 @@
-// AsistenciApp · panel del profesor (T17 panel · T18 vista de sesión)
+// AsistenciApp · panel del profesor (T17 panel · T18 vista de sesión; spec 004 · T14 modo automático)
 // El token va en el fragmento (#t=…): el navegador nunca lo envía en la URL (plan §2.2).
 // La navegación también usa el fragmento: #t=<token> (panel) y #t=<token>&s=<id> (sesión).
 // Todo texto que viene del servidor se pinta con textContent (CA-12).
@@ -46,6 +46,10 @@ function showView(name) {
 
 function hhmm(iso) {
   return new Date(iso).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+}
+
+function dayMonth(iso) {
+  return new Date(iso).toLocaleDateString("es-ES", { day: "2-digit", month: "2-digit" });
 }
 
 function dateTime(iso) {
@@ -101,10 +105,13 @@ async function renderPanel() {
     const badge = document.createElement("span");
     badge.className = s.closedAt ? "badge closed" : "badge";
     badge.textContent = s.closedAt ? "cerrada" : "abierta";
+    const mode = document.createElement("span"); // spec 004 · CA-01
+    mode.className = "badge mode";
+    mode.textContent = s.mode === "automatic" ? "Meet" : "código";
     const meta = document.createElement("div");
     meta.className = "muted small";
     meta.textContent = `${dateTime(s.openedAt)} · ${s.total} ${s.total === 1 ? "asistente" : "asistentes"}`;
-    info.append(title, badge, meta);
+    info.append(title, badge, mode, meta);
 
     const buttons = document.createElement("div");
     buttons.className = "buttons";
@@ -124,18 +131,37 @@ async function renderPanel() {
   }
 }
 
+function selectedMode() {
+  return document.querySelector("input[name='mode']:checked").value;
+}
+
+// El enlace de Meet solo se pide en modo automático (spec 004 · CA-01).
+for (const radio of document.querySelectorAll("input[name='mode']")) {
+  radio.addEventListener("change", () => {
+    $("meeting-field").hidden = selectedMode() !== "automatic";
+  });
+}
+
 $("new-session").addEventListener("submit", async (event) => {
   event.preventDefault();
   const button = event.submitter;
   button.disabled = true;
+  showMessage("", "");
   try {
-    const res = await api("/api/sessions", {
-      method: "POST",
-      body: JSON.stringify({ title: $("session-title").value }),
-    }); // CA-01, CA-02
-    const session = await res.json();
+    const mode = selectedMode();
+    const body = { title: $("session-title").value, mode };
+    if (mode === "automatic") body.meeting = $("session-meeting").value;
+    const res = await api("/api/sessions", { method: "POST", body: JSON.stringify(body) }); // CA-01, CA-02
+    const data = await res.json();
+    if (!res.ok) {
+      // Título demasiado largo o enlace de Meet mal escrito (spec 004 · CA-14): el mensaje del servidor.
+      showMessage("error", data.error);
+      (mode === "automatic" ? $("session-meeting") : $("session-title")).focus();
+      return;
+    }
     $("session-title").value = "";
-    location.hash = hrefFor(session.id);
+    $("session-meeting").value = "";
+    location.hash = hrefFor(data.id);
   } catch (error) {
     handleError(error);
   } finally {
@@ -167,13 +193,18 @@ function renderSession(data) {
   currentSession = data;
   document.title = `${data.title} · AsistenciApp`;
   $("s-title").textContent = data.title;
-  $("s-link").textContent = data.studentUrl;
+  const automatic = data.mode === "automatic";
 
-  // Código y cuenta atrás (CA-03), o aviso de cerrada (CA-13)
-  $("code-card").hidden = !data.open;
+  // Código y cuenta atrás (CA-03), o aviso de cerrada (CA-13).
+  // En una clase automática no hay código: la tarjeta de Meet ocupa su lugar (spec 004 · CA-02, CA-18).
+  $("code-card").hidden = !data.open || automatic;
+  $("meet-card").hidden = !data.open || !automatic;
   $("s-closed").hidden = data.open;
   $("close").hidden = !data.open;
-  if (data.open) {
+  if (automatic) {
+    $("s-meeting").textContent = data.meetingCode;
+  } else if (data.open) {
+    $("s-link").textContent = data.studentUrl;
     $("s-code").textContent = data.code;
     startCountdown(data.secondsLeft);
   }
@@ -333,6 +364,60 @@ $("download").addEventListener("click", () => {
   if (currentSession) downloadCsv(currentSession.id).catch(handleError);
 });
 
+// ---------- tomar la asistencia de Meet (spec 004 · CA-18, CA-20, CA-21) ----------
+
+function showSyncMessage(kind, text) {
+  const status = $("sync-status");
+  status.replaceChildren();
+  if (!text) return;
+  const p = document.createElement("p");
+  p.className = `message ${kind}`;
+  p.textContent = text; // también los mensajes del servidor, como texto literal (CA-12)
+  status.append(p);
+}
+
+// "Reunión del 23/10 a las 08:56 · Añadidas 3 personas nuevas · 12 en la llamada ahora" (plan §4)
+function syncText(result, who) {
+  const parts = [];
+  if (result.meetingStartedAt) {
+    parts.push(`Reunión del ${dayMonth(result.meetingStartedAt)} a las ${hhmm(result.meetingStartedAt)}`);
+  }
+  if (result.found === 0) {
+    parts.push("No hay participantes en la reunión"); // CA-10
+  } else {
+    parts.push(result.added === 1 ? "Añadida 1 persona nueva" : `Añadidas ${result.added} personas nuevas`);
+    parts.push(`${result.found} ${who === "now" ? "en la llamada ahora" : "estuvieron en la reunión"}`);
+  }
+  return parts.join(" · ");
+}
+
+async function syncFromMeet(event) {
+  const pressed = event.currentTarget;
+  const who = pressed.dataset.who;
+  const buttons = [$("sync-now"), $("sync-everyone")];
+  for (const b of buttons) b.disabled = true;
+  showSyncMessage("warn", "Consultando Meet… La primera vez se abre el navegador para dar permiso a Google.");
+  try {
+    const res = await api(`/api/sessions/${encodeURIComponent(currentSession.id)}/meet-sync`, {
+      method: "POST",
+      body: JSON.stringify({ who }),
+    });
+    const data = await res.json();
+    showSyncMessage(res.ok ? "ok" : "error", res.ok ? syncText(data, who) : data.error);
+    await poll(); // trae la lista y el total actualizados
+  } catch (error) {
+    if (error instanceof AuthError) return handleError(error);
+    showSyncMessage("error", "No se pudo conectar con la app. ¿Sigue arrancada en tu ordenador?");
+  } finally {
+    for (const b of buttons) b.disabled = false;
+    // Al desactivarse, el botón pierde el foco: se le devuelve para seguir con el teclado (P5).
+    if (document.activeElement === document.body) pressed.focus();
+  }
+}
+
+$("sync-now").addEventListener("click", syncFromMeet);
+$("sync-everyone").addEventListener("click", syncFromMeet);
+
 // Cerrar con confirmación dentro de la página (CA-13)
 $("close").addEventListener("click", () => {
   $("confirm-close").hidden = false;
@@ -360,6 +445,7 @@ async function route() {
   pendingRemoval = null;
   renderedListKey = "";
   showMessage("", "");
+  showSyncMessage("", "");
   $("confirm-close").hidden = true;
   $("back").href = hrefFor();
 

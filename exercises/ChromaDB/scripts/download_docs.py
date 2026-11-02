@@ -12,7 +12,9 @@ DOCS_DIR = PROJECT_DIR / "python-docs"
 
 
 def download_docs() -> None:
-    parser = argparse.ArgumentParser(description="Download the official Python HTML docs for one version.")
+    parser = argparse.ArgumentParser(
+        description="Download the official Python HTML docs for one version."
+    )
     parser.add_argument("version", help="Docs version, like 3.15 or 3.14")
     args = parser.parse_args()
     version = args.version.strip()
@@ -29,31 +31,53 @@ def download_docs() -> None:
 
     # Sin User-Agent el servidor responde 403
     print(f"Downloading {url}")
-    request = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    request = urllib.request.Request(
+        url, headers={"User-Agent": "Mozilla/5.0"}
+    )
     try:
         try:
             with urllib.request.urlopen(request, timeout=120) as response:
                 archive_path.write_bytes(response.read())
         except urllib.error.HTTPError as error:
             if error.code == 404:
-                raise RuntimeError(f"Python {version} docs were not found. Use a version like 3.15 or 3.14")
-            raise RuntimeError(f"Could not download the Python {version} docs: HTTP {error.code}")
+                raise RuntimeError(
+                    f"Python {version} docs were not found. "
+                    "Use a version like 3.15 or 3.14"
+                )
+            raise RuntimeError(
+                "Could not download the Python "
+                f"{version} docs: HTTP {error.code}"
+            )
         except urllib.error.URLError:
-            raise RuntimeError("Could not download the Python docs. Check the connection and try again")
+            raise RuntimeError(
+                "Could not download the Python docs. "
+                "Check the connection and try again"
+            )
         except TimeoutError:
-            raise RuntimeError("The download timed out. Check the connection and try again")
+            raise RuntimeError(
+                "The download timed out. Check the connection and try again"
+            )
 
         with zipfile.ZipFile(archive_path) as zip_file:
             for info in zip_file.infolist():
                 name = Path(info.filename)
-                if info.filename.startswith("/") or info.filename.startswith("\\") or ".." in name.parts:
-                    raise RuntimeError(f"Unsafe path in the docs archive: {info.filename}")
+                if (
+                    info.filename.startswith("/")
+                    or info.filename.startswith("\\")
+                    or ".." in name.parts
+                ):
+                    raise RuntimeError(
+                        f"Unsafe path in the docs archive: {info.filename}"
+                    )
             with tempfile.TemporaryDirectory() as tmp:
                 tmp_dir = Path(tmp)
                 zip_file.extractall(tmp_dir)
                 extracted = tmp_dir / html_dir.name
                 if not extracted.is_dir():
-                    raise RuntimeError(f"Docs folder not found in the archive: {html_dir.name}")
+                    raise RuntimeError(
+                        "Docs folder not found in the archive: "
+                        f"{html_dir.name}"
+                    )
                 for old in DOCS_DIR.glob("python-*-docs-html"):
                     if old.is_dir():
                         shutil.rmtree(old)

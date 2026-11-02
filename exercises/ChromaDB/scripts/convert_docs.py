@@ -11,7 +11,9 @@ from settings import CHANGELOG_PAGE, HTML_DIR, LICENSE_PAGES, MD_DIR, VERSION
 
 def convert_docs() -> None:
     if VERSION == "":
-        raise RuntimeError("Docs version not found. Run: python scripts/download_docs.py 3.15")
+        raise RuntimeError(
+            "Docs version not found. Run: python scripts/download_docs.py 3.15"
+        )
 
     pages = list_pages(HTML_DIR)
 
@@ -22,17 +24,30 @@ def convert_docs() -> None:
     for page in pages:
         md_path = MD_DIR / page.replace(".html", ".md")
         md_path.parent.mkdir(parents=True, exist_ok=True)
-        md_path.write_text(convert_page(HTML_DIR, page), encoding="utf-8", newline="\n")
+        md_path.write_text(
+            convert_page(HTML_DIR, page), encoding="utf-8", newline="\n"
+        )
 
     changelog_path = MD_DIR / CHANGELOG_PAGE.replace(".html", ".md")
     changelog_path.parent.mkdir(parents=True, exist_ok=True)
-    changelog_path.write_text(convert_changelog(HTML_DIR), encoding="utf-8", newline="\n")
+    changelog_path.write_text(
+        convert_changelog(HTML_DIR), encoding="utf-8", newline="\n"
+    )
 
-    notices = [f"# License\n\nThis folder is generated from the official Python {VERSION} documentation."]
+    notices = [
+        (
+            "# License\n\nThis folder is generated from the official "
+            f"Python {VERSION} documentation."
+        )
+    ]
     for page in LICENSE_PAGES:
-        soup = BeautifulSoup((HTML_DIR / page).read_text(encoding="utf-8"), "lxml")
+        soup = BeautifulSoup(
+            (HTML_DIR / page).read_text(encoding="utf-8"), "lxml"
+        )
         notices.append(convert_block(soup.select_one("div.body"), 1))
-    (MD_DIR / "LICENSE.md").write_text("\n\n".join(notices) + "\n", encoding="utf-8", newline="\n")
+    (MD_DIR / "LICENSE.md").write_text(
+        "\n\n".join(notices) + "\n", encoding="utf-8", newline="\n"
+    )
 
     md_files = list(MD_DIR.rglob("*.md"))
     size = sum(md_file.stat().st_size for md_file in md_files)

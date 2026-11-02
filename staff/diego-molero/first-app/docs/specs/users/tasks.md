@@ -54,3 +54,7 @@ La copia temporal se eliminó; el hash de la base personal no cambió.
 
 - [x] Observar los límites exactos de 64 y 65 caracteres en el correo.
 - [x] Observar el listado vacío y el borrado repetido en una base aislada.
+
+## Iteración del 27 de octubre de 2026
+
+Se conserva el contrato anterior después de comparar 69 escenarios en copias temporales. Los nueve comandos de terminal y notebooks funcionan; la búsqueda por nombre tiene su propia spec y comprobaciones. Se verificaron altas, búsquedas, cambios parciales, duplicados, errores y borrados sin tocar la base personal.

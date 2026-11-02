@@ -1,0 +1,19 @@
+https://github.com/github/github-mcp-server/blob/main/docs/remote-server.md
+
+Servidor remoto: https://api.githubcopilot.com/mcp/
+Configuración de Codex: ~/.codex/config.toml, compartida con su extensión de VS Code.
+Documentación: https://learn.chatgpt.com/docs/extend/mcp
+
+En la sección existente [mcp_servers.github], conservar URL y autenticación.
+Añadir el campo siguiente sin duplicar la sección ni reemplazar otros headers:
+
+http_headers = { "X-MCP-Features" = "mcp_apps_disable_form_deferral" }
+
+Si ya hay http_headers, incorporar solo esa entrada a su mapa. No guardar tokens
+en este archivo ni copiar Authorization a la documentación o a Git. Mantener la
+referencia de credenciales existente. No se utiliza configuración de Cursor.
+
+El header solicita desactivar el diferimiento a formularios del MCP remoto;
+no concede permisos de GitHub ni garantiza corregir un 403. Tras editar la
+configuración, reiniciar la conexión MCP de GitHub o la extensión de Codex para
+cargarla. Una inicialización de solo lectura no acredita escrituras correctas.

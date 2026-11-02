@@ -85,6 +85,6 @@ if ! "$env_python" -c "$notebook_check" >/dev/null 2>&1; then
 fi
 
 # Los kernels heredan UTF-8 para leer la salida de Node también en Windows.
-PYTHONUTF8=1 exec "$env_python" -m notebook clients/jupyter
+PYTHONUTF8=1 exec "$env_python" -m notebook src/clients/jupyter
 status=$?
 exit "$status"

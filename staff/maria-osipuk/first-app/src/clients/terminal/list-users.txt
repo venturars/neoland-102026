@@ -1,0 +1,1 @@
+node --input-type=module -e "import { listUsers } from './src/logic/list-users.js'; console.log(listUsers())"

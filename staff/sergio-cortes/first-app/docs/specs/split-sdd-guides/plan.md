@@ -21,7 +21,7 @@ Se crean:
 Se tocan:
 
 - `docs/CONSTITUTIONS.md`
-- `AGENTS.MD` de first-app
+- `AGENTS.md` de first-app
 
 No se toca el `AGENTS.md` de la raíz del bootcamp.
 
@@ -37,7 +37,7 @@ responsabilidad):
 # Árbol
 
 first-app/
-  AGENTS.MD
+  AGENTS.md
   package.json
   docs/
     ARCHITECTURE.md
@@ -121,7 +121,7 @@ first-app/
 - `docs/ERRORS.md` es la lista de errores y cómo usarlos.
 - `docs/STYLE.md` es la forma de cada línea y las convenciones.
 - `docs/CONSTITUTIONS.md` conserva las specs, los paquetes y el contrato de `logic/`. Enlaza a las otras guías.
-- `AGENTS.MD` son las reglas del agente; apunta a la constitución y a las guías.
+- `AGENTS.md` son las reglas del agente; apunta a la constitución y a las guías.
 ```
 
 ## Base de datos
@@ -227,7 +227,7 @@ La forma de cada línea está en `docs/STYLE.md`. Los errores están en `docs/ER
 
 «Specs» (resto), «Paquetes», «Logic no se reemplaza» y los cuatro pasos siguen igual.
 
-## AGENTS.MD
+## AGENTS.md
 
 En «Proyecto», la frase pasa a ser:
 

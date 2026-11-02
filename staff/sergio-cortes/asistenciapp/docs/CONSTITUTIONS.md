@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 2.3 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-22
+> Versión 2.5 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-30
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -66,8 +66,8 @@ Cambiar el stack requiere enmendar esta constitución.
 
 ## 4. Desarrollo guiado por especificaciones (SDD)
 
-1. **Ningún fichero de la app se modifica sin un spec aprobado que cubra ese cambio.** Entran el código, los tests, el README y el resto de la documentación de uso. Cada cambio nace como `specs/NNN-nombre/spec.md`. Si no cabe en la spec activa, se abre otra. Una issue, una rama o una pull request **no sustituyen** al spec. Quien aprueba cada fase es la persona que trabaja en `staff/sergio-cortes/asistenciapp/`.
-2. El orden siempre es: **spec → plan → tasks → implementación**. No se salta ningún paso. Al terminar el spec, el agente lo enseña y espera el ok. No escribe el plan, las tasks ni el cambio hasta entonces.
+1. **Ningún fichero de la app se modifica sin un spec aprobado que cubra ese cambio.** Entran el código, los tests, el README y el resto de la documentación de uso. Antes de abrir `specs/NNN-nombre/` existe la issue, con qué hay que hacer y cómo probarlo. Si el pedido no cabe en la spec activa, se abre otra. Una issue, una rama o una pull request **no sustituyen** al spec y no autorizan el código. Quien aprueba cada fase es la persona que trabaja en `staff/sergio-cortes/asistenciapp/`.
+2. El orden siempre es: **spec → plan → tasks → implementación**. No se salta ningún paso. Al terminar el spec, el agente lo enseña y espera el ok. No escribe el plan, las tasks ni el cambio hasta entonces. Al terminar el plan, espera el ok antes de las tasks. Al terminar las tasks, espera el ok antes de la implementación.
 3. La `spec.md` describe el **qué y el porqué**, nunca el cómo (no menciona tecnologías).
 4. El `plan.md` describe el **cómo** e incluye una sección que comprueba que cumple esta constitución.
 5. Las dudas se marcan como `[NECESITA ACLARACIÓN]` y se resuelven **antes** de implementar. No se inventan requisitos.
@@ -114,3 +114,4 @@ Cambiar el stack requiere enmendar esta constitución.
 | 2.2 | 2026-10-22 | §4: ningún fichero de la app sin spec aprobado; issue, rama y pull request no sustituyen al spec. §7: carpeta `staff/sergio-cortes/asistenciapp/`. §8: aprueba quien trabaja en esa carpeta | El texto solo frenaba el código; README y tests podían cambiarse sin spec. Las reglas nombraban otra carpeta (spec 002, issue #228) |
 | 2.3 | 2026-10-22 | §3.1: organización en capas documentada en `docs/ARCHITECTURE.md` | Issue #239; alinear gobernanza y código sin cambiar el stack (spec 005) |
 | 2.4 | 2026-10-23 | P4: excepción acotada para IPs en anti-abuso; §6: límite de intentos inválidos por conexión | Issue #318 / spec 006; fuerza bruta de códigos sin mezclar IP con asistencia |
+| 2.5 | 2026-10-30 | §4: la issue existe antes de `specs/NNN-nombre/`. Siguen spec, plan, tasks e implementación, con ok entre ellos. Issue, rama y pull request no autorizan el código. P1–P6 no cambian. La cabecera pasa a 2.5. | Issue #688 / spec 008. El flujo de git del curso entra sin quitar las paradas. La cabecera estaba en 2.3 aunque el historial ya tenía 2.4 |

@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "Gestión de usuarios: logic, queries, db y clients",
   "type": "module",
-  "main": "logic/create-user.js",
+  "main": "src/logic/create-user.js",
   "scripts": {
     "jupyter": "sh scripts/jupyter.sh",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write \"db/**/*.js\" \"queries/**/*.js\" \"logic/**/*.js\"",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\"",
     "lint": "eslint ."
   },
   "keywords": [],

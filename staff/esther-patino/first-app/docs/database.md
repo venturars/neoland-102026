@@ -1,8 +1,8 @@
 ## La base de datos
 
-Hay una sola base de datos: el archivo `db/users.sqlite`.
+Hay una sola base de datos: el archivo `src/db/users.sqlite`.
 
-Ese archivo es el del proyecto y no se reemplaza. No se borra para empezar de cero, no se cambia por otra copia, no se renombra y no se abre otra ruta. Tampoco se usa una base en memoria. `db/connection.js` abre siempre `db/users.sqlite`.
+Ese archivo es el del proyecto y no se reemplaza. No se borra para empezar de cero, no se cambia por otra copia, no se renombra y no se abre otra ruta. Tampoco se usa una base en memoria. `src/db/connection.js` abre siempre `src/db/users.sqlite`.
 
 La tabla se llama `users`. Las columnas son estas:
 
@@ -12,4 +12,4 @@ La tabla se llama `users`. Las columnas son estas:
 - `createdAt TEXT NOT NULL`. Valor por defecto: `datetime('now', 'localtime')`.
 - `updatedAt TEXT NOT NULL`. El mismo valor por defecto al crear.
 
-`queries/users.js` lee los `.sql` de `queries/queries/` y los ejecuta. No hay reglas de negocio aquí. El SQL usa parámetros con nombre (`:id`, `:name`, `:email`).
+`src/queries/users.js` lee los `.sql` de `src/queries/queries/` y los ejecuta. No hay reglas de negocio aquí. El SQL usa parámetros con nombre (`:id`, `:name`, `:email`).

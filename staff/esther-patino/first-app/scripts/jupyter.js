@@ -11,7 +11,7 @@ const VENV_MODULE = "venv";
 const PIP_MODULE = "pip";
 const PIP_INSTALL = "install";
 const NOTEBOOK_PACKAGE = "notebook==7.6.3";
-const JUPYTER_DIRECTORY = "clients/jupyter";
+const JUPYTER_DIRECTORY = "src/clients/jupyter";
 const STDIO_INHERIT = "inherit";
 const EMPTY_EXIT_CODE = 1;
 

@@ -1,1 +1,16 @@
-node --no-warnings logic/listUsers.js
+node --no-warnings --input-type=module -e "
+import { listUsers } from './logic/listUsers.js';
+
+try {
+  const users = listUsers();
+
+  if (users.length === 0) {
+    console.log('There are no users yet.');
+  } else {
+    console.table(users);
+  }
+} catch (error) {
+  console.error('Error: ' + error.message);
+  process.exit(1);
+}
+"

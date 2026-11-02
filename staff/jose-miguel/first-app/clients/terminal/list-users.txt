@@ -1,7 +1,0 @@
-# Pegar en la terminal con el directorio actual en first-app.
-
-# Test 1: lista usuarios. Si responde, la conexión a SQLite funciona (OK).
-node --input-type=module -e "import { listUsers } from './logic/list-users.js'; try { console.log(listUsers()); console.log('Connection works'); } catch (error) { console.log(error.message); }"
-
-# Test 2: si la consulta falla, el mensaje de la app (error).
-node --input-type=module -e "import { listUsers } from './logic/list-users.js'; try { console.log(listUsers()); } catch (error) { console.log(error.message); }"

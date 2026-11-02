@@ -1,0 +1,7 @@
+# Run from the project directory after the separate initialization snippet.
+node --input-type=module <<'NODE'
+import { listUsers } from './src/logic/list-users.js';
+
+const users = listUsers();
+console.log(users);
+NODE

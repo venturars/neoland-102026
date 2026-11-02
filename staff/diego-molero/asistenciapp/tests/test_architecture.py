@@ -28,6 +28,8 @@ def test_documents_and_active_links():
     """Los documentos activos están en su ubicación y enlazan entre sí."""
     assert (APP_ROOT / "docs/CONSTITUTION.md").is_file()
     assert (APP_ROOT / "docs/ARCHITECTURE.md").is_file()
+    assert (APP_ROOT / "docs/TREE.md").is_file()
+    assert (APP_ROOT / "docs/STYLE.md").is_file()
     assert (APP_ROOT / "AGENTS.md").is_file()
     assert not (APP_ROOT / "CONSTITUTION.md").exists()
     assert not (APP_ROOT / "AGENT.md").exists()
@@ -36,12 +38,19 @@ def test_documents_and_active_links():
     for text in (readme, manual):
         assert "docs/CONSTITUTION.md" in text
         assert "docs/ARCHITECTURE.md" in text
+        assert "docs/TREE.md" in text
+        assert "docs/STYLE.md" in text
+    architecture = (APP_ROOT / "docs/ARCHITECTURE.md").read_text(encoding="utf-8")
+    assert "TREE.md" in architecture
+    assert "STYLE.md" in architecture
     constitution = (APP_ROOT / "docs/CONSTITUTION.md").read_text(encoding="utf-8")
     assert "Versión 2.3" in constitution
     for folder in ("domain/", "usecases/", "storage/"):
         assert folder in constitution
+    # STYLE es la fuente de las normas; el manual solo enlaza esa guía.
+    style = (APP_ROOT / "docs/STYLE.md").read_text(encoding="utf-8")
     for marker in (":param", ":return", ":rtype", "Usage::"):
-        assert marker in manual
+        assert marker in style
 
 
 @pytest.mark.parametrize("module", ["codes.py", "names.py", "session.py"])

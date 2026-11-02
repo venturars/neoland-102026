@@ -1,186 +1,115 @@
-# AGENTS.md — Manual de trabajo para agentes de IA
+# AGENTS.md — Cómo trabajar en AsistenciApp
 
-## Qué va primero
+Este archivo contiene solo instrucciones de trabajo. La constitución define las reglas del producto, la arquitectura explica el código y el README contiene los comandos de uso.
 
-Cualquier tarea nueva sigue `docs/GIT-WORKFLOW.md` en la raíz de `neoland-102026`, aunque el mensaje no nombre ese fichero ni diga «issue». Esta sección va antes que el resto de este manual.
+## Regla principal de redacción
 
-Una tarea es una issue, una rama desde `staging` y una pull request en draft hacia `staging`.
+Usa roles generales y rutas de documentación relativas a la aplicación. Evita nombres personales, comparaciones con otras copias y apartados de punto de partida basados en ramas o commits concretos. Los comandos ejecutables conservan las rutas reales necesarias desde la raíz del repositorio.
 
-El momento es dejar la tarea escrita cuando el mensaje cuenta qué hay que hacer. También lo es si:
+## 1. Fuentes de verdad
 
-- trae los títulos «Qué hay que hacer» y «Cómo probarlo»;
-- nombra una carpeta o un fichero de esta app y dice qué debe quedar escrito ahí;
-- pide una forma de trabajar, una spec o un cambio en `AGENTS.md` o en la constitución.
+Lee estos documentos antes de editar, en este orden:
 
-En ese momento se abre solo `neoland-102026/docs/skills/create-issue/SKILL.md`, más `.github/issue_template.md` y `scripts/new-issue.sh`. No hace falta que la skill esté en la lista de skills de la sesión: se abre por esta ruta. No se abre `SKILL.md` ni `MCP.md`. No se usa el resto de este manual para decidir el momento ni para completar la issue.
+1. `docs/CONSTITUTION.md`.
+2. `docs/ARCHITECTURE.md`.
+3. Este archivo.
+4. La spec local aprobada y sus `plan.md` y `tasks.md`.
 
-Se enseña la persona asignada y el título, y se espera el sí. No se enseña la descripción. Con el sí, `scripts/new-issue.sh` crea la issue.
+Busca specs **únicamente** en `staff/maria-osipuk/asistenciapp/specs/`. Una spec de otra app no autoriza cambios aquí.
 
-Nombrar el fichero de destino no autoriza a editarlo. Un mensaje que a la vez describe la tarea y pide escribir ficheros cabe en dos momentos: se pregunta cuál es y se espera. No se elige editar.
+La arquitectura es la fuente para `domain/`, `usecases/attendance.py`, `storage/sqlite.py`, `app.py` y `static/`. No repitas esa información en este archivo.
 
-El resto de este manual se usa cuando el momento ya es hacer el cambio en la rama de esa issue. La issue no sustituye al spec de la app. El spec de la app no sustituye a la issue. El orden es: issue, después la rama, y en esa rama este manual.
+Si una petición contradice la constitución, detente y explica el conflicto antes de escribir.
 
-Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [constitución](docs/CONSTITUTION.md) dice **qué reglas** se cumplen. La [arquitectura](docs/ARCHITECTURE.md) dice **qué hace cada parte**. Este archivo dice **cómo se trabaja** día a día.
+## 2. Flujo Git
 
----
+El trabajo de Git sigue el [orquestador local](agents/git-workflow-agent.md). Según la petición, el orquestador llama al subagente o a la skill correspondiente para pensar una tarea, dejarla escrita, empezar, guardar cambios o pedir revisión.
 
-## 1. Antes de hacer nada: lectura obligatoria
+Una tarea nueva queda registrada en una issue asignada a la cuenta autenticada, una rama desde `staging` y una pull request en borrador hacia `staging`. Antes de elegir la operación se consulta el estado con [check-status](skills/check-status/SKILL.md). Una operación ya autorizada se ejecuta dentro del alcance de esa autorización.
 
-Lee en este orden al empezar cualquier tarea:
+Las [plantillas de issues](templates/issues/) y las [plantillas de PR](templates/pull-request/) son la fuente de la forma del título, el cuerpo y el tipo de rama. Se utiliza la correspondiente al tipo de tarea o la más cercana, sin duplicar sus reglas.
 
-1. `docs/CONSTITUTION.md`: las reglas no negociables.
-2. `docs/ARCHITECTURE.md`: qué hace cada parte.
-3. Este archivo (`AGENTS.md`).
-4. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual"). Busca specs **únicamente** en `staff/maria-osipuk/asistenciapp/specs/`. Un spec o una aprobación de un compañero no autorizan un cambio aquí.
-5. Su `plan.md` y su `tasks.md`, si ya existen.
+El agente `create-pr` crea la pull request. Después, el orquestador llama a [link-pr-to-issue](skills/link-pr-to-issue/SKILL.md) para dejar `Closes #N` y el enlace Development. La issue permanece abierta hasta la fusión que permita su cierre automático; no se cierra a mano.
 
-Si algo de lo que te piden contradice la constitución, **para y avisa** antes de escribir nada.
+Los comandos de las siete skills de terminal incluyen la ruta de sus scripts y se ejecutan desde la raíz del repositorio. Los argumentos que nombran archivos también son relativos a esa raíz.
 
----
+La [guía MCP](MCPS/github-mcp-server/mcp.txt) documenta la conexión remota y su header. Sus ejemplos usan un marcador de credenciales. Configurar una conexión externa o modificar una configuración personal requiere una petición que cubra ese cambio.
 
-## 2. Flujo SDD paso a paso
+El flujo Git respeta las aprobaciones del apartado 3 y la constitución. Una issue, una rama o una PR no sustituyen a la spec local ni autorizan una fase del SDD pendiente. Nombrar un archivo tampoco autoriza a modificarlo.
 
-Cada cambio en esta app recorre estas fases **en orden**. Al terminar cada una, el agente **se detiene** y pide la aprobación explícita de la persona que trabaja en esta carpeta. No se avanza sin un "ok" explícito. Una issue, una rama o una pull request **no sustituyen** al spec.
+## 3. Desarrollo guiado por especificaciones
 
-Al empezar el cambio, el único fichero nuevo permitido es el `spec.md` dentro de `staff/maria-osipuk/asistenciapp/specs/`. El agente lo enseña y espera el ok. El plan, las tasks y el cambio vienen después.
+El orden obligatorio es `spec.md` → aprobación → `plan.md` → aprobación → `tasks.md` → aprobación → código.
 
-| Fase | Archivo | Pregunta que responde | Puerta de salida |
-| --- | --- | --- | --- |
-| 1. Especificar | `spec.md` | ¿**Qué** hay que hacer y **por qué**? | Sin `[NECESITA ACLARACIÓN]` pendientes + aprobación de quien trabaja en esta carpeta |
-| 2. Planificar | `plan.md` | ¿**Cómo** lo hacemos? | Pasa la comprobación de la constitución + esa misma aprobación |
-| 3. Desglosar | `tasks.md` | ¿En qué **pasos pequeños** lo hacemos? | Cada tarea apunta a un criterio de aceptación + esa misma aprobación |
-| 4. Implementar | el cambio que digan las tasks | Hacerlo, tarea a tarea. Incluye el README cuando una task lo diga | Criterios verificados |
-
-### 2.1 Especificar (`spec.md`)
-- Habla del usuario y del problema. **Nunca** nombra tecnologías (nada de "SQLite", "endpoint", "fetch").
-- Estructura: Problema · Usuarios · Historias de usuario · Criterios de aceptación (Dado / Cuando / Entonces) · Fuera de alcance · Preguntas abiertas.
-- Cada criterio de aceptación lleva un identificador (`CA-01`, `CA-02`…) para poder enlazarlo desde tareas y tests.
-- Si falta información, escribe `[NECESITA ACLARACIÓN: pregunta concreta]`. **No inventes la respuesta.**
-- Si ninguna spec **local** aprobada describe lo pedido, no se reutiliza `001-checkin-codigo` ni se usa una spec de un compañero: se abre `staff/maria-osipuk/asistenciapp/specs/NNN-nombre/spec.md` con el siguiente número disponible en esa carpeta.
-
-### 2.2 Planificar (`plan.md`)
-- Arquitectura, modelo de datos, rutas/API, archivos que se crearán.
-- Sección obligatoria **"Comprobación de la constitución"**: repasa P1–P6 y §5–§6 y di cómo los cumple el plan.
-- Si propones una dependencia externa, justifícala aquí (constitución P3).
-
-### 2.3 Desglosar (`tasks.md`)
-- Lista de casillas `- [ ] T01 …` en orden de ejecución.
-- Cada tarea es pequeña (un archivo o una función), tiene un resultado comprobable e indica qué `CA-xx` cubre.
-- Primero el test, luego el código, siempre que sea posible.
-
-### 2.4 Implementar
-- Haz **una tarea cada vez**. Al acabarla, márcala `[x]` en `tasks.md`.
-- Ningún fichero de la app se adelanta al spec. Si ninguna spec local aprobada cubre el pedido, **para**, escribe el spec en `staff/maria-osipuk/asistenciapp/specs/` y espera aprobación.
-- Si durante la implementación descubres que la spec o el plan están mal o incompletos, **para**, propón el cambio en el documento y espera aprobación.
-
----
-
-## 3. Estructura de carpetas
-
-```
-asistenciapp/
-├── AGENTS.md              # este archivo: cómo trabajar
-├── README.md              # cómo arrancar la app (para humanos)
-├── docs/
-│   ├── CONSTITUTION.md    # reglas no negociables
-│   └── ARCHITECTURE.md    # qué hace cada parte
-├── specs/
-│   └── NNN-nombre/
-│       ├── spec.md        # qué y por qué
-│       ├── plan.md        # cómo
-│       └── tasks.md       # pasos
-├── requirements.txt       # dependencias de Python (Flask, pytest)
-├── pytest.ini             # configuración de pytest
-├── app.py                 # entrada HTTP, puerto y túnel
-├── asistencia/
-│   ├── domain/
-│   │   ├── codes.py       # códigos
-│   │   ├── names.py       # nombres
-│   │   ├── session.py     # la clase existe, está abierta y el código vale
-│   │   └── attempts.py    # tope de intentos y error de bloqueo
-│   ├── usecases/
-│   │   └── attendance.py  # acciones de profesor y alumno
-│   ├── storage/
-│   │   └── sqlite.py      # lectura y escritura
-│   ├── export.py          # CSV de filas ya cargadas
-│   └── tunnel.py          # túnel, lo usa app.py
-├── static/                # HTML, CSS y JS del navegador
-├── tests/                 # tests (test_*.py)
-├── .venv/                 # entorno virtual de Python (no se sube a git)
-└── data/                  # base de datos (no se sube a git)
-```
-
-Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codigo`, `002-spec-antes-del-cambio`.
-
----
-
-## 4. Comandos
-
-Ejecutar desde `staff/maria-osipuk/asistenciapp/`:
-
-| Acción | Comando |
+| Fase | Contenido necesario |
 | --- | --- |
-| Preparar el entorno (solo la primera vez) | `python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt` |
-| Activar el entorno (en cada terminal nueva) | `source .venv/bin/activate` |
-| Instalar el túnel (solo la primera vez) | `brew install cloudflared` |
-| Arrancar para una clase online | `python app.py --tunel` (imprime el enlace público del panel) |
-| Arrancar solo en local (desarrollo) | `python app.py` (abre en `http://localhost:8000`) |
-| Ejecutar los tests | `pytest` |
+| `spec.md` | Problema, usuarios, historias, criterios `CA-xx`, fuera de alcance y preguntas abiertas. Explica qué se necesita, sin tecnologías. |
+| `plan.md` | Arquitectura, datos, rutas, archivos y comprobación de P1–P6 y §5–§6 de la constitución. Justifica cualquier dependencia nueva. |
+| `tasks.md` | Pasos pequeños y ordenados. Cada tarea indica qué `CA-xx` cubre. Siempre que sea posible, el test va primero. |
+| Código | Se implementa una tarea cada vez y se marca `[x]` solo después de comprobarla. |
 
-Las únicas dependencias son Flask y pytest (constitución P3).
+Si falta una decisión, escribe `[NECESITA ACLARACIÓN: pregunta concreta]` y espera. No inventes requisitos.
 
----
+Si ninguna spec local aprobada cubre el cambio, crea la siguiente carpeta `specs/NNN-nombre-en-kebab-case/` y empieza únicamente por `spec.md`.
 
-## 5. Reglas de comportamiento
+Si el plan deja de ser correcto durante la implementación, actualízalo y pide aprobación antes de continuar.
 
-- **Solo se edita dentro de `staff/maria-osipuk/asistenciapp/`.**
-- **Pregunta antes de suponer.** Ante una ambigüedad, pregunta o márcala con `[NECESITA ACLARACIÓN]`.
-- **Explica lo que haces.** Al cerrar cada fase, resume qué se ha hecho, por qué y qué tiene que revisar quien trabaja en esta carpeta.
-- **Cambios pequeños.** Mejor varias tareas cortas que una enorme.
-- **Nada de commits ni pushes** sin que quien trabaja en esta carpeta lo pida.
-- **Para todo lo que arranques.** Si levantas el servidor o `cloudflared` para probar, páralos al terminar y comprueba que el puerto queda libre: `lsof -nP -iTCP:8000 -sTCP:LISTEN` no debe mostrar nada. Ojo: en macOS el proceso aparece como `Python` (con mayúscula). (Incidencia del 2026-10-20 en T12.)
-- **No toques la constitución** salvo para proponer una enmienda, que solo aprueba quien trabaja en esta carpeta (constitución §8).
+## 4. Reglas de implementación
 
----
+- Edita solo dentro de `staff/maria-osipuk/asistenciapp/`.
+- Implementa únicamente lo aprobado en la spec y las tasks.
+- Trabaja una tarea o una responsabilidad cada vez.
+- No añadas dependencias, funcionalidades, capas, refactors ni cambios de contrato no solicitados.
+- No hagas commit, push ni merge sin autorización.
+- No modifiques la constitución salvo para proponer una enmienda.
+- Si arrancas la app o el túnel, páralos al terminar y comprueba que el puerto 8000 queda libre.
 
-## 6. Definición de "terminado"
+## 5. Código para una desarrolladora junior
 
-Una funcionalidad está terminada cuando:
+El código nuevo y las partes modificadas deben ser:
 
-- [ ] Todas las tareas de `tasks.md` están en `[x]`.
-- [ ] `pytest` pasa.
-- [ ] Cada `CA-xx` de la spec tiene su test o su verificación manual hecha.
-- [ ] El `README.md` explica cómo usar lo nuevo.
-- [ ] Quien trabaja en esta carpeta la ha probado y la ha dado por buena.
+- **Sencillo:** usa el menor número de conceptos necesario.
+- **Explícito:** valida y transforma los datos en pasos visibles.
+- **Declarativo:** los nombres describen la intención, como `showLiveClassroom` o `isSessionOpen`.
+- **Lineal:** el caso principal se lee de arriba abajo y los errores terminan pronto.
+- **Descriptivo:** usa nombres descriptivos y completos; solo admite abreviaturas habituales, como `id`.
+- **Dividido:** cada función hace una sola cosa y coordina pasos con nombre.
 
----
+Prefiere una solución más larga cuando sea más fácil de entender y explicar. Evita abstracciones prematuras, trucos de una línea, anidación profunda y ayudantes genéricos.
 
-## 7. Estado actual
+En Python, los parámetros y resultados llevan tipos. El docstring usa `:param`, `:return`, `:rtype` y `:raises`; un ejemplo breve puede añadirse en `Usage::`.
 
-| Spec | Fase | Notas |
-| --- | --- | --- |
-| `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
-| `002-spec-antes-del-cambio` | ✅ Implementada (2026-10-23) | Ningún fichero de esta app se toca sin un spec local aprobado |
-| `003-aclarar-instrucciones-arranque` | ✅ Implementada (2026-10-23) | T01–T03 hechas en el README, sin cambio de requisitos |
-| `004-quitar-referencias-personales` | ✅ Implementada (2026-10-23) | Referencias personales quitadas de la documentación. Instrucciones con un usuario genérico |
-| `005-reorganizar-documentos-y-arquitectura` | ✅ Implementada (2026-10-23) | Dominio, acciones, almacenamiento y entrada HTTP. Correcciones de pruebas, tipos y tabla de estado. Tres fallos de validación quedan para otra spec |
-| `006-limitar-intentos-por-ip` | ✅ Implementada (2026-10-26) | Tope de 5 intentos por segundo y 20 por minuto. Con el túnel, la dirección es `CF-Connecting-IP` si la conexión es la de este ordenador. Falta la prueba de quien trabaja en esta carpeta |
-| Bot de Discord | Idea futura, sin número | Fuera del MVP |
+No dupliques reglas, no conviertas silenciosamente un valor inválido y no crees funciones que solo trasladen otra llamada.
 
-> El agente actualiza esta tabla cada vez que una spec cambia de fase.
+La interfaz, los errores y la documentación se escriben en español. Los nombres y comentarios del código pueden estar en inglés.
 
----
+### Comentarios educativos
 
-## 8. Funciones comprensibles
+Un comentario se escribe en inglés sencillo y con una frase completa. Solo se añade cuando explica algo que el código no puede mostrar por sí solo:
 
-Una persona tiene que poder leer una función sin adivinar. No se añade un formateador, un linter ni otra herramienta para vigilar estas normas.
+- una decisión y su motivo;
+- un límite o caso especial;
+- una regla de negocio, privacidad o seguridad;
+- una entrada, salida o error importante;
+- el orden necesario entre dos pasos.
 
-- Cada módulo explica en pocas líneas cuál es su responsabilidad.
-- Una función hace una sola cosa y el nombre dice cuál.
-- Se lee de arriba abajo.
-- Los parámetros y el resultado llevan tipos.
-- El docstring dice qué entra, qué sale y qué errores importan, con `:param`, `:return`, `:rtype` y `:raises`.
-- Si un ejemplo corto ayuda, va en `Usage::`.
-- No se comenta una línea que ya se entiende leyéndola.
-- No hay abreviaturas ambiguas, funciones que solo pasan la llamada, ni la misma regla escrita dos veces.
-- Las explicaciones y los mensajes que ve el usuario van en español.
+Ejemplo útil:
+
+```js
+// Keep the first load silent so existing students are not announced as new arrivals.
+```
+
+Si un nombre más claro evita el comentario, mejora el nombre. No añadas comentarios que solo traduzcan la línea siguiente.
+
+## 6. Verificación y cierre
+
+Una tarea está terminada cuando:
+
+- todas sus casillas están en `[x]`;
+- `pytest` pasa;
+- cada `CA-xx` tiene una prueba automática o una comprobación manual registrada;
+- `README.md` explica cualquier cambio visible;
+- la constitución y la arquitectura siguen siendo correctas;
+- la persona responsable ha probado y aprobado el resultado.
+
+Al cerrar una fase, informa de los archivos modificados, qué hace el cambio, qué se comprobó, el resultado y lo que queda pendiente. No afirmes que algo funciona sin haberlo comprobado.

@@ -35,4 +35,4 @@ Si un resultado cambia, si un mensaje cambia, o si una línea sigue con dos acci
 - Añadir o quitar paquetes de Node.
 - Cambiar las guías (`docs/ARCHITECTURE.md`, `docs/CONSTITUTIONS.md`, `docs/STYLE.md`, `docs/TREE.md`, `docs/DATABASE.md`, `docs/ERRORS.md`).
 - Reescribir los cuadernos Jupyter ni los `.txt` de `clients/terminal/`, salvo que el plan diga lo contrario para una línea concreta.
-- Cambiar `eslint.config.js`, `package.json` ni `AGENTS.MD`.
+- Cambiar `eslint.config.js`, `package.json` ni `AGENTS.md`.

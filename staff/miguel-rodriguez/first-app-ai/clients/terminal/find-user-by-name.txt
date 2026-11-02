@@ -1,8 +1,0 @@
-# Ejecutar desde first-app-ai tras inicializar la tabla por separado.
-# Crear los contactos por separado; el ejemplo busca todos los llamados Ada.
-node --input-type=module <<'NODE'
-import { findUserByName } from './logic/find-user-by-name.js';
-
-const users = findUserByName("Ada");
-console.log(users);
-NODE

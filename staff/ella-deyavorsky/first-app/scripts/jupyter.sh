@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Arranca Jupyter Notebook para los cuadernos de clients/jupyter.
+# Arranca Jupyter Notebook para los cuadernos de src/clients/jupyter.
 # Crea .venv e instala notebook si faltan.
 
 set -euo pipefail
@@ -13,4 +13,4 @@ if [[ ! -x .venv/bin/jupyter-notebook ]]; then
   .venv/bin/pip install notebook==7.6.3
 fi
 
-.venv/bin/jupyter notebook --ip=127.0.0.1 --port=8888 clients/jupyter
+.venv/bin/jupyter notebook --ip=127.0.0.1 --port=8888 src/clients/jupyter

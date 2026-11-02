@@ -69,8 +69,8 @@ El detalle de carpetas y dependencias entre partes está en [ARCHITECTURE.md](AR
 
 ## 4. Desarrollo guiado por especificaciones (SDD)
 
-1. **Ningún fichero de la app se modifica sin un spec aprobado que cubra ese cambio.** Entran el código, los tests, el README y el resto de la documentación de uso. Cada cambio nace como `specs/NNN-nombre/spec.md`. Si no cabe en la spec activa, se abre otra. La persona que trabaja en esta carpeta la aprueba antes de pasar al plan.
-2. El orden siempre es: **spec → plan → tasks → implementación**. No se salta ningún paso. Al terminar el spec, el agente lo enseña y espera el ok. No escribe el plan, las tasks ni el cambio hasta entonces.
+1. **Ningún fichero de la app se modifica sin los tres ficheros de specs (`spec.md`, `plan.md`, `tasks.md`) y el momento de implementar.** Entran el código, los tests, el README y el resto de la documentación de uso. Cada cambio nace como `specs/NNN-nombre/`. Si no cabe en la spec activa, se abre otra. Una issue, una rama o una pull request no sustituyen a esos ficheros ni autorizan el cambio de código.
+2. El orden de ficheros sigue siendo **spec → plan → tasks → implementación**. No se salta ningún paso. Issue y draft van **antes** de las specs. Spec, plan y tasks se escriben **en el mismo momento**. Implementación y pull request son **momentos distintos**. No se exige ok humano entre el spec y el plan.
 3. La `spec.md` describe el **qué y el porqué**, nunca el cómo (no menciona tecnologías).
 4. El `plan.md` describe el **cómo** e incluye una sección que comprueba que cumple esta constitución.
 5. Las dudas se marcan como `[NECESITA ACLARACIÓN]` y se resuelven **antes** de implementar. No se inventan requisitos.
@@ -118,3 +118,4 @@ El detalle de carpetas y dependencias entre partes está en [ARCHITECTURE.md](AR
 | 2.4 | 2026-10-26 | §3: nombra `asistencia/domain/`, `asistencia/usecases/`, `asistencia/storage/` y apunta a `ARCHITECTURE.md` | Spec 005: la constitución describe la organización nueva |
 | 3.0 | 2026-10-26 | P4: la IP pública estática se recuerda solo para contar intentos de registrarse y para la lista de bloqueo | Spec 006: contradice la prohibición total de guardar IPs |
 | 3.1 | 2026-10-27 | P4: el nombre de asistencia puede ser el nombre visible de Discord; prohibido guardar id o email de Discord | Spec 007: check-in con Discord |
+| 3.2 | 2026-10-30 | §4: sin ok entre spec y plan; issue y draft antes de las specs; spec/plan/tasks en el mismo momento; implementación y pull request momentos distintos | Spec 009: cinco momentos humanos |

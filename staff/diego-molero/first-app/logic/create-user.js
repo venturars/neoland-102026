@@ -2,22 +2,34 @@ import { findByEmail, insert } from "../queries/users.js";
 
 // Valida los datos antes de guardar el usuario.
 export function createUser(input) {
-  if (input === null || typeof input !== "object" || Array.isArray(input) ||
-      Object.keys(input).some((key) => key !== "name" && key !== "email")) {
+  if (input === null || typeof input !== "object" || Array.isArray(input)) {
     throw new Error("Input is invalid");
   }
-  if (typeof input.name !== "string" || input.name.trim() === "") {
+  const keys = Object.keys(input);
+  const hasUnknownField = keys.some((key) => key !== "name" && key !== "email");
+  if (hasUnknownField) {
+    throw new Error("Input is invalid");
+  }
+  const rawName = input.name;
+  if (typeof rawName !== "string") {
     throw new Error("Name is invalid");
   }
-  if (typeof input.email !== "string") {
+  const name = rawName.trim();
+  if (name === "") {
+    throw new Error("Name is invalid");
+  }
+  const rawEmail = input.email;
+  if (typeof rawEmail !== "string") {
     throw new Error("Email is invalid");
   }
-  const name = input.name.trim();
-  const email = input.email.trim().toLowerCase();
-  if (email.length > 64 || !/^[^\s@]+@[^\s@]+$/u.test(email)) {
+  const trimmedEmail = rawEmail.trim();
+  const email = trimmedEmail.toLowerCase();
+  const hasValidEmail = /^[^\s@]+@[^\s@]+$/u.test(email);
+  if (email.length > 64 || !hasValidEmail) {
     throw new Error("Email is invalid");
   }
-  if (findByEmail(email)) {
+  const existingUser = findByEmail(email);
+  if (existingUser) {
     throw new Error("Email is already used");
   }
   return insert({ name, email });

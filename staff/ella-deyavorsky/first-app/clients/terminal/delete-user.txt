@@ -1,8 +1,0 @@
-# Paste this in the terminal, with first-app as the current folder
-node --input-type=module <<'EOF'
-import { deleteUser } from "./logic/delete-user.js";
-
-const result = deleteUser({ id: 7 });
-
-console.log(result);
-EOF

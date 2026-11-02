@@ -185,6 +185,8 @@ Los mensajes de error van en español en `{error: "..."}`, con los textos exacto
 
 ## 5. Archivos
 
+> **Nota (2026-10-23):** con la spec 005 el código cambió de sitio para seguir `ARCHITECTURE.md`: el paquete `asistencia/` pasó a `attendance/`, organizado por capas, y `app.py` quedó solo como arranque. El árbol de abajo es el de la versión original de esta spec; el actual está en `AGENT.md` §3 y en el plan 005 §2.1.
+
 ```
 asistenciapp/
 ├── .gitignore             # data/  .venv/  __pycache__/  .pytest_cache/

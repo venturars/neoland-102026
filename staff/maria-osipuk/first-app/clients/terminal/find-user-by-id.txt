@@ -1,1 +1,0 @@
-node --input-type=module -e "import { findUserById } from './logic/find-user-by-id.js'; console.log(findUserById(1))"
