@@ -43,3 +43,13 @@ Rama: `757-feat-vanilla-user-client`. Rutas relativas a first-app. Los criterios
       Resultado: evidencia propia de lo ejecutado, datos y trabajos ajenos conservados y tareas marcadas solo al completarse; durante la implementación, sin commit, push ni PR. (Criterios 1–7)
 
 Publicación de los 16 archivos autorizada mediante commit selectivo, push y PR draft contra staging. Pendiente revisión del código; sin revisores ni merge.
+
+
+## Revisión correctiva autorizada
+
+Revisión sobre el commit inicial `ba7b36490b3018c51353b6579383064df51aabff`, reutilizando la rama y la PR existentes. La autorización expresa permite corregir defectos dentro de estos criterios, comprobarlos con datos desechables y publicar selectivamente en draft sin nuevas pausas intermedias. No cambia el alcance ni el SDD general.
+
+- [x] R01. Localizar rama y PR existentes y capturar el alcance protegido; sin duplicar recursos.
+- [x] R02. Reproducir y corregir decodificación UTF-8 fragmentada y URL mal formada; cuatro casos afectados satisfactorios.
+- [x] R03. Recorrer las tres pantallas en navegador sobre datos ficticios, incluido texto HTML literal y conservación de otro usuario.
+- [x] R04. Revisar capas, arranque, rutas, diff y conservación; preparar publicación selectiva autorizada en draft.

@@ -17,3 +17,8 @@ Estado: spec, plan y T01–T18 aprobados. Implementación y comprobaciones reali
 ## Fuera de alcance
 
 Contraseñas, registro, autenticación real, cambios de las reglas de usuarios, búsqueda adicional, clasificación, frameworks y nuevas dependencias. No se modifican otras aplicaciones ni trabajos en revisión.
+
+
+## Revisión correctiva autorizada
+
+Revisión sobre el commit inicial `ba7b36490b3018c51353b6579383064df51aabff`, reutilizando la rama y la PR existentes. La autorización expresa permite corregir defectos dentro de estos criterios, comprobarlos con datos desechables y publicar selectivamente en draft sin nuevas pausas intermedias. No cambia el alcance ni el SDD general.

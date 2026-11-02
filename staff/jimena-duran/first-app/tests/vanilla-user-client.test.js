@@ -1,4 +1,7 @@
 import test from "node:test";
+import { request } from "node:http";
+import { Buffer } from "node:buffer";
+import { setTimeout } from "node:timers";
 import assert from "node:assert/strict";
 import { mkdtemp, cp, readFile, writeFile, access } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -246,4 +249,96 @@ test("the four terminal clients still run against disposable users", async () =>
     assert.equal(result.status, 0, result.stderr);
     assert.match(result.stdout, expected);
   }
+});
+
+test("UTF-8 request chunks preserve the selected user's name", async (t) => {
+  const directory = await createFixture();
+  const server = await startFixture(directory);
+  t.after(
+    () =>
+      new Promise((resolve) => {
+        server.close(resolve);
+        server.closeAllConnections();
+      }),
+  );
+  const body = Buffer.from(JSON.stringify({ name: "José 🧪" }));
+  const split = body.indexOf(Buffer.from("é")) + 1;
+  const response = await new Promise((resolve, reject) => {
+    const outgoing = request(
+      {
+        hostname: "127.0.0.1",
+        port: server.address().port,
+        path: "/api/users/1",
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+      },
+      (incoming) => {
+        let text = "";
+        incoming.setEncoding("utf8");
+        incoming.on("data", (chunk) => {
+          text += chunk;
+        });
+        incoming.on("end", () =>
+          resolve({ status: incoming.statusCode, text }),
+        );
+        incoming.on("error", reject);
+      },
+    );
+    outgoing.on("error", reject);
+    outgoing.write(body.subarray(0, split));
+    setTimeout(() => outgoing.end(body.subarray(split)), 30);
+  });
+  assert.equal(response.status, 200);
+  const user = JSON.parse(response.text);
+  assert.equal(user.id, 1);
+  assert.equal(user.name, "José 🧪");
+  assert.equal(user.email, "ada@example.test");
+  const other = await fetch(
+    "http://127.0.0.1:" + server.address().port + "/api/users/2",
+  );
+  const unchanged = await other.json();
+  assert.equal(unchanged.name, "Berta");
+  assert.equal(unchanged.email, "berta@example.test");
+});
+
+test("malformed request targets return 404 without stopping the server", async (t) => {
+  const directory = await createFixture();
+  const server = await startFixture(directory);
+  t.after(
+    () =>
+      new Promise((resolve) => {
+        server.close(resolve);
+        server.closeAllConnections();
+      }),
+  );
+  const status = await new Promise((resolve, reject) => {
+    const outgoing = request(
+      {
+        hostname: "127.0.0.1",
+        port: server.address().port,
+        path: "//[",
+        method: "GET",
+      },
+      (incoming) => {
+        incoming.resume();
+        incoming.on("end", () => resolve(incoming.statusCode));
+        incoming.on("error", reject);
+      },
+    );
+    outgoing.on("error", reject);
+    outgoing.setTimeout(750, () =>
+      outgoing.destroy(new Error("Request timed out")),
+    );
+    outgoing.end();
+  });
+  assert.equal(status, 404);
+  const response = await fetch(
+    "http://127.0.0.1:" + server.address().port + "/api/users",
+  );
+  assert.equal(response.status, 200);
+  const users = await response.json();
+  assert.deepEqual(
+    users.map((user) => user.id),
+    [1, 2],
+  );
 });

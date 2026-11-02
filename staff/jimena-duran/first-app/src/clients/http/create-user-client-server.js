@@ -24,7 +24,15 @@ const ERROR_STATUS = {
 
 export function createUserClientServer() {
   return createServer(async (request, response) => {
-    const path = new URL(request.url, "http://localhost").pathname;
+    let url;
+    try {
+      url = new URL(request.url, "http://localhost");
+    } catch {
+      response.writeHead(404);
+      response.end();
+      return;
+    }
+    const path = url.pathname;
     const asset = Object.hasOwn(ASSETS, path) ? ASSETS[path] : undefined;
     if (request.method === "GET" && asset) {
       try {
@@ -66,6 +74,7 @@ export function createUserClientServer() {
         if (request.method === "PATCH") {
           let changes;
           try {
+            request.setEncoding("utf8");
             let body = "";
             for await (const chunk of request) {
               body += chunk;

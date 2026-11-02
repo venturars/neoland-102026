@@ -66,3 +66,9 @@ No hay paquetes nuevos ni cambios de versión, por lo que no se activa una revis
 ## Aprobación y pausa
 
 Spec y plan aprobados para selección de usuario, menú de dos acciones y modificación o eliminación. No quedan decisiones de alcance pendientes. T01–T18 aprobados e implementación autorizada, con pruebas sobre copias desechables. Commit selectivo, push y PR draft contra staging autorizados para los 16 archivos de esta entrega; pendiente revisión del código, sin revisores ni merge.
+
+
+## Revisión correctiva autorizada
+
+Revisión sobre el commit inicial `ba7b36490b3018c51353b6579383064df51aabff`, reutilizando la rama y la PR existentes. La autorización expresa permite corregir defectos dentro de estos criterios, comprobarlos con datos desechables y publicar selectivamente en draft sin nuevas pausas intermedias. No cambia el alcance ni el SDD general.
+Correcciones técnicas: capturar el fallo de interpretación de la URL y responder con el 404 de ruta desconocida; aplicar request.setEncoding(utf8) antes de leer fragmentos JSON. Añadir dos regresiones sobre las fixtures existentes y repetir solo transporte afectado y recorrido de navegador. Sin cambios en firmas, SQL, frontend, dependencias o automatización.
