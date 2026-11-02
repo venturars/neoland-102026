@@ -19,9 +19,10 @@ Actualmente la aplicación permite:
 - contar los usuarios según el género de su nombre;
 - crear la tabla `users`;
 - comprobar las operaciones desde la terminal;
-- comprobar esas mismas operaciones desde Jupyter Notebook.
+- comprobar esas mismas operaciones desde Jupyter Notebook;
+- seleccionar un usuario existente desde el navegador y modificar o borrar sus datos.
 
-La aplicación no tiene frontend, API HTTP ni autenticación. El cliente Jupyter no añade operaciones: llama a las que ya existen.
+El cliente de navegador tiene tres pantallas hechas con HTML, CSS y JavaScript vanilla: selección, menú y edición de usuario. Se comunica con un adaptador HTTP local que llama a las operaciones existentes. El menú muestra «Ir a notas» deshabilitada; no hay gestión de notas, alta de usuarios desde el navegador ni autenticación. El cliente Jupyter tampoco añade operaciones: llama a las que ya existen.
 
 Contar por género llama a Ollama en local desde `src/logic/count-users-by-gender.js`, modelo `gemma4`, usando el paquete `openai` como cliente. No añade una capa. Primero lee los usuarios ya guardados y, solo si hay filas, los envía en partes de hasta 6.
 
@@ -36,17 +37,20 @@ Contar por género llama a Ollama en local desde `src/logic/count-users-by-gende
 ## Flujo de una operación
 
 ```text
-src/clients/terminal/          src/clients/jupyter/
-        ↓                          ↓
-src/logic/
-        ↓
-src/queries/users.js
-        ↓
-src/queries/queries/*.sql
-        ↓
-src/db/connection.js
-        ↓
-src/db/users.sqlite
+src/clients/web/
+        ↓ HTTP
+src/clients/http/       src/clients/terminal/       src/clients/jupyter/
+        └──────────────────────┼────────────────────────┘
+                               ↓
+                          src/logic/
+                               ↓
+                     src/queries/users.js
+                               ↓
+                  src/queries/queries/*.sql
+                               ↓
+                     src/db/connection.js
+                               ↓
+                      src/db/users.sqlite
 ```
 
 Ninguna capa accede directamente a otra capa que no sea la siguiente del recorrido. El cuaderno de preparar la tabla llama a `createUsersTable`, igual que su cliente de terminal.
@@ -55,7 +59,7 @@ Ninguna capa accede directamente a otra capa que no sea la siguiente del recorri
 
 - Cada funcionalidad de negocio tiene su propio archivo.
 - Las reglas de negocio viven en `src/logic/`.
-- Los clientes actuales son la terminal y Jupyter Notebook.
+- Los clientes actuales son la terminal, Jupyter Notebook y el navegador con su adaptador HTTP local.
 - Ninguna funcionalidad se añade sin una tarea concreta.
 - Cada pedido tiene su carpeta `docs/specs/<nombre>/` con `spec.md`, `plan.md` y `tasks.md`.
 - Hay que usar Socket para validar los paquetes de Node antes de aceptar el plan que los añade o les cambia la versión, como dice «Paquetes».
