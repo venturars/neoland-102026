@@ -8,7 +8,7 @@ La alumna pide el trabajo con sus palabras. El agente lo lleva a un solo momento
 
 ## 1. Dejar la tarea escrita
 
-El agente usa la skill `github-issues`. Enseña el título, el autor, la persona asignada y el cuerpo. El autor y la persona asignada son la alumna. El título tiene menos de 72 caracteres. El cuerpo, en inglés, tiene dos partes: qué hay que hacer y cómo lo prueba un compañero en su ordenador. En esta app, esa prueba es pegar el ejemplo de `clients/terminal/` con el directorio actual en `first-app`. No hay script de tests.
+El agente usa la skill `github-issues`. Enseña el título, el autor, la persona asignada y el cuerpo. El autor y la persona asignada son la alumna. El título tiene menos de 72 caracteres. El cuerpo, en inglés, tiene dos partes: qué hay que hacer y cómo lo prueba un compañero en su ordenador. En esta app, esa prueba es pegar el ejemplo de `src/clients/terminal/` con el directorio actual en `first-app`. No hay script de tests.
 
 Si la alumna quiere afilar la tarea antes de escribirla, pide la skill `grill-me`. Esa entrevista no crea la issue.
 

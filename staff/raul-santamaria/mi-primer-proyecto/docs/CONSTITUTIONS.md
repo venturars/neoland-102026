@@ -1,6 +1,6 @@
 # CONSTITUTIONS.md — mi-primer-proyecto
 
-Base de la app. login con IA para alumnos junior de AI Engineering, en español, con el código en inglés. Node y una sola base SQLite. Sigue SDD. Un desarrollo nuevo no empieza en el código: pasa por `spec.md`, `plan.md` y `tasks.md`, y un humano lee cada uno antes de seguir. Antes está la issue, escrita por su subagente. La spec abre con `Issue: #N`.
+Principios **no negociables** de mi-primer-proyecto. login con IA para alumnos junior de AI Engineering, en español, con el código en inglés. Node y una sola base SQLite en `src/db/users.sqlite`. Sigue SDD. Un desarrollo nuevo no empieza en el código: pasa por `spec.md`, `plan.md` y `tasks.md`, y un humano lee cada uno antes de seguir. Antes está la issue, escrita por su subagente. La spec abre con `Issue: #N`. **Cómo** trabaja el agente (orquestador, paradas, comandos) está en `AGENTS.md`.
 
 ## Guías
 
@@ -14,7 +14,7 @@ Base de la app. login con IA para alumnos junior de AI Engineering, en español,
 
 Los paquetes son `openai`, `cli-table3` `0.6.5` y `@colors/colors` `1.6.1`. Se instalan con pnpm. No se usa npm.
 
-Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket.
+Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket. El procedimiento (capas, resumen en el plan, skill) no está en esta sección; está en `AGENTS.md`.
 
 La referencia del MCP está en `MCPS/socket-mcp/mcp.txt`. La organización
 es `ai-engineering`.
@@ -35,7 +35,7 @@ dato en blanco.
 
 ## SDD
 
-Una funcionalidad nueva empieza en `docs/specs/<nombre>/`. `<nombre>` va en inglés y con guiones, igual que el fichero de `logic/`.
+Una funcionalidad nueva empieza en `docs/specs/<nombre>/`. `<nombre>` va en inglés y con guiones, igual que el fichero de `src/logic/`.
 
 Tres ficheros, en este orden. Cada uno se revisa antes de escribir el siguiente.
 
@@ -52,14 +52,14 @@ Para poder revisarlo: `spec.md` cabe en una pantalla, `plan.md` no pasa de sesen
 Un paso nombra un solo fichero o una sola comprobación, empieza por un verbo (Crear, Abrir, Escribir, Comprobar) y dice qué se ve al terminar. Van en orden, con `- [ ]`. Sin códigos `T001` y sin marcas de trabajo en paralelo.
 
 ```text
-- [ ] 3. Abrir logic/create-user.js y escribir la validación del email. Un email vacío lanza "Email is invalid".
+- [ ] 3. Abrir src/logic/create-user.js y escribir la validación del email. Un email vacío lanza "Email is invalid".
 ```
 
-## Un fichero de logic
+## Un fichero de src/logic
 
-`logic/` no importa la base de datos. Recibe el almacén. Cuando una funcionalidad de `logic/` existe, no se mueve a otra carpeta ni se sustituye por otra implementación. Pueden cambiar el cliente y el SQL. Las reglas no.
+`src/logic/` no importa la base de datos. Recibe el almacén. Cuando una funcionalidad de `src/logic/` existe, no se mueve a otra carpeta ni se sustituye por otra implementación. Pueden cambiar el cliente y el SQL. Las reglas no.
 
-Una funcionalidad de `logic/` es un fichero. El fichero define el nombre, los parámetros de entrada, el cuerpo y la salida. La forma de cada línea está en `docs/STYLE.md`.
+Una funcionalidad de `src/logic/` es un fichero. El fichero define el nombre, los parámetros de entrada, el cuerpo y la salida. La forma de cada línea está en `docs/STYLE.md`.
 
 Orden del cuerpo:
 
@@ -70,7 +70,7 @@ Orden del cuerpo:
 
 El error no se devuelve como objeto. Se lanza con `throw new Error("mensaje en inglés")` dentro de `try/catch`. Los mensajes están en `docs/ERRORS.md`.
 
-## Funciones de logic
+## Funciones de src/logic
 
 `createUser({ name, email })`  
 Entrada: nombre y email.  
@@ -94,4 +94,4 @@ Salida: `women`, `men` y `genderUndefined`.
 
 ## Cliente
 
-Al terminar una funcionalidad, su primer cliente es un `.txt` en `clients/terminal/`. El fichero es el bloque que se pega en Git Bash, con el directorio actual en `mi-primer-proyecto`. Ese bloque practica la query.
+Al terminar una funcionalidad, su primer cliente es un `.txt` en `src/clients/terminal/`. El fichero es el bloque que se pega en Git Bash, con el directorio actual en `mi-primer-proyecto`. Ese bloque practica la query.

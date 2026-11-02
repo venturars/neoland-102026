@@ -55,10 +55,12 @@ The active spec is the approved description of the feature you are building now.
 
 When you add a Node package or change its version, validate it with the Socket MCP before the plan is accepted. `docs/CONSTITUTIONS.md` says this is required; this is how it is done.
 
-1. Check with Socket that the package and that exact version are not affected by a campaign, not affected by an alert, and have no stat below 50 points.
+1. Check with Socket whether the package and that exact version are affected by a campaign, are affected by an alert, or have a stat below 50 points, and report what you find. Do not reject: the person decides, as step 2 says. Each datum has its own tool, written in `MCPS/socket-mcp/mcp.txt`: stats with `depscore` (no session), alerts with `alerts` (filtered by the package name) and campaign with `threat_feed`. `alerts` and `threat_feed` need a session in the organization; `threat_feed` also needs the feature enabled, and the free plan answers 403 `threat_feed_not_entitled`.
 2. Do not decide an alert yourself. Comment it, and the person who accepts the plan decides.
 3. Check the dependencies of that package with the same criteria, down to 3 layers.
 4. Put a summary of this review in the plan, before the plan is accepted.
+
+A datum is written as "not found" only after its tool was called. If the tool cannot answer, the summary gives the reason, as the tool gave it. An empty `alerts` list is written as "no alert on a watched package", not as "no alerts". Only an alert of the same version as the plan counts. A stat below 50 is written; 50 does not count as below.
 
 ## Style
 

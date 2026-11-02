@@ -10,10 +10,14 @@ from split_doc import split_doc
 
 def build_index() -> None:
     if not MD_DIR.is_dir():
-        raise RuntimeError(f"Markdown folder not found: {MD_DIR}. Run scripts/convert_docs.py")
+        raise RuntimeError(
+            f"Markdown folder not found: {MD_DIR}. Run scripts/convert_docs.py"
+        )
 
     start = time.time()
-    md_paths = sorted(path for path in MD_DIR.rglob("*.md") if path.name != "LICENSE.md")
+    md_paths = sorted(
+        path for path in MD_DIR.rglob("*.md") if path.name != "LICENSE.md"
+    )
     chunks = []
     for md_path in md_paths:
         chunks = chunks + split_doc(md_path)
@@ -31,7 +35,7 @@ def build_index() -> None:
     )
 
     for batch_start in range(0, len(chunks), BATCH_SIZE):
-        batch = chunks[batch_start:batch_start + BATCH_SIZE]
+        batch = chunks[batch_start : batch_start + BATCH_SIZE]
         texts = [chunk["text"] for chunk in batch]
         collection.add(
             ids=[chunk["id"] for chunk in batch],

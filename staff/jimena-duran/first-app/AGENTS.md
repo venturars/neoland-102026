@@ -1,5 +1,15 @@
 # AGENTS.md — first-app
 
+El flujo de Git entra por [agents/git-workflow-agent.md](agents/git-workflow-agent.md). La guía de uso está en [docs/GIT-AUTOMATION.md](docs/GIT-AUTOMATION.md). Las autorizaciones y las pausas de esta app prevalecen sobre cualquier secuencia automática.
+
+## Orden
+
+1. El orquestador reconoce el momento y lanza al subagente correspondiente como agente real, con las instrucciones de su archivo. El padre coordina; no sustituye al agente de ese momento. Si no hay delegación disponible, informa y se detiene para acordar cómo continuar.
+2. La issue existe antes de crear `docs/specs/<nombre>/`, con `<nombre>` en kebab-case. La spec abre con `Issue: #N`.
+3. Con la issue, preparar únicamente `spec.md` y `plan.md`. Detenerse para revisión humana. Si las fuentes discrepan, registrar la duda al final del plan; no crear tareas ni implementar.
+4. Tras aprobar spec y plan, preparar `tasks.md` y detenerse otra vez para su revisión. La implementación comienza solo cuando la persona la autoriza; ejecuta las tareas aprobadas sin inventar otras.
+5. La rama se toma de cada tarea y de su autorización. No fijar nombres de ramas personales en componentes reutilizables. Un permiso para implementar no autoriza por sí solo commit, push, PR ni merge.
+
 ## Guías del proyecto
 
 Las reglas generales y los enlaces a las guías por tema están en [CONSTITUTIONS.md](docs/CONSTITUTIONS.md). Para escribir código, sigue [STYLE.md](docs/STYLE.md).
@@ -7,7 +17,7 @@ Las reglas generales y los enlaces a las guías por tema están en [CONSTITUTION
 ## Comandos disponibles
 
 - Ejecución: todavía no existe un comando de ejecución.
-- Pruebas: aún no hay tests automatizados; el script `test` de `package.json` es solo el marcador de pnpm.
+- Pruebas de la aplicación: el script `test` de `package.json` es solo el marcador de pnpm. Las comprobaciones aisladas de Git están en `tools/tests/`; requieren autorización para los commits y publicaciones en sus repositorios temporales, según [GIT-AUTOMATION.md](docs/GIT-AUTOMATION.md).
 - Formato: `pnpm format` ejecuta Prettier con sus opciones predeterminadas; las reglas están en [STYLE.md](docs/STYLE.md). `pnpm lint` revisa el JavaScript con ESLint.
 
 ## Reglas de trabajo
@@ -35,7 +45,7 @@ versión no cambie y las dependencias más allá de la tercera capa.
 
 ## Cierre de una tarea
 
-- Cada funcionalidad nueva debe incluir su primer cliente en `clients/terminal/`. Es un archivo `.txt` que se ejecuta desde la carpeta `first-app`, importa la función de `logic/` y muestra su resultado con `console.log`.
+- Cada funcionalidad nueva debe incluir su primer cliente en `src/clients/terminal/`. Es un archivo `.txt` que se ejecuta desde la carpeta `first-app`, importa la función de `src/logic/` y muestra su resultado con `console.log`.
 - Antes de cerrar el trabajo, ejecuta ese fragmento y confirma que la funcionalidad funciona.
 - Ejecuta `pnpm format` antes de dar la tarea por terminada.
 - Ejecuta `pnpm lint` antes de dar la tarea por terminada.

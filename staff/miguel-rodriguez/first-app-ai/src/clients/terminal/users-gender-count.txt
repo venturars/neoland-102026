@@ -1,0 +1,10 @@
+# Run from the project directory after separate table initialization.
+# Create contacts separately for a nonempty example; an empty table returns zeroes.
+# Requires the approved openai dependency and local Ollama at http://127.0.0.1:11434
+# with llama3.2 available. Empty data does not contact the model.
+node --input-type=module <<'NODE'
+import { usersGenderCount } from './src/logic/users-gender-count.js';
+
+const result = await usersGenderCount();
+console.log(result);
+NODE

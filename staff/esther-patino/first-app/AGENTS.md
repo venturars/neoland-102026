@@ -4,7 +4,7 @@ El trabajo de git sigue `agents/git-workflow-agent.md` de esta carpeta.
 
 ## Proyecto
 
-first-app es la primera app del curso de IA Engineer creada por una alumna junior. Creada a través de interacción con IA. No es una web. Se usa desde la terminal.
+first-app es la primera app del curso de IA Engineer creada por una alumna junior. Creada a través de interacción con IA. No es una web. Se usa desde la terminal. También se usa desde el navegador con `pnpm start`.
 
 Está en Node, con módulos ES (`"type": "module"`) y SQLite (`node:sqlite`, fichero `src/db/users.sqlite`). Los campos del usuario están en `docs/CONSTITUTIONS.md`. Ese documento manda sobre el comportamiento de la app. La arquitectura está en `docs/ARCHITECTURE.md`. Los mensajes de error están en `docs/errors.md`. Los nombres de las funciones están en `docs/style.md`.
 

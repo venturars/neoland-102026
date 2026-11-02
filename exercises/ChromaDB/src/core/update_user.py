@@ -4,7 +4,9 @@ from storage.select_user_by_email import select_user_by_email
 from storage.update_user import update_user as update_user_row
 
 
-def update_user(user_id: int, name: str, email: str, age: int, gender: str) -> dict:
+def update_user(
+    user_id: int, name: str, email: str, age: int, gender: str
+) -> dict:
     validate_user(name, email, age, gender)
 
     if select_user(user_id) is None:

@@ -1,0 +1,2 @@
+# El lanzador mantiene finales LF para ejecutarse con sh en cualquier sistema.
+scripts/*.sh text eol=lf

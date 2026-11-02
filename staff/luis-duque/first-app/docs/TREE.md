@@ -2,54 +2,92 @@
 
 ```text
 first-app/
-  db/
-    connection.js
-    users.sqlite
-  logic/
-    shared.js
-    create-user.js
-    update-user.js
-    delete-user.js
-    list-users.js
-    find-user-by-id.js
-    find-user-by-email.js
-    find-user-by-name.js
-    users-gender.js
-  clients/
-    terminal/
-      create-user.txt
-      update-user.txt
-      delete-user.txt
-      list-users.txt
-      find-user-by-id.txt
-      find-user-by-email.txt
-      find-user-by-name.txt
-      users-gender.txt
-    jupyter/
-      create-user.ipynb
-      update-user.ipynb
-      delete-user.ipynb
-      list-users.ipynb
-      find-user-by-id.ipynb
-      find-user-by-email.ipynb
-      find-user-by-name.ipynb
-      users-gender.ipynb
-  queries/
-    users.js
+  src/
+    db/
+      connection.js
+      users.sqlite
+    logic/
+      shared.js
+      create-user.js
+      update-user.js
+      delete-user.js
+      list-users.js
+      find-user-by-id.js
+      find-user-by-email.js
+      find-user-by-name.js
+      users-gender.js
+    clients/
+      terminal/
+        create-user.txt
+        update-user.txt
+        delete-user.txt
+        list-users.txt
+        find-user-by-id.txt
+        find-user-by-email.txt
+        find-user-by-name.txt
+        users-gender.txt
+      jupyter/
+        create-user.ipynb
+        update-user.ipynb
+        delete-user.ipynb
+        list-users.ipynb
+        find-user-by-id.ipynb
+        find-user-by-email.ipynb
+        find-user-by-name.ipynb
+        users-gender.ipynb
     queries/
-      create-table-users.sql
-      create-user.sql
-      update-user.sql
-      delete-user.sql
-      list-users.sql
-      find-user-by-id.sql
-      find-user-by-email.sql
-      find-user-by-name.sql
+      users.js
+      queries/
+        create-table-users.sql
+        create-user.sql
+        update-user.sql
+        delete-user.sql
+        list-users.sql
+        find-user-by-id.sql
+        find-user-by-email.sql
+        find-user-by-name.sql
   scripts/
     jupyter.sh
   eslint.config.js
   package.json
   pnpm-lock.yaml
+  agents/
+    git-workflow-agent.md
+    help-me-to-think.md
+    create-issue.md
+    create-branch.md
+    create-commit.md
+    create-pr.md
+    launch-push.md
+  skills/
+    assign-author/SKILL.md
+    assign-reviewers/SKILL.md
+    check-status/SKILL.md
+    commit-changes/SKILL.md
+    create-branch/SKILL.md
+    create-branch-from-staging/SKILL.md
+    create-draft/SKILL.md
+    create-empty-commit/SKILL.md
+    create-issue/SKILL.md
+    create-pr-base-staging/SKILL.md
+    grill-me/SKILL.md
+    grill-with-docs/SKILL.md
+    launch-push/SKILL.md
+    link-pr-to-issue/SKILL.md
+    pull-changes/SKILL.md
+  tools/
+    check-status.sh
+    commit-changes.sh
+    create-branch.sh
+    create-branch-from-staging.sh
+    create-empty-commit.sh
+    launch-push.sh
+    pull-changes.sh
+  templates/
+    issues/basic_issue.md
+    pull-request/basic-pull-request.md
+  MCPS/
+    github-mcp-server/mcp.txt
   docs/
     ARCHITECTURE.md
     TREE.md

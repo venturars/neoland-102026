@@ -1,1 +1,0 @@
-node --input-type=module -e "import { findUserByName } from './staff/luis-duque/first-app/logic/find-user-by-name.js'; console.log(await findUserByName(process.argv[1]))" Carmen

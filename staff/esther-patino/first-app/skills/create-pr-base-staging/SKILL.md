@@ -10,7 +10,7 @@ Fuente de la forma del cuerpo: [github-pr](https://www.skills.sh/gentleman-progr
 1. **Base** _(Obligatorio)_: `staging`.
 2. **Cabeza** _(Obligatorio)_: La rama que acaba de subirse.
 3. **Título** _(Obligatorio)_: El título de la issue, en inglés.
-4. **Cuerpo** _(Obligatorio)_: Español, con `templates/pull-request/<template>.md`. La sección Issue se deja vacía.
+4. **Cuerpo** _(Obligatorio)_: Español, con la plantilla del tipo en `templates/pull-request/`. La sección Issue se deja vacía. Si el tipo no tiene plantilla, usa la más cercana.
 
 #### Reglas de Invocación Críticas
 

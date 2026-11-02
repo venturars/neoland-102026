@@ -96,7 +96,7 @@ const kernelArguments = [
 run(python, kernelArguments);
 
 console.log("Abriendo los nueve documentos. Ctrl+C para detener Jupyter.");
-const notebookDirectory = join(app, "clients/jupyter");
+const notebookDirectory = join(app, "src/clients/jupyter");
 const suppliedArguments = process.argv.slice(2);
 const notebookArguments = [
   "-m",

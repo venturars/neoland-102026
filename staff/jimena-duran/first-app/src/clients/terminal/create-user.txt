@@ -1,0 +1,9 @@
+# Pega esto en PowerShell desde la carpeta first-app.
+$script = @'
+import { createUser } from "./src/logic/create-user.js";
+
+const result = createUser({ name: "Ada", email: "ada@example.com" });
+
+console.log(result);
+'@
+$script | node --input-type=module

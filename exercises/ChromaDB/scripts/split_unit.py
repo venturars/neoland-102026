@@ -8,7 +8,8 @@ def split_unit(text: str) -> list[str]:
     if len(text) <= SPLIT_ABOVE:
         return [text]
 
-    # Bloques separados por una línea en blanco. Un bloque de código nunca se corta.
+    # Bloques separados por una línea en blanco.
+    # Un bloque de código nunca se corta.
     blocks = []
     block_lines = []
     in_code = False

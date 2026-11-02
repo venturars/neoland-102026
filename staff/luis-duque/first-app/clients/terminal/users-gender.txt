@@ -1,1 +1,0 @@
-node --input-type=module -e "import { usersGender } from './staff/luis-duque/first-app/logic/users-gender.js'; console.log(await usersGender())"

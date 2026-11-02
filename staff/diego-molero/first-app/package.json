@@ -9,6 +9,7 @@
     "node": ">=24.14.0"
   },
   "scripts": {
+    "jupyter": "sh scripts/jupyter.sh",
     "db:init": "node --input-type=module < clients/terminal/create-users-table.txt",
     "create-user": "node --input-type=module < clients/terminal/create-user.txt",
     "update-user": "node --input-type=module < clients/terminal/update-user.txt",
@@ -16,6 +17,10 @@
     "list-users": "node --input-type=module < clients/terminal/list-users.txt",
     "find-user-by-email": "node --input-type=module < clients/terminal/find-user-by-email.txt",
     "find-user-by-id": "node --input-type=module < clients/terminal/find-user-by-id.txt",
+    "find-user-by-name": "node --input-type=module < clients/terminal/find-user-by-name.txt",
     "classify": "node --input-type=module < clients/terminal/users-gender-count.txt"
+  },
+  "dependencies": {
+    "cli-table3": "0.6.5"
   }
 }

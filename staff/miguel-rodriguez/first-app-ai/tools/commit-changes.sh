@@ -45,12 +45,19 @@ for path in "$@"; do
       echo "Se requiere una ruta literal y normalizada: $path" >&2; exit 1;;
   esac
   [[ ! -d "$path" ]] || { echo "No se admiten directorios: $path" >&2; exit 1; }
-  # Impide atravesar directorios simbólicos que salen de la app.
-  parent=$(cd "$(dirname "$path")" && pwd -P) || exit 1
+  # Valida el ancestro existente incluso si el traslado eliminó la carpeta.
+  parent_path=$(dirname "$path")
+  while [[ ! -e "$parent_path" && ! -L "$parent_path" ]]; do
+    parent_path=$(dirname "$parent_path")
+  done
+  parent=$(cd "$parent_path" && pwd -P) || exit 1
   case "$parent/" in "$app/"*) ;; *) echo "Ruta externa: $path" >&2; exit 1;; esac
   if [[ ! -e "$path" && ! -L "$path" ]]; then
-    git cat-file -e "HEAD:$path" 2>/dev/null || {
+    object_type=$(git cat-file -t "HEAD:$path" 2>/dev/null) || {
       echo "No existe el archivo ni está guardado en HEAD: $path" >&2; exit 1;
+    }
+    [[ "$object_type" == "blob" ]] || {
+      echo "Se requiere un archivo de HEAD, no un directorio: $path" >&2; exit 1;
     }
   fi
 done

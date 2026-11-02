@@ -5,5 +5,8 @@ export function deleteUser(id) {
   if (!Number.isSafeInteger(id) || id <= 0) {
     throw new Error("User ID is invalid");
   }
-  if (!remove(id)) throw new Error("User not found");
+  const removed = remove(id);
+  if (!removed) {
+    throw new Error("User not found");
+  }
 }
