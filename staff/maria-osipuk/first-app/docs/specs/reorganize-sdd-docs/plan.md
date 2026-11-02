@@ -2,7 +2,7 @@
 
 Issue: #754.
 
-Estado: implementado y comprobado en local, tras la autorización expresa. Pendiente de commit.
+Estado: implementado y comprobado, tras la autorización expresa.
 
 Todas las rutas son relativas a la raíz de `first-app`.
 

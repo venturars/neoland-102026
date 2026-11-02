@@ -2,7 +2,7 @@
 
 Issue: #754.
 
-Estado: implementado y comprobado en local, tras la autorización expresa. Pendiente de commit.
+Estado: implementado y comprobado, tras la autorización expresa.
 
 ## 1. [x] Llevar las funciones de negocio al estilo
 
