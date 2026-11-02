@@ -7,8 +7,8 @@ Dependencias de desarrollo, con versión fija e instaladas con pnpm:
 
 | Paquete | Versión | Motivo |
 |---|---|---|
-| `prettier` | `3.9.10` | Última versión. La misma que el profe |
-| `eslint` | `10.14.0` | Última versión. El profe tiene `10.13.0` |
+| `prettier` | `3.9.10` | Última versión publicada |
+| `eslint` | `10.14.0` | Última versión publicada |
 | `@eslint/js` | `10.0.1` | Reglas recomendadas. Última versión |
 
 ## Validación con Socket
@@ -44,7 +44,7 @@ En una copia del código, fuera del repositorio:
 ## Arreglos de los errores de ESLint
 | Error | Arreglo | Comportamiento |
 |---|---|---|
-| `URL`, `fetch` y `AbortSignal` no definidos | Se declaran en `eslint.config.js` como globales de solo lectura. Son de Node. Así lo hacen maria-osipuk, meghan-martin y sergio-cortes | No cambia |
+| `URL`, `fetch` y `AbortSignal` no definidos | Se declaran en `eslint.config.js` como globales de solo lectura. Son de Node. Declararlas a mano evita añadir otro paquete | No cambia |
 | `preserve-caught-error` (2) | `throw new Error(<mismo mensaje>, { cause: error })` | Mismo mensaje. El error original queda guardado en `cause` |
 | `'error' is defined but never used` | `catch {` sin variable | No cambia |
 
