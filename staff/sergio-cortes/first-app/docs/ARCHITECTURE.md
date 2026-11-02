@@ -1,12 +1,12 @@
 # Arquitectura
 
 - `eslint.config.js` aplica las reglas recomendadas de ESLint al JavaScript e ignora `.venv`, `node_modules` y los cuadernos Jupyter.
-- `agents/git-workflow-agent.md` reconoce el momento y llama al subagente como un agente aparte. El padre no hace ese trabajo.
+- `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca.
 - `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la tarea se puede dejar escrita.
-- `agents/create-issue.md` crea la issue con título en inglés y descripción en español, asignada a quien está autenticado.
-- `agents/create-branch.md` crea la rama `número-tipo-descripcion`.
+- `agents/create-issue.md` crea la issue asignada a quien está autenticado; el cuerpo sale de la plantilla del tipo en `templates/issues/`.
+- `agents/create-branch.md` crea la rama de trabajo; el tipo y el nombre de rama siguen la plantilla del tipo.
 - `agents/create-commit.md` hace un commit pequeño con ficheros nombrados.
-- `agents/create-pr.md` abre la pull request contra `staging` y la deja en draft, sin enlazar la issue.
+- `agents/create-pr.md` abre la pull request contra `staging` con la plantilla del tipo; la deja en draft, sin enlazar la issue.
 - `agents/launch-push.md` publica `HEAD` en `origin` y deja el upstream puesto.
 - `skills/grill-with-docs/SKILL.md` entrevista cuando el cambio vive en este proyecto.
 - `skills/grill-me/SKILL.md` entrevista cuando el repositorio no responde.
@@ -21,7 +21,7 @@
 - `skills/launch-push/SKILL.md` sube la rama actual y fija el upstream.
 - `skills/create-pr-base-staging/SKILL.md` abre la pull request con base `staging`.
 - `skills/create-draft/SKILL.md` deja la pull request en draft.
-- `skills/link-pr-to-issue/SKILL.md` deja `Related to #N` sin cerrar la issue.
+- `skills/link-pr-to-issue/SKILL.md` deja `Closes #N` en el cuerpo. No cierra la issue por API. GitHub la cierra al fusionar en la rama por defecto.
 - `skills/assign-reviewers/SKILL.md` asigna a quienes miran la pull request y la saca de draft.
 - `tools/check-status.sh` escribe la rama, el remoto y los cambios.
 - `tools/pull-changes.sh` adelanta `staging` en fast-forward.
@@ -30,9 +30,9 @@
 - `tools/create-empty-commit.sh` crea el commit vacío de apertura.
 - `tools/commit-changes.sh` guarda los ficheros nombrados.
 - `tools/launch-push.sh` sube la rama y fija el upstream.
-- `templates/issues/basic_issue.md` es el cuerpo de la issue: qué hay que hacer y cómo probarlo.
-- `templates/pull-request/basic-pull-request.md` es el cuerpo de la pull request.
-- `MCPS/github-mcp-server/mcp.txt` es la dirección del MCP de GitHub.
+- `templates/issues/` lleva seis plantillas (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`). En el comentario HTML van la regla del título, el tipo y el nombre de rama.
+- `templates/pull-request/` lleva seis plantillas del mismo tipo. El cuerpo comparte secciones; la lista de comprobación cambia por tipo. La sección Issue es `Closes #`.
+- `MCPS/github-mcp-server/mcp.txt` es la dirección del MCP de GitHub y el header para que la escritura no abra un formulario.
 - `MCPS/socket-mcp/mcp.txt` es la dirección del MCP de Socket.
 - `docs/specs/<nombre>/` es donde empieza un desarrollo. `<nombre>` es la funcionalidad, en kebab-case.
 - `src/db/` abre la base de datos y no contiene reglas de negocio.
