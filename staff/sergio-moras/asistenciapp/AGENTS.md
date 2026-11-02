@@ -11,25 +11,29 @@ Lee en este orden al empezar cualquier tarea:
 1. `docs/CONSTITUTION.md`: las reglas no negociables.
 2. `docs/ARCHITECTURE.md`: qué pieza del código hace qué y quién puede importar a quién.
 3. Este archivo (`AGENTS.md`).
-4. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
-5. Su `plan.md` y su `tasks.md`, si ya existen.
+4. `agents/git-workflow-agent.md`: el orquestador del flujo de git (§2).
+5. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
+6. Su `plan.md` y su `tasks.md`, si ya existen.
 
 Si algo de lo que te piden contradice la constitución, **para y avisa** antes de escribir nada.
 
 ---
 
-## 2. Flujo SDD paso a paso
+## 2. Flujo de trabajo: cinco momentos
 
-Todo cambio en la app (código, tests, README o documentación de uso) pasa por estas fases **en orden**. Al acabar cada una, el agente **se para** y espera el ok de quien trabaja en esta carpeta. Sin ese ok no se sigue.
+Todo cambio en la app (código, tests, README o documentación de uso) pasa por estos cinco momentos, **en este orden**. Quien trabaja en esta carpeta pide un momento; el agente lo hace entero y **para**. No encadena el siguiente ni pide otro ok en medio.
 
-Lo primero que se escribe es siempre `spec.md`. Ningún otro fichero se toca hasta que esté aprobada.
+Los pasos de git los hace el orquestador [`agents/git-workflow-agent.md`](agents/git-workflow-agent.md), que llama al subagente o a la skill que toca.
 
-| Fase | Archivo | Pregunta que responde | Puerta de salida |
-| --- | --- | --- | --- |
-| 1. Especificar | `spec.md` | ¿**Qué** hay que cambiar y **por qué**? | Sin `[NECESITA ACLARACIÓN]` pendientes + ok de quien trabaja aquí |
-| 2. Planificar | `plan.md` | ¿**Cómo** se hace? | Pasa la comprobación de la constitución + ok de quien trabaja aquí |
-| 3. Desglosar | `tasks.md` | ¿En qué **pasos pequeños**? | Cada tarea apunta a un criterio de aceptación + ok de quien trabaja aquí |
-| 4. Implementar | lo que digan las tasks (código, tests, README…) | Hacerlo, tarea a tarea | `pytest` en verde si hay código + criterios verificados |
+| Momento | Qué hace el agente | Subagentes y skills |
+| --- | --- | --- |
+| **1. Crear la issue** | Deja escrito qué hay que hacer y cómo se comprueba, con la plantilla del tipo en `templates/issues/`. Si la tarea aún no está clara, primero pregunta, una cosa cada vez. No abre rama | `help-me-to-think` (si hace falta) → `create-issue` |
+| **2. Crear el draft** | Adelanta `staging`, crea la rama `N-tipo-descripcion` desde `staging`, hace el commit vacío `chore: open #N`, la sube, abre la PR en borrador contra `staging` con autor y la enlaza con `Closes #N`. No escribe specs | `pull-changes` → `create-branch` (`create-branch-from-staging`) → `create-commit` (`create-empty-commit`) → `launch-push` → `create-pr` (`create-pr-base-staging`, `assign-author`, `create-draft`) → `link-pr-to-issue` |
+| **3. Crear las specs** | Escribe `spec.md`, `plan.md` y `tasks.md` en la misma pasada (§2.1–§2.3). Si falta un dato, lo pregunta ahora; no lo inventa. No toca la app | — |
+| **4. Implementar** | Hace las tasks en orden y las marca (§2.4). Pedir este momento es dar por buenas la spec, el plan y las tasks | — |
+| **5. La pull request** | Solo lo que se pida: subir los ficheros (commit de trabajo y push), pedir revisión (la PR sale de draft) u otra cosa sobre esa PR. **Nunca** hace merge a `staging` | `create-commit` (`commit-changes`) → `launch-push`; `assign-reviewers` |
+
+Una issue, una rama o una pull request no autorizan a tocar la app: el código espera al momento 4, con la spec, el plan y las tasks ya escritos.
 
 ### 2.1 Especificar (`spec.md`)
 - Habla del usuario y del problema. **Nunca** nombra tecnologías (nada de "SQLite", "endpoint", "fetch").
@@ -50,6 +54,7 @@ Lo primero que se escribe es siempre `spec.md`. Ningún otro fichero se toca has
 
 ### 2.4 Implementar
 - Haz **una tarea cada vez**. Al acabarla, márcala `[x]` en `tasks.md`.
+- En este momento no hay commit ni push: eso es el momento 5, si se pide.
 - Si durante la implementación descubres que la spec o el plan están mal o incompletos, **para**, propón el cambio en el documento y espera aprobación.
 - Ningún fichero se adelanta a su spec. Una issue, una rama o una pull request no cuentan como spec.
 
@@ -84,9 +89,9 @@ Las únicas dependencias son Flask y pytest (constitución P3).
 
 - **Solo se edita dentro de `staff/sergio-moras/asistenciapp/`.**
 - **Pregunta antes de suponer.** Ante una ambigüedad, pregunta o márcala con `[NECESITA ACLARACIÓN]`.
-- **Explica lo que haces.** Al cerrar cada fase, resume qué se ha hecho, por qué y qué conviene revisar.
+- **Explica lo que haces.** Al cerrar cada momento, resume qué se ha hecho, por qué y qué conviene revisar.
 - **Cambios pequeños.** Mejor varias tareas cortas que una enorme.
-- **Nada de commits ni pushes** sin que lo pida quien trabaja en esta carpeta.
+- **Commit y push solo en dos momentos:** el commit vacío del momento 2 y los del momento 5, cuando se piden. Nunca merge a `staging`.
 - **Para todo lo que arranques.** Si levantas el servidor o `cloudflared` para probar, páralos al terminar y comprueba que el puerto queda libre: `lsof -nP -iTCP:8000 -sTCP:LISTEN` no debe mostrar nada. Ojo: en macOS el proceso aparece como `Python` (con mayúscula). (Incidencia del 2026-10-20 en T12.)
 - **No toques la constitución** (`docs/CONSTITUTION.md`) salvo para proponer una enmienda, que solo aprueba quien trabaja en esta carpeta (constitución §8).
 
@@ -114,6 +119,7 @@ Una funcionalidad está terminada cuando:
 | `004-quitar-referencias-personales` | ✅ Implementada (2026-11-01) | Documentación sin nombres personales; rutas con `staff/<usuario>/asistenciapp` |
 | `005-reorganizar-arquitectura` | ✅ Implementada (2026-11-01) | Documentos en `docs/`; código en `domain/`, `use_cases/`, `infra/` y `app.py` |
 | `006-limite-intentos-por-ip` | ✅ Implementada (2026-11-01) | 5 intentos/s y 20/min por IP, bloqueo permanente; constitución 3.0 |
+| `007-flujo-de-git` | ✅ Implementada (2026-11-02) | Flujo de git del curso con orquestador y subagentes; trabajo en cinco momentos; constitución 3.1 |
 | Integración con Discord | Idea, sin número asignado | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.

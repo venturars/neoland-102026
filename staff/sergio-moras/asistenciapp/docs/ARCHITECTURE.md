@@ -54,6 +54,11 @@ La idea viene de [python-clean-architecture-example](https://github.com/claudios
 ```
 asistenciapp/
 ├── AGENTS.md              # cómo se trabaja y cómo se escribe el código
+├── agents/                # subagentes del flujo de git (orquestador incluido)
+├── skills/                # pasos pequeños del flujo de git
+├── tools/                 # scripts de git que usan las skills
+├── templates/             # plantillas de issue y de PR por tipo
+├── MCPS/                  # conexión con GitHub
 ├── README.md              # cómo usar la app
 ├── docs/
 │   ├── CONSTITUTION.md    # reglas no negociables
@@ -75,7 +80,23 @@ asistenciapp/
 
 ---
 
-## 5. Lo que no se usa del ejemplo
+## 5. Flujo de git
+
+Las carpetas `agents/`, `skills/`, `tools/`, `templates/` y `MCPS/` vienen de la plantilla del curso (`exercises/git-workflow-agent-template/`). No son código de la app: sirven para trabajar con git y GitHub, y `tests/test_architecture.py` no las analiza.
+
+| Carpeta | Qué tiene |
+| --- | --- |
+| `agents/` | El orquestador `git-workflow-agent.md`, que reconoce el momento pedido y llama a los demás subagentes: pensar la tarea, crear la issue, la rama, el commit, el push y la PR |
+| `skills/` | Pasos pequeños que usan los subagentes (adelantar `staging`, commit vacío, PR en borrador, enlazar issue, asignar revisores…) |
+| `tools/` | Los scripts de git de esas skills. Se lanzan desde la raíz del repositorio como `staff/sergio-moras/asistenciapp/tools/…` |
+| `templates/` | Cuerpo de issues y PRs, una plantilla por tipo (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`) |
+| `MCPS/` | Cómo se conecta con el servidor MCP de GitHub |
+
+Qué momento usa cada pieza está en `AGENTS.md` §2. `tests/test_git_workflow.py` comprueba que la copia es fiel a la plantilla, salvo las rutas de `tools/`.
+
+---
+
+## 6. Lo que no se usa del ejemplo
 
 El ejemplo de referencia es un proyecto más grande. Aquí no entran:
 
