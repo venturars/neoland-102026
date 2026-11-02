@@ -8,7 +8,7 @@ El navegador no abre la base. Pide los datos a un servidor de este equipo, en `1
 
 Las pantallas son HTML, CSS y JavaScript del navegador, sin frameworks. Una función por archivo en `src/clients/web/`. El código va en inglés. Los textos visibles van en español. Un fallo de guardar o borrar muestra el mensaje que ya lanza `src/logic/`, sin traducirlo.
 
-El menú principal pone modificar e ir a notas en fila horizontal; volver a la selección en fila dedicada ancho completo. Ir a notas lleva `disabled` y `title` con texto en español. El borrado usa confirmación inline en la pantalla de edición, no el diálogo nativo del navegador.
+El menú principal pone modificar e ir a notas en fila horizontal; volver a la selección en fila dedicada ancho completo. Ir a notas lleva `disabled` y `title` con texto en español. El borrado abre un popover (`<dialog>`) con confirmar y cancelar; no usa `window.confirm`. Escape y clic en el fondo cierran el popover sin borrar.
 
 ## Ficheros
 

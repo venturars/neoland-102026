@@ -19,6 +19,13 @@ export function initializeClient() {
   deleteConfirmYes.addEventListener("click", confirmDeleteSelectedUser);
   const deleteConfirmNo = document.getElementById("delete-confirm-no");
   deleteConfirmNo.addEventListener("click", cancelDeleteConfirm);
+  const deletePopover = document.getElementById("delete-popover");
+  deletePopover.addEventListener("cancel", cancelDeleteConfirm);
+  deletePopover.addEventListener("click", (event) => {
+    if (event.target === deletePopover) {
+      cancelDeleteConfirm();
+    }
+  });
   document.addEventListener("click", navigate);
 
   loadUserSelection();

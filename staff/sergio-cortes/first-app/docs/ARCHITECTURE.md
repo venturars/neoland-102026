@@ -72,7 +72,7 @@
   - `src/clients/web/open-user-editor.js` abre la edición.
   - `src/clients/web/navigate.js` vuelve o abre pantallas.
   - `src/clients/web/save-user.js` guarda nombre y email.
-  - `src/clients/web/delete-selected-user.js` confirma y borra el usuario elegido.
+  - `src/clients/web/delete-selected-user.js` abre el popover de borrado, confirma o cancela y llama a la API.
 - `package.json` script `start` arranca el cliente HTTP desde `first-app`.
 - `scripts/jupyter.sh` prepara `.venv` si hace falta, instala `notebook==7.6.3` y arranca Jupyter en `src/clients/jupyter/`. Funciona en Mac, Linux y Windows (con `sh`). `package.json` lo invoca con `pnpm jupyter`.
 - `src/clients/jupyter/` es el cuaderno, uno por cada `.txt` de `src/clients/terminal/`. El bloque muestra ese texto: arranca `node --input-type=module` y, dentro, los `import` y la llamada quedan igual. El `console.log` se sustituye por la tabla. `cli-table3` y `@colors/colors` pintan esa tabla con colores y encabezados. Si la función falla, se ve ese mensaje. En esa carpeta no hay ficheros `.py` ni `requirements.txt`. Se abre con `pnpm jupyter` desde `first-app`.

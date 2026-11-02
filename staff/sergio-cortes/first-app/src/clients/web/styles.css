@@ -216,6 +216,29 @@ select:disabled {
   border-top: 1px solid var(--color-border);
 }
 
+.delete-popover {
+  width: min(100% - 2rem, 22rem);
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: 0 12px 40px rgb(36 48 51 / 18%);
+}
+
+.delete-popover::backdrop {
+  background: rgb(36 48 51 / 45%);
+}
+
+.delete-popover .popover-actions {
+  margin-top: 1rem;
+}
+
+.delete-popover h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1.15rem;
+}
+
 .message {
   margin-bottom: 1rem;
   padding: 0.75rem;

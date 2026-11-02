@@ -2,11 +2,16 @@ import { loadUserSelection } from "./load-user-selection.js";
 import { showMessage } from "./show-message.js";
 import { STATE } from "./state.js";
 
+function getDeletePopover() {
+  return document.getElementById("delete-popover");
+}
+
 export function resetDeleteConfirm() {
-  const initial = document.getElementById("delete-initial");
-  const confirm = document.getElementById("delete-confirm");
-  initial.hidden = false;
-  confirm.hidden = true;
+  const popover = getDeletePopover();
+
+  if (popover.open) {
+    popover.close();
+  }
 }
 
 export function showDeleteConfirm() {
@@ -15,13 +20,12 @@ export function showDeleteConfirm() {
   }
 
   const user = STATE.selectedUser;
-  const text = document.getElementById("delete-confirm-text");
+  const text = document.getElementById("delete-popover-text");
   text.textContent =
     "¿Eliminar al usuario «" +
     user.name +
     "»? Esta acción no se puede deshacer.";
-  document.getElementById("delete-initial").hidden = true;
-  document.getElementById("delete-confirm").hidden = false;
+  getDeletePopover().showModal();
 }
 
 export function cancelDeleteConfirm() {
@@ -34,8 +38,9 @@ export async function confirmDeleteSelectedUser() {
   }
 
   const user = STATE.selectedUser;
+  const popover = getDeletePopover();
   const controls = document.querySelectorAll(
-    "#edit-screen input, #edit-screen button",
+    "#edit-screen input, #edit-screen button, #delete-popover button",
   );
   STATE.isBusy = true;
   showMessage("", false);
@@ -54,6 +59,7 @@ export async function confirmDeleteSelectedUser() {
       return;
     }
 
+    resetDeleteConfirm();
     await loadUserSelection();
   } catch {
     showMessage(
@@ -66,6 +72,10 @@ export async function confirmDeleteSelectedUser() {
 
     for (const control of controls) {
       control.disabled = false;
+    }
+
+    if (popover.open) {
+      popover.close();
     }
   }
 }

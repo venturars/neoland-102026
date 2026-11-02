@@ -12,7 +12,7 @@ En la primera pantalla entra la lista de usuarios ya guardados. Cada uno se ve c
 
 En la segunda sale el resumen de ese usuario. Las acciones principales van en una fila horizontal: modificar usuario e ir a notas. Ir a notas se ve deshabilitado, con un tooltip que explica que aún no está disponible, y no abre otra pantalla. Volver a la selección va en un bloque aparte, ancho completo, claramente secundario.
 
-Modificar abre la tercera pantalla. Se cambia el nombre y el email, o se borra el usuario. Volver sin guardar deja los datos como estaban. Borrar muestra un segundo paso en la misma pantalla: confirmación de eliminación o cancelar. Cancelar el borrado no quita al usuario. Tras un borrado confirmado, se vuelve a la pantalla de selección y la lista se actualiza sin ese usuario.
+Modificar abre la tercera pantalla. Se cambia el nombre y el email, o se borra el usuario. Volver sin guardar deja los datos como estaban. Al pedir borrar, aparece un popover sobre la pantalla con el texto de confirmación y las opciones confirmar o cancelar. Cancelar cierra el popover y no quita al usuario. La tecla Escape y pulsar fuera del popover cierran el popover sin borrar. Tras un borrado confirmado, se vuelve a la pantalla de selección y la lista se actualiza sin ese usuario.
 
 ## Quién lo usa
 
@@ -28,7 +28,7 @@ El mismo resultado que esas funcionalidades ya devuelven, mostrado en pantalla. 
 
 Ejemplo. Están Ada, ada@example.com, con id 1, y Grace, grace@example.com, con id 2. Se elige el id 1. Se cambia el nombre a Ada Lovelace y el email a ada.lovelace@example.com. Al volver a la lista, el id 1 se ve con esos datos. Grace sigue igual. Esos datos siguen ahí al abrir la aplicación otra vez.
 
-Si se borra el id 1 y se confirma en el segundo paso, la lista solo muestra a Grace. Si se cancela el borrado, Ada sigue.
+Si se borra el id 1 y se confirma en el popover, la lista solo muestra a Grace. Si se cancela el borrado, Ada sigue.
 
 ## Fallo
 

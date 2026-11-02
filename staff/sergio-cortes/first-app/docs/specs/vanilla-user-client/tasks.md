@@ -19,7 +19,7 @@
 
 5. Abre `src/clients/web/index.html`.
    Tres pantallas; menú con acciones horizontales y volver aparte;
-   notas deshabilitada con tooltip; borrado con confirmación inline.
+   notas deshabilitada con tooltip; borrado con popover de confirmación.
 
 6. Abre `styles.css` con la paleta crema/teal del plan y estados hover/active en botones.
 
