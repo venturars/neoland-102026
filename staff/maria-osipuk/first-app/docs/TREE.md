@@ -111,9 +111,19 @@ first-app/
 │
 ├── templates/
 │   ├── issues/
-│   │   └── basic_issue.md
+│   │   ├── chore_issue.md
+│   │   ├── docs_issue.md
+│   │   ├── feat_issue.md
+│   │   ├── fix_issue.md
+│   │   ├── refactor_issue.md
+│   │   └── test_issue.md
 │   └── pull-request/
-│       └── basic-pull-request.md
+│       ├── chore-pull-request.md
+│       ├── docs-pull-request.md
+│       ├── feat-pull-request.md
+│       ├── fix-pull-request.md
+│       ├── refactor-pull-request.md
+│       └── test-pull-request.md
 │
 ├── MCPS/
 │   └── github-mcp-server/
@@ -151,11 +161,19 @@ first-app/
         │   ├── spec.md
         │   ├── plan.md
         │   └── tasks.md
+        ├── move-code-into-src/
+        │   ├── spec.md
+        │   ├── plan.md
+        │   └── tasks.md
         ├── prettier-and-eslint/
         │   ├── spec.md
         │   ├── plan.md
         │   └── tasks.md
-        └── split-sdd-guides/
+        ├── split-sdd-guides/
+        │   ├── spec.md
+        │   ├── plan.md
+        │   └── tasks.md
+        └── update-git-workflow-template/
             ├── spec.md
             ├── plan.md
             └── tasks.md

@@ -105,6 +105,8 @@ first-app/
   MCPS/
     github-mcp-server/
       mcp.txt
+    socket-mcp/
+      mcp.txt
   docs/
     ARCHITECTURE.md
     CONSTITUTIONS.md

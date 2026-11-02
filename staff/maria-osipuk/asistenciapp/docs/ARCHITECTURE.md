@@ -26,6 +26,20 @@ El panel normal y Aula en directo muestran la misma sesión cargada por `profeso
 
 `alumno.js` conserva la misma petición de registro y organiza la interfaz en tres pasos: Nombre, Código y Listo. Los pasos son una ayuda visual; la validación del dominio y el almacenamiento continúan detrás de `app.py`.
 
+## Flujo de desarrollo
+
+Los recursos de Git acompañan al trabajo del repositorio y viven dentro de la aplicación:
+
+| Carpeta | Responsabilidad |
+| --- | --- |
+| `agents/` | El [orquestador](../agents/git-workflow-agent.md) coordina las operaciones y llama al agente correspondiente. |
+| `skills/` | Define los pasos, argumentos y límites de cada operación. |
+| `tools/` | Contiene los siete scripts de terminal que ejecutan las operaciones de Git. |
+| `templates/` | Contiene las doce plantillas por tipo para issues y PR. |
+| `MCPS/` | Documenta la conexión remota con GitHub y las opciones necesarias para utilizarla. |
+
+Las instrucciones y las aprobaciones propias de AsistenciApp están en [AGENTS.md](../AGENTS.md) y en la [constitución](CONSTITUTION.md). Los recursos de desarrollo no añaden una capa al registro de asistencia: el navegador sigue entrando por `app.py`, que llama al caso de uso, al dominio y al almacenamiento.
+
 ## Pendiente de otra spec
 
 Estos tres fallos se han visto y no están corregidos. Que la suite actual pase no los da por buenos. Hace falta una spec de validación.
