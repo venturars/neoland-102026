@@ -1,9 +1,9 @@
 # Base de datos
 
 - Motor: SQLite con `node:sqlite`.
-- Un solo fichero: `db/users.sqlite`.
-- Una sola conexión: `db/connection.js` abre ese fichero.
-- `queries/users.js` crea la tabla `users` si no existe.
+- Un solo fichero: `src/db/users.sqlite`. Se crea al usar la app. **No va en git** (`.gitignore` de first-app y reglas del monorepo).
+- Una sola conexión: `src/db/connection.js` abre ese fichero.
+- `src/queries/users.js` crea la tabla `users` si no existe.
 
 ```sql
 CREATE TABLE IF NOT EXISTS users (
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS users (
 - `created_at` y `updated_at` son fechas. SQLite rellena `created_at` al insertar.
 - `email` es único en la tabla.
 
-`db/` no valida el formato del email ni decide si se puede borrar un usuario.
+`src/db/` no valida el formato del email ni decide si se puede borrar un usuario.
 
 ## Queries
 
