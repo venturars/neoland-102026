@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Contactos · First app</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module" src="/main.js"></script>
+  </head>
+  <body>
+    <main>
+      <header><p>First app</p><h1 tabindex="-1">Contactos</h1></header>
+      <p id="message" role="status" aria-live="polite"></p>
+      <section id="selection" aria-labelledby="selection-title">
+        <h2 id="selection-title">¿Quién eres?</h2>
+        <ul id="users" aria-label="Contactos guardados"></ul>
+        <button id="reload" class="secondary" type="button">Actualizar lista</button>
+      </section>
+      <section id="menu" hidden aria-labelledby="menu-title">
+        <h2 id="menu-title"></h2>
+        <p id="selected-email"></p>
+        <div class="actions">
+          <button id="edit" type="button">Modificar usuario</button>
+          <button type="button" data-future disabled>Ir a notas · próximamente</button>
+          <button id="back" class="secondary" type="button">Volver</button>
+        </div>
+      </section>
+      <section id="editor" hidden aria-labelledby="editor-title">
+        <h2 id="editor-title">Modificar usuario</h2>
+        <form id="user-form" novalidate>
+          <label for="name">Nombre</label>
+          <input id="name" name="name" autocomplete="name" required />
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" required />
+          <div class="actions">
+            <button id="save" type="submit">Guardar cambios</button>
+            <button id="cancel" class="secondary" type="button">Volver sin guardar</button>
+            <button id="delete" class="danger" type="button">Eliminar usuario</button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>
