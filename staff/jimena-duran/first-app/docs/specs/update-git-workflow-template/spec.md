@@ -2,7 +2,7 @@ Issue: #741
 
 # Actualizar la automatización de Git por tipo
 
-Estado: spec y plan aprobados; T01–T12 completadas. Commit selectivo, push y PR draft contra staging autorizados; publicación pendiente. Sin revisores ni merge. Resultados en [verification.md](verification.md).
+Estado: spec y plan aprobados; T01–T12 completadas. Commit selectivo, push y publicación realizados con autorización expresa. [PR draft #748](https://github.com/venturars/neoland-102026/pull/748) contra staging, sin revisores ni merge. Resultados en [verification.md](verification.md).
 
 ## Comportamiento y aceptación
 

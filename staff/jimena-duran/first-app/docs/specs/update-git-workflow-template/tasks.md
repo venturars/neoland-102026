@@ -4,7 +4,7 @@ Issue: #741
 
 Spec, plan y T01–T12 aprobados; implementación y comprobaciones autorizadas y completadas. Resultados en [verification.md](verification.md).
 Rama: `741-chore-update-git-workflow-template`. Rutas relativas a first-app.
-Commit selectivo, push y PR draft contra staging autorizados; publicación pendiente. Sin revisores, merge ni mutaciones remotas de prueba.
+Commit selectivo y push realizados con autorización expresa. [PR draft #748](https://github.com/venturars/neoland-102026/pull/748) publicada contra staging. Sin revisores, merge ni mutaciones remotas de prueba.
 
 - [x] T01. Contrastar el alcance con el template en `ddbf024a` y localizar referencias operativas a las dos plantillas genéricas.
       Resultado: inventario limitado a los archivos previstos en el plan, sin modificar specs anteriores ni evidencias históricas.
@@ -31,4 +31,4 @@ Commit selectivo, push y PR draft contra staging autorizados; publicación pendi
 - [x] T12. Analizar sintaxis PowerShell, revisar formato de archivos afectados, lint aplicable y `git diff --check`, incluidos los archivos nuevos.
       Resultado: comprobaciones y límites registrados para esta actualización; diff limitado al alcance, sin cambios en SQLite, ChromaDB, lógica, clientes o trabajos independientes.
 
-Implementación completada. Publicación selectiva autorizada; conservar datos y cambios ajenos. El resultado permanecerá en draft para revisión, sin revisores ni merge.
+Implementación y publicación selectiva completadas. Datos y cambios ajenos conservados. PR y Development verificados por relectura; el resultado permanece en draft para revisión, sin revisores ni merge.

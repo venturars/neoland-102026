@@ -2,7 +2,7 @@ Issue: #741
 
 # Plan de actualización de la automatización
 
-Estado: spec, plan y T01–T12 aprobados; implementación y comprobaciones completadas. Commit selectivo, push y PR draft contra staging autorizados; publicación pendiente. Sin revisores ni merge. Resultados en [verification.md](verification.md).
+Estado: spec, plan y T01–T12 aprobados; implementación, comprobaciones y publicación completadas con autorización expresa. [PR draft #748](https://github.com/venturars/neoland-102026/pull/748) contra staging, sin revisores ni merge. Resultados y relectura de Development en [verification.md](verification.md).
 
 ## Estado inicial: base y diferencias detectadas
 
@@ -31,4 +31,4 @@ Referencia de implementación: los agentes y scripts PowerShell existentes. No i
 
 ## Criterio de precedencia y aprobación
 
-Las pausas del SDD y las protecciones de first-app prevalecen sobre cualquier automatismo del template. Se aprobaron spec y plan y después T01–T12 con autorización de implementación y comprobaciones. También se autorizó el commit selectivo, push y apertura de una PR draft contra staging, sin revisores ni merge. La publicación debe releerse y documentarse tras completarla.
+Las pausas del SDD y las protecciones de first-app prevalecen sobre cualquier automatismo del template. Se aprobaron spec y plan y después T01–T12 con autorización de implementación y comprobaciones. El commit selectivo, push y apertura de una PR draft contra staging se autorizaron expresamente y se realizaron. La PR y Development se verificaron por relectura; permanece en draft, sin revisores ni merge.

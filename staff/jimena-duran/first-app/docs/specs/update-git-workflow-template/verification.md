@@ -2,7 +2,7 @@ Issue: #741
 
 # Verificación de la actualización
 
-T01–T12 completadas en `741-chore-update-git-workflow-template`. Commit selectivo, push y PR draft contra staging autorizados; publicación pendiente. Sin revisores, merge ni mutaciones remotas de prueba. Fuente fijada en `ddbf024a`.
+T01–T12 completadas en `741-chore-update-git-workflow-template`. Commit selectivo, push y [PR draft #748](https://github.com/venturars/neoland-102026/pull/748) contra staging realizados con autorización expresa. Sin revisores, merge ni mutaciones remotas de prueba. Fuente fijada en `ddbf024a`.
 
 ## Resultados
 
@@ -37,4 +37,12 @@ Al terminar las comprobaciones de implementación, HEAD seguía en `ddbf024a` y 
 
 La primera invocación de la función quedó bloqueada por ExecutionPolicy; la comprobación pasó en un proceso PowerShell con `-NoProfile -ExecutionPolicy Bypass`, sin cambiar la política global. El primer control de formato señaló documentos pendientes y se corrigieron. No quedan fallos pendientes de estas comprobaciones.
 
-No se ejecutaron suites históricas, ejemplos de usuarios, operaciones sobre datos locales ni pruebas remotas. Los resultados anteriores no acreditan una publicación. La autorización posterior permite publicar esta entrega real y releer la PR y Development, manteniendo separadas esas operaciones de las pruebas y de la revisión estática. No se repetirán comprobaciones satisfactorias salvo cambios que lo justifiquen.
+No se ejecutaron suites históricas, ejemplos de usuarios, operaciones sobre datos locales ni pruebas remotas. Los resultados anteriores no acreditan una publicación. La publicación real autorizada y su relectura se describen a continuación, separadas de las pruebas y de la revisión estática. Las comprobaciones satisfactorias no se repitieron; los ajustes de estado documental se comprobaron solo en formato y diff.
+
+## Publicación y relectura
+
+- Commit de implementación: [`f38feda7a8100dd67099466be07c358774312f87`](https://github.com/venturars/neoland-102026/commit/f38feda7a8100dd67099466be07c358774312f87), con las 31 rutas explícitas de esta entrega. El SHA publicado se confirmó con `ls-remote`; upstream `origin/741-chore-update-git-workflow-template`.
+- La PR usa el título de la issue y la plantilla chore, distingue comprobaciones ejecutadas y revisión estática y conserva las dos casillas sin marcar. El cuerpo contiene una única línea `Closes #741`.
+- La relectura autenticada de GraphQL confirmó PR abierta, draft, base staging, rama correcta, autora asignada y cero solicitudes de revisión. La rama predeterminada del repositorio es staging.
+- Development se verificó en ambos sentidos: `closingIssuesReferences` de la PR contiene la issue y `closedByPullRequestsReferences` de la issue contiene la PR. La issue continúa abierta; no se hizo merge ni cierre manual.
+- Este ajuste documental registra la publicación ya realizada y se publica con un commit selectivo adicional, sin cambios de implementación ni repetición de pruebas satisfactorias. Los datos locales y los trabajos independientes permanecen fuera de los commits.
