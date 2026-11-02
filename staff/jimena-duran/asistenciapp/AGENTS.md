@@ -9,7 +9,7 @@ Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en 
 Lee en este orden al empezar cualquier tarea:
 
 1. `docs/CONSTITUTION.md`: las reglas no negociables.
-2. Este archivo (`AGENTS.md`). Si no hay spec aprobada que cubra el pedido, preparar solo la nueva spec y esperar a Jimena Durán.
+2. Este archivo (`AGENTS.md`): reconocer el momento autorizado antes de actuar. Los momentos Issue y Rama y PR draft no escriben specs; el tercero prepara los tres documentos para revisión conjunta.
 3. La spec activa: `specs/NNN-nombre/spec.md` (ver §7 "Estado actual").
 4. Su `plan.md` y su `tasks.md`, si ya existen.
 
@@ -17,24 +17,33 @@ Si algo de lo que te piden contradice la constitución, **para y avisa** antes d
 
 ---
 
-## 2. Flujo SDD paso a paso
+## 2. Flujo SDD: cinco momentos humanos
 
-Cada cambio recorre estas fases **en orden**. Al terminar cada una, el agente **se detiene** y pide la aprobación de Jimena Durán. No se avanza sin un "ok" explícito.
+El punto de entrada es [agents/git-workflow-agent.md](agents/git-workflow-agent.md). El orquestador lee skills por ruta, delega roles a agentes reales y devuelve preguntas a la persona responsable. Si no puede delegar, informa y se detiene; no presenta una simulación como agente. La guía de herramientas está en [docs/GIT-AUTOMATION.md](docs/GIT-AUTOMATION.md).
 
-| Fase | Archivo | Pregunta que responde | Puerta de salida |
-| --- | --- | --- | --- |
-| 1. Especificar | `spec.md` | ¿**Qué** hay que construir y **por qué**? | Sin `[NECESITA ACLARACIÓN]` pendientes + aprobación de Jimena Durán |
-| 2. Planificar | `plan.md` | ¿**Cómo** lo construimos? | Pasa la comprobación de la constitución + aprobación de Jimena Durán |
-| 3. Desglosar | `tasks.md` | ¿En qué **pasos pequeños** lo hacemos? | Cada tarea apunta a un criterio de aceptación + aprobación de Jimena Durán |
-| 4. Implementar | código + tests | Hacerlo, tarea a tarea | `pytest` en verde + criterios verificados |
+1. Issue: crear o reutilizar la issue y detenerse, sin abrir rama.
 
-- Todo cambio de código, tests, README u otra documentación de uso requiere una spec aprobada que lo cubra.
-- Sin esa aprobación, solo se prepara la spec y se espera el ok de Jimena Durán; no se escriben plan, tasks ni implementación.
-- El orden es spec → plan → tasks → implementación, con aprobación explícita de Jimena Durán al terminar cada fase de preparación.
-- Si la spec activa no cubre el pedido, se abre una spec nueva.
-- Una issue, una rama o una pull request no sustituyen la spec aprobada.
+2. Rama y PR draft: solo con autorización expresa, adelantar staging por avance rápido, crear o recuperar rama, commit de apertura si corresponde, push y PR draft contra staging, con autor y enlace de issue. Sin specs todavía. Detenerse.
 
-Registrar la aprobación en la propia spec forma parte de su ciclo SDD.
+3. Documentos: con autorización, escribir spec, plan y tasks juntos, en ese orden, con el siguiente número disponible y sin sobrescribir specs anteriores. Detenerse para revisión conjunta.
+
+4. Implementación: con documentos revisados y autorización expresa, ejecutar solo las tareas aprobadas. Detenerse con resultados, sin commit ni push.
+
+5. Publicación o revisión: realizar solo las operaciones, archivos y revisores expresamente autorizados. Sin merge implícito. Detenerse.
+
+Todo cambio de código, tests, README u otra documentación de uso requiere una spec aprobada que lo cubra.
+
+Si la spec activa no cubre el pedido, se abre una spec nueva.
+
+Una issue, una rama o una pull request no sustituyen la spec aprobada.
+
+No se encadena un momento con el siguiente sin autorización expresa.
+
+Si cambian los documentos o falta una decisión, detenerse y pedir revisión; no inventar requisitos.
+
+Implementar no autoriza commits ni push del repositorio de trabajo. Los ensayos desechables con remoto local solo pueden hacer esas mutaciones si están expresamente autorizadas. No hay permiso de escritura en GitHub por ejecutar pruebas. La rama, archivos y operaciones autorizados se reciben para cada tarea; no se fijan nombres de ramas personales en componentes reutilizables.
+
+Las reglas editoriales de issue y PR se consultan en las plantillas por tipo; si no existe la del tipo recibido, se usa la más cercana. No se exige una plantilla existente para generar un nombre de rama. Registrar la aprobación en la propia spec forma parte de su ciclo SDD.
 
 ### 2.1 Especificar (`spec.md`)
 - Habla del usuario y del problema. **Nunca** nombra tecnologías (nada de "SQLite", "endpoint", "fetch").
@@ -109,7 +118,7 @@ Las únicas dependencias son Flask y pytest (constitución P3).
 - **Explica lo que haces.** Jimena Durán está aprendiendo SDD: al cerrar cada fase, resume qué se ha hecho, por qué y qué tiene que revisar.
 - **Cambios pequeños.** Mejor varias tareas cortas que una enorme.
 - **Nada de commits ni pushes** sin que Jimena Durán lo pida.
-- **Para todo lo que arranques.** Si levantas el servidor o `cloudflared` para probar, páralos al terminar y comprueba que el puerto queda libre: `lsof -nP -iTCP:8000 -sTCP:LISTEN` no debe mostrar nada. Ojo: en macOS el proceso aparece como `Python` (con mayúscula). (Incidencia del 2026-10-20 en T12.)
+- **Para todo lo que arranques.** Si levantas el servidor o `cloudflared` para probar, páralos al terminar y comprueba que el puerto queda libre: `lsof -nP -iTCP:8000 -sTCP:LISTEN` no debe mostrar nada. Ojo: en macOS el proceso aparece como `Python` (con mayúscula).
 - **No toques la constitución** salvo para proponer una enmienda, que solo Jimena Durán aprueba (constitución §8).
 
 ---
@@ -142,6 +151,8 @@ Una funcionalidad está terminada cuando:
 | `005-reorganizar-arquitectura` | Implementada y verificada localmente | 108 tests pasan; aprobación humana final pendiente |
 
 | `006-limite-por-ip-publica` | Implementación aprobada el 2026-10-23; validación en curso | Límites por dirección de conexión y bloqueo persistente; sin commit, push ni PR |
+
+| `008-flujo-git-cinco-momentos` | Implementada y verificada; publicación autorizada y pendiente | Enmienda 3.1 aplicada; commit selectivo, push y PR draft contra staging autorizados, sin revisores ni merge |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
 

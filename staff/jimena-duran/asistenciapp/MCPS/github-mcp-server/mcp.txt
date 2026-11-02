@@ -1,0 +1,6 @@
+Referencia del servidor GitHub MCP:
+https://github.com/github/github-mcp-server/blob/main/docs/remote-server.md
+Servidor remoto: https://api.githubcopilot.com/mcp/
+
+La referencia no conecta el servicio ni concede permisos. Comprobar en la sesión identidad, repositorio y capacidades disponibles. Conservar conexiones existentes y usar gh autenticado como alternativa cuando MCP no resulte suficiente, explicando el motivo. Consultar docs/GIT-AUTOMATION.md.
+No guardar tokens ni modificar credenciales, headers o configuración personal desde esta entrega. Las respuestas inciertas requieren lectura del estado remoto antes de reintentar una escritura.
