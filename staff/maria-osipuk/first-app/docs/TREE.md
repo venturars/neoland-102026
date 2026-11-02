@@ -140,7 +140,9 @@ first-app/
 │       ├── refactor-pull-request.md
 │       └── test-pull-request.md
 ├── MCPS/
-│   └── github-mcp-server/
+│   ├── github-mcp-server/
+│   │   └── mcp.txt
+│   └── socket-mcp/
 │       └── mcp.txt
 ├── docs/
 │   ├── specs/
