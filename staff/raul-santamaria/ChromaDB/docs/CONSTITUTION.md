@@ -54,3 +54,8 @@ El cuerpo sigue este orden, sin mezclarlo:
 2. Validar el resto de reglas.
 3. Aplicar la lógica.
 4. Estructurar la salida.
+
+## Cambios con SDD
+
+Antes de abrir `docs/specs/<cambio>/` hace falta una issue en GitHub con número.
+La spec abre con `Issue: #N`. El flujo de git y las paradas están en `AGENTS.md`.
