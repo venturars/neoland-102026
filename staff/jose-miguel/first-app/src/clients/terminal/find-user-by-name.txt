@@ -1,0 +1,10 @@
+# Pegar en la terminal con el directorio actual en first-app.
+
+# Test 1: dos usuarios mismo nombre (OK).
+node --input-type=module -e "import { createUser } from './src/logic/create-user.js'; import { findUserByName } from './src/logic/find-user-by-name.js'; try { const stamp = Date.now(); createUser(['Ada', 'ada-name-' + stamp + '@mail.com']); createUser(['Ada', 'ada-name2-' + stamp + '@mail.com']); console.log(findUserByName('Ada')); } catch (error) { console.log(error.message); }"
+
+# Test 2: nombre vacío (error).
+node --input-type=module -e "import { findUserByName } from './src/logic/find-user-by-name.js'; try { findUserByName('   '); } catch (error) { console.log(error.message); }"
+
+# Test 3: nombre sin coincidencias (lista vacía).
+node --input-type=module -e "import { findUserByName } from './src/logic/find-user-by-name.js'; try { console.log(findUserByName('NombreQueNoExiste742')); } catch (error) { console.log(error.message); }"
