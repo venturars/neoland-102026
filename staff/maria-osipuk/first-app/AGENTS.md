@@ -1,98 +1,128 @@
-# Instrucciones para el agente
+# Instrucciones de trabajo — First App
 
-## Regla principal de redacción
+Este manual define el proceso de trabajo. La constitución recoge los principios del proyecto; las guías técnicas describen cómo se aplican.
 
-Redacta las reglas, las especificaciones, los ejemplos y las respuestas en términos generales. Usa roles como «la persona responsable» y evita nombres o referencias personales a quienes trabajan en el repositorio.
+## 1. Alcance y redacción
 
-Las guías del proyecto y los templates compartidos son las referencias de trabajo. No uses las carpetas o copias de otras personas como modelo ni describas un punto de partida ligado a una rama o a commits concretos. Expresa las rutas de la documentación respecto a la raíz del proyecto.
+Trabaja dentro de esta aplicación y solo sobre el pedido autorizado. Usa roles generales y rutas relativas a su raíz en la documentación. Los comandos conservan las rutas necesarias para ejecutarse desde el directorio indicado.
 
-## Qué va primero
+Evita nombres personales, comparaciones con copias de otras personas y apartados de punto de partida ligados a ramas o commits. Las referencias de trabajo son las guías de esta app y los templates compartidos.
 
-El trabajo de git sigue `agents/git-workflow-agent.md` de esta carpeta, aunque el mensaje no nombre ese fichero ni diga «issue». Esta sección organiza el flujo de Git.
+Una petición de explicación, revisión o comparación es de lectura. Una petición explícita de editar o implementar autoriza esos cambios dentro del alcance y de la fase aprobada. Nombrar un archivo no es, por sí solo, una orden de editarlo.
 
-Una tarea es una issue, una rama desde `staging` y una pull request en draft hacia `staging`. El orquestador elige el momento y llama al subagente o a la skill que toca.
+## 2. Qué documento consultar
 
-Ese flujo no quita las paradas de este manual. Antes de crear la issue se enseñan la persona asignada y el título, y se espera el sí. No se toca código hasta que existe `docs/specs/<nombre>/` y la persona responsable confirma de forma explícita que la revisión está hecha.
+Antes de editar, lee la [constitución](docs/CONSTITUTION.md), este manual y la spec local que cubre la tarea. Después consulta las guías relacionadas:
 
-Nombrar el fichero de destino no autoriza a editarlo. Un mensaje que a la vez describe la tarea y pide escribir ficheros cabe en dos momentos: se pregunta cuál es y se espera. No se elige editar.
+| Documento                            | Fuente para                                                     |
+| ------------------------------------ | --------------------------------------------------------------- |
+| [Arquitectura](docs/ARCHITECTURE.md) | Responsabilidades, dependencias y recorrido de los datos.       |
+| [Estilo](docs/STYLE.md)              | Código sencillo, funciones de negocio y comentarios educativos. |
+| [Base de datos](docs/DATABASE.md)    | Esquema, tipos, validación de campos y consultas.               |
+| [Errores](docs/ERRORS.md)            | Errores de negocio y su presentación al cliente.                |
+| [Árbol](docs/TREE.md)                | Ubicación de archivos y carpetas.                               |
+| [README](README.md)                  | Preparación, arranque y comandos de uso.                        |
 
-El orden es: issue, después la rama, después la pull request en draft, y en esa rama la spec y este manual. La issue no sustituye a la spec de la app. La spec de la app no sustituye a la issue.
+No copies reglas de una guía a otra. Si una contradicción afecta al pedido, explícalo antes de implementar y solicita la decisión necesaria. No cambies una regla de producto o un contrato para acomodar el código sin autorización.
 
-## Fuente de verdad
+## 3. Flujo Git y autorizaciones
 
-Lee completamente `docs/CONSTITUTION.md` antes de modificar código.
+Las operaciones de Git siguen el [orquestador local](agents/git-workflow-agent.md). Antes de elegir una operación, consulta [check-status](skills/check-status/SKILL.md).
 
-Esa guía enlaza a la arquitectura, el árbol, la base de datos, los errores y el estilo.
+Una tarea nueva se registra con una issue, una rama desde `staging` y una PR en borrador hacia `staging`. Las [plantillas de issues](templates/issues/) y de [PR](templates/pull-request/) definen el título, el cuerpo y el tipo de rama; no dupliques esas reglas aquí.
 
-Respeta el árbol, el flujo y las responsabilidades definidos en esas guías. No los repitas ni los redefinas en otros documentos.
+Antes de crear la issue, comunica el título y la cuenta asignada y obtén autorización. Si esa creación ya está autorizada para la tarea actual, continúa sin repetir la confirmación. La cuenta asignada es la autenticada en GitHub.
 
-Si el código contradice esas guías, explica la contradicción y espera una decisión antes de programar.
+El orden de preparación es issue → rama → PR en borrador → documentos SDD. Una issue o una PR no sustituye la revisión del SDD ni autoriza código pendiente de aprobación.
 
-## Antes de editar
+No hagas commit, push, merge ni cambios de estado de una PR sin autorización que cubra esa operación. Reutiliza la autorización vigente; no la amplíes a otra tarea. Una PR ya lista para revisión conserva su estado salvo petición expresa.
 
-Cuando el pedido sea una funcionalidad o una forma de trabajar, crea primero `docs/specs/<nombre-en-kebab-case>/` con `spec.md`, `plan.md` y `tasks.md`. No toques código, consultas, clientes ni la constitución hasta que esa carpeta exista y la persona responsable confirme de forma explícita que la revisión está hecha.
+## 4. SDD de esta aplicación
 
-Una petición de explicación, revisión, comparación o planificación no autoriza cambios. Crear o reescribir esos tres ficheros tampoco autoriza cambios de código.
+Todo cambio de un archivo de la app necesita su spec: una funcionalidad, una forma de trabajo, una corrección o un cambio solo de documentación. Después de la PR en borrador, prepara `docs/specs/<nombre-en-kebab-case>/` con estos tres documentos:
 
-Cuando la revisión esté hecha, implementa solo ese pedido:
+| Documento  | Contenido                                                                                                                                                                      |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `spec.md`  | Qué se necesita y por qué, alcance, caso correcto, caso que debe fallar y resultado observable. Describe el comportamiento en el cliente afectado, sin archivos, SQL ni capas. |
+| `plan.md`  | Cómo se construirá: capas y archivos afectados, entradas y salidas de la lógica, dependencias y verificación. No repite reglas de las guías.                                   |
+| `tasks.md` | Pasos pequeños y ordenados, cada uno con una acción y un resultado comprobable. Cada paso ocupa como máximo cuatro líneas.                                                     |
 
-1. Inspecciona los archivos relacionados.
-2. Sigue `tasks.md` de esa carpeta, en orden.
-3. Trabaja un solo pedido a la vez.
+Si el pedido es una regla de trabajo, la spec explica la regla, a qué operaciones obliga y cómo se comprueba.
 
-Si un desarrollo añade o quita un fichero, su spec también actualiza `docs/TREE.md` y `docs/ARCHITECTURE.md`.
+Esta app revisa el conjunto `spec.md`, `plan.md` y `tasks.md` antes de implementar. No modifiques ningún archivo de la app (código, consultas, clientes, guías ni la constitución) hasta que exista la carpeta y la persona responsable confirme explícitamente que la revisión está hecha. Crear los documentos no equivale a aprobarlos.
 
-La forma de cada línea se copia de `docs/STYLE.md`. El código que ya existe sirve para ver a qué fichero se parece una función nueva. Esta issue no lo reescribe. Un desarrollo posterior puede alinearlo. Mientras tanto, un spec nuevo no se para por esa diferencia.
+Antes de implementar, lee completos los tres archivos y sigue `tasks.md` en orden. Una spec describe un pedido y su aceptación; las guías describen el proyecto vigente. Si el plan necesita un cambio de alcance o contrato, presenta ese cambio para revisión antes de continuar con él.
 
-## Forma de trabajar
+## 5. Paquetes
 
-- Trabaja en pasos pequeños.
-- Implementa una sola funcionalidad cada vez.
-- No añadas funcionalidades no solicitadas.
-- No refactorices archivos no relacionados.
-- No cambies contratos existentes silenciosamente.
-- No añadas dependencias sin explicar su necesidad.
-- Antes de aceptar un plan que añade un paquete de Node o cambia su versión, valida ese paquete con Socket, como dice «Paquetes» en `docs/CONSTITUTION.md`.
-- No hagas `commit`, `push`, merge ni pull request sin autorización.
-- Si hay varias soluciones razonables, presenta primero las opciones.
+El gestor Node del proyecto es pnpm 10. La versión exacta está en `packageManager` de `package.json`. Se conserva `pnpm-lock.yaml`; no se genera `package-lock.json`.
 
-Las reglas de este documento se aplican al código nuevo y a las partes que se modifiquen dentro de una tarea autorizada. No refactorices una funcionalidad antigua únicamente para adaptarla a una convención añadida después de su creación.
+No se utilizan npm, npx, yarn ni bun para las dependencias Node de esta app.
 
-## Dónde están las reglas
+| Operación                                  | Comando desde la raíz de la app |
+| ------------------------------------------ | ------------------------------- |
+| Instalar lo declarado                      | `pnpm install`                  |
+| Añadir una dependencia aprobada            | `pnpm add <paquete>`            |
+| Ejecutar un script del proyecto            | `pnpm run <script>`             |
+| Ejecutar una herramienta instalada         | `pnpm exec <herramienta>`       |
+| Ejecutar una herramienta temporal revisada | `pnpm dlx <herramienta>`        |
 
-Este manual dice cómo se trabaja una tarea. Las reglas del código están en las guías:
+Revisa las dependencias y sus scripts de instalación antes de autorizar su ejecución. No autorices scripts bloqueados de forma global por comodidad. El control `preinstall` de este proyecto rechaza gestores distintos de pnpm; no sustituye la revisión de seguridad.
 
-- `docs/STYLE.md`: nivel del código, estilo y comentarios educativos.
-- `docs/DATABASE.md`: tipos y formatos de `id`, `name`, `email`, `created_at` y `updated_at`.
-- `docs/CONSTITUTION.md`: validación de paquetes con Socket, contrato de las funciones (firma, actualización parcial y respuesta), reglas de implementación, seguridad y sincronización de la documentación.
+El cliente Jupyter utiliza `notebook` e `ipykernel`, instalados con pip dentro del entorno virtual de la app. Esa instalación Python no modifica las dependencias Node.
 
-Se leen antes de escribir código. Si cambian los tipos o las reglas de un campo, se actualiza `docs/DATABASE.md`.
+### Revisión con Socket
 
-## Al terminar una tarea
+Antes de aceptar un plan que añada un paquete Node o cambie su versión, revisa el paquete y la versión propuestos con el MCP `socket-mcp`. Comprueba:
 
-- Ejecuta `pnpm format` desde `first-app` para aplicar el formato estándar de Prettier.
-- Ejecuta `pnpm lint` desde `first-app` para comprobar la sintaxis y las reglas de ESLint.
-- Si alguno de los dos comandos falla, la tarea todavía no está terminada.
+- si están afectados por una campaña;
+- si tienen alertas;
+- si alguna puntuación (`stat`) está por debajo de 50.
 
-## Verificación
+La referencia del servidor está en `MCPS/socket-mcp/mcp.txt`. Cada dato se escribe con la herramienta que le corresponde:
 
-Para comprobar una funcionalidad:
+- Las puntuaciones salen de `depscore`, con la versión exacta. Una puntuación por debajo de 50 se escribe; 50 no baja.
+- Las alertas salen de `alerts`, con el `org_slug` que devuelve `organizations`. Una lista vacía es la lista de la organización: no dice que esa versión no tenga alertas.
+- La campaña sale de `threat_feed`, con ese mismo `org_slug`.
 
-1. Revisa la sintaxis.
-2. Ejecuta su cliente de terminal.
-3. Prueba un caso correcto.
-4. Prueba al menos un caso incorrecto.
-5. Utiliza una copia temporal cuando sea posible.
-6. Comprueba que no se modificaron archivos no relacionados.
-7. Comprueba si `docs/CONSTITUTION.md` necesita actualizarse.
+Repite la revisión sobre sus dependencias hasta tres niveles de profundidad. Registra en el plan el paquete, la versión, el alcance revisado, los hallazgos de cada nivel y las alertas pendientes. La persona que aprueba el plan decide sobre esas alertas.
 
-Al finalizar, informa:
+Si una herramienta no puede contestar, el resumen dice el motivo que devolvió. No se escribe «no consta» sin haberla llamado. Indica qué no se pudo revisar. No presentes la validación como superada ni aceptes el plan sin ese resumen y las decisiones requeridas.
 
-- qué archivos cambiaron;
-- qué hace cada cambio;
-- qué se comprobó;
-- cuál fue el resultado;
-- si se actualizó la Constitución;
-- qué quedó pendiente.
+## 6. Implementación
 
-No afirmes que algo funciona si no se ha comprobado.
+- Trabaja un pedido cada vez y en pasos pequeños.
+- Usa las responsabilidades y funciones existentes antes de crear otras.
+- Aplica [STYLE.md](docs/STYLE.md) al código nuevo y a las partes modificadas.
+- Conserva las funcionalidades, contratos y archivos ajenos al pedido.
+- Justifica cualquier dependencia nueva y completa la revisión con Socket antes de aceptar el plan, según el apartado 5.
+- Usa el criterio técnico para decisiones rutinarias dentro de lo aprobado. Presenta opciones cuando cambien el alcance, el contrato, los datos o una decisión fundamental.
+- Usa datos ficticios y copias temporales para las comprobaciones que escriban o borren datos.
+
+No refactorices código antiguo solo para adaptarlo a una convención posterior. Una diferencia de estilo ajena al pedido no bloquea por sí sola una tarea nueva.
+
+## 7. Comprobaciones y cierre
+
+Desde la carpeta de la app, aplica el formato de Prettier con `pnpm format` y comprueba JavaScript con `pnpm lint`. Limita cualquier formateo a los archivos del pedido para no introducir cambios ajenos. Si falla una comprobación requerida, el trabajo sigue pendiente.
+
+Si cambia una funcionalidad, comprueba el caso correcto, al menos un caso incorrecto y el cliente afectado; actualiza el ejemplo de terminal cuando cambie su contrato. Ejecuta las pruebas relacionadas. Para una edición solo documental, comprueba enlaces, coherencia y conservación de las reglas.
+
+Actualiza en la misma tarea únicamente los documentos afectados por el cambio:
+
+| Si cambia…                                                | Actualiza…                                                              |
+| --------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Propósito, alcance, principios o una decisión fundamental | `docs/CONSTITUTION.md`, con autorización de la enmienda.                |
+| Ubicación, alta o eliminación de archivos                 | `docs/TREE.md` y las descripciones afectadas de `docs/ARCHITECTURE.md`. |
+| Responsabilidad, dependencia o recorrido del código       | `docs/ARCHITECTURE.md`.                                                 |
+| Firma, entrada o salida de una operación                  | La spec de la tarea, `docs/STYLE.md` si cambia la regla y los clientes. |
+| Esquema, tipos o validación de campos                     | `docs/DATABASE.md`.                                                     |
+| Errores o su presentación                                 | `docs/ERRORS.md`.                                                       |
+| Convenciones de código o comentarios                      | `docs/STYLE.md`.                                                        |
+| Comandos de arranque o uso visible                        | `README.md` y la guía de uso afectada.                                  |
+| Proceso de trabajo, paquetes o aprobaciones               | `AGENTS.md` y el agente o la skill afectados.                           |
+
+La constitución cambia únicamente si cambian el propósito, el alcance, los principios o una decisión fundamental; mover un archivo o ajustar un detalle interno no obliga a modificarla. Las specs conservan el pedido y las decisiones de su tarea: no se reescriben specs históricas para describir el código actual. Las guías describen lo implementado; no incorporan funcionalidades futuras.
+
+Al cerrar, indica qué guías se revisaron y por qué la constitución cambió o no necesitó cambios.
+
+Al terminar, informa de los archivos cambiados, el resultado, las comprobaciones realizadas, las limitaciones y lo pendiente. Distingue cambios locales de cambios publicados. No afirmes que algo funciona o está aprobado sin la evidencia correspondiente.
