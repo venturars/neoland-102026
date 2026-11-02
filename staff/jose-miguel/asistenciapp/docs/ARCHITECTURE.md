@@ -61,10 +61,11 @@ asistenciapp/
 | Archivo | Parte | Qué hace |
 | --- | --- | --- |
 | `asistencia/domain/codes.py` | Reglas | Calcula el código y dice si el que escribió el alumno vale |
+| `asistencia/domain/attempts.py` | Reglas | Dice si una dirección se pasó de intentos de registrarse; mensaje de bloqueo |
 | `asistencia/domain/names.py` | Reglas | Acepta o rechaza el nombre |
 | `asistencia/domain/session.py` | Reglas | Dice si la clase existe, si sigue abierta y si el código vale ahora |
-| `asistencia/usecases/attendance.py` | Acciones | Abre, cierra, lista, exporta, quita y registra |
-| `asistencia/storage/sqlite.py` | Almacén | Abre `data/asistencia.db`, guarda y lee |
+| `asistencia/usecases/attendance.py` | Acciones | Abre, cierra, lista, exporta, quita y registra; el registro comprueba tope por dirección de conexión |
+| `asistencia/storage/sqlite.py` | Almacén | Abre `data/asistencia.db`, guarda y lee; tablas de intentos de registrarse y direcciones bloqueadas |
 | `asistencia/export.py` | Acción de exportar | Da formato CSV a filas que ya están cargadas. No abre la base |
 | `asistencia/tunnel.py` | Borde | Publica el enlace para que los alumnos entren desde casa. No sabe de asistencia |
 | `app.py` | Pantalla | Recibe HTTP, llama a una acción y devuelve la respuesta |
