@@ -18,6 +18,7 @@ first-app/
         find-all.sql
         find-by-email.sql
         find-by-id.sql
+        find-by-name.sql
         insert.sql
         remove.sql
         update.sql
@@ -27,6 +28,9 @@ first-app/
       delete-user.js
       list-users.js
       find-user-by-email.js
+      find-user-by-name.js
+      find-user-by-id.js
+      create-users-table.js
       users-gender-count.js
     clients/
       terminal/
@@ -47,6 +51,10 @@ first-app/
     CONSTITUTIONS.md
     specs/
       per-type-templates/
+        spec.md
+        plan.md
+        tasks.md
+      user-lookup-clients/
         spec.md
         plan.md
         tasks.md

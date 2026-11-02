@@ -11,6 +11,9 @@
 - `src/logic/delete-user.js` borra un usuario.
 - `src/logic/list-users.js` lista los usuarios.
 - `src/logic/find-user-by-email.js` busca un usuario por email.
+- `src/logic/find-user-by-name.js` busca usuarios por nombre.
+- `src/logic/find-user-by-id.js` busca un usuario por id.
+- `src/logic/create-users-table.js` crea la tabla de usuarios si no existe.
 - `src/logic/users-gender-count.js` cuenta los usuarios por género. Puede usar la librería `openai`.
 - `src/clients/` no importa SQL ni abre la base de datos. Solo llama a `src/logic/`.
 - `src/clients/terminal/` llama a `src/logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
