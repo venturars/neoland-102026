@@ -28,7 +28,7 @@ Los cuadernos se abren con `./scripts/jupyter.sh` desde `first-app`. Usan el Jup
 
 `src/db/users.sqlite` es la base de la aplicación. Si el proceso tiene `FIRST_APP_DATABASE_FILE`, la conexión abre esa ruta. Si no la tiene, abre `src/db/users.sqlite`. Terminal y HTTP pueden recibir esa variable del entorno. El puente Jupyter usa la ruta predeterminada de su copia de la aplicación.
 
-Ninguna capa accede directamente a otra capa que no sea la siguiente del recorrido: `src/clients/terminal/` o `src/clients/jupyter/`, `src/logic/`, `src/queries/users.js`, `src/queries/queries/*.sql`, `src/db/connection.js`, `src/db/users.sqlite`. El navegador se comunica por HTTP con su adaptador, que entra en el mismo recorrido desde `src/logic/`. El cuaderno de preparar la tabla llama a `createUsersTable`, igual que su cliente de terminal.
+Los clientes de terminal, Jupyter y HTTP llaman a la lógica; la lógica llama a las consultas. `src/queries/users.js` lee el texto de los archivos SQL y utiliza la conexión para ejecutarlo en SQLite. Los archivos `.sql` contienen instrucciones, no son una capa que llame a otra. El navegador llega a la lógica mediante su adaptador HTTP. El cuaderno de preparar la tabla llama a `createUsersTable`, igual que su cliente de terminal.
 
 ## Flujo de git
 
@@ -91,8 +91,9 @@ Las skills que lanzan un script usan los de `tools/`, siempre desde la raíz del
 - `docs/TREE.md` es el árbol.
 - `docs/DATABASE.md` es la base de datos, las queries y los tipos y formatos de cada campo.
 - `docs/ERRORS.md` es la lista de errores.
-- `docs/STYLE.md` es el nivel del código, la forma de cada línea, los comentarios y las convenciones.
-- `docs/CONSTITUTION.md` conserva las specs, los paquetes, el contrato de las funciones, las reglas de implementación y seguridad, la sincronización de la documentación y los pasos de `src/logic/`. Enlaza a las otras guías.
+- `docs/STYLE.md` es el nivel del código, la forma de cada línea, el contrato de las funciones de negocio, los comentarios y las convenciones.
+- `docs/CONSTITUTION.md` recoge el propósito, el alcance y los principios generales.
+- `AGENTS.md` recoge el proceso SDD y sus aprobaciones, los paquetes con pnpm y Socket, y qué documento se actualiza según lo que cambie.
 - `docs/specs/<nombre>/` describe un pedido, con `spec.md`, `plan.md` y `tasks.md`. No describe el estado del código. `<nombre>` va en kebab-case.
 
 ## Archivos del cliente de navegador y sus pruebas
