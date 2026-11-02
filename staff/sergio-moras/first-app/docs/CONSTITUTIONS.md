@@ -14,9 +14,10 @@ El flujo es `terminal → logic → queries → db/connection.js`.
 *Motivo:* cada capa se entiende y se prueba por separado, y el SQL queda en un único sitio.
 
 ### 2. Estructura fija
-- Una operación = un archivo en `logic/` + un `.txt` en `terminal/`.
+- Una operación = un archivo en `logic/` + un `.txt` en `clients/terminal/`.
+- Una operación tiene también un `.ipynb` en `clients/jupyter/`, con el mismo nombre que su archivo de `logic/`.
 - Una tabla = un archivo en `queries/`.
-- Cada archivo de `logic/` solo exporta su función. No lee `process.argv`, no imprime y no llama a `process.exit`. El `.txt` de `terminal/` la importa y muestra el resultado.
+- Cada archivo de `logic/` solo exporta su función. No lee `process.argv`, no imprime y no llama a `process.exit`. El `.txt` de `clients/terminal/` la importa y muestra el resultado.
 - No se crean, mueven ni borran archivos o carpetas sin que el usuario lo pida.
 
 *Motivo:* el proyecto es didáctico y su forma debe ser predecible.
@@ -62,4 +63,4 @@ Un cambio no está terminado hasta que se ha ejecutado con los comandos reales, 
 - Un agente que vea una regla desactualizada o incompleta lo propone, pero no la cambia por su cuenta.
 - Cada modificación actualiza la versión y la fecha del final.
 
-**Versión:** 1.1.0 | **Ratificada:** 2026-10-19 | **Última modificación:** 2026-10-30
+**Versión:** 1.2.0 | **Ratificada:** 2026-10-19 | **Última modificación:** 2026-10-30
