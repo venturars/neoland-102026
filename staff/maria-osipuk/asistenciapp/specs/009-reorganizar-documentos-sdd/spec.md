@@ -1,6 +1,6 @@
 # Spec 009 · Reorganizar los documentos SDD
 
-> Estado: **Implementada, pendiente de aprobación final** (2026-11-02) · Aprobada: 2026-11-02 · Issue: #754 · Pull request: #755
+> Estado: **Terminada** (2026-11-02): aprobación final de la persona responsable · Aprobada: 2026-11-02 · Issue: #754 · Pull request: #755
 
 ## 1. Problema
 
