@@ -15,6 +15,15 @@ first-app/
       users-gender-count.js
     clients/terminal/
     clients/jupyter/
+    clients/http/
+      create-user-client-server.js
+      start-user-client.js
+    clients/web/
+      index.html
+      styles.css
+      app.js
+  tests/
+    vanilla-user-client.test.js
   agents/                 orquestador y subagentes del flujo de Git
   skills/                 instrucciones reutilizables por momento
   tools/                  herramientas PowerShell
@@ -34,6 +43,7 @@ first-app/
     ERRORS.md
     STYLE.md
     JUPYTER.md
+    VANILLA-CLIENT.md
     GIT-AUTOMATION.md
     specs/<nombre>/       spec.md, plan.md y tasks.md
 ```

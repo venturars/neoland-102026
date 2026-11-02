@@ -18,7 +18,7 @@ Las reglas generales y los enlaces a las guías por tema están en [CONSTITUTION
 
 ## Comandos disponibles
 
-- Ejecución: todavía no existe un comando de ejecución.
+- Ejecución: `pnpm start:vanilla` sirve el cliente local en `http://127.0.0.1:3000`; uso y requisito de base existente en [VANILLA-CLIENT.md](docs/VANILLA-CLIENT.md).
 - Pruebas de la aplicación: el script `test` de `package.json` es solo el marcador de pnpm. Las comprobaciones aisladas de Git están en `tools/tests/`; requieren autorización para los commits y publicaciones en sus repositorios temporales, según [GIT-AUTOMATION.md](docs/GIT-AUTOMATION.md).
 - Formato: `pnpm format` ejecuta Prettier con sus opciones predeterminadas; las reglas están en [STYLE.md](docs/STYLE.md). `pnpm lint` revisa el JavaScript con ESLint.
 

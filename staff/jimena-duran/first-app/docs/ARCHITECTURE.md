@@ -4,6 +4,8 @@ La aplicación usa Node.js con módulos ES (`"type": "module"`) y una base SQLit
 
 Las cuatro capas viven bajo `src/`. `src/db/` solo abre la base; su conexión conserva `users.sqlite` junto al módulo y fuera de Git. El SQL permanece en `src/queries/queries/`; `src/queries/users.js` lo lee y lo ejecuta, sin reglas de negocio. Las decisiones de negocio viven en `src/logic/`. Los clientes de `src/clients/terminal/` invocan esa capa desde first-app y muestran su resultado; los notebooks están en `src/clients/jupyter/`.
 
+El navegador usa los tres archivos de `src/clients/web/`. El cliente de `src/clients/http/` sirve esos archivos y traduce las cuatro operaciones HTTP a `listUsers`, `findUserById`, `updateUser` y `deleteUser`. Comprueba ID y forma/tipos del JSON, sin replicar reglas de negocio ni abrir otra conexión. Flujo: navegador → cliente HTTP → lógica → consultas → conexión única. Solo expone los archivos web previstos. El arranque comprueba que exista SQLite antes de cargar la lógica; no inicializa ni migra datos. Uso en [VANILLA-CLIENT.md](VANILLA-CLIENT.md); transporte y clientes terminal se comprueban con copias desechables en `tests/vanilla-user-client.test.js`.
+
 `src/logic/` es el núcleo estable de la aplicación. No se reemplaza por adaptadores, plugins o implementaciones intercambiables, y sus reglas no se trasladan a `src/queries/` ni a `src/clients/`. Cada operación tiene su propio archivo; una operación nueva no modifica otro archivo para reutilizarlo.
 
 Los contratos de funciones siguen [STYLE.md](STYLE.md); las salidas y los errores se definen en [ERRORS.md](ERRORS.md).
