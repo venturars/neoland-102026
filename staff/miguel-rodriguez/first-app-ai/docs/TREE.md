@@ -34,6 +34,10 @@ first-app-ai/
 │   ├── STYLE.md
 │   ├── TREE.md
 │   └── specs/
+│       ├── vanilla-web-client/
+│       │   ├── plan.md
+│       │   ├── spec.md
+│       │   └── tasks.md
 │       ├── align-code-with-guides/
 │       │   ├── plan.md
 │       │   ├── spec.md
@@ -111,6 +115,13 @@ first-app-ai/
 │       └── SKILL.md
 ├── src/
 │   ├── clients/
+│   │   ├── http/
+│   │   │   ├── server.js
+│   │   │   └── start-server.js
+│   │   ├── web/
+│   │   │   ├── index.html
+│   │   │   ├── main.js
+│   │   │   └── styles.css
 │   │   ├── jupyter/
 │   │   │   ├── 01-create-users-table.ipynb
 │   │   │   ├── 02-create-user.ipynb
@@ -155,6 +166,8 @@ first-app-ai/
 │       │   ├── remove.sql
 │       │   └── update.sql
 │       └── users.js
+├── tests/
+│   └── web-client.test.js
 ├── templates/
 │   ├── issues/
 │   │   └── basic_issue.md

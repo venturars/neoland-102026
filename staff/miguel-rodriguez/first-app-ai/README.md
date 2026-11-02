@@ -2,6 +2,53 @@
 
 Aplicación local de contactos. Los nueve documentos de Jupyter permiten ejecutar sus operaciones y leer los resultados desde el navegador.
 
+## Abrir el cliente web
+
+Desde esta carpeta, con las dependencias existentes preparadas:
+
+```sh
+pnpm web
+```
+
+Abre la dirección que imprime la terminal, normalmente
+**http://127.0.0.1:8080**. El servidor inicializa la tabla si falta, sin añadir
+contactos. Utiliza `src/db/users.sqlite` de esta copia, igual que Terminal y
+Jupyter. La selección de usuario es por ID, sin contraseña: úsalo localmente,
+no como una aplicación con control de acceso.
+
+Si la lista está vacía, crea un contacto desechable desde Jupyter o usa este
+comando desde la carpeta del proyecto:
+
+```sh
+node --input-type=module <<'JS'
+import { createUsersTable } from "./src/queries/users.js";
+import { createUser } from "./src/logic/create-user.js";
+createUsersTable();
+console.log(createUser({ name: "Ada", email: "ada-web@example.test" }));
+JS
+```
+
+Para comprobar las tres pantallas:
+
+1. Elige el contacto por su ID en la lista.
+2. El menú permite volver a la lista o abrir **Modificar usuario**.
+3. Cambia nombre/email y guarda. Un email duplicado o un nombre vacío muestra
+   el error sin borrar lo escrito.
+4. Vuelve al editor y pulsa **Eliminar usuario**. Cancelar conserva el contacto;
+   confirmar lo borra permanentemente y refresca la lista.
+
+**Ir a notas** está desactivado y marcado como próximo trabajo. No hay gestión
+ni almacenamiento de notas en esta entrega. Si otro cliente borra al contacto
+seleccionado, se informa y se vuelve a la lista.
+
+Para usar otro puerto: `WEB_PORT=8081 pnpm web` en macOS/Linux, o
+`$env:WEB_PORT=8081; pnpm web` en PowerShell. El servidor solo escucha en
+127.0.0.1. Para detenerlo, pulsa **Ctrl+C** en su terminal; cerrar la pestaña
+no lo detiene.
+
+`pnpm test:web` ejecuta comprobaciones HTTP con una base ficticia temporal;
+no utiliza los contactos de esta copia. Requiere permiso para escuchar en loopback.
+
 ## Abrir Jupyter
 
 Requisitos: Node compatible con `node:sqlite` (`24.12.0` verificado), pnpm y Python 3.10 o posterior. En Windows, Python debe estar disponible mediante `py -3`.

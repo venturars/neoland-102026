@@ -30,6 +30,21 @@
 the corresponding operations and print their results. Their usage is described
 in the [constitution](CONSTITUTIONS.md#terminal-examples).
 
+`src/clients/http/server.js` exports `createWebServer()`, a Node HTTP adapter
+for listing, retrieving, updating and deleting users through existing logic.
+It validates transport inputs and maps expected business errors; it does not
+contain SQL or replace business validation. Only the three explicit web assets
+are served. The server binds to loopback when started by
+`src/clients/http/start-server.js`, which explicitly initializes the existing
+table and prints its URL. No users are seeded during startup.
+
+`src/clients/web/` contains the vanilla HTML, CSS and browser JavaScript for
+selection, menu and editing. Navigation and display live here; stored text is
+inserted as text. Notes is a future disabled option, not another business feature.
+`tests/web-client.test.js` checks the HTTP behavior in a temporary project copy
+and database, and cleans up its own server. `pnpm web` starts the local client;
+`pnpm test:web` runs those checks.
+
 `src/clients/jupyter/` provides nine independent notebooks for those same operations
 and explicit table initialization. Initialization calls a query; it is not a new
 public business operation.
@@ -69,7 +84,7 @@ Startup may report environment preparation; it does not introduce business logic
 ## Development tools
 
 `eslint.config.js` applies the official recommended JavaScript checks, recognizes
-this app's Node globals, and excludes installed dependencies, Python environments
+this app's Node globals and browser globals for the web client, and excludes installed dependencies, Python environments
 and generated caches. Its default export is the interface required by ESLint.
 
 The `format` command in `package.json` runs standard Prettier on the app's own
