@@ -152,7 +152,7 @@ Una funcionalidad está terminada cuando:
 
 | `006-limite-por-ip-publica` | Implementación aprobada el 2026-10-23; validación en curso | Límites por dirección de conexión y bloqueo persistente; sin commit, push ni PR |
 
-| `008-flujo-git-cinco-momentos` | Implementada y verificada; publicación autorizada y pendiente | Enmienda 3.1 aplicada; commit selectivo, push y PR draft contra staging autorizados, sin revisores ni merge |
+| `008-flujo-git-cinco-momentos` | Implementada, verificada y publicada con autorización expresa | Enmienda 3.1 aplicada; [PR draft #756](https://github.com/venturars/neoland-102026/pull/756) contra staging, sin revisores ni merge |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
 

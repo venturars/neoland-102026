@@ -2,7 +2,7 @@ Issue: #751
 
 # Resultados de la spec 008
 
-T01–T55 completadas en `751-chore-asistenciapp-git-five-stages`, con implementación, enmienda 3.1 y ensayos locales expresamente autorizados. Commit selectivo, push de esta rama y PR draft contra staging autorizados; publicación pendiente. Sin revisores ni merge. Al cerrar las comprobaciones de implementación, HEAD seguía en `50094711`, sin cambios preparados ni publicación de esta entrega.
+T01–T55 completadas en `751-chore-asistenciapp-git-five-stages`, con implementación, enmienda 3.1 y ensayos locales expresamente autorizados. Commit selectivo, push y [PR draft #756](https://github.com/venturars/neoland-102026/pull/756) contra staging realizados con autorización expresa. Sin revisores ni merge. La publicación se verificó por relectura, separada de las pruebas de implementación.
 
 ## Diff de la entrega
 
@@ -40,6 +40,11 @@ Create-pr usa el título de la issue, draft contra staging y casillas sin marcar
 
 No se crearon issues, PR ni solicitudes de revisión de prueba, ni se modificaron conexiones, credenciales o configuración personal. No se ejecutaron pruebas funcionales, ejemplos ni servidores, ni se abrieron las bases reales. No hay comprobaciones pendientes del alcance local autorizado; estos resultados no acreditan una interacción integral con GitHub.
 
-## Autorización de publicación
+## Publicación y relectura
 
-Se autorizó guardar y publicar selectivamente la entrega en su rama existente y abrir una PR draft contra staging, usando la plantilla chore, casillas sin marcar y una única referencia real de cierre. El resultado del cuerpo y de Development se verificará por relectura y se registrará después de la publicación. No se autorizaron revisores ni merge. Los ajustes de estado documental se comprueban en formato y diff; no se repiten las pruebas satisfactorias de implementación.
+- Commit de implementación: [`399950501b5eef1888c9d312374b2d08b733ac8d`](https://github.com/venturars/neoland-102026/commit/399950501b5eef1888c9d312374b2d08b733ac8d), con las 53 rutas explícitas revisadas. El push se confirmó por SHA remoto y upstream `origin/751-chore-asistenciapp-git-five-stages`.
+- La PR usa la plantilla chore y el título de la issue; distingue las pruebas ejecutadas de la revisión estática de agentes y acceso remoto. El cuerpo releído conserva dos casillas sin marcar y una única línea `Closes #751`.
+- La relectura autenticada confirmó PR abierta, draft, base staging, rama y SHA publicados, autora asignada y cero solicitudes de revisión. La rama predeterminada del repositorio es staging.
+- Development se confirmó en ambos sentidos: `closingIssuesReferences` de la PR contiene la issue y `closedByPullRequestsReferences` de la issue contiene la PR. La issue permanece abierta; no hubo cierre manual ni merge.
+- Se ejercieron los roles de commit, push y PR para esta publicación real; eso no sustituye las pruebas locales ni acredita una ejecución integral de todos los momentos o de los fallos de acceso remoto.
+- Este cierre de estados se publica mediante un commit documental selectivo adicional. Solo se comprueban su formato y diff; no se repiten las pruebas satisfactorias de implementación. Datos y trabajos ajenos permanecen fuera de los commits.

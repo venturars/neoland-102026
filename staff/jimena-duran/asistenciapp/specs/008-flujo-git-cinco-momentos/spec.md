@@ -2,7 +2,7 @@ Issue: #751
 
 # Flujo de cambios con cinco momentos humanos
 
-Estado: spec, plan y T01–T55 aprobados; implementación y enmienda 3.1 completadas. Commit selectivo, push y PR draft contra staging autorizados; publicación pendiente. Sin revisores ni merge. Resultados en [verification.md](verification.md).
+Estado: spec, plan y T01–T55 aprobados; implementación, enmienda 3.1 y publicación completadas con autorización expresa. [PR draft #756](https://github.com/venturars/neoland-102026/pull/756) contra staging, sin revisores ni merge. Resultados en [verification.md](verification.md).
 
 ## Problema
 
@@ -40,4 +40,4 @@ Cambios funcionales, pantallas, almacenamiento, datos locales, dependencias, cre
 
 ## Preguntas abiertas
 
-Ninguna sobre el alcance. Spec, plan y tareas, incluido CA-09, y la aplicación de la enmienda 3.1 se aprobaron expresamente. Implementación y comprobaciones completadas; se autoriza su publicación selectiva y la PR draft contra staging, sin revisores ni merge. La publicación se verificará por relectura.
+Ninguna sobre el alcance. Spec, plan y tareas, incluido CA-09, y la aplicación de la enmienda 3.1 se aprobaron expresamente. Implementación, comprobaciones y publicación selectiva completadas. La PR draft y Development se verificaron por relectura; el resultado queda para revisión, sin revisores ni merge.

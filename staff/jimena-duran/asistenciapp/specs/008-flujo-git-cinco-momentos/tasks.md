@@ -10,7 +10,7 @@ Rama: `751-chore-asistenciapp-git-five-stages`. Fuente fijada en `50094711`. Tod
 
 Se autorizó crear commits y hacer push exclusivamente en repositorios temporales desechables con remoto local para probar esta automatización. Los ensayos se realizaron dentro de ese alcance.
 
-La aplicación de la enmienda 3.1 se autorizó expresamente y está completada. También están autorizados el commit selectivo, push de la rama existente y PR draft contra staging; publicación pendiente. Sin revisores ni merge. Datos, pruebas funcionales, specs anteriores y trabajos ajenos se conservan; no se eliminaron ni saltaron comprobaciones para hacerlas pasar.
+La aplicación de la enmienda 3.1 se autorizó expresamente y está completada. El commit selectivo, push de la rama existente y [PR draft #756](https://github.com/venturars/neoland-102026/pull/756) contra staging se autorizaron y realizaron. Sin revisores ni merge. Datos, pruebas funcionales, specs anteriores y trabajos ajenos se conservan; no se eliminaron ni saltaron comprobaciones para hacerlas pasar.
 
 ## Preparación de pruebas y herramientas
 
@@ -95,4 +95,4 @@ La aplicación de la enmienda 3.1 se autorizó expresamente y está completada. 
 
 Los ensayos se ejecutaron tras autorizar la implementación, incluidos sus commits y push locales. La relectura de cuerpos y Development y el recorrido de momentos se verifican en lectura; no se presentan como escrituras remotas ejecutadas.
 
-Publicación selectiva autorizada y pendiente. Tras realizarla, releer cuerpo y Development y mantener la PR en draft para revisión, sin revisores ni merge.
+Publicación selectiva completada. Cuerpo y Development releídos; mantener la PR en draft para revisión, sin revisores ni merge.

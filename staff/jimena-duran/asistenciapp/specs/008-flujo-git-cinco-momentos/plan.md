@@ -2,7 +2,7 @@ Issue: #751
 
 # Plan de automatización y SDD de cinco momentos
 
-Estado: spec, plan y T01–T55 aprobados; implementación y aplicación de la enmienda 3.1 completadas. Commit selectivo, push y PR draft contra staging autorizados; publicación pendiente. Sin revisores ni merge. Resultados en [verification.md](verification.md).
+Estado: spec, plan y T01–T55 aprobados; implementación, enmienda 3.1 y publicación completadas con autorización expresa. [PR draft #756](https://github.com/venturars/neoland-102026/pull/756) contra staging, sin revisores ni merge. Resultados en [verification.md](verification.md).
 
 ## Estado inicial y alcance
 
@@ -44,7 +44,7 @@ El nuevo §4 y AGENTS expresarán las mismas cinco puertas:
 
 Se conservan la spec aprobada antes de modificar código o pruebas, una nueva spec para alcance no cubierto, la prohibición de inventar requisitos y la obligación de detenerse si cambian los documentos. Issue, rama y PR no autorizan implementación. No habrá un permiso global implícito de commit o push.
 
-**Transición de esta entrega:** se revisaron spec, plan y tareas por separado bajo el SDD anterior. Después se autorizó expresamente implementar y aplicar la enmienda 3.1, ahora vigente. La autorización de ensayos permitió commits y push solo en repositorios desechables con remoto local. No se autorizaron publicaciones del repositorio de trabajo, escrituras en GitHub ni PR; no se recrea la rama o documentación de la 008.
+**Transición de esta entrega:** se revisaron spec, plan y tareas por separado bajo el SDD anterior. Después se autorizó expresamente implementar y aplicar la enmienda 3.1, ahora vigente. La autorización de ensayos permitió commits y push solo en repositorios desechables con remoto local. La publicación del repositorio de trabajo se autorizó después y se realizó en la rama existente, sin recrear documentos: PR draft contra staging, sin revisores ni merge.
 
 ## Adaptación a PowerShell y seguridad
 
@@ -98,4 +98,4 @@ Revisar formato de los documentos afectados, enlaces y `git diff --check`, inclu
 
 ## Revisión pendiente
 
-Implementación y enmienda 3.1 completadas y verificadas. El diff se limita a los 53 archivos aprobados de AsistenciApp; los archivos y datos protegidos no cambiaron. Se autorizó commit selectivo, push de la rama existente y PR draft contra staging, sin revisores ni merge. Se registrará el resultado real después de releer cuerpo y Development, sin repetir pruebas satisfactorias.
+Implementación, enmienda 3.1 y publicación autorizada completadas. El diff se limita a los 53 archivos aprobados de AsistenciApp; los archivos y datos protegidos no cambiaron. La PR permanece en draft contra staging, con cuerpo y Development verificados por relectura, sin revisores ni merge. Los resultados y límites se registran sin repetir pruebas satisfactorias.
