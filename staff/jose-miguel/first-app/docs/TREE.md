@@ -35,6 +35,8 @@ first-app/
   skills/
   tools/
   templates/
+    issues/
+    pull-request/
   MCPS/
   docs/
     ARCHITECTURE.md
@@ -44,6 +46,10 @@ first-app/
     STYLE.md
     CONSTITUTIONS.md
     specs/
+      per-type-templates/
+        spec.md
+        plan.md
+        tasks.md
       <nombre>/
         spec.md
         plan.md
