@@ -16,6 +16,10 @@ first-app/
       update-user.js
     queries/
       users.js
+    db/
+      connection.js
+      server.js
+      users.sqlite
       queries/
         create-users-table.sql
         find-all.sql
@@ -24,9 +28,6 @@ first-app/
         insert.sql
         remove.sql
         update.sql
-    db/
-      connection.js
-      users.sqlite
     clients/
       terminal/
         count-users-by-gender.txt
