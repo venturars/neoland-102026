@@ -9,8 +9,8 @@ Fuente de la forma del cuerpo: [github-pr](https://www.skills.sh/gentleman-progr
 
 1. **Base** _(Obligatorio)_: `staging`.
 2. **Cabeza** _(Obligatorio)_: La rama que acaba de subirse.
-3. **Título** _(Obligatorio)_: El título de la issue, en inglés.
-4. **Cuerpo** _(Obligatorio)_: Español, con `templates/pull-request/<template>.md`. La sección Issue se deja vacía.
+3. **Título** _(Obligatorio)_: El título de la issue, en inglés, de menos de 72 caracteres y empezando por un verbo. Sin issue, sigue esas reglas según la plantilla elegida.
+4. **Cuerpo** _(Obligatorio)_: Español, con `templates/pull-request/<tipo>-pull-request.md`: feat, fix, docs, refactor, test o chore. Usa el tipo de la issue; si no existe, el más cercano al cambio. Conserva todas las secciones; al abrir el borrador, resume el cambio y deja las casillas sin marcar. La sección Issue se deja vacía para que el orquestador la complete.
 
 #### Reglas de Invocación Críticas
 

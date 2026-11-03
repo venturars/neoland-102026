@@ -28,3 +28,14 @@ Quien construye first-app quiere dejar una tarea escrita, preparar su rama, guar
 ## Fuera de alcance
 
 Cambiar operaciones de usuarios, clientes, datos, dependencias, configuración global o tokens. La integración en las guías comunes, la reorganización de capas y el procedimiento de Socket se coordinan en sus desarrollos correspondientes dentro de la issue #663.
+
+## Iteración del 3 de noviembre de 2026 · Issue #774
+
+Diego autoriza implementar y entregar el bloque de actualización de plantillas, con rama y PR propias y sin merge. Se conserva la autorización y evidencia anteriores.
+
+Quien prepara una tarea necesita una plantilla acorde al tipo de cambio para explicar su motivo, resultado y comprobación sin perder las protecciones actuales.
+
+- **CA-09:** Cada tipo feat, fix, docs, refactor, test y chore dispone de una plantilla de issue y otra de PR; agentes y skills seleccionan la pareja del mismo tipo.
+- **CA-10:** Se retiran las plantillas básicas y sus referencias activas; títulos en inglés de menos de 72 caracteres, cuerpos y comentarios en español, UTF-8 y ramas con prefijo codex/.
+- **CA-11:** El orquestador conserva el enlace Closes #N, las PR nacen en borrador y los revisores solo se asignan cuando Diego los indica; scripts, delegación real y protecciones permanecen vigentes.
+- **CA-12:** Árbol y arquitectura describen las plantillas vigentes; comprobaciones documentales y recorridos Git aislados tienen evidencia real. La aplicación, datos y dependencias quedan fuera del cambio.

@@ -5,8 +5,8 @@
 
 #### Especificación de Argumentos
 
-1. **Título** _(Obligatorio)_: Inglés, menos de 72 caracteres.
-2. **Cuerpo** _(Obligatorio)_: Español. Rellena `templates/issues/basic_issue.md` con «Qué hay que hacer» y «Cómo probarlo».
+1. **Título** _(Obligatorio)_: Inglés, menos de 72 caracteres y empieza por un verbo, según la plantilla del tipo.
+2. **Cuerpo** _(Obligatorio)_: Español. Rellena `templates/issues/<tipo>_issue.md`, con tipo feat, fix, docs, refactor, test o chore, conservando todas sus secciones. Si el tipo no está en la lista, elige el más cercano al cambio y úsalo también en la rama y la PR.
 3. **Persona asignada** _(Obligatorio)_: El usuario autenticado en el MCP o en la CLI oficial.
 
 #### Reglas de Invocación Críticas
