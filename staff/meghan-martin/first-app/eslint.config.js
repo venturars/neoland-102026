@@ -18,4 +18,15 @@ export default defineConfig([
       },
     },
   },
+  {
+    files: ["src/clients/browser/server.js"],
+    languageOptions: {
+      globals: {
+        Buffer: "readonly",
+        URL: "readonly",
+        URLSearchParams: "readonly",
+        console: "readonly",
+      },
+    },
+  },
 ]);

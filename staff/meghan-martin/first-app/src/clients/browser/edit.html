@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Edit</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Edit</h1>
+      <!-- Name is empty, Email is invalid, or Email is already used. -->
+      <p class="error">{{error}}</p>
+      <!-- Save sends the name and email to server.js, which calls updateUser. -->
+      <form method="post" action="/user/edit">
+        <input type="hidden" name="id" value="{{id}}" />
+        <label>
+          Name
+          <input name="name" value="{{name}}" />
+        </label>
+        <label>
+          Email
+          <input name="email" value="{{email}}" />
+        </label>
+        <button type="submit">Save</button>
+      </form>
+      <p class="actions">
+        <button class="danger" id="open-delete" type="button">Delete</button>
+        <a href="/user?id={{id}}">Back</a>
+      </p>
+    </main>
+    <!-- Hidden until Delete is clicked. Cancel closes it and saves nothing. -->
+    <dialog id="confirm-delete">
+      <h2>Delete this person?</h2>
+      <p>{{name}}</p>
+      <p class="muted">{{email}}</p>
+      <form method="post" action="/user/delete">
+        <input type="hidden" name="id" value="{{id}}" />
+        <button class="danger" type="submit">Delete</button>
+        <button id="cancel-delete" type="button">Cancel</button>
+      </form>
+    </dialog>
+    <script>
+      // Open the confirm window. The real delete happens only if
+      // the red Delete button inside it is clicked.
+      const dialog = document.querySelector("#confirm-delete");
+      document.querySelector("#open-delete").addEventListener("click", () => {
+        dialog.showModal();
+      });
+      document.querySelector("#cancel-delete").addEventListener("click", () => {
+        dialog.close();
+      });
+    </script>
+  </body>
+</html>

@@ -32,6 +32,18 @@ export function findUserByEmail(email) {
   if (emailHasSpace) {
     throw new Error("Email is invalid");
   }
+  // The part after @ must contain a dot, like example.com.
+  // maria2@.com is rejected because one side of the dot is empty.
+  const domainLabels = parts[1].split(".");
+  let domainIsValid = domainLabels.length >= 2;
+  for (const label of domainLabels) {
+    if (label.length === 0) {
+      domainIsValid = false;
+    }
+  }
+  if (!domainIsValid) {
+    throw new Error("Email is invalid");
+  }
 
   let user;
   try {

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>People</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main>
+      <h1>People</h1>
+      <!-- Filled by server.js when the list cannot be read. -->
+      <p class="error">{{error}}</p>
+      <div class="head">
+        <span>Id</span>
+        <span>Name</span>
+        <span>Email</span>
+      </div>
+      <!-- One clickable row per person. Built in server.js. -->
+      {{rows}}
+    </main>
+    <!-- "Person deleted", or nothing. -->
+    {{notice}}
+    <script>
+      // Take the message out of the address so a refresh does not show it
+      // again, then remove it from the page after 3 seconds.
+      const toast = document.querySelector(".toast");
+      if (toast) {
+        const params = new URLSearchParams(location.search);
+        params.delete("notice");
+        const query = params.toString();
+        const next = query ? `${location.pathname}?${query}` : location.pathname;
+        history.replaceState(null, "", next);
+        setTimeout(() => toast.remove(), 3000);
+      }
+    </script>
+  </body>
+</html>
