@@ -19,3 +19,4 @@ One folder per change. The structure of `spec.md`, `plan.md` and `tasks.md` is i
 | [find-user-by-name](find-user-by-name/)                 | done                      |
 | [create-users-table](create-users-table/)               | done                      |
 | [search-users](search-users/)                           | done                      |
+| [web-client](web-client/)                               | spec written              |
