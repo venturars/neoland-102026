@@ -115,9 +115,6 @@ first-app-ai/
 │       └── SKILL.md
 ├── src/
 │   ├── clients/
-│   │   ├── http/
-│   │   │   ├── server.js
-│   │   │   └── start-server.js
 │   │   ├── web/
 │   │   │   ├── index.html
 │   │   │   ├── main.js
@@ -166,8 +163,6 @@ first-app-ai/
 │       │   ├── remove.sql
 │       │   └── update.sql
 │       └── users.js
-├── tests/
-│   └── web-client.test.js
 ├── templates/
 │   ├── issues/
 │   │   └── basic_issue.md

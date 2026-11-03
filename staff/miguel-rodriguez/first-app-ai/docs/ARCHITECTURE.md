@@ -30,20 +30,11 @@
 the corresponding operations and print their results. Their usage is described
 in the [constitution](CONSTITUTIONS.md#terminal-examples).
 
-`src/clients/http/server.js` exports `createWebServer()`, a Node HTTP adapter
-for listing, retrieving, updating and deleting users through existing logic.
-It validates transport inputs and maps expected business errors; it does not
-contain SQL or replace business validation. Only the three explicit web assets
-are served. The server binds to loopback when started by
-`src/clients/http/start-server.js`, which explicitly initializes the existing
-table and prints its URL. No users are seeded during startup.
-
-`src/clients/web/` contains the vanilla HTML, CSS and browser JavaScript for
-selection, menu and editing. Navigation and display live here; stored text is
-inserted as text. Notes is a future disabled option, not another business feature.
-`tests/web-client.test.js` checks the HTTP behavior in a temporary project copy
-and database, and cleans up its own server. `pnpm web` starts the local client;
-`pnpm test:web` runs those checks.
+`src/clients/web/` contains three standalone vanilla screens: selection, menu and
+editing/deletion. Open index.html directly. Relative CSS and a deferred classic
+script work with file URLs. The UI uses fictional examples stored in the browser;
+it does not call the Node business operations or SQLite. Notes remains disabled.
+No HTTP client, JSON API or server is part of this screen exercise.
 
 `src/clients/jupyter/` provides nine independent notebooks for those same operations
 and explicit table initialization. Initialization calls a query; it is not a new

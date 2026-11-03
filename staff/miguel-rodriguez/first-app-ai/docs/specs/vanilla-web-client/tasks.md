@@ -1,3 +1,57 @@
+# Corrección de alcance · 2026-11-03
+
+Issue: #760. Referencias actuales: [spec](spec.md), [plan](plan.md).
+
+- [x] Sustituir rutas absolutas y módulo por archivos relativos y script defer.
+- [x] Retirar servidor, API, pruebas HTTP y comandos de arranque del servidor.
+- [x] Implementar las tres pantallas con ejemplos identificados y almacenamiento
+  local: selección, menú, edición/cancelación y borrado confirmado.
+- [x] Cubrir lista vacía persistente, restauración y almacenamiento bloqueado.
+- [x] Actualizar guías y alcance, manteniendo la evidencia anterior como histórica.
+- [x] Probar el HTML directamente en Chromium con perfil temporal: carga de CSS,
+  tres contactos iniciales, selección, Notas deshabilitado, guardar normalizado,
+  persistencia tras recargar, email duplicado, nombre vacío, volver sin guardar,
+  cancelar/confirmar borrado, lista vacía tras recarga, restablecer, Enter y móvil
+  390×844. Almacenamiento bloqueado: edición en memoria y aviso. Todo pasa.
+- [x] Confirmar cero peticiones HTTP y cero errores JavaScript en el recorrido.
+- [x] pnpm --config.verifyDepsBeforeRun=false format y después lint en copia
+  temporal sin SQLite: ambos salida 0. Se trasladó solo el formato de los dos
+  archivos JavaScript afectados.
+
+Primer intento de Chromium bloqueado por el sandbox de macOS; repetición con
+permiso para el proceso temporal: pasa. No se cambiaron contactos reales.
+Estado de aquella comprobación local: sin commits, push ni cambios en GitHub.
+La publicación de la corrección fue autorizada después por Miguel el 2026-11-03;
+se mantiene en la PR #762 hacia staging, sin merge ni cierre de la issue.
+
+## Revisión final antes de publicar · 2026-11-03
+
+- Repetido el recorrido con Chromium y perfil nuevo contra una copia desechable,
+  abriendo el HTML por `file://`: estilos, selección, menú, Notas deshabilitado,
+  edición normalizada, recarga, email inválido/duplicado, nombre vacío,
+  cancelación, borrado cancelado/confirmado, lista vacía persistente,
+  restablecimiento, Enter, móvil 390×844 y almacenamiento bloqueado: pasa.
+- Cero peticiones HTTP y cero errores JavaScript en el recorrido principal.
+- `pnpm --config.verifyDepsBeforeRun=false format` y después
+  `pnpm --config.verifyDepsBeforeRun=false lint`, desde la copia sin SQLite:
+  salida 0. El formateador no cambió ningún JavaScript respecto a la entrega.
+- `git diff --check`: salida 0. La carpeta `src/clients/http` no existe.
+- Sin diferencias respecto al HEAD publicado en conexión, consultas, lógica,
+  clientes Terminal/Jupyter, lockfile, requisitos Python, scripts ni flujo Git.
+- No se instalaron paquetes ni se abrió la base real. La copia y el perfil
+  temporales se eliminaron. El primer arranque de Chromium fue bloqueado por el
+  sandbox; con el permiso de ejecución temporal pasó. Un intento inicial de
+  formato/lint desde `/private/tmp` no encontró los comandos; ambos se repitieron
+  correctamente desde la raíz de la copia.
+- Revisión terminada; commits y push pendientes del subagente Git autorizado.
+
+---
+
+## Evidencia histórica de la implementación HTTP retirada
+
+Los resultados siguientes pertenecen a la entrega del 2026-11-02; no acreditan
+la versión actual. Sus pruebas y servidor se han retirado por cambio de alcance.
+
 # Tareas del cliente web
 
 Issue: #760. Referencias: [spec](spec.md), [plan](plan.md).
