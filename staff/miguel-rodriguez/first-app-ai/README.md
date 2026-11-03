@@ -17,19 +17,23 @@ mismos datos. El servicio es local y no tiene autenticación.
 
 En otra terminal puedes usar los ejemplos de `src/clients/terminal/` o abrir Jupyter.
 
-## Abrir las tres pantallas
+## Abrir el cliente web
 
-Abre `src/clients/web/index.html` directamente en el navegador con doble clic.
-No requiere servidor, API, instalación ni conexión a Internet.
+Con `pnpm server` en ejecución, prepara la tabla una vez desde otra terminal:
 
-1. Elige uno de los tres contactos de ejemplo por su ID.
-2. En el menú puedes volver o modificar el contacto. Notas queda pendiente.
-3. Edita nombre/email y guarda, vuelve sin guardar o elimina con confirmación.
+```sh
+node --input-type=module -e 'import { createUsersTable } from "./src/queries/users.js"; await createUsersTable();'
+```
 
-Los ejemplos y sus cambios pertenecen al navegador (`localStorage`), no a SQLite.
-Si el navegador bloquea el almacenamiento, los cambios duran hasta cerrar o recargar
-la página y se muestra un aviso. **Restablecer ejemplos** recupera los tres contactos
-tras confirmar. Terminal y Jupyter siguen usando la base SQLite existente.
+Abre [Contactos](http://127.0.0.1:3000/). Selecciona tu ID, modifica nombre/email
+o vuelve sin guardar. Para eliminar, escribe el email guardado que muestra la
+confirmación. Notas queda como opción futura.
+
+La web usa los mismos contactos que Terminal y Jupyter. No crea ejemplos; una
+base vacía muestra una lista vacía. Para añadir contactos usa la operación de
+creación de Terminal o Jupyter. Repetir la preparación conserva los contactos.
+Los errores de nombre/email aparecen junto al campo; los fallos de conexión
+permiten reintentar. Cerrar el navegador no detiene el servidor.
 
 ## Abrir Jupyter
 

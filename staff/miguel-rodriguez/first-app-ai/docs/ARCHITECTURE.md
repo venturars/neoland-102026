@@ -32,11 +32,15 @@
 the corresponding operations and print their results. Their usage is described
 in the [constitution](CONSTITUTIONS.md#terminal-examples).
 
-`src/clients/web/` contains three standalone vanilla screens: selection, menu and
-editing/deletion. Open index.html directly. Relative CSS and a deferred classic
-script work with file URLs. The UI uses fictional examples stored in the browser;
-it does not call the Node business operations or SQLite. Notes remains disabled.
-No HTTP client, JSON API or server is part of this screen exercise.
+`src/clients/web/` provides the selection, menu and edit/delete screens. The
+browser imports the shared list, ID lookup, update and delete operations as ES
+modules. It keeps presentation state in memory; saved contacts live in SQLite.
+Field errors present shared validation failures. Typed-email confirmation is a
+client precaution before calling delete, not authentication. Notes is disabled.
+
+`src/db/server.js` also serves an explicit list of web assets and the JavaScript
+modules they need. GET / redirects to the HTML; database files and other project
+files are not served. The existing POST /execute remains the query transport.
 
 `src/clients/jupyter/` provides nine independent notebooks for those same operations
 and explicit table initialization. Initialization calls a query; it is not a new
@@ -78,12 +82,17 @@ Startup may report environment preparation; it does not introduce business logic
 
 `tests/serve-data-through-node.test.js` checks the local data service, query
 results, business operations and failure handling in disposable project copies.
-Run it with `node --test tests/serve-data-through-node.test.js`.
+`tests/web-client.test.js` checks web assets, module content types and excluded
+paths. Both use port 3000; run them sequentially:
+
+```sh
+node --test --test-concurrency=1 tests/serve-data-through-node.test.js tests/web-client.test.js
+```
 
 ## Development tools
 
 `eslint.config.js` applies the official recommended JavaScript checks, recognizes
-this app's Node globals and browser globals for the web client, and excludes installed dependencies, Python environments
+this app's Node globals, and excludes installed dependencies, Python environments
 and generated caches. Its default export is the interface required by ESLint.
 
 The `format` command in `package.json` runs standard Prettier on the app's own

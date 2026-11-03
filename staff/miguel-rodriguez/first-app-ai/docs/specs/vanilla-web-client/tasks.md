@@ -1,114 +1,70 @@
-# Corrección de alcance · 2026-11-03
+# Tareas · Cliente web conectado
 
-Issue: #760. Referencias actuales: [spec](spec.md), [plan](plan.md).
+Issue: #760 · PR: #762, hacia staging.
+Referencias: [spec](spec.md) y [plan](plan.md).
+Miguel autorizó implementar, guardar, publicar y solicitar revisión a Jimena y
+Meghan el 2026-11-03. Estas tareas concretan ese encargo; no se atribuyen
+aprobaciones individuales adicionales.
 
-- [x] Sustituir rutas absolutas y módulo por archivos relativos y script defer.
-- [x] Retirar servidor, API, pruebas HTTP y comandos de arranque del servidor.
-- [x] Implementar las tres pantallas con ejemplos identificados y almacenamiento
-  local: selección, menú, edición/cancelación y borrado confirmado.
-- [x] Cubrir lista vacía persistente, restauración y almacenamiento bloqueado.
-- [x] Actualizar guías y alcance, manteniendo la evidencia anterior como histórica.
-- [x] Probar el HTML directamente en Chromium con perfil temporal: carga de CSS,
-  tres contactos iniciales, selección, Notas deshabilitado, guardar normalizado,
-  persistencia tras recargar, email duplicado, nombre vacío, volver sin guardar,
-  cancelar/confirmar borrado, lista vacía tras recarga, restablecer, Enter y móvil
-  390×844. Almacenamiento bloqueado: edición en memoria y aviso. Todo pasa.
-- [x] Confirmar cero peticiones HTTP y cero errores JavaScript en el recorrido.
-- [x] pnpm --config.verifyDepsBeforeRun=false format y después lint en copia
-  temporal sin SQLite: ambos salida 0. Se trasladó solo el formato de los dos
-  archivos JavaScript afectados.
+- [x] T01 · Incorporar staging en la rama existente, preservando #822 y la spec.
+- [x] T02 · Servir HTML/CSS/módulos con lista explícita; mantener /execute y
+  comprobar redirección, tipos, archivos excluidos e inicialización separada.
+- [x] T03 · Conectar selección, lista y edición a la lógica compartida. Mostrar
+  errores junto a los campos y conservar entradas al fallar. Evitar envíos dobles.
+- [x] T04 · Confirmar borrado por email guardado; comprobar vacío, error,
+  cancelación y éxito. Separar el borrado correcto de una recarga fallida.
+- [x] T05 · Ejecutar las pruebas Node en serie. Recorrer la app en navegador:
+  validaciones, navegación, teclado, móvil, lista vacía, fallo del servicio y
+  contacto eliminado desde otro cliente. Comprobar datos compartidos, persistencia,
+  lecturas sin cambios y conservación de otros contactos, con datos ficticios.
+- [x] T06 · Actualizar guías. Formato y lint correctos, diff revisado,
+  dependencias intactas, evidencia registrada y temporales retirados.
 
-Primer intento de Chromium bloqueado por el sandbox de macOS; repetición con
-permiso para el proceso temporal: pasa. No se cambiaron contactos reales.
-Estado de aquella comprobación local: sin commits, push ni cambios en GitHub.
-La publicación de la corrección fue autorizada después por Miguel el 2026-11-03;
-se mantiene en la PR #762 hacia staging, sin merge ni cierre de la issue.
+La entrega Git autorizada se registra en la PR: commits pequeños, push,
+descripción actualizada y revisión solicitada a jiji-mena y meghanmartin995.
 
-## Revisión final antes de publicar · 2026-11-03
-
-- Repetido el recorrido con Chromium y perfil nuevo contra una copia desechable,
-  abriendo el HTML por `file://`: estilos, selección, menú, Notas deshabilitado,
-  edición normalizada, recarga, email inválido/duplicado, nombre vacío,
-  cancelación, borrado cancelado/confirmado, lista vacía persistente,
-  restablecimiento, Enter, móvil 390×844 y almacenamiento bloqueado: pasa.
-- Cero peticiones HTTP y cero errores JavaScript en el recorrido principal.
-- `pnpm --config.verifyDepsBeforeRun=false format` y después
-  `pnpm --config.verifyDepsBeforeRun=false lint`, desde la copia sin SQLite:
-  salida 0. El formateador no cambió ningún JavaScript respecto a la entrega.
-- `git diff --check`: salida 0. La carpeta `src/clients/http` no existe.
-- Sin diferencias respecto al HEAD publicado en conexión, consultas, lógica,
-  clientes Terminal/Jupyter, lockfile, requisitos Python, scripts ni flujo Git.
-- No se instalaron paquetes ni se abrió la base real. La copia y el perfil
-  temporales se eliminaron. El primer arranque de Chromium fue bloqueado por el
-  sandbox; con el permiso de ejecución temporal pasó. Un intento inicial de
-  formato/lint desde `/private/tmp` no encontró los comandos; ambos se repitieron
-  correctamente desde la raíz de la copia.
-- Revisión terminada; commits y push pendientes del subagente Git autorizado.
-
----
-
-## Evidencia histórica de la implementación HTTP retirada
-
-Los resultados siguientes pertenecen a la entrega del 2026-11-02; no acreditan
-la versión actual. Sus pruebas y servidor se han retirado por cambio de alcance.
-
-# Tareas del cliente web
-
-Issue: #760. Referencias: [spec](spec.md), [plan](plan.md).
-Preparación y ejecución delegadas por Miguel el 2026-11-02.
-
-- [x] T01 · CA-05. Inventario inicial y copia aislada sin datos reales.
-- [x] T02 · CA-01,03,04,05. Escribir pruebas HTTP de contratos y preservación.
-- [x] T03 · CA-01,03,04,05. Adaptador HTTP mínimo y errores de entrada.
-- [x] T04 · CA-07. Arranque loopback e inicialización explícita sin datos de ejemplo.
-- [x] T05 · CA-01,02,06. Pantallas y navegación accesible de lista y menú.
-- [x] T06 · CA-03,04,06. Edición, mensajes y borrado confirmado.
-- [x] T07 · CA-02. Notas visible como pendiente, sin implementar almacenamiento.
-- [x] T08 · CA-05,07. Comandos, lint, guías y enmienda descriptiva limitada.
-- [x] T09 · CA-01 a CA-07. Ejecutar pruebas y recorrido de navegador; revisar fallos.
-- [x] T10 · CA-05. Formato/lint, conservación, limpieza y evidencia real.
-
-## Revisión previa
-
-Las tareas cubren el plan y los siete criterios; no requieren paquetes nuevos ni
-cambian contratos existentes. Primero pruebas HTTP, después implementación.
-
-## Evidencia
-
-Implementación y revisión local realizadas el 2026-11-02 en copia aislada de
-staging. El encargo de Miguel delega terminar los pendientes; no se atribuyen
-aprobaciones individuales de estos documentos.
-
-- Node builtin: dos escenarios de integración HTTP pasan, con más de 40 aserciones
-  sobre lista/consulta sin escrituras, validación de transporte, normalización,
-  duplicados, conservación del otro contacto, borrado, vaciado, estáticos,
-  métodos, origen ajeno, inicialización vacía y error interno sin detalles.
-- pnpm --config.verifyDepsBeforeRun=false format y después lint: salida 0.
-- pnpm --config.verifyDepsBeforeRun=false test:web: 2 pruebas, 2 pasan.
-- Primera ejecución sin permiso de loopback: servidor no pudo arrancar; se repitió
-  con autorización de red local y ambas pruebas pasaron. Los servidores y bases
-  temporales de las pruebas se eliminaron al terminar.
-- No se añadieron dependencias ni se alteró pnpm-lock.yaml. Los 113 archivos
-  existentes fuera de README, arquitectura, árbol, constitución descriptiva,
-  package scripts y lint quedaron idénticos a staging. En particular db, queries,
-  logic, clientes Terminal/Jupyter, clasificador y scripts Git no cambiaron.
-- Correcciones durante revisión: usar el mensaje real Email is already used,
-  decodificar UTF-8 después de reunir los chunks y enfocar el campo después de
-  rehabilitar el formulario. Volver a ejecutar formato/lint y pruebas: todo pasa.
-- T09–T10: recorrido real por Playwright en copia separada con Ada y Grace
-  ficticias: selección ID, menú, edición/guardado y normalización, email duplicado,
-  volver sin guardar, cancelar/confirmar borrado, otro contacto conservado, volver
-  a selección y Notas deshabilitado como futura opción. Probados desconexión y
-  recuperación, contacto eliminado desde otra petición y lista vacía. Sin
-  desbordamiento horizontal en el viewport de escritorio observado.
-- Revisión independiente de servidor, arranque, UI y pruebas contra spec/plan:
-  sin defectos bloqueantes. Servidor temporal 8872 detenido y puerto libre.
-  Sin datos reales ni dependencias nuevas. Publicación aún pendiente de registrar
-  mediante sus commits y GitHub; no se atribuye un merge o revisión de compañeros.
+La evidencia de ejemplos con localStorage pertenece a la revisión anterior de
+#762 y no acredita esta versión conectada. La nueva verificación se registra aquí.
 
 
-- Comprobación adicional en viewport móvil 390×844: lista, menú y editor sin
-  desbordamiento horizontal. Selección y entrada al editor mediante Tab/Enter;
-  foco en el título del menú y después en Nombre. Un nombre con marcado HTML
-  se mostró literalmente en lista/menú, sin crear imágenes ni ejecutar eventos.
-  Servidor temporal detenido; sin datos reales ni servidor público.
+## Evidencia · 2026-11-03
+
+Node 24.22.1. Verificación en copias desechables sin la base de trabajo.
+
+- Formato y lint: salida 0. En la copia con node_modules enlazado se utilizó
+  `pnpm --config.verifyDepsBeforeRun=false format` y después `lint` para evitar
+  una instalación automática. HTML, CSS y la nueva prueba también formateados
+  con el Prettier existente.
+- `node --test --test-concurrency=1 tests/serve-data-through-node.test.js tests/web-client.test.js`:
+  2 pruebas, 2 pasan. Incluyen los contratos previos, tipos de los módulos,
+  redirección, archivos no expuestos, fallo de lectura y tabla sin inicializar.
+- Recorrido real Chromium/Playwright: selección por ID, menú, Notas deshabilitado,
+  navegación por teclado, edición normalizada, recarga y cancelación pasan.
+  Nombre vacío, email inválido/duplicado y longitud superior a 64 muestran el
+  error junto al campo, conservan lo escrito y enfocan el campo correcto.
+  El correo sin punto en el dominio mantiene la aceptación de la lógica común.
+- Borrado: confirmación vacía, distinta, cancelada y correcta con mayúsculas y
+  espacios pasan. Se compara el email guardado, no una edición sin guardar.
+  Se distinguió el borrado correcto de una recarga fallida y se recuperó la lista.
+- Peticiones simultáneas de guardar produjeron una única escritura. Una caída
+  simulada al guardar conserva campos y rehabilita controles. Un usuario borrado
+  desde otro cliente se comunica como inexistente y permite recargar.
+- Terminal leyó la edición web y creó otro contacto mediante el ejemplo real.
+  El adaptador Jupyter actualizó y listó los mismos datos; la web vio el cambio.
+  El otro contacto se conservó al borrar. Un reinicio real del servidor conservó
+  la edición web y la lista vacía persistió tras borrar y recargar.
+- Con el servidor realmente detenido, la app mostró el error y permitió reintentar,
+  sin ejemplos de reemplazo. Móvil 390×844 sin desbordamiento horizontal.
+  No hubo errores JavaScript no capturados en el recorrido principal. Las pruebas
+  de fallo producen los errores de red esperados en la consola del navegador.
+- La prueba entre clientes inicialmente asumió un email e ID distintos de los
+  que usa el ejemplo real; se corrigió el guion y la repetición pasó. Se añadió
+  un favicon vacío embebido para evitar una petición de icono inexistente.
+- Dependencias, lockfile, SQL, lógica de negocio, clasificador y clientes
+  Terminal/Jupyter coinciden con staging. Solo cambia su presentación web y la
+  entrega de archivos desde el servicio. La descripción de DATABASE también
+  se ajustó porque el servicio ahora sirve la web.
+
+Verificación final repetida en la rama de entrega: formato, lint y ambas pruebas
+correctos. Integración local de staging resuelta; la comparación de la entrega
+se limita a first-app-ai. Servidores propios detenidos y copia desechable retirada.
