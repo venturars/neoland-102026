@@ -1,6 +1,6 @@
 # Instrucciones de trabajo — AsistenciApp
 
-Este manual define el proceso y sus aprobaciones. La constitución recoge los principios del producto; la arquitectura explica el código y el README, su uso.
+Este manual define el proceso y los cinco momentos en que interviene la persona responsable. La constitución recoge los principios del producto; la arquitectura explica el código y el README, su uso.
 
 ## 1. Alcance, redacción y fuentes
 
@@ -12,7 +12,7 @@ Antes de editar, lee la [constitución](docs/CONSTITUTION.md), la [arquitectura]
 
 Busca specs únicamente en `specs/` de esta app. Una spec de otra aplicación no autoriza cambios aquí. La arquitectura es la fuente para las responsabilidades y dependencias; no las copies en este manual.
 
-Una petición de explicación o revisión es de lectura. Una petición explícita de editar autoriza el trabajo dentro de su alcance y de la fase aprobada; nombrar un archivo no autoriza por sí solo a cambiarlo.
+Una petición de explicación o revisión es de lectura. Una petición explícita de editar autoriza el trabajo dentro de su alcance y del momento en curso; nombrar un archivo no autoriza por sí solo a cambiarlo.
 
 Si el pedido contradice un principio, explica el conflicto y presenta la enmienda antes de implementarlo. La constitución solo se modifica con aprobación explícita de la persona responsable.
 
@@ -61,7 +61,7 @@ Si durante la implementación la spec o el plan resultan incorrectos o incomplet
 
 ## 5. Implementación y documentación
 
-- Implementa únicamente el alcance aprobado y conserva los contratos ajenos al pedido.
+- Implementa únicamente lo que cubren `spec.md`, `plan.md` y `tasks.md`, y conserva los contratos ajenos al pedido.
 - Usa código sencillo, explícito y lineal, con nombres descriptivos, según [STYLE.md](docs/STYLE.md).
 - Justifica dependencias, capas o refactors antes de incorporarlos; no los añadas como mejoras ajenas a la tarea.
 - Comprueba el comportamiento con datos temporales, sin sustituir la base real.
