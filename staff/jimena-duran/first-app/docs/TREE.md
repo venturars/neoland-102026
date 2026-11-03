@@ -25,6 +25,7 @@ first-app/
     pull-request/
       {feat,fix,docs,refactor,test,chore}-pull-request.md
   MCPS/github-mcp-server/
+  MCPS/socket-mcp/mcp.txt  referencia del MCP remoto con OAuth
   AGENTS.md
   docs/
     CONSTITUTIONS.md
@@ -35,5 +36,6 @@ first-app/
     STYLE.md
     JUPYTER.md
     GIT-AUTOMATION.md
+    SOCKET.md             consulta PURL y alertas por versión
     specs/<nombre>/       spec.md, plan.md y tasks.md
 ```
