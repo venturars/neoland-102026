@@ -6,7 +6,7 @@ No hay función nueva, ni SQL, ni cliente. Las operaciones de los usuarios sigue
 
 ## Ficheros
 
-Se copian, tal cual, los 32 ficheros de `exercises/git-workflow-agent-template` a `staff/luis-duque/first-app`, con la misma ruta relativa.
+Se copian, tal cual, los ficheros de `exercises/git-workflow-agent-template` a `staff/luis-duque/first-app`, con la misma ruta relativa.
 
 `agents/`:
 
@@ -48,8 +48,18 @@ Se copian, tal cual, los 32 ficheros de `exercises/git-workflow-agent-template` 
 
 `templates/`:
 
-- `issues/basic_issue.md`
-- `pull-request/basic-pull-request.md`
+- `issues/chore_issue.md`
+- `issues/docs_issue.md`
+- `issues/feat_issue.md`
+- `issues/fix_issue.md`
+- `issues/refactor_issue.md`
+- `issues/test_issue.md`
+- `pull-request/chore-pull-request.md`
+- `pull-request/docs-pull-request.md`
+- `pull-request/feat-pull-request.md`
+- `pull-request/fix-pull-request.md`
+- `pull-request/refactor-pull-request.md`
+- `pull-request/test-pull-request.md`
 
 `MCPS/`:
 

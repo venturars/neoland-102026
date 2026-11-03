@@ -2,7 +2,7 @@
 
 ## Fichero y conexión
 - El fichero es `src/db/users.sqlite` (principio 4 de [CONSTITUTIONS.md](CONSTITUTIONS.md)). No está en git.
-- Hay una sola conexión: la que exporta `src/db/connection.js`, con `node:sqlite`.
+- Hay una sola conexión: la que exporta `src/db/connection.js`, con `node:sqlite`. Solo la usa `src/db/server.js`, el servidor de la base. Lo demás le pide las consultas por HTTP ([ARCHITECTURE.md](ARCHITECTURE.md#servidor-de-la-base)).
 - La tabla se crea al abrir la conexión, si no existe.
 
 ## Tabla `users`
@@ -19,9 +19,10 @@
 - Las fechas se guardan como texto `YYYY-MM-DD HH:MM:SS`.
 
 ## SQL
-- Todo el SQL vive en `src/queries/users.js`. No hay SQL fuera de `queries/`.
+- Todo el SQL vive en `src/queries/users-sql.js`, un texto por nombre. No hay SQL fuera de `queries/`.
+- El servidor solo ejecuta los textos de `src/queries/users-sql.js`, nunca SQL que le llegue en una petición.
 - Los valores van como parámetros `?`, nunca pegados al texto del SQL.
-- `queries/` no valida ni decide mensajes.
+- `queries/` no valida ni decide mensajes, salvo el de base parada de [ERRORS.md](ERRORS.md#base-parada).
 
 ## Campos que devuelve `logic/`
 Lo que devuelve `logic/` usa camelCase: `id`, `name`, `email`, `createdAt` y `updatedAt`. La traducción desde `created_at` y `updated_at` la hace `logic/`. Las columnas de la tabla no cambian.

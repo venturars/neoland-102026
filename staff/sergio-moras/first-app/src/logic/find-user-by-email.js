@@ -3,7 +3,7 @@
 import { selectUserByEmail } from "../queries/users.js";
 
 // Devuelve el usuario encontrado. Lanza un Error si falta el email o no existe el usuario.
-export function findUserByEmail(email) {
+export async function findUserByEmail(email) {
   // Se normaliza igual que al crear, para que la búsqueda no distinga mayúsculas.
   let trimmedEmail = "";
   if (typeof email === "string") {
@@ -15,7 +15,7 @@ export function findUserByEmail(email) {
     throw new Error("Email is required.");
   }
 
-  const user = selectUserByEmail(normalizedEmail);
+  const user = await selectUserByEmail(normalizedEmail);
   if (!user) {
     throw new Error(`User not found: ${normalizedEmail}`);
   }

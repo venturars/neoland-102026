@@ -109,7 +109,13 @@ agent documents. It does not duplicate their procedures. These are optional comp
 
 `skills/` describes each action and its inputs/results. The six Bash scripts in
 `tools/` implement local Git operations. `templates/` supplies the issue and PR
-bodies. `MCPS/github-mcp-server/mcp.txt` is a public server documentation reference,
+bodies: six issue templates and six PR templates for feat, fix, docs, refactor,
+test and chore. The chosen supported type is shared by the issue, branch and PR;
+new tasks without a specific template use the closest supported type. Draft
+checklists remain unchecked until review is requested and their items verified.
+The principal links the issue after PR creation; automatic closure follows the
+actual default branch, while PRs keep staging as their base.
+`MCPS/github-mcp-server/mcp.txt` is a public server documentation reference,
 not an installed connection or credential store. Setup and verification are in
 README.md; workflow permissions and SDD gates remain in AGENTS.md.
 

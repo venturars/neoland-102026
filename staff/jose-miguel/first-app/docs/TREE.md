@@ -6,7 +6,7 @@ first-app/
   package.json
   eslint.config.js
   scripts/
-    jupyter.sh
+    start-jupyter.js
   src/
     db/
       connection.js
@@ -58,8 +58,14 @@ first-app/
         spec.md
         plan.md
         tasks.md
+      untrack-sqlite-jupyter/
+        spec.md
+        plan.md
+        tasks.md
       <nombre>/
         spec.md
         plan.md
         tasks.md
 ```
+
+`src/db/users.sqlite` vive en el árbol local; `.gitignore` de first-app y el monorepo evitan versionarlo.

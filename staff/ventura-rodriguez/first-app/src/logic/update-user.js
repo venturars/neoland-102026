@@ -1,9 +1,9 @@
 import { findByEmail, findById, update } from "../queries/users.js";
 
-export function updateUser(id, changes) {
+export async function updateUser(id, changes) {
   let current;
   try {
-    current = findById(id);
+    current = await findById(id);
   } catch {
     throw new Error("Could not update the user");
   }
@@ -51,7 +51,7 @@ export function updateUser(id, changes) {
 
   let owner;
   try {
-    owner = findByEmail(email);
+    owner = await findByEmail(email);
   } catch {
     throw new Error("Could not update the user");
   }
@@ -69,7 +69,7 @@ export function updateUser(id, changes) {
 
   let user;
   try {
-    user = update({ id: current.id, name, email });
+    user = await update({ id: current.id, name, email });
   } catch {
     throw new Error("Could not update the user");
   }

@@ -5,7 +5,7 @@ Los ficheros de hoy, sin `node_modules/` ni `src/db/users.sqlite`, que no están
 ```
 first-app/
   AGENTS.md            cómo trabaja el agente
-  package.json         dependencias y scripts format y lint
+  package.json         dependencias y scripts format, lint y db
   pnpm-lock.yaml
   eslint.config.js
   .gitignore
@@ -13,7 +13,9 @@ first-app/
   src/                 el código de la app
     db/
       connection.js
+      server.js        el servidor de la base
     queries/
+      users-sql.js     el SQL, una consulta por nombre
       users.js
     logic/
       classify-gender.js

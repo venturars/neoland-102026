@@ -2,7 +2,7 @@ node --no-warnings --input-type=module -e "
 import { listUsers } from './src/logic/list-users.js';
 
 try {
-  const users = listUsers();
+  const users = await listUsers();
 
   if (users.length === 0) {
     console.log('There are no users yet.');

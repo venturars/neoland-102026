@@ -20,7 +20,7 @@ En Codex, usa su herramienta nativa para lanzar subagentes reales secuenciales y
   5. Lanza create-pr para abrir en draft hacia staging.
   6. Ejecuta link-pr-to-issue: cuerpo y Development, sin cerrar la issue.
 - Guardar: lanza create-commit para los archivos elegidos; después launch-push. No incluyas archivos ajenos. Confirma antes que los cambios están verificados según AGENTS.md.
-- Pedir revisión: Miguel debe nombrar revisores. Ejecuta assign-reviewers, excluyendo al autor. Verifica solicitudes y salida de draft; no inventes usuarios.
+- Pedir revisión: Miguel debe nombrar revisores. Ejecuta assign-reviewers, excluyendo al autor. Comprueba las casillas según assign-reviewers y marca solo las verificadas al pedir revisión; si falta una comprobación necesaria, informa antes de pasar a revisión. Verifica solicitudes y salida de draft; no inventes usuarios ni resultados.
 
 ## Reanudación y límites
 
@@ -28,7 +28,7 @@ Antes de repetir una operación, lee sus resultados existentes. Reutiliza la iss
 
 Todo el trabajo nuevo parte de staging actualizado y sus PRs apuntan a staging desde la creación. No encadenes tareas desde otra rama. Si hay otra tarea sin terminar, no abras una dependiente: informa y espera la decisión. No fuerces pushes, sobrescribas datos, limpies cambios ni guardes provisionalmente trabajo ajeno sin autorización. No cambies commits o base después de aprobaciones sin petición expresa. No prometas que GitHub mantendrá aprobaciones si cambia la comparación revisada.
 
-No fusiones PRs, cierres issues ni borres ramas automáticamente. No se inicia un desarrollo posterior por terminar un momento. El enlace deja Closes #N y Development; no llama a la API para cerrar la issue. Fusionar en staging no la cierra mientras main sea la rama por defecto. Antes de afirmar éxito, verifica la acción por lectura y devuelve número, URL, rama o commit según corresponda.
+No fusiones PRs, cierres issues ni borres ramas automáticamente. No se inicia un desarrollo posterior por terminar un momento. El enlace deja Closes #N y Development; no llama a la API para cerrar la issue. Consulta la rama predeterminada real: GitHub cierra la issue al fusionar la PR con el enlace de cierre en esa rama. Si es staging, el merge allí permite el cierre automático; no cambies la base staging ni la configuración para provocar el cierre. Antes de afirmar éxito, verifica la acción por lectura y devuelve número, URL, rama o commit según corresponda.
 
 ## Skills del principal
 

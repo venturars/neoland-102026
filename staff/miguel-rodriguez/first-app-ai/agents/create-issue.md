@@ -10,7 +10,7 @@ Recibe del principal petición, raíz de la app, raíz Git, estado relevante y n
 
 ## Procedimiento
 
-Usa el resumen recibido, la plantilla de issue y create-issue. Busca coincidencias antes de crear. Título inglés de menos de 72 caracteres; cuerpo español. Usa assign-author para el usuario autenticado y verifica el resultado. No abras una rama ni PR.
+Usa el resumen recibido y la plantilla correspondiente en templates/issues/. La forma del título y el tipo se definen en esa plantilla. Si no hay una específica, usa la más cercana según el template, sin imponer una lista cerrada ni renombrar ramas existentes. Sigue create-issue y busca coincidencias antes de crear. Usa assign-author para el usuario autenticado y verifica el resultado. No abras una rama ni PR.
 
 ## Herramientas
 

@@ -7,7 +7,7 @@ import { selectUserByEmail, updateUserById } from "../queries/users.js";
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // Actualiza el usuario y lo devuelve ya modificado. Lanza un Error si algún dato no es válido.
-export function updateUser(id, name, email) {
+export async function updateUser(id, name, email) {
   // Desde la terminal el id puede llegar como texto, así que se convierte a número.
   const userId = Number(id);
 
@@ -50,7 +50,7 @@ export function updateUser(id, name, email) {
 
     // El email no puede pertenecer a otro usuario.
     // Si pertenece al mismo usuario que se está modificando, se permite.
-    const userWithSameEmail = selectUserByEmail(newEmail);
+    const userWithSameEmail = await selectUserByEmail(newEmail);
     if (userWithSameEmail) {
       if (userWithSameEmail.id !== userId) {
         throw new Error(`Email already exists: ${newEmail}`);
@@ -58,7 +58,7 @@ export function updateUser(id, name, email) {
     }
   }
 
-  const updatedUser = updateUserById(userId, newName, newEmail);
+  const updatedUser = await updateUserById(userId, newName, newEmail);
   if (!updatedUser) {
     throw new Error(`User not found: id ${userId}`);
   }
