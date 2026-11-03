@@ -66,7 +66,8 @@ def test_app_does_not_open_the_database():  # CA-06
 
 def test_constitution_names_the_new_folders():  # CA-09
     text = _text("docs/CONSTITUTION.md")
-    assert "Versión 2.3" in text
+    assert "Versión 3.0" in text
+    assert "IP pública estática" in text
     for folder in (
         "docs/",
         "asistencia/domain/",
