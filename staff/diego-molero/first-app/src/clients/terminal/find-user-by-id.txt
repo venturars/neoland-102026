@@ -1,0 +1,6 @@
+// Ejemplo manual. Ejecución: docs/CONSTITUTIONS.md.
+import { findUserById } from "./src/logic/find-user-by-id.js";
+
+const result = findUserById(1);
+
+console.log(result);

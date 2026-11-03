@@ -18,3 +18,5 @@ La automatización de Git vive en agents/, skills/, tools/, templates/ y MCPS/, 
 Los agentes y skills mantienen su estructura original. Solo se adaptan las siete rutas de comandos para ejecutarlos desde la raíz Git y se añade al orquestador la referencia al SDD local. AGENTS.md conserva las revisiones separadas de spec/plan y tareas antes de implementar; ese SDD prevalece sobre la continuación automática del template.
 
 Las doce plantillas originales son la fuente editorial de issues y PR. MCPS contiene la referencia original, sin ejecutar su configuración. La guía [GIT-AUTOMATION.md](GIT-AUTOMATION.md) explica uso con Git Bash, MCP y alternativa gh, así como los límites de esta copia. Los ensayos autorizados usan repositorios desechables con remoto local y evidencia separada de los resultados históricos.
+
+`MCPS/socket-mcp/mcp.txt` referencia el MCP remoto de Socket con OAuth. [SOCKET.md](SOCKET.md) documenta la consulta PURL autenticada con `SOCKET_API_TOKEN`, el inventario directo derivado del manifiesto y lockfile y la interpretación de alertas. Son documentación de desarrollo; la conexión y configuración existentes se conservan.
