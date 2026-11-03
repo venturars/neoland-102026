@@ -1,23 +1,14 @@
-# Tareas — cerrar la issue al fusionar la pull request
+# Tareas — cerrar la issue al fusionar en la rama por defecto
 
-1. Abrir `skills/link-pr-to-issue/SKILL.md`.
-   La línea del cuerpo queda `Closes #N`.
-   Ese paso no cierra la issue.
-   El cierre queda para cuando la pull request ya está fusionada.
-
-2. Abrir `agents/git-workflow-agent.md`.
+1. Abrir `spec.md` de esta carpeta.
    Al enlazar, la issue sigue abierta.
-   Cuando la pull request ya está fusionada, se cierra la issue si sigue abierta.
-   No se cierra en ningún paso anterior.
+   Nadie la cierra con una llamada.
+   GitHub la cierra al fusionar en la rama por defecto. Fusionar solo en staging no la cierra.
 
-3. Abrir `docs/ARCHITECTURE.md`.
-   El punto de `link-pr-to-issue` dice `Closes #N` y que la issue se cierra al fusionar.
-   El resto de los puntos sigue igual.
+2. Abrir `plan.md` de esta carpeta.
+   Dice lo mismo que la spec.
+   No abre `skills/link-pr-to-issue/SKILL.md`.
 
-4. Abrir la spec `git-workflow-in-first-app`.
-   `spec.md` y `plan.md` dicen lo mismo que la arquitectura.
-   El resto de esa spec sigue igual.
-
-5. Comprobar.
-   Esos ficheros coinciden: la issue sigue abierta al enlazar y se cierra al fusionar.
-   `logic/`, `queries/`, `db/`, `clients/`, `scripts/` y `package.json` no cambian.
+3. Comprobar.
+   Los dos ficheros coinciden con la plantilla en el cierre.
+   La skill de enlace sigue sin tocarse en este paso.

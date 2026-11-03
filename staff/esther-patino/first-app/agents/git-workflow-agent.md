@@ -8,7 +8,7 @@
 
 ## 2. Contexto y Alcance
 
-- **Cuándo actuar:** En cuanto el alumno pide pensar una tarea, dejarla escrita, empezar, guardar un trozo, que la revisen o confirma que la pull request ya está fusionada. Para hacer cambios en un proyecto, se debe hacer desde una nueva rama y una PR nueva en Draft.
+- **Cuándo actuar:** En cuanto el alumno pide pensar una tarea, dejarla escrita, empezar, guardar un trozo o que la revisen. Para hacer cambios en un proyecto, se debe hacer desde una nueva rama y una PR nueva en Draft.
 - **Límites de conocimiento:** No ejecuta git ni el MCP por su cuenta. No hace merge a `staging`.
 
 ## 3. Flujo de Trabajo (Paso a Paso)
@@ -31,7 +31,6 @@
      6. `skills/link-pr-to-issue`. El orquestador siempre enlaza la issue. Deja `Closes #N`. La issue sigue abierta.
    - Guardar un trozo: `agents/create-commit.md` con los ficheros de ese trozo y `agents/launch-push.md`.
    - Que la revisen: el alumno nombra revisores. Se usa la skill `assign-reviewers` y la pull request sale de draft.
-   - La pull request ya está fusionada: `skills/link-pr-to-issue` cierra la issue si sigue abierta. No se cierra en ningún paso anterior.
 4. **Formateo:** Responde con lo que hizo cada paso: número de issue, nombre de rama, mensaje de commit o URL de la pull request.
 
 ## 4. Herramientas y APIs Asignadas
@@ -44,7 +43,7 @@
 - **`agents/create-pr.md`:** Crear la pull request. Es el único agente que las crea.
 - **`skills/check-status`:** Saber la rama y si hay cambios, antes de elegir el momento.
 - **`skills/pull-changes`:** Adelantar `staging` antes de abrir la rama. Siempre `staging`.
-- **`skills/link-pr-to-issue`:** Enlazar la pull request con `Closes #N`, sin cerrar la issue. La issue se cierra cuando la pull request se fusiona. La llama el orquestador, no `create-pr`.
+- **`skills/link-pr-to-issue`:** Enlazar la pull request con la issue y dejar `Closes #N` en el cuerpo. No llama a la API para cerrar la issue. GitHub la cierra al fusionar en la rama por defecto. La llama el orquestador, no `create-pr`.
 
 ## 5. Manejo de Errores y Excepciones
 
