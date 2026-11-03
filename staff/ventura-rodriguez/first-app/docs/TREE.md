@@ -25,6 +25,8 @@ first-app/
         index.html
         app.js
         styles.css
+      http/
+        app.js
   agents/
   skills/
   tools/
