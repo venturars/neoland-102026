@@ -36,10 +36,10 @@
 - `MCPS/socket-mcp/mcp.txt` es la dirección del MCP de Socket.
 - `docs/specs/<nombre>/` es donde empieza un desarrollo. `<nombre>` es la funcionalidad, en kebab-case.
 - `src/db/` abre la base de datos y no contiene reglas de negocio.
-- `src/db/connections.js` es la única conexión a la base de datos.
+- `src/db/server.js` abre la única conexión a la base de datos, lee los `.sql` de `src/queries/queries/` por nombre de fichero y atiende `POST /execute` en `127.0.0.1:3000` con `{ method, file, params }`. `method` es `exec`, `get`, `all` o `run`. Se arranca con `pnpm server` desde first-app.
 - `src/db/users.sqlite` es el único fichero de la base de datos.
 - `src/queries/queries/` guarda el SQL en ficheros `.sql`. Hay un fichero por sentencia.
-- `src/queries/user.js` lee esos ficheros y los ejecuta. No hay reglas de negocio en `src/queries/`.
+- `src/queries/user.js` pide el resultado de esas operaciones al servidor de la base por HTTP. No hay reglas de negocio en `src/queries/`.
 - `src/logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
 - `src/logic/errors.js` exporta las clases de error compartidas. No es una funcionalidad de negocio.
 - `src/logic/create-user.js` crea un usuario.
@@ -73,7 +73,7 @@
   - `src/clients/web/navigate.js` vuelve o abre pantallas.
   - `src/clients/web/save-user.js` guarda nombre y email.
   - `src/clients/web/delete-selected-user.js` abre el popover de borrado, confirma o cancela y llama a la API.
-- `package.json` script `start` arranca el cliente HTTP desde `first-app`.
+- `package.json` script `server` arranca el servidor de la base desde `first-app`. El script `start` arranca el cliente HTTP.
 - `scripts/jupyter.sh` prepara `.venv` si hace falta, instala `notebook==7.6.3` y arranca Jupyter en `src/clients/jupyter/`. Funciona en Mac, Linux y Windows (con `sh`). `package.json` lo invoca con `pnpm jupyter`.
 - `src/clients/jupyter/` es el cuaderno, uno por cada `.txt` de `src/clients/terminal/`. El bloque muestra ese texto: arranca `node --input-type=module` y, dentro, los `import` y la llamada quedan igual. El `console.log` se sustituye por la tabla. `cli-table3` y `@colors/colors` pintan esa tabla con colores y encabezados. Si la función falla, se ve ese mensaje. En esa carpeta no hay ficheros `.py` ni `requirements.txt`. Se abre con `pnpm jupyter` desde `first-app`.
 - `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada fichero.
