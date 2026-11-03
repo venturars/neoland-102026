@@ -27,7 +27,7 @@
      2. `agents/create-branch.md` con la skill `create-branch-from-staging`.
      3. `agents/create-commit.md` con la skill `create-empty-commit`.
      4. `agents/launch-push.md`.
-     5. `agents/create-pr.md` con `create-pr-base-staging`, `assign-author` y `create-draft`. Este agente no enlaza la issue.
+     5. `agents/create-pr.md` con `create-pr-base-staging`: crea directamente en draft y autoasignada en la misma invocación. Solo continúa si el commit vacío y el push terminaron correctamente. Este agente no enlaza la issue.
      6. `skills/link-pr-to-issue`. El orquestador siempre enlaza la issue.
    - Guardar un trozo: `agents/create-commit.md` con los ficheros de ese trozo y `agents/launch-push.md`.
    - Que la revisen: el alumno nombra revisores. Se usa la skill `assign-reviewers` y la pull request sale de draft.
