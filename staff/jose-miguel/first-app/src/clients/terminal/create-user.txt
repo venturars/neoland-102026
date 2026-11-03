@@ -1,7 +1,8 @@
-# Pegar en la terminal con el directorio actual en first-app.
+# Pega esto en la terminal, con el directorio actual en first-app
+node --input-type=module <<'EOF'
+import { createUser } from "./src/logic/create-user.js";
 
-# Test 1: crea un usuario (OK).
-node --input-type=module -e "import { createUser } from './src/logic/create-user.js'; try { console.log(createUser(['Ana', 'ana-' + Date.now() + '@mail.com'])); } catch (error) { console.log(error.message); }"
+const result = await createUser({ name: "Ada", email: "ada@example.com" });
 
-# Test 2: nombre vacío (error).
-node --input-type=module -e "import { createUser } from './src/logic/create-user.js'; try { createUser(['', 'ana@mail.com']); } catch (error) { console.log(error.message); }"
+console.log(result);
+EOF

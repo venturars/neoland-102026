@@ -1,57 +1,41 @@
-# Cliente de navegador (SSR)
+# Cliente de navegador (módulos ES)
 
-Frontend vanilla de first-app: HTML generado en Node, formularios y enlaces. No usa `/api/*` ni `fetch`.
-
-## Iniciar el frontend
-
-1. **Carpeta de trabajo:** raíz de first-app (donde está `package.json`):
-
-   ```text
-   staff/jose-miguel/first-app
-   ```
-
-2. **Arrancar el servidor** (PowerShell, CMD o terminal Linux):
-
-   ```text
-   node src/clients/browser/start-browser-server.js
-   ```
-
-   Debe aparecer en consola:
-
-   ```text
-   First App (browser): http://127.0.0.1:3000
-   ```
-
-3. **Abrir el navegador** en:
-
-   ```text
-   http://127.0.0.1:3000
-   ```
-
-4. **Detener:** en la misma terminal, **Ctrl+C**.
-
-El script ajusta el directorio de trabajo a first-app y usa la misma base `src/db/users.sqlite` que terminal y Jupyter. **No** hay entrada en `package.json` (`pnpm start` no aplica a este cliente).
-
-### Si algo falla
-
-| Síntoma | Qué hacer |
-| --- | --- |
-| Puerto en uso | Cierra otra instancia del cliente o cualquier proceso en el puerto 3000. |
-| Lista vacía | Crea usuarios antes con un `.txt` de terminal o un cuaderno Jupyter. |
-| `node` no encontrado | Usa la misma instalación de Node con la que ejecutas `pnpm jupyter`. |
+El browser importa `src/logic/` directamente. No hay rutas GET/POST de pantalla ni `/api/*`. La base SQLite vive en el servidor Node (`POST /execute`).
 
 ## Requisitos
 
-- Usuarios ya guardados en la base local. Este cliente no crea usuarios.
-- Solo escucha en **127.0.0.1** (máquina local).
+- Node con `fetch` nativo.
+- Usuarios en `src/db/users.sqlite` con el esquema actual (`createdAt`, `updatedAt`). Si migraste desde columnas antiguas, borra `users.sqlite` y ejecuta `create-users-table.txt` con el servidor en marcha.
+
+## Arranque
+
+1. Terminal en la raíz de first-app (`staff/jose-miguel/first-app`).
+
+2. Servidor SQL:
+
+   ```text
+   pnpm server
+   ```
+
+   Debe imprimir `http://127.0.0.1:3000`. Déjalo abierto.
+
+3. Otra terminal, cliente browser:
+
+   ```text
+   pnpm browser
+   ```
+
+   Abre Edge o Chrome con `file://…/src/clients/browser/index.html` y permiso para módulos ES.
+
+4. Detener el servidor con **Ctrl+C** en la primera terminal.
 
 ## Pantallas
 
-1. Selección por id (sin contraseña).
-2. Menú: volver, modificar, «Ir a notas» deshabilitada.
-3. Edición: guardar, volver sin guardar, eliminar con confirmación.
+1. Lista de usuarios (id, nombre, email).
+2. Menú: volver, modificar, notas deshabilitado.
+3. Edición: guardar, volver, eliminar (con confirmación).
 
-## Más documentación
+## Spec
 
-- Spec, plan y tareas: `docs/specs/browser-user-client/`
+- `docs/specs/browser-user-client/`
 - Issue: [#779](https://github.com/venturars/neoland-102026/issues/779)
