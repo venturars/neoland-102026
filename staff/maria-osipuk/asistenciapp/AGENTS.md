@@ -81,4 +81,4 @@ La implementación está preparada para revisión cuando:
 
 La aceptación final corresponde a la persona responsable después de probar y aprobar el resultado. Pasar las pruebas no sustituye esa aceptación.
 
-Al cerrar una fase, informa de los archivos cambiados, el resultado, las comprobaciones, las limitaciones y lo pendiente. Distingue trabajo local de trabajo publicado y no afirmes que algo funciona o está aprobado sin evidencia.
+Al cerrar un momento, informa de los archivos cambiados, el resultado, las comprobaciones, las limitaciones y lo pendiente. Distingue trabajo local de trabajo publicado y no afirmes que algo funciona o está aprobado sin evidencia.
