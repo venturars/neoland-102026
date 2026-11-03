@@ -16,3 +16,7 @@
 - `docs/SOCKET.md` describe autenticación, puntuaciones, alertas, campañas y sus límites. Socket se consulta durante la preparación de cambios de dependencias; no se integra en el CRUD ni envía datos de usuarios.
 
 Las operaciones llaman directamente a queries. El clasificador usa fetch nativo para consultar Ollama local dentro de su operación. No se añaden adaptadores, clases ni capas intercambiables.
+
+## Desarrollos previstos · Issue #778
+
+Las propuestas de [notas](specs/notes/plan.md) y [cliente web](specs/vanilla-web-client/plan.md) preparan la ampliación. No describen módulos ya implementados: notes añadirá persistencia y operaciones por usuario; el cliente añadirá HTTP y pantallas vanilla que llaman a logic. La preparación de tablas seguirá siendo explícita y los usuarios actuales se conservarán. Los archivos futuros se incorporarán al árbol cuando existan.

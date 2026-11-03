@@ -46,6 +46,10 @@ first-app/
         plan.md
         spec.md
         tasks.md
+      notes/
+        plan.md
+        spec.md
+        tasks.md
       socket-package-validation/
         plan.md
         spec.md
@@ -55,6 +59,10 @@ first-app/
         spec.md
         tasks.md
       users/
+        plan.md
+        spec.md
+        tasks.md
+      vanilla-web-client/
         plan.md
         spec.md
         tasks.md
