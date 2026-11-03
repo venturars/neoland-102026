@@ -18,6 +18,8 @@
   primer cliente y el test manual de cada funcionalidad.
 - `src/clients/terminal/create-users-table.txt` llama a `src/queries/users.js`.
 - `src/clients/jupyter/` es el cliente que se abre con el Jupyter de la app.
+- `src/clients/browser/` llama a `src/logic/`.
+- `src/clients/browser/index.html` se abre en el navegador.
 - `agents/git-workflow-agent.md` reconoce el momento y llama al
   subagente como un agente aparte. El padre no hace ese trabajo.
 - `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la

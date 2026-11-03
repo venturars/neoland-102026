@@ -21,6 +21,10 @@ first-app/
     clients/
       terminal/
       jupyter/
+      browser/
+        index.html
+        app.js
+        styles.css
   agents/
   skills/
   tools/
