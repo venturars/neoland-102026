@@ -30,7 +30,7 @@ Issue: #679.
 ## 3. Historias de usuario
 
 - **HU-01**: Como quien trabaja en esta carpeta, quiero que cada spec nueva lleve el número de su issue, para que dos specs nunca compartan nombre.
-- **HU-02**: Como agente, quiero que las specs antiguas tengan un resumen, para leer menos sin perder lo que se decidió.
+- **HU-02**: Como agente, quiero que las specs antiguas tengan un resumen en un solo fichero, para leer menos sin perder lo que se decidió.
 - **HU-03**: Como quien trabaja en esta carpeta, quiero que las specs resumidas sigan intactas, para poder volver a ellas.
 - **HU-04**: Como quien revisa, quiero un índice de todas las specs y otro de todas las enmiendas, cada uno en un solo sitio.
 - **HU-05**: Como agente, quiero que una funcionalidad diga a qué objetivo sirve, para pararme si no sirve a ninguno.
@@ -49,7 +49,8 @@ Issue: #679.
 
 ### Los resúmenes (HU-02, HU-03)
 
-- **CA-04**: **Dado** 8 specs sin resumir, **cuando** se aplica la regla, **entonces** las 4 más antiguas quedan en un solo resumen. No cuentan el historial, los resúmenes ni las specs descartadas.
+- **CA-04**: **Dado** 8 specs sin resumir, **cuando** se aplica la regla, **entonces** las 4 más antiguas se resumen. No cuentan el historial, el resumen ni las specs descartadas.
+- **CA-21**: **Dado** el resumen, **cuando** se resumen más specs, **entonces** se añaden al final de un único fichero sin reescribir lo anterior. Si ese fichero pasaría de 300 líneas, se sigue en otro.
 - **CA-05**: **Dado** un resumen, **cuando** se lee, **entonces** dice, por cada spec, qué problema resolvió, qué decisiones siguen vigentes y qué cambió después, con un enlace a la spec original.
 - **CA-06**: **Dado** las specs resumidas, **cuando** se escribe el resumen, **entonces** no se editan ni se borran.
 - **CA-07**: **Dado** este cambio, **cuando** termina, **entonces** existe el resumen de `001` a `004`.
@@ -107,3 +108,4 @@ Ninguna. El resumen lo escribe el agente, en el momento 4 de la spec que hace ll
 | 0.1 | 2026-10-30 | Borrador inicial | La issue 679 recoge lo acordado en la entrevista |
 | 1.0 | 2026-10-30 | Quién y cuándo escribe el resumen (CA-20) | Quien trabaja en esta carpeta cerró la pregunta abierta |
 | 1.1 | 2026-10-30 | Implementada | T01–T09 hechas; 114 tests en verde |
+| 1.2 | 2026-11-03 | Un solo fichero de resumen, con un límite de 300 líneas (CA-21) | Quien trabaja en esta carpeta prefiere un fichero que leer en vez de uno por cada 4 specs |

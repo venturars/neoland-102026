@@ -13,7 +13,7 @@ Lee en este orden al empezar cualquier tarea:
 1. `docs/CONSTITUTION.md`: las reglas no negociables.
 2. `docs/ARCHITECTURE.md`: cómo se organiza el código.
 3. Este archivo (`AGENTS.md`).
-4. El historial: `specs/000-historial/specs.md`. Dice cuál es la spec activa. De las specs ya resumidas basta con su resumen, en `specs/000-historial/resumenes/`.
+4. El historial: `specs/000-historial/specs.md`. Dice cuál es la spec activa. De las specs ya resumidas basta con su resumen, en `specs/000-historial/resumen.md`.
 5. La spec activa: `specs/<issue>-nombre/spec.md`, y su `plan.md` y su `tasks.md`, si ya existen.
 
 Si algo de lo que te piden contradice la constitución, **para y avisa** antes de escribir nada.
@@ -76,9 +76,9 @@ El árbol de carpetas está en [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 Las specs nuevas se llaman `<issue>-nombre-en-kebab-case`, con el número de la issue que las abre: `679-formato-de-specs-e-historial`. Una issue, una spec. Las specs `001` a `008` conservan su nombre. El orden es `001` a `008` y después por número de issue.
 
-`specs/000-historial/` no es una spec: guarda el historial de specs (`specs.md`), el de enmiendas de la constitución (`enmienda.md`) y los resúmenes (`resumenes/`).
+`specs/000-historial/` no es una spec: guarda el historial de specs (`specs.md`), el de enmiendas de la constitución (`enmienda.md`) y el resumen de las specs antiguas (`resumen.md`).
 
-**Resúmenes.** Cuando hay **8 specs sin resumir**, las **4 más antiguas** se resumen en `specs/000-historial/resumenes/<primera>-<última>.md`. No cuentan `000-historial`, los resúmenes ni las specs descartadas. Por cada spec, el resumen dice qué resolvió, qué decisiones siguen vigentes y qué cambió después, con un enlace a la original. Las specs resumidas **no se editan ni se borran**. El resumen lo escribe el agente en el momento 4 de la spec que hace llegar a 8 las specs sin resumir, en la misma pull request.
+**Resúmenes.** Cuando hay **8 specs sin resumir**, las **4 más antiguas** se resumen al final de `specs/000-historial/resumen.md`. No cuentan `000-historial`, el resumen ni las specs descartadas. Por cada spec, el resumen dice qué resolvió, qué decisiones siguen vigentes y qué cambió después, con un enlace a la original. Lo ya resumido **no se reescribe**: solo se añade al final. Si añadir un bloque haría pasar el fichero de **300 líneas**, se sigue en `resumen-2.md` (después `resumen-3.md`, y así). Las specs resumidas **no se editan ni se borran**. El resumen lo escribe el agente en el momento 4 de la spec que hace llegar a 8 las specs sin resumir, en la misma pull request.
 
 ---
 

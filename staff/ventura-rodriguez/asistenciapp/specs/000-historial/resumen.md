@@ -1,12 +1,18 @@
-# Resumen de las specs 001 a 004
+# Resumen de specs
 
-> Escrito: 2026-10-30, con la spec 679 (issue #679). Las cuatro specs siguen intactas en su carpeta.
+Versión corta de las specs ya resumidas (`AGENTS.md` §3). Quien empieza una tarea lee este fichero en vez de esas specs. Si necesita el detalle (un criterio, una prueba, una nota), va a la original, que sigue intacta en su carpeta.
 
-Quien empieza una tarea lee este resumen en vez de las cuatro specs. Si necesita el detalle (un criterio, una prueba, una nota), va a la original.
+Cada bloque se añade al final y no se reescribe. Al pasar de 300 líneas se sigue en `resumen-2.md`.
 
 ---
 
-## 001 · [checkin-codigo](../../001-checkin-codigo/spec.md)
+## Specs 001 a 004
+
+> Escrito: 2026-10-30, con la spec 679 (issue #679).
+
+---
+
+### 001 · [checkin-codigo](../001-checkin-codigo/spec.md)
 
 **Qué resolvió.** Pasar lista en una clase online en menos de un minuto, en cualquier plataforma, con una lista guardada y descargable.
 
@@ -25,7 +31,7 @@ Quien empieza una tarea lee este resumen en vez de las cuatro specs. Si necesita
 
 ---
 
-## 002 · [spec-antes-del-cambio](../../002-spec-antes-del-cambio/spec.md)
+### 002 · [spec-antes-del-cambio](../002-spec-antes-del-cambio/spec.md)
 
 **Qué resolvió.** El agente cambiaba el README o los tests sin spec, porque las reglas solo frenaban las funcionalidades nuevas. Además, las reglas nombraban otra carpeta y a otra persona.
 
@@ -42,7 +48,7 @@ Quien empieza una tarea lee este resumen en vez de las cuatro specs. Si necesita
 
 ---
 
-## 003 · [activar-el-entorno](../../003-activar-el-entorno/spec.md)
+### 003 · [activar-el-entorno](../003-activar-el-entorno/spec.md)
 
 **Qué resolvió.** En el README, el paso que solo activa el entorno se titulaba «Arrancar la app», y parecía que la app ya estaba en marcha.
 
@@ -55,7 +61,7 @@ Quien empieza una tarea lee este resumen en vez de las cuatro specs. Si necesita
 
 ---
 
-## 004 · [quitar-referencias-personales](../../004-quitar-referencias-personales/spec.md)
+### 004 · [quitar-referencias-personales](../004-quitar-referencias-personales/spec.md)
 
 **Qué resolvió.** Las instrucciones y las notas nombraban a una persona y usaban su carpeta personal.
 

@@ -24,7 +24,7 @@ Cómo leer esta lista:
   - *Cubre:* CA-03, CA-08.
   - *Hecha cuando:* cada spec tiene su fila, en orden, y `001` a `004` apuntan al resumen.
 
-- [x] **T03** · Escribir `specs/000-historial/resumenes/001-004.md` leyendo las cuatro specs.
+- [x] **T03** · Escribir el bloque `Specs 001 a 004` de `specs/000-historial/resumen.md` leyendo las cuatro specs.
   - Por spec: enlace, qué resolvió, decisiones vigentes y qué cambió después.
   - No copia el título de la spec 004.
   - *Cubre:* CA-05, CA-07.
@@ -60,3 +60,10 @@ Cómo leer esta lista:
 - [x] **T09** · Pasar `pytest`, comprobar que `specs/001-…` a `specs/008-…` no cambian y marcar la `679` en `specs.md`.
   - *Cubre:* CA-02, CA-06, CA-19.
   - *Hecha cuando:* `pytest` pasa y el diff de esas carpetas está vacío.
+
+## Fase E · Un solo resumen (spec v1.2)
+
+- [x] **T10** · Pasar `resumenes/001-004.md` a `specs/000-historial/resumen.md`, con un bloque por tanda, y actualizar la regla en `AGENTS.md` §3, `specs.md`, `docs/ARCHITECTURE.md` y este plan.
+  - Límite de 300 líneas; después, `resumen-2.md`.
+  - *Cubre:* CA-04, CA-21.
+  - *Hecha cuando:* no queda ninguna mención a `resumenes/` y `pytest` pasa.

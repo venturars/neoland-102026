@@ -1,6 +1,6 @@
 # Plan técnico 679 · Formato de specs e historial
 
-> Estado: **Implementado** (2026-10-30) · Spec: [spec.md](spec.md) v1.0 · Creado: 2026-10-30
+> Estado: **Implementado** (2026-11-03) · Spec: [spec.md](spec.md) v1.2 · Creado: 2026-10-30
 
 Issue: #679.
 
@@ -10,7 +10,7 @@ Este documento explica **cómo** se cumple la spec. Cada decisión indica qué c
 
 ## 1. Visión general
 
-- Nace `specs/000-historial/` con `specs.md`, `enmienda.md` y `resumenes/001-004.md`.
+- Nace `specs/000-historial/` con `specs.md`, `enmienda.md` y `resumen.md`.
 - Las specs nuevas se llaman `specs/<issue>-nombre/`. Esta es la primera: `specs/679-formato-de-specs-e-historial/`.
 - La constitución pasa a 4.1: §4, §5 y §6 cortos, sin tabla de historial.
 - `AGENTS.md` y `docs/ARCHITECTURE.md` se ajustan.
@@ -31,11 +31,11 @@ Un `000` nunca choca con una issue: GitHub no da la issue 0.
 
 `AGENTS.md` §3 gana:
 
-> Cuando hay **8 specs sin resumir**, las **4 más antiguas** se resumen en `specs/000-historial/resumenes/<primera>-<última>.md`. No cuentan `000-historial`, los resúmenes ni las specs descartadas. Las specs resumidas **no se editan ni se borran**. Quien empieza una tarea lee el resumen en vez de esas 4 specs. El resumen lo escribe el agente en el momento 4 de la spec que hace llegar a 8 las specs sin resumir, en la misma pull request.
+> Cuando hay **8 specs sin resumir**, las **4 más antiguas** se resumen al final de `specs/000-historial/resumen.md`. No cuentan `000-historial`, el resumen ni las specs descartadas. Por cada spec, el resumen dice qué resolvió, qué decisiones siguen vigentes y qué cambió después, con un enlace a la original. Lo ya resumido **no se reescribe**: solo se añade al final. Si añadir un bloque haría pasar el fichero de **300 líneas**, se sigue en `resumen-2.md` (después `resumen-3.md`, y así). Las specs resumidas **no se editan ni se borran**. El resumen lo escribe el agente en el momento 4 de la spec que hace llegar a 8 las specs sin resumir, en la misma pull request.
 
-Cada resumen tiene, por spec: enlace a la original, **qué resolvió** (una o dos frases), **decisiones vigentes** y **qué cambió después** (con la spec que lo cambió).
+Cada bloque del resumen tiene, por spec: enlace a la original, **qué resolvió** (una o dos frases), **decisiones vigentes** y **qué cambió después** (con la spec que lo cambió).
 
-El resumen `001-004.md` se escribe leyendo las cuatro specs. Ni este fichero ni `specs.md` copian el título de la spec 004: `tests/test_personal_references.py` (CA-02 de la spec 004) busca ese nombre en todos los `.md` salvo la carpeta de esa spec. Se usa el nombre de carpeta, `quitar-referencias-personales`.
+El primer bloque, `## Specs 001 a 004`, se escribe leyendo las cuatro specs. Cada bloque abre con su fecha y la spec que lo escribió (CA-21). Ni este fichero ni `specs.md` copian el título de la spec 004: `tests/test_personal_references.py` (CA-02 de la spec 004) busca ese nombre en todos los `.md` salvo la carpeta de esa spec. Se usa el nombre de carpeta, `quitar-referencias-personales`.
 
 Quién y cuándo (CA-20): el agente, en el momento 4 de la spec que hace llegar a 8 las specs sin resumir, dentro de esa misma pull request. La regla de `AGENTS.md` §3 termina con esa frase.
 
@@ -45,7 +45,7 @@ Una tabla con estas columnas: `ID` · `Nombre` · `Issue` · `Fecha` · `Tipo` �
 
 - Filas de `001` a `008` y `679`. La issue, solo si consta en la spec. La fecha, la de creación.
 - Tipo: `001` y `006` son **funcionalidad**; `002`, `003`, `004`, `005`, `007` y `679` son **proceso**; `008` es **funcionalidad** (cambia el freno).
-- `001` a `004`: «Resumida en» = `resumenes/001-004.md`.
+- `001` a `004`: «Resumida en» = `resumen.md`.
 - `006`: la nota de `AGENTS.md` §7 («El recuento, la duración del bloqueo y la IP con túnel los cambia la 008»).
 - La tabla de `AGENTS.md` §7 desaparece. El §7 queda en una línea: «El estado de cada spec y la spec activa están en `specs/000-historial/specs.md`. El agente actualiza esa tabla cada vez que una spec cambia de fase.»
 
@@ -107,7 +107,7 @@ Una tabla con estas columnas: `ID` · `Nombre` · `Issue` · `Fecha` · `Tipo` �
 
 ### 2.8 Arquitectura
 
-En el árbol de `docs/ARCHITECTURE.md`, `specs/` muestra `000-historial/` (con `specs.md`, `enmienda.md` y `resumenes/`) y `<issue>-nombre/` en lugar de `NNN-nombre/`.
+En el árbol de `docs/ARCHITECTURE.md`, `specs/` muestra `000-historial/` (con `specs.md`, `enmienda.md` y `resumen.md`) y `<issue>-nombre/` en lugar de `NNN-nombre/`.
 
 ---
 
@@ -134,8 +134,8 @@ En el árbol de `docs/ARCHITECTURE.md`, `specs/` muestra `000-historial/` (con `
 | --- | --- |
 | CA-01, CA-03 | Leer `AGENTS.md` §3 y el orden de `specs.md` |
 | CA-02, CA-06 | `git diff` sin cambios en `specs/001-…` a `specs/008-…`. `tests/test_personal_references.py` sigue pasando |
-| CA-04, CA-07, CA-20 | Leer la regla en `AGENTS.md` §3 y que existe `resumenes/001-004.md` |
-| CA-05 | Leer `resumenes/001-004.md`: cuatro apartados con enlace, qué resolvió, decisiones vigentes y qué cambió |
+| CA-04, CA-07, CA-20, CA-21 | Leer la regla en `AGENTS.md` §3; existe `resumen.md` con el bloque `Specs 001 a 004` y no pasa de 300 líneas |
+| CA-05 | Leer `resumen.md`: cuatro apartados con enlace, qué resolvió, decisiones vigentes y qué cambió |
 | CA-08, CA-10 | Leer `specs.md` y `AGENTS.md` §7 |
 | CA-09 | `enmienda.md` tiene de la 1.0 a la 4.1. `CONSTITUTION.md` no tiene la tabla |
 | CA-11 a CA-13 | Leer `AGENTS.md` §2.1 |
