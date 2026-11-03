@@ -99,8 +99,8 @@ One folder per skill, each with a `SKILL.md`. A skill that runs a script names i
 
 ### templates/
 
-- `issues/basic_issue.md` is the body of the issue: what has to be done and how to test it.
-- `pull-request/basic-pull-request.md` is the body of the pull request. Its "Issue" section ends with `Closes #`.
+- `issues/<type>_issue.md` is the body of the issue, one per type: `feat`, `fix`, `refactor`, `docs`, `chore` and `test`. If the type has no template, the closest one is used.
+- `pull-request/<type>-pull-request.md` is the body of the pull request, one per type with the same six types. Its "Issue" section ends with `Closes #` and is left empty when the draft is opened.
 
 ### MCPS/
 
