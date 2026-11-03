@@ -10,7 +10,7 @@ Recibe del principal petición, raíz de la app, raíz Git, estado relevante y n
 
 ## Procedimiento
 
-Recibe la rama publicada y el título. Usa templates/pull-request/<tipo>-pull-request.md en español, con el mismo tipo admitido de la issue y la rama. Si no existe plantilla del tipo recibido para una tarea nueva, elige el admitido más cercano y comunica la elección; no renombres una rama existente para hacerlo. Ejecuta create-pr-base-staging, assign-author y create-draft, en ese orden. El título va en inglés, tiene menos de 72 caracteres y empieza por un verbo. En draft, describe el alcance previsto y lo pendiente sin atribuir cambios o pruebas inexistentes; conserva las casillas sin marcar y deja Issue vacío para el enlace posterior del principal. Solo una PR de esta rama. No cambies bases ni conviertas una PR revisada a draft. No enlaces la issue ni solicites revisores: esos pasos pertenecen al principal.
+Recibe la rama publicada y el título. Consulta templates/pull-request/<tipo>-pull-request.md para las reglas editoriales y la estructura. Si falta una específica, usa la más cercana sin convertir el tipo recibido ni renombrar la rama. Ejecuta create-pr-base-staging, assign-author y create-draft, en ese orden. En draft, describe el alcance previsto y lo pendiente sin atribuir cambios o pruebas inexistentes; conserva las casillas sin marcar y deja Issue vacío para el enlace posterior del principal. Solo una PR de esta rama. No cambies bases ni conviertas una PR revisada a draft. No enlaces la issue ni solicites revisores: esos pasos pertenecen al principal.
 
 ## Herramientas
 

@@ -10,11 +10,12 @@ Recibe del principal petición, raíz de la app, raíz Git, estado relevante y n
 
 ## Procedimiento
 
-Recibe número, tipo y descripción. Usa el mismo tipo admitido elegido para la issue y sus plantillas: feat, fix, docs, refactor, test o chore. Si llega otro tipo, elige el admitido más cercano al propósito, comunica la elección y conserva esa correspondencia para la PR, sin cambiar una rama existente. Confirma que pull-changes terminó y que el nombre corresponde a la tarea. Usa create-branch-from-staging. Si existe, comprueba identidad y reanuda sin modificar base. No crees commits ni PRs.
+Recibe número, tipo y descripción de la tarea definida con su plantilla. Conserva el tipo recibido: no lo convierte ni renombra una rama para sortear un error. Confirma que pull-changes terminó y que el nombre corresponde a la tarea. Usa create-branch-from-staging para el flujo normal de esta app. Si existe, comprueba identidad y reanuda sin modificar base. create-branch y su skill se conservan como parte de la fuente; su presencia no autoriza ramas dependientes ni cambiar el destino staging de una PR. No crees commits ni PRs.
 
 ## Herramientas
 
 - `skills/create-branch-from-staging/SKILL.md`
+- `skills/create-branch/SKILL.md`
 
 ## Resultado y errores
 

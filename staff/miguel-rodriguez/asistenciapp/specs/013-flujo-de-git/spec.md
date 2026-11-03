@@ -45,6 +45,15 @@ aunque el ejercicio actualizado reúne su preparación en un solo momento.
   cuando se ejecuta esta entrega, entonces se registra esa autorización expresa
   para los momentos incluidos sin inventar aprobaciones documento por documento.
 
+## Corrección solicitada el 2026-11-03
+
+La integración conserva la implementación de las herramientas del template del
+curso. Solo se adaptan las rutas de invocación y las referencias al proceso de
+esta app. No se sustituyen por herramientas propias de first-app-ai. Deben
+estar presentes todas las herramientas y sus instrucciones, incluida la opción
+de crear una rama desde otra base; el flujo normal de esta app sigue partiendo
+de staging. Esta corrección está autorizada por Miguel dentro de la misma PR.
+
 ## Fuera de alcance
 
 Cambiar la carrera o el registro de asistencia, añadir funciones de notas o RAG,

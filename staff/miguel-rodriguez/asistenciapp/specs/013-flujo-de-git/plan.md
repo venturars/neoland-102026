@@ -9,14 +9,17 @@ Adaptar el template exercises/git-workflow-agent-template de la revisión
 25208d23157626954906ffe7da32757c58d9a66e y los cinco momentos descritos en
 staff/ventura-rodriguez/asistenciapp/specs/007-flujo-de-git. No copiar su
 constitución: nuestra versión 4.1 conserva controles adicionales de carreras.
-Los scripts seguros y la adaptación Codex existentes en first-app-ai se usan
-como referencia de implementación, sin importar sus commits ni su SDD.
+Corrección del 2026-11-03: los siete scripts se copian sin modificar su
+implementación desde el template en 9e45fcafa3f513df57335d45b4cf260f0b5374bb.
+Las siete skills de esas herramientas solo adaptan la ruta ./tools/ a la ruta
+de esta app. Se conserva la delegación nativa de Codex y el SDD de cinco momentos;
+no se usa first-app-ai como fuente de scripts.
 
 ## Archivos
 
 - Crear agents/: principal git-workflow-agent y seis roles (help-me-to-think,
   create-issue, create-branch, create-commit, launch-push, create-pr).
-- Crear catorce skills para esos roles y las acciones del principal, seis tools
+- Crear quince skills para esos roles y las acciones del principal, siete tools
   Bash, seis plantillas de issue y seis de PR, y MCPS/github-mcp-server/mcp.txt.
 - Ajustar AGENTS.md al ciclo de cinco momentos, conservando instrucciones de
   seguridad, estilo, scope, pruebas y apagado de servidores. Añadir estado de 013.
@@ -44,7 +47,8 @@ status, pull, enlace y revisores corresponden al principal.
 
 Ramas nuevas desde staging, PRs staging desde creación. No ramas encadenadas,
 force push, cambios posteriores a revisión sin petición ni cierres API. El tipo
-admitido se conserva entre plantilla y rama. Draft con casillas desmarcadas;
+recibido se conserva; las reglas editoriales se consultan en las plantillas, sin
+forzar una conversión a seis tipos. Draft con casillas desmarcadas;
 solo se marcan al pedir revisión con evidencia. Closes y Development se comprueban
 sin duplicar mutaciones; el cierre automático sigue la rama predeterminada real.
 
@@ -67,10 +71,17 @@ sin duplicar mutaciones; el cierre automático sigue la rama predeterminada real
 Comparar hashes de todos los archivos previos salvo AGENTS, constitución,
 arquitectura, README y las dos expectativas de versión documentadas; contrastar la constitución original al retirar solo los
 cambios previstos. Revisar rutas de skills, doce plantillas y referencias.
-Ejecutar bash -n y ensayos de los seis scripts en un repositorio Git desechable
-con origin local: ramas staging, índice ajeno preservado, commit solo explícito,
-commit vacío sin staged files, negativa en protegidas/directorios y push normal.
+Ejecutar bash -n de los siete scripts y comparar byte a byte con la fuente
+fijada. Comparar las siete skills permitiendo solo el cambio de ruta. Probar en
+un repositorio Git desechable con origin bare local: status, pull fast-forward,
+ambas herramientas de rama, commit explícito conservando índice ajeno, commit
+vacío sin staged files, rechazo de directorios y de force push, y push normal.
+No atribuir a los originales validaciones adicionales de nuestros scripts retirados.
 Ejecutar pytest en copia sin datos usando la instalación virtual existente y las
 pruebas Node sin dependencias del final de carrera/catálogo. No llamar MCP mutador
 para probar instrucciones ni crear recursos externos de prueba. Registrar
 resultados reales y retirar temporales propios; detener cualquier proceso propio.
+
+La corrección también retira de create-issue/create-pr y sus skills la duplicación
+de reglas editoriales, y de create-branch la conversión automática de tipos.
+Las siete skills de herramientas permanecen fieles a la fuente fijada.

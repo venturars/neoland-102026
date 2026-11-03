@@ -5,8 +5,8 @@
 
 #### Especificación de Argumentos
 
-1. **Título** _(Obligatorio)_: Inglés, menos de 72 caracteres, empezando por un verbo.
-2. **Cuerpo** _(Obligatorio)_: Español. Rellena `templates/issues/<tipo>_issue.md`, conservando sus secciones y comprobaciones. Selecciona feat, fix, docs, refactor, test o chore según la tarea. Si el tipo recibido no tiene plantilla, elige el tipo admitido más cercano y comunica la elección; conserva ese mismo tipo para la plantilla de issue, la rama y la plantilla de PR. No renombres ramas existentes.
+1. **Título** _(Obligatorio)_: Sigue las reglas editoriales de la plantilla de issue elegida.
+2. **Cuerpo** _(Obligatorio)_: Rellena templates/issues/<tipo>_issue.md, conservando sus secciones y comprobaciones. Si falta una plantilla específica, usa la más cercana al propósito sin convertir automáticamente el tipo recibido ni renombrar ramas.
 3. **Persona asignada** _(Obligatorio)_: El usuario autenticado en el MCP.
 
 #### Reglas de Invocación Críticas

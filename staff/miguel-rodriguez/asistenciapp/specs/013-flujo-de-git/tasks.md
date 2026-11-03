@@ -7,8 +7,10 @@ Preparación e implementación completas delegadas por Miguel el 2026-11-02.
 - [x] T02 · CA-01–08: preparar y revisar spec, plan y tareas en ese orden.
 - [x] T03 · CA-03/08: enmendar solamente §4 de la constitución y registrar 4.2.
 - [x] T04 · CA-01–05: adaptar los cinco momentos en AGENTS.
-- [x] T05 · CA-06: incorporar seis scripts seguros con rutas de esta app.
-- [x] T06 · CA-06: incorporar catorce skills y referencia MCP pública de Codex.
+- [x] T05 · CA-06: incorporación inicial de seis scripts propios; corregida por
+  C01 para conservar los siete originales del template.
+- [x] T06 · CA-06: incorporación inicial de catorce skills y referencia MCP; C02
+  completa quince skills y alinea las siete herramientas locales.
 - [x] T07 · CA-01–06: incorporar seis roles y principal, manteniendo controles.
 - [x] T08 · CA-06: incorporar doce plantillas de la referencia fijada.
 - [x] T09 · CA-06: actualizar árbol y responsabilidades de arquitectura.
@@ -20,10 +22,14 @@ Preparación e implementación completas delegadas por Miguel el 2026-11-02.
   pytest y pruebas Node con dependencias existentes sin datos.
 - [x] T14 · CA-07: comparación final de protegidos y revisión del alcance.
 - [x] T15 · CA-01–08: registrar evidencia y retirar temporales propios.
-- [ ] T16 · CA-05: publicación por el principal cuando termine la revisión; PR
-  independiente hacia staging, enlazada a #761, con Jimena y Meghan como revisoras.
+- [x] T16 · CA-05: entrega inicial publicada en #763 hacia staging, enlazada a
+  #761; la corrección actual se publica en esa misma PR, sin cambiar su base.
 
-## Evidencia
+## Evidencia histórica del 2026-11-02
+
+Las comprobaciones de los seis scripts propios describen la entrega anterior,
+retirada por no conservar la implementación del template. No acreditan los
+scripts originales incorporados en la corrección del 3 de noviembre.
 
 Completado localmente el 2026-11-02, antes de publicación por el principal.
 
@@ -78,3 +84,43 @@ podio de oro de ese participante. Se observó la fase final «Ya» y el podio; l
 29 tests JavaScript verifican las fases sin atribuir a este recorrido la medida
 de todos sus tiempos. El servidor de prueba en 8871 se detuvo y el puerto quedó
 libre. No se usó la base real ni se publicó un túnel.
+
+## Corrección de la copia · 2026-11-03
+
+Miguel autorizó terminar y publicar esta corrección en #763, sin merge ni cierre.
+
+- [x] C01 · CA-06: sustituir los seis scripts propios por los originales y añadir
+  create-branch.sh; conservar siete scripts idénticos a la fuente fijada.
+- [x] C02 · CA-06: copiar las siete skills correspondientes, cambiando únicamente
+  las rutas de invocación; conservar los cinco momentos y Codex.
+- [x] C03 · CA-06/08: corregir alcance, fuente, arquitectura y evidencia.
+- [x] C04 · CA-06/07: bash -n, comparación fuente, smoke Git desechable, pytest y Node.
+- [ ] C05 · CA-05/07: revisar protegidos, commits pequeños y push, actualizar PR763
+  hacia staging y solicitar revisión a Jimena y Meghan.
+
+### Evidencia de la corrección
+
+- Fuente fijada: staging 9e45fcafa3f513df57335d45b4cf260f0b5374bb,
+  exercises/git-workflow-agent-template. Sus scripts coinciden con la revisión
+  fuente original 25208d23157626954906ffe7da32757c58d9a66e.
+- Siete scripts idénticos byte a byte y siete skills idénticas tras sustituir
+  únicamente ./tools/ por staff/miguel-rodriguez/asistenciapp/tools/. Bash -n de
+  todos los scripts: correcto. No se amplían sus validaciones o interfaces.
+- python3 /private/tmp/test_763_original_tools.py: 14 comprobaciones pasan en Git
+  desechable con origin bare local. Ejercita los siete helpers: estado, pull, ambas
+  ramas, commit vacío, commit de archivo explícito, índice ajeno conservado,
+  rechazo de directorio, rechazo de force y push normal. Temporal Git eliminado.
+- Python existente de .venv, python -m pytest -q en esta copia sin datos reales:
+  304 passed in 5.89s. Node --test de test-race-finale.mjs y
+  test-catalog-errors.mjs: 29 pasan, cero fallos. Sin instalaciones.
+- Un primer intento de comprobación usó rutas relativas a la raíz desde la
+  carpeta de la app y falló antes de probar nada. Se repitió desde la raíz Git;
+  las pruebas Python/Node se ejecutaron desde la app, con los resultados anteriores.
+- Contra el HEAD previo de #763 permanecen idénticos app.py, asistencia/, static/,
+  tests/, requirements.txt, pytest.ini, constitución, manual AGENTS.md, README,
+  los agentes ajenos a issue/PR/rama, las skills no afectadas, doce plantillas y
+  specs 001–012.
+- git diff --check correcto; ningún cambio en datos o código del producto.
+- Revisión documental adicional: reglas editoriales de issue/PR centralizadas
+  en plantillas; eliminada la conversión automática de tipos en sus referencias
+  y en create-branch. Se conservan las siete skills originales de herramientas.
