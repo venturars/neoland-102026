@@ -6,7 +6,7 @@ first-app/
   package.json
   eslint.config.js
   scripts/
-    jupyter.sh
+    start-jupyter.js
   src/
     db/
       connection.js
