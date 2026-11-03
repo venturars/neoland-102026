@@ -40,6 +40,8 @@ La automatización Git se define en `agents/`, `skills/`, `tools/` y `templates/
 - [Código conforme a las guías](specs/align-code-with-guides/spec.md).
 - [Automatización Git](specs/git-workflow/spec.md).
 - [Capas dentro de src](specs/move-layers-under-src/spec.md).
+- [Notas por usuario](specs/notes/spec.md) — propuesta documental, pendiente de implementación.
+- [Cliente web vanilla](specs/vanilla-web-client/spec.md) — propuesta documental, pendiente de implementación.
 
 Las rutas vigentes están en arquitectura y TREE. Las evidencias anteriores conservan las rutas utilizadas cuando se ejecutaron sus comprobaciones; el traslado a `src/` no cambia los contratos de usuarios, búsqueda ni clasificador.
 
