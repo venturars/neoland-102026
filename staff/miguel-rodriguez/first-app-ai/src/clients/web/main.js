@@ -6,16 +6,14 @@ const users = document.querySelector("#users");
 const form = document.querySelector("#user-form");
 const nameInput = document.querySelector("#name");
 const emailInput = document.querySelector("#email");
+const storageKey = "first-app-contact-screens-v1";
+const examples = [
+  { id: 1, name: "Ada", email: "ada@example.test" },
+  { id: 2, name: "Grace", email: "grace@example.test" },
+  { id: 3, name: "Linus", email: "linus@example.test" },
+];
+let contacts = [];
 let selectedUser = null;
-let busy = false;
-
-const ERROR_MESSAGES = new Map([
-  ["User not found", "Ese usuario ya no existe. Elige otro."],
-  ["Name is empty", "Escribe un nombre."],
-  ["Email is empty", "Escribe un email."],
-  ["Email is invalid", "El email no es válido."],
-  ["Email is already used", "Ese email ya pertenece a otro usuario."],
-]);
 
 function showMessage(text = "", isError = false) {
   message.textContent = text;
@@ -31,36 +29,16 @@ function showScreen(screen) {
   heading.focus();
 }
 
-function setBusy(value) {
-  busy = value;
-  document
-    .querySelectorAll("button:not([data-future]), input")
-    .forEach((element) => {
-      element.disabled = value;
-    });
-  form.setAttribute("aria-busy", String(value));
-}
-
-async function requestUser(path, options) {
-  let response;
+function saveContacts(nextContacts) {
   try {
-    response = await fetch(path, options);
+    window.localStorage.setItem(storageKey, JSON.stringify(nextContacts));
   } catch {
-    throw new Error(
-      "No se pudo conectar. Comprueba que el servidor sigue abierto.",
+    showMessage(
+      "El navegador no permite guardar. Los cambios se conservarán solo mientras esta página esté abierta.",
+      true,
     );
   }
-  if (response.status === 204) return;
-  const data = await response.json();
-  if (!response.ok) {
-    const text = ERROR_MESSAGES.get(data.error);
-    const error = new Error(
-      text ?? "No se pudo completar la operación. Vuelve a intentarlo.",
-    );
-    error.status = response.status;
-    throw error;
-  }
-  return data;
+  contacts = nextContacts;
 }
 
 function showMenu(user) {
@@ -71,120 +49,128 @@ function showMenu(user) {
   showScreen(menu);
 }
 
-async function loadUsers(preserveMessage = false) {
+function showUsers() {
   selectedUser = null;
-  showScreen(selection);
-  if (!preserveMessage) showMessage("Cargando contactos…");
   users.replaceChildren();
-  setBusy(true);
-  try {
-    const contacts = await requestUser("/api/users");
-    if (!preserveMessage)
-      showMessage(
-        contacts.length
-          ? ""
-          : "Todavía no hay contactos. Crea uno desde Terminal o Jupyter.",
-      );
-    for (const user of contacts) {
-      const item = document.createElement("li");
-      const button = document.createElement("button");
-      const detail = document.createElement("span");
-      button.type = "button";
-      button.className = "user";
-      button.append(document.createTextNode(`${user.name} · ID ${user.id}`));
-      detail.textContent = user.email;
-      button.append(detail);
-      button.addEventListener("click", () => selectUser(user.id));
-      item.append(button);
-      users.append(item);
-    }
-  } catch (error) {
-    showMessage(error.message, true);
-  } finally {
-    setBusy(false);
-  }
-}
-
-async function selectUser(id) {
-  if (busy) return;
-  setBusy(true);
-  showMessage();
-  try {
-    const user = await requestUser(`/api/users/${id}`);
-    showMenu(user);
-  } catch (error) {
-    showMessage(error.message, true);
-    if (error.status === 404) await loadUsers(true);
-  } finally {
-    setBusy(false);
-  }
-}
-
-async function openEditor() {
-  if (!selectedUser || busy) return;
-  setBusy(true);
-  showMessage();
-  try {
-    selectedUser = await requestUser(`/api/users/${selectedUser.id}`);
-    nameInput.value = selectedUser.name;
-    emailInput.value = selectedUser.email;
-    showScreen(editor);
-  } catch (error) {
-    showMessage(error.message, true);
-    if (error.status === 404) await loadUsers(true);
-  } finally {
-    setBusy(false);
-    if (!editor.hidden) nameInput.focus();
-  }
-}
-
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  if (!selectedUser || busy) return;
-  setBusy(true);
-  showMessage();
-  try {
-    const changes = { name: nameInput.value, email: emailInput.value };
-    const user = await requestUser(`/api/users/${selectedUser.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(changes),
+  showScreen(selection);
+  for (const user of contacts) {
+    const item = document.createElement("li");
+    const button = document.createElement("button");
+    const detail = document.createElement("span");
+    button.type = "button";
+    button.className = "user";
+    button.append(document.createTextNode(`${user.name} · ID ${user.id}`));
+    detail.textContent = user.email;
+    button.append(detail);
+    button.addEventListener("click", () => {
+      showMessage();
+      showMenu(user);
     });
-    showMenu(user);
-    showMessage("Cambios guardados.");
-  } catch (error) {
-    showMessage(error.message, true);
-    if (error.status === 404) await loadUsers(true);
-  } finally {
-    setBusy(false);
+    item.append(button);
+    users.append(item);
   }
-});
+  if (!contacts.length)
+    showMessage("No quedan contactos. Puedes restablecer los ejemplos.");
+}
 
-document.querySelector("#delete").addEventListener("click", async () => {
-  if (!selectedUser || busy) return;
-  const confirmed = window.confirm(
-    `¿Eliminar a ${selectedUser.name}? No se puede deshacer.`,
-  );
-  if (!confirmed) return;
-  setBusy(true);
+function loadContacts() {
   showMessage();
   try {
-    await requestUser(`/api/users/${selectedUser.id}`, { method: "DELETE" });
-    showMessage("Usuario eliminado.");
-    await loadUsers(true);
-  } catch (error) {
-    showMessage(error.message, true);
-    if (error.status === 404) await loadUsers(true);
-  } finally {
-    setBusy(false);
+    const saved = window.localStorage.getItem(storageKey);
+    const parsed =
+      saved === null ? structuredClone(examples) : JSON.parse(saved);
+    if (
+      !Array.isArray(parsed) ||
+      !parsed.every(
+        (user) =>
+          user &&
+          Number.isSafeInteger(user.id) &&
+          user.id > 0 &&
+          typeof user.name === "string" &&
+          typeof user.email === "string",
+      ) ||
+      new Set(parsed.map((user) => user.id)).size !== parsed.length
+    ) {
+      throw new Error("Invalid contacts");
+    }
+    contacts = parsed.sort((a, b) => a.id - b.id);
+  } catch {
+    contacts = structuredClone(examples);
+    showMessage(
+      "No se pudieron leer los contactos del navegador. Se muestran ejemplos; puedes restablecerlos.",
+      true,
+    );
   }
+  showUsers();
+}
+
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (!selectedUser) return;
+  showMessage();
+  const name = nameInput.value.trim();
+  const email = emailInput.value.trim().toLowerCase();
+  if (!name) {
+    showMessage("Escribe un nombre.", true);
+    nameInput.focus();
+    return;
+  }
+  emailInput.value = email;
+  if (!email || !emailInput.checkValidity()) {
+    showMessage("Escribe un email válido.", true);
+    emailInput.focus();
+    return;
+  }
+  if (
+    contacts.some(
+      (user) =>
+        user.id !== selectedUser.id && user.email.toLowerCase() === email,
+    )
+  ) {
+    showMessage("Ese email ya pertenece a otro usuario.", true);
+    emailInput.focus();
+    return;
+  }
+  const updated = { ...selectedUser, name, email };
+  saveContacts(
+    contacts.map((user) => (user.id === updated.id ? updated : user)),
+  );
+  showMenu(updated);
 });
 
-document.querySelector("#back").addEventListener("click", () => loadUsers());
-document.querySelector("#reload").addEventListener("click", () => loadUsers());
-document.querySelector("#edit").addEventListener("click", openEditor);
+document.querySelector("#edit").addEventListener("click", () => {
+  if (!selectedUser) return;
+  showMessage();
+  nameInput.value = selectedUser.name;
+  emailInput.value = selectedUser.email;
+  showScreen(editor);
+  nameInput.focus();
+});
+document.querySelector("#delete").addEventListener("click", () => {
+  if (!selectedUser || !window.confirm(`¿Eliminar a ${selectedUser.name}?`))
+    return;
+  showMessage();
+  saveContacts(contacts.filter((user) => user.id !== selectedUser.id));
+  showUsers();
+});
+document.querySelector("#back").addEventListener("click", () => {
+  showMessage();
+  showUsers();
+});
+document.querySelector("#reload").addEventListener("click", loadContacts);
 document.querySelector("#cancel").addEventListener("click", () => {
   showMessage();
   showMenu(selectedUser);
 });
-loadUsers();
+document.querySelector("#reset").addEventListener("click", () => {
+  if (
+    !window.confirm(
+      "¿Restablecer los tres contactos de ejemplo? Se perderán los cambios de esta pantalla.",
+    )
+  )
+    return;
+  showMessage();
+  saveContacts(structuredClone(examples));
+  showUsers();
+});
+loadContacts();

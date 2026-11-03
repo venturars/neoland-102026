@@ -7,10 +7,8 @@
   },
   "scripts": {
     "jupyter": "node scripts/jupyter.js",
-    "format": "prettier --no-config --no-editorconfig --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/jupyter/**/*.js\" \"src/clients/http/**/*.js\" \"src/clients/web/**/*.js\" \"tests/**/*.js\" \"scripts/**/*.js\" \"eslint.config.js\"",
-    "lint": "eslint .",
-    "web": "node src/clients/http/start-server.js",
-    "test:web": "node --test tests/web-client.test.js"
+    "format": "prettier --no-config --no-editorconfig --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/jupyter/**/*.js\" \"src/clients/web/**/*.js\" \"scripts/**/*.js\" \"eslint.config.js\"",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

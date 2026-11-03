@@ -4,8 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Contactos · First app</title>
-    <link rel="stylesheet" href="/styles.css" />
-    <script type="module" src="/main.js"></script>
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./main.js"></script>
   </head>
   <body>
     <main>
@@ -13,8 +13,12 @@
       <p id="message" role="status" aria-live="polite"></p>
       <section id="selection" aria-labelledby="selection-title">
         <h2 id="selection-title">¿Quién eres?</h2>
+        <p class="context">Contactos de ejemplo · guardados en este navegador.</p>
         <ul id="users" aria-label="Contactos guardados"></ul>
-        <button id="reload" class="secondary" type="button">Actualizar lista</button>
+        <div class="list-actions">
+          <button id="reload" class="secondary" type="button">Volver a cargar</button>
+          <button id="reset" class="secondary" type="button">Restablecer ejemplos</button>
+        </div>
       </section>
       <section id="menu" hidden aria-labelledby="menu-title">
         <h2 id="menu-title"></h2>
@@ -35,10 +39,13 @@
           <div class="actions">
             <button id="save" type="submit">Guardar cambios</button>
             <button id="cancel" class="secondary" type="button">Volver sin guardar</button>
+          </div>
+          <div class="delete-action">
             <button id="delete" class="danger" type="button">Eliminar usuario</button>
           </div>
         </form>
       </section>
+      <noscript>Activa JavaScript para usar estas pantallas.</noscript>
     </main>
   </body>
 </html>
