@@ -4,7 +4,7 @@ first-app/
   eslint.config.js
   src/
     db/
-      connection.js
+      server.js
       users.sqlite
     queries/
       queries/
