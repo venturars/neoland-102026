@@ -3,7 +3,7 @@ import { toUser } from "./shared.js";
 
 export { findAll };
 
-export function listUsers() {
-  const users = findAll();
+export async function listUsers() {
+  const users = await findAll();
   return users.map(toUser);
 }

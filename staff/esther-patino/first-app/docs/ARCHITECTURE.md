@@ -7,9 +7,9 @@
 - `scripts/` arranca Jupyter sobre `src/clients/jupyter/`.
   - `scripts/jupyter.js` arranca Jupyter sobre `src/clients/jupyter/`.
 
-- `src/db/` abre la base de datos y no tiene reglas de negocio.
-  - `src/db/connection.js` abre `src/db/users.sqlite`.
-  - `src/db/users.sqlite` es la base de datos del proyecto.
+- `src/db/` abre la base de datos y no contiene reglas de negocio.
+  - `src/db/server.js` es el único fichero de esa capa junto a la base. Abre la única conexión, guarda la dirección `http://127.0.0.1:3000` y ejecuta el SQL que recibe. No exporta la conexión.
+  - `src/db/users.sqlite` es el único fichero de la base de datos.
 
 - `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca.
 - `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la tarea se puede dejar escrita.
@@ -68,7 +68,7 @@
   - `plan.md` es la técnica.
   - `tasks.md` son los pasos.
 
-- `src/logic/` guarda las reglas de negocio.
+- `src/logic/` guarda las reglas de negocio. Cada función es async y espera a `src/queries/`.
   - `src/logic/shared.js` comprueba el nombre, el email y el id, y deja el usuario plano.
   - `src/logic/create-user.js` crea un usuario.
   - `src/logic/list-users.js` lista los usuarios.
@@ -79,21 +79,13 @@
   - `src/logic/delete-user.js` borra un usuario.
   - `src/logic/users-gender-count.js` cuenta los usuarios según el sexo que sugiere el nombre. No guarda el sexo.
 
-- `src/queries/` guarda el SQL y lo ejecuta. No hay reglas de negocio.
-  - `src/queries/users.js` lee los `.sql` y los ejecuta.
-  - `src/queries/queries/create-users-table.sql` crea la tabla `users`.
-  - `src/queries/queries/insert-user.sql` inserta un usuario.
-  - `src/queries/queries/find-all.sql` lee todos los usuarios.
-  - `src/queries/queries/find-by-email.sql` busca por email.
-  - `src/queries/queries/find-by-id.sql` busca por id.
-  - `src/queries/queries/find-by-name.sql` busca por nombre.
-  - `src/queries/queries/update-user.sql` cambia un usuario.
-  - `src/queries/queries/remove-user.sql` borra un usuario.
+- `src/queries/queries/` guarda el texto de cada consulta. Hay un módulo `.js` por consulta. Exporta el texto y no lo ejecuta.
+- `src/queries/users.js` importa ese texto y pide la ejecución al servidor. No importa `src/db/server.js`. No hay reglas de negocio en `src/queries/`.
 
 - `src/clients/` agrupa los clientes.
 
-- `src/clients/terminal/` llama a `src/logic/` y es el test manual.
-  - `src/clients/terminal/create-users-table.txt` prueba crear la tabla.
+- `src/clients/terminal/` llama con `await` y es el test manual.
+  - `src/clients/terminal/create-users-table.txt` llama a `src/queries/users.js` con `await` y no importa la conexión.
   - `src/clients/terminal/insert-user.txt` prueba crear un usuario.
   - `src/clients/terminal/find-all.txt` prueba listar los usuarios.
   - `src/clients/terminal/find-by-email.txt` prueba buscar por email.
