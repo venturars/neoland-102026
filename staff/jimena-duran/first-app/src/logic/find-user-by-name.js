@@ -1,6 +1,6 @@
 import { findByName } from "../queries/users.js";
 
-export function findUsersByName(name) {
+export async function findUserByName(name) {
   const normalizedName = name.trim();
 
   if (!normalizedName) {
@@ -9,7 +9,7 @@ export function findUsersByName(name) {
 
   let users;
   try {
-    users = findByName(normalizedName);
+    users = await findByName(normalizedName);
   } catch {
     throw new Error("Could not find the user");
   }

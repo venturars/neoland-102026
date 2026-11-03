@@ -2,7 +2,7 @@
 $script = @'
 import { listUsers } from "./src/logic/list-users.js";
 
-const result = listUsers();
+const result = await listUsers();
 
 console.log(result);
 '@

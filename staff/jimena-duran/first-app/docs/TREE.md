@@ -4,26 +4,20 @@
 first-app/
   eslint.config.js
   src/
-    db/connection.js
+    db/server.js
     db/users.sqlite         local, fuera de Git
-    queries/queries/
+    queries/queries/        constantes SQL en módulos .js
+      create-users-table.js, find-all.js, find-by-id.js
+      find-by-email.js, find-by-name.js, insert.js
+      list-tables.js, remove.js, update.js
     queries/users.js
     logic/                  una función de negocio por archivo
       create-user.js, update-user.js, delete-user.js
       list-users.js, find-user-by-email.js, find-user-by-id.js
-      find-users-by-name.js
+      find-user-by-name.js
       users-gender-count.js
     clients/terminal/
     clients/jupyter/
-    clients/http/
-      create-user-client-server.js
-      start-user-client.js
-    clients/web/
-      index.html
-      styles.css
-      app.js
-  tests/
-    vanilla-user-client.test.js
   agents/                 orquestador y subagentes del flujo de Git
   skills/                 instrucciones reutilizables por momento
   tools/                  siete scripts Bash originales del flujo de Git
@@ -43,8 +37,9 @@ first-app/
     ERRORS.md
     STYLE.md
     JUPYTER.md
-    VANILLA-CLIENT.md
     GIT-AUTOMATION.md
     SOCKET.md             consulta PURL y alertas por versión
     specs/<nombre>/       spec.md, plan.md y tasks.md
+    specs/host-sql-on-node-server/
+      spec.md, plan.md, tasks.md, verification.md
 ```
