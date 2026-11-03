@@ -17,6 +17,7 @@ first-app/
     get-user.js
     get-user-by-email.js
     find-user-by-name.js
+    search-users.js
     count-users-by-gender.js
     errors.js
     validate-user.js

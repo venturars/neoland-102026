@@ -14,4 +14,4 @@ Table `users`, defined in `db/schema.sql`:
 The SQL does not live inside the function that runs it.
 
 - `queries/queries/` has one `.sql` file per query. It holds only the SQL text, with named parameters (`:id`, `:name`, `:email`).
-- `queries/users.js` reads those files, prepares them with `db` and runs them. Its functions (`findAll`, `findById`, `findByEmail`, `findByName`, `insert`, `update`, `remove`) are reused from `logic/`. `createUsersTable` runs `db/schema.sql`, the same schema `db/connection.js` runs when it opens the database; it is called only by the `create-users-table` clients. They do not catch errors.
+- `queries/users.js` reads those files, prepares them with `db` and runs them. Its functions (`findAll`, `findById`, `findByEmail`, `findByName`, `search`, `insert`, `update`, `remove`) are reused from `logic/`. `createUsersTable` runs `db/schema.sql`, the same schema `db/connection.js` runs when it opens the database; it is called only by the `create-users-table` clients. They do not catch errors.

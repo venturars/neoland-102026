@@ -19,6 +19,7 @@ The folders and files are in [TREE.md](TREE.md).
   - `logic/get-user.js` gets a user by id.
   - `logic/get-user-by-email.js` gets a user by email.
   - `logic/find-user-by-name.js` finds the users with a name.
+  - `logic/search-users.js` finds the users whose name contains a text.
   - `logic/count-users-by-gender.js` counts the users by gender, with the local AI.
   - `logic/errors.js` holds the error classes.
   - `logic/validate-user.js`, `logic/validate-email.js` and `logic/validate-name.js` hold input checks shared by several features.
