@@ -12,6 +12,11 @@ Antes de tocar código se leen la constitución y la guía del tema:
 - [docs/STYLE.md](docs/STYLE.md): nombres, líneas y formato.
 
 ## Comandos
+Antes de nada se arranca la base desde `first-app/`, en una terminal aparte. Se queda en marcha en `http://127.0.0.1:4000` y se para con Ctrl+C. Sin ella, todo da `Error: Database is not running. Start it with pnpm db.`
+```
+pnpm db
+```
+
 Los comandos de la app están en `src/clients/terminal/`, un `.txt` por operación. Se copian y se pegan en la terminal (PowerShell o Git Bash) desde la raíz del proyecto (`first-app/`). Los valores de ejemplo se cambian editando el comando. El flag `--no-warnings` oculta el aviso experimental de `node:sqlite`.
 ```
 src/clients/terminal/create-user.txt
@@ -30,7 +35,7 @@ pnpm lint     # ESLint con las reglas recomendadas
 ```
 
 ## Cómo verificar un cambio
-1. Ejecutar los comandos reales de la sección anterior.
+1. Arrancar `pnpm db` y ejecutar los comandos reales de la sección anterior.
 2. Probar también los casos de error: datos que faltan, email inválido o repetido, id inexistente o no numérico.
 3. Probar con usuarios temporales y borrarlos al terminar. Comprobar con `src/clients/terminal/list-users.txt` que los datos existentes siguen intactos.
 4. Lanzar `pnpm format` y `pnpm lint`. `pnpm lint` no da errores.

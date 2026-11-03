@@ -32,6 +32,7 @@ src/logic/*.js                      await en cada llamada a queries; las funcion
 src/clients/terminal/*.txt          await en cada llamada a logic
 src/clients/jupyter/*.ipynb         await en el código y una anotación de que hace falta la base
 package.json                        script db
+eslint.config.js                    console como global (cambio aprobado 1.1)
 docs/ARCHITECTURE.md, docs/TREE.md, docs/DATABASE.md, docs/ERRORS.md, AGENTS.md
 ```
 `src/db/connection.js` no cambia: sigue siendo la única conexión y crea la tabla. Ahora solo la importa `server.js`.
@@ -86,3 +87,8 @@ Los comentarios que hoy explican el SQL (`RETURNING *`, `COALESCE`, los `?`) se 
 ## Riesgos
 - Si `pnpm db` se olvida, todo falla. El mensaje lo dice y `AGENTS.md` lo explica.
 - El principio 1 dice "solo `queries/` contiene SQL y toca la base de datos". El SQL sigue solo en `queries/` y es `queries/` quien decide qué consulta se hace, pero quien la ejecuta ahora es `db/server.js`. Con el texto actual se cumple si "tocar la base" se lee como decidir qué se hace en ella. Este plan no cambia la constitución.
+
+## Cambios aprobados
+| Versión | Fecha | Cambio | Motivo |
+|---|---|---|---|
+| 1.1 | 2026-11-03 | `eslint.config.js` añade `console` a las globales del bloque general | `server.js` escribe su dirección con `console.log` y `pnpm lint` daba `'console' is not defined`. Es la misma línea que añade #768 |
