@@ -4,7 +4,7 @@ import { STATE } from "./state.js";
 
 export function openUserEditor() {
   const user = STATE.selectedUser;
-  document.getElementById("user-name").value = user.nombre;
+  document.getElementById("user-name").value = user.name;
   document.getElementById("user-email").value = user.email;
   showMessage("", false);
   showScreen("edit");

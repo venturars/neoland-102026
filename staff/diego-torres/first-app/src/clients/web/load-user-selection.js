@@ -1,3 +1,4 @@
+import { listUsers } from "/logic/list-users.js";
 import { showMessage } from "./show-message.js";
 import { showScreen } from "./show-screen.js";
 import { STATE } from "./state.js";
@@ -19,14 +20,7 @@ export async function loadUserSelection() {
   status.textContent = "Cargando usuarios…";
 
   try {
-    const response = await fetch("/api/users");
-    const users = await response.json();
-
-    if (!response.ok) {
-      status.textContent = "No se ha podido cargar la lista";
-      reload.hidden = false;
-      return;
-    }
+    const users = await listUsers();
 
     if (users.length === 0) {
       status.textContent = "No hay usuarios todavía";
@@ -36,16 +30,17 @@ export async function loadUserSelection() {
     for (const user of users) {
       const option = document.createElement("option");
       option.value = user.id;
-      option.textContent = `#${user.id} · ${user.nombre} — ${user.email}`;
+      option.textContent = `#${user.id} · ${user.name} — ${user.email}`;
       select.append(option);
     }
 
     select.disabled = false;
     submit.disabled = false;
     status.textContent = "Elige tu usuario y pulsa Continuar.";
-  } catch {
+  } catch (error) {
     status.textContent = "No se ha podido cargar la lista";
     reload.hidden = false;
+    showMessage(error.message, true);
   } finally {
     STATE.isBusy = false;
   }

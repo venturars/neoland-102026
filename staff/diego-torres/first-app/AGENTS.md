@@ -8,7 +8,7 @@ first-app es una app de usuarios para alumnos junior. Se construye con IA siguie
 
 Está en Node, con módulos ES (`"type": "module"`). SQLite entra con `node:sqlite`. Las dependencias de paquete son `openai`, `cli-table3` y `@colors/colors`. Las de desarrollo son `prettier`, `eslint` y `@eslint/js`. Los scripts se lanzan con pnpm.
 
-La arquitectura está en `docs/CONSTITUCION.md`. Esta guía no la repite. Si una tarea y la constitución chocan, gana la constitución. Si la constitución, el código y esta guía se contradicen, se pregunta antes de escribir.
+La arquitectura está en `docs/CONSTITUCION.md` y en las guías que enlaza (`docs/ARCHITECTURE.md`, `docs/DATABASE.md`, `docs/ERRORS.md`, `docs/STYLE.md` y `docs/TREE.md`). Esta guía no las repite. Si una tarea y la constitución chocan, gana la constitución. Si la constitución, el código y esta guía se contradicen, se pregunta antes de escribir.
 
 Un desarrollo nuevo pasa por `docs/specs/<nombre>/`, con `<nombre>` en kebab-case. Ahí viven `spec.md`, `plan.md` y `tasks.md`.
 
@@ -24,15 +24,11 @@ Si la constitución, el código actual y la spec no dicen lo mismo, la pregunta 
 
 La implementación empieza cuando esa persona lo pide. Ejecuta `tasks.md` y no inventa pasos.
 
-## Base de datos
+## Código
 
-El código vive en `src/`: `src/db/`, `src/logic/`, `src/queries/` y `src/clients/`.
+El código vive en `src/`: `src/db/`, `src/queries/`, `src/logic/` y `src/clients/`. Qué sabe cada carpeta está en `docs/ARCHITECTURE.md`. La base y el servidor SQL están en `docs/DATABASE.md`.
 
-`src/db/` solo contiene `connection.js` y `users.sqlite`.
-
-`src/db/connection.js` exporta `db`, la conexión a `src/db/users.sqlite`. No se añade otro fichero en `src/db/`. El esquema es `src/queries/queries/create-users-table.sql`. El almacén es `src/queries/users.js`: recibe la conexión ya abierta y no abre el fichero.
-
-`src/logic/` tiene un fichero por operación. `src/clients/terminal/` tiene un `.txt` por operación: se pega en la terminal con el directorio actual en `first-app`. Importa la función de `src/logic/`, le pasa el almacén y hace `console.log`.
+Ningún cliente funciona sin el servidor en marcha. Antes de usar la web, la terminal o Jupyter, se lanza `pnpm start` en otra terminal.
 
 ## Paquetes
 
@@ -56,24 +52,18 @@ Para empezar, copia `.mcp.example.json` a `.mcp.json` y define `SOCKET_API_TOKEN
 
 Desde esta carpeta, Jupyter se abre con `pnpm run jupyter`, en Linux y en Windows. Lo lanza `scripts/jupyter.js`: la primera vez crea `.venv` e instala `notebook==7.6.3`; las siguientes lo reutiliza.
 
-`pnpm start` levanta la web en `http://127.0.0.1:3000`. La sirve `src/clients/http/start-http-server.js`.
+`pnpm start` lanza `src/db/server.js`: el servidor SQL y la web en `http://127.0.0.1:3000`. Tiene que estar en marcha para cualquier cliente.
 
-`pnpm format` pasa Prettier por los `.js` de `src/db/`, `src/queries/`, `src/logic/` y `src/clients/http/`, y por los `.js`, `.html` y `.css` de `src/clients/web/`, con el formato estándar y sin configuración propia. `pnpm lint` pasa ESLint con las reglas recomendadas, según `eslint.config.js`.
+`pnpm format` pasa Prettier por los `.js` de `src/db/`, `src/queries/` y `src/logic/`, y por los `.js`, `.html` y `.css` de `src/clients/web/`, con el formato estándar y sin configuración propia. `pnpm lint` pasa ESLint con las reglas recomendadas, según `eslint.config.js`.
 
 La dependencia `openai` es la del clasificador. `@colors/colors` y `cli-table3` son las tablas del cliente Jupyter. Se instalan con `pnpm install`.
 
 ## Estilo
 
-El código se escribe en castellano. Los nombres de las queries, de las funciones y de los documentos que las nombran van en inglés. Un fallo es `throw new Error`, con uno de los mensajes de la constitución.
-
-Ficheros en kebab-case. Funciones y variables en camelCase. Exportaciones con nombre. Imports ESM con la extensión `.js`.
-
-Comillas dobles, punto y coma, indentación de 2 espacios.
-
-El código se lee de arriba a abajo, con `if` y con nombres que dicen qué hacen. No se añaden envoltorios de resultado ni capas de más.
+Está en `docs/STYLE.md`.
 
 ## Antes de escribir
 
-- Lee `docs/CONSTITUCION.md`.
+- Lee `docs/CONSTITUCION.md` y sus guías.
 - No inventes campos, errores, carpetas ni operaciones.
 - Si la constitución, el código y esta guía se contradicen, pregunta antes de escribir.

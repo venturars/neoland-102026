@@ -1,8 +1,23 @@
-export async function deleteUser(store, id) {
-  const current = await store.findById(id);
-  if (!current) {
-    throw new Error(`There is no user with id ${id}`);
+import { findById, remove } from "../queries/users.js";
+import { copyUser } from "./shared.js";
+
+export async function deleteUser(id) {
+  let actual;
+  try {
+    actual = await findById(id);
+  } catch {
+    throw new Error("Could not delete the user");
   }
-  await store.remove(id);
-  return current;
+
+  if (!actual) {
+    throw new Error("User not found");
+  }
+
+  try {
+    await remove(actual.id);
+  } catch {
+    throw new Error("Could not delete the user");
+  }
+
+  return copyUser(actual);
 }

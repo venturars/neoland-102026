@@ -17,8 +17,15 @@ export default defineConfig([
     languageOptions: {
       globals: {
         document: "readonly",
-        fetch: "readonly",
         confirm: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/queries/**/*.js"],
+    languageOptions: {
+      globals: {
+        fetch: "readonly",
       },
     },
   },
