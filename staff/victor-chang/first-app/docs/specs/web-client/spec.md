@@ -29,7 +29,7 @@ The database file, chosen once. Then the name and email typed in the sheet, and 
 
 The page and its screens, as described above. Every change is in the database file at once.
 
-Example: `Ada` `ada@x.com` and `María` `maria@x.com` are saved. The list shows `A` with `Ada` and `M` with `María`. Typing `ar` leaves only `María`. Adding `Adam` `adam@x.com` puts him under `A`, after `Ada`, and the terminal client that lists the users shows him too.
+Example: `Ada` `ada@x.com` and `María` `maria@x.com` are saved. The list shows `A` with `Ada` and `M` with `María`. Typing `ar` leaves only `María`. Adding `Adam` `adam@x.com` puts the new user under `A`, after `Ada`, and the terminal client that lists the users shows it too.
 
 ## Failures
 
