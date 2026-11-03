@@ -1,7 +1,7 @@
 import { DatabaseError, NotFoundError, ValidationError } from "./errors.js";
 import { findByEmail } from "../queries/user.js";
 
-export function findUserByEmail(email) {
+export async function findUserByEmail(email) {
   let emailIsInvalid = false;
 
   if (typeof email !== "string") {
@@ -57,7 +57,7 @@ export function findUserByEmail(email) {
   let user;
 
   try {
-    user = findByEmail(email);
+    user = await findByEmail(email);
   } catch {
     throw new DatabaseError("Could not find the user");
   }

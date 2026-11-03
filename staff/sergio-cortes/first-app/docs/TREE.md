@@ -25,7 +25,7 @@ first-app/
         tasks.md
   src/
     db/
-      connections.js
+      server.js
       users.sqlite
     queries/
       queries/
