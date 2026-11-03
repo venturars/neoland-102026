@@ -26,7 +26,14 @@ first-app/
   clients/
     terminal/
     jupyter/
+    web/
+      index.html
+      styles.css
+      app.js
+      queries.js
   docs/
+    adr/
+      0001-browser-sqlite-connection.md
     ARCHITECTURE.md
     CONSTITUTION.md
     DATABASE.md
@@ -40,7 +47,9 @@ first-app/
         tasks.md
   scripts/
     jupyter.sh
+    web.sh
   AGENTS.md
+  GLOSSARY.md
   package.json
   pnpm-lock.yaml
   .venv/

@@ -25,6 +25,11 @@ The folders and files are in [TREE.md](TREE.md).
   - `logic/validate-user.js`, `logic/validate-email.js` and `logic/validate-name.js` hold input checks shared by several features.
 - `clients/terminal/` calls `logic/` and shows the result. It is the first client and the manual test of each feature.
 - `clients/jupyter/` calls `logic/` and shows the result in a table. It is for someone who does not code. One notebook per terminal client.
+- `clients/web/` is a web page that calls `logic/` in the browser, on `db/users.sqlite`, with no API.
+  - `clients/web/index.html` is the page and its import map.
+  - `clients/web/styles.css` is its look.
+  - `clients/web/app.js` reads the file, calls `logic/`, shows the result and saves the file.
+  - `clients/web/queries.js` is the browser twin of `queries/users.js`, on sql.js.
 - `docs/` holds the rules of the app.
   - `docs/CONSTITUTION.md` is what every change follows, and links to the guides.
   - `docs/ARCHITECTURE.md` is this file.
@@ -35,6 +40,9 @@ The folders and files are in [TREE.md](TREE.md).
 - `docs/specs/<name>/` is one change. `<name>` is in kebab-case; for a feature, it is named like its `logic/` file.
   - `spec.md` is the business of the change, `plan.md` what gets built, and `tasks.md` the steps to build it.
 - `scripts/jupyter.sh` prepares and opens the Jupyter client.
+- `scripts/web.sh` serves the app's files for the web client, on `127.0.0.1`.
+- `GLOSSARY.md` holds the words of the domain.
+- `docs/adr/` holds the decisions that would surprise a reader, one file each.
 - `AGENTS.md` is how to work in the app: rules, commands, the Socket check and the workflow.
 - `package.json` holds the npm dependencies, installed with pnpm. `pnpm-lock.yaml` holds the exact installed versions.
 - `.venv/` is the Python of the Jupyter client (git-ignored).
@@ -66,3 +74,14 @@ After a feature is done, its first client is `clients/terminal/<name>.txt`, name
 - A failure prints only `error.message`, without the stack trace.
 - It uses the real `db/users.sqlite`. A practice user it creates is deleted at the end, so the cell can be run again. It does not use the id of a real user.
 - The saved output is what really came out when the cell ran.
+
+### Web
+
+`clients/web/` is a page, opened with `pnpm web` from `first-app`, in Chrome or Edge. It looks like the Contacts app of an iPhone. Why it opens the database in the browser is in [ADR 0001](adr/0001-browser-sqlite-connection.md).
+
+- It makes no API call. `scripts/web.sh` only hands out the app's files, on `127.0.0.1`.
+- It imports the `logic/` files as they are. The import map in `index.html` sends their `../queries/users.js` to `clients/web/queries.js`, which has the same functions and runs the same `.sql` files.
+- Before each step it reads `db/users.sqlite`; after a create, update or delete it writes the file back. It remembers the chosen file in IndexedDB.
+- It shows `error.message` as it is: name and email failures under their field, the others in a box with `OK`. Its own messages are in [ERRORS.md](ERRORS.md).
+- Sorting by name and the A to Z sections are only how it shows the list.
+- It does not import `count-users-by-gender`, which calls the local AI over HTTP.
