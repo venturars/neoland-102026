@@ -1,12 +1,12 @@
 # Plan del cliente vanilla y HTTP
 
-Issue: #778. Propuesta técnica para revisión. Depende de implementar y comprobar primero [notas](../notes/plan.md). No hay servidor ni pantallas nuevas en esta entrega.
+Issue: #778 (documentación) y #788 (implementación). La implementación parte de la rama de [notas](../notes/plan.md), PR #787.
 
 ## Arquitectura y arranque
 
 Mantener clients → logic → queries → db. Añadir src/clients/http/ con start-http-server.js, handle-request.js, handle-users.js, handle-notes.js, read-json-body.js, send-json.js, send-http-error.js y serve-public-file.js. Son funciones pequeñas de interfaz; no deciden validaciones de negocio ni acceden a db/queries. Llaman a listUsers, findUserById, updateUser, deleteUser y las cinco operaciones de notas.
 
-Usar node:http, node:fs y node:url existentes en Node; no instalar paquetes. Servidor en 127.0.0.1:3000, puerto configurable mediante PORT entero de 1 a 65535. El comando start futuro se documentará únicamente en ejecución de la constitución. Un puerto ocupado provoca un error claro y fin del proceso, sin detener procesos ajenos ni buscar otro puerto automáticamente. Ctrl+C cierra el servidor y permite terminar el proceso.
+Usar node:http, node:fs y node:url existentes en Node; no instalar paquetes. Servidor en 127.0.0.1:3000, puerto configurable mediante PORT entero de 1 a 65535. El comando de arranque se documenta únicamente en ejecución de la constitución. Un puerto ocupado provoca un error claro y fin del proceso, sin detener procesos ajenos ni buscar otro puerto automáticamente. Ctrl+C cierra el servidor y permite terminar el proceso.
 
 La preparación de la base se ejecuta explícitamente antes de arrancar, con el inicializador de notas. Arrancar HTTP no crea ni migra tablas; antes de preparar una base existente, realizar copia local con la aplicación detenida. Las comprobaciones funcionales usan exclusivamente una copia temporal sin la base personal.
 
@@ -46,8 +46,12 @@ Eliminar usa confirmación nativa window.confirm: usuario «Se eliminarán este 
 
 En copia aislada con dos usuarios y notas diferenciadas: recorrer todas las pantallas, cancelar/confirmar eliminaciones, comprobar datos tras reiniciar, recargar selección, ausencia de usuarios/notas y mensajes de error. Hacer llamadas HTTP directas con IDs mezclados/malformados, JSON inválido, campos desconocidos, MIME incorrecto, cuerpo superior a 1 MiB, métodos y rutas no admitidos. Comprobar que assets privados no se sirven y que texto con aspecto de HTML no se ejecuta. Verificar teclado, foco, 390 px y carga/fallos de red mediante navegador real. No añadir suite de tests. Cerrar servidor propio al terminar y comprobar puerto libre.
 
-Actualizar las guías y contratos afectados únicamente cuando se implemente: arquitectura, árbol, errores, ejecución y evidencia de tasks. Esta fase documental solo enlaza los desarrollos previstos. No se añade dependencia nueva: no se requiere una revisión Socket de nuevas versiones.
+La implementación actualiza arquitectura, árbol, errores, ejecución y evidencia de tareas. No se añade dependencia nueva: no se requiere una revisión Socket de nuevas versiones.
 
 ## Fuentes
 
 [HTTP nativo de Node 24](https://nodejs.org/docs/latest-v24.x/api/http.html) documenta la creación y cierre del servidor. Las APIs de almacenamiento y sus reglas se detallan en el [plan de notas](../notes/plan.md), sin replicarlas en el cliente.
+
+## Implementación autorizada · 2026-11-03 · Issue #788
+
+Diego pidió continuar con el cliente web después de la entrega de notas. Esta autorización cubre implementación, comprobación y entrega de HTTP y pantallas vanilla; no atribuye una revisión individual de los documentos. La rama de implementación parte de la de notas de la PR #787, que depende de la propuesta documental de la PR #781. La aplicación usa una copia temporal para las comprobaciones, sin migrar la base personal.

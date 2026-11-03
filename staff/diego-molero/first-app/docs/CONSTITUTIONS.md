@@ -40,8 +40,8 @@ La automatización Git se define en `agents/`, `skills/`, `tools/` y `templates/
 - [Código conforme a las guías](specs/align-code-with-guides/spec.md).
 - [Automatización Git](specs/git-workflow/spec.md).
 - [Capas dentro de src](specs/move-layers-under-src/spec.md).
-- [Notas por usuario](specs/notes/spec.md) — persistencia y operaciones implementadas; cliente web pendiente.
-- [Cliente web vanilla](specs/vanilla-web-client/spec.md) — propuesta documental, pendiente de implementación.
+- [Notas por usuario](specs/notes/spec.md) — persistencia y operaciones implementadas.
+- [Cliente web vanilla](specs/vanilla-web-client/spec.md) — HTTP y pantallas implementados.
 
 Las rutas vigentes están en arquitectura y TREE. Las evidencias anteriores conservan las rutas utilizadas cuando se ejecutaron sus comprobaciones; el traslado a `src/` no cambia los contratos de usuarios, búsqueda ni clasificador.
 
@@ -82,7 +82,17 @@ pnpm run update-note
 pnpm run delete-note
 ```
 
-Los datos de estos clientes se editan en sus ejemplos de terminal, igual que los de usuarios. Crear recibe title y content; actualizar permite uno o ambos. El título es obligatorio y se recorta; el contenido admite vacío y conserva su texto. Una nota borrada no reutiliza su ID, por lo que se revisan los IDs antes de repetir los ejemplos. Eliminar un usuario desde cualquier cliente elimina también sus notas definitivamente; los ejemplos de terminal ejecutan la llamada explícita sin una confirmación interactiva. La futura interfaz web pedirá confirmación.
+Los datos de estos clientes se editan en sus ejemplos de terminal, igual que los de usuarios. Crear recibe title y content; actualizar permite uno o ambos. El título es obligatorio y se recorta; el contenido admite vacío y conserva su texto. Una nota borrada no reutiliza su ID, por lo que se revisan los IDs antes de repetir los ejemplos. Eliminar un usuario desde cualquier cliente elimina también sus notas definitivamente; los ejemplos de terminal ejecutan la llamada explícita sin una confirmación interactiva. La interfaz web pide confirmación.
+
+### Cliente web
+
+Preparar la base con `pnpm run db:init` antes de arrancar. En una base existente, cerrar otros procesos y guardar una copia local antes de la migración. El servidor no crea tablas por sí mismo. Desde `first-app`:
+
+```powershell
+pnpm web
+```
+
+Abrir `http://127.0.0.1:3000/`. El puerto se puede cambiar con `$env:PORT = "3001"` antes del comando. Detener con Ctrl+C. La selección de usuario no se guarda al recargar. Eliminar desde la web pide confirmación y borra también sus notas.
 
 ### Jupyter
 
