@@ -38,6 +38,26 @@ def test_readme_cd_uses_a_generic_user():  # CA-01
 
 def test_agent_rules_limit_spec_search_to_this_app():  # CA-03
     agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
-    assert "staff/maria-osipuk/asistenciapp/" in agents
-    assert "únicamente" in agents
-    assert "staff/maria-osipuk/asistenciapp/specs/" in agents
+    assert "Busca specs únicamente en `specs/` de esta app." in agents
+    assert "Una spec de otra aplicación no autoriza cambios aquí." in agents
+
+
+def section(text, start, end):
+    return text.split(start, 1)[1].split(end, 1)[0]
+
+
+def test_constitution_keeps_concrete_rules():  # spec 009 · CA-09
+    constitution = (ROOT / "docs" / "CONSTITUTION.md").read_text(encoding="utf-8")
+    mobile = section(constitution, "### P5", "### P6")
+    assert "400 px" in mobile
+    assert "<label>" in mobile
+    security = section(constitution, "## 6.", "## 7.")
+    assert "dos veces en la misma sesión" in security
+    scope = section(constitution, "## 7.", "## 8.")
+    assert "fuera de esta carpeta" in scope
+
+
+def test_workflow_requires_spec_before_editing():  # spec 009 · CA-06, CA-07
+    workflow = (ROOT / "agents" / "git-workflow-agent.md").read_text(encoding="utf-8")
+    assert "sin parar el avance" not in workflow
+    assert "7. Las specs" in workflow

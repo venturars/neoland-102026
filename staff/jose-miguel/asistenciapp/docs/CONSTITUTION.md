@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 3.1 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-26
+> Versión 3.3 · Ratificada: 2026-10-19 · Última enmienda: 2026-11-02
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -31,7 +31,7 @@ El registro de asistencia no depende de una plataforma concreta. Las integracion
 
 ### P4 · Privacidad mínima
 - Del alumno solo se guarda el **nombre que él mismo escribe** y la **hora del registro**.
-- **Prohibido** guardar emails, IPs, identificadores de dispositivo o cualquier dato no imprescindible.
+- **Prohibido** guardar emails, identificadores de dispositivo o cualquier dato no imprescindible. La dirección de red de la conexión es la excepción: se recuerda solo para contar los intentos de registrarse y para la lista de bloqueo. No forma parte del registro del alumno.
 - Los datos se **almacenan** solo en local (SQLite). Ningún servicio de terceros los guarda.
 - Para que los alumnos lleguen a la app desde sus casas, el tráfico puede **pasar cifrado (HTTPS)** por un proveedor de túnel (p. ej. Cloudflare). Ese proveedor no los almacena, pero técnicamente podría verlos en tránsito; por eso solo se envía lo imprescindible (nombre y código).
 
@@ -63,8 +63,8 @@ El detalle de cómo se relacionan esas carpetas está en `docs/ARCHITECTURE.md`.
 
 ## 4. Desarrollo guiado por especificaciones (SDD)
 
-1. **No hay cambio sin especificación aprobada.** Eso incluye el código de una funcionalidad nueva, las instrucciones de uso, las comprobaciones y el resto de documentación de uso. Cada funcionalidad nace como `specs/NNN-nombre/spec.md` y el usuario la aprueba antes de pasar al plan. La issue, la rama y la pull request del bootcamp dejan la tarea apuntada; no dicen qué hay que cumplir y no sustituyen a esta spec. Si no hay spec aprobada, no se escribe.
-2. El orden siempre es: **spec → plan → tasks → implementación**. No se salta ningún paso.
+1. **Ningún fichero de la app se modifica sin spec, plan y tasks que cubran ese cambio.** Entran el código, los tests, el README y el resto de la documentación de uso. Cada cambio nace como `specs/NNN-nombre/spec.md`. Si no cabe en la spec activa, se abre otra. Una issue, una rama o una pull request no autorizan el código: el código espera a las tres specs y a que se pida implementar.
+2. El orden de los ficheros siempre es: **spec → plan → tasks → implementación**. No se salta ningún paso. Quien trabaja en esta carpeta interviene en cinco momentos, y el agente no los encadena: la issue, el draft, las tres specs en la misma pasada, la implementación, y lo que se pida sobre la pull request. No hay un ok entre spec y plan.
 3. La `spec.md` describe el **qué y el porqué**, nunca el cómo (no menciona tecnologías).
 4. El `plan.md` describe el **cómo** e incluye una sección que comprueba que cumple esta constitución.
 5. Las dudas se marcan como `[NECESITA ACLARACIÓN]` y se resuelven **antes** de implementar. No se inventan requisitos.
@@ -109,3 +109,5 @@ El detalle de cómo se relacionan esas carpetas está en `docs/ARCHITECTURE.md`.
 | 2.1 | 2026-10-20 | P4: distingue *almacenar* (solo en local) de *transitar* (puede pasar cifrado por un proveedor de túnel) | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08) |
 | 3.0 | 2026-10-22 | §4: la spec aprobada frena también las instrucciones de uso, las comprobaciones y el resto de documentación de uso. La tarea del bootcamp no sustituye a la spec. §7 y §8: la carpeta y quien aprueba son los de esta copia | Spec 002. Las reglas solo frenaban el código nuevo y nombraban otra carpeta y a otra persona |
 | 3.1 | 2026-10-26 | §3: el código se reparte en `docs/`, `asistencia/domain/`, `asistencia/usecases/`, `asistencia/storage/` y `app.py`. El archivo sigue en `data/` y las pantallas en `static/` | Spec 005. La organización de archivos y carpetas cambió. El propósito, la privacidad y las reglas de pasar lista siguen |
+| 3.2 | 2026-11-01 | §4: cinco momentos del humano, issue y draft antes de las specs, sin ok entre spec y plan; flujo de git del curso en esta carpeta | Spec 006. El agente deja de pedir ok tras cada fichero SDD y el git vive aquí |
+| 3.3 | 2026-11-02 | P4: excepción para recordar la dirección de la conexión solo en contador de intentos de registrarse y lista de bloqueo | Spec 007. Frena abuso del check-in sin guardar la IP en el pasar lista |

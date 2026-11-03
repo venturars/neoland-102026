@@ -2,7 +2,7 @@
 
 ## 1. Decidir la base
 
-Leer la constitución de esta rama y la de `375-feat-add-jupyter-notebook-client`.
+Leer la constitución del proyecto y la especificación del cliente Jupyter.
 Confirmar de dónde sale el comando y si `pnpm jupyter` desaparece.
 Sin esa decisión, no se crea el shell ni se toca el paquete.
 

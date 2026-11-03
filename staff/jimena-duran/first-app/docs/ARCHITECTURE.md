@@ -23,6 +23,8 @@ Los scripts `.ps1` de `tools/` ejecutan las operaciones de Git en PowerShell. Re
 
 `tools/git-common.ps1` comparte solo las comprobaciones de repositorio, estado, ramas, hooks y comandos nativos. `tools/tests/` verifica el flujo y la conservación de datos en repositorios desechables con remoto local; no ejecuta mutaciones en el repositorio personal.
 
-`templates/issues/` y `templates/pull-request/` dan forma a los cuerpos en español. `MCPS/github-mcp-server/mcp.txt` referencia la documentación del servidor; la conexión, identidad y capacidades se comprueban en la sesión. GitHub CLI es una alternativa documentada si el MCP no resulta suficiente o no corresponde a la cuenta autorizada.
+`templates/issues/` y `templates/pull-request/` contienen seis plantillas cada una, una por tipo, y dan forma a los cuerpos en español. Agentes y skills seleccionan la del tipo o, si no existe, la más cercana. Sus comentarios son la fuente de las reglas editoriales; la generación de nombres de rama no exige una plantilla existente. `MCPS/github-mcp-server/mcp.txt` referencia la documentación del servidor; la conexión, identidad y capacidades se comprueban en la sesión. GitHub CLI es una alternativa documentada si el MCP no resulta suficiente o no corresponde a la cuenta autorizada.
 
 El orden de AGENTS.md permanece por encima del flujo de Git: issue antes de spec; spec y plan antes de la primera pausa; tareas antes de la segunda pausa; implementación tras autorización. La actualización del árbol y la arquitectura forma parte de las tareas aprobadas cuando se añaden o eliminan archivos.
+
+`MCPS/socket-mcp/mcp.txt` referencia el MCP remoto de Socket con OAuth. [SOCKET.md](SOCKET.md) documenta la consulta PURL autenticada con `SOCKET_API_TOKEN`, el inventario directo derivado del manifiesto y lockfile y la interpretación de alertas. Son documentación de desarrollo; la conexión y configuración existentes se conservan.

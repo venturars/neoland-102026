@@ -7,8 +7,9 @@
     "node": ">=22"
   },
   "scripts": {
+    "start": "node src/clients/http/start-http-server.js",
     "jupyter": "sh scripts/jupyter.sh",
-    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\"",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/**/*.js\"",
     "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

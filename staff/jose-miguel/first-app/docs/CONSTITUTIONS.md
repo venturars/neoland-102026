@@ -18,7 +18,7 @@ Cada funcionalidad es un fichero. Un fichero de `logic/` ya creado no se reempla
 
 ### Un fichero de logic
 
-Un fichero, una función. El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `listUsers`, `findUserByEmail`). Los parámetros van en la firma, con su nombre. `createUser` recibe un array con nombre y email en las posiciones 0 y 1. `updateUser` recibe el `id` y un array con los cambios en las posiciones 0 y 1.
+Un fichero, una función. El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `listUsers`, `findUserByEmail`, `findUserByName`, `findUserById`, `createUsersTable`). Los parámetros van en la firma, con su nombre. `createUser` recibe un array con nombre y email en las posiciones 0 y 1. `updateUser` recibe el `id` y un array con los cambios en las posiciones 0 y 1.
 
 Ejemplos de firma:
 
@@ -27,6 +27,9 @@ Ejemplos de firma:
 - `deleteUser(id)`
 - `listUsers()`
 - `findUserByEmail(email)`
+- `findUserByName(name)`
+- `findUserById(id)`
+- `createUsersTable()`
 
 El cuerpo sigue este orden y **no se mezcla**:
 

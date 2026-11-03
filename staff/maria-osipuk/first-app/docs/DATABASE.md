@@ -18,7 +18,7 @@ Los archivos contienen exclusivamente SQL y no contienen JavaScript ni reglas de
 
 `src/db/connection.js` abre la conexión SQLite.
 
-`src/db/users.sqlite` es la base de la aplicación. Si el proceso tiene `FIRST_APP_DATABASE_FILE`, la conexión abre esa ruta. Si no la tiene, abre `src/db/users.sqlite`. Ni el cliente de terminal ni el cliente Jupyter definen esa variable.
+`src/db/users.sqlite` es la base de la aplicación. Si el proceso tiene `FIRST_APP_DATABASE_FILE`, la conexión abre esa ruta. Si no la tiene, abre `src/db/users.sqlite`. Los clientes de terminal y HTTP no fijan esa variable: pueden recibirla del entorno. El puente Jupyter abre la ruta predeterminada de su copia de la aplicación.
 
 ## Usuario
 
@@ -57,7 +57,7 @@ Cada tipo es el de JavaScript y el de SQLite. Un valor de otro tipo no se convie
 - Un único `@`, con contenido a ambos lados, y como máximo 64 caracteres.
 - La comprobación se escribe en pasos visibles: `split("@")`, un solo `@`, texto a ambos lados y longitud. No se sustituye por una expresión regular.
 - Se rechazan `ada`, `@example.com`, `ada@`, `ada@@example.com`, `""` y `null`. Válido: `ada@example.com`.
-- Un futuro formulario HTML usará `<input type="email" />`, pero no sustituye la validación de `src/logic/`.
+- El formulario del navegador usa `<input type="email" />`, pero no sustituye la validación de `src/logic/`.
 
 ### `created_at` y `updated_at`
 

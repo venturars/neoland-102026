@@ -28,4 +28,6 @@ CREATE TABLE IF NOT EXISTS users (
 
 `users.js` lee ese fichero y lo ejecuta con `db.exec` o `db.prepare`. Los parámetros son `:id`, `:name` y `:email`.
 
+- `find-by-name.sql` devuelve filas con un `name` exacto, ordenadas por `id`.
+
 Queries no valida nombre, email ni unicidad de negocio. Queries no captura errores. Eso es logic.

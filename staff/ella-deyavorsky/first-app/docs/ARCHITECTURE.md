@@ -13,7 +13,7 @@ Each layer has one job. The files of each layer are listed in [TREE.md](TREE.md)
 - `skills/` holds one skill per git or GitHub step. The subagents call them.
 - `tools/` holds the shell scripts that the skills run from the root of the repository.
 - `templates/` holds the body of the issue and the body of the pull request.
-- `MCPS/` holds the address of the GitHub MCP server that the skills use.
+- `MCPS/` holds the address of the GitHub MCP server that the skills use, and the address of the Socket MCP server that checks Node packages.
 - `docs/` explains the app.
 
 The rules in `logic/` stay even if the database changes, or if a notebook or a web page is added later. The queries and the clients can be replaced. The logic cannot.
@@ -105,6 +105,7 @@ One folder per skill, each with a `SKILL.md`. A skill that runs a script names i
 ### MCPS/
 
 - `github-mcp-server/mcp.txt` is the address of the GitHub MCP and the header that lets it write directly.
+- `socket-mcp/mcp.txt` is the address of the Socket MCP, what each of its tools answers, and what each one cannot answer.
 
 ### docs/
 

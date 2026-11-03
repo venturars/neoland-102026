@@ -14,6 +14,49 @@ Los ficheros van en kebab-case. Las funciones y las variables van en camelCase. 
 
 Una función por fichero, sin clases, sin `this` y sin métodos. Un usuario sigue siendo un registro con `id`, `name`, `email`, `createdAt` y `updatedAt`. Cada línea deja una sola acción en un nombre. Una acción es una llamada o una comprobación, así que `input.name` y `.trim()` van en líneas distintas y Prettier no las junta. Un fallo de la lista se comprueba con `if` y `throw new Error` en su propia línea. Se escribe como lo escribiría un junior a mano.
 
+## Funciones de negocio
+
+Cada funcionalidad de negocio tiene su propio archivo en `src/logic/`. Las responsabilidades de cada capa están en [ARCHITECTURE.md](ARCHITECTURE.md).
+
+### Firma
+
+- Sin entrada, no recibe argumentos: `listUsers()`.
+- Un dato se recibe directamente: `findUserById(id)` o `findUserByEmail(email)`.
+- Varios valores fijos se muestran en la firma.
+- Un objeto se utiliza cuando representa un grupo con significado propio, como `changes`, o cuando la spec define ese contrato.
+- No se desestructura un objeto en la firma. Primero se valida y después se leen sus propiedades dentro de la función.
+- El nombre describe la acción completa y coincide con la finalidad del archivo.
+
+### Orden de los pasos
+
+1. Recibir los parámetros y validar sus tipos.
+2. Normalizar los valores admitidos.
+3. Comprobar las reglas de negocio.
+4. Solicitar la operación correspondiente a la capa de consultas.
+5. Estructurar la respuesta.
+
+Las reglas concretas de los campos y las fechas generadas por SQLite están en [DATABASE.md](DATABASE.md). La lógica no crea tablas ni calcula esas fechas.
+
+### Actualización parcial
+
+`updateUser(id, changes)` recibe el identificador y los cambios por separado. Valida primero `id` y después que `changes` sea un objeto válido.
+
+Solo modifica propiedades presentes en `changes` y admitidas por la spec. Las demás conservan su valor. Cada valor se valida y normaliza como al crearlo. Un usuario puede conservar su propio valor único, pero no usar el de otra fila.
+
+### Respuesta y errores
+
+Una operación correcta devuelve directamente el dato saneado, sin un envoltorio como `{ ok: true }`. Si no produce datos, no inventa un valor de retorno. Una actualización devuelve la entidad completa, salvo contrato distinto aprobado en la spec.
+
+El usuario que devuelve la lógica tiene `id`, `name`, `email`, `createdAt` y `updatedAt`. Los nombres de columna permanecen dentro del acceso a datos y se adaptan al construir la respuesta. Cada cliente puede presentar únicamente los campos que necesita.
+
+Las entradas inválidas y los fallos de operación siguen [ERRORS.md](ERRORS.md). Los detalles internos de SQLite no se devuelven al cliente.
+
+### Clientes y comprobación
+
+Si cambia un contrato, se actualizan sus clientes afectados. Cada archivo de `src/clients/terminal/` conserva una sola línea con el caso correcto. Los casos incorrectos se comprueban durante la tarea y no se añaden a esos archivos de ejemplo.
+
+Se reutilizan las responsabilidades existentes antes de crear funciones o consultas. El esquema no cambia como efecto secundario de otra tarea. Los cambios de datos siguen el procedimiento de migración de [DATABASE.md](DATABASE.md).
+
 ## Comentarios
 
 Los comentarios son material de estudio: la desarrolladora debe poder aprender el código leyéndolos. Se escriben cuando se crea una funcionalidad o se modifica código con autorización, en inglés sencillo y con frases completas, no con etiquetas de una o dos palabras.

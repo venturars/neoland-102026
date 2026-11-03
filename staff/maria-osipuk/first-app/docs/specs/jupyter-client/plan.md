@@ -42,17 +42,17 @@ Al cargar `queries/users.js`, `createUsersTable()` ya hace `CREATE TABLE IF NOT 
 
 Carpeta: `clients/jupyter/`.
 
-| Archivo | Qué llama |
-| --- | --- |
-| `bienvenida.ipynb` | Nada. Índice, escenario corto e instrucciones de uso. |
-| `crear-usuario.ipynb` | `createUser(name, email)` |
-| `buscar-usuario-por-email.ipynb` | `findUserByEmail(email)` |
-| `buscar-usuario-por-id.ipynb` | `findUserById(id)` |
-| `actualizar-usuario.ipynb` | `updateUser(id, changes)` |
-| `borrar-usuario.ipynb` | `deleteUser(id)` y después `listUsers()` |
-| `listar-usuarios.ipynb` | `listUsers()` |
-| `contar-usuarios-por-genero.ipynb` | `countUsersByGender()` |
-| `preparar-tabla-usuarios.ipynb` | `createUsersTable()` y después `listUsers()` |
+| Archivo                            | Qué llama                                             |
+| ---------------------------------- | ----------------------------------------------------- |
+| `bienvenida.ipynb`                 | Nada. Índice, escenario corto e instrucciones de uso. |
+| `crear-usuario.ipynb`              | `createUser(name, email)`                             |
+| `buscar-usuario-por-email.ipynb`   | `findUserByEmail(email)`                              |
+| `buscar-usuario-por-id.ipynb`      | `findUserById(id)`                                    |
+| `actualizar-usuario.ipynb`         | `updateUser(id, changes)`                             |
+| `borrar-usuario.ipynb`             | `deleteUser(id)` y después `listUsers()`              |
+| `listar-usuarios.ipynb`            | `listUsers()`                                         |
+| `contar-usuarios-por-genero.ipynb` | `countUsersByGender()`                                |
+| `preparar-tabla-usuarios.ipynb`    | `createUsersTable()` y después `listUsers()`          |
 
 `preparar-tabla-usuarios.ipynb` se presenta como preparación técnica, no como acción del CEO. La bienvenida no lo ofrece como un caso de negocio.
 
@@ -87,7 +87,7 @@ En borrar y en preparar la tabla, la lista va dentro del `try`, después de la o
 
 ## Arranque
 
-Desde `staff/maria-osipuk/first-app`:
+Desde la raíz de `first-app`:
 
 ```text
 pnpm jupyter
