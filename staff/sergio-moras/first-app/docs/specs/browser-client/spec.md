@@ -3,10 +3,10 @@
 Issue: #768.
 
 ## Qué queremos conseguir
-Que quien usa first-app gestione su usuario desde el navegador, sin pegar comandos en la terminal. Las pantallas usan las operaciones de usuarios que ya existen: las reglas y los mensajes de error no cambian.
+Que quien usa first-app gestione su usuario desde el navegador, sin pegar comandos en la terminal. Las pantallas usan directamente las operaciones de usuarios que ya existen, las de `src/logic/`: las reglas y los mensajes de error no cambian.
 
 ## Cómo se usa
-Se arranca el cliente desde `first-app/` y se abre en el navegador la dirección que indica. Hay tres pantallas, con los textos en español.
+Desde `first-app/` se arranca la base (`pnpm db`, de #819) y, en otra terminal, el cliente. Se abre en el navegador la dirección que indica el cliente. Hay tres pantallas, con los textos en español.
 
 ### 1. Elegir quién soy
 - Sale la lista de usuarios guardados, de menor a mayor id, con su id, su nombre y su email.
@@ -36,6 +36,7 @@ Los da la lógica que ya existe; el navegador solo los muestra:
 - Email de otro usuario: `Error: Email already exists: <email>`.
 - Nombre y email vacíos a la vez: `Error: Provide a new name, a new email, or both.`
 - El usuario ya no existe (lo borraron desde otro sitio): `Error: User not found: id <id>`.
+- La base no está arrancada: `Error: Database is not running. Start it with pnpm db.`, en la pantalla en la que se esté.
 
 ## Ejemplo
 Guardados: Ana (`ana@mail.com`, id 2) y Pedro (`pedro@mail.com`, id 18).
@@ -49,4 +50,5 @@ Guardados: Ana (`ana@mail.com`, id 2) y Pedro (`pedro@mail.com`, id 18).
 - Crear usuarios, buscar por email o por nombre, y clasificar por género desde estas pantallas.
 - La pantalla de notas.
 - Frameworks o librerías de frontend.
-- Cambiar `src/logic/`, `src/queries/`, `src/db/`, la tabla o los clientes de terminal y Jupyter.
+- Una API propia del navegador: no hay rutas de datos, el navegador llama a `logic/`.
+- Cambiar `src/logic/`, `src/queries/`, la tabla o los clientes de terminal y Jupyter. De `src/db/` solo cambia el permiso del servidor de la base para el navegador.
