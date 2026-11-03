@@ -1,9 +1,9 @@
 import { findAll } from "../queries/users.js";
 
-export function listUsers() {
+export async function listUsers() {
   let users;
   try {
-    users = findAll();
+    users = await findAll();
   } catch {
     throw new Error("Could not list the users");
   }

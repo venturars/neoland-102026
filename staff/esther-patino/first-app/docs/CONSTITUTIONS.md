@@ -26,7 +26,7 @@ Un usuario es un objeto con estos campos y ningún otro:
 
 ## 2. La base de datos
 
-La base de datos y las consultas están en `docs/database.md`.
+La base de datos y las consultas están en `docs/database.md`. La base se abre desde el servidor. Quien pide los datos no la abre.
 
 ## 3. Árbol y para qué es cada archivo
 

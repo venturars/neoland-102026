@@ -46,6 +46,10 @@ first-app/
         plan.md
         spec.md
         tasks.md
+      notes/
+        plan.md
+        spec.md
+        tasks.md
       socket-package-validation/
         plan.md
         spec.md
@@ -55,6 +59,10 @@ first-app/
         spec.md
         tasks.md
       users/
+        plan.md
+        spec.md
+        tasks.md
+      vanilla-web-client/
         plan.md
         spec.md
         tasks.md
@@ -105,6 +113,15 @@ first-app/
       SKILL.md
   src/
     clients/
+      http/
+        handle-notes.js
+        handle-request.js
+        handle-users.js
+        read-json-body.js
+        send-http-error.js
+        send-json.js
+        serve-public-file.js
+        start-http-server.js
       jupyter/
         create-user.ipynb
         create-users-table.ipynb
@@ -116,24 +133,46 @@ first-app/
         update-user.ipynb
         users-gender-count.ipynb
       terminal/
+        create-note.txt
         create-user.txt
         create-users-table.txt
+        delete-note.txt
         delete-user.txt
+        find-note-by-id.txt
         find-user-by-email.txt
         find-user-by-id.txt
         find-user-by-name.txt
+        list-notes.txt
         list-users.txt
+        update-note.txt
         update-user.txt
         users-gender-count.txt
+      web/
+        api.js
+        index.html
+        main.js
+        note-editor.js
+        notes-list.js
+        show-screen.js
+        state.js
+        styles.css
+        user-editor.js
+        user-menu.js
+        user-selection.js
     db/
       connection.js
     logic/
+      create-note.js
       create-user.js
+      delete-note.js
       delete-user.js
+      find-note-by-id.js
       find-user-by-email.js
       find-user-by-id.js
       find-user-by-name.js
+      list-notes.js
       list-users.js
+      update-note.js
       update-user.js
       users-gender-count.js
     queries/
@@ -143,15 +182,34 @@ first-app/
         find-by-email.sql
         find-by-id.sql
         find-by-name.sql
+        notes/
+          create-table.sql
+          find-all.sql
+          find-by-id.sql
+          insert.sql
+          remove.sql
+          update.sql
         insert.sql
         remove.sql
         update.sql
+      initialize-database.js
+      notes.js
       users.js
   templates/
     issues/
-      basic_issue.md
+      chore_issue.md
+      docs_issue.md
+      feat_issue.md
+      fix_issue.md
+      refactor_issue.md
+      test_issue.md
     pull-request/
-      basic-pull-request.md
+      chore-pull-request.md
+      docs-pull-request.md
+      feat-pull-request.md
+      fix-pull-request.md
+      refactor-pull-request.md
+      test-pull-request.md
   tools/
     check-status.sh
     commit-changes.sh

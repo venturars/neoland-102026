@@ -8,6 +8,11 @@ La aplicación conserva sus pantallas y comportamiento; cada parte tiene una res
 asistenciapp/
 ├── AGENTS.md              # proceso y estilo de código
 ├── README.md              # uso de la app
+├── agents/                # principal y seis roles del flujo Git
+├── skills/                # acciones con entradas, resultados y controles
+├── tools/                 # siete scripts Git locales
+├── templates/             # issues y PRs por tipo
+├── MCPS/                  # referencias públicas, sin credenciales
 ├── docs/
 │   ├── CONSTITUTION.md     # principios y seguridad
 │   └── ARCHITECTURE.md     # estructura y responsabilidades
@@ -168,3 +173,26 @@ La primera creación de una carrera prepara los quince alumnos originales solo s
 Cada carrera guarda su propia correspondencia en `race_slots`: cambios del catálogo solo afectan a carreras nuevas. `join` y `release` resuelven contra esas plazas, sin depender del catálogo actual. No se cambian operaciones A/B, credenciales, intentos, vigencia, asistencias ni limpieza de temporales. El catálogo no se enlaza a direcciones de seguridad.
 
 El adaptador traduce los dos motivos a 409/503. El panel muestra el mensaje como texto al crear carreras; 401, fallos de red y clases normales conservan su tratamiento anterior. No hay edición de alumnos, administración multigrupo, API nueva ni dependencia nueva. La separación del SQL antiguo sigue pendiente.
+
+## Flujo de trabajo local
+
+`agents/git-workflow-agent.md` es el documento que carga el principal. Los otros
+seis roles ejecutan aclaración, issue, rama, commit, push y PR mediante delegación
+nativa de Codex; no requieren un registro de Cursor. El principal conserva status,
+pull, enlace Development y asignación de revisores.
+
+Las quince skills documentan sus entradas y comprobaciones. Los siete scripts
+Bash conservan la implementación original del template y trabajan desde la raíz
+Git. El orquestador limita los encargos a esta app y nombra los archivos de cada
+commit; no se atribuyen a los scripts validaciones añadidas de rutas o tipos.
+create-branch.sh y su skill se conservan para completar la copia de la fuente;
+el flujo normal de esta app sigue usando create-branch-from-staging. Las reglas editoriales viven en las plantillas. Si falta una plantilla específica,
+se usa la más cercana sin convertir automáticamente el tipo recibido ni renombrar
+ramas.
+La referencia `MCPS/github-mcp-server/mcp.txt` describe la conexión, no contiene
+una credencial ni configura una sesión. Se preserva la autenticación existente.
+
+El SDD de cinco momentos pertenece a AGENTS y a §4 de la constitución. Este flujo
+no cambia la aplicación ni autoriza código por la mera existencia de una issue.
+Closes y Development enlazan la tarea; el cierre automático sigue la rama
+predeterminada real, sin cambiar el destino staging ni cerrar por API.

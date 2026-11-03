@@ -1,9 +1,9 @@
 import { findById, findByEmail, update } from "../queries/users.js";
 
-export function updateUser(id, changes) {
+export async function updateUser(id, changes) {
   let existingUser;
   try {
-    existingUser = findById(id);
+    existingUser = await findById(id);
   } catch {
     throw new Error("Could not update the user");
   }
@@ -62,7 +62,7 @@ export function updateUser(id, changes) {
 
   let emailOwner;
   try {
-    emailOwner = findByEmail(email);
+    emailOwner = await findByEmail(email);
   } catch {
     throw new Error("Could not update the user");
   }
@@ -81,7 +81,7 @@ export function updateUser(id, changes) {
   try {
     const existingUserId = existingUser.id;
     const updatedFields = { id: existingUserId, name, email };
-    user = update(updatedFields);
+    user = await update(updatedFields);
   } catch {
     throw new Error("Could not update the user");
   }

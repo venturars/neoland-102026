@@ -31,11 +31,11 @@ Las operaciones de Git siguen el [orquestador local](agents/git-workflow-agent.m
 
 Una tarea nueva se registra con una issue, una rama desde `staging` y una PR en borrador hacia `staging`. Las [plantillas de issues](templates/issues/) y de [PR](templates/pull-request/) definen el título, el cuerpo y el tipo de rama; no dupliques esas reglas aquí.
 
-Antes de crear la issue, comunica el título y la cuenta asignada y obtén autorización. Si esa creación ya está autorizada para la tarea actual, continúa sin repetir la confirmación. La cuenta asignada es la autenticada en GitHub.
+La issue se crea sin pedir confirmación del título, asignada a la cuenta autenticada en GitHub. Después, la rama, el commit vacío, el push, la PR en borrador y el enlace con la issue van encadenados, sin esperar un sí. Las únicas paradas de la preparación son las del apartado 4.
 
 El orden de preparación es issue → rama → PR en borrador → documentos SDD. Una issue o una PR no sustituye la revisión del SDD ni autoriza código pendiente de aprobación.
 
-No hagas commit, push, merge ni cambios de estado de una PR sin autorización que cubra esa operación. Reutiliza la autorización vigente; no la amplíes a otra tarea. Una PR ya lista para revisión conserva su estado salvo petición expresa.
+Fuera del commit vacío de apertura, el commit y el push de un trozo se hacen solo cuando la persona lo pide. La revisión se pide cuando la persona nombra a los revisores; entonces la PR sale de borrador. No se hace merge a `staging`.
 
 ## 4. SDD de esta aplicación
 
@@ -49,7 +49,12 @@ Todo cambio de un archivo de la app necesita su spec: una funcionalidad, una for
 
 Si el pedido es una regla de trabajo, la spec explica la regla, a qué operaciones obliga y cómo se comprueba.
 
-Esta app revisa el conjunto `spec.md`, `plan.md` y `tasks.md` antes de implementar. No modifiques ningún archivo de la app (código, consultas, clientes, guías ni la constitución) hasta que exista la carpeta y la persona responsable confirme explícitamente que la revisión está hecha. Crear los documentos no equivale a aprobarlos.
+Esta app tiene dos paradas en el SDD:
+
+1. Se escriben `spec.md` y `plan.md`. La spec abre con `Issue: #N`. No se toca ningún otro archivo. Ahí se para: la persona responsable revisa la spec y el plan.
+2. Con esa revisión hecha, se escribe `tasks.md`. Ahí se para. La implementación empieza cuando la persona lo pide.
+
+Si la constitución, el código actual y la spec no dicen lo mismo, la pregunta queda al final del plan y no se escribe `tasks.md` hasta tener la respuesta. No modifiques ningún archivo de la app (código, consultas, clientes, guías ni la constitución) antes de que la persona pida implementar. Crear los documentos no equivale a aprobarlos.
 
 Antes de implementar, lee completos los tres archivos y sigue `tasks.md` en orden. Una spec describe un pedido y su aceptación; las guías describen el proyecto vigente. Si el plan necesita un cambio de alcance o contrato, presenta ese cambio para revisión antes de continuar con él.
 

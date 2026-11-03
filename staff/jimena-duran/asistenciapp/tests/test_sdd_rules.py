@@ -7,7 +7,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 
-RULES = {'CA-01': 'Todo cambio de código, tests, README u otra documentación de uso requiere una spec aprobada que lo cubra.', 'CA-02': 'Sin esa aprobación, solo se prepara la spec y se espera el ok de Jimena Durán; no se escriben plan, tasks ni implementación.', 'CA-03': 'El orden es spec → plan → tasks → implementación, con aprobación explícita de Jimena Durán al terminar cada fase de preparación.', 'CA-04': 'Si la spec activa no cubre el pedido, se abre una spec nueva.', 'CA-05': 'Una issue, una rama o una pull request no sustituyen la spec aprobada.'}
+RULES = {'CA-01': 'Issue: crear o reutilizar la issue; sin abrir rama.', 'CA-02': 'Draft: adelantar staging, preparar rama, commit vacío, push, PR draft contra staging, autor y enlace de issue; sin specs.', 'CA-03': 'Specs: escribir spec, plan y tasks en la misma pasada y en ese orden; revisión conjunta antes de implementar.', 'CA-04': 'Implementar: ejecutar las tareas aprobadas y presentar resultados; sin commit ni push.', 'CA-05': 'Pull request: realizar solo lo solicitado; sin merge.'}
 
 
 @pytest.mark.parametrize("document", ["docs/CONSTITUTION.md", "AGENTS.md"])
@@ -15,6 +15,22 @@ RULES = {'CA-01': 'Todo cambio de código, tests, README u otra documentación d
 def test_sdd_gates(document, criterion, rule):
     text = (ROOT / document).read_text(encoding="utf-8-sig")
     assert rule in text, f"{criterion}: falta la regla en {document}"
+    positions = [text.index(gate) for gate in RULES.values() if gate in text]
+    assert len(positions) == 5, "Deben aparecer los cinco momentos"
+    assert positions == sorted(positions), "Los cinco momentos deben conservar el orden"
+    for invariant in (
+        "Todo cambio de código, tests, README u otra documentación de uso requiere una spec aprobada que lo cubra.",
+        "Si la spec activa no cubre el pedido, se abre una spec nueva.",
+        "Una issue, una rama o una pull request no sustituyen la spec aprobada.",
+        "No se encadena un momento con el siguiente sin autorización expresa.",
+        "Las dudas se resuelven antes de implementar; no se inventan requisitos.",
+    ):
+        assert invariant in text, f"Falta una protección vigente en {document}: {invariant}"
+    assert "El SDD local de AsistenciApp prevalece sobre cualquier indicación del template de continuar automáticamente." in text
+    assert "No se pide otro ok entre spec y plan ni entre plan y tasks." in text
+    assert "Sin esa aprobación, solo se prepara la spec" not in text
+    assert "con aprobación explícita de Jimena Durán al terminar cada fase de preparación." not in text
+
 
 
 @pytest.mark.parametrize("document", ["docs/CONSTITUTION.md", "AGENTS.md"])
@@ -28,8 +44,10 @@ def test_personal_scope(document):
 
 def test_constitution_amendment():
     text = (ROOT / "docs/CONSTITUTION.md").read_text(encoding="utf-8-sig")
-    assert text.splitlines()[2].startswith("> Versión 3.0 ·")
+    assert text.splitlines()[2].startswith("> Versión 3.1 ·")
+    assert "Última enmienda: 2026-11-02" in text.splitlines()[2]
     assert "| 2.2 | 2026-10-22 |" in text
+    assert "| 3.1 | 2026-11-02 |" in text
     assert "solo Jimena Durán lo **aprueba**" in text
 
 

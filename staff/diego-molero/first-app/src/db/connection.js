@@ -7,4 +7,7 @@ const filePath = fileURLToPath(fileUrl);
 const directory = dirname(filePath);
 const databasePath = join(directory, "users.sqlite");
 
-export const db = new DatabaseSync(databasePath);
+// Cada proceso conserva el borrado en cascada de las notas del usuario.
+export const db = new DatabaseSync(databasePath, {
+  enableForeignKeyConstraints: true,
+});

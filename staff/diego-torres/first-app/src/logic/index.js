@@ -1,6 +1,8 @@
 export {
+  copyUser,
   validateChanges,
   validateEmail,
+  validateName,
   validateNewUser,
 } from "./shared.js";
 export { updateUser } from "./update-user.js";

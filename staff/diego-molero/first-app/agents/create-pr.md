@@ -14,7 +14,7 @@
 ## 3. Flujo de Trabajo (Paso a Paso)
 
 1. **Recepción:** Toma el título en inglés y la rama que acaba de subirse. No hace falta el número de issue.
-2. **Validación:** El cuerpo va en español y rellena `templates/pull-request/<template>.md`. La sección Issue se deja vacía.
+2. **Validación:** El cuerpo va en español y rellena `templates/pull-request/<tipo>-pull-request.md`, con el mismo tipo que la issue: feat, fix, docs, refactor, test o chore. Si no hay issue, deduce el tipo del cambio y usa el más cercano de la lista. La sección Issue se deja vacía; el orquestador completa el enlace. Las casillas quedan sin marcar al abrir el borrador y se marcan solo con evidencia al pedir revisión.
 3. **Procesamiento:** En este orden:
    1. `skills/create-pr-base-staging/SKILL.md`
    2. `skills/assign-author/SKILL.md`
@@ -26,7 +26,7 @@
 - **SKILL create-pr-base-staging:** Abre la pull request con base `staging`.
 - **SKILL assign-author:** Asigna al usuario autenticado.
 - **SKILL create-draft:** La deja en draft.
-- **templates/pull-request/<template>.md:** La forma del cuerpo.
+- **templates/pull-request/<tipo>-pull-request.md:** Una plantilla por tipo; conservar títulos en inglés de menos de 72 caracteres que empiecen por un verbo.
 
 ## 5. Manejo de Errores y Excepciones
 
