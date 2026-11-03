@@ -9,9 +9,9 @@
 - Create: `scripts/web.sh`, which starts the page.
 - Create: `GLOSSARY.md`, with the term **User**.
 - Create: `docs/adr/0001-browser-sqlite-connection.md`, why the browser opens a second connection to `db/users.sqlite`.
-- Touch: `package.json`, the dependency `sql.js` at `1.15.2` and the script `"web": "sh scripts/web.sh"`. `pnpm-lock.yaml` changes with it.
+- Touch: `package.json`, the dependency `sql.js` at `1.14.2` and the script `"web": "sh scripts/web.sh"`. `pnpm-lock.yaml` changes with it.
 - Touch: `eslint.config.js`, a block for `clients/web/**/*.js` with the browser globals the page uses, listed by hand (`window`, `document`, `navigator`, `indexedDB`, `fetch`, `initSqlJs`, …). No `globals` package.
-- Touch: `docs/ERRORS.md`, the three client messages of the spec, printed by `clients/web/` and `scripts/web.sh`.
+- Touch: `docs/ERRORS.md`, the five client messages of the spec, printed by `clients/web/` and `scripts/web.sh`.
 - Touch: `docs/CONSTITUTION.md`, **Runtime**: `sql.js`, why it is there, Python 3 also for `pnpm web`, and the browsers (Chrome or Edge).
 - Touch: `docs/DATABASE.md`, the one exception to "No other database or connection is opened", with a link to the ADR.
 - Touch: `docs/ARCHITECTURE.md`, the new files and a **Web** section under **Clients**. `docs/TREE.md`, the new files. `AGENTS.md`, **Commands**: `pnpm web`. `docs/specs/README.md`.
@@ -47,36 +47,39 @@ None new. `queries.js` runs the `.sql` files of `queries/queries/` and `db/schem
 
 ## Errors
 
-| Spec failure              | Message                                                      | Shown by                           |
-| ------------------------- | ------------------------------------------------------------ | ---------------------------------- |
-| empty name                | `Name is empty`                                              | under the field                    |
-| invalid email             | `Email is invalid`                                           | under the field                    |
-| email used                | `Email is already used`                                      | under the field                    |
-| user deleted meanwhile    | `User not found`                                             | box with `OK`                      |
-| SQLite fails in `logic/`  | the `Could not …` of that feature, as `logic/` throws it     | box with `OK`                      |
-| file cannot be read/saved | see **Open questions**                                       | box with `OK`                      |
-| browser without the API   | `This browser cannot open the database. Use Chrome or Edge.` | instead of the page                |
-| permission refused        | `Access to users.sqlite was denied.`                         | box with `OK`                      |
-| no Python 3               | `Python 3 is required to start the web client.`              | `scripts/web.sh`, stderr, exit `1` |
+| Spec failure             | Message                                                      | Shown by                           |
+| ------------------------ | ------------------------------------------------------------ | ---------------------------------- |
+| empty name               | `Name is empty`                                              | under the field                    |
+| invalid email            | `Email is invalid`                                           | under the field                    |
+| email used               | `Email is already used`                                      | under the field                    |
+| user deleted meanwhile   | `User not found`                                             | box with `OK`                      |
+| SQLite fails in `logic/` | the `Could not …` of that feature, as `logic/` throws it     | box with `OK`                      |
+| file cannot be read      | `Could not read users.sqlite.`                               | box with `OK`                      |
+| file cannot be saved     | `Could not save users.sqlite.`                               | box with `OK`                      |
+| browser without the API  | `This browser cannot open the database. Use Chrome or Edge.` | instead of the page                |
+| permission refused       | `Access to users.sqlite was denied.`                         | box with `OK`                      |
+| no Python 3              | `Python 3 is required to start the web client.`              | `scripts/web.sh`, stderr, exit `1` |
 
 ## Socket check
 
 | Package         | Layer | Alerts                                                                                                   | Scores below 50 |
 | --------------- | ----- | -------------------------------------------------------------------------------------------------------- | --------------- |
-| `sql.js@1.15.2` | 1     | Not checked by the agent: the page answers HTTP 403. https://socket.dev/npm/package/sql.js/alerts/1.15.2 | None            |
+| `sql.js@1.14.2` | 1     | Not checked by the agent: the page answers HTTP 403. https://socket.dev/npm/package/sql.js/alerts/1.14.2 | None            |
 
-- Layer 2 and 3: none. `npm view sql.js@1.15.2 dependencies` is empty.
-- Scores: license 100, maintenance 90, quality 100, supplyChain 100, vulnerability 100.
-- To weigh: `1.15.2` was published on 2026-10-26, eight days ago, after `1.15.0` (2026-10-14) and `1.15.1` (2026-10-19). A very new release has had little time to be reviewed by others. The last one before that series is `1.14.2` (2026-08-14). The package is 31 MB unpacked, mostly zip archives the page never loads; the page uses `dist/sql-wasm-browser.js` and `dist/sql-wasm-browser.wasm`.
+- Layer 2 and 3: none. `npm view sql.js@1.14.2 dependencies` is empty.
+- Scores: license 100, maintenance 92, quality 100, supplyChain 100, vulnerability 100.
+- `1.14.2` was published on 2026-08-14. The newer `1.15.0`, `1.15.1` and `1.15.2` came out in the last three weeks (2026-10-14 to 2026-10-26) and are not used: they have had little time to be reviewed by others (`1.15.2` was also checked: no dependencies, scores 90 to 100). The package is 24 MB unpacked, mostly zip archives the page never loads; the page uses `dist/sql-wasm-browser.js` and `dist/sql-wasm-browser.wasm`.
 
 Checked on 2026-11-03. Sources: `npm view`, the `socket-mcp` tool `depscore`, `curl` to socket.dev (403).
 
-Decision:
+Decision: use `1.14.2`, not the newer `1.15.2`. Decided on 2026-11-03.
+
+## Decisions
+
+Answers to the open questions, 2026-11-03:
+
+1. **The file cannot be read or saved.** Reading and saving the file happen in `app.js`, outside `logic/`, and a client only prints the messages `logic/` threw. So these are two new client messages, `Could not read users.sqlite.` and `Could not save users.sqlite.`, added to [ERRORS.md](../../ERRORS.md) and to the spec. Every `logic/` message keeps coming only from `logic/`, and the message says what failed: the file, not the user.
 
 ## Open questions
 
-1. **The file cannot be read or saved.** The spec says this shows "the `Could not …` message of that step". But reading and saving the file happen in `app.js`, outside `logic/` (the File System Access API is asynchronous, `logic/` is synchronous), and [ERRORS.md](../../ERRORS.md) says a client throws nothing and prints the message `logic/` threw. Two ways out:
-   - (a) Two new client messages, `Could not read users.sqlite.` and `Could not save users.sqlite.`, added to **ERRORS.md** and to the spec.
-   - (b) `app.js` shows the `Could not …` message of the feature it was running (for example `Could not create the user`), copying a `logic/` message into the client.
-
-   Recommended: (a). It keeps every `logic/` message coming only from `logic/`, and it says what really failed: the file, not the user.
+None.

@@ -39,7 +39,9 @@ Each message is shown as it is. The name and email messages show in red under th
 - An email that is not valid → `Email is invalid`.
 - An email another user has → `Email is already used`.
 - The user was deleted meanwhile, for example from the terminal → `User not found`.
-- The file cannot be read or saved → the `Could not …` message of that step.
+- The database file cannot be read → `Could not read users.sqlite.`
+- The database file cannot be saved → `Could not save users.sqlite.`
+- SQLite fails while reading or changing the users → the `Could not …` message of that step.
 - A browser that cannot open files this way → `This browser cannot open the database. Use Chrome or Edge.`
 - Permission to the file is refused → `Access to users.sqlite was denied.`
 - No Python 3 to start the page → `Python 3 is required to start the web client.`
