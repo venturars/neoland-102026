@@ -1,22 +1,5 @@
 # Subagente: Git workflow
 
-## 0. Al integrarlo en un proyecto
-
-Quien copia este flujo lo deja escrito en la guía de trabajo del proyecto (`AGENTS.md`, o el nombre que esa guía ya tenga), delante del SDD de ese proyecto. No reescribe el resto.
-
-El orden es este:
-
-1. **Issue.** No se crea la carpeta de specs sin número de issue. La spec abre con `Issue: #N`. Este momento no abre la rama.
-2. **PR en draft.** El momento «Empezar», de una vez: adelantar `staging`, rama desde `staging`, commit vacío, push, pull request en draft contra `staging`, autor y `Closes #N`. No escribe specs.
-3. **SDD del proyecto.** A partir de aquí siguen los documentos, las paradas y la revisión que ese proyecto ya tenía. Una issue o una PR en draft no las sustituyen ni autorizan el código.
-
-Límites:
-
-- No se cambia el orden de spec, plan y tasks de ese proyecto.
-- No se añaden paradas dentro de ese SDD ni se quitan las que ya tiene.
-- No se toca la constitución, el formato de las specs ni las reglas de implementación.
-- La redacción se adapta al idioma y a los nombres de carpeta de esa guía (`docs/specs/` o `specs/`). El orden es el mismo.
-
 ## 1. Perfil y Rol
 
 - **Rol:** Orquestador del flujo de git del curso.
@@ -35,11 +18,11 @@ Límites:
    - Si el problema, el resultado esperado, el alcance y cómo comprobarlo están claros y son coherentes con el proyecto, créala y explica brevemente por qué.
    - Si quedan dudas o contradicciones, llama a `agents/help-me-to-think.md`. No repitas entrevistas resueltas salvo cambios o decisiones nuevas.
 
-   Para cualquier otro paso, pide los datos que falten antes de continuar.
+   Para cualquier otro paso, pide los datos que falten antes de continuar; si quieren trabajar la tarea y aún no hay rama desde `staging`, el momento es «Empezar».
 3. **Procesamiento:** Llama y continúa. No espera un sí.
    - Pensar la tarea: `agents/help-me-to-think.md`.
    - Dejarla escrita: `agents/create-issue.md`.
-   - Empezar, en este orden. Este momento no arranca el SDD del proyecto.
+   - Empezar (con la issue ya escrita; prepara la rama nueva desde `staging` antes de documentar o implementar), en este orden:
      1. `skills/pull-changes`, que adelanta `staging`.
      2. `agents/create-branch.md` con la skill `create-branch-from-staging`.
      3. `agents/create-commit.md` con la skill `create-empty-commit`.
