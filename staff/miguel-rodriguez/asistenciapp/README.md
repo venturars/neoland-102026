@@ -189,3 +189,10 @@ Al preparar la primera carrera de esta versión se guardan una sola vez los quin
 Si el catálogo preparado está vacío, el panel muestra «No hay alumnos disponibles para preparar la carrera». Si los datos no se pueden cargar o son incoherentes, muestra «No se pudo cargar el catálogo de alumnos». En ambos casos se rechaza la nueva carrera sin reponer alumnos ni alterar carreras anteriores. Un error de conexión no significa que una operación ya confirmada se haya deshecho; revisa el listado antes de volver a preparar una carrera.
 
 El grupo inicial procede de `asistencia/storage/data/initial-students.csv`; después se utiliza la tabla local `students`. Esta versión no incorpora un panel para editar alumnos o gestionar varios grupos. El catálogo no atribuye asistencia: cada alumno sigue entrando al lobby y registrándose con el código.
+
+## Desarrollo con el flujo del curso
+
+[AGENTS.md](AGENTS.md) describe los cinco momentos: issue, draft, documentos,
+implementación y acción sobre la PR. [El flujo Git](agents/git-workflow-agent.md)
+coordina agentes y skills propios de esta carpeta en Codex. Las ramas nuevas
+parten de staging actualizado y las PRs apuntan a staging desde su creación.

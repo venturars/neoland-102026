@@ -1,0 +1,15 @@
+https://github.com/github/github-mcp-server/blob/main/docs/remote-server.md
+
+La conexión del entorno activo debe usar la opción mcp_apps_disable_form_deferral para que las escrituras autorizadas se ejecuten directamente, sin el formulario diferido cuyo Submit puede no mostrarse.
+
+Servidor remoto: https://api.githubcopilot.com/mcp/
+Header: X-MCP-Features: mcp_apps_disable_form_deferral
+Conserva la autenticación existente. No copies tokens a este fichero ni al repositorio.
+
+En Codex con el servidor local github-mcp-server por stdio, la opción equivalente es:
+args = ["--features", "mcp_apps_disable_form_deferral"]
+El wrapper configurado debe reenviar esos argumentos al binario. Si ya existen argumentos, conserva los demás y añade la opción sin duplicarla.
+
+Después de cambiar la configuración local, reconecta el MCP o reinicia Codex. Comprueba el resultado real de una escritura autorizada. Leer esta referencia o guardar la configuración no acredita que el proceso activo haya recargado la opción.
+
+Si sigue apareciendo el formulario sin Submit, detén la escritura, registra el bloqueo y comprueba duplicados antes de reintentar. No cambies a gh para simular una prueba MCP ni elimines otros controles de autorización.
