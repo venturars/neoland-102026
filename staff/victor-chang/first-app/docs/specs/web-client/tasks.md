@@ -1,8 +1,8 @@
 # Tasks — web client
 
-1. [ ] In `docs/ERRORS.md`, add the five client messages of the spec, printed by `clients/web/` and `scripts/web.sh`.
-2. [ ] Create `GLOSSARY.md` with the term **User**, and `docs/adr/0001-browser-sqlite-connection.md`. In `docs/DATABASE.md`, add the exception with a link to the ADR.
-3. [ ] In `docs/CONSTITUTION.md`, **Runtime**, add `sql.js`, Python 3 for `pnpm web`, and Chrome or Edge.
+1. [x] In `docs/ERRORS.md`, add the five client messages of the spec, printed by `clients/web/` and `scripts/web.sh`.
+2. [x] Create `GLOSSARY.md` with the term **User**, and `docs/adr/0001-browser-sqlite-connection.md`. In `docs/DATABASE.md`, add the exception with a link to the ADR.
+3. [x] In `docs/CONSTITUTION.md`, **Runtime**, add `sql.js`, Python 3 for `pnpm web`, and Chrome or Edge.
 4. [ ] Run `pnpm add sql.js@1.14.2 --save-exact`.
        `package.json` has `"sql.js": "1.14.2"` and `pnpm-lock.yaml` has only `sql.js` as new.
 5. [ ] Create `scripts/web.sh` and the `web` script in `package.json`. Run `pnpm web`.

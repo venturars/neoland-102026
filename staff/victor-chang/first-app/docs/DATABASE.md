@@ -2,6 +2,8 @@
 
 There is one database, `db/users.sqlite`, and one connection, the `db` exported by `db/connection.js`. No other database or connection is opened.
 
+The one exception is the web client: in the browser, `clients/web/queries.js` opens the same `db/users.sqlite` with sql.js and runs the same `.sql` files. Why is in [ADR 0001](adr/0001-browser-sqlite-connection.md).
+
 Table `users`, defined in `db/schema.sql`:
 
 - `id` is `INTEGER PRIMARY KEY`. SQLite assigns it: 1, 2, 3…

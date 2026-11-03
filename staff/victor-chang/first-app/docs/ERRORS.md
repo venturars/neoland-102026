@@ -26,7 +26,14 @@ Step 4: if everything works, the function returns the shaped data. If the operat
 
 A new message is added to this list before any spec uses it.
 
-This list is for `logic/`. A client throws nothing and prints the message `logic/` threw. The only messages of a client's own are `Cannot find first-app.`, printed by a Jupyter notebook that does not find the app folder, and `Python 3 is required to start Jupyter.`, printed by `scripts/jupyter.sh` when there is no Python 3.
+This list is for `logic/`. A client throws nothing and prints the message `logic/` threw. The only messages of a client's own are:
+
+- `Cannot find first-app.`, printed by a Jupyter notebook that does not find the app folder.
+- `Python 3 is required to start Jupyter.`, printed by `scripts/jupyter.sh` when there is no Python 3.
+- `Python 3 is required to start the web client.`, printed by `scripts/web.sh` when there is no Python 3.
+- `This browser cannot open the database. Use Chrome or Edge.`, shown by the web client in a browser without the File System Access API.
+- `Access to users.sqlite was denied.`, shown by the web client when the browser refuses permission to the file.
+- `Could not read users.sqlite.` and `Could not save users.sqlite.`, shown by the web client when reading or writing the file fails.
 
 ## In code
 
