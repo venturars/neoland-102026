@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>first-app</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main>
+      <section id="select-screen">
+        <h1>¿Quién eres?</h1>
+        <p>Elige tu usuario en la lista.</p>
+        <p id="empty-list" hidden>Todavía no hay usuarios.</p>
+        <table id="users-table">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Nombre</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody id="users-body"></tbody>
+        </table>
+        <p id="select-error" class="error" hidden></p>
+      </section>
+
+      <section id="options-screen" hidden>
+        <h1>Tu usuario</h1>
+        <dl class="user-card">
+          <dt>Id</dt>
+          <dd id="options-id"></dd>
+          <dt>Nombre</dt>
+          <dd id="options-name"></dd>
+          <dt>Email</dt>
+          <dd id="options-email"></dd>
+        </dl>
+        <div class="buttons">
+          <button type="button" id="options-back">Volver</button>
+          <button type="button" id="options-edit">Modificar</button>
+          <button type="button" id="options-notes" disabled>
+            Notas (próximamente)
+          </button>
+        </div>
+      </section>
+
+      <section id="edit-screen" hidden>
+        <h1>Modificar usuario</h1>
+        <form id="edit-form">
+          <label for="edit-name">Nombre</label>
+          <input type="text" id="edit-name" />
+          <label for="edit-email">Email</label>
+          <input type="text" id="edit-email" />
+          <p class="hint">Un campo vacío no cambia ese dato.</p>
+          <div class="buttons">
+            <button type="button" id="edit-back">Volver</button>
+            <button type="submit" id="edit-save">Guardar</button>
+            <button type="button" id="edit-delete" class="danger">
+              Eliminar
+            </button>
+          </div>
+        </form>
+        <p id="edit-error" class="error" hidden></p>
+      </section>
+    </main>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

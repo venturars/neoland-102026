@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "format": "prettier --write \"src/logic/**/*.js\" \"src/queries/**/*.js\" \"src/db/**/*.js\" eslint.config.js",
-    "lint": "eslint ."
+    "format": "prettier --write \"src/logic/**/*.js\" \"src/queries/**/*.js\" \"src/db/**/*.js\" \"src/clients/browser/**/*.{js,html,css}\" eslint.config.js",
+    "lint": "eslint .",
+    "browser": "node --no-warnings src/clients/browser/server.js"
   },
   "dependencies": {
     "@colors/colors": "1.6.1",

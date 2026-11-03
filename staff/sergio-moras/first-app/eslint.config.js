@@ -11,6 +11,16 @@ export default defineConfig([
         URL: "readonly",
         fetch: "readonly",
         AbortSignal: "readonly",
+        console: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/browser/public/**/*.js"],
+    languageOptions: {
+      globals: {
+        document: "readonly",
+        confirm: "readonly",
       },
     },
   },
