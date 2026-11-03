@@ -15,3 +15,4 @@ One folder per change. The structure of `spec.md`, `plan.md` and `tasks.md` is i
 | [socket-package-validation](socket-package-validation/) | done                      |
 | [prettier-and-eslint](prettier-and-eslint/)             | done                      |
 | [jupyter-script](jupyter-script/)                       | waiting for Windows check |
+| [split-docs](split-docs/)                               | done                      |

@@ -1,0 +1,46 @@
+# Tree
+
+```
+first-app/
+  db/
+    connection.js
+    schema.sql
+    users.sqlite
+  queries/
+    queries/
+    users.js
+  logic/
+    create-user.js
+    update-user.js
+    delete-user.js
+    list-users.js
+    get-user.js
+    get-user-by-email.js
+    count-users-by-gender.js
+    errors.js
+    validate-user.js
+    validate-email.js
+  clients/
+    terminal/
+    jupyter/
+  docs/
+    ARCHITECTURE.md
+    CONSTITUTION.md
+    DATABASE.md
+    ERRORS.md
+    STYLE.md
+    TREE.md
+    specs/
+      <name>/
+        spec.md
+        plan.md
+        tasks.md
+  scripts/
+    jupyter.sh
+  AGENTS.md
+  package.json
+  pnpm-lock.yaml
+  .venv/
+  .prettierignore
+  eslint.config.js
+```
