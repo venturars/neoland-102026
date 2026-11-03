@@ -26,15 +26,25 @@ El agente `create-pr` crea la PR. El orquestador llama después a [link-pr-to-is
 
 Los scripts de `tools/` se ejecutan desde la raíz del repositorio, con los argumentos de archivo relativos a ella. La [guía MCP](MCPS/github-mcp-server/mcp.txt) documenta la conexión remota y utiliza marcadores de credenciales. Modificar una configuración personal requiere autorización para ese cambio.
 
-No hagas commit, push, merge ni cambios de estado de una PR sin autorización que cubra esa operación. Reutiliza la autorización vigente, sin extenderla a otra tarea. Una PR ya lista para revisión conserva su estado salvo petición expresa.
+Commit y push solo en el momento 2 (el commit vacío) y en el momento 5, cuando se piden. No se hace merge a `staging`. Una PR ya lista para revisión conserva su estado salvo petición expresa.
 
-El orden de preparación es issue → rama → PR en borrador → spec local. Vale para cualquier cambio de un archivo de la app, incluida la documentación. Ningún archivo se edita antes de la aprobación de la spec.
+El orden de preparación es issue → rama → PR en borrador → spec local. Vale para cualquier cambio de un archivo de la app, incluida la documentación. Una issue, una rama o una PR no sustituye la spec local ni autoriza el código.
 
-El flujo Git respeta las aprobaciones SDD siguientes. Una issue, una rama o una PR no sustituye la spec local ni aprueba una fase pendiente.
+## 3. Cinco momentos
 
-## 3. SDD de esta aplicación
+La persona responsable interviene solo en estos cinco momentos, en este orden. Cada uno lo pide ella; el agente se para al terminarlo y no empieza el siguiente.
 
-El orden es `spec.md` → aprobación → `plan.md` → aprobación → `tasks.md` → aprobación → implementación. Cada aprobación se refiere a su fase y debe proceder de la persona responsable. No la deduzcas de crear archivos o ejecutar pruebas; no pidas de nuevo una aprobación ya concedida para el mismo contenido.
+| Momento         | Qué queda escrito                                                                      | Qué no se hace        |
+| --------------- | -------------------------------------------------------------------------------------- | --------------------- |
+| 1. Issue        | Qué hay que hacer y cómo probarlo. Si falta definirla, la entrevista va aquí, una pregunta cada vez | Rama, specs, código   |
+| 2. Draft        | De un tirón: `staging` al día, rama, commit vacío, push, PR en borrador y `Closes #N`  | Specs y código        |
+| 3. Specs        | `spec.md`, `plan.md` y `tasks.md` en la misma pasada, sin ok entre ellos              | Código, commit y push |
+| 4. Implementar  | El cambio de las tasks                                                                 | Commit y push         |
+| 5. Pull request | Solo lo que se pida sobre esa PR: subir ficheros nombrados, pedir revisión u otra cosa | Merge a `staging`     |
+
+El código espera al momento 4, con las tres specs ya escritas. Crear archivos o pasar las pruebas no equivale a la aceptación de la persona responsable.
+
+## 4. SDD de esta aplicación
 
 | Fase           | Contenido                                                                                                                             |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
@@ -43,13 +53,13 @@ El orden es `spec.md` → aprobación → `plan.md` → aprobación → `tasks.m
 | `tasks.md`     | Pasos pequeños y ordenados, relacionados con sus `CA-xx`. Siempre que sea posible, el test va primero.                                |
 | Implementación | Una tarea cada vez. Marca `[x]` solo después de comprobar su resultado.                                                               |
 
-Si ninguna spec local aprobada cubre el cambio, crea la siguiente carpeta `specs/NNN-nombre-en-kebab-case/` y escribe únicamente `spec.md`. Presenta el documento y espera su aprobación antes de redactar el plan; aplica la misma regla entre las fases siguientes.
+Si ninguna spec local cubre el cambio, crea en el momento 3 la siguiente carpeta `specs/NNN-nombre-en-kebab-case/` con los tres documentos. La spec abre con el número de la issue.
 
-Esta cobertura incluye código, tests, README y demás documentación de la aplicación. Las dudas necesarias para decidir alcance o comportamiento se marcan como `[NECESITA ACLARACIÓN: pregunta concreta]`. No inventes requisitos; continúa solo con trabajo independiente que ya esté autorizado.
+Esta cobertura incluye código, tests, README y demás documentación de la aplicación. Las dudas necesarias para decidir alcance o comportamiento se preguntan en el momento 3 o se marcan como `[NECESITA ACLARACIÓN: pregunta concreta]`. No inventes requisitos.
 
-Si cambia una decisión del plan durante la implementación, actualízalo y obtén su aprobación antes de implementar ese cambio.
+Si durante la implementación la spec o el plan resultan incorrectos o incompletos, dilo y no inventes el cambio.
 
-## 4. Implementación y documentación
+## 5. Implementación y documentación
 
 - Implementa únicamente el alcance aprobado y conserva los contratos ajenos al pedido.
 - Usa código sencillo, explícito y lineal, con nombres descriptivos, según [STYLE.md](docs/STYLE.md).
@@ -59,7 +69,7 @@ Si cambia una decisión del plan durante la implementación, actualízalo y obt�
 - Conserva las specs históricas como registro de sus tareas; no las reescribas para describir una versión posterior de la app.
 - Si arrancas un proceso para comprobar la tarea, registra su puerto y detén únicamente ese proceso al terminar. No detengas procesos existentes ajenos a la comprobación.
 
-## 5. Verificación y cierre
+## 6. Verificación y cierre
 
 La implementación está preparada para revisión cuando:
 
