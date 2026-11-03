@@ -2,7 +2,7 @@
 $script = @'
 import { updateUser } from "./src/logic/update-user.js";
 
-const result = updateUser(1, { name: "Ada Lovelace" });
+const result = await updateUser(1, { name: "Ada Lovelace" });
 
 console.log(result);
 '@

@@ -6,7 +6,7 @@ const MODEL = "llama3.2";
 export async function usersGenderCount() {
   let users;
   try {
-    users = findAll();
+    users = await findAll();
   } catch {
     throw new Error("Could not classify the users");
   }
