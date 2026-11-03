@@ -57,3 +57,7 @@ En una copia temporal sin la base personal, observar altas, búsquedas, cambios,
 listado y borrado. Comprobar que las validaciones lanzan Error, que no modifican
 usuarios y que no se devuelven envoltorios. Repetir la inicialización para comprobar
 que conserva los datos. Registrar los resultados en [tareas](tasks.md).
+
+## Compatibilidad con notas · 2026-11-03 · Issue #782
+
+La conexión declara claves foráneas activas en cada proceso. La relación notes.userId → users.id con borrado en cascada amplía el efecto de DELETE FROM users sin cambiar su SQL, la firma de deleteUser ni sus errores. El cliente de preparación y su notebook usan initializeDatabase, una migración aditiva transaccional que conserva createUsersTable como operación disponible. Esquema y comprobaciones de compatibilidad: [plan de notas](../notes/plan.md).

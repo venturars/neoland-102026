@@ -1,0 +1,5 @@
+// Ejemplo manual. Ejecución: docs/CONSTITUTIONS.md.
+import { createNote } from "./src/logic/create-note.js";
+
+const result = createNote(1, { title: "Primera nota", content: "Contenido de ejemplo." });
+console.log(result);
