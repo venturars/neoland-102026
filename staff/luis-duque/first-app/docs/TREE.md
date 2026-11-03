@@ -84,8 +84,20 @@ first-app/
     launch-push.sh
     pull-changes.sh
   templates/
-    issues/basic_issue.md
-    pull-request/basic-pull-request.md
+    issues/
+      chore_issue.md
+      docs_issue.md
+      feat_issue.md
+      fix_issue.md
+      refactor_issue.md
+      test_issue.md
+    pull-request/
+      chore-pull-request.md
+      docs-pull-request.md
+      feat-pull-request.md
+      fix-pull-request.md
+      refactor-pull-request.md
+      test-pull-request.md
   MCPS/
     github-mcp-server/mcp.txt
   docs/
