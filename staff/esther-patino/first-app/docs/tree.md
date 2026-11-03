@@ -1,89 +1,89 @@
 # Árbol
 
 first-app/
-  AGENTS.md
-  package.json
-  pnpm-lock.yaml
-  scripts/
-    jupyter.js
-  db/
-    server.js
-    users.sqlite
-  agents/
-  skills/
-  tools/
-  templates/
-  MCPS/
-  docs/
-    CONSTITUTIONS.md
-    specs/
-      <nombre>/
-        spec.md
-        plan.md
-        tasks.md
-  logic/
-    shared.js
-    create-user.js
-    list-users.js
-    find-user-by-email.js
-    find-user-by-id.js
-    find-user-by-name.js
-    update-user.js
-    delete-user.js
-    users-gender-count.js
-  queries/
-    users.js
-    queries/
-      create-users-table.js
-      find-by-id.js
-      find-by-email.js
-      find-by-name.js
-      find-all.js
-      insert.js
-      update.js
-      remove.js
-      list-tables.js
-  clients/
-    terminal/
-      create-users-table.txt
-      insert-user.txt
-      find-all.txt
-      find-by-email.txt
-      find-by-id.txt
-      find-user-by-name.txt
-      update-user.txt
-      remove-user.txt
-      users-gender-count.txt
-    jupyter/
-      create-users-table.ipynb
-      insert-user.ipynb
-      find-all.ipynb
-      find-by-email.ipynb
-      find-by-id.ipynb
-      find-user-by-name.ipynb
-      update-user.ipynb
-      remove-user.ipynb
-      users-gender-count.ipynb
-    http/
-      start-http-server.js
-      handle-request.js
-      handle-users.js
-      read-json-body.js
-      send-json.js
-      send-http-error.js
-      serve-public-file.js
-    web/
-      index.html
-      styles.css
-      main.js
-      state.js
-      show-screen.js
-      show-message.js
-      load-user-selection.js
-      select-user.js
-      show-user-menu.js
-      open-user-editor.js
-      navigate.js
-      save-user.js
-      delete-selected-user.js
+AGENTS.md
+package.json
+pnpm-lock.yaml
+scripts/
+jupyter.js
+db/
+server.js
+users.sqlite
+agents/
+skills/
+tools/
+templates/
+MCPS/
+docs/
+CONSTITUTIONS.md
+specs/
+<nombre>/
+spec.md
+plan.md
+tasks.md
+logic/
+shared.js
+create-user.js
+list-users.js
+find-user-by-email.js
+find-user-by-id.js
+find-user-by-name.js
+update-user.js
+delete-user.js
+users-gender-count.js
+queries/
+users.js
+queries/
+create-users-table.js
+find-by-id.js
+find-by-email.js
+find-by-name.js
+find-all.js
+insert.js
+update.js
+remove.js
+list-tables.js
+clients/
+terminal/
+create-users-table.txt
+insert-user.txt
+find-all.txt
+find-by-email.txt
+find-by-id.txt
+find-user-by-name.txt
+update-user.txt
+remove-user.txt
+users-gender-count.txt
+jupyter/
+create-users-table.ipynb
+insert-user.ipynb
+find-all.ipynb
+find-by-email.ipynb
+find-by-id.ipynb
+find-user-by-name.ipynb
+update-user.ipynb
+remove-user.ipynb
+users-gender-count.ipynb
+http/
+start-http-server.js
+handle-request.js
+send-http-error.js
+serve-public-file.js
+web/
+index.html
+styles.css
+main.js
+state.js
+show-screen.js
+show-message.js
+load-user-selection.js
+select-user.js
+show-user-menu.js
+open-user-editor.js
+navigate.js
+save-user.js
+delete-selected-user.js
+
+```
+
 ```

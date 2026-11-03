@@ -1,3 +1,4 @@
+import { deleteUser } from "../../logic/delete-user.js";
 import { loadUserSelection } from "./load-user-selection.js";
 import { showMessage } from "./show-message.js";
 import { STATE } from "./state.js";
@@ -29,16 +30,22 @@ export async function deleteSelectedUser() {
   }
 
   try {
-    const response = await fetch("/api/users/" + user.id, { method: "DELETE" });
+    await deleteUser(user.id);
+    await loadUserSelection();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    const isLogicError =
+      message === "Name is empty" ||
+      message === "Email is invalid" ||
+      message === "Email is already used" ||
+      message === "Invalid id" ||
+      message === "User not found";
 
-    if (!response.ok) {
-      const problem = await response.json();
-      showMessage(problem.error, true);
+    if (isLogicError) {
+      showMessage(message, true);
       return;
     }
 
-    await loadUserSelection();
-  } catch {
     showMessage(
       "No se ha podido eliminar el usuario. Comprueba la conexión y vuelve a intentarlo.",
       true,

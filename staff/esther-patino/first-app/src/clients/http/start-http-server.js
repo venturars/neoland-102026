@@ -7,17 +7,17 @@ import { handleRequest } from "./handle-request.js";
 export async function startHttpServer() {
   const server = createServer(handleRequest);
 
-  server.listen(3000, "127.0.0.1");
+  server.listen(3001, "127.0.0.1");
   await once(server, "listening");
 
-  log("First App: http://127.0.0.1:3000");
+  log("First App: http://127.0.0.1:3001");
 }
 
 try {
   await startHttpServer();
 } catch {
   error(
-    "No se ha podido iniciar First App. Comprueba si el puerto 3000 está ocupado.",
+    "No se ha podido iniciar First App. Comprueba si el puerto 3001 está ocupado.",
   );
   process.exitCode = 1;
 }

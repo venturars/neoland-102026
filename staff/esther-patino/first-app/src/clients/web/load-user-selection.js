@@ -1,3 +1,4 @@
+import { listUsers } from "../../logic/list-users.js";
 import { showMessage } from "./show-message.js";
 import { showScreen } from "./show-screen.js";
 import { STATE } from "./state.js";
@@ -18,14 +19,7 @@ export async function loadUserSelection() {
   status.textContent = "Cargando la lista…";
 
   try {
-    const response = await fetch("/api/users");
-    const users = await response.json();
-
-    if (!response.ok) {
-      status.textContent = "Actualiza la lista para volver a intentarlo.";
-      showMessage(users.error, true);
-      return;
-    }
+    const users = await listUsers();
 
     if (users.length === 0) {
       status.textContent = "No hay usuarios disponibles.";
@@ -50,8 +44,21 @@ export async function loadUserSelection() {
     select.disabled = false;
     submit.disabled = false;
     status.textContent = "Selecciona el usuario con el que quieres continuar.";
-  } catch {
+  } catch (error) {
     status.textContent = "Actualiza la lista para volver a intentarlo.";
+    const message = error instanceof Error ? error.message : "";
+    const isLogicError =
+      message === "Name is empty" ||
+      message === "Email is invalid" ||
+      message === "Email is already used" ||
+      message === "Invalid id" ||
+      message === "User not found";
+
+    if (isLogicError) {
+      showMessage(message, true);
+      return;
+    }
+
     showMessage(
       "No se ha podido cargar la lista. Comprueba la conexión con la aplicación.",
       true,

@@ -1,5 +1,3 @@
-import { sendJson } from "./send-json.js";
-
 const HTTP_ERRORS = {
   "Name is empty": 400,
   "Email is invalid": 400,
@@ -26,5 +24,8 @@ export function sendHttpError(response, error) {
     }
   }
 
-  sendJson(response, statusCode, { error: message });
+  response.statusCode = statusCode;
+  response.setHeader("Content-Type", "application/json; charset=utf-8");
+  response.setHeader("Cache-Control", "no-store");
+  response.end(JSON.stringify({ error: message }));
 }

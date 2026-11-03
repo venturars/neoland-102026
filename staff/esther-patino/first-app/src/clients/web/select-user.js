@@ -1,3 +1,4 @@
+import { findUserById } from "../../logic/find-user-by-id.js";
 import { showMessage } from "./show-message.js";
 import { showUserMenu } from "./show-user-menu.js";
 import { STATE } from "./state.js";
@@ -10,9 +11,9 @@ export async function selectUser(event) {
   }
 
   const select = document.getElementById("user-select");
-  const id = select.value;
+  const rawId = select.value;
 
-  if (id === "") {
+  if (rawId === "") {
     showMessage("Elige un usuario de la lista.", true);
     return;
   }
@@ -27,17 +28,24 @@ export async function selectUser(event) {
   }
 
   try {
-    const response = await fetch("/api/users/" + id);
-    const user = await response.json();
+    const id = Number(rawId);
+    const user = await findUserById(id);
+    STATE.selectedUser = user;
+    showUserMenu();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    const isLogicError =
+      message === "Name is empty" ||
+      message === "Email is invalid" ||
+      message === "Email is already used" ||
+      message === "Invalid id" ||
+      message === "User not found";
 
-    if (!response.ok) {
-      showMessage(user.error, true);
+    if (isLogicError) {
+      showMessage(message, true);
       return;
     }
 
-    STATE.selectedUser = user;
-    showUserMenu();
-  } catch {
     showMessage(
       "No se ha podido obtener el usuario. Vuelve a intentarlo.",
       true,
