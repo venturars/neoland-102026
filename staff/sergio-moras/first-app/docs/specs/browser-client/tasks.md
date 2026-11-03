@@ -41,23 +41,23 @@ Implementan [plan.md](plan.md), que cumple [spec.md](spec.md). Se ejecutan **en 
 - [x] `pnpm format` y `pnpm lint` sin errores.
 
 ## T8. `logic` directa en el navegador (plan 1.2)
-- [ ] Mergear la rama de #819 y resolver los choques.
-- [ ] `src/clients/browser/server.js`: solo la lista fija de ficheros del plan, sin las rutas `/users`.
-- [ ] `index.html`: las rutas de `styles.css` y `app.js` desde `src/`.
-- [ ] `app.js`: importar `listUsers`, `updateUser` y `deleteUser` y llamarlas con `await`, sin `callServer`.
-- [ ] `src/db/server.js`: `BROWSER_ORIGIN`, `OPTIONS /query`, el 403 de otro `Origin` y el `Content-Type` obligatorio.
+- [x] Mergear la rama de #819 y resolver los choques.
+- [x] `src/clients/browser/server.js`: solo la lista fija de ficheros del plan, sin las rutas `/users`.
+- [x] `index.html`: las rutas de `styles.css` y `app.js` desde `src/`.
+- [x] `app.js`: importar `listUsers`, `updateUser` y `deleteUser` y llamarlas con `await`, sin `callServer`.
+- [x] `src/db/server.js`: `BROWSER_ORIGIN`, `OPTIONS /query`, el 403 de otro `Origin` y el `Content-Type` obligatorio.
 
 ## T9. Comprobación del cambio
-- [ ] Guardar la salida de `list-users.txt` antes de empezar.
-- [ ] Con `curl` al cliente: los siete ficheros de la lista dan 200; `/users`, `/logic/classify-gender.js`, `/queries/users-sql.js`, `/db/users.sqlite` y una ruta con `..` dan 404.
-- [ ] Con `curl` a la base: `OPTIONS` desde `http://127.0.0.1:3000` da 204 con el permiso; un `POST` con otro `Origin` da 403; un `POST` sin `Content-Type: application/json` da 400; la terminal sigue funcionando.
-- [ ] Las tres pantallas en el navegador con un usuario temporal `tmp-768-4`: elegir, Notas desactivada, volver, modificar, los errores de la spec y la ventana de borrado cancelada y confirmada.
-- [ ] Con la base parada, la pantalla 1 enseña `Error: Database is not running. Start it with pnpm db.`
-- [ ] No queda ningún `tmp-768-*` y `list-users.txt` da lo mismo que al empezar.
-- [ ] `pnpm format` y `pnpm lint` sin errores.
+- [x] Guardar la salida de `list-users.txt` antes de empezar.
+- [x] Con `curl` al cliente: los siete ficheros de la lista dan 200; `/users`, `/logic/classify-gender.js`, `/queries/users-sql.js`, `/db/users.sqlite` y una ruta con `..` dan 404.
+- [x] Con `curl` a la base: `OPTIONS` desde `http://127.0.0.1:3000` da 204 con el permiso; un `POST` con otro `Origin` da 403; un `POST` sin `Content-Type: application/json` da 400; la terminal sigue funcionando.
+- [x] Las tres pantallas en el navegador con un usuario temporal `tmp-768-4`: elegir, Notas desactivada, volver, modificar, los errores de la spec y la ventana de borrado cancelada y confirmada.
+- [x] Con la base parada, la pantalla 1 enseña `Error: Database is not running. Start it with pnpm db.`
+- [x] No queda ningún `tmp-768-*` y `list-users.txt` da lo mismo que al empezar.
+- [x] `pnpm format` y `pnpm lint` sin errores.
 
 ## T10. Guías y PR
-- [ ] `ARCHITECTURE.md`: la sección Navegador con el camino nuevo, los ficheros que se sirven y el permiso del servidor de la base.
-- [ ] `TREE.md`: `server.js` del navegador solo sirve ficheros.
-- [ ] `AGENTS.md`: `pnpm db` antes de `pnpm browser`.
-- [ ] La descripción de #769 incluye #820 (#819).
+- [x] `ARCHITECTURE.md`: la sección Navegador con el camino nuevo, los ficheros que se sirven y el permiso del servidor de la base.
+- [x] `TREE.md`: `server.js` del navegador solo sirve ficheros.
+- [x] `AGENTS.md`: `pnpm db` antes de `pnpm browser`.
+- [x] La descripción de #769 incluye #820 (#819).

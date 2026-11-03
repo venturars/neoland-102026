@@ -29,7 +29,7 @@ first-app/
       terminal/        un .txt por operación
       jupyter/         un .ipynb por operación
       browser/
-        server.js      sirve las pantallas y llama a logic
+        server.js      solo sirve las pantallas y los módulos que importan
         public/        index.html, styles.css y app.js
   docs/
     CONSTITUTIONS.md

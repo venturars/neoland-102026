@@ -24,7 +24,7 @@ Los clientes lo muestran como `Error: <mensaje>`.
 ## Base parada
 Si el servidor de la base no está en marcha, `queries/users.js` lanza `Database is not running. Start it with pnpm db.`, con el error original en `cause`. Es el único mensaje que no lanza `logic/`. Sale tal cual en todas las operaciones, salvo en `classifyGender`, que lo envuelve: `Users could not be classified: Database is not running. Start it with pnpm db.`
 
-Las respuestas de error del servidor (`Unknown query: <nombre>`, `Invalid request.`, `Not found.` y los mensajes de SQLite) están en [ARCHITECTURE.md](ARCHITECTURE.md#servidor-de-la-base). `queries/` las lanza tal cual.
+Las respuestas de error del servidor (`Unknown query: <nombre>`, `Invalid request.`, `Not found.`, `Forbidden origin.` y los mensajes de SQLite) están en [ARCHITECTURE.md](ARCHITECTURE.md#servidor-de-la-base). `queries/` las lanza tal cual.
 
 ## Un mensaje nuevo
 Una operación nueva que necesite un mensaje que no está en la lista lo añade aquí en su misma tarea.
