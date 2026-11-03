@@ -1,18 +1,14 @@
----
-name: pull-changes
-description: Actualiza staging mediante fast-forward para empezar una tarea sin reemplazar cambios locales ni forzar referencias.
----
+### Herramienta: PULL_CHANGES
 
-# Actualizar la base
+- **Descripción**: Úsala única y exclusivamente para adelantar `staging` con un fast-forward de `origin/staging`. El orquestador siempre actualiza `staging`, esté en la rama que esté. No la uses si `staging` exige un merge o un rebase.
+- **Comando de Terminal**: `./staff/jimena-duran/first-app/tools/pull-changes.sh`
 
-La llama el orquestador cuando el alcance autorizado incluye empezar una tarea. Primero lee `skills/check-status/SKILL.md`. No implica autorización para commit, push o PR.
+El comando se lanza desde el root del repositorio git (la carpeta que contenga el directorio .git).
 
-Desde la raíz del repositorio:
+#### Especificación de Argumentos
 
-```powershell
-& .\staff\jimena-duran\first-app\tools\pull-changes.ps1
-```
+No recibe argumentos. Adelanta la rama local `staging` a `origin/staging`. No cambia de rama.
 
-Desde `first-app`, usa `& .\tools\pull-changes.ps1`. No recibe argumentos. El script debe conservar la rama actual y actualizar staging únicamente si puede avanzarla de forma segura. Comprueba el resultado y comunica el commit alcanzado.
+#### Reglas de Invocación Críticas
 
-Si hay divergencia, cambios que bloquean la operación, otro worktree, un conflicto o fallo nativo, detén el flujo e informa antes de resolver. No uses reset, clean, stash automático ni una actualización forzada para sortear el fallo.
+- **Procesamiento de respuestas**: El script escribe en qué commit quedó `staging`. Si el código de salida no es 0, `staging` no se pudo adelantar. Comunica el texto y no fuerces la integración. La rama en la que estabas no importa.
