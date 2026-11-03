@@ -1,0 +1,266 @@
+/* Change these colors here to update the three screens together. */
+:root {
+  --color-primary: #8655b9;
+  --color-primary-hover: #7043a1;
+  --color-background: #f4edff;
+  --color-surface: #fffcff;
+  --color-text: #372448;
+  --color-muted: #70617f;
+  min-height: 100vh;
+  font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+  color: var(--color-text);
+  /* Soft color gradients stay behind the card, where no form text is drawn. */
+  background:
+    radial-gradient(circle at top left, #e6d1ff, transparent 55%),
+    radial-gradient(circle at bottom right, #fbd9ea, transparent 55%),
+    var(--color-background);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  line-height: 1.6;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.app {
+  width: min(100% - 2rem, 42rem);
+  margin: 3.5rem auto;
+}
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1.75rem;
+}
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.9rem;
+  background: var(--color-primary);
+  color: white;
+  font-size: 1.6rem;
+  font-weight: 750;
+}
+h1 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+.app-header p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+.card {
+  background: var(--color-surface);
+  border: 1px solid #e5d9ef;
+  border-radius: 1.25rem;
+  padding: 2.25rem;
+  box-shadow: 0 10px 35px #54297514;
+}
+.eyebrow {
+  margin: 0 0 0.4rem;
+  color: var(--color-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+}
+h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+.description {
+  color: var(--color-muted);
+  margin: 1rem 0 2rem;
+}
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.45rem;
+}
+input,
+select,
+button {
+  font: inherit;
+}
+input,
+select {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.7rem;
+  border: 1px solid #ad99c1;
+  border-radius: 0.5rem;
+  background: var(--color-surface);
+  color: inherit;
+}
+.field {
+  margin-bottom: 1.2rem;
+}
+.help {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.75rem;
+}
+button {
+  min-height: 2.9rem;
+  padding: 0.7rem 1.1rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  background: var(--color-primary);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+button:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+button.secondary {
+  background: var(--color-surface);
+  color: #714498;
+  border-color: #c8b4dd;
+}
+button.secondary:hover:not(:disabled) {
+  background: #f0e5fb;
+}
+button:disabled {
+  background: #ede6f4;
+  color: #85768f;
+  border-color: #e1d6ea;
+  cursor: not-allowed;
+}
+input:disabled,
+select:disabled {
+  background: #f3eef7;
+  color: #85768f;
+}
+:focus-visible {
+  outline: 3px solid #9d70c9;
+  outline-offset: 3px;
+}
+.user-summary {
+  background: #f1e6fc;
+  border: 1px solid #e5d9ef;
+  border-radius: 0.75rem;
+  padding: 1.1rem;
+  margin: 1.5rem 0;
+  overflow-wrap: anywhere;
+}
+.user-summary h3 {
+  margin-top: 0.3rem;
+}
+.user-summary p {
+  margin: 0.3rem 0 0;
+}
+.menu-actions {
+  display: grid;
+  gap: 0.75rem;
+}
+.menu-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+}
+.danger-zone {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e4d4d6;
+}
+.danger-zone p {
+  margin: 0.4rem 0 1rem;
+  color: #6e4d52;
+}
+button.danger {
+  color: #a12433;
+  background: #fff3f4;
+  border-color: #d8a9ae;
+}
+button.danger:hover:not(:disabled) {
+  background: #fbe3e6;
+}
+.message {
+  border: 1px solid #c7a9e0;
+  border-radius: 0.5rem;
+  padding: 0.8rem;
+  margin: 0 0 1.5rem;
+  background: #f5edfd;
+  overflow-wrap: anywhere;
+}
+.message-error {
+  background: #fff1f2;
+  border-color: #d8a9ae;
+  color: #91202f;
+}
+
+/* Hidden sections must stay hidden, even when another rule uses display. */
+[hidden] {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .app {
+    margin: 1.5rem auto;
+  }
+  .card {
+    padding: 1.25rem;
+    border-radius: 0.9rem;
+  }
+  h2 {
+    font-size: 1.3rem;
+  }
+  .actions {
+    flex-direction: column;
+  }
+  .actions button {
+    width: 100%;
+  }
+}
+
+/* The arrow belongs inside the control, away from its text and border. */
+.select-control {
+  position: relative;
+}
+
+.select-control select {
+  appearance: none;
+  padding-right: 2.75rem;
+}
+
+.select-arrow {
+  position: absolute;
+  right: 1.15rem;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid var(--color-muted);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Headings receive focus for announcements. Interactive controls keep
+   their visible keyboard focus ring. */
+h2[tabindex="-1"]:focus {
+  outline: none;
+}

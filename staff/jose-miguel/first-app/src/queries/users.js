@@ -17,6 +17,9 @@ const findUserByIdSql = readFileSync(findUserByIdPath, "utf8");
 const findUserByEmailPath = join(directory, "find-by-email.sql");
 const findUserByEmailSql = readFileSync(findUserByEmailPath, "utf8");
 
+const findUsersByNamePath = join(directory, "find-by-name.sql");
+const findUsersByNameSql = readFileSync(findUsersByNamePath, "utf8");
+
 const insertUserPath = join(directory, "insert.sql");
 const insertUserSql = readFileSync(insertUserPath, "utf8");
 
@@ -41,6 +44,11 @@ export function findUserById(id) {
 export function findUserByEmail(email) {
   const statement = db.prepare(findUserByEmailSql);
   return statement.get({ email });
+}
+
+export function findUsersByName(name) {
+  const statement = db.prepare(findUsersByNameSql);
+  return statement.all({ name });
 }
 
 export function insertUser(name, email) {

@@ -1,0 +1,4 @@
+# Pegar en la terminal con el directorio actual en first-app.
+
+# Test 1: crea la tabla y lista (lista vacía o usuarios existentes).
+node --input-type=module -e "import { createUsersTable } from './src/logic/create-users-table.js'; import { listUsers } from './src/logic/list-users.js'; try { createUsersTable(); console.log(listUsers()); } catch (error) { console.log(error.message); }"

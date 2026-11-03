@@ -120,9 +120,6 @@ function Get-TaskBranchName {
     if ($Issue -notmatch '^[1-9][0-9]*$') {
         throw 'Issue must be a positive issue number.'
     }
-    if ($Type -notin @('feat', 'fix', 'docs', 'refactor', 'test', 'chore')) {
-        throw 'Unsupported conventional commit type.'
-    }
     if ($Description -cnotmatch '^[a-z0-9]+(-[a-z0-9]+)*$') {
         throw 'Description must be lowercase kebab-case.'
     }
