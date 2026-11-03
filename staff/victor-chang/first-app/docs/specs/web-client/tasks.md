@@ -18,8 +18,8 @@
 10. [x] In `eslint.config.js`, add the block for `clients/web/**/*.js` with its browser globals. Run `pnpm format:check` and `pnpm lint`.
         Both pass.
 11. [x] Add the new files to `docs/TREE.md` and `docs/ARCHITECTURE.md`, with a **Web** section under **Clients**, and `pnpm web` to `AGENTS.md`.
-12. [ ] Check in Chrome: open the file, list, search, open a user, add, add with a used email, edit, delete.
+12. [x] Check in Chrome: open the file, list, search, open a user, add, add with a used email, edit, delete.
         Each screen does what the spec says, and each failure shows its message.
-13. [ ] Check in Chrome: reload the page (the file is remembered), and switch to dark mode.
+13. [x] Check in Chrome: reload the page (the file is remembered), and switch to dark mode.
         Then paste `clients/terminal/list-users.txt`: it shows the changes made in the page.
-14. [ ] In `docs/specs/README.md`, set `web-client` to `done`.
+14. [x] In `docs/specs/README.md`, set `web-client` to `done`.
