@@ -7,7 +7,7 @@ first-app/
   scripts/
     jupyter.js
   db/
-    connection.js
+    server.js
     users.sqlite
   agents/
   skills/
@@ -34,14 +34,15 @@ first-app/
   queries/
     users.js
     queries/
-      create-users-table.sql
-      insert-user.sql
-      find-all.sql
-      find-by-email.sql
-      find-by-id.sql
-      find-by-name.sql
-      update-user.sql
-      remove-user.sql
+      create-users-table.js
+      find-by-id.js
+      find-by-email.js
+      find-by-name.js
+      find-all.js
+      insert.js
+      update.js
+      remove.js
+      list-tables.js
   clients/
     terminal/
       create-users-table.txt

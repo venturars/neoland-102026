@@ -1,7 +1,7 @@
 import { DatabaseError, ValidationError } from "./errors.js";
 import { findByName } from "../queries/user.js";
 
-export function findUserByName(name) {
+export async function findUserByName(name) {
   let nameIsEmpty = false;
 
   if (typeof name !== "string") {
@@ -25,7 +25,7 @@ export function findUserByName(name) {
   let rows;
 
   try {
-    rows = findByName(trimmedName);
+    rows = await findByName(trimmedName);
   } catch {
     throw new DatabaseError("Could not find the user");
   }

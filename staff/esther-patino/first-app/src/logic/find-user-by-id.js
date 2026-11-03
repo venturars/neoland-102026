@@ -3,9 +3,9 @@ import { toUser, validateId } from "./shared.js";
 
 export { findById };
 
-export function findUserById(id) {
+export async function findUserById(id) {
   const userId = validateId(id);
-  const user = findById(userId);
+  const user = await findById(userId);
 
   if (!user) {
     throw new Error("User not found");

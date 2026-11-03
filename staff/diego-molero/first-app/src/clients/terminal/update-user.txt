@@ -1,0 +1,6 @@
+// Ejemplo manual. Ejecución: docs/CONSTITUTIONS.md.
+import { updateUser } from "./src/logic/update-user.js";
+
+const result = updateUser(1, { name: "Ada Lovelace" });
+
+console.log(result);

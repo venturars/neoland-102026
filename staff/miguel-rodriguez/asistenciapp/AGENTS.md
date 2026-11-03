@@ -18,18 +18,17 @@ Si algo de lo que te piden contradice la constitución, **para y avisa** antes d
 
 ---
 
-## 2. Flujo SDD paso a paso
+## 2. Cinco momentos del trabajo
 
-Cada cambio de código, pruebas, README, instrucciones de uso u otra documentación de la app recorre estas fases **en orden**. Al terminar cada una, el agente **se detiene** y pide la aprobación de Miguel. No se avanza sin un "ok" explícito.
+El agente principal sigue [el flujo Git](agents/git-workflow-agent.md). Miguel pide el momento y el agente lo ejecuta sin confirmaciones repetidas dentro de ese alcance; se detiene al terminarlo. Solo encadena momentos cuando Miguel los haya pedido expresamente juntos. Una duda real o un conflicto detiene el paso afectado.
 
-| Fase | Archivo | Pregunta que responde | Puerta de salida |
-| --- | --- | --- | --- |
-| 1. Especificar | `spec.md` | ¿**Qué** hay que construir y **por qué**? | Sin `[NECESITA ACLARACIÓN]` pendientes + aprobación de Miguel |
-| 2. Planificar | `plan.md` | ¿**Cómo** lo construimos? | Pasa la comprobación de la constitución + aprobación de Miguel |
-| 3. Desglosar | `tasks.md` | ¿En qué **pasos pequeños** lo hacemos? | Cada tarea apunta a un criterio de aceptación + aprobación de Miguel |
-| 4. Implementar | código + tests | Hacerlo, tarea a tarea | `pytest` en verde + criterios verificados |
+1. **Crear la issue:** concretar qué se hará y cómo comprobarlo, crearla y asignarla. No abrir rama ni escribir código.
+2. **Crear el draft:** actualizar staging en fast-forward, crear rama desde staging, commit vacío `chore: open #N`, push y PR en draft hacia staging, asignada y enlazada mediante `Closes #N` y Development. No escribir todavía las specs.
+3. **Crear las specs:** preparar y revisar `spec.md`, `plan.md` y `tasks.md` en ese orden, en una misma pasada, sin otro ok entre documentos. La spec abre con la issue. No implementar.
+4. **Implementar:** ejecutar las tareas dentro del alcance documentado y registrar comprobaciones reales. No hacer commits ni push sin petición.
+5. **Actuar sobre la PR:** realizar solo lo solicitado: guardar cambios, push o pedir revisión a las personas nombradas. No hacer merge a staging ni cerrar issues por API.
 
-Si el pedido no tiene una spec aprobada que lo cubra, solo se redacta y se muestra esa spec; se espera el sí explícito de Miguel antes de preparar el plan o las tareas. Una issue, rama o PR no sustituye esa aprobación. Si el pedido no está cubierto por la spec activa, se abre otra spec sin ampliar silenciosamente una terminada. Las contradicciones detienen el trabajo afectado hasta acordar su resolución.
+Cada cambio nuevo tiene sus tres documentos antes de implementarse. La existencia de una issue, rama o PR no autoriza código por sí sola. Las specs históricas no se amplían ni se reescriben para cubrir tareas nuevas. El detalle de creación, reanudación y fallos parciales está en el flujo, no en procedimientos paralelos.
 
 ### 2.1 Especificar (`spec.md`)
 - Habla del usuario y del problema. **Nunca** nombra tecnologías (nada de "SQLite", "endpoint", "fetch").
@@ -49,7 +48,7 @@ Si el pedido no tiene una spec aprobada que lo cubra, solo se redacta y se muest
 
 ### 2.4 Implementar
 - Haz **una tarea cada vez**. Al acabarla, márcala `[x]` en `tasks.md`.
-- Si durante la implementación descubres que la spec o el plan están mal o incompletos, **para**, propón el cambio en el documento y espera aprobación. El código nunca se adelanta a los documentos.
+- Si durante la implementación descubres que la spec o el plan están mal o incompletos, **para el trabajo afectado**, explica la corrección y pide decisión si cambia el alcance. No inventes requisitos ni adelantes código a los documentos.
 
 ---
 
@@ -82,9 +81,9 @@ Las dependencias son Flask, pytest y qrcode==8.2 sin extras de imágenes (consti
 
 - **Solo se edita dentro de `staff/miguel-rodriguez/asistenciapp/`.**
 - **Pregunta antes de suponer.** Ante una ambigüedad, pregunta o márcala con `[NECESITA ACLARACIÓN]`.
-- **Explica lo que haces.** Miguel está aprendiendo SDD: al cerrar cada fase, resume qué se ha hecho, por qué y qué tiene que revisar.
+- **Explica lo que haces.** Al cerrar el momento solicitado, resume qué se hizo, qué se comprobó y qué queda pendiente.
 - **Cambios pequeños.** Mejor varias tareas cortas que una enorme.
-- **Nada de commits ni pushes** sin que Miguel lo pida.
+- **Commit y push** solo en el momento 2 para la apertura vacía y en el momento 5 cuando Miguel los pide. No se fusiona automáticamente. Revisores solo si Miguel los nombra.
 - **Para todo lo que arranques.** Si levantas el servidor o `cloudflared` para probar, páralos al terminar y comprueba que el puerto queda libre: `lsof -nP -iTCP:8000 -sTCP:LISTEN` no debe mostrar nada. Ojo: en macOS el proceso aparece como `Python` (con mayúscula). (Incidencia del 2026-10-20 en T12.)
 - **No toques la constitución** salvo para proponer una enmienda, que solo Miguel aprueba (constitución §8).
 
@@ -124,6 +123,7 @@ Una funcionalidad está terminada cuando:
 | `010-consistencia-y-legibilidad` | Terminada; revisión final aprobada por Miguel el 2026-10-26 | Reglas de estilo y árbol único; nueve criterios y seis casos revisados; 226 pruebas pasan; evidencia en specs/010-consistencia-y-legibilidad/tasks.md; sin refactorización de código |
 | `011-funciones-de-carrera-legibles` | Implementada y verificada; preparación completa autorizada por Miguel el 2026-10-26; revisión de compañeros pendiente | Resultados semánticos, permiso local de un uso y compatibilidad con 010; evidencia en specs/011-funciones-de-carrera-legibles/tasks.md |
 | `012-alumnos-y-personajes-en-almacenamiento` | Implementada y verificada; resultado aprobado por Miguel el 2026-10-27 | Issue #524, PR #525 en draft con base staging; 304 pruebas Python y 29 JavaScript; recorrido local verificado; evidencia en tasks.md; publicación autorizada, revisión de compañeros pendiente |
+| `013-flujo-de-git` | Implementación y verificación delegadas por Miguel el 2026-11-02; revisión de compañeros pendiente | Issue #761; cinco momentos y flujo Git local, sin cambios del producto |
 | Bot de Discord (sin número asignado) | Idea futura | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.

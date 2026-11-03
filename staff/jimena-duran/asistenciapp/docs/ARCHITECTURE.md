@@ -25,3 +25,22 @@ almacén concreto: no hay una segunda persistencia ni una interfaz genérica.
 
 No se añaden PostgreSQL, SQLAlchemy, Alembic, una segunda aplicación de consola,
 .env, pre-commit ni documentación generada. Solo Flask, pytest y biblioteca estándar.
+
+## Automatización del trabajo
+
+```text
+asistenciapp/
+  agents/
+  skills/
+  tools/
+  templates/
+  MCPS/
+  docs/
+  specs/
+```
+
+Estas carpetas contienen el flujo original de desarrollo, separado de app.py, asistencia/, static/ y data/. El orquestador llama al subagente o skill del momento solicitado. Los siete scripts Bash se conservan sin cambios; no acceden al almacenamiento de asistencia.
+
+Las doce plantillas originales son la fuente editorial de issues y PR. MCP y la alternativa gh se describen en [GIT-AUTOMATION.md](GIT-AUTOMATION.md), junto con la ejecución desde Git Bash y los límites de la copia.
+
+El SDD local definido en AGENTS.md y CONSTITUTION.md prevalece sobre las indicaciones de continuar automáticamente del template. La integración no incorpora ensayos propios permanentes en tools/tests/; las comprobaciones de la entrega se realizan en repositorios desechables con remoto local y resultados separados.

@@ -1,74 +1,78 @@
-import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
-import { db } from "../db/connection.js";
+import { CREATE_USERS_TABLE } from "./queries/create-users-table.js";
+import { FIND_ALL } from "./queries/find-all.js";
+import { FIND_BY_EMAIL } from "./queries/find-by-email.js";
+import { FIND_BY_ID } from "./queries/find-by-id.js";
+import { FIND_BY_NAME } from "./queries/find-by-name.js";
+import { INSERT } from "./queries/insert.js";
+import { UPDATE } from "./queries/update.js";
+import { REMOVE } from "./queries/remove.js";
+import { LIST_TABLES } from "./queries/list-tables.js";
 
-const modulePath = fileURLToPath(import.meta.url);
-const directory = dirname(modulePath);
+const ORIGIN = "http://127.0.0.1:3000";
 
-const createUsersTablePath = join(
-  directory,
-  "queries",
-  "create-users-table.sql",
-);
-const createUsersTableSql = readFileSync(createUsersTablePath, "utf8");
-const findByEmailPath = join(directory, "queries", "find-by-email.sql");
-const findByEmailSql = readFileSync(findByEmailPath, "utf8");
-const findByNamePath = join(directory, "queries", "find-by-name.sql");
-const findByNameSql = readFileSync(findByNamePath, "utf8");
-const insertPath = join(directory, "queries", "insert.sql");
-const insertSql = readFileSync(insertPath, "utf8");
-const findAllPath = join(directory, "queries", "find-all.sql");
-const findAllSql = readFileSync(findAllPath, "utf8");
-const findByIdPath = join(directory, "queries", "find-by-id.sql");
-const findByIdSql = readFileSync(findByIdPath, "utf8");
-const updatePath = join(directory, "queries", "update.sql");
-const updateSql = readFileSync(updatePath, "utf8");
-const removePath = join(directory, "queries", "remove.sql");
-const removeSql = readFileSync(removePath, "utf8");
-
-export function createUsersTable() {
-  db.exec(createUsersTableSql);
+async function execute(method, sql, params = {}) {
+  const payload = JSON.stringify({ method, sql, params });
+  const response = await fetch(`${ORIGIN}/execute`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: payload,
+  });
+  const requestFailed = !response.ok;
+  if (requestFailed) {
+    throw new Error("Query failed");
+  }
+  const result = await response.json();
+  const invalidResult =
+    !result || typeof result !== "object" || Array.isArray(result);
+  if (invalidResult) {
+    throw new Error("Query failed");
+  }
+  const executed = method === "exec" && result.ok === true;
+  if (executed) {
+    return undefined;
+  }
+  const singleRow = method === "get" && Object.hasOwn(result, "row");
+  if (singleRow) {
+    return result.row ?? undefined;
+  }
+  const rowList = method === "all" && Array.isArray(result.rows);
+  if (rowList) {
+    return result.rows;
+  }
+  const runResult =
+    method === "run" &&
+    typeof result.changes === "number" &&
+    typeof result.lastInsertRowid === "number";
+  if (runResult) {
+    return result;
+  }
+  throw new Error("Query failed");
 }
 
-export function findByEmail(email) {
-  const statement = db.prepare(findByEmailSql);
-  const user = statement.get({ email });
-  return user;
+export async function createUsersTable() {
+  await execute("exec", CREATE_USERS_TABLE);
 }
-
-export function insert({ name, email }) {
-  const statement = db.prepare(insertSql);
-  const createdUser = statement.get({ name, email });
-  return createdUser;
+export async function findByEmail(email) {
+  return await execute("get", FIND_BY_EMAIL, { email });
 }
-
-export function findAll() {
-  const statement = db.prepare(findAllSql);
-  const users = statement.all();
-  return users;
+export async function insert({ name, email }) {
+  return await execute("get", INSERT, { name, email });
 }
-
-export function findById(id) {
-  const statement = db.prepare(findByIdSql);
-  const user = statement.get({ id });
-  return user;
+export async function findAll() {
+  return await execute("all", FIND_ALL);
 }
-
-export function update({ id, name, email }) {
-  const statement = db.prepare(updateSql);
-  const updatedUser = statement.get({ id, name, email });
-  return updatedUser;
+export async function findById(id) {
+  return await execute("get", FIND_BY_ID, { id });
 }
-
-export function remove(id) {
-  const statement = db.prepare(removeSql);
-  const deletionResult = statement.run({ id });
-  return deletionResult;
+export async function update({ id, name, email }) {
+  return await execute("get", UPDATE, { id, name, email });
 }
-
-export function findByName(name) {
-  const statement = db.prepare(findByNameSql);
-  const users = statement.all({ name });
-  return users;
+export async function remove(id) {
+  return await execute("run", REMOVE, { id });
+}
+export async function findByName(name) {
+  return await execute("all", FIND_BY_NAME, { name });
+}
+export async function listTables() {
+  return await execute("all", LIST_TABLES);
 }

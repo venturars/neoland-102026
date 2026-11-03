@@ -12,7 +12,7 @@ export async function handleUsers(request, response, pathname) {
       throw new Error("HTTP method is not allowed");
     }
 
-    const users = listUsers();
+    const users = await listUsers();
     const selection = [];
 
     for (const user of users) {
@@ -47,7 +47,7 @@ export async function handleUsers(request, response, pathname) {
   }
 
   if (request.method === "GET") {
-    const user = findUserById(id);
+    const user = await findUserById(id);
     sendJson(response, 200, {
       id: user.id,
       name: user.name,
@@ -68,7 +68,7 @@ export async function handleUsers(request, response, pathname) {
       changes.email = body.email;
     }
 
-    const user = updateUser(id, changes);
+    const user = await updateUser(id, changes);
     sendJson(response, 200, {
       id: user.id,
       name: user.name,
@@ -78,7 +78,7 @@ export async function handleUsers(request, response, pathname) {
   }
 
   if (request.method === "DELETE") {
-    deleteUser(id);
+    await deleteUser(id);
     response.statusCode = 204;
     response.end();
     return;

@@ -6,7 +6,7 @@ El trabajo de git sigue `agents/git-workflow-agent.md` de esta carpeta. Las para
 
 first-app es la primera app del curso de IA Engineer para alumnos junior. Sirve para construirla con IA siguiendo el sistema SDD.
 
-Está en Node, con módulos ES (`"type": "module"`) y SQLite (`node:sqlite`, fichero `db/users.sqlite`). Las reglas de base están en `docs/CONSTITUTIONS.md`. Esa guía enlaza a la arquitectura, el árbol, la base de datos, los errores y el estilo.
+Está en Node, con módulos ES (`"type": "module"`) y SQLite (`node:sqlite`, fichero `src/db/users.sqlite`, local y fuera de git). Las reglas de base están en `docs/CONSTITUTIONS.md`. Esa guía enlaza a la arquitectura, el árbol, la base de datos, los errores y el estilo.
 
 ## Orden
 
@@ -81,9 +81,9 @@ Queda fuera comprobar paquetes que no son de Node, comprobar un paquete cuya ver
 
 ## Comandos
 
-- Ejecutar: pegar el contenido de `clients/terminal/` en la terminal, con el directorio actual en `first-app`.
-- Jupyter: `pnpm jupyter` desde `first-app` (abre Notebook sobre `clients/jupyter/`; la primera vez crea `.venv` e instala Notebook).
-- Tests: no hay tests automatizados. El script `test` de `package.json` es el placeholder de npm. El test manual son los `.txt` de `clients/terminal/` o sus notebooks en `clients/jupyter/`.
+- Ejecutar: pegar el contenido de `src/clients/terminal/` en la terminal, con el directorio actual en `first-app`.
+- Jupyter: `pnpm jupyter` desde `first-app` (ejecuta `node scripts/start-jupyter.js`; abre Notebook sobre `src/clients/jupyter/`; la primera vez crea `.venv` e instala Notebook).
+- Tests: no hay tests automatizados. El script `test` de `package.json` es el placeholder de npm. El test manual son los `.txt` de `src/clients/terminal/` o sus notebooks en `src/clients/jupyter/`.
 - Lint/formato: `pnpm format` lanza Prettier. El formato es el estándar, sin configuración propia. `pnpm lint` lanza ESLint.
 - Dependencias: se instalan con pnpm, no con npm.
 
@@ -93,7 +93,7 @@ La forma de cada línea y las convenciones están en `docs/STYLE.md`.
 
 ## Al terminar cualquier tarea
 
-- Al crear una funcionalidad se crea su primer cliente en `clients/terminal/`, un `.txt` que se pega en la terminal con el directorio actual en `first-app`. Ese cliente importa la función de `logic/` y hace `console.log` del resultado. Es el test manual básico.
-- Comprueba que el desarrollo nuevo funciona antes de dar la tarea por terminada. La comprobación es ejecutar ese fragmento de `clients/terminal/`.
+- Al crear una funcionalidad se crea su primer cliente en `src/clients/terminal/`, un `.txt` que se pega en la terminal con el directorio actual en `first-app`. Ese cliente importa la función de `src/logic/` y hace `console.log` del resultado. Es el test manual básico.
+- Comprueba que el desarrollo nuevo funciona antes de dar la tarea por terminada. La comprobación es ejecutar ese fragmento de `src/clients/terminal/`.
 - Lanza el formato antes de dar la tarea por terminada. El comando es `pnpm format`.
 - Lanza el lint antes de dar la tarea por terminada. El comando es `pnpm lint`.

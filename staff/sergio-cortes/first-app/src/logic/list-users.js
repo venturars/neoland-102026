@@ -1,11 +1,11 @@
 import { DatabaseError } from "./errors.js";
 import { findAll } from "../queries/user.js";
 
-export function listUsers() {
+export async function listUsers() {
   let rows;
 
   try {
-    rows = findAll();
+    rows = await findAll();
   } catch {
     throw new DatabaseError("Could not list the users");
   }

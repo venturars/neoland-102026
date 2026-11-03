@@ -46,11 +46,12 @@ El flujo es `terminal → logic → queries → db/connection.js`.
 
 ### 6. Cambios acotados
 - Un cambio se limita a lo que se pidió: sin refactorizaciones ni mejoras por iniciativa.
-- Los cambios se hacen de uno en uno y se enseñan antes de continuar.
+- Antes del código, el usuario lee y aprueba `spec.md`, `plan.md` y `tasks.md`. Lo que está en un `tasks.md` aprobado cuenta como pedido.
+- Con ese visto bueno, `tasks.md` se ejecuta entero, sin paradas entre tareas, y el resultado se enseña al final.
 - Sin dependencias nuevas sin permiso.
 - Ante lo que estas reglas no cubran, se pregunta.
 
-*Motivo:* el usuario revisa el proyecto paso a paso y debe poder seguir cada cambio.
+*Motivo:* el usuario decide qué se hace al aprobar los documentos y revisa el resultado entero al final.
 
 ### 7. Verificación obligatoria
 Un cambio no está terminado hasta que se ha ejecutado con los comandos reales, incluidos los casos de error (datos que faltan, email inválido o repetido, id inexistente o no numérico).
@@ -63,4 +64,4 @@ Un cambio no está terminado hasta que se ha ejecutado con los comandos reales, 
 - Un agente que vea una regla desactualizada o incompleta lo propone, pero no la cambia por su cuenta.
 - Cada modificación actualiza la versión y la fecha del final.
 
-**Versión:** 1.2.0 | **Ratificada:** 2026-10-19 | **Última modificación:** 2026-10-30
+**Versión:** 1.3.0 | **Ratificada:** 2026-10-19 | **Última modificación:** 2026-10-31

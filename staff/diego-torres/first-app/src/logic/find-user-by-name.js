@@ -1,7 +1,15 @@
-export async function findUserByName(store, name) {
-  const trimmed = String(name ?? "").trim();
-  if (trimmed === "") {
-    throw new Error("Name is required");
+import { findByName } from "../queries/users.js";
+import { copyUser, validateName } from "./shared.js";
+
+export async function findUserByName(name) {
+  const limpio = validateName(name);
+
+  let filas;
+  try {
+    filas = await findByName(limpio);
+  } catch {
+    throw new Error("Could not find the user");
   }
-  return store.findByName(trimmed);
+
+  return filas.map(copyUser);
 }

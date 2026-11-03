@@ -1,6 +1,6 @@
 import { findByEmail, insert } from "../queries/users.js";
 
-export function createUser(input) {
+export async function createUser(input) {
   const inputName = input.name;
   const name = inputName.trim();
   const nameIsEmpty = !name;
@@ -38,7 +38,7 @@ export function createUser(input) {
 
   let existingUser;
   try {
-    existingUser = findByEmail(email);
+    existingUser = await findByEmail(email);
   } catch {
     throw new Error("Could not create the user");
   }
@@ -50,7 +50,7 @@ export function createUser(input) {
 
   let user;
   try {
-    user = insert({ name, email });
+    user = await insert({ name, email });
   } catch {
     throw new Error("Could not create the user");
   }

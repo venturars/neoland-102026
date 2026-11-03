@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 2.1 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-20
+> Versión 2.2 · Ratificada: 2026-10-19 · Última enmienda: 2026-11-03
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -87,7 +87,7 @@ Cambiar el stack requiere enmendar esta constitución.
 
 ## 7. Alcance y límites del repositorio
 
-- El proyecto vive entero en `staff/victor-chang/asistenciapp/`. No se tocan archivos fuera de esta carpeta.
+- El proyecto vive entero en `staff/luis-duque/asistenciapp/`. No se tocan archivos fuera de esta carpeta.
 
 ---
 
@@ -104,3 +104,4 @@ Cambiar el stack requiere enmendar esta constitución.
 | 1.1 | 2026-10-19 | §6: los códigos no deben poder adivinarse *a mano*; la protección contra scripts deja de ser obligatoria | En una clase el riesgo real es un alumno ausente, no un ataque automatizado. Evita añadir límites de intentos que no aportan al MVP (P2) |
 | 2.0 | 2026-10-20 | §3: stack Node.js → Python (Flask + pytest). P3 pasa de "cero dependencias" a "dependencias mínimas" y permite Flask y pytest | Requisito nuevo: el proyecto debe hacerse en Python. Se elige Flask por ser simple y muy extendido, y pytest por su sintaxis sencilla |
 | 2.1 | 2026-10-20 | P4: distingue *almacenar* (solo en local) de *transitar* (puede pasar cifrado por un proveedor de túnel) | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08) |
+| 2.2 | 2026-11-03 | §7: la ruta del proyecto pasa a `staff/luis-duque/asistenciapp/` | Corrección de alcance del fork; el trabajo vive en esta carpeta (spec 006) |
