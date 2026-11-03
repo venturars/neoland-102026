@@ -1,6 +1,6 @@
 import { findByName } from "../queries/users.js";
 
-export function findUserByName(name) {
+export async function findUserByName(name) {
   const trimmedName = name.trim();
   const nameIsEmpty = !trimmedName;
   if (nameIsEmpty) {
@@ -9,7 +9,7 @@ export function findUserByName(name) {
 
   let users;
   try {
-    users = findByName(trimmedName);
+    users = await findByName(trimmedName);
   } catch {
     throw new Error("Could not find the user");
   }
