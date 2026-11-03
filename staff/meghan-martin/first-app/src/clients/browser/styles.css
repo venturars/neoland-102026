@@ -1,0 +1,64 @@
+body {
+  margin: 2rem;
+  color: #1a1a1a;
+  font-family: sans-serif;
+}
+
+.head,
+a.row {
+  display: grid;
+  grid-template-columns: 4rem 1fr 1.5fr;
+  gap: 1rem;
+  padding: 0.75rem 0;
+}
+
+.head {
+  color: #555;
+  font-size: 0.85rem;
+}
+
+a.row {
+  border-top: 1px solid #ddd;
+  color: inherit;
+  text-decoration: none;
+}
+
+a.row:hover {
+  background: #f4f4f4;
+}
+
+.error:empty {
+  display: none;
+}
+
+.error {
+  color: #9b1c1c;
+  font-weight: 700;
+}
+
+.empty {
+  margin-top: 1rem;
+}
+
+label {
+  display: block;
+  margin: 1rem 0;
+}
+
+input {
+  display: block;
+  width: 20rem;
+  max-width: 100%;
+  margin-top: 0.25rem;
+  padding: 0.4rem;
+  font: inherit;
+}
+
+.actions a,
+button {
+  margin-right: 0.75rem;
+}
+
+button:disabled {
+  opacity: 0.45;
+}

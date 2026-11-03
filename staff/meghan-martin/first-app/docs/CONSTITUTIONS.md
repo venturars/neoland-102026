@@ -2,7 +2,7 @@
 
 Este archivo es el reglamento de la app. Dice qué es y qué llevan spec, plan y tasks. El orden de trabajo de Cursor está en `AGENTS.md`.
 
-first-app es una app pequeña en Node. No es una web. Se usa desde la terminal. Guarda personas en SQLite. Más adelante puede crecer hacia login.
+first-app es una app pequeña en Node. Se usa desde la terminal y, además, desde el navegador para ver y cambiar las mismas personas. Guarda personas en SQLite. Más adelante puede crecer hacia login.
 
 ## Guías
 
@@ -52,6 +52,13 @@ first-app/
         find-user-by-email.txt
         find-user-by-id.txt
         users-gender-count.txt
+      browser/
+        server.js
+        list.html
+        options.html
+        edit.html
+        styles.css
+        delete.html
       jupyter/
         create-users-table.ipynb
         create-user.ipynb
@@ -87,6 +94,7 @@ first-app/
 - `src/logic/` es la app. Cada acción es su propio fichero, con sus comprobaciones dentro. Un fichero ya creado no se reescribe para meter otra acción. Las reglas no se mueven a queries ni a clients.
 - `src/clients/terminal/*.txt` no son programas. Se pegan con el directorio actual en `first-app`. Solo ahí se imprime el resultado.
 - `src/clients/jupyter/*.ipynb` llaman a la misma acción que su `.txt`. Se abren con `npm run jupyter` desde `first-app`. No cambian `logic/`.
+- `src/clients/browser/` sirve tres páginas. Llama a las mismas acciones de `src/logic/`. Se abre con `npm run browser` desde `first-app`. No cambia `logic/`.
 - Una acción nueva es un fichero nuevo en `src/logic/` y un `.txt` nuevo en `src/clients/terminal/`.
 
 ## Specs
