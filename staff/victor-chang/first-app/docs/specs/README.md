@@ -16,3 +16,4 @@ One folder per change. The structure of `spec.md`, `plan.md` and `tasks.md` is i
 | [prettier-and-eslint](prettier-and-eslint/)             | done                      |
 | [jupyter-script](jupyter-script/)                       | waiting for Windows check |
 | [split-docs](split-docs/)                               | done                      |
+| [find-user-by-name](find-user-by-name/)                 | done                      |

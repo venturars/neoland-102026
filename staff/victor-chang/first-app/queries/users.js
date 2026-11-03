@@ -18,6 +18,10 @@ export function findByEmail(email) {
   return db.prepare(sql("find-user-by-email.sql")).get({ email });
 }
 
+export function findByName(name) {
+  return db.prepare(sql("find-users-by-name.sql")).all({ name });
+}
+
 export function insert(name, email) {
   const { lastInsertRowid } = db
     .prepare(sql("insert-user.sql"))

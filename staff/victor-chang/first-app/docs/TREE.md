@@ -16,10 +16,12 @@ first-app/
     list-users.js
     get-user.js
     get-user-by-email.js
+    find-user-by-name.js
     count-users-by-gender.js
     errors.js
     validate-user.js
     validate-email.js
+    validate-name.js
   clients/
     terminal/
     jupyter/

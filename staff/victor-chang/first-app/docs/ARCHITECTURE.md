@@ -18,9 +18,10 @@ The folders and files are in [TREE.md](TREE.md).
   - `logic/list-users.js` lists the users.
   - `logic/get-user.js` gets a user by id.
   - `logic/get-user-by-email.js` gets a user by email.
+  - `logic/find-user-by-name.js` finds the users with a name.
   - `logic/count-users-by-gender.js` counts the users by gender, with the local AI.
   - `logic/errors.js` holds the error classes.
-  - `logic/validate-user.js` and `logic/validate-email.js` hold input checks shared by several features.
+  - `logic/validate-user.js`, `logic/validate-email.js` and `logic/validate-name.js` hold input checks shared by several features.
 - `clients/terminal/` calls `logic/` and shows the result. It is the first client and the manual test of each feature.
 - `clients/jupyter/` calls `logic/` and shows the result in a table. It is for someone who does not code. One notebook per terminal client.
 - `docs/` holds the rules of the app.
