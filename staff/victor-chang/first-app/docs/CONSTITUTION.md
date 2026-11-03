@@ -36,6 +36,8 @@ first-app/
         spec.md         The business of the change
         plan.md         What gets built
         tasks.md        The steps to build it
+  scripts/
+    jupyter.sh          Prepares and opens the Jupyter client
   AGENTS.md             How to write the code
   package.json          The npm dependencies, installed with pnpm
   pnpm-lock.yaml        The exact installed versions
@@ -56,7 +58,7 @@ first-app/
 - Node.js 24+, ES modules (`"type": "module"` in `package.json`).
 - Node built-ins: `node:sqlite`, `node:fs`, `node:url`.
 - npm dependencies: `openai`, to call the local AI (Ollama); `cli-table3` and `@colors/colors`, to draw the tables of the Jupyter client. Exact versions. Packages are installed with pnpm (`pnpm install`); `node_modules/` is git-ignored, `pnpm-lock.yaml` is committed.
-- Python 3, only for the Jupyter client: an app-local `.venv` with `notebook` at an exact version, created by `pnpm jupyter`. The Jupyter installed on the computer is not used.
+- Python 3, only for the Jupyter client: an app-local `.venv` with `notebook` at an exact version, created by `scripts/jupyter.sh`, run with `pnpm jupyter`, on macOS, Linux and Windows (Git Bash). The Jupyter installed on the computer is not used.
 - Tooling: Prettier and ESLint, development packages at an exact version, run with `pnpm format`, `pnpm format:check` and `pnpm lint`. Prettier keeps its default config, with no config file; `.prettierignore` only lists `.venv/` (installed Python packages) and `pnpm-lock.yaml` (written by pnpm in its own format). ESLint uses its recommended rules only, set in `eslint.config.js`, which ignores `.venv/` and `node_modules/`.
 
 A new dependency is added here before any plan uses it.
@@ -170,7 +172,7 @@ Step 4: if everything works, the function returns the shaped data. If the operat
 
 A new message is added to this list before any spec uses it.
 
-This list is for `logic/`. A client throws nothing and prints the message `logic/` threw. The only message of a client's own is `Cannot find first-app.`, printed by a Jupyter notebook that does not find the app folder.
+This list is for `logic/`. A client throws nothing and prints the message `logic/` threw. The only messages of a client's own are `Cannot find first-app.`, printed by a Jupyter notebook that does not find the app folder, and `Python 3 is required to start Jupyter.`, printed by `scripts/jupyter.sh` when there is no Python 3.
 
 ## Queries
 
