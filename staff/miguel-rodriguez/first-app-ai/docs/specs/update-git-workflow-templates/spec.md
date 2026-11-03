@@ -3,6 +3,10 @@
 Issue: #749 · PR: #750.
 Estado: aprobada por Miguel el 2026-11-02.
 
+Corrección de review solicitada por Miguel el 2026-11-03: las reglas editoriales
+de título y tipo pertenecen a las plantillas, sin duplicación en agentes/skills
+de creación ni normalización obligatoria a seis tipos.
+
 ## Referencia
 
 Se adapta `exercises/git-workflow-agent-template` en la revisión
@@ -17,8 +21,8 @@ Ventura sin perder las adaptaciones que ya funcionan en Codex.
 
 ## Entrada y resultado
 
-La entrada es una tarea concreta y su tipo: feat, fix, docs, refactor, test o
-chore. La documentación del flujo indica qué plantilla corresponde y qué
+La entrada es una tarea concreta y su tipo. Las seis plantillas disponibles
+no constituyen una lista cerrada impuesta por agentes o skills. La documentación del flujo indica qué plantilla corresponde y qué
 información debe aportar quien crea la issue o la PR. Si el tipo no tiene una
 plantilla específica, se utiliza la más cercana a la intención de la tarea.
 

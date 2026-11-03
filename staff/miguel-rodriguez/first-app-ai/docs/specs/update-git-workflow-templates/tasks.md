@@ -1,3 +1,21 @@
+## Corrección de review · 2026-11-03
+
+Autorizada por Miguel. Las instrucciones siguientes sustituyen la normalización
+obligatoria a seis tipos descrita en la entrega original; la evidencia del
+2026-11-02 se conserva como histórica, no como validación de la corrección.
+
+- [x] Reglas editoriales referenciadas desde las plantillas en create-issue,
+  create-pr y sus dos skills; no se repiten longitud, idioma o verbo del título.
+- [x] Sin lista cerrada ni conversión automática en los agentes de creación.
+- [x] Tipo sin plantilla: usar la más cercana según la fuente, sin renombrar ramas.
+- [x] Mantener staging, MCP, duplicados, controles de fallo y revisión intactos.
+- [x] Formato y lint: ambos salida 0 en copia aislada con las dependencias existentes.
+  Comandos: `pnpm --config.verifyDepsBeforeRun=false format` y
+  `pnpm --config.verifyDepsBeforeRun=false lint`. La opción evita el auto-install
+  previo de pnpm en la copia temporal; no modifica la configuración del proyecto.
+- [x] Las doce plantillas siguen idénticas a la referencia de Ventura.
+- [x] Corrección revisada y preparada para commit y push mediante los subagentes del flujo automatizado. El resultado remoto se verifica en la PR.
+
 # Tareas: actualizar las plantillas del flujo Git
 
 Issue: #749 · PR: #750.
@@ -55,12 +73,12 @@ Todas las rutas son relativas a first-app-ai salvo la referencia del ejercicio.
 ## Instrucciones
 
 - [x] **T09 · Creación de issues — CA-02, CA-03, CA-05.** Actualizar únicamente
-  agents/create-issue.md y skills/create-issue/SKILL.md para elegir el tipo
-  admitido y su plantilla. Ante un tipo sin plantilla, elegir el admitido más
-  cercano, comunicarlo y conservarlo para rama y PR. Resultado: selección clara,
+  agents/create-issue.md y skills/create-issue/SKILL.md para referenciar la plantilla
+  correspondiente, sin duplicar reglas editoriales ni imponer una lista cerrada.
+  Ante un tipo sin plantilla, usar la más cercana según la fuente. Resultado: selección clara,
   manteniendo asignación, MCP, comprobaciones de duplicados y manejo de fallos.
 - [x] **T10 · Tipo de rama — CA-02, CA-05.** Ajustar agents/create-branch.md para
-  recibir el mismo tipo admitido de T09. Resultado: nombre coherente con las
+  recibir el tipo según la plantilla, sin normalizarlo automáticamente. Resultado: nombre coherente con las
   plantillas, helper intacto y base staging; sin renombrar ramas existentes.
 - [x] **T11 · Creación de PRs — CA-02, CA-03, CA-05.** Ajustar agents/create-pr.md
   y skills/create-pr-base-staging/SKILL.md para usar la plantilla del mismo tipo,
@@ -95,8 +113,7 @@ Todas las rutas son relativas a first-app-ai salvo la referencia del ejercicio.
 
 - [x] **T17 · Comparación y recorridos — CA-01, CA-02, CA-03.** Comparar los doce
   archivos con T02 y revisar todas sus referencias activas. Recorrer por lectura
-  los seis tipos y un ejemplo sin plantilla, como maintenance → chore: mismo tipo
-  admitido en issue, PR y rama prevista. Revisar draft con casillas vacías, enlace
+  los seis tipos y un ejemplo sin plantilla, sin normalizarlo automáticamente a chore ni renombrar ramas. Revisar draft con casillas vacías, enlace
   posterior por el principal y revisión con casillas solo verificadas. Resultado:
   instrucciones coherentes; no ejecutar helpers ni crear recursos de prueba.
 - [x] **T18 · Enlace real y caso alternativo — CA-04, CA-05.** Consultar solo por

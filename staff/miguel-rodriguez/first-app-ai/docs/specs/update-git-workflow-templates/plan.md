@@ -2,7 +2,8 @@
 
 Issue: #749 · PR: #750.
 Referencia: [spec aprobada](spec.md).
-Estado: aprobado por Miguel el 2026-11-02.
+Estado: aprobado por Miguel el 2026-11-02; corrección de review autorizada
+el 2026-11-03.
 
 ## Enfoque
 
@@ -25,7 +26,7 @@ Rutas relativas a `staff/miguel-rodriguez/first-app-ai/`:
 | `templates/pull-request/{feat,fix,docs,refactor,test,chore}-pull-request.md` | Añadir las seis plantillas de la referencia. |
 | `templates/issues/basic_issue.md`, `templates/pull-request/basic-pull-request.md` | Retirar las dos plantillas genéricas después de actualizar sus referencias activas. |
 | `agents/create-issue.md`, `agents/create-pr.md` | Seleccionar plantilla por tipo y alternativa más cercana; conservar el resto de responsabilidades y controles. |
-| `agents/create-branch.md` | Usar el mismo tipo admitido elegido para la tarea y sus plantillas, sin cambiar la base staging ni el helper actual. |
+| `agents/create-branch.md` | Recibir el tipo según la plantilla sin normalizarlo a una lista cerrada, sin cambiar la base staging ni el helper actual. |
 | `skills/create-issue/SKILL.md`, `skills/create-pr-base-staging/SKILL.md` | Sustituir referencias genéricas por selección por tipo, manteniendo MCP, validaciones y protección de PRs existentes. |
 | `skills/assign-reviewers/SKILL.md` | Incorporar la comprobación de casillas verificadas al solicitar revisión, sin inventar revisores ni resultados. |
 | `skills/link-pr-to-issue/SKILL.md` | Eliminar la suposición obligatoria de main y explicar el cierre según la rama predeterminada real; mantener lectura previa, idempotencia y verificación posterior. |
@@ -40,16 +41,14 @@ de editarla. Las referencias de specs históricas permanecen históricas.
 
 ## Selección y creación — CA-01, CA-02, CA-03
 
-- Normalizar el tipo de la tarea a uno de los seis admitidos: feat, fix, docs,
-  refactor, test o chore. Si el tipo recibido no tiene plantilla, elegir el tipo
-  admitido más cercano al propósito y comunicar la elección. Usar ese mismo tipo
-  en las plantillas de issue y PR y en el nombre de la rama; transmitirlo al
-  agente create-branch. No pasar el tipo no admitido al helper ni ampliar los
-  tipos aceptados por los scripts. Esta regla se aplica a tareas nuevas; no
-  renombrar ramas existentes ni alterar una PR revisada para normalizar su tipo.
-- Conservar títulos en inglés, inferiores a 72 caracteres y comenzando por un
-  verbo; cuerpos en español. Mantener secciones, comentarios y listas propios
-  de cada plantilla de la referencia; no unificar las doce en otra genérica.
+- Seleccionar la plantilla por tipo. Si no existe una específica, usar la más
+  cercana como indica la fuente. La forma del título y el tipo pertenecen a las
+  plantillas; agentes y skills de creación solo las referencian. No imponer una
+  lista cerrada, normalizar tipos automáticamente ni renombrar ramas existentes.
+- Mantener secciones, comentarios y listas propios de cada plantilla de la
+  referencia. No cambiar las doce plantillas ni los scripts en esta corrección.
+  Los validadores previos de los helpers quedan fuera de esta PR; si rechazan un
+  tipo, comunicar el error en vez de convertirlo silenciosamente a otro.
 - El creador de PR utiliza la plantilla correspondiente pero deja Issue vacío
   para el enlace posterior del principal. Un borrador resume el alcance previsto
   y señala qué está pendiente sin afirmar una implementación o prueba inexistente.
@@ -78,9 +77,9 @@ La comprobación es documental y de solo lectura; no necesita recursos de prueba
    a ellas. Buscar fuera de specs históricas; no alterar sus evidencias.
 2. Recorrer documentalmente los seis tipos: plantilla de issue y PR, campos y
    comprobaciones esperados. Simular un tipo sin plantilla solo para comprobar
-   la elección de alternativa. Comprobar que el tipo admitido elegido coincide
-   en ambas plantillas y en el nombre de rama previsto, sin ejecutar el helper
-   con un tipo no admitido. No crear ramas ni recursos externos para probarlo.
+   la elección de alternativa sin normalizar automáticamente el tipo. Comprobar
+   que agentes y skills remiten las reglas editoriales a las plantillas y que no
+   se renombra una rama existente. No ejecutar helpers ni crear recursos externos.
 3. Revisar el borrador, la solicitud de revisión y el enlace posterior: casillas
    inicialmente vacías, comprobaciones reales, Issue completado por el principal,
    Closes único y Development. Esto verifica instrucciones, no ejecución remota.

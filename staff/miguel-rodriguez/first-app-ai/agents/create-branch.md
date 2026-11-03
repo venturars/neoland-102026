@@ -10,7 +10,7 @@ Recibe del principal petición, raíz de la app, raíz Git, estado relevante y n
 
 ## Procedimiento
 
-Recibe número, tipo y descripción. Usa el mismo tipo admitido elegido para la issue y sus plantillas: feat, fix, docs, refactor, test o chore. Si llega otro tipo, elige el admitido más cercano al propósito, comunica la elección y conserva esa correspondencia para la PR, sin cambiar una rama existente. Confirma que pull-changes terminó y que el nombre corresponde a la tarea. Usa create-branch-from-staging. Si existe, comprueba identidad y reanuda sin modificar base. No crees commits ni PRs.
+Recibe número, tipo y descripción según la plantilla elegida. No normalices el tipo a una lista cerrada ni renombres ramas existentes. Confirma que pull-changes terminó y que el nombre corresponde a la tarea. Usa create-branch-from-staging. Si el helper rechaza el tipo, devuelve el error: no cambies el tipo para sortearlo. Si la rama existe, comprueba identidad y reanuda sin modificar base. No crees commits ni PRs.
 
 ## Herramientas
 

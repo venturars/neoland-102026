@@ -3,14 +3,14 @@
 - **Descripción**: Úsala desde el agente `create-pr` para abrir la pull request con base `staging`. No la uses para enlazar la issue: eso es `link-pr-to-issue`. Abre la PR directamente con draft=true si la herramienta lo permite; create-draft verifica ese estado. Si no permite abrir en draft, detente antes de crear y comunica el bloqueo.
 - **MCP**: El servidor remoto descrito en `MCPS/github-mcp-server/mcp.txt`. No uses `gh` ni un script de `tools/`.
 
-Fuente de la forma del cuerpo: [github-pr](https://www.skills.sh/gentleman-programming/gentleman-skills/github-pr), adaptada a esta plantilla. La base es `staging` y la descripción va en español.
+Fuente de la forma del cuerpo: [github-pr](https://www.skills.sh/gentleman-programming/gentleman-skills/github-pr), adaptada a esta plantilla. La base es `staging`; el contenido sigue la plantilla elegida.
 
 #### Especificación de Argumentos
 
 1. **Base** _(Obligatorio)_: `staging`.
 2. **Cabeza** _(Obligatorio)_: La rama que acaba de subirse.
-3. **Título** _(Obligatorio)_: El título de la issue, en inglés, de menos de 72 caracteres y empezando por un verbo.
-4. **Cuerpo** _(Obligatorio)_: Español, con `templates/pull-request/<tipo>-pull-request.md` del mismo tipo admitido de la issue y la rama. Para tareas nuevas sin plantilla específica, elegir el tipo admitido más cercano al propósito y comunicarlo, sin renombrar ramas existentes. Conservar las secciones y listas del tipo elegido. La sección Issue se deja vacía para el principal y las casillas sin marcar mientras esté en draft.
+3. **Título** _(Obligatorio)_: El título de la issue, conforme a la plantilla elegida.
+4. **Cuerpo** _(Obligatorio)_: Rellena la plantilla correspondiente en `templates/pull-request/`. La forma del título y el tipo se definen allí. Si no existe una específica, usa la más cercana según el template; no impongas una lista cerrada ni renombres ramas existentes. Conserva sus secciones y listas. La sección Issue se deja vacía para el principal y las casillas sin marcar mientras esté en draft.
 
 #### Reglas de Invocación Críticas
 
