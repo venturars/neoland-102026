@@ -31,6 +31,6 @@ export default [
   },
   {
     files: ["src/clients/web/**/*.js"],
-    languageOptions: { globals: { document: "readonly", window: "readonly", structuredClone: "readonly" } },
+    languageOptions: { globals: { document: "readonly", window: "readonly" } },
   },
 ];

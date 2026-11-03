@@ -1,3 +1,8 @@
+import { listUsers } from "../../logic/list-users.js";
+import { findUserById } from "../../logic/find-user-by-id.js";
+import { updateUser } from "../../logic/update-user.js";
+import { deleteUser } from "../../logic/delete-user.js";
+
 const selection = document.querySelector("#selection");
 const menu = document.querySelector("#menu");
 const editor = document.querySelector("#editor");
@@ -6,18 +11,25 @@ const users = document.querySelector("#users");
 const form = document.querySelector("#user-form");
 const nameInput = document.querySelector("#name");
 const emailInput = document.querySelector("#email");
-const storageKey = "first-app-contact-screens-v1";
-const examples = [
-  { id: 1, name: "Ada", email: "ada@example.test" },
-  { id: 2, name: "Grace", email: "grace@example.test" },
-  { id: 3, name: "Linus", email: "linus@example.test" },
-];
-let contacts = [];
+const confirmation = document.querySelector("#confirmation");
+const deleteForm = document.querySelector("#delete-form");
+const confirmationInput = document.querySelector("#confirmation-email");
 let selectedUser = null;
+let busy = false;
 
 function showMessage(text = "", isError = false) {
   message.textContent = text;
   message.dataset.error = String(isError);
+}
+
+function setBusy(value) {
+  busy = value;
+  document.querySelector("main").setAttribute("aria-busy", String(value));
+  const controls = document.querySelectorAll("button, input");
+  for (const control of controls) {
+    const futureOption = control.hasAttribute("data-future");
+    control.disabled = value || futureOption;
+  }
 }
 
 function showScreen(screen) {
@@ -29,148 +41,190 @@ function showScreen(screen) {
   heading.focus();
 }
 
-function saveContacts(nextContacts) {
-  try {
-    window.localStorage.setItem(storageKey, JSON.stringify(nextContacts));
-  } catch {
-    showMessage(
-      "El navegador no permite guardar. Los cambios se conservarán solo mientras esta página esté abierta.",
-      true,
-    );
+function clearErrors() {
+  showMessage();
+  for (const input of [nameInput, emailInput, confirmationInput]) {
+    input.removeAttribute("aria-invalid");
+    const errorId = input.getAttribute("aria-describedby");
+    document.getElementById(errorId).textContent = "";
   }
-  contacts = nextContacts;
+}
+
+function fieldError(input, text) {
+  input.setAttribute("aria-invalid", "true");
+  const errorId = input.getAttribute("aria-describedby");
+  document.getElementById(errorId).textContent = text;
+  setBusy(false);
+  input.focus();
+}
+
+function showFailure(error) {
+  const missing = error.message === "User not found";
+  if (missing) {
+    selectedUser = null;
+    users.replaceChildren();
+    showScreen(selection);
+    showMessage("Ese usuario ya no existe. Vuelve a cargar la lista.", true);
+    return;
+  }
+  showMessage("No se pudo completar la operación. Vuelve a intentarlo.", true);
 }
 
 function showMenu(user) {
   selectedUser = user;
+  confirmation.hidden = true;
   document.querySelector("#menu-title").textContent =
     `${user.name} · ID ${user.id}`;
   document.querySelector("#selected-email").textContent = user.email;
   showScreen(menu);
 }
 
-function showUsers() {
+async function selectUser(id) {
+  if (busy) return;
+  clearErrors();
+  showMessage("Cargando…");
+  setBusy(true);
+  try {
+    const user = await findUserById(id);
+    showMenu(user);
+    showMessage();
+  } catch (error) {
+    showFailure(error);
+  } finally {
+    setBusy(false);
+  }
+}
+
+async function loadContacts() {
+  if (busy) return;
+  clearErrors();
   selectedUser = null;
   users.replaceChildren();
   showScreen(selection);
-  for (const user of contacts) {
-    const item = document.createElement("li");
-    const button = document.createElement("button");
-    const detail = document.createElement("span");
-    button.type = "button";
-    button.className = "user";
-    button.append(document.createTextNode(`${user.name} · ID ${user.id}`));
-    detail.textContent = user.email;
-    button.append(detail);
-    button.addEventListener("click", () => {
-      showMessage();
-      showMenu(user);
-    });
-    item.append(button);
-    users.append(item);
-  }
-  if (!contacts.length)
-    showMessage("No quedan contactos. Puedes restablecer los ejemplos.");
-}
-
-function loadContacts() {
-  showMessage();
+  showMessage("Cargando…");
+  setBusy(true);
   try {
-    const saved = window.localStorage.getItem(storageKey);
-    const parsed =
-      saved === null ? structuredClone(examples) : JSON.parse(saved);
-    if (
-      !Array.isArray(parsed) ||
-      !parsed.every(
-        (user) =>
-          user &&
-          Number.isSafeInteger(user.id) &&
-          user.id > 0 &&
-          typeof user.name === "string" &&
-          typeof user.email === "string",
-      ) ||
-      new Set(parsed.map((user) => user.id)).size !== parsed.length
-    ) {
-      throw new Error("Invalid contacts");
+    const contacts = await listUsers();
+    for (const user of contacts) {
+      const item = document.createElement("li");
+      const button = document.createElement("button");
+      const detail = document.createElement("span");
+      button.type = "button";
+      button.className = "user";
+      button.append(document.createTextNode(`${user.name} · ID ${user.id}`));
+      detail.textContent = user.email;
+      button.append(detail);
+      button.addEventListener("click", () => selectUser(user.id));
+      item.append(button);
+      users.append(item);
     }
-    contacts = parsed.sort((a, b) => a.id - b.id);
-  } catch {
-    contacts = structuredClone(examples);
-    showMessage(
-      "No se pudieron leer los contactos del navegador. Se muestran ejemplos; puedes restablecerlos.",
-      true,
-    );
+    const empty = contacts.length === 0;
+    showMessage(empty ? "No hay contactos guardados." : "");
+    return true;
+  } catch (error) {
+    showFailure(error);
+    return false;
+  } finally {
+    setBusy(false);
   }
-  showUsers();
 }
 
-form.addEventListener("submit", (event) => {
+form.addEventListener("submit", async (event) => {
   event.preventDefault();
-  if (!selectedUser) return;
-  showMessage();
-  const name = nameInput.value.trim();
-  const email = emailInput.value.trim().toLowerCase();
-  if (!name) {
-    showMessage("Escribe un nombre.", true);
-    nameInput.focus();
-    return;
+  if (busy || !selectedUser) return;
+  clearErrors();
+  setBusy(true);
+  showMessage("Guardando…");
+  try {
+    const name = nameInput.value;
+    const email = emailInput.value;
+    const user = await updateUser(selectedUser.id, { name, email });
+    showMenu(user);
+    showMessage("Cambios guardados.");
+  } catch (error) {
+    showMessage();
+    const invalidName = error.message === "Name is empty";
+    const invalidEmail = error.message === "Email is invalid";
+    const duplicateEmail = error.message === "Email is already used";
+    if (invalidName) {
+      fieldError(nameInput, "Escribe un nombre.");
+    } else if (invalidEmail) {
+      fieldError(
+        emailInput,
+        "Revisa el email: debe tener una sola @, ambas partes y hasta 64 caracteres.",
+      );
+    } else if (duplicateEmail) {
+      fieldError(emailInput, "Ese email ya pertenece a otro usuario.");
+    } else {
+      showFailure(error);
+    }
+  } finally {
+    setBusy(false);
   }
-  emailInput.value = email;
-  if (!email || !emailInput.checkValidity()) {
-    showMessage("Escribe un email válido.", true);
-    emailInput.focus();
-    return;
-  }
-  if (
-    contacts.some(
-      (user) =>
-        user.id !== selectedUser.id && user.email.toLowerCase() === email,
-    )
-  ) {
-    showMessage("Ese email ya pertenece a otro usuario.", true);
-    emailInput.focus();
-    return;
-  }
-  const updated = { ...selectedUser, name, email };
-  saveContacts(
-    contacts.map((user) => (user.id === updated.id ? updated : user)),
-  );
-  showMenu(updated);
 });
 
 document.querySelector("#edit").addEventListener("click", () => {
-  if (!selectedUser) return;
-  showMessage();
+  if (busy || !selectedUser) return;
+  clearErrors();
   nameInput.value = selectedUser.name;
   emailInput.value = selectedUser.email;
+  confirmation.hidden = true;
   showScreen(editor);
   nameInput.focus();
 });
+
 document.querySelector("#delete").addEventListener("click", () => {
-  if (!selectedUser || !window.confirm(`¿Eliminar a ${selectedUser.name}?`))
+  if (busy || !selectedUser) return;
+  clearErrors();
+  document.querySelector("#delete-email").textContent = selectedUser.email;
+  confirmationInput.value = "";
+  confirmation.hidden = false;
+  confirmationInput.focus();
+});
+
+deleteForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  if (busy || !selectedUser) return;
+  clearErrors();
+  const typedEmail = confirmationInput.value;
+  const trimmedEmail = typedEmail.trim();
+  const email = trimmedEmail.toLowerCase();
+  const storedEmail = selectedUser.email.trim().toLowerCase();
+  const matches = email.length > 0 && email === storedEmail;
+  if (!matches) {
+    fieldError(confirmationInput, "Escribe el email mostrado para confirmar.");
     return;
-  showMessage();
-  saveContacts(contacts.filter((user) => user.id !== selectedUser.id));
-  showUsers();
+  }
+  setBusy(true);
+  showMessage("Eliminando…");
+  try {
+    await deleteUser(selectedUser.id);
+  } catch (error) {
+    showFailure(error);
+    setBusy(false);
+    return;
+  }
+  confirmation.hidden = true;
+  setBusy(false);
+  const loaded = await loadContacts();
+  if (!loaded) {
+    showMessage(
+      "Usuario eliminado. No se pudo cargar la lista; vuelve a cargarla.",
+      true,
+    );
+  }
 });
-document.querySelector("#back").addEventListener("click", () => {
-  showMessage();
-  showUsers();
+
+document.querySelector("#cancel-delete").addEventListener("click", () => {
+  clearErrors();
+  confirmation.hidden = true;
+  document.querySelector("#delete").focus();
 });
+document.querySelector("#back").addEventListener("click", loadContacts);
 document.querySelector("#reload").addEventListener("click", loadContacts);
 document.querySelector("#cancel").addEventListener("click", () => {
-  showMessage();
+  if (busy || !selectedUser) return;
+  clearErrors();
   showMenu(selectedUser);
-});
-document.querySelector("#reset").addEventListener("click", () => {
-  if (
-    !window.confirm(
-      "¿Restablecer los tres contactos de ejemplo? Se perderán los cambios de esta pantalla.",
-    )
-  )
-    return;
-  showMessage();
-  saveContacts(structuredClone(examples));
-  showUsers();
 });
 loadContacts();
