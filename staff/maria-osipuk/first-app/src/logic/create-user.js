@@ -1,6 +1,6 @@
 import { findUserByEmail, insertUser } from "../queries/users.js";
 
-export function createUser(name, email) {
+export async function createUser(name, email) {
   // A name of another type is not turned into text.
   // The caller passes the name itself, not an object that wraps it.
   if (typeof name !== "string") {
@@ -59,7 +59,7 @@ export function createUser(name, email) {
   let owner;
 
   try {
-    owner = findUserByEmail(normalizedEmail);
+    owner = await findUserByEmail(normalizedEmail);
   } catch {
     throw new Error("Unable to create user");
   }
@@ -75,7 +75,7 @@ export function createUser(name, email) {
   let user;
 
   try {
-    user = insertUser(normalizedName, normalizedEmail);
+    user = await insertUser(normalizedName, normalizedEmail);
   } catch {
     throw new Error("Unable to create user");
   }

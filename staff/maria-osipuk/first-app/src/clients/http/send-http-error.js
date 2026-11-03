@@ -23,17 +23,14 @@ const HTTP_ERRORS = {
     "No se ha encontrado ese usuario. Vuelve a la selección y actualiza la lista.",
   ],
   "Unable to find user": [500, "No se ha podido obtener el usuario."],
-  "Unable to list users": [
-    500,
-    "No se ha podido obtener la lista de usuarios.",
-  ],
+  "Unable to create user": [500, "No se ha podido crear el usuario."],
   "Unable to update user": [500, "No se ha podido guardar el usuario."],
   "Unable to delete user": [500, "No se ha podido eliminar el usuario."],
   "Request must contain JSON": [400, "Envía los datos en formato JSON."],
   "Request JSON is invalid": [400, "No se han podido leer los datos enviados."],
   "Request JSON must be an object": [
     400,
-    "Envía un objeto con los datos que quieres modificar.",
+    "Envía un objeto con los datos del usuario.",
   ],
   "Request body is too large": [
     413,
