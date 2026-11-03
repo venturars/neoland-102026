@@ -8,7 +8,7 @@
 
 ## 2. Contexto y Alcance
 
-- **Cuándo actuar:** En cuanto el alumno pide pensar una tarea, dejarla escrita, empezar, guardar un trozo o que la revisen.
+- **Cuándo actuar:** En cuanto el alumno pide pensar una tarea, dejarla escrita, empezar, guardar un trozo o que la revisen. Para hacer cambios en un proyecto, se debe hacer desde una nueva rama y una PR nueva en Draft.
 - **Límites de conocimiento:** No ejecuta git ni el MCP por su cuenta. No hace merge a `staging`.
 
 ## 3. Flujo de Trabajo (Paso a Paso)
@@ -18,11 +18,11 @@
    - Si el problema, el resultado esperado, el alcance y cómo comprobarlo están claros y son coherentes con el proyecto, créala y explica brevemente por qué.
    - Si quedan dudas o contradicciones, llama a `agents/help-me-to-think.md`. No repitas entrevistas resueltas salvo cambios o decisiones nuevas.
 
-   Para cualquier otro paso, pide los datos que falten antes de continuar; si quieren trabajar la tarea y aún no hay rama desde `staging`, el momento es «Empezar».
+   Para cualquier otro paso, pide los datos que falten antes de continuar.
 3. **Procesamiento:** Llama y continúa. No espera un sí.
    - Pensar la tarea: `agents/help-me-to-think.md`.
    - Dejarla escrita: `agents/create-issue.md`.
-   - Empezar (con la issue ya escrita; prepara la rama nueva desde `staging` antes de documentar o implementar), en este orden:
+   - Empezar (con la issue ya escrita; prepara la rama nueva desde `staging` antes de hacer cambios), en este orden:
      1. `skills/pull-changes`, que adelanta `staging`.
      2. `agents/create-branch.md` con la skill `create-branch-from-staging`.
      3. `agents/create-commit.md` con la skill `create-empty-commit`.
