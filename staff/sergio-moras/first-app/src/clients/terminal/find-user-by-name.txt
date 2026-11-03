@@ -1,0 +1,11 @@
+node --no-warnings --input-type=module -e "
+import { findUserByName } from './src/logic/find-user-by-name.js';
+
+try {
+  const users = findUserByName('Ana');
+  console.log('Users found:', users);
+} catch (error) {
+  console.error('Error: ' + error.message);
+  process.exit(1);
+}
+"
