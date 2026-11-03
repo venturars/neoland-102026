@@ -26,6 +26,9 @@ first-app/
     clients/
       terminal/        un .txt por operación
       jupyter/         un .ipynb por operación
+      browser/
+        server.js      sirve las pantallas y llama a logic
+        public/        index.html, styles.css y app.js
   docs/
     CONSTITUTIONS.md
     ARCHITECTURE.md

@@ -26,6 +26,8 @@ La base de datos está en [DATABASE.md](DATABASE.md). El árbol completo, en [TR
 - `src/logic/classify-gender.js`: cuenta hombres, mujeres y no definidos con un modelo de Ollama. Exporta también `countGenders`, que hace el conteo sobre una lista.
 - `src/clients/terminal/<operación>.txt`: el comando que se pega en la terminal.
 - `src/clients/jupyter/<operación>.ipynb`: el documento que se ejecuta en Jupyter.
+- `src/clients/browser/server.js`: el servidor del cliente de navegador. Sirve las pantallas y llama a `listUsers`, `updateUser` y `deleteUser`.
+- `src/clients/browser/public/`: las pantallas del navegador (`index.html`, `styles.css` y `app.js`).
 
 ## Una operación
 Una operación tiene, con el mismo nombre:
@@ -55,3 +57,19 @@ Cada `.ipynb` tiene un bloque de texto (qué hace, qué pasa en la base, qué co
 - sube de carpeta hasta la que contiene `logic/`, o se para con `App not found.`;
 - lanza Node con el código de la operación y lee su salida en UTF-8;
 - muestra el resultado en una tabla de `cli-table3` con el encabezado en color, o el `Error: <mensaje>`.
+
+### Navegador
+Se arranca con `pnpm browser` desde `first-app/` y se abre `http://127.0.0.1:3000`. Tiene tres pantallas: elegir el usuario en una lista, sus opciones (volver, modificar y notas, que está desactivada) y modificar o eliminar.
+
+El JavaScript del navegador no puede importar `logic/`, porque `logic` usa `node:sqlite`. Por eso el cliente tiene dos partes:
+- `server.js`, con `node:http`, es el que importa las funciones de `logic/`. Escucha solo en `127.0.0.1`.
+- `public/app.js` cambia de pantalla y llama al servidor con `fetch`.
+
+| Petición | Llama a | Responde |
+|---|---|---|
+| `GET /`, `/styles.css`, `/app.js` | — | El fichero de `public/` |
+| `GET /users` | `listUsers()` | 200 y la lista en JSON |
+| `PUT /users/<id>` con `{ name, email }` | `updateUser(id, name, email)` | 200 y el usuario en JSON |
+| `DELETE /users/<id>` | `deleteUser(id)` | 200 y `{ id }` |
+
+Si `logic` lanza un error, el servidor responde 400 y `{ "error": "<mensaje>" }`, y la pantalla lo muestra como `Error: <mensaje>`. Cualquier otra ruta da 404 y `Not found.` El servidor no valida nada: el `<id>` llega como texto y lo valida `logic`.

@@ -3,6 +3,7 @@
 ## Idioma
 - Código, nombres de ficheros, funciones y variables, y mensajes de error y de salida: en inglés.
 - Comentarios en español, solo donde haya algo no evidente, más uno al principio de cada fichero con su responsabilidad.
+- Excepción: los textos de las pantallas del navegador (títulos, botones, campos y avisos) van en español. Los errores salen tal cual los lanza `logic`, en inglés.
 
 ## Nombres
 - Ficheros en kebab-case: `create-user.js`, `create-user.txt`, `create-user.ipynb`.

@@ -23,9 +23,14 @@ src/clients/terminal/delete-user.txt
 src/clients/terminal/classify-gender.txt   # necesita Ollama en marcha
 ```
 
+El cliente de navegador se arranca desde `first-app/` y se abre en `http://127.0.0.1:3000`. Se para con Ctrl+C:
+```
+pnpm browser
+```
+
 Formato y revisión del JavaScript de la app, desde `first-app/`:
 ```
-pnpm format   # Prettier sobre los .js de src/logic/, src/queries/ y src/db/, y eslint.config.js
+pnpm format   # Prettier sobre los .js de src/logic/, src/queries/ y src/db/, el cliente de navegador y eslint.config.js
 pnpm lint     # ESLint con las reglas recomendadas
 ```
 
