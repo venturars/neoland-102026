@@ -1,4 +1,8 @@
-// Pantallas del cliente de navegador: enseña una cada vez y pide los datos al servidor.
+// Pantallas del cliente de navegador: enseña una cada vez y llama a las funciones de logic/.
+
+import { listUsers } from "../../../logic/list-users.js";
+import { updateUser } from "../../../logic/update-user.js";
+import { deleteUser } from "../../../logic/delete-user.js";
 
 const SCREEN_IDS = ["select-screen", "options-screen", "edit-screen"];
 
@@ -23,22 +27,6 @@ function hideError(elementId) {
   const element = document.getElementById(elementId);
   element.textContent = "";
   element.hidden = true;
-}
-
-// Llama al servidor y devuelve el JSON. Si el servidor responde con un error, lo lanza con su mensaje.
-async function callServer(method, path, body) {
-  const options = { method: method, headers: {} };
-  if (body !== undefined) {
-    options.headers["Content-Type"] = "application/json";
-    options.body = JSON.stringify(body);
-  }
-
-  const response = await fetch(path, options);
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.error);
-  }
-  return data;
 }
 
 // Las iniciales del círculo: la primera letra de las dos primeras palabras del nombre.
@@ -109,7 +97,7 @@ async function loadUsers() {
   showScreen("select-screen");
 
   try {
-    users = await callServer("GET", "/users");
+    users = await listUsers();
     renderUsers();
   } catch (error) {
     showError("select-error", error.message);
@@ -149,13 +137,12 @@ async function saveUser(event) {
 
   const nameInput = document.getElementById("edit-name");
   const emailInput = document.getElementById("edit-email");
-  const changes = { name: nameInput.value, email: emailInput.value };
 
   try {
-    const updatedUser = await callServer(
-      "PUT",
-      "/users/" + selectedUser.id,
-      changes,
+    const updatedUser = await updateUser(
+      selectedUser.id,
+      nameInput.value,
+      emailInput.value,
     );
     selectUser(updatedUser);
   } catch (error) {
@@ -187,7 +174,7 @@ async function removeUser() {
   closeDeleteDialog();
 
   try {
-    await callServer("DELETE", "/users/" + selectedUser.id);
+    await deleteUser(selectedUser.id);
     selectedUser = null;
     await loadUsers();
   } catch (error) {

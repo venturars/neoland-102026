@@ -9,9 +9,26 @@ import { USER_QUERIES } from "../queries/users-sql.js";
 const HOST = "127.0.0.1";
 const PORT = 4000;
 
+// La única página que puede llamar a la base desde el navegador: el cliente de navegador.
+const BROWSER_ORIGIN = "http://127.0.0.1:3000";
+
+// Access-Control-Allow-Origin es el permiso para que el navegador deje leer la respuesta.
 function sendJson(response, status, data) {
-  response.writeHead(status, { "Content-Type": "application/json" });
+  response.writeHead(status, {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": BROWSER_ORIGIN,
+  });
   response.end(JSON.stringify(data));
+}
+
+// Antes de un POST con JSON, el navegador pregunta con OPTIONS si se le permite.
+function sendPermission(response) {
+  response.writeHead(204, {
+    "Access-Control-Allow-Origin": BROWSER_ORIGIN,
+    "Access-Control-Allow-Methods": "POST",
+    "Access-Control-Allow-Headers": "Content-Type",
+  });
+  response.end();
 }
 
 // Junta los trozos del cuerpo de la petición y devuelve el texto completo.
@@ -30,13 +47,31 @@ function readBody(request) {
 }
 
 async function handleRequest(request, response) {
+  // El navegador siempre dice desde qué página llama. La terminal y Jupyter no lo dicen.
+  const origin = request.headers.origin;
+  if (origin !== undefined && origin !== BROWSER_ORIGIN) {
+    sendJson(response, 403, { error: "Forbidden origin." });
+    return;
+  }
+
   const url = new URL(request.url, "http://" + HOST + ":" + PORT);
   if (url.pathname !== "/query") {
     sendJson(response, 404, { error: "Not found." });
     return;
   }
+  if (request.method === "OPTIONS") {
+    sendPermission(response);
+    return;
+  }
   if (request.method !== "POST") {
     sendJson(response, 404, { error: "Not found." });
+    return;
+  }
+
+  // Pedir JSON obliga al navegador a preguntar antes con OPTIONS.
+  const contentType = request.headers["content-type"];
+  if (contentType !== "application/json") {
+    sendJson(response, 400, { error: "Invalid request." });
     return;
   }
 

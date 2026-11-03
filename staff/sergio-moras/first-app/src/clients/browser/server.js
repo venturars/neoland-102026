@@ -1,103 +1,75 @@
-// Cliente de navegador: sirve las pantallas de public/ y llama a las funciones de logic/.
-// No valida nada: el resultado o el mensaje del error salen tal cual de logic/.
+// Cliente de navegador: sirve las pantallas de public/ y los módulos de logic/ y queries/ que importan.
+// No llama a logic/: lo hace el propio navegador desde app.js.
+// Hace falta porque el navegador no carga módulos desde file://.
 
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
-import { listUsers } from "../../logic/list-users.js";
-import { updateUser } from "../../logic/update-user.js";
-import { deleteUser } from "../../logic/delete-user.js";
 
 const HOST = "127.0.0.1";
 const PORT = 3000;
 
-// Los únicos ficheros que se sirven, con su tipo de contenido.
-const PUBLIC_FILES = {
-  "/": { fileName: "index.html", contentType: "text/html; charset=utf-8" },
-  "/styles.css": {
-    fileName: "styles.css",
-    contentType: "text/css; charset=utf-8",
+const HTML = "text/html; charset=utf-8";
+const CSS = "text/css; charset=utf-8";
+const JAVASCRIPT = "text/javascript; charset=utf-8";
+
+// Los únicos ficheros que se sirven. Las rutas son las de src/, para que los
+// import relativos funcionen igual en el navegador y en el disco.
+const SERVED_FILES = {
+  "/": { filePath: "clients/browser/public/index.html", contentType: HTML },
+  "/clients/browser/public/styles.css": {
+    filePath: "clients/browser/public/styles.css",
+    contentType: CSS,
   },
-  "/app.js": {
-    fileName: "app.js",
-    contentType: "text/javascript; charset=utf-8",
+  "/clients/browser/public/app.js": {
+    filePath: "clients/browser/public/app.js",
+    contentType: JAVASCRIPT,
+  },
+  "/logic/list-users.js": {
+    filePath: "logic/list-users.js",
+    contentType: JAVASCRIPT,
+  },
+  "/logic/update-user.js": {
+    filePath: "logic/update-user.js",
+    contentType: JAVASCRIPT,
+  },
+  "/logic/delete-user.js": {
+    filePath: "logic/delete-user.js",
+    contentType: JAVASCRIPT,
+  },
+  "/queries/users.js": {
+    filePath: "queries/users.js",
+    contentType: JAVASCRIPT,
   },
 };
-
-// Las rutas de un usuario tienen la forma /users/<id>.
-const USER_PATH_PREFIX = "/users/";
-
-function sendJson(response, status, data) {
-  response.writeHead(status, {
-    "Content-Type": "application/json; charset=utf-8",
-  });
-  response.end(JSON.stringify(data));
-}
 
 function sendNotFound(response) {
   response.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
   response.end("Not found.");
 }
 
-async function sendFile(response, fileName, contentType) {
-  const fileUrl = new URL("./public/" + fileName, import.meta.url);
+async function sendFile(response, servedFile) {
+  // Este fichero está en src/clients/browser/, así que src/ queda dos carpetas más arriba.
+  const fileUrl = new URL("../../" + servedFile.filePath, import.meta.url);
   const content = await readFile(fileUrl);
-  response.writeHead(200, { "Content-Type": contentType });
+  response.writeHead(200, { "Content-Type": servedFile.contentType });
   response.end(content);
-}
-
-// Junta los trozos del cuerpo de la petición y devuelve el JSON.
-async function readBody(request) {
-  let text = "";
-  for await (const chunk of request) {
-    text = text + chunk;
-  }
-  if (text === "") {
-    return {};
-  }
-  return JSON.parse(text);
 }
 
 async function handleRequest(request, response) {
   const url = new URL(request.url, "http://" + HOST + ":" + PORT);
   const path = url.pathname;
-  const method = request.method;
+
+  // Object.hasOwn evita que nombres heredados, como "/toString", cuenten como fichero.
+  const isServedFile = Object.hasOwn(SERVED_FILES, path);
+  if (request.method !== "GET" || !isServedFile) {
+    sendNotFound(response);
+    return;
+  }
 
   try {
-    if (method === "GET") {
-      const publicFile = PUBLIC_FILES[path];
-      if (publicFile) {
-        await sendFile(response, publicFile.fileName, publicFile.contentType);
-        return;
-      }
-    }
-
-    if (method === "GET" && path === "/users") {
-      const users = listUsers();
-      sendJson(response, 200, users);
-      return;
-    }
-
-    if (path.startsWith(USER_PATH_PREFIX)) {
-      // El id llega como texto; lo valida logic/, igual que desde la terminal.
-      const id = path.slice(USER_PATH_PREFIX.length);
-
-      if (method === "PUT") {
-        const body = await readBody(request);
-        const user = updateUser(id, body.name, body.email);
-        sendJson(response, 200, user);
-        return;
-      }
-
-      if (method === "DELETE") {
-        const deletedId = deleteUser(id);
-        sendJson(response, 200, { id: deletedId });
-        return;
-      }
-    }
-
+    await sendFile(response, SERVED_FILES[path]);
+  } catch {
     sendNotFound(response);
-  } catch (error) {
-    sendJson(response, 400, { error: error.message });
   }
 }
 
