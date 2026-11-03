@@ -11,6 +11,9 @@
 - `src/logic/delete-user.js` borra un usuario.
 - `src/logic/list-users.js` lista los usuarios.
 - `src/logic/find-user-by-email.js` busca un usuario por email.
+- `src/logic/find-user-by-name.js` busca usuarios por nombre.
+- `src/logic/find-user-by-id.js` busca un usuario por id.
+- `src/logic/create-users-table.js` crea la tabla de usuarios si no existe.
 - `src/logic/users-gender-count.js` cuenta los usuarios por género. Puede usar la librería `openai`.
 - `src/clients/` no importa SQL ni abre la base de datos. Solo llama a `src/logic/`.
 - `src/clients/terminal/` llama a `src/logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
@@ -18,10 +21,10 @@
 - `scripts/jupyter.sh` prepara el `.venv` local e inicia Notebook sobre `src/clients/jupyter/`.
 - `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca.
 - `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la tarea se puede dejar escrita.
-- `agents/create-issue.md` crea la issue con título en inglés y descripción en español, asignada a quien está autenticado.
-- `agents/create-branch.md` crea la rama `número-tipo-descripcion`.
+- `agents/create-issue.md` crea la issue asignada a quien está autenticado; el cuerpo sale de la plantilla del tipo en `templates/issues/`.
+- `agents/create-branch.md` crea la rama de trabajo; el tipo y el nombre de rama siguen la plantilla del tipo.
 - `agents/create-commit.md` hace un commit pequeño con ficheros nombrados.
-- `agents/create-pr.md` abre la pull request contra `staging` y la deja en draft, sin enlazar la issue.
+- `agents/create-pr.md` abre la pull request contra `staging` con la plantilla del tipo; la deja en draft, sin enlazar la issue.
 - `agents/launch-push.md` publica `HEAD` en `origin` y deja el upstream puesto.
 - `skills/grill-with-docs/SKILL.md` entrevista cuando el cambio vive en este proyecto.
 - `skills/grill-me/SKILL.md` entrevista cuando el repositorio no responde.
@@ -45,8 +48,8 @@
 - `tools/create-empty-commit.sh` crea el commit vacío de apertura.
 - `tools/commit-changes.sh` guarda los ficheros nombrados.
 - `tools/launch-push.sh` sube la rama y fija el upstream.
-- `templates/issues/basic_issue.md` es el cuerpo de la issue: qué hay que hacer y cómo probarlo.
-- `templates/pull-request/basic-pull-request.md` es el cuerpo de la pull request.
+- `templates/issues/` lleva seis plantillas (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`). En el comentario HTML van la regla del título, el tipo y el nombre de rama.
+- `templates/pull-request/` lleva seis plantillas del mismo tipo. El cuerpo comparte secciones; la lista de comprobación cambia por tipo.
 - `MCPS/github-mcp-server/mcp.txt` es la dirección del MCP de GitHub.
 - `MCPS/socket-mcp/mcp.txt` es la dirección del MCP de Socket.
 - `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada fichero.

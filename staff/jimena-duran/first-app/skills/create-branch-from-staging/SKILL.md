@@ -5,7 +5,7 @@ description: Crea o recupera la rama de una tarea desde staging actualizado pres
 
 # Rama desde staging
 
-La ejecuta `agents/create-branch.md`. Recibe número de issue existente, tipo convencional y descripción kebab-case derivados de esa issue. El nombre habitual es `numero-tipo-descripcion`; no fijes una rama personal en los scripts. Si Jimena autoriza expresamente un nombre diferente, pásalo como `-BranchName`.
+La ejecuta `agents/create-branch.md`. Recibe número de issue existente, tipo y descripción derivados de esa issue. Las reglas editoriales están en la plantilla del tipo en `templates/issues/`; si el tipo no tiene plantilla, usa la más cercana. No fijes una rama personal en los scripts. Si Jimena autoriza expresamente un nombre diferente, pásalo como `-BranchName`.
 
 La actualización de staging debe haber terminado correctamente. Desde la raíz:
 

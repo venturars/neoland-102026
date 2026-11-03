@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>First App · Usuarios</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module" src="/main.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <header class="app-header">
+        <p class="brand-mark">F</p>
+        <div>
+          <h1>First App</h1>
+          <p>Gestión de usuarios</p>
+        </div>
+      </header>
+      <main class="card">
+        <p id="message" class="message" role="status" hidden></p>
+
+        <section id="selection-screen" data-screen>
+          <p class="eyebrow">Usuarios</p>
+          <h2 id="selection-heading">Selecciona un usuario</h2>
+          <p class="description">
+            Elige un usuario de la lista para ver sus opciones.
+          </p>
+          <form id="selection-form">
+            <div class="field">
+              <label for="user-select">Usuario</label>
+              <select id="user-select" name="user" required>
+                <option value="">Cargando usuarios…</option>
+              </select>
+              <p id="selection-status" class="help">Cargando la lista…</p>
+            </div>
+            <div class="actions">
+              <button id="select-user" type="submit">Continuar</button>
+              <button
+                id="reload-users"
+                class="secondary"
+                type="button"
+                data-action="selection"
+              >
+                Actualizar lista
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <section id="menu-screen" data-screen hidden>
+          <p class="eyebrow">Menú del usuario</p>
+          <h2 id="menu-heading">¿Qué quieres hacer?</h2>
+          <div class="user-summary">
+            <p id="menu-user-id"></p>
+            <h3 id="menu-user-name"></h3>
+            <p id="menu-user-email"></p>
+          </div>
+          <div class="menu-actions">
+            <button type="button" data-action="edit">Modificar usuario</button>
+            <button type="button" disabled>Ir a notas</button>
+            <button class="secondary" type="button" data-action="selection">
+              Volver a la selección
+            </button>
+          </div>
+        </section>
+
+        <section id="edit-screen" data-screen hidden>
+          <p class="eyebrow">Datos del usuario</p>
+          <h2 id="edit-heading">Modificar usuario</h2>
+          <p class="description">Edita los datos y guarda los cambios.</p>
+          <form id="edit-form">
+            <div class="field">
+              <label for="user-name">Nombre</label>
+              <input id="user-name" name="name" type="text" required />
+            </div>
+            <div class="field">
+              <label for="user-email">Email</label>
+              <input
+                id="user-email"
+                name="email"
+                type="email"
+                maxlength="64"
+                required
+              />
+            </div>
+            <div class="actions">
+              <button type="submit">Guardar cambios</button>
+              <button class="secondary" type="button" data-action="menu">
+                Volver sin guardar
+              </button>
+            </div>
+          </form>
+          <div class="danger-zone">
+            <h3>Eliminar usuario</h3>
+            <p>Se eliminará este usuario de forma permanente.</p>
+            <button id="delete-user" class="danger" type="button">
+              Eliminar usuario
+            </button>
+          </div>
+        </section>
+      </main>
+      <noscript>
+        <p>Activa JavaScript en el navegador para utilizar la aplicación.</p>
+      </noscript>
+    </div>
+  </body>
+</html>

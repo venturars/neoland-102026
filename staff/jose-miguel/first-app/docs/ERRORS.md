@@ -8,6 +8,7 @@ El error depende del paso del cuerpo:
 
 1. Validar los parámetros de entrada. Las reglas de negocio lanzan el error del dato y quedan **fuera** del `try`.
    - `"Name is required"`
+   - `"Name is empty"`
    - `"Name cannot exceed 100 characters"`
    - `"Email is required"`
    - `"Email cannot exceed 255 characters"`
@@ -21,6 +22,7 @@ El error depende del paso del cuerpo:
    - `"Could not delete the user"`
    - `"Could not list the users"`
    - `"Could not find the user"`
+   - `"Could not create the users table"`
    - `"Could not count the users by gender"`
 4. Estructurar la salida y sanear la respuesta. Este paso no lanza error. Devuelve el dato saneado.
 
