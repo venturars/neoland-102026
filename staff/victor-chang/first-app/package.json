@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "jupyter": "sh scripts/jupyter.sh",
+    "web": "sh scripts/web.sh",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint ."
@@ -11,7 +12,8 @@
   "dependencies": {
     "@colors/colors": "1.6.1",
     "cli-table3": "0.6.5",
-    "openai": "7.42.0"
+    "openai": "7.42.0",
+    "sql.js": "1.14.2"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

@@ -3,9 +3,9 @@
 1. [x] In `docs/ERRORS.md`, add the five client messages of the spec, printed by `clients/web/` and `scripts/web.sh`.
 2. [x] Create `GLOSSARY.md` with the term **User**, and `docs/adr/0001-browser-sqlite-connection.md`. In `docs/DATABASE.md`, add the exception with a link to the ADR.
 3. [x] In `docs/CONSTITUTION.md`, **Runtime**, add `sql.js`, Python 3 for `pnpm web`, and Chrome or Edge.
-4. [ ] Run `pnpm add sql.js@1.14.2 --save-exact`.
+4. [x] Run `pnpm add sql.js@1.14.2 --save-exact`.
        `package.json` has `"sql.js": "1.14.2"` and `pnpm-lock.yaml` has only `sql.js` as new.
-5. [ ] Create `scripts/web.sh` and the `web` script in `package.json`. Run `pnpm web`.
+5. [x] Create `scripts/web.sh` and the `web` script in `package.json`. Run `pnpm web`.
        It prints the URL, and the URL of `logic/list-users.js` answers 200. With no Python on the `PATH`, it prints `Python 3 is required to start the web client.` and `echo $?` prints `1`.
 6. [ ] Create `clients/web/queries.js`.
        In the page's console, `load` an empty file, `insert` a user, `findAll` and `search` show it, and `dump` returns bytes.
