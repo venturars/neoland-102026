@@ -3,8 +3,8 @@
 import { selectAllUsers } from "../queries/users.js";
 
 // Devuelve la lista de usuarios ordenada por id (vacía si no hay ninguno).
-export function listUsers() {
-  const rows = selectAllUsers();
+export async function listUsers() {
+  const rows = await selectAllUsers();
 
   const users = [];
   for (const row of rows) {

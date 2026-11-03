@@ -11,6 +11,7 @@ export default defineConfig([
         URL: "readonly",
         fetch: "readonly",
         AbortSignal: "readonly",
+        console: "readonly",
       },
     },
   },

@@ -153,7 +153,7 @@ export async function countGenders(users) {
 // Lanza un Error si no se puede leer la base de datos o el modelo no responde.
 export async function classifyGender() {
   try {
-    const users = selectAllUsers();
+    const users = await selectAllUsers();
     const counts = await countGenders(users);
     return counts;
   } catch (error) {

@@ -4,7 +4,7 @@ import { selectUsersByName } from "../queries/users.js";
 
 // Devuelve la lista de usuarios con ese nombre, ordenada por id (vacía si no hay ninguno).
 // Lanza un Error si falta el nombre.
-export function findUserByName(name) {
+export async function findUserByName(name) {
   // Los espacios del principio y del final no cuentan. Si el dato no es texto, cuenta como vacío.
   let trimmedName = "";
   if (typeof name === "string") {
@@ -15,7 +15,7 @@ export function findUserByName(name) {
     throw new Error("Name is required.");
   }
 
-  const rows = selectUsersByName(trimmedName);
+  const rows = await selectUsersByName(trimmedName);
 
   const users = [];
   for (const row of rows) {

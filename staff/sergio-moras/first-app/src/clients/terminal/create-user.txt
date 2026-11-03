@@ -2,7 +2,7 @@ node --no-warnings --input-type=module -e "
 import { createUser } from './src/logic/create-user.js';
 
 try {
-  const user = createUser('Pedro', 'pedro@gmail.com');
+  const user = await createUser('Pedro', 'pedro@gmail.com');
   console.log('User created:', user);
 } catch (error) {
   console.error('Error: ' + error.message);
