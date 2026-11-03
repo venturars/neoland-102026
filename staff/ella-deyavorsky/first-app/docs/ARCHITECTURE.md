@@ -7,7 +7,7 @@ Each layer has one job. The files of each layer are listed in [TREE.md](TREE.md)
 - `logic/` decides if an action is allowed. It does not contain SQL. It calls the functions exported by `src/queries/users.js`. It never reads a `.sql` file.
 - `queries/` talks to the database. It does not decide if a name or an email is valid. The SQL text lives in `src/queries/queries/`.
 - `db/` opens the database and stores it.
-- `clients/` runs the logic by hand. A client imports a function from `logic/` and prints the result. It has no rules.
+- `clients/` runs the logic by hand. A client imports a function from `logic/` and prints the result. It has no rules. The exception is `clients/web/`, which is isolated and does not use `logic/`.
 - `scripts/` holds the helper that starts the notebooks.
 - `agents/` holds the git workflow: an orchestrator and one subagent per moment. It has no rules of the app.
 - `skills/` holds one skill per git or GitHub step. The subagents call them.
@@ -52,6 +52,7 @@ A new query is a new `.sql` file in `src/queries/queries/` and a new function in
 
 - `terminal/` has one `.txt` file per feature, named like its logic file. You paste it into the terminal while `first-app` is the current folder. `create-users-table.txt` prepares the table.
 - `jupyter/` has one notebook per feature, plus `prepare-database.ipynb`, `00-welcome-and-index.ipynb` and a `README.md`. They open in the browser with `scripts/jupyter.sh`.
+- `web/` has `index.html`, `style.css` and `app.js`: three screens (choose a user, menu, edit) over an example list of 3 users saved in `localStorage`. It is isolated: it does not use `logic/` or any API, and it opens with a double click (`file://`). The `.txt` per feature of `terminal/` does not apply here; it is tested by opening `index.html`.
 
 ### scripts/
 
