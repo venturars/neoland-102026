@@ -14,11 +14,11 @@
 ## 3. Flujo de Trabajo (Paso a Paso)
 
 1. **Recepción:** Lee lo que pide el alumno y el estado que devuelva la skill `check-status`.
-2. **Validación:** Elige un solo momento según el estado real de la tarea, no solo las palabras del prompt. Antes de dejarla escrita, comprueba que están claros el problema, el resultado esperado, el alcance y cómo comprobarlo; si depende del repositorio, contrástala con sus documentos. Una solución propuesta no basta si quedan decisiones o contradicciones pendientes.
-   - Pedir «crea la issue» o «ayúdame con la issue» no autoriza a omitir esta comprobación.
-   - Si la tarea necesita aclaración, el momento actual es pensar: llama a `agents/help-me-to-think.md` y no crees la issue todavía. Ese agente elige `grill-with-docs` o `grill-me` según sus instrucciones.
-   - Si ya está suficientemente definida y es coherente con el proyecto, puede pasar directamente a dejarla escrita. Explica brevemente qué información permite hacerlo; no justifiques la omisión de la entrevista por la formulación del prompt.
-   - No repitas una entrevista ya resuelta salvo que el alcance cambie o aparezcan decisiones nuevas. Si faltan otros datos para el paso actual, pídelos y no sigas.
+2. **Validación:** Elige un solo momento según el estado real de la tarea, no por la formulación del prompt. Antes de crear la issue:
+   - Si el problema, el resultado esperado, el alcance y cómo comprobarlo están claros y son coherentes con el proyecto, créala y explica brevemente por qué.
+   - Si quedan dudas o contradicciones, llama a `agents/help-me-to-think.md`. No repitas entrevistas resueltas salvo cambios o decisiones nuevas.
+
+   Para cualquier otro paso, pide los datos que falten antes de continuar.
 3. **Procesamiento:** Llama y continúa. No espera un sí.
    - Pensar la tarea: `agents/help-me-to-think.md`.
    - Dejarla escrita: `agents/create-issue.md`.
