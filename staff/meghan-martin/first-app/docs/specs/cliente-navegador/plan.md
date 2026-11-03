@@ -6,10 +6,9 @@ Cumple `docs/specs/cliente-navegador/spec.md`. No es una acción nueva de `src/l
 
 - `src/clients/browser/server.js`: sirve las páginas en `127.0.0.1:3000` y llama a las funciones que ya existen.
 - `src/clients/browser/list.html`: la lista.
-- `src/clients/browser/options.html`: volver, editar, y el botón desactivado.
-- `src/clients/browser/edit.html`: el nombre, el email y borrar.
+- `src/clients/browser/options.html`: volver y editar.
+- `src/clients/browser/edit.html`: el nombre, el email, y la ventana de borrar. Cancel cierra la ventana y no borra.
 - `src/clients/browser/styles.css`: el aspecto.
-- `src/clients/browser/delete.html`: la pregunta antes de borrar, con Cancel. Cancel no borra.
 - `package.json`: el script `browser`. No se añade ningún paquete.
 - `docs/CONSTITUTIONS.md`, `docs/ARCHITECTURE.md`, `docs/TREE.md`, `AGENTS.md`: nombran este cliente.
 

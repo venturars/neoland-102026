@@ -24,7 +24,6 @@ first-app/
         options.html
         edit.html
         styles.css
-        delete.html
     users.js
   logic/
     create-user.js

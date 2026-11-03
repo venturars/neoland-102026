@@ -58,7 +58,6 @@ first-app/
         options.html
         edit.html
         styles.css
-        delete.html
       jupyter/
         create-users-table.ipynb
         create-user.ipynb
@@ -130,7 +129,7 @@ Tabla `users`:
 
 Una persona que devuelve logic es un objeto plano con exactamente `id`, `name`, `email`, `createdAt` y `updatedAt`. No se devuelve la fila cruda de SQLite.
 
-El email se recorta, se pasa a minúsculas y lleva un solo `@`, con las dos partes llenas, sin espacios y con longitud de hasta 64. Si no, no es un email válido.
+El email se recorta, se pasa a minúsculas y lleva un solo `@`, con las dos partes llenas, sin espacios y con longitud de hasta 64. La parte de después del `@` lleva un punto, y ningún lado del punto está vacío. Si no, no es un email válido.
 
 ## Cómo se lee una acción
 
