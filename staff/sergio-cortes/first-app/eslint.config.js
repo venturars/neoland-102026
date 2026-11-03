@@ -15,4 +15,21 @@ export default [
       },
     },
   },
+  {
+    files: ["src/clients/http/**/*.js"],
+    languageOptions: {
+      globals: {
+        process: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/web/**/*.js"],
+    languageOptions: {
+      globals: {
+        document: "readonly",
+        fetch: "readonly",
+      },
+    },
+  },
 ];

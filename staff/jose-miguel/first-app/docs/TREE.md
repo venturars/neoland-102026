@@ -58,7 +58,7 @@ first-app/
         spec.md
         plan.md
         tasks.md
-      jupyter-cross-platform/
+      untrack-sqlite-jupyter/
         spec.md
         plan.md
         tasks.md
@@ -67,3 +67,5 @@ first-app/
         plan.md
         tasks.md
 ```
+
+`src/db/users.sqlite` vive en el árbol local; `.gitignore` de first-app y el monorepo evitan versionarlo.

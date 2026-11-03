@@ -140,7 +140,9 @@ first-app/
 │       ├── refactor-pull-request.md
 │       └── test-pull-request.md
 ├── MCPS/
-│   └── github-mcp-server/
+│   ├── github-mcp-server/
+│   │   └── mcp.txt
+│   └── socket-mcp/
 │       └── mcp.txt
 ├── docs/
 │   ├── specs/
@@ -173,6 +175,14 @@ first-app/
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
 │   │   ├── prettier-and-eslint/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── reorganize-sdd-docs/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── socket-mcp-reference/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md

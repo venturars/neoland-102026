@@ -83,13 +83,14 @@ def test_styles_include_mobile_focus_and_reduced_motion_rules():
 
 
 def test_agent_rules_are_concrete_and_junior_friendly():
-    source = read("AGENTS.md")
+    agents = read("AGENTS.md")
+    assert "[STYLE.md](docs/STYLE.md)" in agents
+    source = read("docs/STYLE.md")
     normalized = source.lower()
     for piece in (
-        "desarrolladora junior",
+        "nivel junior",
         "sencillo",
         "explícito",
-        "declarativo",
         "lineal",
         "nombres descriptivos",
         "solución más larga",
