@@ -4,7 +4,7 @@ Issue: #757
 
 Estado: comprobaciones locales completadas el 2026-11-03; pendiente revisión humana. Sin commit ni publicación. Todas las escrituras se ejecutaron sobre datos ficticios en una copia desechable.
 
-Referencia: PR 814, head `5fc36f67f38c3e8404f6df325bf71b3aa3517a53`. Entorno: Windows, Node y PowerShell; dependencias y herramientas ya disponibles, sin instalación.
+Contratos comprobados: servidor SQL local con exec/get/all/run en /execute, queries asíncronas y clientes terminal/Jupyter con logic compartida. Entorno: Windows, Node y PowerShell; dependencias y herramientas ya disponibles, sin instalación.
 
 ## Resultados
 

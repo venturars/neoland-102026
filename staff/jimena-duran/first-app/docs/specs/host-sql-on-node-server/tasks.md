@@ -4,15 +4,15 @@ Issue: #757
 
 Trabajo local autorizado y T01–T13 completadas el 2026-11-03. Resultados y límites en [verification.md](verification.md); pendiente revisión humana, sin commit ni publicación.
 
-- [x] T01. Capturar referencias, datos y hashes protegidos antes de implementar.
+- [x] T01. Capturar el estado de las ramas, datos y hashes protegidos antes de implementar.
   Resultado: se puede verificar la conservación de trabajo ajeno y SQLite personal. (CA-07)
-- [x] T02. Preparar los nueve módulos .js de constantes SQL con nombres y parámetros de referencia.
+- [x] T02. Preparar los nueve módulos .js de constantes SQL con los nombres y parámetros descritos en el plan.
   Resultado: imports ESM sin lectura de .sql desde queries. (CA-01–CA-03)
-- [x] T03. Implementar src/db/server.js con SQLite y protocolo /execute de referencia.
+- [x] T03. Implementar src/db/server.js con SQLite y el protocolo /execute descrito en el plan.
   Resultado: exec/get/all/run, parámetros, fila nula, CORS y estados previstos. (CA-01–CA-05)
 - [x] T04. Implementar queries asíncronas, incluidas createUsersTable y listTables.
   Resultado: acceso al servidor sin fs, SQLite o conexión alternativa desde clientes. (CA-01–CA-05)
-- [x] T05. Adaptar las ocho funciones de logic con await y nombres de referencia.
+- [x] T05. Adaptar las ocho funciones de logic con await y los nombres descritos en el plan.
   Resultado: reglas, tipos y mensajes conservados; clasificación sin cambios de comportamiento. (CA-02–CA-06)
 - [x] T06. Adaptar los nueve clientes terminal a PowerShell y resultados esperados con await.
   Resultado: ejemplos ejecutables en Windows, sin abrir SQLite directamente ni imprimir promesas. (CA-01–CA-05)

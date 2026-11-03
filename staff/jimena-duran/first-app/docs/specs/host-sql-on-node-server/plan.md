@@ -4,22 +4,22 @@ Issue: #757
 
 Estado: implementación local y comprobaciones registradas en [verification.md](verification.md); pendiente revisión humana. Esta pasada solo documenta el resultado y el inventario, sin modificar o ejecutar código, datos o recursos remotos.
 
-## Referencia y entrega
+## Alcance de la entrega
 
-Paridad semántica con [PR 814](https://github.com/venturars/neoland-102026/pull/814), head `5fc36f67f38c3e8404f6df325bf71b3aa3517a53`, asociada a la issue 806. La [PR 816](https://github.com/venturars/neoland-102026/pull/816), head `292e064af70eff159569176660ed64f567c946f9`, corresponde al navegador de la segunda entrega. No se copian módulos completos ni se añaden reglas propias.
-Prefijos comparados: referencia `staff/ventura-rodriguez/first-app/`; local `staff/jimena-duran/first-app/`. Todas las rutas siguientes son relativas a esos prefijos. Primera entrega coordinada por #757 y la PR 758 existente; no se cambian sus metadatos ni se publica durante esta revisión.
+Servidor SQL local, queries asíncronas y clientes de terminal y Jupyter que comparten logic y SQLite. El cliente del navegador corresponde a la segunda entrega; las reglas de negocio existentes se conservan.
+Todas las rutas siguientes son relativas a first-app. Primera entrega coordinada por #757 y la PR #758 existente; no se cambian sus metadatos ni se publica durante esta revisión.
 
-## Inventario comparado de la primera entrega
+## Inventario de la primera entrega
 
-| Referencia 814 | Resultado local y estado |
+| Archivo o componente | Resultado local y estado |
 | --- | --- |
-| `src/db/server.js` | Mismo nombre, extensión y función; presente. |
+| `src/db/server.js` | Presente; servidor SQL local y propietario de SQLite. |
 | `src/queries/users.js` | Presente; nueve funciones asíncronas y acceso al servidor, sin readFile ni SQLite. |
-| `src/queries/queries/{create-users-table,find-all,find-by-email,find-by-id,find-by-name,insert,list-tables,remove,update}.js` | Nueve módulos presentes, con las constantes SQL homónimas de la referencia. |
+| `src/queries/queries/{create-users-table,find-all,find-by-email,find-by-id,find-by-name,insert,list-tables,remove,update}.js` | Nueve módulos presentes, con constantes SQL exportadas y parámetros nombrados. |
 | `src/logic/{create-user,delete-user,find-user-by-email,find-user-by-id,find-user-by-name,list-users,update-user,users-gender-count}.js` | Ocho módulos presentes; reglas y resultados conservados, con await. |
-| Clientes terminal y Jupyter | Nueve archivos por formato, .txt e .ipynb; presentes, con comandos Windows y resultados asíncronos. La 814 modifica ocho por formato; clasificación ya era asíncrona. |
+| Clientes terminal y Jupyter | Nueve archivos por formato, .txt e .ipynb; presentes, con comandos Windows y resultados asíncronos. Clasificación ya era asíncrona. |
 | `package.json`, `docs/{ARCHITECTURE,DATABASE,TREE}.md` | Script server y guías presentes; dependencias y versiones conservadas. |
-| `docs/specs/host-sql-on-node-server/{spec,plan,tasks}.md` | Mismos nombres locales; verification.md registra la evidencia de esta implementación. |
+| `docs/specs/host-sql-on-node-server/{spec,plan,tasks}.md` | Alcance, plan y tareas; verification.md registra la evidencia de esta implementación. |
 
 Los nueve clientes por formato se denominan `create-user`, `create-users-table`, `delete-user`, `find-user-by-email`, `find-user-by-id`, `find-user-by-name`, `list-users`, `update-user` y `users-gender-count`.
 Las constantes son CREATE_USERS_TABLE, FIND_ALL, FIND_BY_EMAIL, FIND_BY_ID, FIND_BY_NAME, INSERT_USER, LIST_TABLES, REMOVE_USER y UPDATE_USER. `findUserByName` tiene nombre singular y devuelve un array de coincidencias exactas ordenadas.
@@ -38,9 +38,9 @@ Logic espera las consultas. createUser(input), updateUser(id, changes), deleteUs
 | `src/clients/web/{app.js,index.html,styles.css}` | Los tres ausentes; no se incorporan a la primera entrega. |
 | `src/db/connection.js` y `src/queries/queries/{create-users-table,find-all,find-by-email,find-by-id,find-by-name,insert,remove,update}.sql` | Ausentes; el propietario de SQLite es db/server.js y las consultas son los nueve .js del inventario. |
 | `src/logic/find-users-by-name.js`, `src/clients/terminal/find-users-by-name.txt`, `src/clients/jupyter/find-users-by-name.ipynb` | Rutas plurales ausentes; los tres nombres singulares del inventario están presentes. |
-| `tests/vanilla-user-client.test.js`, `docs/VANILLA-CLIENT.md` y `docs/specs/vanilla-user-client/{spec,plan,tasks,verification}.md` | Ausentes; fuera de los archivos finales de ambas referencias. |
+| `tests/vanilla-user-client.test.js`, `docs/VANILLA-CLIENT.md` y `docs/specs/vanilla-user-client/{spec,plan,tasks,verification}.md` | Ausentes; no pertenecen al alcance del servidor SQL ni del cliente del navegador previsto. |
 
-Este inventario distingue ausencia ya comprobada de acciones pendientes: no se retira, renombra o limpia ningún archivo en esta revisión documental. La segunda entrega solo incorpora los archivos browser comparados en su propio plan.
+Este inventario distingue ausencia ya comprobada de acciones pendientes: no se retira, renombra o limpia ningún archivo en esta revisión documental. La segunda entrega solo incorpora los archivos browser descritos en su propio plan.
 
 ## Datos, Windows y documentación
 
