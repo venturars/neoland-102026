@@ -29,13 +29,13 @@ Implementan [plan.md](plan.md), que cumple [spec.md](spec.md). Se ejecutan **en 
 - [x] `AGENTS.md`: el comando `pnpm browser`.
 
 ## T6. Aspecto y confirmación propia (plan 1.1)
-- [ ] `index.html`: la lista de filas, las pantallas 2 y 3 con el orden de la sección Aspecto, y el `<dialog>` de confirmación.
-- [ ] `styles.css`: rehecho con los criterios de la sección Aspecto.
-- [ ] `app.js`: las filas como botones con iniciales, `askDeleteConfirmation()` y `removeUser()` desde la ventana.
-- [ ] `eslint.config.js`: quitar `confirm` de las globales.
+- [x] `index.html`: la lista de filas, las pantallas 2 y 3 con el orden de la sección Aspecto, y el `<dialog>` de confirmación.
+- [x] `styles.css`: rehecho con los criterios de la sección Aspecto.
+- [x] `app.js`: las filas como botones con iniciales, `askDeleteConfirmation()` y `removeUser()` desde la ventana.
+- [x] `eslint.config.js`: quitar `confirm` de las globales.
 
 ## T7. Comprobación del cambio
-- [ ] Las tres pantallas en el navegador con un usuario temporal `tmp-768-3`: elegir con el ratón y con el teclado, Notas desactivada, volver, modificar, los errores, y la ventana de borrado cancelada con `Cancelar`, con `Esc` y confirmada.
-- [ ] Una captura de cada pantalla y de la ventana, en escritorio y en móvil.
-- [ ] No queda ningún `tmp-768-*` y `list-users.txt` da lo mismo que al empezar.
-- [ ] `pnpm format` y `pnpm lint` sin errores.
+- [x] Las tres pantallas en el navegador con un usuario temporal `tmp-768-3`: elegir con el ratón y con el teclado, Notas desactivada, volver, modificar, los errores, y la ventana de borrado cancelada con `Cancelar`, con `Esc` y confirmada.
+- [x] Una captura de cada pantalla y de la ventana, en escritorio y en móvil.
+- [x] No queda ningún `tmp-768-*` y `list-users.txt` da lo mismo que al empezar.
+- [x] `pnpm format` y `pnpm lint` sin errores.

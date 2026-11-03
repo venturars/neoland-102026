@@ -41,35 +41,66 @@ async function callServer(method, path, body) {
   return data;
 }
 
-function renderUsers() {
-  const tableBody = document.getElementById("users-body");
-  tableBody.textContent = "";
+// Las iniciales del círculo: la primera letra de las dos primeras palabras del nombre.
+function getInitials(name) {
+  const words = name.trim().split(" ");
+  let initials = "";
+  for (const word of words) {
+    if (word !== "" && initials.length < 2) {
+      initials = initials + word[0];
+    }
+  }
+  return initials.toUpperCase();
+}
 
-  const table = document.getElementById("users-table");
+function createUserRow(user) {
+  const row = document.createElement("button");
+  row.type = "button";
+  row.className = "user-row";
+
+  const avatar = document.createElement("span");
+  avatar.className = "avatar";
+  avatar.textContent = getInitials(user.name);
+  row.appendChild(avatar);
+
+  const text = document.createElement("span");
+  text.className = "user-text";
+
+  const name = document.createElement("span");
+  name.className = "user-name";
+  name.textContent = user.name;
+  text.appendChild(name);
+
+  const email = document.createElement("span");
+  email.className = "user-email";
+  email.textContent = user.email;
+  text.appendChild(email);
+
+  row.appendChild(text);
+
+  const id = document.createElement("span");
+  id.className = "user-id";
+  id.textContent = "#" + user.id;
+  row.appendChild(id);
+
+  row.addEventListener("click", function () {
+    selectUser(user);
+  });
+  return row;
+}
+
+function renderUsers() {
+  const list = document.getElementById("users-list");
+  list.textContent = "";
+
   const emptyText = document.getElementById("empty-list");
   const hasUsers = users.length > 0;
-  table.hidden = !hasUsers;
+  list.hidden = !hasUsers;
   emptyText.hidden = hasUsers;
 
   for (const user of users) {
-    const row = document.createElement("tr");
-
-    const idCell = document.createElement("td");
-    idCell.textContent = user.id;
-    row.appendChild(idCell);
-
-    const nameCell = document.createElement("td");
-    nameCell.textContent = user.name;
-    row.appendChild(nameCell);
-
-    const emailCell = document.createElement("td");
-    emailCell.textContent = user.email;
-    row.appendChild(emailCell);
-
-    row.addEventListener("click", function () {
-      selectUser(user);
-    });
-    tableBody.appendChild(row);
+    const row = createUserRow(user);
+    list.appendChild(row);
   }
 }
 
@@ -88,12 +119,14 @@ async function loadUsers() {
 function selectUser(user) {
   selectedUser = user;
 
-  const idText = document.getElementById("options-id");
-  idText.textContent = selectedUser.id;
+  const avatar = document.getElementById("options-avatar");
+  avatar.textContent = getInitials(selectedUser.name);
   const nameText = document.getElementById("options-name");
   nameText.textContent = selectedUser.name;
   const emailText = document.getElementById("options-email");
   emailText.textContent = selectedUser.email;
+  const idText = document.getElementById("options-id");
+  idText.textContent = "Id " + selectedUser.id;
 
   showScreen("options-screen");
 }
@@ -130,19 +163,28 @@ async function saveUser(event) {
   }
 }
 
-async function removeUser() {
+function askDeleteConfirmation() {
   hideError("edit-error");
 
-  const question =
+  const question = document.getElementById("delete-question");
+  question.textContent =
     "¿Seguro que quieres eliminar a " +
     selectedUser.name +
     " (id " +
     selectedUser.id +
     ")?";
-  const isConfirmed = confirm(question);
-  if (!isConfirmed) {
-    return;
-  }
+
+  const dialog = document.getElementById("delete-dialog");
+  dialog.showModal();
+}
+
+function closeDeleteDialog() {
+  const dialog = document.getElementById("delete-dialog");
+  dialog.close();
+}
+
+async function removeUser() {
+  closeDeleteDialog();
 
   try {
     await callServer("DELETE", "/users/" + selectedUser.id);
@@ -169,7 +211,22 @@ function connectButtons() {
   editForm.addEventListener("submit", saveUser);
 
   const editDelete = document.getElementById("edit-delete");
-  editDelete.addEventListener("click", removeUser);
+  editDelete.addEventListener("click", askDeleteConfirmation);
+
+  const deleteCancel = document.getElementById("delete-cancel");
+  deleteCancel.addEventListener("click", closeDeleteDialog);
+
+  const deleteConfirm = document.getElementById("delete-confirm");
+  deleteConfirm.addEventListener("click", removeUser);
+
+  // Un clic en el fondo oscuro llega al propio <dialog>, no a su contenido: cancela.
+  // Esc ya lo cierra el navegador.
+  const dialog = document.getElementById("delete-dialog");
+  dialog.addEventListener("click", function (event) {
+    if (event.target === dialog) {
+      closeDeleteDialog();
+    }
+  });
 }
 
 connectButtons();

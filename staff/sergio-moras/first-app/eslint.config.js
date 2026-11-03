@@ -20,7 +20,6 @@ export default defineConfig([
     languageOptions: {
       globals: {
         document: "readonly",
-        confirm: "readonly",
       },
     },
   },
