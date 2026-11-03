@@ -2,7 +2,6 @@
 # Resume la rama, el remoto y los cambios locales.
 
 set -euo pipefail
-[[ $# -eq 0 ]] || { echo "Este script no recibe argumentos." >&2; exit 1; }
 
 root=$(git rev-parse --show-toplevel 2>/dev/null) || {
   echo "No es un repositorio git." >&2

@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Adelanta staging local a origin/staging solo en fast-forward.
+# No cambia la rama en la que estás.
+
 set -euo pipefail
 
 root=$(git rev-parse --show-toplevel 2>/dev/null) || {
@@ -7,31 +10,30 @@ root=$(git rev-parse --show-toplevel 2>/dev/null) || {
 }
 cd "$root"
 
-# Actualiza staging sin cambiar la rama de trabajo ni guardar cambios locales.
-[[ $# -eq 0 ]] || { echo "Este script no recibe argumentos." >&2; exit 1; }
-if [[ -n $(git ls-files --unmerged) ]]; then
-  echo "Hay conflictos sin resolver." >&2
+if [[ $# -gt 0 ]]; then
+  echo "pull-changes.sh no recibe argumentos." >&2
   exit 1
 fi
-for operation in MERGE_HEAD CHERRY_PICK_HEAD REVERT_HEAD rebase-merge rebase-apply; do
-  if [[ -e $(git rev-parse --git-path "$operation") ]]; then
-    echo "Hay una operación de git pendiente: ${operation}." >&2
-    exit 1
-  fi
-done
 
 git fetch origin staging
+
+if ! git show-ref --verify --quiet refs/remotes/origin/staging; then
+  echo "No existe origin/staging." >&2
+  exit 1
+fi
+
 if git show-ref --verify --quiet refs/heads/staging; then
-  git merge-base --is-ancestor staging origin/staging || {
-    echo "staging ha divergido: no se actualiza automáticamente." >&2; exit 1;
-  }
-  if [[ $(git symbolic-ref --quiet --short HEAD || true) == staging ]]; then
+  if ! git merge-base --is-ancestor staging origin/staging; then
+    echo "staging no se puede adelantar en fast-forward." >&2
+    exit 1
+  fi
+  if [[ $(git rev-parse --abbrev-ref HEAD) == "staging" ]]; then
     git merge --ff-only origin/staging
   else
-    # Git rechaza mover una rama abierta en otro worktree.
     git branch -f staging origin/staging
   fi
 else
   git branch staging origin/staging
 fi
-echo "staging actualizado a $(git rev-parse --short staging)."
+
+echo "staging quedó en $(git rev-parse --short staging)."

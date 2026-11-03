@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Sube HEAD a origin y fija el upstream. No admite force push.
+
 set -euo pipefail
 
 root=$(git rev-parse --show-toplevel 2>/dev/null) || {
@@ -7,26 +9,18 @@ root=$(git rev-parse --show-toplevel 2>/dev/null) || {
 }
 cd "$root"
 
-# Publica únicamente HEAD sin aceptar argumentos de fuerza.
-[[ $# -eq 0 ]] || { echo "Este script no recibe argumentos; no admite force push." >&2; exit 1; }
-branch=$(git symbolic-ref --quiet --short HEAD) || {
-  echo "HEAD separado: selecciona la rama de trabajo." >&2
-  exit 1
-}
-if [[ ! "$branch" =~ ^[0-9]+-(feat|fix|docs|refactor|test|chore)-[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
-  echo "Se requiere una rama de trabajo número-tipo-descripcion." >&2
-  exit 1
-fi
-if [[ -n $(git ls-files --unmerged) ]]; then
-  echo "Hay conflictos sin resolver." >&2
-  exit 1
-fi
-for operation in MERGE_HEAD CHERRY_PICK_HEAD REVERT_HEAD rebase-merge rebase-apply; do
-  if [[ -e $(git rev-parse --git-path "$operation") ]]; then
-    echo "Hay una operación de git pendiente: ${operation}." >&2
-    exit 1
-  fi
+for arg in "$@"; do
+  case "$arg" in
+    -f|--force|--force-with-lease|--force-with-lease=*)
+      echo "No se admite el force push." >&2
+      exit 1
+      ;;
+    *)
+      echo "launch-push.sh no recibe argumentos." >&2
+      exit 1
+      ;;
+  esac
 done
 
 git push -u origin HEAD
-echo "Rama publicada: $branch en origin."
+echo "Rama $(git rev-parse --abbrev-ref HEAD) subida a origin."
