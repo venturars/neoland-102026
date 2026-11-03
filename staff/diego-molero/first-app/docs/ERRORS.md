@@ -23,3 +23,7 @@ Los fallos se señalan con `throw new Error("...")`, con mensajes en inglés. No
 El plan de cada spec define el orden de validación. Una búsqueda por nombre o un listado sin coincidencias devuelve una lista vacía. Los fallos técnicos de las operaciones actuales se propagan como excepciones; no se sustituyen sus mensajes durante una reorganización.
 
 Los notebooks muestran el mensaje de Node cuando una operación falla. Si no encuentran la aplicación, muestran `No encuentro la app.`. Los fallos de preparación de Jupyter terminan con estado de error.
+
+## Cliente HTTP
+
+HTTP conserva esos `Error` en logic y traduce sus mensajes para la interfaz: entrada incorrecta a 400, usuario o nota ausente a 404 y correo duplicado a 409. Un método no admitido devuelve 405 con `Allow`; JSON vacío o inválido devuelve 400, tipo distinto de JSON 415 y cuerpo superior a 1 MiB 413. Las rutas desconocidas devuelven 404. Los errores técnicos devuelven 500 con un mensaje genérico, sin detalles internos. Cada error HTTP usa `{ "message": "..." }` en español y UTF-8.

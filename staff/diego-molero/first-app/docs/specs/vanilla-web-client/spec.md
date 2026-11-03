@@ -1,8 +1,8 @@
 # Cliente web de usuarios y notas
 
-Issue: #778. Fecha: 2026-11-03.
+Issue: #778 (documentación) y #788 (implementación). Fecha: 2026-11-03.
 
-Estado: propuesta documental preparada por el agente para revisión. La autorización actual cubre los documentos, no la implementación ni su validación funcional.
+Estado: la propuesta documental original precede a la autorización de implementación registrada al final. Las comprobaciones reales se anotan en tareas.
 
 ## Problema y personas
 
@@ -36,3 +36,7 @@ Quien usa first-app necesita gestionar su usuario y sus notas desde pantallas se
 La selección representa el contexto de trabajo, no introduce una cuenta autenticada. No se crean usuarios desde esta interfaz inicial: se reutilizan los existentes. No se incluye el clasificador, contraseñas, registro de cuentas, sincronización, edición enriquecida ni un despliegue público. Solo hay navegación interna; los botones de volver no dependen del historial del navegador. Volver/cancelar descarta cambios sin confirmación adicional; las eliminaciones sí requieren confirmación.
 
 Depende de [notas](../notes/spec.md) y del contrato existente de [usuarios](../users/spec.md). [Plan](plan.md) y [tareas](tasks.md). No hay preguntas pendientes para esta propuesta.
+
+## Implementación autorizada · 2026-11-03 · Issue #788
+
+Diego pidió continuar con el cliente web después de la entrega de notas. Esta autorización cubre implementación, comprobación y entrega de HTTP y pantallas vanilla; no atribuye una revisión individual de los documentos. La rama de implementación parte de la de notas de la PR #787, que depende de la propuesta documental de la PR #781. La aplicación usa una copia temporal para las comprobaciones, sin migrar la base personal.

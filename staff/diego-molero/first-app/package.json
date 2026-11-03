@@ -10,6 +10,7 @@
   },
   "scripts": {
     "jupyter": "sh scripts/jupyter.sh",
+    "web": "node src/clients/http/start-http-server.js",
     "db:init": "node --input-type=module < src/clients/terminal/create-users-table.txt",
     "create-user": "node --input-type=module < src/clients/terminal/create-user.txt",
     "update-user": "node --input-type=module < src/clients/terminal/update-user.txt",

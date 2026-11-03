@@ -8,6 +8,8 @@
 - `src/logic/` contiene una operación por fichero: crear, actualizar, borrar, listar, buscar por correo, ID o nombre y clasificar nombres, además de crear, listar, consultar, actualizar y borrar notas por usuario. Valida las entradas y aplica las reglas de cada spec.
 - `src/clients/terminal/` contiene ejemplos pequeños: importar, llamar y mostrar. Es la comprobación manual básica de cada operación.
 - `src/clients/jupyter/` presenta esas mismas operaciones en nueve notebooks con tablas. Python ejecuta Node en el directorio de la aplicación; las reglas permanecen en `src/logic/`.
+- `src/clients/http/` ofrece las rutas JSON y solo sirve los archivos públicos enumerados. Traduce los errores de logic a códigos HTTP y escucha en el equipo local.
+- `src/clients/web/` contiene cinco pantallas HTML, CSS y JavaScript vanilla. La selección del usuario vive en memoria y las acciones llaman a HTTP.
 - `scripts/jupyter.sh` prepara el entorno local y arranca Notebook.
 - `docs/CONSTITUTIONS.md` contiene reglas compartidas, el índice de specs y los comandos de ejecución.
 - `docs/TREE.md`, `DATABASE.md`, `ERRORS.md` y `STYLE.md` describen el árbol, los datos, los errores y el estilo.
@@ -21,4 +23,4 @@ Las operaciones llaman directamente a queries. El clasificador usa fetch nativo 
 
 ## Notas y cliente web · Issues #778 y #782
 
-La [persistencia y lógica de notas](specs/notes/plan.md) está implementada en la issue #782. Sus cinco clientes de terminal y el notebook de preparación llaman a las operaciones actuales. El borrado de usuario conserva su firma y elimina las notas mediante la relación de cascada. El [cliente web](specs/vanilla-web-client/plan.md) sigue pendiente: añadirá HTTP y pantallas vanilla que llaman a logic. La confirmación de borrados pertenece a ese futuro cliente.
+La [persistencia y lógica de notas](specs/notes/plan.md) está implementada en la issue #782. Sus cinco clientes de terminal y el notebook de preparación llaman a las operaciones actuales. El borrado de usuario conserva su firma y elimina las notas mediante la relación de cascada. El [cliente web](specs/vanilla-web-client/plan.md) añade HTTP y pantallas vanilla que llaman a logic. La interfaz confirma los borrados antes de hacer la petición.

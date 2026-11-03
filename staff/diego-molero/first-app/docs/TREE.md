@@ -113,6 +113,15 @@ first-app/
       SKILL.md
   src/
     clients/
+      http/
+        handle-notes.js
+        handle-request.js
+        handle-users.js
+        read-json-body.js
+        send-http-error.js
+        send-json.js
+        serve-public-file.js
+        start-http-server.js
       jupyter/
         create-user.ipynb
         create-users-table.ipynb
@@ -125,19 +134,31 @@ first-app/
         users-gender-count.ipynb
       terminal/
         create-note.txt
-      create-user.txt
+        create-user.txt
         create-users-table.txt
         delete-note.txt
-      delete-user.txt
+        delete-user.txt
         find-note-by-id.txt
-      find-user-by-email.txt
+        find-user-by-email.txt
         find-user-by-id.txt
         find-user-by-name.txt
         list-notes.txt
-      list-users.txt
+        list-users.txt
         update-note.txt
-      update-user.txt
+        update-user.txt
         users-gender-count.txt
+      web/
+        api.js
+        index.html
+        main.js
+        note-editor.js
+        notes-list.js
+        show-screen.js
+        state.js
+        styles.css
+        user-editor.js
+        user-menu.js
+        user-selection.js
     db/
       connection.js
     logic/
