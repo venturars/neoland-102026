@@ -1,2 +1,3 @@
 # Paste this in the terminal, with the current directory set to first-app
-node --input-type=module -e "import { db } from './src/db/connection.js'; import { findUserByName } from './src/logic/find-user-by-name.js'; import { createSqliteStore } from './src/queries/users.js'; console.log(await findUserByName(createSqliteStore(db), 'Ana'));"
+# First start the server in another terminal: pnpm start
+node --input-type=module -e "import { findUserByName } from './src/logic/find-user-by-name.js'; console.log(await findUserByName('Ana'));"

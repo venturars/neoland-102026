@@ -1,16 +1,45 @@
-import { validateChanges } from "./shared.js";
+import { findByEmail, findById, update } from "../queries/users.js";
+import { copyUser, validateChanges } from "./shared.js";
 
-export async function updateUser(store, id, changes) {
-  const next = validateChanges(changes);
-  const current = await store.findById(id);
-  if (!current) {
-    throw new Error(`There is no user with id ${id}`);
+export async function updateUser(id, changes) {
+  const cambios = validateChanges(changes);
+
+  let actual;
+  try {
+    actual = await findById(id);
+  } catch {
+    throw new Error("Could not update the user");
   }
-  if (next.email !== undefined && next.email !== current.email) {
-    const other = await store.findByEmail(next.email);
-    if (other) {
-      throw new Error(`Email ${next.email} is already registered`);
+
+  if (!actual) {
+    throw new Error("User not found");
+  }
+
+  const siguiente = { ...actual, ...cambios };
+
+  if (siguiente.email !== actual.email) {
+    let otro;
+    try {
+      otro = await findByEmail(siguiente.email);
+    } catch {
+      throw new Error("Could not update the user");
+    }
+
+    if (otro) {
+      throw new Error("Email is already used");
     }
   }
-  return store.save({ ...current, ...next, id: current.id });
+
+  let fila;
+  try {
+    fila = await update({
+      id: actual.id,
+      name: siguiente.name,
+      email: siguiente.email,
+    });
+  } catch {
+    throw new Error("Could not update the user");
+  }
+
+  return copyUser(fila);
 }
