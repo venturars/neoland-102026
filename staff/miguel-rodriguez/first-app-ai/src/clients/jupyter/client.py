@@ -25,10 +25,10 @@ def runNode(operation, *args):
         print("No encuentro la app.")
         return
 
-    connectionPath = app / "src/db/connection.js"
-    connectionExists = connectionPath.is_file()
-    connectionIsMissing = not connectionExists
-    if connectionIsMissing:
+    serverPath = app / "src/db/server.js"
+    serverExists = serverPath.is_file()
+    serverIsMissing = not serverExists
+    if serverIsMissing:
         print("No encuentro la app.")
         return
 
