@@ -1,6 +1,6 @@
 ### Herramienta: LINK_PR_TO_ISSUE
 
-- **Descripción**: Úsala desde el orquestador, después de `create-pr`, para dejar `Closes #N` en el cuerpo y enlazar la issue en Development. `create-pr` no la llama: puede abrir la pull request sin issue. No la uses para abrir la pull request ni para cambiar la base. No cierres la issue tú: no llames a la API para cerrarla. La línea `Closes #N` de `templates/pull-request/basic-pull-request.md` es el cierre.
+- **Descripción**: Úsala desde el orquestador, después de `create-pr`, para dejar `Closes #N` en el cuerpo y enlazar la issue en Development. `create-pr` no la llama: puede abrir la pull request sin issue. No la uses para abrir la pull request ni para cambiar la base. No cierres la issue tú: no llames a la API para cerrarla. La línea `Closes #N` de la plantilla elegida en `templates/pull-request/` es el cierre.
 - **Cuerpo**: El servidor remoto descrito en `MCPS/github-mcp-server/mcp.txt` actualiza el cuerpo. Si no ejecuta la acción, consulta el estado y utiliza la alternativa gh de esa referencia sin duplicar la escritura. No modifiques mcp.json, tokens ni configuración personal automáticamente. No uses un script Git de `tools/` para editar el cuerpo remoto.
 - **Development**: `gh api graphql`. No uses el MCP para este enlace.
 

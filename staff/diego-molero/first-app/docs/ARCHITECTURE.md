@@ -12,7 +12,7 @@
 - `docs/specs/<nombre>/` agrupa spec, plan y tareas de cada desarrollo.
 - `agents/git-workflow-agent.md` coordina los momentos de Git y delega cada encargo en un subagente real con instrucciones de `agents/`.
 - `skills/` contiene los procedimientos concretos y sus entradas; `tools/` ejecuta las operaciones Git locales. No forman parte de las reglas de negocio.
-- `templates/` define el contenido de issues y PR. `MCPS/` reúne las referencias de GitHub y Socket; `.mcp.example.json` es solo un ejemplo público, sin tokens.
+- `templates/` define seis plantillas de issues y seis de PR, una pareja por tipo: feat, fix, docs, refactor, test y chore. Los agentes y sus skills eligen el mismo tipo; el orquestador añade `Closes #N` y conserva el borrador hasta que se pida revisión. `MCPS/` reúne las referencias de GitHub y Socket; `.mcp.example.json` es solo un ejemplo público, sin tokens.
 - `docs/SOCKET.md` describe autenticación, puntuaciones, alertas, campañas y sus límites. Socket se consulta durante la preparación de cambios de dependencias; no se integra en el CRUD ni envía datos de usuarios.
 
 Las operaciones llaman directamente a queries. El clasificador usa fetch nativo para consultar Ollama local dentro de su operación. No se añaden adaptadores, clases ni capas intercambiables.

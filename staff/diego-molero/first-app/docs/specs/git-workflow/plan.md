@@ -36,3 +36,16 @@ Conservar el resto de operaciones pequeñas de la plantilla: fast-forward de sta
 ## Constitución y alcance
 
 Se conservan contratos de usuarios, una operación por fichero, datos ordinarios y errores Error; ninguna parte de esta tarea toca esos contratos. Las bases y credenciales siguen fuera de Git. Se escriben los documentos antes de cambiar el comportamiento de automatización; la autorización anticipada permite continuar sin nuevas paradas, conservando el historial. No se añaden paquetes, capas de aplicación ni suite de tests. Código, comentarios y textos en UTF-8; comentarios y documentación en español.
+
+## Iteración del 3 de noviembre de 2026 · Issue #774
+
+Autorización explícita de Diego para completar el plan, implementación, comprobación y entrega. Se parte del staging que ya integra la PR #671.
+
+1. Incorporar las doce plantillas de exercises/git-workflow-agent-template/templates y adaptar solo su comentario de rama al prefijo codex/.
+2. Eliminar las dos plantillas básicas y concretar la selección por tipo en create-issue, create-pr y sus skills. Mantener las comprobaciones previas, fallback gh y delegación real; link-pr-to-issue conserva su responsabilidad y referencia genérica a la plantilla elegida.
+3. Actualizar TREE y ARCHITECTURE. Los siete scripts y el resto del flujo no se reemplazan por versiones de la fuente.
+4. Comparar las doce plantillas con la fuente tras normalizar únicamente el prefijo de rama; buscar referencias obsoletas, comprobar UTF-8, enlaces y git diff --check. Cotejar scripts contra staging.
+5. Ejecutar el comprobador local existente con un destino temporal nuevo bajo .venv: siete sintaxis y 14 recorridos en repositorios con remoto bare local. Registrar límites de plataforma y resultados en tasks, sin añadir suite ni dependencias.
+6. Entregar en codex/774-chore-update-git-templates mediante una PR en borrador contra staging, asignada a la cuenta autenticada y con Closes #774 añadido por el orquestador. No asignar revisores ni fusionar.
+
+La constitución se cumple: cambio exclusivo de automatización y documentación, UTF-8, comentarios explicativos, datos privados fuera de Git y conservación de contratos y dependencias.

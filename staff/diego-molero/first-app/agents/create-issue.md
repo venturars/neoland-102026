@@ -14,14 +14,14 @@
 ## 3. Flujo de Trabajo (Paso a Paso)
 
 1. **Recepción:** Toma lo que el alumno quiere hacer. Si `help-me-to-think` dejó un resumen, úsalo.
-2. **Validación:** El título va en inglés y tiene menos de 72 caracteres. El cuerpo va en español y rellena `templates/issues/<template>.md`.
+2. **Validación:** El título va en inglés y tiene menos de 72 caracteres. El cuerpo va en español y rellena `templates/issues/<tipo>_issue.md`, donde tipo es feat, fix, docs, refactor, test o chore. Si el tipo recibido no pertenece a esa lista, elige el más cercano según el cambio y usa ese mismo tipo en la rama y la PR.
 3. **Procesamiento:** Sigue `skills/create-issue/SKILL.md`. Identifica la cuenta y comprueba antes si la issue ya existe. Asigna al usuario autenticado mediante el MCP disponible o la alternativa oficial de `MCPS/github-mcp-server/mcp.txt`.
 4. **Formateo:** Responde con el número, el título y la URL.
 
 ## 4. Herramientas y APIs Asignadas
 
 - **create-issue:** Crea la issue en el MCP de GitHub.
-- **templates/issues/<template>.md:** La forma del cuerpo.
+- **templates/issues/<tipo>_issue.md:** Una plantilla por tipo; sus comentarios indican la forma del contenido.
 
 ## 5. Manejo de Errores y Excepciones
 
