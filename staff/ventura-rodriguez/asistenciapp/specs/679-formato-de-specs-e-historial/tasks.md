@@ -1,6 +1,6 @@
 # Tareas 679 · Formato de specs e historial
 
-> Estado: **Terminado** (2026-10-30) · Plan: [plan.md](plan.md) · Creado: 2026-10-30
+> Estado: **Terminado** (2026-11-03) · Plan: [plan.md](plan.md) · Creado: 2026-10-30
 
 Issue: #679.
 
@@ -67,3 +67,26 @@ Cómo leer esta lista:
   - Límite de 300 líneas; después, `resumen-2.md`.
   - *Cubre:* CA-04, CA-21.
   - *Hecha cuando:* no queda ninguna mención a `resumenes/` y `pytest` pasa.
+
+## Fase F · Borrar las resumidas y quitar las referencias a specs (spec v1.3)
+
+- [x] **T11** · `tests/test_personal_references.py`: quitar `test_notes_keep_the_date_and_the_result` y `PRESERVED`, y la exclusión de `specs/004-…`.
+  - *Cubre:* CA-24.
+  - *Hecha cuando:* ningún test abre ni excluye una carpeta de spec.
+
+- [x] **T12** · Quitar `CA-xx`, `Txx`, «spec 00x» y «plan §x» de comentarios y docstrings de `tests/`, `app.py`, `asistencia/` y `static/`.
+  - Solo comentarios. La parte que describe se queda.
+  - *Cubre:* CA-25.
+  - *Hecha cuando:* el `grep` del plan §2.12 no encuentra nada y `pytest` pasa.
+
+- [x] **T13** · Borrar `specs/001-…` a `specs/004-…`.
+  - *Cubre:* CA-06, CA-07.
+  - *Hecha cuando:* las cuatro carpetas no existen.
+
+- [x] **T14** · Enlaces permanentes y textos: `specs.md`, `resumen.md` (enlaces y líneas en «Qué cambió después»), `README.md`, y la regla de `AGENTS.md` §3.
+  - *Cubre:* CA-22, CA-23.
+  - *Hecha cuando:* no queda ningún enlace a `specs/001-…` a `specs/004-…` y ningún texto dice que las resumidas se guardan.
+
+- [x] **T15** · Cierre: `pytest` (113), los enlaces permanentes abren y la fila de la `679` en `specs.md` está al día.
+  - *Cubre:* CA-19, CA-22.
+  - *Hecha cuando:* todo lo anterior se cumple.

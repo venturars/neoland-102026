@@ -1,10 +1,10 @@
 # Plan técnico 679 · Formato de specs e historial
 
-> Estado: **Implementado** (2026-11-03) · Spec: [spec.md](spec.md) v1.2 · Creado: 2026-10-30
+> Estado: **Implementado** (2026-11-03) · Spec: [spec.md](spec.md) v1.3 · Creado: 2026-10-30
 
 Issue: #679.
 
-Este documento explica **cómo** se cumple la spec. Cada decisión indica qué criterios de aceptación (`CA-xx`) cubre. El código de la app no se toca.
+Este documento explica **cómo** se cumple la spec. Cada decisión indica qué criterios de aceptación (`CA-xx`) cubre. Lo que hace la app no cambia: en el código y en los tests solo cambian comentarios.
 
 ---
 
@@ -14,6 +14,8 @@ Este documento explica **cómo** se cumple la spec. Cada decisión indica qué c
 - Las specs nuevas se llaman `specs/<issue>-nombre/`. Esta es la primera: `specs/679-formato-de-specs-e-historial/`.
 - La constitución pasa a 4.1: §4, §5 y §6 cortos, sin tabla de historial.
 - `AGENTS.md` y `docs/ARCHITECTURE.md` se ajustan.
+- Se borran `001` a `004`, ya resumidas, con enlaces permanentes (v1.3).
+- Ni los tests ni los comentarios del código nombran specs (v1.3).
 
 Un `000` nunca choca con una issue: GitHub no da la issue 0.
 
@@ -31,7 +33,7 @@ Un `000` nunca choca con una issue: GitHub no da la issue 0.
 
 `AGENTS.md` §3 gana:
 
-> Cuando hay **8 specs sin resumir**, las **4 más antiguas** se resumen al final de `specs/000-historial/resumen.md`. No cuentan `000-historial`, el resumen ni las specs descartadas. Por cada spec, el resumen dice qué resolvió, qué decisiones siguen vigentes y qué cambió después, con un enlace a la original. Lo ya resumido **no se reescribe**: solo se añade al final. Si añadir un bloque haría pasar el fichero de **300 líneas**, se sigue en `resumen-2.md` (después `resumen-3.md`, y así). Las specs resumidas **no se editan ni se borran**. El resumen lo escribe el agente en el momento 4 de la spec que hace llegar a 8 las specs sin resumir, en la misma pull request.
+> Cuando hay **8 specs sin resumir**, las **4 más antiguas** se resumen al final de `specs/000-historial/resumen.md`. No cuentan `000-historial`, el resumen ni las specs descartadas. Por cada spec, el resumen dice qué resolvió, qué decisiones siguen vigentes y qué cambió después, con un enlace a la original. Lo ya resumido **no se reescribe**: en un bloque escrito solo se actualizan sus enlaces y se añaden líneas en «Qué cambió después», con la spec que lo cambió. Si añadir un bloque haría pasar el fichero de **300 líneas**, se sigue en `resumen-2.md` (después `resumen-3.md`, y así). Las specs resumidas **se borran** en la misma pull request, sin editarlas antes, y cada enlace a ellas pasa a un enlace permanente a su carpeta en un commit de `staging` donde aún existe. El resumen lo escribe el agente en el momento 4 de la spec que hace llegar a 8 las specs sin resumir, en la misma pull request.
 
 Cada bloque del resumen tiene, por spec: enlace a la original, **qué resolvió** (una o dos frases), **decisiones vigentes** y **qué cambió después** (con la spec que lo cambió).
 
@@ -109,6 +111,42 @@ Una tabla con estas columnas: `ID` · `Nombre` · `Issue` · `Fecha` · `Tipo` �
 
 En el árbol de `docs/ARCHITECTURE.md`, `specs/` muestra `000-historial/` (con `specs.md`, `enmienda.md` y `resumen.md`) y `<issue>-nombre/` en lugar de `NNN-nombre/`.
 
+### 2.9 Borrar `001` a `004` con enlaces permanentes (CA-02, CA-06, CA-07, CA-22)
+
+- Se borran las carpetas `specs/001-checkin-codigo/`, `specs/002-spec-antes-del-cambio/`, `specs/003-activar-el-entorno/` y `specs/004-quitar-referencias-personales/`.
+- Commit fijo: `90d8be4e` (`90d8be4e5f19ef4d3bab29dacdc29904393a2e82`), de `staging`, que tiene las cuatro carpetas. Un commit de `staging` no se pierde con un squash ni al borrar ramas.
+- Enlace de cada spec: `https://github.com/venturars/neoland-102026/tree/90d8be4e5f19ef4d3bab29dacdc29904393a2e82/staff/ventura-rodriguez/asistenciapp/specs/<carpeta>`.
+- Cambian a ese enlace:
+  - `specs.md`: la columna «Nombre» de `001` a `004`, y la nota «Borrada el 2026-11-03».
+  - `resumen.md`: los encabezados `### 001` a `### 004`.
+  - `README.md`: la línea que enlaza `specs/001-checkin-codigo/`.
+- `specs.md` y `resumen.md` dejan de decir que las specs resumidas «no se editan ni se borran» o «siguen intactas».
+
+### 2.10 Qué se toca de un bloque escrito (CA-23)
+
+En el bloque `Specs 001 a 004` de `resumen.md` solo cambian los cuatro enlaces y se añaden líneas en «Qué cambió después»:
+
+- En las cuatro: «La **679** la borró; está en su enlace permanente.»
+- En la `004`, además: «La **679** quitó el test que leía las notas de la `001`; el test de nombres ya no excluye ninguna carpeta.»
+- La frase de la `004` sobre `tests/test_personal_references.py` no se reescribe: la corrige la línea nueva.
+
+### 2.11 El README sin specs borradas
+
+- La línea que enlaza la especificación pasa a enlazar el historial: `specs/000-historial/specs.md`.
+- La sección de tests deja de enlazar `specs/001-…/plan.md §6`. Pasa a: «Cada spec tiene en su `plan.md` una tabla que dice qué test comprueba cada criterio. Las specs ya resumidas se consultan desde [el historial](specs/000-historial/specs.md).»
+
+### 2.12 Tests y código sin specs (CA-24, CA-25)
+
+- `tests/test_personal_references.py`:
+  - Sale `test_notes_keep_the_date_and_the_result` y su `PRESERVED`: leía `specs/001-…`, que ya no existe.
+  - `_markdown_files` deja de excluir `specs/004-…`. Con la `004` borrada, ningún `.md` nombra a esa persona, así que el test de nombres sigue pasando sin excepciones.
+- En los comentarios y docstrings de `tests/`, `app.py`, `asistencia/` y `static/` salen los `CA-xx`, `Txx`, «spec 00x», «plan §x» y sus paréntesis. Queda la parte que describe. Ejemplos:
+  - `# ---------- T06 · base y acceso del profesor (CA-15, CA-17) ----------` → `# ---------- base y acceso del profesor ----------`
+  - `def test_create_session_with_title(client, teacher):  # CA-01` → sin el comentario.
+  - `// Todo texto que viene del servidor se pinta con textContent (CA-12).` → `// Todo texto que viene del servidor se pinta con textContent.`
+- Lo que hace cada test y cada función no cambia. Sale un test: `pytest` pasa con 113.
+- Comprobación: `grep -rnE "CA-[0-9]|[Ss]pec 0|plan §|specs/|T[0-9]{2} ·|\(T[0-9]{2}|T[0-9]{2}\)" tests app.py asistencia static` no encuentra nada (sin contar `__pycache__`). El patrón no usa `T[0-9]{2}` suelto: también casaría con las fechas de los tests (`2026-10-23T09:00`).
+
 ---
 
 ## 3. Comprobación de la constitución
@@ -133,7 +171,10 @@ En el árbol de `docs/ARCHITECTURE.md`, `specs/` muestra `000-historial/` (con `
 | Criterio | Test o paso |
 | --- | --- |
 | CA-01, CA-03 | Leer `AGENTS.md` §3 y el orden de `specs.md` |
-| CA-02, CA-06 | `git diff` sin cambios en `specs/001-…` a `specs/008-…`. `tests/test_personal_references.py` sigue pasando |
+| CA-02, CA-06, CA-07 | `specs/001-…` a `specs/004-…` no existen; `git diff` sin cambios en `specs/005-…` a `specs/008-…` |
+| CA-22 | Abrir los cuatro enlaces permanentes y el del README: cargan la carpeta |
+| CA-23 | Leer el bloque `Specs 001 a 004`: solo cambian los enlaces y hay líneas nuevas en «Qué cambió después» |
+| CA-24, CA-25 | El `grep` del §2.12 no encuentra nada |
 | CA-04, CA-07, CA-20, CA-21 | Leer la regla en `AGENTS.md` §3; existe `resumen.md` con el bloque `Specs 001 a 004` y no pasa de 300 líneas |
 | CA-05 | Leer `resumen.md`: cuatro apartados con enlace, qué resolvió, decisiones vigentes y qué cambió |
 | CA-08, CA-10 | Leer `specs.md` y `AGENTS.md` §7 |
@@ -142,4 +183,4 @@ En el árbol de `docs/ARCHITECTURE.md`, `specs/` muestra `000-historial/` (con `
 | CA-14, CA-15 | Leer §4, §5 y §6: sin `pytest`, sin ejemplos, sin «spec 008» |
 | CA-16 | `test_constitution_names_the_new_folders` busca `Versión 4.1` |
 | CA-17, CA-18 | Leer `AGENTS.md`: línea 5 y momento 2 iguales; ni la frase del §2 ni la del §4 |
-| CA-19 | `pytest` |
+| CA-19 | `pytest`: 113 tests en verde |

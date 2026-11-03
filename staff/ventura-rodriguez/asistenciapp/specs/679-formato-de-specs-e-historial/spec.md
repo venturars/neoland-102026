@@ -1,6 +1,6 @@
 # Spec 679 · Formato de specs e historial
 
-> Estado: **Implementada** (2026-10-30) · Creada: 2026-10-30 · Tipo: **proceso**
+> Estado: **Implementada** (v1.4, 2026-11-03) · Creada: 2026-10-30 · Tipo: **proceso**
 
 Issue: #679.
 
@@ -14,6 +14,7 @@ Issue: #679.
 4. **El propósito no se comprueba.** La constitución dice que una funcionalidad que no sirve al propósito queda fuera, pero ningún paso lo mira.
 5. **La constitución entra en detalle que no es suyo.** La forma de trabajar, la calidad y la seguridad nombran herramientas, ejemplos y specs concretas.
 6. **El manual describe por dentro el flujo de git.** Si ese flujo cambia, el manual también tiene que cambiar.
+7. **Las specs resumidas siguen ocupando sitio, y los tests las atan.** Un test lee los ficheros de una spec y otro excluye la carpeta de otra por su ruta. Muchos comentarios de los tests citan criterios y tareas de specs concretas. Borrar una spec rompe tests o deja comentarios que apuntan a nada.
 
 ---
 
@@ -31,7 +32,8 @@ Issue: #679.
 
 - **HU-01**: Como quien trabaja en esta carpeta, quiero que cada spec nueva lleve el número de su issue, para que dos specs nunca compartan nombre.
 - **HU-02**: Como agente, quiero que las specs antiguas tengan un resumen en un solo fichero, para leer menos sin perder lo que se decidió.
-- **HU-03**: Como quien trabaja en esta carpeta, quiero que las specs resumidas sigan intactas, para poder volver a ellas.
+- **HU-03**: Como quien trabaja en esta carpeta, quiero que las specs resumidas se borren y que se pueda volver a ellas con un enlace, para que la carpeta de specs no crezca sin fin y no se pierda el detalle.
+- **HU-08**: Como quien trabaja en esta carpeta, quiero que ni los tests ni el código nombren specs, para poder borrar una spec sin romper un test ni dejar comentarios que apuntan a nada.
 - **HU-04**: Como quien revisa, quiero un índice de todas las specs y otro de todas las enmiendas, cada uno en un solo sitio.
 - **HU-05**: Como agente, quiero que una funcionalidad diga a qué objetivo sirve, para pararme si no sirve a ninguno.
 - **HU-06**: Como quien trabaja en esta carpeta, quiero una constitución corta que diga los principios y no el detalle.
@@ -44,16 +46,18 @@ Issue: #679.
 ### El nombre de las specs (HU-01)
 
 - **CA-01**: **Dado** una spec nueva, **cuando** se crea, **entonces** su carpeta empieza por el número de su issue, seguido del nombre en kebab-case.
-- **CA-02**: **Dado** las specs `001` a `008`, **cuando** se aplica este cambio, **entonces** conservan su nombre y su contenido.
+- **CA-02**: **Dado** las specs `001` a `008`, **cuando** se aplica este cambio, **entonces** conservan su nombre. Las que no se resumen conservan también su contenido.
 - **CA-03**: **Dado** el orden de las specs, **cuando** se consulta, **entonces** primero van `001` a `008` y después las demás por número de issue.
 
 ### Los resúmenes (HU-02, HU-03)
 
 - **CA-04**: **Dado** 8 specs sin resumir, **cuando** se aplica la regla, **entonces** las 4 más antiguas se resumen. No cuentan el historial, el resumen ni las specs descartadas.
-- **CA-21**: **Dado** el resumen, **cuando** se resumen más specs, **entonces** se añaden al final de un único fichero sin reescribir lo anterior. Si ese fichero pasaría de 300 líneas, se sigue en otro.
+- **CA-21**: **Dado** el resumen, **cuando** se resumen más specs, **entonces** se añaden al final de un único fichero. Si ese fichero pasaría de 300 líneas, se sigue en otro.
 - **CA-05**: **Dado** un resumen, **cuando** se lee, **entonces** dice, por cada spec, qué problema resolvió, qué decisiones siguen vigentes y qué cambió después, con un enlace a la spec original.
-- **CA-06**: **Dado** las specs resumidas, **cuando** se escribe el resumen, **entonces** no se editan ni se borran.
-- **CA-07**: **Dado** este cambio, **cuando** termina, **entonces** existe el resumen de `001` a `004`.
+- **CA-06**: **Dado** las specs que se resumen, **cuando** se escribe el resumen, **entonces** se borran en la misma pull request, sin editarlas antes.
+- **CA-22**: **Dado** una spec borrada, **cuando** se sigue cualquier enlace a ella (historial, resumen o README), **entonces** abre la spec completa tal como era, en una versión fija de la rama principal donde aún existía.
+- **CA-23**: **Dado** un bloque del resumen ya escrito, **cuando** cambia algo de lo que cuenta, **entonces** solo se actualizan sus enlaces y se añaden líneas en «Qué cambió después», nombrando la spec que lo cambió. «Qué resolvió» y «Decisiones vigentes» no se reescriben.
+- **CA-07**: **Dado** este cambio, **cuando** termina, **entonces** existe el resumen de `001` a `004` y esas cuatro specs ya no están en la carpeta.
 - **CA-20**: **Dado** una spec que hace llegar a 8 las specs sin resumir, **cuando** se implementa, **entonces** el agente escribe el resumen en ese mismo momento y en la misma pull request.
 
 ### El historial (HU-04)
@@ -79,6 +83,11 @@ Issue: #679.
 - **CA-17**: **Dado** el manual, **cuando** se lee, **entonces** sigue diciendo que el git sigue el flujo de la carpeta y conserva el momento 2, pero no describe cómo funciona ese flujo por dentro.
 - **CA-18**: **Dado** los comandos del manual, **cuando** se leen, **entonces** no repiten las dependencias: están en la constitución.
 
+### Los tests y el código sin specs (HU-08)
+
+- **CA-24**: **Dado** los tests, **cuando** se leen, **entonces** ninguno abre un fichero de una spec ni excluye la carpeta de una spec.
+- **CA-25**: **Dado** los comentarios y las descripciones de los tests y del código de la app, **cuando** se leen, **entonces** no citan specs, criterios (`CA-xx`), tareas (`Txx`) ni apartados de un plan. Lo que cubre cada test lo dice su nombre, y la traza la lleva el plan de cada spec.
+
 ### Lo que no se rompe
 
 - **CA-19**: **Dado** este cambio, **cuando** se pasan los tests, **entonces** todos pasan.
@@ -88,8 +97,7 @@ Issue: #679.
 ## 5. Fuera de alcance
 
 - Renombrar o mover las specs `001` a `008`.
-- Borrar las specs resumidas (queda para otra reunión).
-- Cambiar el código de la app.
+- Cambiar lo que hace la app. En el código y en los tests solo cambian comentarios, y sale un test que leía una spec.
 - Cambiar el flujo de git o su orquestador.
 - Cambiar el propósito de la constitución.
 
@@ -109,3 +117,5 @@ Ninguna. El resumen lo escribe el agente, en el momento 4 de la spec que hace ll
 | 1.0 | 2026-10-30 | Quién y cuándo escribe el resumen (CA-20) | Quien trabaja en esta carpeta cerró la pregunta abierta |
 | 1.1 | 2026-10-30 | Implementada | T01–T09 hechas; 114 tests en verde |
 | 1.2 | 2026-11-03 | Un solo fichero de resumen, con un límite de 300 líneas (CA-21) | Quien trabaja en esta carpeta prefiere un fichero que leer en vez de uno por cada 4 specs |
+| 1.3 | 2026-11-03 | Las specs resumidas se borran con enlace permanente (HU-03, CA-02, CA-06, CA-07, CA-22). Qué se puede tocar de un bloque escrito (CA-23). Ni los tests ni el código nombran specs (HU-08, CA-24, CA-25) | La reunión pidió borrar las specs resumidas. Para borrarlas, los tests no pueden depender de ellas |
+| 1.4 | 2026-11-03 | Implementada | T10–T15 hechas; 113 tests en verde |
