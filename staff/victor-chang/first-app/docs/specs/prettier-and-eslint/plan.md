@@ -17,7 +17,8 @@ Tooling only. It changes no feature.
   - **Commands**: `pnpm format`, `pnpm format:check` and `pnpm lint` replace the two `npx prettier` lines.
   - **How code is written**: run `pnpm format` and `pnpm lint` before committing.
 - Touch: `docs/specs/README.md`, the row `prettier-and-eslint`.
-- Not touched: `.prettierignore` (it already lists `.venv/` and `pnpm-lock.yaml`; Prettier also skips `node_modules/` by default), `logic/`, `queries/`, `db/`, `clients/`, unless the answer to the open question says so.
+- Touch: `db/connection.js` and `queries/users.js`, add `URL` to the `node:url` import (`db/connection.js` already imports `fileURLToPath` from it; `queries/users.js` gets a new `import { URL } from "node:url";`). The behaviour does not change.
+- Not touched: `.prettierignore` (it already lists `.venv/` and `pnpm-lock.yaml`; Prettier also skips `node_modules/` by default), `logic/`, `clients/`.
 
 `eslint.config.js`:
 
@@ -128,7 +129,6 @@ Decision:
 
 ## Open questions
 
-1. ESLint's recommended rules include `no-undef`, and with no Node globals declared, the `URL` in `db/connection.js` and `queries/users.js` fails as `'URL' is not defined`. Which fix?
-   - **a.** `import { URL } from "node:url"` in those two files. No new package. `node:url` is already a listed built-in. (Recommended.)
-   - **b.** Declare `URL` as a global in `eslint.config.js` (`languageOptions: { globals: { URL: "readonly" } }`).
-   - **c.** Add the `globals` package and use `globals.node`. One more package, with its own Socket check.
+None. Answered on 2026-11-03:
+
+1. `no-undef` flags the global `URL` in `db/connection.js` and `queries/users.js`. Fix: `import { URL } from "node:url"` in those two files. No new package, and `node:url` is already a listed built-in.
