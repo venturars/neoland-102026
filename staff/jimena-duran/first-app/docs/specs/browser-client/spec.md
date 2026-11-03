@@ -2,7 +2,7 @@ Issue: #832
 
 # Cliente del navegador
 
-Estado: alcance confirmado; tareas preparadas para revisión. La implementación no ha comenzado.
+Estado: alcance y trece tareas aprobados, implementados y comprobados localmente. Resultados y límites en verification.md; entrega aprobada para publicación en la PR draft #834, sin revisores ni merge.
 
 ## Resultado esperado
 

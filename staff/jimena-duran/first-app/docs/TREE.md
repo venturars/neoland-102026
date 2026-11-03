@@ -18,6 +18,10 @@ first-app/
       users-gender-count.js
     clients/terminal/
     clients/jupyter/
+    clients/browser/
+      index.html
+      app.js
+      styles.css
   agents/                 orquestador y subagentes del flujo de Git
   skills/                 instrucciones reutilizables por momento
   tools/                  siete scripts Bash originales del flujo de Git
