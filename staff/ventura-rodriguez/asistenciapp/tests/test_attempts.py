@@ -1,4 +1,4 @@
-"""Regla del máximo de intentos. CA-01."""
+"""Regla del máximo de intentos."""
 
 import pytest
 

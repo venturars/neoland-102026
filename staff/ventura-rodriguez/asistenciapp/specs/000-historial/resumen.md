@@ -1,6 +1,6 @@
 # Resumen de specs
 
-Versión corta de las specs ya resumidas (`AGENTS.md` §3). Quien empieza una tarea lee este fichero en vez de esas specs. Si necesita el detalle (un criterio, una prueba, una nota), va a la original, que sigue intacta en su carpeta.
+Versión corta de las specs ya resumidas (`AGENTS.md` §3). Quien empieza una tarea lee este fichero en vez de esas specs. Si necesita el detalle (un criterio, una prueba, una nota), va a la original por el enlace de su encabezado: las specs resumidas se borran.
 
 Cada bloque se añade al final y no se reescribe. Al pasar de 300 líneas se sigue en `resumen-2.md`.
 
@@ -12,7 +12,7 @@ Cada bloque se añade al final y no se reescribe. Al pasar de 300 líneas se sig
 
 ---
 
-### 001 · [checkin-codigo](../001-checkin-codigo/spec.md)
+### 001 · [checkin-codigo](https://github.com/venturars/neoland-102026/tree/90d8be4e5f19ef4d3bab29dacdc29904393a2e82/staff/ventura-rodriguez/asistenciapp/specs/001-checkin-codigo)
 
 **Qué resolvió.** Pasar lista en una clase online en menos de un minuto, en cualquier plataforma, con una lista guardada y descargable.
 
@@ -28,10 +28,11 @@ Cada bloque se añade al final y no se reescribe. Al pasar de 300 líneas se sig
 **Qué cambió después.**
 - «Sin límite de intentos» (decisión 1 de su plan): la **006** añadió un límite por IP y la **008** lo dejó en solo códigos fallados, con un bloqueo que caduca.
 - La «futura spec `002`» para Discord no llegó: el bot sigue como idea sin spec, y el número `002` lo usó otra spec.
+- La **679** la borró; está en el enlace de su encabezado.
 
 ---
 
-### 002 · [spec-antes-del-cambio](../002-spec-antes-del-cambio/spec.md)
+### 002 · [spec-antes-del-cambio](https://github.com/venturars/neoland-102026/tree/90d8be4e5f19ef4d3bab29dacdc29904393a2e82/staff/ventura-rodriguez/asistenciapp/specs/002-spec-antes-del-cambio)
 
 **Qué resolvió.** El agente cambiaba el README o los tests sin spec, porque las reglas solo frenaban las funcionalidades nuevas. Además, las reglas nombraban otra carpeta y a otra persona.
 
@@ -45,10 +46,11 @@ Cada bloque se añade al final y no se reescribe. Al pasar de 300 líneas se sig
 **Qué cambió después.**
 - «Esperar el ok entre la spec y el plan» (CA-02): la **007** lo quitó. La spec, el plan y las tareas se escriben en la misma pasada, dentro de los cinco momentos.
 - «Ningún fichero de la app»: la **679** lo dejó en «ningún fichero de esta carpeta» (constitución §4).
+- La **679** la borró; está en el enlace de su encabezado.
 
 ---
 
-### 003 · [activar-el-entorno](../003-activar-el-entorno/spec.md)
+### 003 · [activar-el-entorno](https://github.com/venturars/neoland-102026/tree/90d8be4e5f19ef4d3bab29dacdc29904393a2e82/staff/ventura-rodriguez/asistenciapp/specs/003-activar-el-entorno)
 
 **Qué resolvió.** En el README, el paso que solo activa el entorno se titulaba «Arrancar la app», y parecía que la app ya estaba en marcha.
 
@@ -58,10 +60,11 @@ Cada bloque se añade al final y no se reescribe. Al pasar de 300 líneas se sig
 
 **Qué cambió después.**
 - La **008** añadió a esos pasos los comandos de macOS, Linux y Windows. La separación sigue igual.
+- La **679** la borró; está en el enlace de su encabezado.
 
 ---
 
-### 004 · [quitar-referencias-personales](../004-quitar-referencias-personales/spec.md)
+### 004 · [quitar-referencias-personales](https://github.com/venturars/neoland-102026/tree/90d8be4e5f19ef4d3bab29dacdc29904393a2e82/staff/ventura-rodriguez/asistenciapp/specs/004-quitar-referencias-personales)
 
 **Qué resolvió.** Las instrucciones y las notas nombraban a una persona y usaban su carpeta personal.
 
@@ -73,3 +76,5 @@ Cada bloque se añade al final y no se reescribe. Al pasar de 300 líneas se sig
 
 **Qué cambió después.**
 - Nada. La **008** mantuvo las dos líneas `cd staff/<usuario>/asistenciapp` al reescribir el README.
+- La **679** la borró; está en el enlace de su encabezado.
+- La **679** quitó el test que leía las notas de la `001`; el test de nombres ya no excluye ninguna carpeta.

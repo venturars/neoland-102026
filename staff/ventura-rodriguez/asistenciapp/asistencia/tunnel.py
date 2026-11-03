@@ -1,4 +1,4 @@
-"""Túnel público con cloudflared para que los alumnos entren desde casa (plan §2.10)."""
+"""Túnel público con cloudflared para que los alumnos entren desde casa."""
 
 import queue
 import re
