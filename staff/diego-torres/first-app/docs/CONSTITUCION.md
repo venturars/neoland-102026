@@ -15,6 +15,8 @@ Si una tarea y esta constitución chocan, gana la constitución.
 | `src/clients/terminal/*.txt` | Un cliente por operación. Se pega en la terminal, le pasa el almacén y hace `console.log` |
 | `src/logic/users-gender-count.js` | Cuenta usuarios por género del nombre. No guarda nada |
 | `src/clients/jupyter/*.ipynb` | Cliente que abre Jupyter y llama a las operaciones |
+| `src/clients/http/*` | Servidor local con `node:http`. Llama a `src/logic/`, sirve `src/clients/web/` y traduce los errores a HTTP |
+| `src/clients/web/*` | Cliente de navegador en HTML, CSS y JS vanilla. Llama a la API y no copia validaciones |
 
 
 ## Base de datos
@@ -90,6 +92,8 @@ Los tres primeros los lanza `src/logic/shared.js`. Los dos últimos los lanzan l
 
 `No se han podido clasificar los usuarios` lo lanza `src/logic/users-gender-count.js` si el almacén no se puede leer o la llamada a la IA falla. No es uno de los mensajes de arriba.
 
+`Not found`, `Body is not valid JSON` y `Unexpected error` son solo de `src/clients/http/`. Salen en las respuestas HTTP y no los lanza `src/logic/`.
+
 ## Qué no entra
 
-HTTP y frontend no se añaden. Jupyter llama a las operaciones que ya existen. No copia la regla de que el email es único.
+El HTTP solo escucha en `127.0.0.1` y no tiene login. No se añaden paquetes para el servidor ni para la web. Las notas aún no existen. Jupyter llama a las operaciones que ya existen. No copia la regla de que el email es único.

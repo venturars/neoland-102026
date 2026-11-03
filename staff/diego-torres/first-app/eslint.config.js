@@ -12,4 +12,14 @@ export default defineConfig([
     },
     extends: ["js/recommended"],
   },
+  {
+    files: ["src/clients/web/**/*.js"],
+    languageOptions: {
+      globals: {
+        document: "readonly",
+        fetch: "readonly",
+        confirm: "readonly",
+      },
+    },
+  },
 ]);

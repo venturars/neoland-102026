@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>First App</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="module" src="/main.js"></script>
+  </head>
+  <body>
+    <main class="app">
+      <h1 class="title">First App</h1>
+
+      <p id="message" class="message" role="status" hidden></p>
+
+      <section id="selection-screen" class="card" data-screen>
+        <h2>¿Quién eres?</h2>
+        <form id="selection-form">
+          <label for="user-select">Usuario</label>
+          <select id="user-select" name="userId" required disabled></select>
+          <p id="selection-status" class="help"></p>
+          <div class="actions">
+            <button id="select-user" type="submit" disabled>Continuar</button>
+            <button
+              id="reload-users"
+              type="button"
+              class="secondary"
+              data-action="selection"
+              hidden
+            >
+              Volver a intentarlo
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section id="menu-screen" class="card" data-screen hidden>
+        <h2>Menú</h2>
+        <div class="user-summary">
+          <p id="menu-user-id" class="help"></p>
+          <p id="menu-user-name" class="user-name"></p>
+          <p id="menu-user-email"></p>
+        </div>
+        <div class="actions stacked">
+          <button type="button" data-action="edit">Modificar usuario</button>
+          <button type="button" data-action="notes">Ir a notas</button>
+          <button type="button" class="secondary" data-action="selection">
+            Volver
+          </button>
+        </div>
+      </section>
+
+      <section id="edit-screen" class="card" data-screen hidden>
+        <h2>Modificar usuario</h2>
+        <form id="edit-form">
+          <label for="user-name">Nombre</label>
+          <input id="user-name" name="nombre" type="text" required />
+          <label for="user-email">Email</label>
+          <input
+            id="user-email"
+            name="email"
+            type="email"
+            maxlength="64"
+            required
+          />
+          <div class="actions">
+            <button type="submit">Guardar</button>
+            <button type="button" class="secondary" data-action="menu">
+              Volver
+            </button>
+          </div>
+        </form>
+        <div class="danger-zone">
+          <h3>Eliminar usuario</h3>
+          <p>El usuario se borra para siempre.</p>
+          <button id="delete-user" type="button" class="danger">
+            Eliminar usuario
+          </button>
+        </div>
+      </section>
+
+      <section id="notes-screen" class="card" data-screen hidden>
+        <h2>Notas</h2>
+        <p id="notes-user" class="help"></p>
+        <p>Aún no hay notas</p>
+        <div class="actions">
+          <button type="button" class="secondary" data-action="menu">
+            Volver
+          </button>
+        </div>
+      </section>
+
+      <noscript>Activa JavaScript para usar First App.</noscript>
+    </main>
+  </body>
+</html>

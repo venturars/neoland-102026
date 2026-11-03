@@ -56,7 +56,9 @@ Para empezar, copia `.mcp.example.json` a `.mcp.json` y define `SOCKET_API_TOKEN
 
 Desde esta carpeta, Jupyter se abre con `pnpm run jupyter`, en Linux y en Windows. Lo lanza `scripts/jupyter.js`: la primera vez crea `.venv` e instala `notebook==7.6.3`; las siguientes lo reutiliza.
 
-`pnpm format` pasa Prettier por los `.js` de `src/db/`, `src/queries/` y `src/logic/`, con el formato estándar y sin configuración propia. `pnpm lint` pasa ESLint con las reglas recomendadas, según `eslint.config.js`.
+`pnpm start` levanta la web en `http://127.0.0.1:3000`. La sirve `src/clients/http/start-http-server.js`.
+
+`pnpm format` pasa Prettier por los `.js` de `src/db/`, `src/queries/`, `src/logic/` y `src/clients/http/`, y por los `.js`, `.html` y `.css` de `src/clients/web/`, con el formato estándar y sin configuración propia. `pnpm lint` pasa ESLint con las reglas recomendadas, según `eslint.config.js`.
 
 La dependencia `openai` es la del clasificador. `@colors/colors` y `cli-table3` son las tablas del cliente Jupyter. Se instalan con `pnpm install`.
 
