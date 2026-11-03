@@ -20,8 +20,15 @@ Las flechas solo van hacia dentro. Una parte de fuera puede llamar a una de dent
 
 ## 2. Estructura de carpetas
 
+El flujo de git vive junto al código. `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca. El detalle de cada momento está en `AGENTS.md`.
+
 ```
 asistenciapp/
+├── agents/                # orquestador y subagentes del flujo de git
+├── skills/                # skills de ese flujo
+├── tools/                 # scripts de git
+├── templates/             # cuerpo de la issue y de la pull request
+├── MCPS/                  # dirección del MCP de GitHub
 ├── docs/
 │   ├── CONSTITUTION.md    # reglas no negociables
 │   └── ARCHITECTURE.md    # este archivo
@@ -56,6 +63,7 @@ asistenciapp/
 | `asistencia/domain/codes.py` | Reglas | Calcula el código y dice si el que escribió el alumno vale |
 | `asistencia/domain/names.py` | Reglas | Acepta o rechaza el nombre |
 | `asistencia/domain/session.py` | Reglas | Dice si la clase existe, si sigue abierta y si el código vale ahora |
+| `asistencia/domain/attempts.py` | Reglas | Decide si los intentos de una IP se han pasado. No abre la base ni dibuja pantallas |
 | `asistencia/usecases/attendance.py` | Acciones | Abre, cierra, lista, exporta, quita y registra |
 | `asistencia/storage/sqlite.py` | Almacén | Abre `data/asistencia.db`, guarda y lee |
 | `asistencia/export.py` | Acción de exportar | Da formato CSV a filas que ya están cargadas. No abre la base |

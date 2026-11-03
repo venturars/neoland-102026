@@ -1,0 +1,4 @@
+Socket MCP remoto: https://mcp.socket.dev/
+Autorización: OAuth de la conexión existente.
+Documentación oficial: https://docs.socket.dev/docs/remote-socket-mcp
+Procedimiento de consulta PURL y límites: ../../docs/SOCKET.md

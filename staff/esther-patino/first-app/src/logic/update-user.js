@@ -7,7 +7,7 @@ import { validateEmail, validateId, validateName, toUser } from "./shared.js";
 
 export { findById, saveUser as updateUserQuery };
 
-export function updateUser(id, changes = {}) {
+export async function updateUser(id, changes = {}) {
   const userId = validateId(id);
   const next = {};
 
@@ -18,13 +18,13 @@ export function updateUser(id, changes = {}) {
     next.email = validateEmail(changes.email);
   }
 
-  const current = findById(userId);
+  const current = await findById(userId);
   if (!current) {
     throw new Error("User not found");
   }
 
   if (next.email !== undefined) {
-    const owner = findByEmail(next.email);
+    const owner = await findByEmail(next.email);
     if (owner && owner.id !== userId) {
       throw new Error("Email is already used");
     }
@@ -44,7 +44,7 @@ export function updateUser(id, changes = {}) {
     email = next.email;
   }
 
-  const saved = saveUser({
+  const saved = await saveUser({
     id: userId,
     name,
     email,

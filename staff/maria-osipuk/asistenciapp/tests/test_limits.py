@@ -218,8 +218,18 @@ def test_docs_explain_the_address_and_the_amendment():  # CA-19, CA-20
     root = Path(__file__).resolve().parents[1]
     readme = (root / "README.md").read_text(encoding="utf-8")
     constitution = (root / "docs" / "CONSTITUTION.md").read_text(encoding="utf-8")
-    assert "Versión 3.0" in constitution
-    assert "Excepción de la spec 006" in constitution
+    history = (root / "docs" / "CONSTITUTION-HISTORY.md").read_text(encoding="utf-8")
+    assert "CONSTITUTION-HISTORY.md" in constitution
+    versions = [
+        line.split("|")[1].strip()
+        for line in history.splitlines()
+        if line.startswith("|")
+    ]
+    assert "3.0" in versions
+    privacy = constitution.split("### P4", 1)[1].split("### P5", 1)[0]
+    for piece in ("dirección de red", "exclusivamente", "contar intentos", "bloqueo"):
+        assert piece in privacy
+    assert "No se incorpora a la asistencia" in privacy
     for piece in (
         "dirección pública",
         "no identifica para siempre",

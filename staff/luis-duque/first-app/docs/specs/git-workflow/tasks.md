@@ -16,9 +16,9 @@
    Los siete ficheros se pueden leer.
 
 4. Copia `exercises/git-workflow-agent-template/templates/` en `staff/luis-duque/first-app/templates/`.
-   Entran `issues/basic_issue.md` y `pull-request/basic-pull-request.md`.
+   Entran seis issues y seis pull requests tipadas: chore, docs, feat, fix, refactor y test.
    El texto no cambia.
-   Los dos ficheros se pueden leer.
+   Los doce ficheros se pueden leer.
 
 5. Copia `exercises/git-workflow-agent-template/MCPS/` en `staff/luis-duque/first-app/MCPS/`.
    Entra `github-mcp-server/mcp.txt`.

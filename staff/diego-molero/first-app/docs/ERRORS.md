@@ -14,6 +14,11 @@ Los fallos se señalan con `throw new Error("...")`, con mensajes en inglés. No
 | User not found | No existe el usuario de una búsqueda individual, cambio o borrado. |
 | Could not find the user | Falla la consulta de búsqueda por nombre. |
 | Could not classify the users | Falla la lectura, configuración o comunicación del clasificador. |
+| Note ID is invalid | El ID de nota no es un entero positivo seguro. |
+| Note not found | La nota no existe para el usuario indicado. |
+| Note title is invalid | El título no es texto o queda vacío tras recortarlo. |
+| Note content is invalid | El contenido no es texto; el texto vacío sí se acepta. |
+| Notes schema is incompatible | El esquema existente de notas no cumple el contrato; la preparación hace rollback sin reparar ni borrar datos. |
 
 El plan de cada spec define el orden de validación. Una búsqueda por nombre o un listado sin coincidencias devuelve una lista vacía. Los fallos técnicos de las operaciones actuales se propagan como excepciones; no se sustituyen sus mensajes durante una reorganización.
 

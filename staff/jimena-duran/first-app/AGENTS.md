@@ -18,8 +18,8 @@ Las reglas generales y los enlaces a las guías por tema están en [CONSTITUTION
 
 ## Comandos disponibles
 
-- Ejecución: `pnpm start:vanilla` sirve el cliente local en `http://127.0.0.1:3000`; uso y requisito de base existente en [VANILLA-CLIENT.md](docs/VANILLA-CLIENT.md).
-- Pruebas de la aplicación: el script `test` de `package.json` es solo el marcador de pnpm. Las comprobaciones aisladas de Git están en `tools/tests/`; requieren autorización para los commits y publicaciones en sus repositorios temporales, según [GIT-AUTOMATION.md](docs/GIT-AUTOMATION.md).
+- Ejecución: `pnpm server` o `node src/db/server.js` inicia el servidor SQL local en `http://127.0.0.1:3000`. Mantenerlo abierto antes de ejecutar terminal o Jupyter; uso en [DATABASE.md](docs/DATABASE.md).
+- Pruebas de la aplicación: el script `test` de `package.json` es solo el marcador de pnpm. La comprobación de los originales Bash y sus ensayos temporales se documenta en [GIT-AUTOMATION.md](docs/GIT-AUTOMATION.md); no hay ensayos propios en `tools/tests/`.
 - Formato: `pnpm format` ejecuta Prettier con sus opciones predeterminadas; las reglas están en [STYLE.md](docs/STYLE.md). `pnpm lint` revisa el JavaScript con ESLint.
 
 ## Reglas de trabajo

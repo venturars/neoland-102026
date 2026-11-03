@@ -1,18 +1,18 @@
----
-name: commit-changes
-description: Guarda solo los archivos explícitos de una tarea mediante un commit autorizado conservando el índice ajeno.
----
+### Herramienta: COMMIT_CHANGES
 
-# Guardar un trozo
+- **Descripción**: Úsala única y exclusivamente para guardar un trozo con ficheros nombrados. No la uses para el commit vacío de apertura. No la uses con `git add -A` ni con el directorio entero.
+- **Comando de Terminal**: `./staff/jimena-duran/first-app/tools/commit-changes.sh "[MENSAJE]" "[FICHERO_1]" "[FICHERO_2]"`
 
-La ejecuta `agents/create-commit.md`. Recibe una lista explícita de archivos, mensaje convencional en inglés y rama autorizada. Revisa el diff de esos archivos antes de guardar; no amplíes la lista para incluir todos los cambios. Nunca en main o staging y nunca sin autorización de commit.
+El comando se lanza desde el root del repositorio git (la carpeta que contenga el directorio .git).
 
-Desde la raíz:
+Fuente: un commit es un conventional commit, como en [github-pr](https://www.skills.sh/gentleman-programming/gentleman-skills/github-pr). En esta plantilla caben varios commits pequeños en la misma pull request.
 
-```powershell
-& .\staff\jimena-duran\first-app\tools\commit-changes.ps1 -Message $message -Paths $filePaths -ExpectedBranch $branchName
-```
+#### Especificación de Argumentos
 
-`$filePaths` es un array de rutas de archivos relativas a la raíz del repositorio; cita literalmente las rutas con espacios. Desde `first-app`, usa `& .\tools\commit-changes.ps1` con las mismas rutas relativas a la raíz, no al directorio actual. No pases directorios, comodines ni opciones como archivos.
+1. **MENSAJE** _(Obligatorio)_: Conventional commit en inglés, `tipo: descripción`. El tipo es `feat`, `fix`, `docs`, `refactor`, `test` o `chore`.
+2. **FICHERO** _(Obligatorio, uno o más)_: Ruta desde la raíz del repo. Repite el argumento por cada fichero del trozo.
 
-El script usa un índice temporal y conserva los archivos preparados que no forman parte del commit. Verifica el hash, los archivos incluidos y el índice posterior. Si falla, informa y comprueba el estado antes de reintentar. No uses `git add .`, reset, clean ni stash automático. No hagas push ni abras PR desde esta skill. Las restricciones de la entrega actual prevalecen.
+#### Reglas de Invocación Críticas
+
+- **Escapado de caracteres**: Si el mensaje contiene comillas dobles (`"`), escápalas como `\"`.
+- **Procesamiento de respuestas**: El script lista el mensaje y los ficheros. El commit lleva solo esos ficheros: lo que ya estuviera preparado se queda preparado. Si el código de salida no es 0, no reintentes metiendo más ficheros de los que nombró el alumno.

@@ -1,5 +1,8 @@
 node_modules/
-db/*.sqlite
-db/*.sqlite-*
+src/db/*.sqlite
+src/db/*.sqlite-*
 .venv/
 .ipynb_checkpoints/
+
+# La configuración MCP privada puede guardar credenciales.
+.mcp.json
