@@ -1,4 +1,4 @@
-import { updateUser } from "/logic/update-user.js";
+import { updateUser } from "../../logic/update-user.js";
 import { showMessage } from "./show-message.js";
 import { showUserMenu } from "./show-user-menu.js";
 import { STATE } from "./state.js";

@@ -1,4 +1,4 @@
-import { listUsers } from "/logic/list-users.js";
+import { listUsers } from "../../logic/list-users.js";
 import { showMessage } from "./show-message.js";
 import { showScreen } from "./show-screen.js";
 import { STATE } from "./state.js";

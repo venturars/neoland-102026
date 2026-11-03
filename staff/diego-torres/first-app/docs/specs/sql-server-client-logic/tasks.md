@@ -12,9 +12,9 @@
    Cada uno exporta una constante en mayúsculas con el mismo texto SQL.
    Borra los `.sql`.
 
-4. Crea `src/db/execute-sql.js`, `src/db/serve-file.js` y `src/db/server.js`.
-   `/execute` atiende `exec`, `get`, `all` y `run`. Cualquier otra cosa da 500 con el cuerpo vacío. No hay cabeceras CORS.
-   `serveFile` solo sirve `.html`, `.css` y `.js` de la tabla del plan, y la ruta resuelta tiene que quedar dentro de su carpeta.
+4. Reescribe `src/db/server.js` como único fichero de `src/db/` y borra `connection.js`.
+   `/execute` atiende `exec`, `get`, `all` y `run`. Cualquier otra cosa da 500 con el cuerpo vacío.
+   CORS solo para `Origin: file://` o `null`; otro origen da 403. Cualquier ruta que no sea `/execute` da 404.
    Al arrancar se ejecuta `CREATE_USERS_TABLE` y se escribe `First App: http://127.0.0.1:3000`.
 
 5. Reescribe `src/queries/users.js`.
@@ -34,7 +34,8 @@
    Si falla la base o la IA, lanza `Could not classify the users`.
 
 9. Borra `src/clients/http/`.
-   En `src/clients/web/`, cada módulo importa su operación de `/logic/<fichero>.js` y deja de usar `fetch("/api/…")`.
+   En `src/clients/web/`, cada módulo importa su operación de `../../logic/<fichero>.js` y deja de usar `fetch("/api/…")`. `index.html` carga `./styles.css` y `./main.js`.
+   Crea `scripts/browser.js`, que abre `index.html` como fichero en Chrome.
    Usa `name` y `error.message`. Las pantallas no cambian.
 
 10. Reescribe `src/clients/terminal/*.txt`.
@@ -46,7 +47,7 @@
     La celda markdown avisa de que antes hay que lanzar `pnpm start`.
 
 12. Abre `package.json` y `eslint.config.js`.
-    `start` es `node src/db/server.js`. `format` ya no nombra `src/clients/http/`.
+    `start` es `node src/db/server.js` y `browser` es `node scripts/browser.js`. `format` ya no nombra `src/clients/http/`.
     `fetch` es un global para `src/queries/**/*.js`.
 
 13. En `first-app`, ejecuta `pnpm format` solo sobre los ficheros tocados y luego `pnpm lint`.

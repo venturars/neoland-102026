@@ -1,6 +1,6 @@
 # Base de datos
 
-Hay una sola base, `src/db/users.sqlite`, y una sola conexión: el `db` que exporta `src/db/connection.js` con `node:sqlite`. El fichero no se sube a git.
+Hay una sola base, `src/db/users.sqlite`, y un solo fichero que la abre: `src/db/server.js`, con `node:sqlite`. El fichero de la base no se sube a git.
 
 ## Tabla `users`
 
@@ -11,7 +11,7 @@ Hay una sola base, `src/db/users.sqlite`, y una sola conexión: el `db` que expo
 
 ## Servidor
 
-`src/db/server.js` escucha solo en `127.0.0.1:3000`. Al arrancar crea la tabla si no existe.
+`src/db/server.js` es todo `src/db/`. Abre la base, crea la tabla si no existe y escucha solo en `127.0.0.1:3000`. Solo atiende datos: no sirve la web ni ningún otro fichero. Cualquier ruta que no sea `/execute` da 404.
 
 `POST /execute` recibe `{ method, sql, params }`:
 
@@ -24,22 +24,18 @@ Hay una sola base, `src/db/users.sqlite`, y una sola conexión: el `db` que expo
 
 Cualquier otra cosa, o un fallo de SQLite, da 500 con el cuerpo vacío.
 
-Una web de otro origen no puede llamar a `/execute`:
+## Quién puede llamar a `/execute`
 
-- no hay cabeceras CORS, así que no puede leer la respuesta;
-- solo se acepta `Content-Type: application/json`, que obliga al navegador a pedir permiso antes, y ese permiso nunca se da (si no, 415);
-- si llega una cabecera `Origin` distinta de `http://127.0.0.1:3000`, se responde 403;
-- si la cabecera `Host` no es `127.0.0.1:3000`, se responde 403. Por eso la app se abre con `127.0.0.1` y no con `localhost`.
+- **La terminal y Jupyter** llaman desde Node y no envían `Origin`.
+- **La web** se abre como fichero con `pnpm browser`. Chrome la presenta con origen `file://` (por `--allow-file-access-from-files`), o `null` sin ese flag. Solo esos dos orígenes reciben permiso CORS, con `Access-Control-Allow-Origin` igual al origen que llega, en el `OPTIONS` previo y en el `POST`.
+- **Otra web** tiene otro origen: el `OPTIONS` y el `POST` dan 403.
 
-`GET` sirve solo `.html`, `.css` y `.js`, y solo de estas carpetas:
+Además:
 
-| Ruta | Carpeta |
-| --- | --- |
-| `/` y `/<fichero>` | `src/clients/web/` |
-| `/logic/…` | `src/logic/` |
-| `/queries/…` | `src/queries/` |
+- Solo se acepta `Content-Type: application/json`; si no, 415. Así nadie puede mandar una petición «simple» sin pasar por el permiso.
+- Si la cabecera `Host` no es `127.0.0.1:3000`, se responde 403. Protege del DNS rebinding.
 
-`src/db/` no se sirve nunca.
+Riesgo conocido: una página de otra web metida en un iframe con `sandbox` también tiene origen `null`, y cualquier otro fichero local abierto en ese Chrome tiene origen `file://`. Es el precio de abrir la web como fichero. El servidor solo escucha en `127.0.0.1` y no guarda nada sensible.
 
 ## Consultas
 

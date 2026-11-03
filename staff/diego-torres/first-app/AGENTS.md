@@ -52,7 +52,9 @@ Para empezar, copia `.mcp.example.json` a `.mcp.json` y define `SOCKET_API_TOKEN
 
 Desde esta carpeta, Jupyter se abre con `pnpm run jupyter`, en Linux y en Windows. Lo lanza `scripts/jupyter.js`: la primera vez crea `.venv` e instala `notebook==7.6.3`; las siguientes lo reutiliza.
 
-`pnpm start` lanza `src/db/server.js`: el servidor SQL y la web en `http://127.0.0.1:3000`. Tiene que estar en marcha para cualquier cliente.
+`pnpm start` lanza `src/db/server.js`, el servidor de datos en `http://127.0.0.1:3000`. Tiene que estar en marcha para cualquier cliente.
+
+`pnpm browser` abre `src/clients/web/index.html` como fichero en Google Chrome, con un perfil aparte y `--allow-file-access-from-files`. Se lanza en otra terminal, con `pnpm start` ya en marcha.
 
 `pnpm format` pasa Prettier por los `.js` de `src/db/`, `src/queries/` y `src/logic/`, y por los `.js`, `.html` y `.css` de `src/clients/web/`, con el formato estándar y sin configuración propia. `pnpm lint` pasa ESLint con las reglas recomendadas, según `eslint.config.js`.
 

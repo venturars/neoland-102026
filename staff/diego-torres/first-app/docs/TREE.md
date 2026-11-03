@@ -7,12 +7,10 @@ first-app/
   eslint.config.js
   scripts/
     jupyter.js
+    browser.js
   src/
     db/
-      connection.js
-      server.js
-      execute-sql.js
-      serve-file.js
+      server.js           (todo el servidor de datos)
       users.sqlite        (no está en git)
     queries/
       users.js

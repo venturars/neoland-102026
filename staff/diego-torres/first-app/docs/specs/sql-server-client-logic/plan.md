@@ -1,6 +1,8 @@
 # Plan — lógica en el cliente con la base en un servidor
 
-No es una funcionalidad nueva: cambia la arquitectura. Las operaciones son las mismas. Cambian sus firmas, la forma del usuario, los mensajes y dónde se ejecutan.
+No es una funcionalidad nueva: cambia la arquitectura.
+
+Cambio tras la revisión de la #805: el servidor solo atiende datos y todo `src/db/` es un único `server.js`. La web se abre como fichero con `pnpm browser`, como en la #816. Las operaciones son las mismas. Cambian sus firmas, la forma del usuario, los mensajes y dónde se ejecutan.
 
 ## Capas, de abajo arriba
 
@@ -13,9 +15,8 @@ No es una funcionalidad nueva: cambia la arquitectura. Las operaciones son las m
 
 Se crean:
 
-- `src/db/server.js` — arranca el servidor en `127.0.0.1:3000` y crea la tabla al empezar
-- `src/db/execute-sql.js` — `executeSql(body)`: ejecuta una petición de `/execute` con `db`
-- `src/db/serve-file.js` — `serveFile(response, pathname)`: sirve un fichero de la lista blanca
+- `src/db/server.js` — todo `src/db/`: abre la base, crea la tabla al empezar y atiende `/execute` en `127.0.0.1:3000`
+- `scripts/browser.js` — abre `src/clients/web/index.html` como fichero en Chrome
 - `src/queries/queries/*.js` — uno por consulta y con el mismo nombre que el `.sql` de hoy (`find-all.js`, `insert.js`…). Cada uno exporta una constante en mayúsculas con el texto (`FIND_ALL`, `INSERT_USER`…)
 - `docs/ARCHITECTURE.md`, `docs/TREE.md`, `docs/DATABASE.md`, `docs/ERRORS.md`, `docs/STYLE.md`
 
@@ -29,6 +30,7 @@ Se tocan:
 Se borran:
 
 - `src/queries/queries/*.sql`
+- `src/db/connection.js` (lo absorbe `server.js`)
 - `src/clients/http/` entera
 
 ## Servidor — `src/db/server.js`
@@ -46,18 +48,21 @@ Se borran:
 
 Otro `method`, un cuerpo que no es JSON o un fallo de SQLite → 500 con el cuerpo vacío. El detalle no sale del servidor.
 
-No hay cabeceras CORS. `fetch` con `Content-Type: application/json` desde otro origen exige preflight. Sin `access-control-allow-origin`, el navegador no envía la petición.
+Quién puede llamar:
 
-`GET` sirve ficheros:
+- sin `Origin` (terminal y Jupyter): sí;
+- `Origin: file://` o `Origin: null` (la página abierta como fichero; Chrome usa `file://` con `--allow-file-access-from-files`): sí, con `Access-Control-Allow-Origin` igual al origen recibido, en el `OPTIONS` y en el `POST`. Si Chrome lo pide, también `Access-Control-Allow-Private-Network: true`;
+- cualquier otro origen: 403.
 
-| Ruta | Carpeta |
-| --- | --- |
-| `/` | `src/clients/web/index.html` |
-| `/logic/<fichero>` | `src/logic/` |
-| `/queries/<…>` | `src/queries/` (incluye `queries/queries/`) |
-| `/<fichero>` | `src/clients/web/` |
+Solo se acepta `Content-Type: application/json` (si no, 415). Si `Host` no es `127.0.0.1:3000`, da 403.
 
-Solo se sirven `.html`, `.css` y `.js`. La ruta se decodifica y se resuelve, y tiene que quedar dentro de su carpeta. Si no, 404. `src/db/` no está en la tabla, así que `connection.js` y `users.sqlite` nunca se sirven.
+No sirve ficheros. Cualquier ruta que no sea `/execute` da 404.
+
+## Web como fichero
+
+Los módulos de `src/clients/web/` importan la lógica con rutas relativas (`../../logic/<fichero>.js`). `index.html` carga `./styles.css` y `./main.js`.
+
+`pnpm browser` ejecuta `scripts/browser.js`, que lanza Chrome con `--user-data-dir` en la carpeta temporal y `--allow-file-access-from-files`, con la URL `file://` de `index.html`.
 
 ## Consultas — `src/queries/users.js`
 
@@ -114,13 +119,13 @@ Desaparecen `Name is required`, `A name or an email is required`, `Email <email>
 
 ## Clientes
 
-- Web: cada módulo importa la operación desde `/logic/<fichero>.js` y la llama directamente. Se quita `fetch("/api/…")`. El mensaje de error sale de `error.message`. Se usa `name` en lugar de `nombre`. Las cuatro pantallas no cambian.
+- Web: cada módulo importa la operación desde `../../logic/<fichero>.js` y la llama directamente. Se quita `fetch("/api/…")`. El mensaje de error sale de `error.message`. Se usa `name` en lugar de `nombre`. Las cuatro pantallas no cambian.
 - Terminal y Jupyter: sin `db` ni `createSqliteStore`. Se llama a la operación y se usa `name`. El comentario o la celda markdown avisa de que antes hay que lanzar `pnpm start`. Las tablas de Jupyter muestran `id`, `name`, `email`, `createdAt` y `updatedAt`.
 - `create-users-table.txt` / `.ipynb` llaman a `createUsersTable()` de `src/queries/users.js`.
 
 ## Configuración
 
-- `package.json`: `start` → `node src/db/server.js`. `format` quita `src/clients/http/`.
+- `package.json`: `start` → `node src/db/server.js` y `browser` → `node scripts/browser.js`. `format` quita `src/clients/http/`.
 - `eslint.config.js`: `fetch` como global para `src/queries/**/*.js`.
 
 ## Docs
@@ -141,8 +146,9 @@ Se escriben con nuestras palabras, sin copiar las de otras carpetas:
 - `pnpm start`, y en otra terminal `list-users.txt` devuelve usuarios con `name` y fechas.
 - Con el servidor parado, `list-users.txt` da `Could not list the users`.
 - Web en `http://127.0.0.1:3000`: seleccionar, menú, notas, modificar (email inválido → `Email is invalid`, email de otro → `Email is already used`, datos válidos → se guarda) y eliminar.
-- `curl -i -X OPTIONS -H "Origin: http://otra.web" http://127.0.0.1:3000/execute` no trae `access-control-allow-origin`.
-- `curl -i --path-as-is` a `/../db/connection.js`, `/db/users.sqlite` y `/logic/../db/connection.js` da 404.
+- `OPTIONS /execute` con `Origin: http://otra.web` da 403; con `Origin: file://` o `null`, 204 y ese mismo valor en `access-control-allow-origin`.
+- `GET /`, `/main.js` y `/logic/list-users.js` dan 404: el servidor no sirve ficheros.
+- `pnpm browser` abre la página como `file://` y funciona con `pnpm start` en marcha.
 
 ## Antes de escribir el código
 

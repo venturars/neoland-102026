@@ -1,4 +1,4 @@
-import { deleteUser } from "/logic/delete-user.js";
+import { deleteUser } from "../../logic/delete-user.js";
 import { loadUserSelection } from "./load-user-selection.js";
 import { showMessage } from "./show-message.js";
 import { STATE } from "./state.js";

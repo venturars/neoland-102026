@@ -27,7 +27,8 @@ Un paquete de Node nuevo, o un cambio de versión, se comprueba con Socket antes
 ## Qué no entra
 
 - El servidor solo escucha en `127.0.0.1`. No hay login ni contraseña.
-- El servidor no envía cabeceras CORS ni sirve `src/db/`.
+- El servidor solo atiende datos en `/execute`: no sirve la web ni ningún fichero. Todo `src/db/` es `server.js`.
+- La web se abre como fichero con `pnpm browser`. Solo su origen (`file://`, o `null`) recibe permiso CORS.
 - No se añaden paquetes para el servidor ni para la web.
 - Las reglas viven solo en `src/logic/`. Ni `src/queries/`, ni `src/db/`, ni los clientes las copian.
 - Las notas aún no existen.

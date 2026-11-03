@@ -4,7 +4,7 @@ Issue: #824
 
 Quien usa first-app hace lo mismo que ahora desde el navegador, la terminal o Jupyter: listar, buscar, crear, modificar, borrar y contar por género. Cambia dónde se aplican las reglas y cómo se ve un usuario.
 
-Las reglas se aplican en el propio cliente. La base de datos vive en un servidor local, que solo guarda y lee. Para usar cualquier cliente, el servidor tiene que estar en marcha. La web la abre ese mismo servidor.
+Las reglas se aplican en el propio cliente. La base de datos vive en un servidor local, que solo guarda y lee. Para usar cualquier cliente, el servidor tiene que estar en marcha. El servidor no sirve la web: la página se abre como fichero en el navegador, con su propio comando.
 
 Lo usa quien prueba la app en su ordenador.
 
@@ -44,7 +44,7 @@ Si no se llega a la base, por ejemplo con el servidor parado:
 
 ## Seguridad
 
-Solo se llega a la base desde este ordenador y desde la página que sirve la app. Una web de otro sitio abierta en el navegador no puede leer ni cambiar los datos. El fichero de la base no se puede descargar.
+Solo se llega a la base desde este ordenador: desde la terminal, desde Jupyter y desde la página abierta como fichero. Una web de otro sitio abierta en el navegador no puede leer ni cambiar los datos. El servidor no entrega ningún fichero, tampoco el de la base.
 
 ## Qué queda fuera
 

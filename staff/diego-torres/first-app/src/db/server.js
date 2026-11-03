@@ -1,16 +1,55 @@
 import { createServer } from "node:http";
 import { error, log } from "node:console";
+import { dirname, join } from "node:path";
 import process from "node:process";
-import { URL } from "node:url";
+import { DatabaseSync } from "node:sqlite";
+import { fileURLToPath, URL } from "node:url";
 
 import { CREATE_USERS_TABLE } from "../queries/queries/create-users-table.js";
-import { db } from "./connection.js";
-import { executeSql } from "./execute-sql.js";
-import { serveFile } from "./serve-file.js";
 
 const HOST = "127.0.0.1";
 const PORT = 3000;
 const ORIGIN = `http://${HOST}:${PORT}`;
+
+// La página se abre como fichero. Chrome la presenta como "file://" si se abre
+// con --allow-file-access-from-files, y como "null" si no.
+// La terminal y Jupyter no envían Origin.
+const ORIGENES_PAGINA = ["file://", "null"];
+
+const carpeta = dirname(fileURLToPath(import.meta.url));
+const db = new DatabaseSync(join(carpeta, "users.sqlite"));
+
+function ejecutarSql(peticion) {
+  const method = peticion?.method;
+  const sql = peticion?.sql;
+  const params = peticion?.params ?? {};
+
+  if (typeof sql !== "string") {
+    return null;
+  }
+
+  if (method === "exec") {
+    db.exec(sql);
+    return { ok: true };
+  }
+
+  if (method === "get") {
+    const fila = db.prepare(sql).get(params);
+    return { row: fila ?? null };
+  }
+
+  if (method === "all") {
+    const filas = db.prepare(sql).all(params);
+    return { rows: filas };
+  }
+
+  if (method === "run") {
+    const info = db.prepare(sql).run(params);
+    return { changes: Number(info.changes) };
+  }
+
+  return null;
+}
 
 async function leerCuerpo(request) {
   let texto = "";
@@ -20,46 +59,71 @@ async function leerCuerpo(request) {
   return texto;
 }
 
-function terminar(response, estado) {
-  response.writeHead(estado);
+function terminar(response, estado, cabeceras = {}) {
+  response.writeHead(estado, cabeceras);
   response.end();
 }
 
-async function atenderExecute(request, response) {
-  if (request.method !== "POST") {
-    terminar(response, 404);
-    return;
+// Permiso CORS solo para la página local. Otra web no lo recibe nunca.
+function cabecerasPagina(origen) {
+  if (!ORIGENES_PAGINA.includes(origen)) {
+    return {};
   }
+  return { "Access-Control-Allow-Origin": origen, Vary: "Origin" };
+}
 
-  // Otra web abierta en el navegador no puede llamar a /execute.
+function atenderPermiso(request, response) {
   const origen = request.headers.origin;
-  if (origen !== undefined && origen !== ORIGIN) {
+  if (!ORIGENES_PAGINA.includes(origen)) {
     terminar(response, 403);
     return;
   }
 
-  // Solo JSON: obliga al navegador a pedir permiso (preflight) a otras webs,
-  // y como no hay cabeceras CORS, ese permiso nunca se da.
+  const cabeceras = {
+    ...cabecerasPagina(origen),
+    "Access-Control-Allow-Methods": "POST",
+    "Access-Control-Allow-Headers": "content-type",
+  };
+  // Chrome lo pide antes de dejar que un fichero llame a 127.0.0.1.
+  if (request.headers["access-control-request-private-network"] === "true") {
+    cabeceras["Access-Control-Allow-Private-Network"] = "true";
+  }
+  terminar(response, 204, cabeceras);
+}
+
+async function atenderExecute(request, response) {
+  const origen = request.headers.origin;
+  if (origen !== undefined && !ORIGENES_PAGINA.includes(origen)) {
+    terminar(response, 403);
+    return;
+  }
+
+  const cabeceras = cabecerasPagina(origen);
+
+  // Solo JSON: así otra web no puede mandar una petición "simple" sin permiso.
   const tipo = request.headers["content-type"] ?? "";
   if (!tipo.startsWith("application/json")) {
-    terminar(response, 415);
+    terminar(response, 415, cabeceras);
     return;
   }
 
   let resultado;
   try {
     const peticion = JSON.parse(await leerCuerpo(request));
-    resultado = executeSql(peticion);
+    resultado = ejecutarSql(peticion);
   } catch {
     resultado = null;
   }
 
   if (resultado === null) {
-    terminar(response, 500);
+    terminar(response, 500, cabeceras);
     return;
   }
 
-  response.writeHead(200, { "Content-Type": "application/json" });
+  response.writeHead(200, {
+    ...cabeceras,
+    "Content-Type": "application/json",
+  });
   response.end(JSON.stringify(resultado));
 }
 
@@ -71,18 +135,22 @@ async function atender(request, response) {
   }
 
   const pathname = new URL(request.url, ORIGIN).pathname;
-
-  if (pathname === "/execute") {
-    await atenderExecute(request, response);
-    return;
-  }
-
-  if (request.method !== "GET") {
+  if (pathname !== "/execute") {
     terminar(response, 404);
     return;
   }
 
-  await serveFile(response, pathname);
+  if (request.method === "OPTIONS") {
+    atenderPermiso(request, response);
+    return;
+  }
+
+  if (request.method === "POST") {
+    await atenderExecute(request, response);
+    return;
+  }
+
+  terminar(response, 404);
 }
 
 db.exec(CREATE_USERS_TABLE);

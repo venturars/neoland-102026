@@ -1,4 +1,4 @@
-import { findUserById } from "/logic/find-user-by-id.js";
+import { findUserById } from "../../logic/find-user-by-id.js";
 import { showMessage } from "./show-message.js";
 import { showUserMenu } from "./show-user-menu.js";
 import { STATE } from "./state.js";

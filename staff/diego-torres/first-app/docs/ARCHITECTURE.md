@@ -5,25 +5,23 @@ La app tiene cuatro capas. Cada una solo habla con la de debajo.
 1. `src/clients/` — muestra datos y pide acciones. Llama a `src/logic/`.
 2. `src/logic/` — las reglas. Se ejecuta en el cliente: navegador, terminal o Jupyter. Llama a `src/queries/`.
 3. `src/queries/` — el texto SQL y su envío al servidor. No tiene reglas.
-4. `src/db/` — el servidor que abre la base y ejecuta el SQL. No tiene reglas.
+4. `src/db/` — el servidor que abre la base y ejecuta el SQL. Solo datos: no sirve la web. No tiene reglas.
 
-Ningún cliente funciona sin el servidor en marcha (`pnpm start`).
+Ningún cliente funciona sin el servidor en marcha (`pnpm start`). La web no la sirve nadie: se abre como fichero local con `pnpm browser`.
 
 ## Quién sabe qué
 
 | Carpeta o fichero | Qué sabe |
 | --- | --- |
-| `src/db/connection.js` | La única conexión, a `src/db/users.sqlite` |
-| `src/db/server.js` | Arranca el servidor en `127.0.0.1:3000` y crea la tabla al empezar |
-| `src/db/execute-sql.js` | Ejecuta una petición de `/execute` con la conexión |
-| `src/db/serve-file.js` | Sirve los ficheros de la web, de `src/logic/` y de `src/queries/` |
+| `src/db/server.js` | Todo `src/db/`: abre `src/db/users.sqlite`, crea la tabla al empezar y atiende `/execute` en `127.0.0.1:3000` |
 | `src/queries/queries/*.js` | Una frase SQL por fichero, exportada como constante |
 | `src/queries/users.js` | Envía cada frase al servidor con `fetch` y devuelve las filas |
 | `src/logic/shared.js` | Qué es un nombre y un email válidos, y la copia de salida de un usuario |
 | `src/logic/<operación>.js` | Una operación por fichero: crear, modificar, borrar, listar y las tres búsquedas |
 | `src/logic/users-gender-count.js` | Cuenta usuarios por el género del nombre. No guarda nada |
 | `src/logic/index.js` | Reexporta las operaciones |
-| `src/clients/web/*` | Cliente de navegador en HTML, CSS y JS vanilla. Importa `src/logic/` |
+| `src/clients/web/*` | Cliente de navegador en HTML, CSS y JS vanilla. Se abre como fichero e importa `src/logic/` con rutas relativas |
+| `scripts/browser.js` | Abre `src/clients/web/index.html` en Chrome, con un perfil aparte y `--allow-file-access-from-files` |
 | `src/clients/terminal/*.txt` | Un cliente por operación, para pegar en la terminal |
 | `src/clients/jupyter/*.ipynb` | Un cuaderno por operación, que abre `pnpm run jupyter` |
 
