@@ -5,8 +5,8 @@
 
 #### Especificación de Argumentos
 
-1. **Título** _(Obligatorio)_: Inglés, menos de 72 caracteres.
-2. **Cuerpo** _(Obligatorio)_: Español. Rellena `templates/issues/basic_issue.md` con «Qué hay que hacer» y «Cómo probarlo».
+1. **Título** _(Obligatorio)_: El título según la plantilla elegida.
+2. **Cuerpo** _(Obligatorio)_: Rellena la plantilla correspondiente en `templates/issues/`, conservando sus secciones y comprobaciones. La forma del título y el tipo se definen en la plantilla. Si no existe una específica, usa la más cercana según el template; no impongas una lista cerrada ni renombres ramas existentes.
 3. **Persona asignada** _(Obligatorio)_: El usuario autenticado en el MCP.
 
 #### Reglas de Invocación Críticas
