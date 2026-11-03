@@ -2,7 +2,7 @@
 
 Issue: #778. Fecha: 2026-11-03.
 
-Estado: propuesta documental preparada por el agente para revisión. Diego autorizó preparar las specs, planes y tareas; esta entrega no implementa la funcionalidad ni acredita su comprobación.
+Estado actual: persistencia y lógica implementadas y comprobadas por el agente el 2026-11-03, issue #782. Revisión de la PR y merge pendientes; no se atribuye conformidad final a Diego. La propuesta documental original se entregó en la issue #778 antes de la autorización de implementación.
 
 ## Necesidad y personas
 
@@ -42,3 +42,7 @@ Compartir notas, búsqueda, etiquetas, adjuntos, papelera, formato enriquecido, 
 ## Seguimiento
 
 Decisiones de partida: título obligatorio y contenido que admite vacío; sin límites arbitrarios de longitud en las reglas de negocio. No hay preguntas de alcance pendientes para esta propuesta. [Plan](plan.md) y [tareas](tasks.md).
+
+## Implementación autorizada · 2026-11-03 · Issue #782
+
+Diego solicitó continuar con la persistencia y lógica de notas tras recibir los documentos. Autoriza implementar, comprobar y entregar este bloque con sus clientes de terminal y el notebook de preparación. Se conserva el registro documental previo; no se atribuye una revisión individual distinta de esa autorización. El cliente web sigue fuera de este bloque. La PR de implementación depende de las specs de la PR #781 mientras no estén integradas.

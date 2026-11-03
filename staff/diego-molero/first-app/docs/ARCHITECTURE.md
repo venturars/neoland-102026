@@ -1,9 +1,11 @@
 # Arquitectura
 
-- `src/db/connection.js` abre la única conexión a `src/db/users.sqlite`; no crea tablas al importar.
+- `src/db/connection.js` abre la única conexión a `src/db/users.sqlite` con claves foráneas activas en cada proceso; no crea tablas al importar.
+- `src/queries/initialize-database.js` prepara usuarios y notas en una transacción explícita y comprueba columnas, fechas, relación de cascada e índice de notas antes de confirmar.
 - `src/queries/queries/` contiene un fichero SQL parametrizado por consulta.
 - `src/queries/users.js` carga SQL en UTF-8, prepara las consultas y devuelve objetos normales. Traduce el conflicto UNIQUE del correo; no valida reglas de negocio.
-- `src/logic/` contiene una operación por fichero: crear, actualizar, borrar, listar, buscar por correo, ID o nombre y clasificar nombres. Valida las entradas y aplica las reglas de cada spec.
+- `src/queries/notes.js` carga el SQL de `src/queries/queries/notes/`; las consultas individuales filtran usuario e ID de nota.
+- `src/logic/` contiene una operación por fichero: crear, actualizar, borrar, listar, buscar por correo, ID o nombre y clasificar nombres, además de crear, listar, consultar, actualizar y borrar notas por usuario. Valida las entradas y aplica las reglas de cada spec.
 - `src/clients/terminal/` contiene ejemplos pequeños: importar, llamar y mostrar. Es la comprobación manual básica de cada operación.
 - `src/clients/jupyter/` presenta esas mismas operaciones en nueve notebooks con tablas. Python ejecuta Node en el directorio de la aplicación; las reglas permanecen en `src/logic/`.
 - `scripts/jupyter.sh` prepara el entorno local y arranca Notebook.
@@ -17,6 +19,6 @@
 
 Las operaciones llaman directamente a queries. El clasificador usa fetch nativo para consultar Ollama local dentro de su operación. No se añaden adaptadores, clases ni capas intercambiables.
 
-## Desarrollos previstos · Issue #778
+## Notas y cliente web · Issues #778 y #782
 
-Las propuestas de [notas](specs/notes/plan.md) y [cliente web](specs/vanilla-web-client/plan.md) preparan la ampliación. No describen módulos ya implementados: notes añadirá persistencia y operaciones por usuario; el cliente añadirá HTTP y pantallas vanilla que llaman a logic. La preparación de tablas seguirá siendo explícita y los usuarios actuales se conservarán. Los archivos futuros se incorporarán al árbol cuando existan.
+La [persistencia y lógica de notas](specs/notes/plan.md) está implementada en la issue #782. Sus cinco clientes de terminal y el notebook de preparación llaman a las operaciones actuales. El borrado de usuario conserva su firma y elimina las notas mediante la relación de cascada. El [cliente web](specs/vanilla-web-client/plan.md) sigue pendiente: añadirá HTTP y pantallas vanilla que llaman a logic. La confirmación de borrados pertenece a ese futuro cliente.

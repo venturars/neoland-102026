@@ -124,24 +124,34 @@ first-app/
         update-user.ipynb
         users-gender-count.ipynb
       terminal/
-        create-user.txt
+        create-note.txt
+      create-user.txt
         create-users-table.txt
-        delete-user.txt
-        find-user-by-email.txt
+        delete-note.txt
+      delete-user.txt
+        find-note-by-id.txt
+      find-user-by-email.txt
         find-user-by-id.txt
         find-user-by-name.txt
-        list-users.txt
-        update-user.txt
+        list-notes.txt
+      list-users.txt
+        update-note.txt
+      update-user.txt
         users-gender-count.txt
     db/
       connection.js
     logic/
+      create-note.js
       create-user.js
+      delete-note.js
       delete-user.js
+      find-note-by-id.js
       find-user-by-email.js
       find-user-by-id.js
       find-user-by-name.js
+      list-notes.js
       list-users.js
+      update-note.js
       update-user.js
       users-gender-count.js
     queries/
@@ -151,9 +161,18 @@ first-app/
         find-by-email.sql
         find-by-id.sql
         find-by-name.sql
+        notes/
+          create-table.sql
+          find-all.sql
+          find-by-id.sql
+          insert.sql
+          remove.sql
+          update.sql
         insert.sql
         remove.sql
         update.sql
+      initialize-database.js
+      notes.js
       users.js
   templates/
     issues/

@@ -1,6 +1,6 @@
 # Plan de notas por usuario
 
-Issue: #778. Propuesta técnica para revisión; ninguna migración ni operación nueva está ejecutada.
+Issue de propuesta: #778. Implementación: #782, autorizada y comprobada por el agente en copias temporales el 2026-11-03. La base personal no se ha migrado.
 
 ## Capas y contratos
 
@@ -24,7 +24,7 @@ Crear notes con id INTEGER PRIMARY KEY AUTOINCREMENT; userId INTEGER NOT NULL RE
 
 El SQL parametrizado se guarda en src/queries/queries/notes/: create-table.sql, find-all.sql, find-by-id.sql, insert.sql, update.sql y remove.sql. src/queries/notes.js carga ese SQL en UTF-8 y convierte filas en objetos normales.
 
-Añadir src/queries/initialize-database.js con initializeDatabase(), sin retorno: abre una transacción, llama al createUsersTable existente y a createNotesTable de notes.js, y confirma; ante error hace rollback y propaga la causa. La creación de notes y de su índice constituye la primera migración aditiva de esta ampliación, mediante CREATE TABLE/INDEX IF NOT EXISTS. No se recrea users, no se alteran sus columnas ni se renumeran sus IDs. No se añade un sistema genérico de migraciones. Después del DDL y antes de confirmar, initializeDatabase comprueba dentro de la misma transacción PRAGMA table_info(notes) y PRAGMA foreign_key_list(notes): columnas, tipos, nulabilidad y clave primaria descritos, además de userId → users.id con ON DELETE CASCADE. Comprueba asimismo el índice por (userId, id). Si la tabla existente no cumple ese contrato, lanza Error("Notes schema is incompatible") y hace rollback; no borra ni repara silenciosamente. En particular, una tabla con columnas correctas pero sin la relación de cascada se rechaza.
+Añadir src/queries/initialize-database.js con initializeDatabase(), sin retorno: abre una transacción, llama al createUsersTable existente y a createNotesTable de notes.js, y confirma; ante error hace rollback y propaga la causa. La creación de notes y de su índice constituye la primera migración aditiva de esta ampliación, mediante CREATE TABLE/INDEX IF NOT EXISTS. No se recrea users, no se alteran sus columnas ni se renumeran sus IDs. No se añade un sistema genérico de migraciones. Después del DDL y antes de confirmar, initializeDatabase comprueba dentro de la misma transacción PRAGMA table_info(notes) y PRAGMA foreign_key_list(notes): columnas, tipos, nulabilidad y clave primaria descritos, además de userId → users.id con ON DELETE CASCADE. Comprueba asimismo que los valores por defecto de las fechas sean los UTC descritos y que el índice no único ni parcial use (userId, id). Si la tabla existente no cumple ese contrato, lanza Error("Notes schema is incompatible") y hace rollback; no borra ni repara silenciosamente. En particular, una tabla con columnas correctas pero sin la relación de cascada se rechaza.
 
 El comando de preparación actual y el notebook create-users-table pasarán a llamar a initializeDatabase. createUsersTable conserva su función pública anterior. deleteUser y su SQL mantienen su firma y funcionamiento; la clave foránea hace atómico el borrado conjunto. Registrar ese nuevo efecto en las specs de usuarios y las guías durante la implementación.
 
@@ -43,3 +43,7 @@ En una copia temporal sin la base personal: preparar una base nueva y otra con u
 ## Fuentes técnicas
 
 La [documentación de node:sqlite para Node 24.14.0](https://github.com/nodejs/node/blob/v24.14.0/doc/api/sqlite.md) describe DatabaseSync, la opción de claves foráneas y exec. La implementación debe usar la versión mínima declarada por el proyecto, sin actualizar paquetes.
+
+## Implementación autorizada · 2026-11-03 · Issue #782
+
+Diego solicitó continuar con la persistencia y lógica de notas tras recibir los documentos. Autoriza implementar, comprobar y entregar este bloque con sus clientes de terminal y el notebook de preparación. Se conserva el registro documental previo; no se atribuye una revisión individual distinta de esa autorización. El cliente web sigue fuera de este bloque. La PR de implementación depende de las specs de la PR #781 mientras no estén integradas.
