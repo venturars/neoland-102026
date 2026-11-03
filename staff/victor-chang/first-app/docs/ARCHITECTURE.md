@@ -44,6 +44,8 @@ The folders and files are in [TREE.md](TREE.md).
 
 A client calls `logic/` and shows the result. It has no business rules.
 
+The one exception is `create-users-table` (`clients/terminal/create-users-table.txt` and `clients/jupyter/create-users-table.ipynb`): it calls `createUsersTable()` from `queries/users.js`, because it is a setup step with no business rules and no `logic/` file.
+
 ### Terminal
 
 After a feature is done, its first client is `clients/terminal/<name>.txt`, named like the `logic/` file. It is the manual test of the feature.

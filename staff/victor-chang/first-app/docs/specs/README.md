@@ -17,3 +17,4 @@ One folder per change. The structure of `spec.md`, `plan.md` and `tasks.md` is i
 | [jupyter-script](jupyter-script/)                       | waiting for Windows check |
 | [split-docs](split-docs/)                               | done                      |
 | [find-user-by-name](find-user-by-name/)                 | done                      |
+| [create-users-table](create-users-table/)               | done                      |

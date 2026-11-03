@@ -6,6 +6,10 @@ function sql(file) {
   return readFileSync(new URL(`./queries/${file}`, import.meta.url), "utf8");
 }
 
+export function createUsersTable() {
+  db.exec(readFileSync(new URL("../db/schema.sql", import.meta.url), "utf8"));
+}
+
 export function findAll() {
   return db.prepare(sql("find-all-users.sql")).all();
 }
