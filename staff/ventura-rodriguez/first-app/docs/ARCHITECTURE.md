@@ -1,13 +1,11 @@
 # Arquitectura
 
 - `src/db/` abre la base de datos y no contiene reglas de negocio.
-- `src/db/connection.js` es la única conexión a la base de datos.
+- `src/db/server.js` es el único fichero de esa capa junto a la base. Abre la única conexión, guarda la dirección `http://127.0.0.1:3000` y ejecuta el SQL que recibe. No exporta la conexión.
 - `src/db/users.sqlite` es el único fichero de la base de datos.
-- `src/queries/queries/` guarda el SQL. Hay un fichero `.sql` por query.
-- `src/queries/users.js` lee esos ficheros, prepara el SQL y lo ejecuta.
-  No hay reglas de negocio en `src/queries/`.
-- `src/logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
-  Una funcionalidad por fichero.
+- `src/queries/queries/` guarda el texto de cada consulta. Hay un módulo `.js` por consulta. Exporta el texto y no lo ejecuta.
+- `src/queries/users.js` importa ese texto y pide la ejecución al servidor. No importa `src/db/server.js`. No hay reglas de negocio en `src/queries/`.
+- `src/logic/` es el núcleo de la app. Aquí viven las reglas de negocio. Una funcionalidad por fichero.
 - `src/logic/create-user.js` crea un usuario.
 - `src/logic/update-user.js` actualiza un usuario.
 - `src/logic/delete-user.js` borra un usuario.
@@ -18,7 +16,10 @@
 - `src/logic/users-gender-count.js` cuenta los usuarios por género.
 - `src/clients/terminal/` llama a `src/logic/` y muestra el resultado. Es el
   primer cliente y el test manual de cada funcionalidad.
+- `src/clients/terminal/create-users-table.txt` llama a `src/queries/users.js`.
 - `src/clients/jupyter/` es el cliente que se abre con el Jupyter de la app.
+- `src/clients/browser/` llama a `src/logic/`.
+- `src/clients/browser/index.html` se abre en el navegador.
 - `agents/git-workflow-agent.md` reconoce el momento y llama al
   subagente como un agente aparte. El padre no hace ese trabajo.
 - `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la

@@ -48,6 +48,10 @@ first-app/
         list-users.ipynb
         prepare-database.ipynb
         update-user.ipynb
+      web/
+        index.html
+        style.css
+        app.js
   scripts/
     jupyter.sh
   agents/
