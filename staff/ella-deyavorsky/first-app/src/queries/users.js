@@ -1,6 +1,11 @@
-/* global fetch */
-// The address of the database program (src/db/server.js).
-const DATABASE_URL = "http://localhost:3000";
+/* global fetch, window */
+// In the browser the page already comes from the database program, so a
+// relative address works from http://127.0.0.1:3000 and http://localhost:3000.
+// Node has no page address, so it needs the full one.
+let DATABASE_URL = "http://127.0.0.1:3000";
+if (typeof window !== "undefined") {
+  DATABASE_URL = "";
+}
 
 export async function createUsersTable() {
   const response = await fetch(DATABASE_URL + "/queries/create-users-table", {

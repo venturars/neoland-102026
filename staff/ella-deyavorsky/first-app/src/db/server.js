@@ -6,7 +6,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { db } from "./connection.js";
 
-// The port where the database program listens.
+// The program listens only on this computer, so nobody else on the network can reach it.
+const HOST = "127.0.0.1";
 const PORT = 3000;
 
 const currentFile = fileURLToPath(import.meta.url);
@@ -141,6 +142,6 @@ const server = http.createServer(async (request, response) => {
   sendJson(response, 404, { error: "Not found." });
 });
 
-server.listen(PORT, () => {
-  console.log("Database program on http://localhost:" + PORT);
+server.listen(PORT, HOST, () => {
+  console.log("Database program on http://" + HOST + ":" + PORT);
 });
