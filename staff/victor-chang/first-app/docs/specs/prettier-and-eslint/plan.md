@@ -125,7 +125,7 @@ Checked on 2026-11-03. Sources:
 - **Scores**: `depscore` from the `socket-mcp` server of this session, with exact versions, for all 61 packages.
 - **Alerts**: `https://socket.dev/npm/package/<name>/alerts/<version>` returns HTTP 403 to the agent (curl), so each one is "Not checked by the agent" and carries its link.
 
-Decision:
+Decision: _accepted by the person who approves the plan, on 2026-11-03: `prettier@3.9.10`, `eslint@10.13.0` and `@eslint/js@10.0.1`, on the scores alone. The alerts were not read._
 
 ## Open questions
 

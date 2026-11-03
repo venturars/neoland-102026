@@ -41,6 +41,7 @@ first-app/
   pnpm-lock.yaml        The exact installed versions
   .venv/                The Python of the Jupyter client (git-ignored)
   .prettierignore       What Prettier does not format
+  eslint.config.js      The ESLint rules
 ```
 
 - `db/` opens the database. No business rules.
@@ -56,7 +57,7 @@ first-app/
 - Node built-ins: `node:sqlite`, `node:fs`, `node:url`.
 - npm dependencies: `openai`, to call the local AI (Ollama); `cli-table3` and `@colors/colors`, to draw the tables of the Jupyter client. Exact versions. Packages are installed with pnpm (`pnpm install`); `node_modules/` is git-ignored, `pnpm-lock.yaml` is committed.
 - Python 3, only for the Jupyter client: an app-local `.venv` with `notebook` at an exact version, created by `pnpm jupyter`. The Jupyter installed on the computer is not used.
-- Tooling: Prettier, run through `npx`, default config, no config file. `.prettierignore` only lists `.venv/` (installed Python packages) and `pnpm-lock.yaml` (written by pnpm in its own format).
+- Tooling: Prettier and ESLint, development packages at an exact version, run with `pnpm format`, `pnpm format:check` and `pnpm lint`. Prettier keeps its default config, with no config file; `.prettierignore` only lists `.venv/` (installed Python packages) and `pnpm-lock.yaml` (written by pnpm in its own format). ESLint uses its recommended rules only, set in `eslint.config.js`, which ignores `.venv/` and `node_modules/`.
 
 A new dependency is added here before any plan uses it.
 

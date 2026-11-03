@@ -13,8 +13,9 @@ Run from `staff/victor-chang/first-app`:
 ```
 pnpm install             # install the npm dependencies
 pnpm jupyter             # open the Jupyter client (the first run creates .venv)
-npx prettier --write .   # format every file
-npx prettier --check .   # check formatting without changing files
+pnpm format              # format every file
+pnpm format:check        # check formatting without changing files
+pnpm lint                # run ESLint
 ```
 
 To try a feature, open its `clients/terminal/<name>.txt`, copy the whole block and paste it into Git Bash from `first-app`, or run its notebook in `clients/jupyter/`.
@@ -32,7 +33,7 @@ To try a feature, open its `clients/terminal/<name>.txt`, copy the whole block a
 - Named exports only, no default exports.
 - Always use braces with `if`, even for one line.
 - No classes except errors. Plain objects in, plain objects out.
-- Formatting is Prettier's default config, with no config file and no overrides. Run `npx prettier --write .` before committing.
+- Formatting is Prettier's default config, with no config file and no overrides. Run `pnpm format` and `pnpm lint` before committing.
 - Comments only for the step names of a `logic/` file, or when the _why_ is not obvious.
 
 ## Error handling

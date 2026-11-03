@@ -13,6 +13,6 @@
 7. [ ] Move `.venv` aside. Make a temporary folder with links to `dirname` and `uname` only, and run `PATH=<folder> /bin/sh scripts/jupyter.sh` (no Python on the path).
        It prints `Python 3 is required to start Jupyter.` and `echo $?` prints `1`. Put `.venv` back.
 8. [ ] In `docs/CONSTITUTION.md`, **Tree**, add `scripts/jupyter.sh`; in **Runtime**, say `.venv` is created by `scripts/jupyter.sh` on macOS, Linux and Windows (Git Bash).
-9. [ ] Run `npx prettier --check .`: every file passes. In `docs/specs/README.md`, set `jupyter-script` to `done`.
+9. [ ] Run `pnpm format:check` and `pnpm lint`: both pass. In `docs/specs/README.md`, set `jupyter-script` to `done`.
 10. [ ] On Windows, in Git Bash, a person runs `pnpm jupyter` and `list-users.ipynb`.
         The table shows with its borders and accents.

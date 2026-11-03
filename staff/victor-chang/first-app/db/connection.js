@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, URL } from "node:url";
 import { DatabaseSync } from "node:sqlite";
 
 const DB_PATH = fileURLToPath(new URL("./users.sqlite", import.meta.url));
