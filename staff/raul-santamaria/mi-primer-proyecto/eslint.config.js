@@ -13,7 +13,7 @@ export default defineConfig([
     extends: ["js/recommended"],
   },
   {
-    files: ["src/clients/browser/**/*.js"],
+    files: ["src/clients/browser/**/*.js", "src/clients/electron/app.js"],
     languageOptions: {
       globals: globals.browser,
     },

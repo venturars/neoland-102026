@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "main": "src/clients/electron/main.js",
   "description": "CRUD de usuarios con la lógica separada de SQLite y de la terminal",
   "scripts": {
     "jupyter": "node start-jupyter.js",
     "server": "node src/db/server.js",
     "http": "node src/clients/http/app.js",
     "browser": "powershell -NoProfile -Command \"$page = [uri](Resolve-Path 'src/clients/browser/index.html').Path; $browserProfile = Join-Path $env:TEMP 'mi-primer-proyecto-chrome'; $chrome = 'C:/Program Files/Google/Chrome/Application/chrome.exe'; if (-not (Test-Path $chrome)) { $chrome = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe' }; & $chrome ('--user-data-dir=' + $browserProfile) '--allow-file-access-from-files' $page.AbsoluteUri\"",
-    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/http/**/*.js\" \"src/clients/browser/**/*.js\"",
+    "electron": "electron .",
+    "electron:dist": "electron-builder --win",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/http/**/*.js\" \"src/clients/browser/**/*.js\" \"src/clients/electron/**/*.js\"",
     "lint": "eslint ."
   },
   "dependencies": {
@@ -21,8 +24,21 @@
   "packageManager": "pnpm@12.14.0+sha512.c18ba6d87993d3d164cb5e8948f32b2c06ee854487e06cd8d86781342fb3e5bb4634367034711e86802baa9c37bea906ce1929ad08d70884c97d801df13389a6",
   "devDependencies": {
     "@eslint/js": "10.0.1",
+    "electron": "45.2.2",
+    "electron-builder": "26.18.0",
     "eslint": "10.13.0",
     "globals": "17.13.0",
     "prettier": "3.9.10"
+  },
+  "build": {
+    "appId": "es.neoland.mi-primer-proyecto",
+    "productName": "Mi primer proyecto",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": ["package.json", "src/**/*"],
+    "win": {
+      "target": ["nsis"]
+    }
   }
 }

@@ -24,6 +24,10 @@
 - `src/clients/browser/` llama a `src/logic/` con `await`, no repite sus
   reglas y no se sirve la página; se abre con el script `browser` de
   `package.json`.
+- `src/clients/electron/main.js` arranca y para `src/db/server.js`, abre
+  la ventana de escritorio y carga `index.html`. `app.js` llama a
+  `src/logic/` con `await` y no repite sus reglas. Se abre con el script
+  `electron` de `package.json`; el instalador Windows con `electron:dist`.
 - `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001 y no
   repite sus reglas.
 - `src/clients/jupyter/` es el cliente que se abre con el Jupyter de la app.
