@@ -8,4 +8,4 @@ Issue: #971 · Plan: [plan.md](plan.md)
 - [x] **T04** — Crear `src/clients/chrome/server.js`, `manifest.json`, `index.html`, `popup.js`, `styles.css`, `README.md`.
 - [x] **T05** — Actualizar `docs/ARCHITECTURE.md`, `docs/TREE.md`, `docs/STARTUP.md`, `AGENTS.md`.
 - [x] **T06** — Checklist issue #971; `pnpm format` y `pnpm lint`.
-- [ ] **T07** — Commits por trozo, push, actualizar cuerpo PR #972.
+- [x] **T07** — Commits por trozo, push, actualizar cuerpo PR #972.
