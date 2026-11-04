@@ -14,11 +14,14 @@
   almacén. Cuando una funcionalidad existe, no se mueve ni se sustituye.
 - `src/logic/create-user.js` crea un usuario.
 - `src/logic/list-users.js` lista los usuarios.
+- `src/logic/find-user-by-id.js` devuelve un usuario por id.
 - `src/logic/update-user.js` actualiza un usuario.
 - `src/logic/delete-user.js` borra un usuario.
 - `src/logic/users-gender-count.js` cuenta los usuarios por género.
 - `src/clients/terminal/` llama a `src/logic/` y muestra el resultado. Es el
   primer cliente y el test manual de cada funcionalidad.
+- `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001 y no
+  repite sus reglas.
 - `src/clients/jupyter/` es el cliente que se abre con el Jupyter de la app.
 - `src/clients/browser/` llama a `src/logic/` desde el navegador. La página
   no se sirve por HTTP; se abre con el script `browser` de `package.json`.
