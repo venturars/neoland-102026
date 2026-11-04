@@ -1,7 +1,7 @@
-# Pega esto en la terminal, con el directorio actual en first-app
+# Pega esto en la terminal, con el directorio actual en first-app.
+# La base tiene que estar en marcha: npm run db
 node --input-type=module <<'EOF'
 import { createUsersTable } from "./src/queries/users.js";
-import { db } from "./src/db/connection.js";
-createUsersTable();
-console.log(db.prepare("SELECT name FROM sqlite_master WHERE type = 'table'").all());
+const result = await createUsersTable();
+console.log(result);
 EOF

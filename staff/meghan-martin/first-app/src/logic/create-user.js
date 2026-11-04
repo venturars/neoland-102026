@@ -1,6 +1,6 @@
 import { findByEmail, insert } from "../queries/users.js";
 
-export function createUser(input) {
+export async function createUser(input) {
   if (typeof input?.name !== "string") {
     throw new Error("Name is empty");
   }
@@ -59,9 +59,14 @@ export function createUser(input) {
 
   let owner;
   try {
-    owner = findByEmail(email);
-  } catch {
-    throw new Error("Could not create the user");
+    owner = await findByEmail(email);
+  } catch (error) {
+    if (
+      error.message === "Database is not running. Start it with npm run db."
+    ) {
+      throw error;
+    }
+    throw new Error("Could not create the user", { cause: error });
   }
   if (owner) {
     throw new Error("Email is already used");
@@ -69,9 +74,14 @@ export function createUser(input) {
 
   let savedUser;
   try {
-    savedUser = insert({ name, email });
-  } catch {
-    throw new Error("Could not create the user");
+    savedUser = await insert({ name, email });
+  } catch (error) {
+    if (
+      error.message === "Database is not running. Start it with npm run db."
+    ) {
+      throw error;
+    }
+    throw new Error("Could not create the user", { cause: error });
   }
 
   return {

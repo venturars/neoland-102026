@@ -2,7 +2,9 @@
 
 Quien usa la app quiere ver las personas, elegir una, cambiar su nombre y su email, o borrarla, sin usar la terminal ni Jupyter.
 
-No hay login. La lista muestra el número, el nombre y el email. Pulsar una fila elige a esa persona.
+No hay login. La página se abre con `npm run browser` desde `first-app`. No se sirve. La base tiene que estar en marcha. Si no lo está, se ve `Database is not running. Start it with npm run db.`
+
+La lista muestra el número, el nombre y el email. Pulsar una fila elige a esa persona.
 
 La página de esa persona tiene volver a la lista y editar.
 

@@ -1,10 +1,11 @@
 # Arquitectura
 
 - `src/db/` abre la base y no decide reglas de negocio.
-- `src/db/connection.js` es la única conexión.
+- `src/db/connection.js` es la única conexión. Solo la abre `src/db/server.js`.
 - `src/db/users.sqlite` es el único fichero de la base.
-- `src/queries/queries/` guarda el SQL. Hay un fichero `.sql` por sentencia.
-- `src/queries/users.js` lee esos ficheros y los ejecuta. No decide si un email vale.
+- `src/db/server.js` escucha en este equipo, en el puerto 3000, y ejecuta una sentencia por su nombre.
+- `src/queries/users-sql.js` guarda el SQL. Los parámetros siguen siendo `:id`, `:name` y `:email`.
+- `src/queries/users.js` pide esas sentencias al programa de la base. No decide si un email vale.
 - `src/logic/` es la app. Aquí viven las reglas. Una acción por fichero.
 - `src/logic/create-user.js` guarda una persona.
 - `src/logic/update-user.js` cambia una persona.
@@ -14,7 +15,7 @@
 - `src/logic/find-user-by-id.js` busca una persona por su número.
 - `src/logic/users-gender-count.js` cuenta las personas por género.
 - `src/clients/terminal/` llama a `src/logic/` y muestra el resultado. Es la prueba a mano de cada acción.
-- `src/clients/browser/` sirve la lista, las opciones y la edición. Llama a `listUsers`, `findUserById`, `updateUser` y `deleteUser`. No decide si un email vale.
+- `src/clients/browser/` es la página de personas. `app.js` llama a `listUsers`, `findUserById`, `updateUser` y `deleteUser`. No decide si un email vale.
 - `docs/ARCHITECTURE.md` dice qué hace cada capa y cada fichero.
 - `docs/TREE.md` es el dibujo de carpetas y ficheros.
 - `docs/DATABASE.md` es la base y las consultas.

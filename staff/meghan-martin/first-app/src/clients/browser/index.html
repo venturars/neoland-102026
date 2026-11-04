@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>People</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <p id="toast" class="toast" hidden></p>
+    <main>
+      <section id="list-screen">
+        <h1>People</h1>
+        <p id="list-error" class="error"></p>
+        <div class="head">
+          <span>Id</span>
+          <span>Name</span>
+          <span>Email</span>
+        </div>
+        <div id="user-list"></div>
+      </section>
+
+      <section id="options-screen" hidden>
+        <h1 id="options-name"></h1>
+        <p id="options-email" class="muted"></p>
+        <p id="options-error" class="error"></p>
+        <p class="actions">
+          <button id="back-button" type="button">Back</button>
+          <button id="edit-button" type="button">Edit</button>
+        </p>
+      </section>
+
+      <section id="edit-screen" hidden>
+        <h1>Edit</h1>
+        <p id="edit-error" class="error"></p>
+        <form id="edit-form">
+          <label>
+            Name
+            <input id="name-input" name="name" type="text" />
+          </label>
+          <label>
+            Email
+            <input id="email-input" name="email" type="text" />
+          </label>
+          <button type="submit">Save</button>
+        </form>
+        <p class="actions">
+          <button class="danger" id="open-delete" type="button">Delete</button>
+          <button id="edit-back-button" type="button">Back</button>
+        </p>
+      </section>
+    </main>
+
+    <dialog id="confirm-delete">
+      <h2>Delete this person?</h2>
+      <p id="delete-name"></p>
+      <p id="delete-email" class="muted"></p>
+      <button class="danger" id="confirm-delete-button" type="button">
+        Delete
+      </button>
+      <button id="cancel-delete" type="button">Cancel</button>
+    </dialog>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
