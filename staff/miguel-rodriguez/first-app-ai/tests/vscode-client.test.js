@@ -16,6 +16,7 @@ Module._load = originalLoad;
 test("rejects unsupported actions and malformed inputs before accessing data", async () => {
   await assert.rejects(execute({ action: "unknown" }), /Unknown action/);
   await assert.rejects(execute({ action: "id", id: Number.MAX_SAFE_INTEGER + 1 }), /Invalid ID/);
+  await assert.rejects(execute({ action: "id", id: Number.MIN_SAFE_INTEGER - 1 }), /Invalid ID/);
   await assert.rejects(execute({ action: "id", id: "1" }), /Invalid ID/);
   await assert.rejects(execute({ action: "create", name: null, email: "x" }), /Invalid input/);
   await assert.rejects(execute({ action: "delete", id: 1 }), /Confirm the saved email/);
@@ -47,6 +48,9 @@ test("adapter uses shared user operations for CRUD, search, and confirmations", 
     assert.equal((await execute({ action: "email", email: " ANA@EXAMPLE.COM " })).id, ana.id);
     assert.equal((await execute({ action: "id", id: ana.id })).id, ana.id);
     await assert.rejects(execute({ action: "id", id: 999 }), /User not found/);
+    for (const id of [Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]) {
+      await assert.rejects(execute({ action: "id", id }), /User not found/);
+    }
     await assert.rejects(execute({ action: "create", name: "", email: "x@y" }), /Name is empty/);
     await assert.rejects(execute({ action: "create", name: "X", email: "bad" }), /Email is invalid/);
     await assert.rejects(execute({ action: "create", name: "X", email: "ana@example.com" }), /Email is already used/);
@@ -58,6 +62,10 @@ test("adapter uses shared user operations for CRUD, search, and confirmations", 
     await execute({ action: "delete", id: ana.id, confirmation: " ANA@EXAMPLE.COM " });
     assert.deepEqual((await execute({ action: "list" })).map((u) => u.id), [other.id]);
     await assert.rejects(execute({ action: "delete", id: ana.id, confirmation: ana.email }), /User not found/);
+    // Another client removes the selected contact before this client submits.
+    db.prepare("DELETE FROM users WHERE id = ?").run(other.id);
+    await assert.rejects(execute({ action: "update", id: other.id, name: "Changed", email: other.email }), /User not found/);
+    await assert.rejects(execute({ action: "delete", id: other.id, confirmation: other.email }), /User not found/);
     globalThis.fetch = async () => { throw new Error("offline"); };
     await assert.rejects(execute({ action: "list" }), /Could not list the users/);
   } finally {
