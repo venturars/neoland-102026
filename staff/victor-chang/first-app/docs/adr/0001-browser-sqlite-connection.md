@@ -11,5 +11,6 @@ The web client cannot make API calls, not even to a local server, yet it must wo
 ## Consequences
 
 - The page works only in Chrome or Edge.
+- The page has to ask for the file: a browser lets a page read or write a file on disk only after the person chooses it, so no website can open someone's files on its own. The first visit shows the file picker; later visits remember the file but ask again for permission to edit it. Downloading the file from `pnpm web` would avoid the question, but then the page could not save, since sending the changes back would need an API.
 - `clients/web/queries.js` must keep the same functions as `queries/users.js`; a new query function needs both.
 - The page reads the whole file before each step and writes it after each change. Two changes at the same moment, from the page and the terminal, can overwrite each other.
