@@ -8,7 +8,7 @@ Git work follows `agents/git-workflow-agent.md` in this folder. The stops are th
 
 This is the first app of the AI engineering course for junior students. It is a good app to build with spec-driven development (SDD): write the rules first, then write the code that follows them.
 
-The app is JavaScript, run by Node.js. `package.json` sets `"type": "module"`, so files use ESM: `import` and `export`. The only web framework is Express, used only by the HTTP client in `src/clients/api/`. There is no TypeScript.
+The app is JavaScript, run by Node.js. `package.json` sets `"type": "module"`, so files use ESM: `import` and `export`. The only web frameworks are Express, used only by the HTTP client in `src/clients/api/`, and Fastify, used only by the program of the extension in `src/clients/chrome/`. There is no TypeScript.
 
 The database is SQLite through Node's built-in `node:sqlite`. `src/db/connection.js` opens `src/db/users.sqlite` with `DatabaseSync`, and only the database program `src/db/server.js` uses it. Everything else asks that program. No database package is installed.
 
@@ -47,8 +47,8 @@ The active spec is the approved description of the feature you are building now.
 ## Commands
 
 - Install dependencies with `pnpm install`.
-- `pnpm format` runs Prettier on the `.js` files of `src/db/`, `src/queries/`, `src/logic/`, `src/clients/web/`, `src/clients/api/` and `src/clients/electron/`. The format is the standard one, with no config of its own. `pnpm lint` runs ESLint.
-- `pnpm start` runs the database program. Every client needs it running. `pnpm browser` opens the web client at `http://127.0.0.1:3000` (the program must be running). `pnpm api` starts the HTTP client on `http://127.0.0.1:3001` (the program must be running). `pnpm jupyter` starts the notebooks. `pnpm electron` opens the desktop window (the program must be running first, with `pnpm start`). Do not add another way to run the whole app unless the spec asks for it.
+- `pnpm format` runs Prettier on the `.js` files of `src/db/`, `src/queries/`, `src/logic/`, `src/clients/web/`, `src/clients/api/`, `src/clients/chrome/` and `src/clients/electron/`. The format is the standard one, with no config of its own. `pnpm lint` runs ESLint.
+- `pnpm start` runs the database program. Every client needs it running. `pnpm browser` opens the web client at `http://127.0.0.1:3000` (the program must be running). `pnpm api` starts the HTTP client on `http://127.0.0.1:3001` (the program must be running). `pnpm chrome` starts the program of the Chrome extension on `http://127.0.0.1:3002` (the database program must be running). `pnpm jupyter` starts the notebooks. `pnpm electron` opens the desktop window (the program must be running first, with `pnpm start`). Do not add another way to run the whole app unless the spec asks for it.
 - There are no tests yet. `pnpm test` only prints that no test is specified, then stops.
 
 ## Packages
