@@ -23,6 +23,9 @@
 - `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001.
 - `src/clients/electron/` llama a `src/logic/`, abre su ventana y no
   reutiliza `src/clients/browser/`. No sustituye a `src/db/server.js`.
+- `src/clients/chrome/` llama a `src/logic/` desde su API, escucha en
+  el puerto 3002 y no repite sus reglas. La extensión solo llama a esa
+  API. No sustituye a `src/clients/http/` ni a `src/db/server.js`.
 - `agents/git-workflow-agent.md` reconoce el momento y llama al
   subagente como un agente aparte. El padre no hace ese trabajo.
 - `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la
