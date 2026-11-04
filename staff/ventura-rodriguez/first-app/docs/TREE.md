@@ -27,6 +27,11 @@ first-app/
         styles.css
       http/
         app.js
+      electron/
+        main.js
+        index.html
+        app.js
+        styles.css
   agents/
   skills/
   tools/

@@ -21,6 +21,8 @@
 - `src/clients/browser/` llama a `src/logic/`.
 - `src/clients/browser/index.html` se abre en el navegador.
 - `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001.
+- `src/clients/electron/` llama a `src/logic/`, abre su ventana y no
+  reutiliza `src/clients/browser/`. No sustituye a `src/db/server.js`.
 - `agents/git-workflow-agent.md` reconoce el momento y llama al
   subagente como un agente aparte. El padre no hace ese trabajo.
 - `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la
