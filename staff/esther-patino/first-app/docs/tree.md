@@ -70,6 +70,12 @@ styles.css
 app.js
 http/
 app.js
+chrome/
+server.js
+manifest.json
+index.html
+popup.js
+styles.css
 
 ```
 
