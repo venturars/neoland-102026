@@ -11,8 +11,11 @@ Lo usa quien construye la app con IA.
 Entra una tarea de esta app. Sale la tarea escrita, con el título en
 inglés y el cuerpo en español. Al empezar, la rama sale de staging. Al
 guardar, entra ese trozo. Al pedir revisión, quien pide nombra a los
-revisores y la pull request deja de ser borrador. Enlazar la tarea no
-la cierra. Antes de escribir la spec hay una issue con número. La spec
+revisores y la pull request deja de ser borrador. Al enlazar, el cuerpo
+lleva `Closes #N` y la tarea queda en Development. Quien enlaza no la
+cierra. GitHub la cierra al fusionar esa pull request en la rama por
+defecto. Fusionar en staging no la cierra mientras la rama por defecto
+sea main. Antes de escribir la spec hay una issue con número. La spec
 abre con ese número.
 
 Ejemplo: se pide un cambio. Queda escrito qué hay que hacer y cómo
@@ -25,9 +28,9 @@ es antes de crear las tareas: una persona revisa la spec y el plan. La
 segunda es al crear las tareas.
 
 No hay un fallo de la lista «Errores». Si la rama no sale de staging,
-si el enlace cierra la tarea, si la revisión se pide sin nombrar
-revisores, si el stack queda fuera de esta app, o si la spec nace sin
-issue, el flujo no está adaptado.
+si el cuerpo no lleva `Closes #N`, si quien enlaza cierra la tarea con la
+API, si la revisión se pide sin nombrar revisores, si el stack queda fuera
+de esta app, o si la spec nace sin issue, el flujo no está adaptado.
 
 Queda fuera cambiar las reglas de negocio, la base de datos, los
 clientes, los paquetes, el layout de capas y las specs ya escritas.
