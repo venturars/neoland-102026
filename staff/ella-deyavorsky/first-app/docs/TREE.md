@@ -29,7 +29,10 @@ first-app/
         remove.sql
         update.sql
     clients/
+      api/
+        server.js
       terminal/
+        api.txt
         count-users-by-gender.txt
         create-user.txt
         create-users-table.txt

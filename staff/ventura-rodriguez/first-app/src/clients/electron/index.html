@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>First app</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main>
+      <section id="list-screen">
+        <h1>Usuarios</h1>
+        <form id="create-form">
+          <label>
+            Nombre
+            <input id="create-name" name="name" type="text" />
+          </label>
+          <label>
+            Email
+            <input id="create-email" name="email" type="text" />
+          </label>
+          <button type="submit">Crear</button>
+        </form>
+        <form id="view-form">
+          <label>
+            Id
+            <input id="view-id" name="id" type="text" />
+          </label>
+          <button type="submit">Ver</button>
+        </form>
+        <ul id="user-list"></ul>
+        <p id="list-message" class="message"></p>
+      </section>
+
+      <section id="detail-screen" hidden>
+        <h1>Usuario</h1>
+        <p id="detail-id"></p>
+        <p id="detail-name"></p>
+        <p id="detail-email"></p>
+        <p>Creado <span id="detail-created"></span></p>
+        <p>Actualizado <span id="detail-updated"></span></p>
+        <form id="edit-form">
+          <label>
+            Nombre
+            <input id="edit-name" name="name" type="text" />
+          </label>
+          <label>
+            Email
+            <input id="edit-email" name="email" type="text" />
+          </label>
+          <button type="submit">Guardar</button>
+        </form>
+        <button id="delete-button" type="button">Eliminar</button>
+        <button id="back-button" type="button">Volver</button>
+        <p id="detail-message" class="message"></p>
+      </section>
+    </main>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

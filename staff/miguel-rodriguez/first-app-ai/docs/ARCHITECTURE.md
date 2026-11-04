@@ -125,6 +125,9 @@ record the request, approved approach, tasks, decisions, and verification.
 ## Git workflow
 
 `agents/git-workflow-agent.md` defines the workflow loaded by the principal agent.
+It checks task readiness against project context, asks for missing decisions and
+retains resolved answers. Starting a task completes branch and draft PR setup,
+including issue links, before project edits; resuming reuses completed steps.
 The six other agent documents define task clarification, issue creation, branch
 creation, commits, pushes and pull requests. The principal runs status, staging
 updates, issue linking and reviewer assignment through their respective skills.

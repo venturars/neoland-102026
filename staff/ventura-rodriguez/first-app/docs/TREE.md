@@ -1,6 +1,7 @@
 # Árbol
 
 first-app/
+  README.md
   eslint.config.js
   src/
     db/
@@ -27,6 +28,17 @@ first-app/
         styles.css
       http/
         app.js
+      electron/
+        main.js
+        index.html
+        app.js
+        styles.css
+      chrome/
+        server.js
+        manifest.json
+        index.html
+        popup.js
+        styles.css
   agents/
   skills/
   tools/
