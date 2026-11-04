@@ -3,7 +3,7 @@
 La app tiene cuatro capas. Cada una solo habla con la de debajo.
 
 1. `src/clients/` — muestra datos y pide acciones. Llama a `src/logic/`.
-2. `src/logic/` — las reglas. Se ejecuta en el cliente: navegador, terminal o Jupyter. Llama a `src/queries/`.
+2. `src/logic/` — las reglas. Se ejecuta en el cliente: navegador, ventana de Electron, API de la extensión de Chrome, terminal o Jupyter. Llama a `src/queries/`.
 3. `src/queries/` — el texto SQL y su envío al servidor. No tiene reglas.
 4. `src/db/` — el servidor que abre la base y ejecuta el SQL. Solo datos: no sirve la web. No tiene reglas.
 
@@ -22,6 +22,9 @@ Ningún cliente funciona sin el servidor en marcha (`pnpm start`). La web no la 
 | `src/logic/index.js` | Reexporta las operaciones |
 | `src/clients/web/*` | Cliente de navegador en HTML, CSS y JS vanilla. Se abre como fichero e importa `src/logic/` con rutas relativas |
 | `scripts/browser.js` | Abre `src/clients/web/index.html` en Chrome, con un perfil aparte y `--allow-file-access-from-files` |
+| `src/clients/electron/*` | Cliente de escritorio con ventana propia, abierto con `pnpm electron`. `main.js` abre la ventana y la página importa `src/logic/` con rutas relativas. No reutiliza `src/clients/web/` |
+| `src/clients/chrome/server.js` | API de la extensión, con Fastify, en `127.0.0.1:3002`. La lanza `pnpm chrome`. Llama a `src/logic/`, no tiene reglas y comprueba `Host` y `Origin` |
+| `src/clients/chrome/*` | Extensión de Chrome: `manifest.json`, `index.html`, `popup.js` y `styles.css`. Solo llama a su API, porque una extensión no carga ficheros de fuera de su carpeta |
 | `src/clients/terminal/*.txt` | Un cliente por operación, para pegar en la terminal |
 | `src/clients/jupyter/*.ipynb` | Un cuaderno por operación, que abre `pnpm run jupyter` |
 

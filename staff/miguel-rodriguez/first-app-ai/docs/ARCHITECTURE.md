@@ -159,3 +159,11 @@ README.md; workflow permissions and SDD gates remain in AGENTS.md.
 documentation reference, alongside the GitHub reference. It is not an installed
 connection or credential store. The constitution explains access and source
 coverage; AGENTS.md retains the detailed dependency-validation procedure.
+
+## REST client
+
+`src/clients/http/app.js` adapts five user operations to HTTP using Express.
+It awaits the existing logic, converts route IDs to numbers, and maps business
+errors to HTTP statuses and JSON messages. It listens on loopback port 3001 via
+`pnpm http`; queries still reach the separate data service on port 3000.
+The client does not serve web assets. README documents the Postman requests.

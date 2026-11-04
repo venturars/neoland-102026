@@ -2,6 +2,7 @@
 
 ```
 first-app/
+  README.md
   eslint.config.js
   src/
     db/server.js
@@ -28,6 +29,12 @@ first-app/
       main.js
       index.html
       app.js
+      styles.css
+    clients/chrome/
+      server.js
+      manifest.json
+      index.html
+      popup.js
       styles.css
   agents/                 orquestador y subagentes del flujo de Git
   skills/                 instrucciones reutilizables por momento

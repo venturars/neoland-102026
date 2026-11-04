@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Usuarios</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="layout">
+      <header class="header">
+        <h1>Usuarios</h1>
+        <p class="subtitle">First App</p>
+      </header>
+
+      <section
+        id="connection-banner"
+        class="banner"
+        hidden
+        aria-live="polite"
+      >
+        <p id="connection-text">No se puede contactar con la base.</p>
+        <button id="retry-button" type="button">Reintentar</button>
+      </section>
+
+      <p id="status" class="status" role="status"></p>
+
+      <section class="block" aria-labelledby="search-heading">
+        <h2 id="search-heading">Buscar</h2>
+        <form id="search-form" class="form">
+          <label class="field">
+            <span class="label">Modo</span>
+            <select id="search-mode" name="mode">
+              <option value="searchName">Nombre (exacto)</option>
+              <option value="searchEmail">Email</option>
+              <option value="searchId">Id</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="label">Valor</span>
+            <input id="search-value" name="value" type="text" />
+          </label>
+          <button type="submit">Buscar</button>
+        </form>
+        <button id="list-all-button" type="button" class="secondary">
+          Ver todos
+        </button>
+      </section>
+
+      <section class="block" aria-labelledby="create-heading">
+        <h2 id="create-heading">Alta</h2>
+        <form id="create-form" class="form">
+          <label class="field">
+            <span class="label">Nombre</span>
+            <input id="create-name" name="name" type="text" />
+          </label>
+          <label class="field">
+            <span class="label">Email</span>
+            <input id="create-email" name="email" type="email" />
+          </label>
+          <button type="submit" class="primary">Crear</button>
+        </form>
+      </section>
+
+      <section class="block" aria-labelledby="list-heading">
+        <h2 id="list-heading">Lista</h2>
+        <p id="empty-list" class="empty">No hay usuarios que mostrar.</p>
+        <ul id="user-list" class="list"></ul>
+      </section>
+
+      <section id="detail-section" class="block" hidden aria-labelledby="detail-heading">
+        <h2 id="detail-heading">Ficha</h2>
+        <dl class="meta">
+          <dt>Id</dt>
+          <dd id="detail-id"></dd>
+          <dt>Creado</dt>
+          <dd id="detail-created"></dd>
+          <dt>Modificado</dt>
+          <dd id="detail-updated"></dd>
+        </dl>
+        <form id="edit-form" class="form">
+          <label class="field">
+            <span class="label">Nombre</span>
+            <input id="edit-name" name="name" type="text" />
+          </label>
+          <label class="field">
+            <span class="label">Email</span>
+            <input id="edit-email" name="email" type="email" />
+          </label>
+          <button type="submit" class="primary">Guardar</button>
+        </form>
+        <form id="delete-form" class="form delete">
+          <p class="hint">Escribe el email guardado para confirmar el borrado.</p>
+          <label class="field">
+            <span class="label">Confirmar email</span>
+            <input id="delete-confirm" name="confirmation" type="email" />
+          </label>
+          <div class="row">
+            <button id="delete-submit" type="submit" class="danger">
+              Borrar
+            </button>
+            <button id="delete-cancel" type="button" class="secondary">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+    <script src="./panel.js"></script>
+  </body>
+</html>

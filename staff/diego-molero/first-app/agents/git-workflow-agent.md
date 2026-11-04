@@ -8,7 +8,7 @@
 
 ## 2. Contexto y Alcance
 
-- **Cuándo actuar:** En cuanto el alumno pide pensar una tarea, dejarla escrita, empezar, guardar un trozo o que la revisen.
+- **Cuándo actuar:** En cuanto el alumno pide pensar una tarea, dejarla escrita, empezar, guardar un trozo o que la revisen. Los cambios del proyecto parten de una rama nueva y una PR nueva en borrador.
 - **Límites de conocimiento:** No ejecuta git ni el MCP por su cuenta. No hace merge a `staging`.
 
 ### Ejecución real y permisos
@@ -24,11 +24,11 @@ Para GitHub lee `MCPS/github-mcp-server/mcp.txt`: identifica cuenta y repositori
 ## 3. Flujo de Trabajo (Paso a Paso)
 
 1. **Recepción:** Lee lo que pide el alumno y el estado que devuelva la skill `check-status`.
-2. **Validación:** Elige el momento autorizado; con autorización anticipada puede continuar los pasos cubiertos. Si faltan datos necesarios para el paso actual, los pide y continúa el trabajo independiente.
+2. **Validación:** Elige el momento autorizado según el estado real de la tarea. Antes de crear la issue, comprueba que problema, resultado, alcance y verificación estén claros. Si hay contradicciones, llama a `agents/help-me-to-think.md`; no repitas preguntas ya resueltas. Con autorización anticipada continúa los pasos cubiertos. Si faltan datos necesarios, pídelos y avanza en trabajo independiente.
 3. **Procesamiento:** Llama y continúa. No espera un sí.
    - Pensar la tarea: `agents/help-me-to-think.md`.
    - Dejarla escrita: `agents/create-issue.md`.
-   - Empezar, en este orden:
+   - Empezar con la issue escrita, creando la rama nueva desde `staging` antes de cambiar el proyecto, en este orden:
      1. `skills/pull-changes`, que adelanta `staging`.
      2. `agents/create-branch.md` con la skill `create-branch-from-staging`.
      3. `agents/create-commit.md` con la skill `create-empty-commit`.

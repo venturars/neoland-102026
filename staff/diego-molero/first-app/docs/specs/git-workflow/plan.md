@@ -50,6 +50,10 @@ Autorización explícita de Diego para completar el plan, implementación, compr
 
 La constitución se cumple: cambio exclusivo de automatización y documentación, UTF-8, comentarios explicativos, datos privados fuera de Git y conservación de contratos y dependencias.
 
+## Iteración del 4 de noviembre de 2026 · Issue #855
+
+Comparar agentes y skills de `exercises/git-workflow-agent-template` en el `staging` actualizado. Incorporar la validación de una issue lista y la regla explícita de crear rama y PR en borrador antes de cambiar un proyecto. Conservar las diferencias locales justificadas: delegación real, autorizaciones ya dadas, comentarios y cuerpo en español, títulos cortos en inglés, selección de las doce plantillas, alternativa `gh`, ausencia de cambios automáticos de credenciales y scripts seguros. Revisar sintaxis, referencias, UTF-8 y recorridos aislados en repositorios temporales; registrar resultados en tareas.
+
 ## Iteración del 4 de noviembre de 2026 · Issue #957
 
 1. Guardar `skills/assign-reviewers/reviewer-cache.json` en UTF-8 y versionado, agrupado por repositorio, con las dos asociaciones proporcionadas por Diego.

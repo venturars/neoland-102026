@@ -1,4 +1,3 @@
-/* global console, URL */
 import { createServer } from "node:http";
 import { DatabaseSync } from "node:sqlite";
 import { dirname, join } from "node:path";
@@ -124,6 +123,16 @@ const server = createServer((request, response) => {
       response.end();
     }
   });
+});
+
+server.on("error", (error) => {
+  if (error.code === "EADDRINUSE") {
+    console.error(
+      `Port ${port} is already in use. Stop the other pnpm server or free port ${port}.`,
+    );
+    process.exit(1);
+  }
+  throw error;
 });
 
 server.listen(port, hostname, () => {

@@ -39,6 +39,12 @@ first-app/
         index.html
         popup.js
         styles.css
+      vscode/
+        package.json
+        extension.js
+        index.html
+        panel.js
+        styles.css
   agents/
   skills/
   tools/

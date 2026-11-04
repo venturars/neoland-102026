@@ -1,12 +1,12 @@
 import { listUserRows } from "../queries/users.js";
 
-export function listUsers() {
+export async function listUsers() {
   // Ask the database for every user. If SQLite fails, do not return
   // its message: replace it with a clear error about this operation.
   let rows;
 
   try {
-    rows = listUserRows();
+    rows = await listUserRows();
   } catch {
     throw new Error("Unable to list users");
   }

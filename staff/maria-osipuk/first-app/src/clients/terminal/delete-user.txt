@@ -1,1 +1,1 @@
-node --input-type=module -e "import { deleteUser } from './src/logic/delete-user.js'; deleteUser(1)"
+node --input-type=module -e "import { deleteUser } from './src/logic/delete-user.js'; await deleteUser(1)"

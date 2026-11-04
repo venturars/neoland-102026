@@ -17,6 +17,7 @@
 - `src/clients/terminal/` llama a `src/logic/` y muestra el resultado. Es la prueba a mano de cada acción.
 - `src/clients/browser/` es la página de personas. `app.js` llama a `listUsers`, `findUserById`, `updateUser` y `deleteUser`. No decide si un email vale.
 - `src/clients/rest/server.js` responde JSON en el puerto 3001. Llama a las mismas reglas. No decide si un email vale.
+- `src/clients/electron/` es una ventana de escritorio. `app.js` llama a `listUsers`, `findUserById`, `createUser`, `updateUser` y `deleteUser`. No decide si un email vale.
 - `docs/ARCHITECTURE.md` dice qué hace cada capa y cada fichero.
 - `docs/TREE.md` es el dibujo de carpetas y ficheros.
 - `docs/DATABASE.md` es la base y las consultas.
