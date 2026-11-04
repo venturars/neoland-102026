@@ -72,6 +72,10 @@ first-app/
         spec.md
         plan.md
         tasks.md
+      sync-git-workflow-template/
+        spec.md
+        plan.md
+        tasks.md
       <nombre>/
         spec.md
         plan.md
