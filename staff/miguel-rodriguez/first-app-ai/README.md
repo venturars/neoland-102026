@@ -25,7 +25,15 @@ Con `pnpm server` en ejecución, prepara la tabla una vez desde otra terminal:
 node --input-type=module -e 'import { createUsersTable } from "./src/queries/users.js"; await createUsersTable();'
 ```
 
-Abre [Contactos](http://127.0.0.1:3000/). Selecciona tu ID, modifica nombre/email
+Después ejecuta:
+
+```sh
+pnpm web
+```
+
+El comando abre `src/clients/web/index.html` como archivo en Chrome/Chromium,
+con permiso para cargar sus módulos locales y un perfil temporal separado.
+Selecciona tu ID, modifica nombre/email
 o vuelve sin guardar. Para eliminar, escribe el email guardado que muestra la
 confirmación. Notas queda como opción futura.
 
@@ -33,7 +41,14 @@ La web usa los mismos contactos que Terminal y Jupyter. No crea ejemplos; una
 base vacía muestra una lista vacía. Para añadir contactos usa la operación de
 creación de Terminal o Jupyter. Repetir la preparación conserva los contactos.
 Los errores de nombre/email aparecen junto al campo; los fallos de conexión
-permiten reintentar. Cerrar el navegador no detiene el servidor.
+permiten reintentar. Pulsa Ctrl+C en la terminal de `pnpm web` para cerrar el
+cliente y eliminar su perfil temporal. El servidor de datos sigue
+en su propia terminal.
+
+El lanzador busca Chrome en las ubicaciones habituales de macOS/Windows y
+Chrome/Chromium en PATH en Linux. Si está en otra ubicación, configura `CHROME_BIN`
+con la ruta de su ejecutable. La apertura y el recorrido se verificaron en macOS.
+Abrir el HTML con doble clic en una sesión normal puede bloquear los módulos.
 
 ## Abrir Jupyter
 

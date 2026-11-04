@@ -7,8 +7,9 @@ Meghan el 2026-11-03. Estas tareas concretan ese encargo; no se atribuyen
 aprobaciones individuales adicionales.
 
 - [x] T01 · Incorporar staging en la rama existente, preservando #822 y la spec.
-- [x] T02 · Servir HTML/CSS/módulos con lista explícita; mantener /execute y
-  comprobar redirección, tipos, archivos excluidos e inicialización separada.
+- [x] T02 · Mantener solo el servicio de consultas y el preflight de /execute;
+  abrir el HTML con pnpm web, módulos locales y perfil temporal separado.
+  Verificar archivo real, consultas compartidas y limpieza del perfil.
 - [x] T03 · Conectar selección, lista y edición a la lógica compartida. Mostrar
   errores junto a los campos y conservar entradas al fallar. Evitar envíos dobles.
 - [x] T04 · Confirmar borrado por email guardado; comprobar vacío, error,
@@ -27,7 +28,10 @@ La evidencia de ejemplos con localStorage pertenece a la revisión anterior de
 #762 y no acredita esta versión conectada. La nueva verificación se registra aquí.
 
 
-## Evidencia · 2026-11-03
+## Evidencia histórica · 2026-11-03
+
+La entrega HTTP descrita aquí fue corregida por el feedback del 4 de noviembre.
+Sus pruebas de archivos servidos no acreditan la apertura actual como archivo.
 
 Node 24.22.1. Verificación en copias desechables sin la base de trabajo.
 
@@ -68,3 +72,31 @@ Node 24.22.1. Verificación en copias desechables sin la base de trabajo.
 Verificación final repetida en la rama de entrega: formato, lint y ambas pruebas
 correctos. Integración local de staging resuelta; la comparación de la entrega
 se limita a first-app-ai. Servidores propios detenidos y copia desechable retirada.
+
+
+## Corrección · 2026-11-04
+
+- Retirados WEB_FILES, redirección y entrega de archivos del servidor. Se conserva
+  POST /execute y OPTIONS para el preflight que necesita el navegador.
+- Añadidos scripts/web.js y pnpm web: archivo HTML con módulos locales, perfil
+  temporal exclusivo y cierre/limpieza al salir. No se añadieron paquetes.
+- Prueba real de pnpm web en una copia cuyo nombre incluye espacios. Se utilizó
+  Chrome de macOS con un wrapper externo solo de prueba para añadir modo headless
+  y depuración local; esas opciones no forman parte del lanzador entregado.
+  El lanzador suministró la URL file://, el permiso local y el perfil temporal.
+- Verificados módulos desde disco, listado, email inválido/duplicado, normalización,
+  edición y persistencia al recargar; confirmación vacía, incorrecta, cancelada y
+  correcta del borrado. El otro contacto se conservó. Cero excepciones JavaScript.
+  Todas las peticiones HTTP observadas fueron a /execute.
+- Ctrl+C terminó el navegador dedicado con salida 0 y eliminó su perfil temporal.
+  CHROME_BIN inexistente produjo salida 1 con un mensaje claro.
+- La revisión corrigió el reconocimiento de URL en el lanzador importándolo de
+  node:url. La repetición de formato, lint y pruebas se registra tras completarla.
+
+Solo se acredita la ejecución del navegador en macOS; las rutas de búsqueda de
+Windows/Linux están previstas en el script, sin atribuirles una prueba real.
+
+Repetición final en copia: formato y lint con salida 0; las dos pruebas Node en
+serie pasan. El recorrido file:// y la limpieza del perfil pasan. Se mantienen
+intactos la lógica, queries, main.js, los datos de trabajo y las dependencias.
+Los procesos propios se detuvieron y las copias de prueba se retiraron.

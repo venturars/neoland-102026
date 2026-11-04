@@ -1,7 +1,8 @@
 # Cliente web de contactos
 
 Issue: #760 · PR: #762, hacia staging.
-Corrección solicitada y spec aprobada por Miguel el 2026-11-03.
+Spec aprobada por Miguel el 2026-11-03; apertura como archivo corregida según
+el feedback que trasladó el 2026-11-04.
 Sustituye la versión de ejemplos guardados en el navegador.
 
 ## Propósito
@@ -11,7 +12,7 @@ que utilizan Terminal y Jupyter, aprovechando el acceso compartido de #822.
 
 ## Comportamiento y aceptación
 
-- **CA-01 · Selección:** al abrir la dirección local de la app, mostrar los
+- **CA-01 · Selección:** al abrir el HTML con el comando del proyecto, mostrar los
   contactos guardados, ordenados por ID. Elegir uno por su ID abre su menú, sin
   contraseña. Si no hay contactos, mostrar la lista vacía.
 - **CA-02 · Navegación:** conservar Volver, Modificar usuario e Ir a notas.
@@ -41,7 +42,8 @@ que utilizan Terminal y Jupyter, aprovechando el acceso compartido de #822.
   comunicarlo y permitir volver a cargar la lista.
 - **CA-08 · Uso:** conservar el diseño, el teclado y la adaptación móvil. Las
   instrucciones explican cómo arrancar el servicio, preparar la tabla por
-  separado y abrir la app. Arrancar el servicio no crea la tabla. Repetir la
+  separado y abrir el HTML como archivo con permiso para sus módulos locales.
+  El servicio de datos se dedica a las consultas. Arrancar el servicio no crea la tabla. Repetir la
   preparación conserva los contactos. Las guías reflejan la conexión real.
 
 ## Alcance

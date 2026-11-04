@@ -2,7 +2,8 @@
 
 Issue: #760 · PR: #762, hacia staging.
 Spec: [spec.md](spec.md), aprobada por Miguel el 2026-11-03.
-Estado: implementación y publicación autorizadas por Miguel el 2026-11-03.
+Estado: implementación y publicación autorizadas por Miguel el 2026-11-03;
+corrección de apertura solicitada el 2026-11-04.
 
 ## Base y recorrido
 
@@ -15,18 +16,20 @@ El navegador importa las operaciones compartidas como módulos JavaScript.
 
 ## Abrir la app · CA-01,06,08
 
-Ampliar src/db/server.js para servir la página y los módulos necesarios con GET,
-reutilizando el mismo proceso y puerto. GET / redirige a
-/clients/web/index.html, manteniendo las rutas relativas de los archivos.
+Restaurar src/db/server.js a su responsabilidad de SQLite y POST /execute,
+conservando el preflight necesario para las consultas desde file://. Retirar
+WEB_FILES, la redirección de / y la lectura/entrega de archivos. Los demás
+recursos devuelven 404. La tabla se prepara por separado.
 
-Servir únicamente una lista explícita de archivos de clients/web, las operaciones
-utilizadas de logic y los módulos que importan de queries. Enviar el tipo de
-contenido correcto para HTML, CSS y JavaScript; devolver 404 para otros archivos,
-incluida la base de datos. Mantener POST /execute y su preflight existentes.
-La tabla se prepara por separado con el ejemplo Terminal o el primer notebook.
+Añadir scripts/web.js y el comando pnpm web. Localizar Chrome/Chromium por
+CHROME_BIN o sus ubicaciones habituales en cada plataforma. Abrir el HTML
+mediante su URL file:// relativa al propio script, con
+--allow-file-access-from-files y un perfil temporal exclusivo. Mantener el
+lanzador activo mientras se usa el cliente; Ctrl+C cierra su navegador. Limpiar
+el perfil al terminar y comunicar los fallos de arranque.
 
-Cambiar index.html a script type="module". Conservar el diseño y las tres
-pantallas; retirar los textos de ejemplos y el botón para restablecerlos.
+Mantener script type="module", los imports relativos y las tres pantallas.
+No cambia la lógica ni se añade otro servidor para los archivos.
 
 ## Conectar las pantallas · CA-01 a CA-04,06,07
 
@@ -64,12 +67,12 @@ presentarlo como un borrado fallido. User not found permite volver a cargar.
 
 Actualizar README, ARCHITECTURE, TREE, la descripción del servicio en DATABASE
 y la descripción del cliente en CONSTITUTIONS.
-Documentar pnpm server, preparación explícita y la dirección local. Conservar los
+Documentar pnpm server, preparación explícita y pnpm web para abrir el archivo. Conservar los
 comandos y contratos de Terminal/Jupyter, el esquema y las dependencias actuales.
 Mantener el formato del cliente y combinar ESLint con la configuración de #822.
 
-Añadir tests/web-client.test.js con las herramientas integradas de Node para los
-archivos servidos, tipos de contenido y rutas excluidas. Ambas pruebas usan copias
+Adaptar tests/web-client.test.js para comprobar que no se sirven archivos y que
+POST /execute y su preflight permiten consultas desde el origen de archivo. Ambas pruebas usan copias
 desechables y el puerto 3000; ejecutarlas en serie:
 
 ```sh

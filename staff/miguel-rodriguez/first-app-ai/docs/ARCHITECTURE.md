@@ -38,9 +38,12 @@ modules. It keeps presentation state in memory; saved contacts live in SQLite.
 Field errors present shared validation failures. Typed-email confirmation is a
 client precaution before calling delete, not authentication. Notes is disabled.
 
-`src/db/server.js` also serves an explicit list of web assets and the JavaScript
-modules they need. GET / redirects to the HTML; database files and other project
-files are not served. The existing POST /execute remains the query transport.
+`scripts/web.js`, run by `pnpm web`, opens the HTML as a file in Chrome/Chromium
+with local-file module access and a separate temporary profile. It uses an
+explicit `CHROME_BIN` path or the platform's usual installation paths. Stopping
+the launcher with Ctrl+C closes its browser and removes that profile.
+`src/db/server.js` handles only database requests on POST /execute and its CORS
+preflight; it does not serve the page or JavaScript files.
 
 `src/clients/jupyter/` provides nine independent notebooks for those same operations
 and explicit table initialization. Initialization calls a query; it is not a new
@@ -82,8 +85,8 @@ Startup may report environment preparation; it does not introduce business logic
 
 `tests/serve-data-through-node.test.js` checks the local data service, query
 results, business operations and failure handling in disposable project copies.
-`tests/web-client.test.js` checks web assets, module content types and excluded
-paths. Both use port 3000; run them sequentially:
+`tests/web-client.test.js` checks file-origin query access and confirms that
+the database server does not serve web assets or other project files. Both use port 3000; run them sequentially:
 
 ```sh
 node --test --test-concurrency=1 tests/serve-data-through-node.test.js tests/web-client.test.js

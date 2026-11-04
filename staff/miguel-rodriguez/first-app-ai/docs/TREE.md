@@ -91,7 +91,8 @@ first-app-ai/
 ├── pnpm-lock.yaml
 ├── requirements-jupyter.txt
 ├── scripts/
-│   └── jupyter.js
+│   ├── jupyter.js
+│   └── web.js
 ├── skills/
 │   ├── assign-author/
 │   │   └── SKILL.md
