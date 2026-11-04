@@ -66,4 +66,14 @@ export default [
       },
     },
   },
+  {
+    files: ["src/clients/vscode/panel.js"],
+    languageOptions: {
+      globals: {
+        document: "readonly",
+        window: "readonly",
+        acquireVsCodeApi: "readonly",
+      },
+    },
+  },
 ];

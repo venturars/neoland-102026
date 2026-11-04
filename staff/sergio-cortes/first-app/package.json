@@ -12,6 +12,7 @@
     "http": "nc -z 127.0.0.1 3000 >/dev/null 2>&1 || { node src/db/server.js & DB=$!; trap \"kill $DB\" EXIT INT TERM; }; node src/clients/http/server.js",
     "electron": "nc -z 127.0.0.1 3000 >/dev/null 2>&1 || { node src/db/server.js & DB=$!; trap \"kill $DB\" EXIT INT TERM; }; electron src/clients/electron/main.js",
     "chrome": "nc -z 127.0.0.1 3000 >/dev/null 2>&1 || { node src/db/server.js & DB=$!; trap \"kill $DB\" EXIT INT TERM; }; node src/clients/chrome/server.js",
+    "vscode": "code --extensionDevelopmentPath=\"$(pwd)/src/clients/vscode\" \"$(pwd)/src/clients/vscode\"",
     "jupyter": "sh scripts/jupyter.sh",
     "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/**/*.js\"",
     "lint": "eslint .",
