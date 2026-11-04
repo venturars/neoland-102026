@@ -70,11 +70,14 @@ examples from the project directory using a Node version supporting `node:sqlite
 Each example starts a separate Node process. Clients import and call the relevant operation and use `console.log`; initialization awaits `createUsersTable()` and prints the result of `listTables()`, including `users`, deletion prints `undefined`, and other examples print returned data. The classifier client awaits its async result and requires the local AI prerequisites documented in its example for nonempty data. A vanilla web client calls the same asynchronous operations for selection, editing
 and deletion. It confirms deletion by asking for the saved email; that is a client
 precaution, not an additional business-operation parameter or authentication.
+The REST client exposes create, list, ID lookup, update and delete through HTTP
+on loopback port 3001, using the same business operations and data service.
+It starts with `pnpm http` after `pnpm server`; requests are documented in README.
 No general-purpose CLI is implemented.
 
 ## Dependencies and package management
 
-The application uses Node built-ins and the exact external dependency `openai@7.39.0`. The Jupyter client additionally uses the exact development dependency `cli-table3@0.6.5` for colored table headers. Its project-local Python environment uses `notebook==7.6.3` and the directly invoked `ipykernel==7.1.0` from `requirements-jupyter.txt`. These client dependencies do not change the business operations or classifier. pnpm generates `pnpm-lock.yaml`; it is maintained with `package.json`.
+The application uses Node built-ins and the exact external dependency `openai@7.39.0`. The REST client uses `express@5.3.0`. The Jupyter client additionally uses the exact development dependency `cli-table3@0.6.5` for colored table headers. Its project-local Python environment uses `notebook==7.6.3` and the directly invoked `ipykernel==7.1.0` from `requirements-jupyter.txt`. These client dependencies do not change the business operations or classifier. pnpm generates `pnpm-lock.yaml`; it is maintained with `package.json`.
 
 Development checks use exact versions `prettier@3.9.10`, `eslint@10.13.0`, and
 `@eslint/js@10.0.1`. These development dependencies do not change application

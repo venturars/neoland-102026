@@ -96,3 +96,31 @@ Reutiliza la conexión existente. Configura la escritura directa según [la refe
 Las entradas `.cursor/agents/` se conservan como compatibilidad opcional. Requieren abrir esta app como proyecto en Cursor y verificar su propio entorno; el resultado de Codex no acredita ejecución allí. No son necesarias para usar el flujo en Codex.
 
 Las verificaciones y pendientes están en [las tareas de Git](docs/specs/git-workflow-automation/tasks.md). Las solicitudes de revisión van después de publicar los cambios finales; después no se cambian commits ni base sin petición expresa.
+
+## Cliente REST y Postman
+
+Prepara la tabla de esta copia y deja `pnpm server` abierto. En otra terminal:
+
+```sh
+pnpm http
+```
+
+El cliente escucha en http://127.0.0.1:3001. En Postman usa Body → raw → JSON
+para POST y PATCH, con Content-Type: application/json.
+
+| Petición | Body | Respuesta |
+| --- | --- | --- |
+| POST /users | {"name":"Ada","email":"ada@example.com"} | 201, usuario |
+| GET /users | — | 200, lista |
+| GET /users/ID | — | 200, usuario |
+| PATCH /users/ID | {"name":"Ada Lovelace"} | 200, usuario modificado |
+| DELETE /users/ID | — | 204, cuerpo vacío |
+
+Sustituye ID por el recibido al crear. PATCH conserva los campos omitidos.
+Los errores devuelven JSON con message: 400 para nombre/email inválido, 409
+para email ocupado, 404 para usuario inexistente y 500 para fallos de datos.
+Una ruta desconocida devuelve 404 vacío; JSON mal formado, 400 vacío.
+
+Usa datos desechables para borrar. Terminal, Jupyter, web y REST comparten los
+contactos. Ctrl+C detiene cada servicio desde su propia terminal. El cliente REST
+no sirve la página web.
