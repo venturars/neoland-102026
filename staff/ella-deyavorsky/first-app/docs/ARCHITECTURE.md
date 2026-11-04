@@ -38,7 +38,7 @@ One file per action. Each file exports one function. The order inside the functi
 
 ### src/queries/
 
-- `users.js` exports one function per query. Each one sends a `POST` to the database program with `fetch`. It has no connection, no `.sql` path and no SQL string. Importing it does not create the table.
+- `users.js` exports one function per query. Each one sends a `POST` to the database program with `fetch`. It has no connection, no `.sql` path and no SQL string. The database program creates the table when it starts.
 
 The `.sql` files are in `src/db/queries/`. The file names and the functions are in [DATABASE.md](DATABASE.md).
 
@@ -53,7 +53,7 @@ A new query is a new `.sql` file in `src/db/queries/` and a new function in `src
 
 ### src/clients/
 
-- `terminal/` has one `.txt` file per feature, named like its logic file. You paste it into the terminal while `first-app` is the current folder. `create-users-table.txt` prepares the table.
+- `terminal/` has one `.txt` file per feature, named like its logic file. You paste it into the terminal while `first-app` is the current folder. `create-users-table.txt` calls `createUsersTable()` and lists the users.
 - `jupyter/` has one notebook per feature, plus `prepare-database.ipynb`, `00-welcome-and-index.ipynb` and a `README.md`. They open in the browser with `scripts/jupyter.sh`.
 - `web/` has `index.html`, `style.css` and `app.js`: three screens (choose a user, menu, edit) over the real users. `app.js` is a browser module that imports `logic/`. It opens at `http://localhost:3000` while the database program runs. The `.txt` per feature of `terminal/` does not apply here; it is tested by opening the page.
 

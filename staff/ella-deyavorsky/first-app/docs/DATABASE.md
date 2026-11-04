@@ -28,8 +28,8 @@ The query functions are:
 
 A query function does not use the same name as a function in `logic/`.
 
-The SQL text lives only in `src/db/queries/`. `src/queries/users.js` asks the database program to run a query by its name. It does not contain a SQL string. Importing `src/queries/users.js` does not create the table. The table appears only when `createUsersTable()` is called.
+The SQL text lives only in `src/db/queries/`. `src/queries/users.js` asks the database program to run a query by its name. It does not contain a SQL string. The database program creates the table when it starts, so the table already exists when the first query arrives. `createUsersTable()` is still exported and can be called at any time. It does nothing if the table exists.
 
-`insert`, `findById`, `findByEmail`, and `update` use `.get()`. `findAll` uses `.all()`. `remove` uses `.run()` and returns nothing.
+The database program, not `users.js`, decides how each query runs and what it returns. `users.js` only sends the request and returns the parsed answer. `remove` and `createUsersTable` return nothing. If the program is not running, or answers with an error, every function throws "The database failed.".
 
 A file in `logic/` calls a function exported by `src/queries/users.js`. It does not read a `.sql` file. The query functions do not decide if a name or an email is valid. Those decisions stay in `logic/`. The one connection from `src/db/connection.js` belongs to the database program, not to the query functions.
