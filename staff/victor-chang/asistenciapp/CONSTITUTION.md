@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 3.1 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-23
+> Versión 3.2 · Ratificada: 2026-10-19 · Última enmienda: 2026-11-04
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -28,7 +28,7 @@ El registro de asistencia no depende de una plataforma concreta. Las integracion
 - Se usa la biblioteca estándar de Python (`sqlite3`, `hmac`, `secrets`, `csv`, `unicodedata`…) y el navegador (HTML, CSS y JavaScript sin frameworks).
 - Las únicas dependencias externas permitidas de serie son **Flask** (servidor web) y **pytest** (tests), listadas en `requirements.txt`.
 - Añadir cualquier otra requiere **justificarla por escrito** en el `plan.md` de la feature (qué problema resuelve y por qué no basta lo que ya hay).
-- Las **herramientas de desarrollo** (tests, formato, estilo, tipos; p. ej. pytest, ruff, mypy) no cuentan como dependencias de la app ni necesitan esa justificación, siempre que el código de la aplicación no las importe ni las necesite para arrancar. Se listan en `requirements.txt`.
+- Las **herramientas de desarrollo** (tests, formato, estilo, tipos, empaquetado; p. ej. pytest, ruff, mypy, PyInstaller) no cuentan como dependencias de la app ni necesitan esa justificación, siempre que el código de la aplicación no las importe ni las necesite para arrancar. Se listan en `requirements.txt`.
 
 ### P4 · Privacidad mínima
 - Del alumno solo se guarda su **nombre (y apellidos)** y la **hora del registro**.
@@ -50,9 +50,10 @@ Interfaz, mensajes de error, documentación y especificaciones se escriben en es
 
 | Capa | Tecnología |
 | --- | --- |
-| Runtime | Python 3.13+, en un entorno virtual `.venv/` (no se sube a git) |
+| Runtime | Python 3.13+: desde el código, en un entorno virtual `.venv/` (desarrollo; no se sube a git), o empaquetada como app de escritorio con PyInstaller (distribución) |
+| Ventana de escritorio | pywebview |
 | Servidor | Flask |
-| Base de datos | SQLite vía `sqlite3` (biblioteca estándar), archivo en `data/` (no se sube a git) |
+| Base de datos | SQLite vía `sqlite3` (biblioteca estándar), archivo en la carpeta de datos del usuario de cada sistema (en `data/` al ejecutar desde el código; no se sube a git) |
 | Frontend | HTML + CSS + JavaScript sin frameworks, servidos desde `static/` |
 | Tests | `pytest` |
 
@@ -90,6 +91,7 @@ Cambiar el stack requiere enmendar esta constitución.
 ## 7. Alcance y límites del repositorio
 
 - El proyecto vive entero en `staff/victor-chang/asistenciapp/`. No se tocan archivos fuera de esta carpeta.
+- Las versiones para descargar se compilan y publican en un repositorio público propio que es una **copia de esta carpeta**. Allí no se desarrolla: el código se cambia siempre aquí.
 
 ---
 
@@ -108,3 +110,4 @@ Cambiar el stack requiere enmendar esta constitución.
 | 2.1 | 2026-10-20 | P4: distingue *almacenar* (solo en local) de *transitar* (puede pasar cifrado por un proveedor de túnel) | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08) |
 | 3.0 | 2026-10-21 | P4: solo se guarda nombre (y apellidos) y hora; el nombre puede venir de la plataforma de videollamada (modo automático, elegido por clase); prohibido guardar emails | Spec 004: asistencia automática desde Meet sin intervención del alumno. Es versión mayor (§8) porque cambia un principio: el nombre ya no lo escribe siempre el alumno (numerada 2.2 en su día; renumerada el 2026-10-23) |
 | 3.1 | 2026-10-23 | P3: las herramientas de desarrollo (tests, formato, estilo, tipos) no cuentan como dependencias y se listan en `requirements.txt` | Poder usar herramientas como ruff o mypy para aplicar las reglas de `ARCHITECTURE.md` sin justificarlas una a una; no forman parte de la app. Una sola lista de dependencias mantiene la instalación en un único comando |
+| 3.2 | 2026-11-04 | §3: la app también se distribuye empaquetada como app de escritorio (PyInstaller), con ventana pywebview, y en ese caso guarda la base de datos en la carpeta de datos del usuario. §7: las versiones se compilan en una copia pública de esta carpeta. P3: el empaquetado cuenta como herramienta de desarrollo | Spec 007 (issue #919): que cualquier profesor pueda instalar la app en macOS o Windows con doble clic, sin Python ni terminal. pywebview en vez de Electron para seguir solo en Python (plan 007, "Decisiones") |
