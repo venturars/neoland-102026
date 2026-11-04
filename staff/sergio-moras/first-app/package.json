@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "format": "prettier --write \"src/logic/**/*.js\" \"src/queries/**/*.js\" \"src/db/**/*.js\" \"src/clients/browser/**/*.{js,html,css}\" \"src/clients/rest/**/*.js\" eslint.config.js",
+    "format": "prettier --write \"src/logic/**/*.js\" \"src/queries/**/*.js\" \"src/db/**/*.js\" \"src/clients/browser/**/*.{js,html,css}\" \"src/clients/rest/**/*.js\" \"src/clients/electron/**/*.{js,html,css}\" eslint.config.js",
     "lint": "eslint .",
     "browser": "start \"\" chrome --user-data-dir=\"%TEMP%\\first-app-chrome\" --allow-file-access-from-files --no-first-run --no-default-browser-check \"%CD%\\src\\clients\\browser\\index.html\"",
     "db": "node --no-warnings src/db/server.js",
-    "api": "node --no-warnings src/clients/rest/server.js"
+    "api": "node --no-warnings src/clients/rest/server.js",
+    "electron": "electron src/clients/electron/main.js"
   },
   "dependencies": {
     "@colors/colors": "1.6.1",
