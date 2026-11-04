@@ -42,6 +42,14 @@ mi-primer-proyecto/
         users.service.js
         logic-exception.filter.js
         logic-error.constants.js
+      vscode/
+        package.json
+        extension.cjs
+        panel.html
+        panel.js
+        panel.css
+        .vscode/
+          launch.json
       jupyter/
     db/
       server.js

@@ -12,7 +12,7 @@
     "http": "node src/clients/http/app.js",
     "chrome": "node src/clients/chrome/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/http/**/*.js\" \"src/clients/electron/**/*.js\" \"src/clients/chrome/**/*.js\"",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/http/**/*.js\" \"src/clients/electron/**/*.js\" \"src/clients/chrome/**/*.js\" \"src/clients/vscode/**/*.js\"",
     "lint": "eslint ."
   },
   "keywords": [],

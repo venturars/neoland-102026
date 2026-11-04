@@ -1,0 +1,38 @@
+{
+  "name": "mi-primer-proyecto-users",
+  "displayName": "Mi primer proyecto — Usuarios",
+  "description": "Panel lateral para gestionar usuarios de mi-primer-proyecto",
+  "version": "0.0.1",
+  "publisher": "mi-primer-proyecto-local",
+  "engines": {
+    "vscode": "^1.142.0"
+  },
+  "main": "./extension.cjs",
+  "activationEvents": ["onView:miPrimerProyecto.usersView"],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "miPrimerProyectoUsers",
+          "title": "Usuarios",
+          "icon": "$(person)"
+        }
+      ]
+    },
+    "views": {
+      "miPrimerProyectoUsers": [
+        {
+          "type": "webview",
+          "id": "miPrimerProyecto.usersView",
+          "name": "Usuarios"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "miPrimerProyecto.focusUsers",
+        "title": "Mi primer proyecto: Abrir usuarios"
+      }
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 import { findUserById as findUserRowById } from "../queries/users.js";
 
-export function findUserById(id) {
+export async function findUserById(id) {
   // Check that id is a whole number greater than zero.
   // The client sends it as a JavaScript value, so a string like "1"
   // or a decimal like 1.5 must be rejected here, before any query runs.
@@ -13,7 +13,7 @@ export function findUserById(id) {
   let user;
 
   try {
-    user = findUserRowById(id);
+    user = await findUserRowById(id);
   } catch {
     throw new Error("Unable to find user");
   }

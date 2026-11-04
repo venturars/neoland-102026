@@ -1,24 +1,31 @@
 # Base de datos
 
+## `src/db/server.js`
+
+Es el servidor de datos y el único proceso que abre SQLite, con `node:sqlite`. Escucha en `127.0.0.1:3000` y tiene una sola ruta, `POST /execute`, que recibe `{ method, sql, params }`:
+
+| `method` | Qué hace                  | Respuesta `200`                |
+| -------- | ------------------------- | ------------------------------ |
+| `exec`   | Ejecuta el SQL sin filas. | `{ ok: true }`                 |
+| `get`    | Lee una fila.             | `{ row }`, o `{ row: null }`   |
+| `all`    | Lee todas las filas.      | `{ rows }`                     |
+| `run`    | Escribe.                  | `{ changes, lastInsertRowid }` |
+
+Otra ruta u otro `method` responden `404`. Un JSON mal formado o un fallo de SQLite responden `500` sin cuerpo, para no enseñar detalles de la base. Añade `access-control-allow-origin: *` porque la página del navegador se abre desde `file://`.
+
+Al arrancar crea la tabla `users` si todavía no existe.
+
+`src/db/users.sqlite` es la base de la aplicación. Si el servidor arranca con `FIRST_APP_DATABASE_FILE`, abre esa ruta. Como todos los clientes pasan por el servidor, todos usan ese archivo.
+
 ## `src/queries/users.js`
 
-Es la capa de ejecución de consultas.
+Es la capa de ejecución de consultas. No abre SQLite ni lee archivos: importa el SQL de `src/queries/queries/` y lo envía al servidor de datos con `fetch`, mediante su única función `execute(method, sql, params)`. Por eso solo usa `import` y `fetch`, y funciona igual en Node y en el navegador.
 
-Lee los archivos SQL, prepara las consultas, proporciona sus parámetros y las ejecuta mediante la conexión compartida.
-
-Al cargar este módulo, crea la tabla `users` si todavía no existe.
+Sus funciones son `async`. Si el servidor responde con error o no está arrancado, lanzan `Error("Query failed")`; `src/logic/` cambia ese error por el suyo.
 
 ## `src/queries/queries/`
 
-Contiene un archivo `.sql` por consulta.
-
-Los archivos contienen exclusivamente SQL y no contienen JavaScript ni reglas de negocio.
-
-## `src/db/`
-
-`src/db/connection.js` abre la conexión SQLite.
-
-`src/db/users.sqlite` es la base de la aplicación. Si el proceso tiene `FIRST_APP_DATABASE_FILE`, la conexión abre esa ruta. Si no la tiene, abre `src/db/users.sqlite`. Los clientes de terminal y HTTP no fijan esa variable: pueden recibirla del entorno. El puente Jupyter abre la ruta predeterminada de su copia de la aplicación.
+Contiene un módulo `.js` por consulta. Cada uno exporta el texto SQL como una constante en mayúsculas, por ejemplo `INSERT_USER`. No contiene funciones ni reglas de negocio.
 
 ## Usuario
 
@@ -68,19 +75,18 @@ Cada tipo es el de JavaScript y el de SQLite. Un valor de otro tipo no se convie
 
 ## Decisiones fundamentales
 
-- Existe una sola conexión SQLite por proceso.
-- La base de la aplicación es `src/db/users.sqlite`. Un proceso solo abre otro archivo si trae `FIRST_APP_DATABASE_FILE`.
-- Cada consulta SQL tiene su propio archivo.
-- Los archivos `.sql` están separados del código JavaScript.
+- Solo el servidor de datos abre SQLite. Ningún cliente, ni `src/logic/`, ni `src/queries/` lo hace.
+- La base de la aplicación es `src/db/users.sqlite`. El servidor solo abre otro archivo si arranca con `FIRST_APP_DATABASE_FILE`.
+- Cada consulta SQL tiene su propio módulo.
 - Las consultas se ejecutan desde `src/queries/users.js`.
 
 ## Reglas de implementación
 
-- Lee los archivos SQL una vez al cargar el módulo.
 - Utiliza parámetros SQL con nombre.
 - Nunca concatenes datos del usuario dentro del SQL.
 - No cambies el esquema como efecto secundario de otra tarea.
-- `src/logic/` no llama a `createUsersTable()` ni crea tablas. La tabla `users` queda preparada al cargar `src/queries/users.js`. Asegurarla con `CREATE TABLE IF NOT EXISTS` no es un cambio de esquema.
+- `src/logic/` no llama a `createUsersTable()` ni crea tablas. La tabla `users` queda preparada al arrancar el servidor de datos. Asegurarla con `CREATE TABLE IF NOT EXISTS` no es un cambio de esquema.
+- El servidor de datos ejecuta el SQL que recibe. Por eso escucha solo en `127.0.0.1` y no se publica fuera del equipo.
 
 ## Cambios en la base de datos
 
