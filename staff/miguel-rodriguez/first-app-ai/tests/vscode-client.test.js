@@ -84,7 +84,7 @@ test("a late initial refresh cannot overwrite a newer search", async () => {
   let receive;
   const context = {
     acquireVsCodeApi: () => ({ postMessage: (message) => messages.push(message) }),
-    document: { getElementById: element, createElement: () => element(Symbol()) },
+    document: { getElementById: element, createElement: () => element(Symbol()), querySelectorAll: () => [...elements.values()] },
     window: { addEventListener: (_type, fn) => { receive = fn; } },
   };
   vm.runInNewContext(await readFile(new URL("../src/clients/vscode/panel.js", import.meta.url), "utf8"), context);
@@ -129,12 +129,18 @@ test("a late initial refresh cannot overwrite a newer search", async () => {
   const create = element("user-form").handlers.submit({ preventDefault() {} });
   const createRequest = messages.at(-1);
   assert.equal(createRequest.action, "create");
+  assert.equal(element("name").disabled, true);
+  assert.equal(element("cancel").disabled, true);
+  element("cancel").handlers.click();
+  context.selectUser({ id: 8, name: "Other", email: "other@example.com" });
+  assert.equal(element("name").value, "New User");
   receive({ data: { request: createRequest.request, value: { id: 2 } } });
   await new Promise((resolve) => setImmediate(resolve));
   const listRequest = messages.at(-1);
   assert.equal(listRequest.action, "list");
   receive({ data: { request: listRequest.request, error: "offline" } });
   await create;
+  assert.equal(element("name").disabled, false);
   assert.equal(element("status").textContent, "User created. Could not refresh users: offline");
   assert.equal(messages.filter((message) => message.action === "create").length, 1);
   const retry = element("refresh").handlers.click();

@@ -31,4 +31,4 @@ En una copia desechable, iniciar el servicio y preparar la tabla, abrir la exten
 
 ## Punto a contrastar
 
-El README y arquitectura en esta rama coinciden en abrir el cliente web como archivo mediante `pnpm web`; el servicio solo procesa consultas. La extensión tiene su propio arranque. El plan no afirma que el punto de entrada ni la ejecución F5 se hayan probado todavía.
+El README y arquitectura en esta rama coinciden en abrir el cliente web como archivo mediante `pnpm web`; el servicio solo procesa consultas. La extensión tiene su propio arranque. La activación y el acceso al servicio se verificaron en el Extension Development Host iniciado con F5; los resultados se registran en las tareas.

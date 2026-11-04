@@ -21,6 +21,12 @@ window.addEventListener("message", ({ data }) => {
   if (data.error) item.reject(new Error(data.error));
   else item.resolve(data.value);
 });
+function setBusy(value) {
+  busy = value;
+  for (const control of document.querySelectorAll("button, input, select")) {
+    control.disabled = value;
+  }
+}
 function status(message) {
   $("status").textContent = message;
 }
@@ -34,14 +40,17 @@ function showUsers(users) {
     label.textContent = `${user.id}: ${user.name} — ${user.email}`;
     const edit = document.createElement("button");
     edit.type = "button";
+    edit.disabled = busy;
     edit.textContent = "Edit";
     edit.setAttribute("aria-label", `Edit ${user.name}, ID ${user.id}`);
     edit.addEventListener("click", () => selectUser(user));
     const remove = document.createElement("button");
     remove.type = "button";
+    remove.disabled = busy;
     remove.textContent = "Delete";
     remove.setAttribute("aria-label", `Delete ${user.name}, ID ${user.id}`);
     remove.addEventListener("click", () => {
+      if (busy) return;
       deleteTarget = user;
       $("delete-section").hidden = false;
       $("confirmation").value = "";
@@ -52,6 +61,7 @@ function showUsers(users) {
   }
 }
 function selectUser(user) {
+  if (busy) return;
   selected = user;
   $("name").value = user.name;
   $("email").value = user.email;
@@ -127,7 +137,7 @@ $("search").addEventListener("submit", async (event) => {
 $("user-form").addEventListener("submit", async (event) => {
   event.preventDefault();
   if (busy) return;
-  busy = true;
+  setBusy(true);
   ++viewVersion;
   const user = selected;
   try {
@@ -141,18 +151,21 @@ $("user-form").addEventListener("submit", async (event) => {
   } catch (error) {
     status(error.message);
   } finally {
-    busy = false;
+    setBusy(false);
   }
 });
-$("cancel").addEventListener("click", resetForm);
+$("cancel").addEventListener("click", () => {
+  if (!busy) resetForm();
+});
 $("cancel-delete").addEventListener("click", () => {
+  if (busy) return;
   $("delete-section").hidden = true;
   deleteTarget = null;
 });
 $("delete-form").addEventListener("submit", async (event) => {
   event.preventDefault();
   if (busy || !deleteTarget) return;
-  busy = true;
+  setBusy(true);
   ++viewVersion;
   try {
     await call("delete", {
@@ -164,7 +177,7 @@ $("delete-form").addEventListener("submit", async (event) => {
   } catch (error) {
     status(error.message);
   } finally {
-    busy = false;
+    setBusy(false);
   }
 });
 refresh().catch((error) => status(error.message));
