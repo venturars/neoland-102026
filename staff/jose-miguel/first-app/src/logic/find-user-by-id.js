@@ -1,42 +1,22 @@
-import { findUserById as findUserRowById } from "../queries/users.js";
+import { findById } from "../queries/users.js";
 
-export function findUserById(id) {
-  let idMissing = false;
-  if (id === undefined) {
-    idMissing = true;
-  }
-  if (id === null) {
-    idMissing = true;
-  }
-  if (!idMissing) {
-    const idAsText = String(id);
-    const trimmedId = idAsText.trim();
-    if (trimmedId === "") {
-      idMissing = true;
-    }
-  }
-  if (idMissing) {
-    throw new Error("User does not exist");
-  }
-
+export async function findUserById(id) {
   let user;
-
   try {
-    const numericId = Number(id);
-    user = findUserRowById(numericId);
+    user = await findById(id);
   } catch {
     throw new Error("Could not find the user");
   }
 
   if (!user) {
-    throw new Error("User does not exist");
+    throw new Error("User not found");
   }
 
   return {
     id: user.id,
     name: user.name,
     email: user.email,
-    createdAt: user.created_at,
-    updatedAt: user.updated_at,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
   };
 }
