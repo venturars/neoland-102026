@@ -7,9 +7,10 @@
     "start": "node src/db/server.js",
     "browser": "node scripts/browser.js",
     "electron": "electron src/clients/electron/main.js",
+    "chrome": "node src/clients/chrome/server.js",
     "jupyter": "node scripts/jupyter.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/web/**/*.{js,html,css}\" \"src/clients/electron/**/*.{js,html,css}\"",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/web/**/*.{js,html,css}\" \"src/clients/electron/**/*.{js,html,css}\" \"src/clients/chrome/**/*.{js,html,css}\"",
     "lint": "eslint ."
   },
   "keywords": [],
@@ -19,6 +20,7 @@
   "dependencies": {
     "@colors/colors": "1.6.1",
     "cli-table3": "0.6.5",
+    "fastify": "5.12.8",
     "openai": "7.39.0"
   },
   "devDependencies": {

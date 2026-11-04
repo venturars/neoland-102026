@@ -14,14 +14,7 @@ first-app/
 ├── src/
 │   ├── clients/
 │   │   ├── http/
-│   │   │   ├── create-http-server.js
-│   │   │   ├── handle-request.js
-│   │   │   ├── handle-users.js
-│   │   │   ├── read-json-body.js
-│   │   │   ├── send-http-error.js
-│   │   │   ├── send-json.js
-│   │   │   ├── serve-public-file.js
-│   │   │   └── start-http-server.js
+│   │   │   └── app.js
 │   │   ├── jupyter/
 │   │   │   ├── actualizar-usuario.ipynb
 │   │   │   ├── bienvenida.ipynb
@@ -43,21 +36,11 @@ first-app/
 │   │   │   ├── list-users.txt
 │   │   │   └── update-user.txt
 │   │   └── web/
-│   │       ├── delete-selected-user.js
+│   │       ├── app.js
 │   │       ├── index.html
-│   │       ├── load-user-selection.js
-│   │       ├── main.js
-│   │       ├── navigate.js
-│   │       ├── open-user-editor.js
-│   │       ├── save-user.js
-│   │       ├── select-user.js
-│   │       ├── show-message.js
-│   │       ├── show-screen.js
-│   │       ├── show-user-menu.js
-│   │       ├── state.js
 │   │       └── styles.css
 │   ├── db/
-│   │   ├── connection.js
+│   │   ├── server.js
 │   │   └── users.sqlite
 │   ├── logic/
 │   │   ├── count-users-by-gender.js
@@ -69,13 +52,13 @@ first-app/
 │   │   └── update-user.js
 │   └── queries/
 │       ├── queries/
-│       │   ├── create-users-table.sql
-│       │   ├── delete.sql
-│       │   ├── find-by-email.sql
-│       │   ├── find-by-id.sql
-│       │   ├── insert.sql
-│       │   ├── list.sql
-│       │   └── update.sql
+│       │   ├── create-users-table.js
+│       │   ├── delete.js
+│       │   ├── find-by-email.js
+│       │   ├── find-by-id.js
+│       │   ├── insert.js
+│       │   ├── list.js
+│       │   └── update.js
 │       └── users.js
 ├── agents/
 │   ├── create-branch.md
@@ -158,7 +141,15 @@ first-app/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
+│   │   ├── express-rest-client/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
 │   │   ├── gestor-pnpm/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── independent-web-http-clients/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
@@ -206,5 +197,7 @@ first-app/
 │   ├── TREE.md
 │   └── WEB-CLIENT-GUIDE.md
 └── tests/
-    └── http-client.test.js
+    ├── database-server.test.js
+    ├── http-client.test.js
+    └── shared-database.test.js
 ```

@@ -18,12 +18,21 @@ export default defineConfig([
     },
   },
   {
+    // The queries send their SQL to the data server with fetch.
+    files: ["src/queries/**/*.js"],
+    languageOptions: {
+      globals: {
+        fetch: "readonly",
+      },
+    },
+  },
+  {
+    // The web page uses the DOM. It reaches the data through src/logic/.
     files: ["src/clients/web/**/*.js"],
     languageOptions: {
       globals: {
         document: "readonly",
         window: "readonly",
-        fetch: "readonly",
       },
     },
   },

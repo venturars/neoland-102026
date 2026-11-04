@@ -42,6 +42,7 @@ Para liberar un puerto en Windows: localiza la terminal donde corre el comando y
 | HTTP (Express) | `pnpm http` | API en `http://127.0.0.1:3001`. Ver [`src/clients/http/README.md`](../src/clients/http/README.md). |
 | Electron | `pnpm electron` | Ventana de escritorio. Ver [`src/clients/electron/README.md`](../src/clients/electron/README.md). |
 | Chrome | `pnpm chrome` + extensión cargada | API en `http://127.0.0.1:3002` y popup MV3. Ver [`src/clients/chrome/README.md`](../src/clients/chrome/README.md). |
+| VS Code | F5 desde `src/clients/vscode` | Panel lateral; ver [`src/clients/vscode/README.md`](../src/clients/vscode/README.md). |
 | Terminal / Jupyter | Pegar `.txt` o ejecutar notebook | Misma regla: servidor SQL antes. Directorio actual en `first-app`. |
 
 ## Pasos comunes

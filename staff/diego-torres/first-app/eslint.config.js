@@ -23,6 +23,16 @@ export default defineConfig([
     },
   },
   {
+    // La ventana de la extensión usa las variables del navegador.
+    files: ["src/clients/chrome/popup.js"],
+    languageOptions: {
+      globals: {
+        document: "readonly",
+        fetch: "readonly",
+      },
+    },
+  },
+  {
     files: ["src/queries/**/*.js"],
     languageOptions: {
       globals: {

@@ -5,11 +5,12 @@
   "scripts": {
     "start": "node src/db/server.js",
     "api": "node src/clients/api/server.js",
+    "chrome": "node src/clients/chrome/server.js",
     "browser": "open http://127.0.0.1:3000",
     "jupyter": "sh scripts/jupyter.sh",
     "electron": "electron src/clients/electron/main.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/web/**/*.js\" \"src/clients/api/**/*.js\" \"src/clients/electron/**/*.js\"",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/web/**/*.js\" \"src/clients/api/**/*.js\" \"src/clients/chrome/**/*.js\" \"src/clients/electron/**/*.js\"",
     "lint": "eslint ."
   },
   "keywords": [],
@@ -21,12 +22,13 @@
   "dependencies": {
     "cli-table3": "0.6.5",
     "express": "5.2.1",
+    "fastify": "5.12.8",
     "openai": "^7.43.0"
   },
   "devDependencies": {
-    "prettier": "3.9.10",
-    "eslint": "10.13.0",
     "@eslint/js": "10.0.1",
-    "electron": "45.2.2"
+    "electron": "45.2.2",
+    "eslint": "10.13.0",
+    "prettier": "3.9.10"
   }
 }

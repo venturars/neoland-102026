@@ -1,219 +1,228 @@
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
+import { spawn } from "node:child_process";
 import { once } from "node:events";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { test } from "node:test";
-import { fileURLToPath } from "node:url";
+
+const CLIENT = "http://127.0.0.1:3001";
+
+async function send(method, route, body) {
+  const options = { method };
+
+  if (body !== undefined) {
+    options.headers = { "content-type": "application/json" };
+    options.body = body;
+  }
+
+  const url = CLIENT + route;
+  const response = await fetch(url, options);
+  const text = await response.text();
+  let json = null;
+
+  if (text !== "") {
+    json = JSON.parse(text);
+  }
+
+  return { status: response.status, text, json };
+}
+
+async function sendUser(method, route, user) {
+  const body = JSON.stringify(user);
+
+  return send(method, route, body);
+}
+
+async function waitForClient(client) {
+  // If the port is taken the child exits. The test must stop there, or
+  // its requests would reach a client that uses the real database.
+  const started = once(client.stdout, "data");
+  const exited = once(client, "exit");
+  const failed = exited.then(() => {
+    throw new Error("The REST client did not start");
+  });
+
+  await Promise.race([started, failed]);
+}
 
 async function testHttpClient() {
   const folder = mkdtempSync(path.join(tmpdir(), "first-app-http-"));
-  const databaseFile = path.join(folder, "users.sqlite");
   const previousDatabaseFile = process.env.FIRST_APP_DATABASE_FILE;
-  process.env.FIRST_APP_DATABASE_FILE = databaseFile;
+  process.env.FIRST_APP_DATABASE_FILE = path.join(folder, "users.sqlite");
 
-  let server;
+  let dataServer;
   let database;
-  let databaseIsClosed = false;
+  let client;
 
   try {
-    // Import only after choosing the temporary database. Importing earlier
-    // would open the application's default database during the test.
-    const connection = await import("../src/db/connection.js");
-    database = connection.database;
-    const creation = await import("../src/logic/create-user.js");
-    const lookup = await import("../src/logic/find-user-by-id.js");
-    const http = await import("../src/clients/http/create-http-server.js");
-    server = http.createHttpServer();
-    server.listen(0, "127.0.0.1");
-    await once(server, "listening");
+    // The queries always ask 127.0.0.1:3000, so the temporary data server
+    // listens there. If the real one is running, listen fails here and
+    // the test stops before sending anything to the real database.
+    const data = await import("../src/db/server.js");
+    database = data.openDatabase();
+    dataServer = data.createDatabaseServer(database);
+    dataServer.listen(3000, "127.0.0.1");
+    await once(dataServer, "listening");
 
-    const address = server.address();
-    const baseUrl = "http://127.0.0.1:" + address.port;
-    let response = await fetch(baseUrl + "/api/users");
-    assert.equal(response.status, 200);
-    assert.deepEqual(await response.json(), []);
+    client = spawn(process.execPath, ["src/clients/http/app.js"], {
+      stdio: ["ignore", "pipe", "ignore"],
+    });
+    await waitForClient(client);
 
-    // Public resources must be served with a browser-readable content type.
-    for (const publicPath of ["/", "/styles.css", "/main.js"]) {
-      response = await fetch(baseUrl + publicPath);
-      assert.equal(response.status, 200);
-      const contentType = response.headers.get("content-type");
-      assert.ok(contentType.includes("charset=utf-8"));
-      const content = await response.text();
-      assert.ok(content.length > 0);
+    // The correct case of the spec, in order.
+    const emptyList = await send("GET", "/users");
+    assert.equal(emptyList.status, 200);
+    assert.deepEqual(emptyList.json, []);
+
+    const created = await sendUser("POST", "/users", {
+      name: "Ada",
+      email: "ada@example.com",
+    });
+    assert.equal(created.status, 201);
+    assert.equal(created.json.name, "Ada");
+    assert.equal(created.json.email, "ada@example.com");
+    assert.equal(typeof created.json.createdAt, "string");
+    assert.equal(typeof created.json.updatedAt, "string");
+
+    const route = "/users/" + created.json.id;
+
+    const listed = await send("GET", "/users");
+    assert.equal(listed.status, 200);
+    assert.equal(listed.json.length, 1);
+
+    const found = await send("GET", route);
+    assert.equal(found.status, 200);
+    assert.deepEqual(found.json, created.json);
+
+    const updated = await sendUser("PATCH", route, { name: "Ada Lovelace" });
+    assert.equal(updated.status, 200);
+    assert.equal(updated.json.id, created.json.id);
+    assert.equal(updated.json.name, "Ada Lovelace");
+    assert.equal(updated.json.email, "ada@example.com");
+
+    // Bad data answers the message of logic/ and creates nothing.
+    const emptyName = await sendUser("POST", "/users", {
+      name: "  ",
+      email: "other@example.com",
+    });
+    assert.equal(emptyName.status, 400);
+    assert.deepEqual(emptyName.json, { message: "User name is required" });
+
+    const badEmail = await sendUser("POST", "/users", {
+      name: "Grace",
+      email: "grace",
+    });
+    assert.equal(badEmail.status, 400);
+    assert.deepEqual(badEmail.json, { message: "User email is invalid" });
+
+    const usedEmail = await sendUser("POST", "/users", {
+      name: "Grace",
+      email: "ada@example.com",
+    });
+    assert.equal(usedEmail.status, 409);
+    assert.deepEqual(usedEmail.json, {
+      message: "User email is already registered",
+    });
+
+    const afterErrors = await send("GET", "/users");
+    assert.equal(afterErrors.json.length, 1);
+
+    // A missing body and broken JSON are the client's fault, not a 500,
+    // and they never show the HTML error page of Express.
+    const noBody = await send("POST", "/users");
+    assert.equal(noBody.status, 400);
+    assert.deepEqual(noBody.json, { message: "User name is required" });
+
+    const brokenJson = await send("POST", "/users", "{ broken");
+    assert.equal(brokenJson.status, 400);
+    assert.deepEqual(brokenJson.json, { message: "Request JSON is invalid" });
+
+    // A valid id that nobody has.
+    const missingMessage = { message: "User does not exist" };
+    const missingGet = await send("GET", "/users/999");
+    assert.equal(missingGet.status, 404);
+    assert.deepEqual(missingGet.json, missingMessage);
+
+    const missingPatch = await sendUser("PATCH", "/users/999", { name: "X" });
+    assert.equal(missingPatch.status, 404);
+    assert.deepEqual(missingPatch.json, missingMessage);
+
+    const missingDelete = await send("DELETE", "/users/999");
+    assert.equal(missingDelete.status, 404);
+    assert.deepEqual(missingDelete.json, missingMessage);
+
+    // 1e3 is the case that must not turn into the number 1000.
+    const invalidMessage = { message: "User id must be a positive integer" };
+
+    for (const id of ["abc", "0", "1.5", "1e3"]) {
+      const invalidRoute = "/users/" + id;
+
+      const invalidGet = await send("GET", invalidRoute);
+      assert.equal(invalidGet.status, 400);
+      assert.deepEqual(invalidGet.json, invalidMessage);
+
+      const invalidPatch = await sendUser("PATCH", invalidRoute, { name: "X" });
+      assert.equal(invalidPatch.status, 400);
+      assert.deepEqual(invalidPatch.json, invalidMessage);
+
+      const invalidDelete = await send("DELETE", invalidRoute);
+      assert.equal(invalidDelete.status, 400);
+      assert.deepEqual(invalidDelete.json, invalidMessage);
     }
 
-    const first = creation.createUser("Example One", "one@example.com");
-    const second = creation.createUser("Example Two", "two@example.com");
-    const userUrl = baseUrl + "/api/users/" + first.id;
-    response = await fetch(baseUrl + "/api/users");
-    const selection = await response.json();
-    assert.deepEqual(selection, [
-      { id: first.id, name: first.name, email: first.email },
-      { id: second.id, name: second.name, email: second.email },
-    ]);
-    assert.equal(response.headers.get("cache-control"), "no-store");
+    const unknownRoute = await send("GET", "/no-existe");
+    assert.equal(unknownRoute.status, 404);
+    assert.equal(unknownRoute.text, "");
 
-    response = await fetch(userUrl);
-    assert.equal(response.status, 200);
-    assert.deepEqual(await response.json(), selection[0]);
+    const removed = await send("DELETE", route);
+    assert.equal(removed.status, 204);
+    assert.equal(removed.text, "");
 
-    // A partial update must preserve the absent email and ignore fields that
-    // a browser is not allowed to edit, such as the id and creation date.
-    response = await fetch(userUrl, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: "  Nombre con acento: Á  ",
-        id: second.id,
-        createdAt: "changed",
-      }),
+    const afterDelete = await send("GET", "/users");
+    assert.deepEqual(afterDelete.json, []);
+
+    // Without the data server each operation answers its own message.
+    const closed = once(dataServer, "close");
+    dataServer.close();
+    await closed;
+
+    const downCreate = await sendUser("POST", "/users", {
+      name: "Ada",
+      email: "ada@example.com",
     });
-    assert.equal(response.status, 200);
-    let saved = await response.json();
-    assert.equal(saved.name, "Nombre con acento: Á");
-    assert.equal(saved.email, first.email);
-    assert.equal(saved.id, first.id);
-    const existing = lookup.findUserById(first.id);
-    assert.equal(existing.createdAt, first.createdAt);
+    assert.equal(downCreate.status, 500);
+    assert.deepEqual(downCreate.json, { message: "Unable to create user" });
 
-    response = await fetch(userUrl, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: "  UPDATED@EXAMPLE.COM  " }),
-    });
-    assert.equal(response.status, 200);
-    saved = await response.json();
-    assert.equal(saved.email, "updated@example.com");
-    assert.equal(saved.name, "Nombre con acento: Á");
+    const downList = await send("GET", "/users");
+    assert.equal(downList.status, 500);
+    assert.deepEqual(downList.json, { message: "Unable to list users" });
 
-    const invalidChanges = [
-      { name: "   " },
-      { name: 123 },
-      { email: "invalid" },
-      { email: null },
-      { email: "name@@example.com" },
-      { email: "a".repeat(65) + "@example.com" },
-    ];
+    const downGet = await send("GET", "/users/1");
+    assert.equal(downGet.status, 500);
+    assert.deepEqual(downGet.json, { message: "Unable to find user" });
 
-    for (const changes of invalidChanges) {
-      response = await fetch(userUrl, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(changes),
-      });
-      assert.equal(response.status, 400);
-      const problem = await response.json();
-      assert.equal(typeof problem.error, "string");
-    }
+    const downPatch = await sendUser("PATCH", "/users/1", { name: "X" });
+    assert.equal(downPatch.status, 500);
+    assert.deepEqual(downPatch.json, { message: "Unable to update user" });
 
-    response = await fetch(userUrl, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: second.email }),
-    });
-    assert.equal(response.status, 409);
-    response = await fetch(userUrl);
-    assert.deepEqual(await response.json(), saved);
-
-    const invalidBodies = ["{", "null", "[]", '"text"'];
-
-    for (const body of invalidBodies) {
-      response = await fetch(userUrl, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: body,
-      });
-      assert.equal(response.status, 400);
-    }
-
-    response = await fetch(userUrl, { method: "PATCH", body: "name=value" });
-    assert.equal(response.status, 400);
-    response = await fetch(userUrl, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: "x".repeat(70_000) }),
-    });
-    assert.equal(response.status, 413);
-
-    for (const id of ["0", "-1", "1.5", "1abc", "9007199254740993"]) {
-      response = await fetch(baseUrl + "/api/users/" + id);
-      assert.equal(response.status, 400);
-    }
-
-    response = await fetch(baseUrl + "/api/users/999999");
-    assert.equal(response.status, 404);
-    response = await fetch(baseUrl + "/api/users", { method: "POST" });
-    assert.equal(response.status, 405);
-    assert.equal(response.headers.get("allow"), "GET");
-    response = await fetch(userUrl, { method: "PUT" });
-    assert.equal(response.status, 405);
-    assert.equal(response.headers.get("allow"), "GET, PATCH, DELETE");
-
-    for (const privatePath of [
-      "/src/db/users.sqlite",
-      "/src/queries/users.js",
-      "/../package.json",
-      "/%2e%2e/package.json",
-      "/__proto__",
-      "/api/users/1/notes",
-    ]) {
-      response = await fetch(baseUrl + privatePath);
-      assert.equal(response.status, 404);
-    }
-
-    // A second Node process reads the saved data from disk, rather than
-    // relying on an object already held by this process.
-    const appUrl = new URL("../", import.meta.url);
-    const appDirectory = fileURLToPath(appUrl);
-    const script =
-      'import { findUserById } from "./src/logic/find-user-by-id.js"; console.log(JSON.stringify(findUserById(' +
-      first.id +
-      ")));";
-    const reopened = spawnSync(
-      process.execPath,
-      ["--input-type=module", "-e", script],
-      {
-        cwd: appDirectory,
-        env: process.env,
-        encoding: "utf8",
-      },
-    );
-    assert.equal(reopened.status, 0, reopened.stderr);
-    const persisted = JSON.parse(reopened.stdout);
-    assert.equal(persisted.name, saved.name);
-    assert.equal(persisted.email, saved.email);
-
-    response = await fetch(userUrl, { method: "DELETE" });
-    assert.equal(response.status, 204);
-    assert.equal(await response.text(), "");
-    response = await fetch(userUrl);
-    assert.equal(response.status, 404);
-    response = await fetch(baseUrl + "/api/users");
-    const remaining = await response.json();
-    assert.deepEqual(remaining, [selection[1]]);
-    response = await fetch(userUrl, { method: "DELETE" });
-    assert.equal(response.status, 404);
-
-    // Closing this temporary connection forces a real storage failure.
-    // The API must return an error instead of a misleading empty list.
-    database.close();
-    databaseIsClosed = true;
-    response = await fetch(baseUrl + "/api/users");
-    assert.equal(response.status, 500);
-    assert.deepEqual(await response.json(), {
-      error: "No se ha podido obtener la lista de usuarios.",
-    });
+    const downDelete = await send("DELETE", "/users/1");
+    assert.equal(downDelete.status, 500);
+    assert.deepEqual(downDelete.json, { message: "Unable to find user" });
   } finally {
-    if (server && server.listening) {
-      const closed = once(server, "close");
-      server.close();
+    if (client) {
+      const exited = once(client, "exit");
+      client.kill();
+      await exited;
+    }
+
+    if (dataServer && dataServer.listening) {
+      const closed = once(dataServer, "close");
+      dataServer.close();
       await closed;
     }
 
-    if (database && !databaseIsClosed) {
+    if (database) {
       database.close();
     }
 
@@ -228,6 +237,6 @@ async function testHttpClient() {
 }
 
 test(
-  "The HTTP client manages existing users without changing the real database",
+  "The REST client answers the five routes and their errors",
   testHttpClient,
 );
