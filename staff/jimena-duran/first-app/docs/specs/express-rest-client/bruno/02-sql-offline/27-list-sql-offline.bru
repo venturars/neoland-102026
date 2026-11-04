@@ -1,0 +1,16 @@
+meta {
+  name: list-sql-offline
+  type: http
+  seq: 27
+}
+
+get {
+  url: {{baseUrl}}/users
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 500", function () { expect(res.getStatus()).to.equal(500); });
+  test("Mensaje exacto", function () { expect(res.getBody()).to.deep.equal({ message: "Could not list the users" }); });
+}

@@ -1,0 +1,23 @@
+meta {
+  name: patch-name
+  type: http
+  seq: 6
+}
+
+patch {
+  url: {{baseUrl}}/users/{{userId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Ada Lovelace"
+  }
+}
+
+tests {
+  test("Estado 200", function () { expect(res.getStatus()).to.equal(200); });
+  test("Campos del usuario", function () { expect(res.getBody()).to.have.all.keys("id", "name", "email", "createdAt", "updatedAt"); });
+  test("Conserva id email y fecha de creación", function () { const user = res.getBody(); expect(user.id).to.equal(Number(bru.getVar("userId"))); expect(user.email).to.equal("ada@example.com"); expect(user.createdAt).to.equal(bru.getVar("createdAt")); expect(user.name).to.equal("Ada Lovelace"); });
+}

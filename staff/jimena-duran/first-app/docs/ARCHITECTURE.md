@@ -8,9 +8,11 @@ Cada consulta es un módulo .js de `src/queries/queries/` con una constante SQL 
 
 Las decisiones de negocio viven en `src/logic/`. Sus funciones esperan las consultas con await y mantienen sus reglas, resultados y errores. Los clientes de terminal y Jupyter importan logic directamente y esperan el resultado. La preparación de tabla utiliza queries y listTables, sin una conexión alternativa.
 
-Flujo: cliente → logic → queries → HTTP/JSON /execute → servidor SQL → users.sqlite. No hay API entre cliente y logic; sí una interfaz HTTP de datos entre queries y el servidor. Los clientes comparten la base del servidor y no se llaman entre sí. Uso en [DATABASE.md](DATABASE.md) y [JUPYTER.md](JUPYTER.md).
+Flujo: cliente → logic → queries → HTTP/JSON /execute → servidor SQL → users.sqlite. El cliente HTTP expone las operaciones de usuarios y llama directamente a logic; queries conserva la interfaz HTTP de datos con el servidor SQL. Los clientes comparten la base del servidor y no se llaman entre sí. Uso en [DATABASE.md](DATABASE.md) y [JUPYTER.md](JUPYTER.md).
 
-El cliente `src/clients/browser/` contiene `index.html`, `app.js` y `styles.css`. La página se abre mediante file:// e importa directamente listUsers, updateUser y deleteUser desde logic. Node solo ejecuta el servidor SQL; no sirve HTML ni incorpora una API de usuarios. `npm.cmd run browser` abre Chrome instalado con un perfil temporal separado y permiso para cargar módulos locales.
+El cliente `src/clients/browser/` contiene `index.html`, `app.js` y `styles.css`. La página se abre mediante file:// e importa directamente listUsers, updateUser y deleteUser desde logic. El navegador conserva sus imports directos; el servidor SQL no sirve HTML ni incorpora una API de usuarios. `npm.cmd run browser` abre Chrome instalado con un perfil temporal separado y permiso para cargar módulos locales.
+
+`src/clients/http/app.js` importa y espera con await las cinco operaciones existentes de `src/logic/`. Express escucha en `http://127.0.0.1:3001`, sin repetir reglas de negocio. Se arranca con `pnpm http`; no sustituye al servidor SQL de `src/db/server.js`, que permanece en 3000.
 
 `src/logic/` es el núcleo estable de la aplicación. No se reemplaza por adaptadores, plugins o implementaciones intercambiables, y sus reglas no se trasladan a `src/queries/` ni a `src/clients/`. Cada operación tiene su propio archivo; una operación nueva no modifica otro archivo para reutilizarlo.
 

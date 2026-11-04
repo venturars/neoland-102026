@@ -22,6 +22,8 @@ first-app/
       index.html
       app.js
       styles.css
+    clients/http/
+      app.js
   agents/                 orquestador y subagentes del flujo de Git
   skills/                 instrucciones reutilizables por momento
   tools/                  siete scripts Bash originales del flujo de Git
@@ -44,6 +46,9 @@ first-app/
     GIT-AUTOMATION.md
     SOCKET.md             consulta PURL y alertas por versión
     specs/<nombre>/       spec.md, plan.md y tasks.md
+    specs/express-rest-client/
+      spec.md, plan.md, tasks.md, verification.md, bruno.md
+      bruno/              peticiones ficticias para Bruno en VS Code
     specs/host-sql-on-node-server/
       spec.md, plan.md, tasks.md, verification.md
 ```

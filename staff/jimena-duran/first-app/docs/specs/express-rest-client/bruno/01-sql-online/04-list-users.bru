@@ -1,0 +1,16 @@
+meta {
+  name: list-users
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/users
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 200", function () { expect(res.getStatus()).to.equal(200); });
+  test("Dos usuarios ficticios", function () { expect(res.getBody()).to.have.length(2); });
+}

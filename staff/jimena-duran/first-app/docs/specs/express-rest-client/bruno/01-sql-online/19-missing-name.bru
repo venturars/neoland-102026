@@ -1,0 +1,22 @@
+meta {
+  name: missing-name
+  type: http
+  seq: 19
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "missing@example.com"
+  }
+}
+
+tests {
+  test("Estado 500", function () { expect(res.getStatus()).to.equal(500); });
+  test("Mensaje exacto", function () { expect(res.getBody()).to.deep.equal({ message: "Could not create the user" }); });
+}

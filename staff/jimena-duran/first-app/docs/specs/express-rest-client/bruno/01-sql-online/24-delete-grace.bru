@@ -1,0 +1,16 @@
+meta {
+  name: delete-grace
+  type: http
+  seq: 24
+}
+
+delete {
+  url: {{baseUrl}}/users/{{otherId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 204", function () { expect(res.getStatus()).to.equal(204); });
+  test("Sin cuerpo", function () { expect(res.getBody()).to.equal(""); });
+}

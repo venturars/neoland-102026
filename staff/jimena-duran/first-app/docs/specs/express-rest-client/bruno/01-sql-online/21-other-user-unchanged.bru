@@ -1,0 +1,16 @@
+meta {
+  name: other-user-unchanged
+  type: http
+  seq: 21
+}
+
+get {
+  url: {{baseUrl}}/users/{{otherId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 200", function () { expect(res.getStatus()).to.equal(200); });
+  test("El otro usuario está intacto", function () { expect(res.getBody()).to.deep.equal(JSON.parse(bru.getVar("otherUser"))); });
+}
