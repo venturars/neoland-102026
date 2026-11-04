@@ -1,8 +1,6 @@
 # Sincronizar flujo git con la plantilla del curso
 
-Issue: #932.
-
-Quien construye esta app con IA debe seguir el mismo orquestador y herramientas que `exercises/git-workflow-agent-template` en el commit `0d548411` de `staging`. Los scripts se invocan desde la raíz del monorepo con rutas `staff/jose-miguel/first-app/tools/`.
+Issue: #932 · Plantilla @ `f832a367` (incl. protocolo entrevista #925). Los scripts se invocan desde la raíz del monorepo con rutas `staff/jose-miguel/first-app/tools/`.
 
 Esta tarea continúa el mantenimiento de #858 (`665b92a5`): incorpora el script `create-pr-base-staging.sh`, el orquestador «issue escrita → Empezar» y la PR draft en una sola invocación.
 

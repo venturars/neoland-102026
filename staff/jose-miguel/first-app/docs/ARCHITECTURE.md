@@ -23,7 +23,7 @@
 - `scripts/start-jupyter.js` prepara el `.venv` local e inicia Notebook sobre `src/clients/jupyter/`.
 - `scripts/start-browser.js` abre el cliente browser con `file://` y permiso para módulos ES.
 - `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca. Los cambios de proyecto van en rama nueva y pull request en draft; antes de crear la issue comprueba que la tarea está clara (si no, `help-me-to-think`); si la issue ya está escrita y el trabajo implica cambios, el momento es Empezar; al empezar, la rama sale de `staging` antes de tocar código.
-- `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la tarea se puede dejar escrita.
+- `agents/help-me-to-think.md` elige `grill-with-docs` o `grill-me`, devuelve preguntas con respuesta recomendada y espera al alumno; el orquestador reanuda con el historial si hace falta.
 - `agents/create-issue.md` crea la issue asignada a quien está autenticado; el cuerpo sale de la plantilla del tipo en `templates/issues/`.
 - `agents/create-branch.md` crea la rama de trabajo; el tipo y el nombre de rama siguen la plantilla del tipo.
 - `agents/create-commit.md` hace un commit pequeño con ficheros nombrados.
