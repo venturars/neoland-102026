@@ -33,9 +33,14 @@ El cliente de navegador se abre desde `first-app/`, con `pnpm db` ya en marcha e
 pnpm browser
 ```
 
+La API REST se arranca desde `first-app/`, con `pnpm db` ya en marcha en otra terminal. Escucha en `http://127.0.0.1:3000` y se para con Ctrl+C:
+```
+pnpm api
+```
+
 Formato y revisión del JavaScript de la app, desde `first-app/`:
 ```
-pnpm format   # Prettier sobre los .js de src/logic/, src/queries/ y src/db/, el cliente de navegador y eslint.config.js
+pnpm format   # Prettier sobre los .js de src/logic/, src/queries/ y src/db/, el cliente de navegador, la API REST y eslint.config.js
 pnpm lint     # ESLint con las reglas recomendadas
 ```
 

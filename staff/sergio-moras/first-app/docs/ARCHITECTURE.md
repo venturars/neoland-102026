@@ -29,6 +29,7 @@ La base de datos está en [DATABASE.md](DATABASE.md). El árbol completo, en [TR
 - `src/clients/terminal/<operación>.txt`: el comando que se pega en la terminal.
 - `src/clients/jupyter/<operación>.ipynb`: el documento que se ejecuta en Jupyter.
 - `src/clients/browser/`: las pantallas del navegador (`index.html`, `styles.css` y `app.js`), que se abren desde el disco. `app.js` llama a `listUsers`, `updateUser` y `deleteUser`.
+- `src/clients/rest/server.js`: el cliente API REST, con Express. Una ruta por operación de `logic/`.
 
 ## Una operación
 Una operación tiene, con el mismo nombre:
@@ -36,6 +37,7 @@ Una operación tiene, con el mismo nombre:
 2. Una consulta en `src/queries/users-sql.js` y una función en `src/queries/users.js`, si usa la base.
 3. Un `.txt` en `src/clients/terminal/`.
 4. Un `.ipynb` en `src/clients/jupyter/`.
+5. Una ruta en `src/clients/rest/server.js`.
 
 Una operación nueva es un fichero nuevo en `logic/`. Un fichero de `logic/` ya creado no se reemplaza para encajar otra operación.
 
@@ -69,6 +71,34 @@ No hay servidor del navegador: la página se abre desde el disco (`file://`) y C
 - `--allow-file-access-from-files`: quita ese bloqueo, solo en ese perfil.
 
 El comando usa `start` de `cmd`, que es lo que usa `pnpm` en Windows. Para cerrar la app se cierra la ventana de Chrome.
+
+### API REST
+Se arranca con `pnpm db` y, en otra terminal, `pnpm api`, desde `first-app/`. Escucha en `http://127.0.0.1:3000`, solo en este equipo, y se para con Ctrl+C. Usa Express (`express` 5.3.0).
+
+`server.js` es un cliente como la terminal: cada ruta lee la petición, llama a una función de `logic/` con `await` y responde en JSON. No valida nada. Los cuerpos van en JSON.
+
+| Petición | Llama a | Bien |
+|---|---|---|
+| `GET /users` | `listUsers()` | 200 y la lista |
+| `GET /users?name=<nombre>` | `findUserByName(nombre)` | 200 y la lista |
+| `GET /users/email/<email>` | `findUserByEmail(email)` | 200 y el usuario |
+| `POST /users` con `{ name, email }` | `createUser(name, email)` | 201 y el usuario |
+| `PATCH /users/<id>` con `{ name }`, `{ email }` o los dos | `updateUser(id, name, email)` | 200 y el usuario. Lo que no se envía no cambia |
+| `DELETE /users/<id>` | `deleteUser(id)` | 200 y `{ id }` |
+| `GET /users/genders` | `classifyGender()` | 200 y `{ men, women, undefinedGender }` |
+
+Si `logic` lanza un error, la respuesta es `{ "error": "<mensaje>" }` con el mensaje de [ERRORS.md](ERRORS.md) tal cual. El código lo elige `getStatus` según cómo empieza el mensaje:
+
+| El mensaje empieza por | Código |
+|---|---|
+| `Name is required.`, `Email is required.`, `Invalid email:`, `Invalid id:`, `Provide a new name, a new email, or both.` | 400 |
+| `User not found:` | 404 |
+| `Email already exists:` | 409 |
+| `Users could not be classified:` | 502 |
+| `Database is not running.` | 503 |
+| Otro | 500 |
+
+Una ruta o un método que no existe da 404 y `Not found.`; un cuerpo que no es JSON, 400 y `Invalid request.` La API no da permiso a los navegadores (`Access-Control-Allow-Origin`), así que una página web no puede llamarla. Un mensaje nuevo en [ERRORS.md](ERRORS.md) se añade también a la tabla de `getStatus`.
 
 ## Servidor de la base
 Se arranca con `pnpm db` desde `first-app/` y escucha en `http://127.0.0.1:4000`, solo en este equipo. Se para con Ctrl+C. Los clientes necesitan que esté en marcha.
