@@ -28,9 +28,9 @@ npm-shrinkwrap.json
 !/staff/miguel-rodriguez/first-app-ai/src/clients/vscode/.vscode/
 /staff/miguel-rodriguez/first-app-ai/src/clients/vscode/.vscode/*
 !/staff/miguel-rodriguez/first-app-ai/src/clients/vscode/.vscode/launch.json
-!/staff/jose-miguel/first-app/src/clients/vscode/.vscode/
-/staff/jose-miguel/first-app/src/clients/vscode/.vscode/*
-!/staff/jose-miguel/first-app/src/clients/vscode/.vscode/launch.json
+!/staff/esther-patino/first-app/.vscode/
+/staff/esther-patino/first-app/.vscode/*
+!/staff/esther-patino/first-app/.vscode/launch.json
 .vs/
 *.code-workspace
 *.suo

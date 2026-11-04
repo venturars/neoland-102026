@@ -76,12 +76,14 @@ manifest.json
 index.html
 popup.js
 styles.css
-electron/
-main.js
-preload.js
+vscode/
+package.json
+extension.js
 index.html
 app.js
 styles.css
+.vscode/
+launch.json
 
 ```
 
