@@ -47,8 +47,8 @@
 - `src/logic/update-user.js` actualiza un usuario.
 - `src/logic/delete-user.js` borra un usuario.
 - `src/logic/find-user-by-id.js` busca un usuario por id.
-- `src/logic/find-user-by-email.js` busca un usuario por email (`find-by-email.sql` compara sin distinguir mayúsculas).
-- `src/logic/find-user-by-name.js` busca usuarios por nombre (`find-by-name.sql` compara sin distinguir mayúsculas).
+- `src/logic/find-user-by-email.js` busca un usuario por email.
+- `src/logic/find-user-by-name.js` busca un usuario por nombre.
 - `src/logic/list-users.js` lista los usuarios.
 - `src/logic/user-gender-count.js` cuenta usuarios por género.
 - `src/clients/terminal/` llama a `src/logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.

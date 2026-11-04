@@ -10,7 +10,7 @@ El panel se abre como pestaña de editor con el comando `First App: Abrir usuari
 
 En la primera pantalla entra la lista de usuarios ya guardados. Cada uno se ve con su id, su nombre y su email en un desplegable. Se elige uno por su id y se continúa. No se escribe una contraseña. En esa misma pantalla hay alta (nombre y email) y búsqueda.
 
-La búsqueda pide un criterio (nombre, email o id) y el valor exacto. Para nombre y email, la comparación no distingue mayúsculas ni minúsculas. No se adivina el criterio ni se busca un trozo del nombre. Si la búsqueda devuelve un solo usuario, se abre la pantalla de menú de ese usuario. Si devuelve varios (solo puede pasar por nombre), el desplegable muestra esos resultados y hay que elegir uno y continuar. Si no hay coincidencias, el desplegable se ve vacío. Actualizar la lista, crear, guardar o borrar vuelven a la pantalla de selección con todos los usuarios.
+La búsqueda pide un criterio (nombre, email o id) y el valor exacto. No se adivina el criterio ni se busca un trozo del nombre. Si la búsqueda devuelve un solo usuario, se abre la pantalla de menú de ese usuario. Si devuelve varios (solo puede pasar por nombre), el desplegable muestra esos resultados y hay que elegir uno y continuar. Si no hay coincidencias, el desplegable se ve vacío. Actualizar la lista, crear, guardar o borrar vuelven a la pantalla de selección con todos los usuarios.
 
 En la segunda sale el resumen de ese usuario. Las acciones principales van en una fila horizontal: modificar usuario e ir a notas. Ir a notas se ve deshabilitado, con un tooltip que explica que aún no está disponible, y no abre otra pantalla. Volver a la selección va en un bloque aparte, ancho completo, claramente secundario.
 
@@ -34,7 +34,7 @@ La misma que ya usan listar, crear, buscar por nombre, por email o por id, actua
 
 El mismo resultado que esas funcionalidades ya devuelven, mostrado en el panel. La lista de selección muestra id, nombre y email por usuario.
 
-Ejemplo. Están Ada, ada@example.com, con id 1, y Grace, grace@example.com, con id 2. Se abre el comando. Se crea Ana, ana@mail.com. Ana aparece en el desplegable. Se elige el criterio nombre y se busca Ada: se abre el menú de Ada. Buscar ada abre el mismo menú. Se elige el criterio email y se busca ada@example.com o ADA@example.com: se abre el menú de Ada. Se elige el criterio id y se busca el 1: se abre el mismo menú. Desde el menú se modifica el usuario. Se cambia el nombre a Ada Lovelace y el email a ada.lovelace@example.com. Al volver a la lista completa, el id 1 se ve con esos datos. Grace sigue igual. Esos datos siguen ahí al cerrar VS Code y volver a abrir el panel.
+Ejemplo. Están Ada, ada@example.com, con id 1, y Grace, grace@example.com, con id 2. Se abre el comando. Se crea Ana, ana@mail.com. Ana aparece en el desplegable. Se elige el criterio nombre y se busca Ada: se abre el menú de Ada. Buscar ada no la muestra. Se elige el criterio email y se busca ada@example.com: se abre el menú de Ada. Se elige el criterio id y se busca el 1: se abre el mismo menú. Desde el menú se modifica el usuario. Se cambia el nombre a Ada Lovelace y el email a ada.lovelace@example.com. Al volver a la lista completa, el id 1 se ve con esos datos. Grace sigue igual. Esos datos siguen ahí al cerrar VS Code y volver a abrir el panel.
 
 Si se borra el id 1 y se confirma con el email guardado, la lista solo muestra a Grace y a Ana. Si se cancela el borrado, o el email no coincide, Ada sigue.
 

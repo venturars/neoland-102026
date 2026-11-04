@@ -121,7 +121,7 @@ No aplica: no hay paquete nuevo ni cambio de versión. No hay alertas que acepta
 
 1. Pestaña de editor y comando `First App: Abrir usuarios`, no barra lateral. Sin API ni puerto nuevos.
 2. Mismas tres pantallas crema/teal que el navegador, más búsqueda y alta en la primera. Copia de partida, no HTML compartido.
-3. Criterio + valor exactos (nombre y email sin distinguir mayúsculas). `findUserByName` puede devolver varios. Un solo resultado abre el menú del usuario. Varios llenan el desplegable y hay que continuar. Actualizar lista restaura todos en la pantalla de selección.
+3. Criterio + valor exactos. `findUserByName` puede devolver varios. Un solo resultado abre el menú del usuario. Varios llenan el desplegable y hay que continuar. Actualizar lista restaura todos en la pantalla de selección.
 4. Popover de borrado como el de navegador. Sin cliente `.txt` de terminal.
 5. `docs/STYLE.md` amplía la excepción de varias funciones a `panel.js` y `extension.js`.
 6. `README.md` nuevo en first-app: VS Code (arrancar y reabrir) y Chrome (cómo usarlo).

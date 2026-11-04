@@ -18,5 +18,3 @@ El SQL no vive dentro de la función que lo ejecuta. Vive aparte.
 `src/db/server.js` lee esos ficheros al arrancar y los guarda por nombre de fichero. Atiende `POST /execute` con `method`, `file` y `params`. `exec` crea la tabla y no devuelve fila. `get` devuelve una fila, o `null` si no hay. `all` devuelve la lista. `run` devuelve `changes` y `lastInsertRowid`.
 
 `src/queries/user.js` pide ese resultado por HTTP. No abre la base ni lee los `.sql`. Cada función exportada es `async` y devuelve una promesa con el mismo valor que antes.
-
-Búsqueda por nombre y email: `find-by-name.sql` usa `LOWER(name) = LOWER(:name)` y ordena por `id`; `find-by-email.sql` usa `LOWER(email) = LOWER(:email)`. Solo aplica a esas búsquedas, no al resto de operaciones sobre `name` o `email`.

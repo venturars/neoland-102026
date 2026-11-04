@@ -10,7 +10,7 @@ Quien quiere ver los datos de esos usuarios a partir del nombre.
 
 ## Entrada
 
-Entra un nombre. Los espacios al inicio y al final no cuentan. Tiene que coincidir con el guardado; la comparación no distingue mayúsculas ni minúsculas.
+Entra un nombre. Los espacios al inicio y al final no cuentan. El nombre tiene que ser el mismo que el guardado, con las mismas mayúsculas y minúsculas.
 
 ## Salida
 
