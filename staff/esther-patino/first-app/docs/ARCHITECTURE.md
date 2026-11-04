@@ -12,11 +12,11 @@
   - `src/db/users.sqlite` es el único fichero de la base de datos.
 
 - `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca.
-- `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la tarea se puede dejar escrita.
+- `agents/help-me-to-think.md` hace las preguntas que haga falta hasta que la tarea se puede dejar escrita.
 - `agents/create-issue.md` crea la issue con título en inglés y descripción en español, asignada a quien está autenticado.
 - `agents/create-branch.md` crea la rama desde `staging`. El tipo es el de la plantilla. Si no hay plantilla, elige la más cercana.
 - `agents/create-commit.md` hace un commit pequeño con ficheros nombrados.
-- `agents/create-pr.md` abre la pull request contra `staging` y la deja en draft, sin enlazar la issue.
+- `agents/create-pr.md` abre la pull request contra `staging`, en draft y asignada a quien está autenticado, en una sola invocación, sin enlazar la issue.
 - `agents/launch-push.md` publica `HEAD` en `origin` y deja el upstream puesto.
 - `skills/grill-with-docs/SKILL.md` entrevista cuando el cambio vive en este proyecto.
 - `skills/grill-me/SKILL.md` entrevista cuando el repositorio no responde.
@@ -29,8 +29,8 @@
 - `skills/create-empty-commit/SKILL.md` hace el commit vacío `chore: open #N`.
 - `skills/commit-changes/SKILL.md` guarda un trozo con ficheros nombrados.
 - `skills/launch-push/SKILL.md` sube la rama actual y fija el upstream.
-- `skills/create-pr-base-staging/SKILL.md` abre la pull request con base `staging`.
-- `skills/create-draft/SKILL.md` deja la pull request en draft.
+- `skills/create-pr-base-staging/SKILL.md` abre la pull request con base `staging`, en draft y asignada a quien está autenticado, en una sola invocación.
+- `skills/create-draft/SKILL.md` pasa a draft una pull request que ya existe.
 - `skills/link-pr-to-issue/SKILL.md` deja `Closes #N` y no llama a la API para cerrar la issue. GitHub la cierra al fusionar en la rama por defecto. Fusionar solo en `staging` no la cierra.
 - `skills/assign-reviewers/SKILL.md` asigna a quienes miran la pull request y la saca de draft.
 - `tools/check-status.sh` escribe la rama, el remoto y los cambios.
@@ -40,6 +40,7 @@
 - `tools/create-empty-commit.sh` crea el commit vacío de apertura.
 - `tools/commit-changes.sh` guarda los ficheros nombrados.
 - `tools/launch-push.sh` sube la rama y fija el upstream.
+- `tools/create-pr-base-staging.sh` crea la pull request con base `staging`, en draft y asignada a quien está autenticado.
 - `templates/issues/feat_issue.md` es el cuerpo de la issue de tipo feat.
 - `templates/issues/fix_issue.md` es el cuerpo de la issue de tipo fix.
 - `templates/issues/docs_issue.md` es el cuerpo de la issue de tipo docs.
