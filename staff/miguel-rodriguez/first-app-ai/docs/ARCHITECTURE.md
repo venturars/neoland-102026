@@ -37,6 +37,8 @@ browser imports the shared list, ID lookup, update and delete operations as ES
 modules. It keeps presentation state in memory; saved contacts live in SQLite.
 Field errors present shared validation failures. Typed-email confirmation is a
 client precaution before calling delete, not authentication. Notes is disabled.
+Its summary button requests `GET /users/gender-count` from Express on port 3001;
+this keeps the Node-based classifier outside the browser.
 
 `scripts/web.js`, run by `pnpm web`, opens the HTML as a file in Chrome/Chromium
 with local-file module access and a separate temporary profile. It uses an
@@ -50,7 +52,26 @@ preflight; it does not serve the page or JavaScript files.
 operations. `panel.html`, `panel.js`, and `panel.css` present the contact flows;
 the extension uses the same local data service and does not own business rules.
 Its `.vscode/launch.json` starts the Extension Development Host for local testing.
-`tests/vscode-client.test.js` checks the extension adapter.
+`tests/vscode-client.test.js` checks the extension adapter. Its `genderCount`
+message calls the existing classifier in the extension host and returns aggregate
+counts to the panel.
+
+`src/clients/electron/main.js` opens the desktop client's own `index.html` and
+handles an allowlist of IPC operations through the existing logic.
+`preload.cjs` exposes only that bridge. The renderer (`app.js` and `styles.css`)
+runs with context isolation and without Node integration. The main process
+performs classification; the window does not load the web client.
+
+`src/clients/chrome/manifest.json` registers a Manifest V3 popup with only the
+local port-3002 host permission. Its own `index.html`, `popup.js` and `styles.css`
+call the Fastify adapter in `server.js`. The adapter converts numeric IDs and
+calls the same business operations, including the classifier. `pnpm chrome`
+starts the adapter; Chrome loads the folder as an unpacked extension.
+
+`src/clients/nest/app.js` defines the Nest controller, module and error filter
+in JavaScript, applying framework decorators as function calls. These classes
+adapt HTTP requests; they do not duplicate business rules. `pnpm nest` starts
+the loopback API on port 3003.
 
 `src/clients/jupyter/` provides nine independent notebooks for those same operations
 and explicit table initialization. Initialization calls a query; it is not a new
@@ -78,12 +99,14 @@ public business operation.
   folder as its root.
 - `requirements-jupyter.txt` lists the Python requirements for that client.
 - `package.json` holds minimal application metadata, ES module mode, the
-  data-service and Jupyter startup commands and development-check commands, and dependency declarations. `pnpm-lock.yaml` records the
-  resolved packages. Version and package rules remain in the
+  client startup commands, development-check commands and dependency declarations.
+  `pnpm-lock.yaml` records the resolved packages. `pnpm-workspace.yaml` holds
+  exact-version release-age exceptions for the three Nest packages and Electron.
+  Version and package rules remain in the
   [constitution](CONSTITUTIONS.md#dependencies-and-package-management).
 - `.gitignore` excludes generated local artifacts. `src/db/users.sqlite`, `.venv/`,
   dependency installations and caches are runtime files, not source inventory.
-- `README.md` explains how to start and use the Jupyter client.
+- `README.md` explains how to prepare the data service and start each client.
 
 Results are presented by clients rather than printed by business operations.
 Startup may report environment preparation; it does not introduce business logic.
@@ -128,6 +151,8 @@ is defined in [AGENTS.md](../AGENTS.md).
 Socket package validation, guide separation, formatting/lint checks, and alignment
 with the architecture and style guides. Their individual documents
 record the request, approved approach, tasks, decisions, and verification.
+`complete-user-clients/` covers Electron, Chrome, Nest and the added summary
+controls in the existing clients.
 
 ## Git workflow
 
@@ -162,8 +187,16 @@ coverage; AGENTS.md retains the detailed dependency-validation procedure.
 
 ## REST client
 
-`src/clients/http/app.js` adapts five user operations to HTTP using Express.
+`src/clients/http/app.js` adapts create, list, ID lookup, update, delete and
+the existing gender summary to HTTP using Express.
 It awaits the existing logic, converts route IDs to numbers, and maps business
 errors to HTTP statuses and JSON messages. It listens on loopback port 3001 via
 `pnpm http`; queries still reach the separate data service on port 3000.
-The client does not serve web assets. README documents the Postman requests.
+The client does not serve web assets. The summary route precedes the ID route
+and permits the web client's file origin. Fastify and Nest offer the same six
+routes on their own ports. README documents the Postman requests.
+
+All adapters await the shared logic and use the data service on port 3000.
+They preserve the existing five-field contacts, validation, ordering and
+timestamps. Summary requests require Ollama only when contacts exist and return
+no partial result on a classifier failure.
