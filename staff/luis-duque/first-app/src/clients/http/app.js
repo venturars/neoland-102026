@@ -22,44 +22,6 @@ const originUrl = new URL(ORIGIN);
 const port = Number(originUrl.port);
 const hostname = originUrl.hostname;
 
-function sendError(response, error) {
-  if (!(error instanceof Error)) {
-    response.status(500);
-    response.json({ message: String(error) });
-    return;
-  }
-
-  const message = error.message;
-
-  if (
-    message === NAME_IS_REQUIRED ||
-    message === NAME_IS_TOO_LONG ||
-    message === EMAIL_IS_REQUIRED ||
-    message === EMAIL_IS_NOT_VALID ||
-    message === ID_IS_INVALID ||
-    message === UPDATE_NEEDS_A_FIELD
-  ) {
-    response.status(400);
-    response.json({ message });
-    return;
-  }
-
-  if (message.endsWith(WAS_NOT_FOUND)) {
-    response.status(404);
-    response.json({ message });
-    return;
-  }
-
-  if (message.includes(UNIQUE_CONSTRAINT)) {
-    response.status(409);
-    response.json({ message });
-    return;
-  }
-
-  response.status(500);
-  response.json({ message });
-}
-
 const app = express();
 const readJson = express.json();
 app.use(readJson);
@@ -73,7 +35,33 @@ app.post("/users", async (request, response) => {
     response.status(201);
     response.json(user);
   } catch (error) {
-    sendError(response, error);
+    if (!(error instanceof Error)) {
+      response.status(500);
+      response.json({ message: String(error) });
+      return;
+    }
+
+    const message = error.message;
+
+    if (
+      message === NAME_IS_REQUIRED ||
+      message === NAME_IS_TOO_LONG ||
+      message === EMAIL_IS_REQUIRED ||
+      message === EMAIL_IS_NOT_VALID
+    ) {
+      response.status(400);
+      response.json({ message });
+      return;
+    }
+
+    if (message.includes(UNIQUE_CONSTRAINT)) {
+      response.status(409);
+      response.json({ message });
+      return;
+    }
+
+    response.status(500);
+    response.json({ message });
   }
 });
 
@@ -84,7 +72,28 @@ app.get("/users/email/:email", async (request, response) => {
     response.status(200);
     response.json(user);
   } catch (error) {
-    sendError(response, error);
+    if (!(error instanceof Error)) {
+      response.status(500);
+      response.json({ message: String(error) });
+      return;
+    }
+
+    const message = error.message;
+
+    if (message === EMAIL_IS_REQUIRED || message === EMAIL_IS_NOT_VALID) {
+      response.status(400);
+      response.json({ message });
+      return;
+    }
+
+    if (message.endsWith(WAS_NOT_FOUND)) {
+      response.status(404);
+      response.json({ message });
+      return;
+    }
+
+    response.status(500);
+    response.json({ message });
   }
 });
 
@@ -95,7 +104,28 @@ app.get("/users/name/:name", async (request, response) => {
     response.status(200);
     response.json(users);
   } catch (error) {
-    sendError(response, error);
+    if (!(error instanceof Error)) {
+      response.status(500);
+      response.json({ message: String(error) });
+      return;
+    }
+
+    const message = error.message;
+
+    if (message === NAME_IS_REQUIRED || message === NAME_IS_TOO_LONG) {
+      response.status(400);
+      response.json({ message });
+      return;
+    }
+
+    if (message.endsWith(WAS_NOT_FOUND)) {
+      response.status(404);
+      response.json({ message });
+      return;
+    }
+
+    response.status(500);
+    response.json({ message });
   }
 });
 
@@ -105,7 +135,14 @@ app.get("/users", async (request, response) => {
     response.status(200);
     response.json(users);
   } catch (error) {
-    sendError(response, error);
+    if (!(error instanceof Error)) {
+      response.status(500);
+      response.json({ message: String(error) });
+      return;
+    }
+
+    response.status(500);
+    response.json({ message: error.message });
   }
 });
 
@@ -116,7 +153,28 @@ app.get("/users/:id", async (request, response) => {
     response.status(200);
     response.json(user);
   } catch (error) {
-    sendError(response, error);
+    if (!(error instanceof Error)) {
+      response.status(500);
+      response.json({ message: String(error) });
+      return;
+    }
+
+    const message = error.message;
+
+    if (message === ID_IS_INVALID) {
+      response.status(400);
+      response.json({ message });
+      return;
+    }
+
+    if (message.endsWith(WAS_NOT_FOUND)) {
+      response.status(404);
+      response.json({ message });
+      return;
+    }
+
+    response.status(500);
+    response.json({ message });
   }
 });
 
@@ -138,7 +196,41 @@ app.patch("/users/:id", async (request, response) => {
     response.status(200);
     response.json(user);
   } catch (error) {
-    sendError(response, error);
+    if (!(error instanceof Error)) {
+      response.status(500);
+      response.json({ message: String(error) });
+      return;
+    }
+
+    const message = error.message;
+
+    if (
+      message === NAME_IS_REQUIRED ||
+      message === NAME_IS_TOO_LONG ||
+      message === EMAIL_IS_REQUIRED ||
+      message === EMAIL_IS_NOT_VALID ||
+      message === ID_IS_INVALID ||
+      message === UPDATE_NEEDS_A_FIELD
+    ) {
+      response.status(400);
+      response.json({ message });
+      return;
+    }
+
+    if (message.endsWith(WAS_NOT_FOUND)) {
+      response.status(404);
+      response.json({ message });
+      return;
+    }
+
+    if (message.includes(UNIQUE_CONSTRAINT)) {
+      response.status(409);
+      response.json({ message });
+      return;
+    }
+
+    response.status(500);
+    response.json({ message });
   }
 });
 
@@ -149,7 +241,28 @@ app.delete("/users/:id", async (request, response) => {
     response.status(204);
     response.end();
   } catch (error) {
-    sendError(response, error);
+    if (!(error instanceof Error)) {
+      response.status(500);
+      response.json({ message: String(error) });
+      return;
+    }
+
+    const message = error.message;
+
+    if (message === ID_IS_INVALID) {
+      response.status(400);
+      response.json({ message });
+      return;
+    }
+
+    if (message.endsWith(WAS_NOT_FOUND)) {
+      response.status(404);
+      response.json({ message });
+      return;
+    }
+
+    response.status(500);
+    response.json({ message });
   }
 });
 
@@ -173,7 +286,14 @@ app.use((error, request, response, next) => {
     return;
   }
 
-  sendError(response, error);
+  if (!(error instanceof Error)) {
+    response.status(500);
+    response.json({ message: String(error) });
+    return;
+  }
+
+  response.status(500);
+  response.json({ message: error.message });
 });
 
 app.listen(port, hostname, () => {
