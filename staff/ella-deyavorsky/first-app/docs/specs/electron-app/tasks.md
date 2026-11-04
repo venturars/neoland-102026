@@ -11,13 +11,13 @@ Do the tasks in order. Inside a task, do the steps in order.
 
 ## Task 2 — Check the packages
 
-- [ ] Check the dependencies of `electron@45.2.2`, down to 3 layers, with the Socket MCP (`depscore`, `alerts`, `threat_feed`, as `AGENTS.md` says). Result: a list of packages and any alert, campaign or score below 50, written to the person.
-- [ ] Stop and wait for the person to accept the packages. Result: no install before that.
+- [x] Check the dependencies of `electron@45.2.2`, down to 3 layers, with the Socket MCP (`depscore`, `alerts`, `threat_feed`, as `AGENTS.md` says). Result: a list of packages and any alert, campaign or score below 50, written to the person.
+- [x] Stop and wait for the person to accept the packages. Result: no install before that.
 
 ## Task 3 — Add Electron
 
-- [ ] Run `pnpm add -D electron@45.2.2`. Result: `electron` is in `devDependencies` with the exact version, and `pnpm-lock.yaml` changes.
-- [ ] In `package.json`, add the script `"electron": "electron src/clients/electron/main.js"` and add `"src/clients/electron/**/*.js"` and `"src/clients/electron/**/*.cjs"` to `format`. Result: the scripts are there.
+- [x] Run `pnpm add -D electron@45.2.2`. Result: `electron` is in `devDependencies` with the exact version, and `pnpm-lock.yaml` changes.
+- [x] In `package.json`, add the script `"electron": "electron src/clients/electron/main.js"` and add `"src/clients/electron/**/*.js"` and `"src/clients/electron/**/*.cjs"` to `format`. Result: the scripts are there.
 
 ## Task 4 — Write the client
 
