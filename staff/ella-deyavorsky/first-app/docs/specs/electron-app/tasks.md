@@ -21,21 +21,21 @@ Do the tasks in order. Inside a task, do the steps in order.
 
 ## Task 4 — Write the client
 
-- [ ] Create `src/clients/electron/main.js` (ESM): one handler for `list-users`, `update-user` and `delete-user`, each checking its input, calling the function of `logic/` and returning `{ ok, value }` or `{ ok, error }`. Known sentences pass; anything else returns "The database failed." and `console.error(error)`. Open the `BrowserWindow` with `contextIsolation` on and `nodeIntegration` off, deny new windows, block navigation, and quit when the last window closes. Result: the main process matches the plan.
-- [ ] Create `src/clients/electron/preload.cjs` with `contextBridge.exposeInMainWorld("api", ...)` and one function per action, no `ipcRenderer`. Result: the page has `window.api`.
-- [ ] Create `src/clients/electron/index.html` with the three screens (list, menu, edit), a Content-Security-Policy `<meta>`, and a classic `<script src="app.js">`. Result: only its own files load.
-- [ ] Create `src/clients/electron/style.css` with the `hidden` class and simple styles. Result: one screen is visible at a time.
-- [ ] Create `src/clients/electron/app.js` starting with `/* global document, window, confirm */`. It calls `window.api`, reads `ok` and shows the error in a `<p>`. No imports, no classes. Result: list, edit and delete work as in `spec.md`.
+- [x] Create `src/clients/electron/main.js` (ESM): one handler for `list-users`, `update-user` and `delete-user`, each checking its input, calling the function of `logic/` and returning `{ ok, value }` or `{ ok, error }`. Known sentences pass; anything else returns "The database failed." and `console.error(error)`. Open the `BrowserWindow` with `contextIsolation` on and `nodeIntegration` off, deny new windows, block navigation, and quit when the last window closes. Result: the main process matches the plan.
+- [x] Create `src/clients/electron/preload.cjs` with `contextBridge.exposeInMainWorld("api", ...)` and one function per action, no `ipcRenderer`. Result: the page has `window.api`.
+- [x] Create `src/clients/electron/index.html` with the three screens (list, menu, edit), a Content-Security-Policy `<meta>`, and a classic `<script src="app.js">`. Result: only its own files load.
+- [x] Create `src/clients/electron/style.css` with the `hidden` class and simple styles. Result: one screen is visible at a time.
+- [x] Create `src/clients/electron/app.js` starting with `/* global document, window, confirm */`. It calls `window.api`, reads `ok` and shows the error in a `<p>`. No imports, no classes. Result: list, edit and delete work as in `spec.md`.
 
 ## Task 5 — Run it
 
-- [ ] Run `pnpm start` in one terminal and `pnpm electron` in another. Result: a window opens with the real users.
-- [ ] Edit a name and save, then list the users in the terminal. Result: the terminal shows the new name.
-- [ ] Try an empty name, an email that is not valid and an email already used. Result: the message of the app is shown and nothing is saved.
-- [ ] Delete a user and accept the confirmation. Result: the user is gone from the list.
+- [x] Run `pnpm start` in one terminal and `pnpm electron` in another. Result: a window opens with the real users.
+- [x] Edit a name and save, then list the users in the terminal. Result: the terminal shows the new name.
+- [x] Try an empty name, an email that is not valid and an email already used. Result: the message of the app is shown and nothing is saved.
+- [x] Delete a user and accept the confirmation. Result: the user is gone from the list.
 - [ ] Stop `pnpm start` and press an action. Result: "The database failed." is shown and the window does not crash.
-- [ ] In the DevTools of the window, run `typeof require` and `typeof process`. Result: both are `"undefined"`.
-- [ ] Run `pnpm format` and `pnpm lint`. Result: no errors, and `eslint.config.js` did not change.
+- [x] In the DevTools of the window, run `typeof require` and `typeof process`. Result: both are `"undefined"`.
+- [x] Run `pnpm format` and `pnpm lint`. Result: no errors, and `eslint.config.js` did not change.
 - [ ] Check that `pnpm start`, `pnpm browser` and the terminal client still work. Result: they behave as before.
-- [ ] Say which systems were checked. Result: macOS is checked; Windows and Linux are written as "not verified" if nobody ran them.
-- [ ] Stop. Result: the one-pass cycle is done.
+- [x] Say which systems were checked. Result: macOS is checked; Windows and Linux are written as "not verified" if nobody ran them.
+- [x] Stop. Result: the one-pass cycle is done.

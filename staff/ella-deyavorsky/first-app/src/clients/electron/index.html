@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>First app</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Pantalla 1: elegir usuario -->
+    <section id="screen-list">
+      <h1>¿Quién eres?</h1>
+      <ul id="user-list"></ul>
+      <p id="list-empty" class="hidden">No hay usuarios.</p>
+      <p id="list-error" class="error"></p>
+    </section>
+
+    <!-- Pantalla 2: menú -->
+    <section id="screen-menu" class="hidden">
+      <h1 id="menu-title"></h1>
+      <button id="btn-back">Volver</button>
+      <button id="btn-edit">Modificar usuario</button>
+    </section>
+
+    <!-- Pantalla 3: editar -->
+    <section id="screen-edit" class="hidden">
+      <h1>Modificar usuario</h1>
+      <label>Nombre <input id="edit-name" type="text" /></label>
+      <label>Email <input id="edit-email" type="text" /></label>
+      <p id="edit-error" class="error"></p>
+      <button id="btn-save">Guardar</button>
+      <button id="btn-delete">Eliminar</button>
+      <button id="btn-cancel">Cancelar</button>
+    </section>
+
+    <script src="app.js"></script>
+  </body>
+</html>
