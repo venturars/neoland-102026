@@ -41,5 +41,3 @@ Esos ficheros se tocan al ejecutar las tareas, no antes. Ahí se crea `skills/fr
 La constitución, `AGENTS.MD` y el código de esta rama dicen que no hay pantalla ni otro cliente. `src/db/connection.js` abre `users.sqlite` y no ejecuta SQL. Cada consulta es un `.sql` que lee y ejecuta `src/queries/users.js`. El desarrollo abierto es `docs/specs/find-user-by-name/`.
 
 La spec diseña el cliente web que ya lista, elige, modifica, elimina y muestra notas. Ese cliente está en el desarrollo que aún no está mergeado. Sus ficheros no se nombran aquí.
-
-Sí. El diseño espera a que ese cliente esté en esta rama. Las tareas empiezan por esa espera.
