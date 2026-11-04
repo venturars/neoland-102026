@@ -78,6 +78,10 @@ first-app-ai/
 │       │   ├── plan.md
 │       │   ├── spec.md
 │       │   └── tasks.md
+│       ├── rest-user-client/
+│       │   ├── plan.md
+│       │   ├── spec.md
+│       │   └── tasks.md
 │       ├── update-workflow-task-checks/
 │       │   ├── plan.md
 │       │   ├── spec.md
@@ -132,6 +136,8 @@ first-app-ai/
 │       └── SKILL.md
 ├── src/
 │   ├── clients/
+│   │   ├── http/
+│   │   │   └── app.js
 │   │   ├── vscode/
 │   │   │   ├── .vscode/
 │   │   │   │   └── launch.json

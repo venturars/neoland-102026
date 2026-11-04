@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Usuarios</title>
+    <link href="./styles.css" rel="stylesheet" />
+  </head>
+  <body>
+    <main>
+      <h1>Usuarios</h1>
+      <form id="create-form">
+        <h2>Crear</h2>
+        <label for="create-name">Nombre</label>
+        <input id="create-name" name="name" type="text" />
+        <label for="create-email">Email</label>
+        <input id="create-email" name="email" type="text" />
+        <button type="submit">Crear</button>
+      </form>
+
+      <section>
+        <h2>Lista</h2>
+        <ul id="user-list"></ul>
+      </section>
+
+      <form id="view-form">
+        <h2>Ver</h2>
+        <label for="view-id">Id</label>
+        <input id="view-id" name="id" type="text" />
+        <button type="submit">Ver</button>
+      </form>
+      <p id="viewed-user"></p>
+
+      <form id="update-form">
+        <h2>Modificar</h2>
+        <label for="update-id">Id</label>
+        <input id="update-id" name="id" type="text" />
+        <label for="update-name">Nombre</label>
+        <input id="update-name" name="name" type="text" />
+        <label for="update-email">Email</label>
+        <input id="update-email" name="email" type="text" />
+        <button type="submit">Modificar</button>
+      </form>
+
+      <form id="delete-form">
+        <h2>Borrar</h2>
+        <label for="delete-id">Id</label>
+        <input id="delete-id" name="id" type="text" />
+        <button type="submit">Borrar</button>
+      </form>
+      <p id="message"></p>
+    </main>
+    <script src="./popup.js" type="module"></script>
+  </body>
+</html>

@@ -10,25 +10,27 @@
 
 Cada cuaderno de operación tiene el escenario, las instrucciones y una celda. Si esa celda falla, muestra una frase en español y deja el detalle en `src/clients/jupyter/jupyter-client.log`.
 
-Los cuadernos se abren con `./scripts/jupyter.sh` desde `first-app`. Usan el Jupyter del `.venv`, el kernel `first-app` y la base `src/db/users.sqlite`. No crean usuarios de ejemplo.
+Los cuadernos se abren con `./scripts/jupyter.sh` desde `first-app`. Usan el Jupyter del `.venv` y el kernel `first-app`, y necesitan el servidor de datos arrancado. No crean usuarios de ejemplo.
 
-`src/clients/web/` contiene las tres pantallas del navegador: selección, menú y edición de usuario. `index.html` define sus controles y `styles.css` su diseño adaptable con lila y fondo continuo con matices lilas y rosados. Los módulos JavaScript leen los formularios y llaman al cliente HTTP mediante `fetch`. La selección se mantiene en memoria; recargar vuelve a la lista. «Ir a notas» está deshabilitada, sin pantalla ni petición asociada.
+`src/clients/web/` es el cliente de navegador, con tres pantallas: selección (con el alta de usuario), menú y edición. `index.html` define sus controles y `styles.css` su diseño adaptable con lila y fondo continuo con matices lilas y rosados. `app.js` importa las funciones de `src/logic/` directamente, lee los formularios y traduce los errores. Se abre desde `file://` con `pnpm run web`. La selección se mantiene en memoria; recargar vuelve a la lista. «Ir a notas» está deshabilitada, sin pantalla ni petición asociada.
 
-`src/clients/http/` es el adaptador local, construido con `node:http`. Sirve solo los archivos públicos declarados y conecta el listado, búsqueda por id, modificación y borrado con las funciones existentes de `src/logic/`. Traduce entradas y errores de transporte; no contiene validación de negocio ni SQL. Se arranca con `pnpm start` y escucha en `127.0.0.1:3000`.
+`src/clients/http/` es el cliente REST, construido con Express. `app.js` conecta crear, listar, ver, modificar y borrar con las funciones de `src/logic/`. Traduce la petición y la respuesta; no contiene validación de negocio ni SQL. Se arranca con `pnpm run http`, escucha en `127.0.0.1:3001` y necesita el servidor de datos arrancado. No sustituye a `src/db/server.js`.
 
 `src/logic/` es el núcleo de la aplicación. Contiene las funcionalidades para crear, buscar, actualizar, borrar y listar usuarios, y para contarlos según el género del nombre. Aplica las reglas de negocio y decide qué resultado recibe el cliente.
 
 `src/logic/` no calcula `createdAt` ni `updatedAt` y no los envía a las consultas. Esas fechas las escribe SQLite.
 
-`src/queries/users.js` lee los archivos SQL, prepara las consultas, proporciona sus parámetros y las ejecuta mediante la conexión compartida. Al cargar este módulo, crea la tabla `users` si todavía no existe.
+Las funciones de `src/logic/` son `async` y no importan módulos `node:*`, para que el navegador pueda importarlas. La excepción es `countUsersByGender`, que usa el paquete `openai` y solo se ejecuta desde terminal y Jupyter.
 
-`src/queries/queries/` contiene un archivo `.sql` por consulta. Los archivos contienen exclusivamente SQL y no contienen JavaScript ni reglas de negocio.
+`src/queries/users.js` importa el SQL de `src/queries/queries/` y lo envía al servidor de datos con `fetch`, mediante `execute(method, sql, params)`. No abre SQLite ni lee archivos.
 
-`src/db/connection.js` abre la conexión SQLite.
+`src/queries/queries/` contiene un módulo `.js` por consulta, que exporta el SQL como una constante en mayúsculas. No contiene funciones ni reglas de negocio.
 
-`src/db/users.sqlite` es la base de la aplicación. Si el proceso tiene `FIRST_APP_DATABASE_FILE`, la conexión abre esa ruta. Si no la tiene, abre `src/db/users.sqlite`. Terminal y HTTP pueden recibir esa variable del entorno. El puente Jupyter usa la ruta predeterminada de su copia de la aplicación.
+`src/db/server.js` es el servidor de datos y el único proceso que abre SQLite. Escucha en `127.0.0.1:3000`, ejecuta lo que llega a `POST /execute` y crea la tabla `users` al arrancar. Como ejecuta cualquier SQL recibido, solo escucha en el equipo local. Se arranca con `pnpm start`.
 
-Los clientes de terminal, Jupyter y HTTP llaman a la lógica; la lógica llama a las consultas. `src/queries/users.js` lee el texto de los archivos SQL y utiliza la conexión para ejecutarlo en SQLite. Los archivos `.sql` contienen instrucciones, no son una capa que llame a otra. El navegador llega a la lógica mediante su adaptador HTTP. El cuaderno de preparar la tabla llama a `createUsersTable`, igual que su cliente de terminal.
+`src/db/users.sqlite` es la base de la aplicación. Si el servidor de datos arranca con `FIRST_APP_DATABASE_FILE`, abre esa ruta; todos los clientes usan entonces ese archivo.
+
+Todos los clientes (terminal, Jupyter, web y REST) llaman a la lógica; la lógica llama a las consultas; las consultas piden al servidor de datos que ejecute el SQL. Ningún cliente importa archivos de otro. El cuaderno de preparar la tabla llama a `createUsersTable`, igual que su cliente de terminal.
 
 ## Flujo de git
 
@@ -49,20 +51,21 @@ Las skills que lanzan un script usan los de `tools/`, siempre desde la raíz del
 - `AGENTS.md` guarda el proceso SDD, los comandos y el cierre de una tarea. Enlaza a las guías con las reglas del código y al flujo de git de `agents/git-workflow-agent.md`.
 - `.gitignore` deja fuera `node_modules/`, `.env`, los archivos de SQLite, los checkpoints de Jupyter y el log del cliente Jupyter.
 - `.prettierignore` evita que Prettier entre en `.venv/`, `node_modules/` y el archivo de bloqueo generado por pnpm.
-- `package.json` declara los módulos ESM, `packageManager` con `pnpm@10.34.7`, los comandos `pnpm start`, `pnpm test`, `pnpm format` y `pnpm lint`, y el control que impide instalar con otro gestor.
+- `package.json` declara los módulos ESM, `packageManager` con `pnpm@10.34.7`, los comandos `pnpm start` (servidor de datos), `pnpm run web`, `pnpm run http`, `pnpm test` (de una prueba en una), `pnpm format` y `pnpm lint`, y el control que impide instalar con otro gestor.
 - `pnpm-lock.yaml` fija las versiones de las dependencias de la aplicación y de las herramientas de desarrollo.
-- `eslint.config.js` limita ESLint a los archivos JavaScript, ignora el entorno y las dependencias, activa las reglas `no-undef` y `no-unused-vars`, y limita los globals del navegador y de las pruebas a sus carpetas.
+- `eslint.config.js` limita ESLint a los archivos JavaScript, ignora el entorno y las dependencias, activa las reglas `no-undef` y `no-unused-vars`, y limita `fetch` a las consultas y las pruebas y los globals del navegador a `src/clients/web/`.
 - `scripts/jupyter.sh` entra en la raíz de `first-app` y abre los cuadernos con el Jupyter del `.venv`.
-- `src/db/connection.js` abre la conexión SQLite. Acepta `FIRST_APP_DATABASE_FILE` para que un proceso use otra ruta.
+- `src/db/server.js` es el servidor de datos. Exporta `openDatabase()` y `createDatabaseServer(database)` para las pruebas y solo escucha si se ejecuta directamente. Acepta `FIRST_APP_DATABASE_FILE`.
 - `src/db/users.sqlite` es la base de la aplicación cuando no se configura otra ruta.
-- `src/queries/users.js` lee, prepara y ejecuta las consultas. Al cargarse, crea la tabla `users` si no existe.
-- `src/queries/queries/create-users-table.sql` es el SQL que crea la tabla `users` si no existe.
-- `src/queries/queries/insert.sql` es el SQL que inserta un usuario.
-- `src/queries/queries/find-by-email.sql` es el SQL que busca un usuario por email.
-- `src/queries/queries/find-by-id.sql` es el SQL que busca un usuario por id.
-- `src/queries/queries/update.sql` es el SQL que actualiza un usuario.
-- `src/queries/queries/delete.sql` es el SQL que borra un usuario.
-- `src/queries/queries/list.sql` es el SQL que lista los usuarios.
+- `src/queries/users.js` envía las consultas al servidor de datos y devuelve sus filas. Sus funciones son `async`.
+- `src/queries/queries/create-users-table.js` exporta `CREATE_USERS_TABLE`, el SQL que crea la tabla `users` si no existe.
+- `src/queries/queries/insert.js` exporta `INSERT_USER`, el SQL que inserta un usuario.
+- `src/queries/queries/find-by-email.js` exporta `FIND_USER_BY_EMAIL`, el SQL que busca un usuario por email.
+- `src/queries/queries/find-by-id.js` exporta `FIND_USER_BY_ID`, el SQL que busca un usuario por id.
+- `src/queries/queries/update.js` exporta `UPDATE_USER`, el SQL que actualiza un usuario.
+- `src/queries/queries/delete.js` exporta `DELETE_USER`, el SQL que borra un usuario.
+- `src/queries/queries/list.js` exporta `LIST_USERS`, el SQL que lista los usuarios.
+- Todas las funciones de `src/logic/` son `async` y se llaman con `await`.
 - `src/logic/create-user.js` es `createUser(name, email)`. Crea un usuario y devuelve `id`, `name`, `email`, `createdAt` y `updatedAt`.
 - `src/logic/find-user-by-id.js` es `findUserById(id)`. Busca por id y devuelve ese usuario, o lanza un error si no existe.
 - `src/logic/find-user-by-email.js` es `findUserByEmail(email)`. Busca por email y devuelve ese usuario, o lanza un error si no existe.
@@ -80,7 +83,7 @@ Las skills que lanzan un script usan los de `tools/`, siempre desde la raíz del
 - `src/clients/jupyter/crear-usuario.ipynb` ejecuta el alta de usuario.
 - `src/clients/jupyter/listar-usuarios.ipynb` ejecuta el listado de usuarios.
 - `src/clients/jupyter/preparar-tabla-usuarios.ipynb` prepara la tabla y explica que no es una acción de usuario.
-- `src/clients/jupyter/run_logic.py` arranca Node y comunica los cuadernos con las funciones existentes.
+- `src/clients/jupyter/run_logic.py` arranca Node, espera cada función con `await` y comunica los cuadernos con las funciones existentes.
 - `agents/` guarda los siete subagentes del flujo de git: el orquestador y los seis que llama.
 - `skills/` guarda una carpeta por skill, cada una con su `SKILL.md`. Dice cuándo se usa, qué argumentos lleva y cómo se leen sus respuestas.
 - `tools/` guarda los siete scripts de git que lanzan las skills. Se ejecutan desde la raíz del repositorio y no admiten force push.
@@ -96,30 +99,13 @@ Las skills que lanzan un script usan los de `tools/`, siempre desde la raíz del
 - `AGENTS.md` recoge el proceso SDD y sus aprobaciones, los paquetes con pnpm y Socket, y qué documento se actualiza según lo que cambie.
 - `docs/specs/<nombre>/` describe un pedido, con `spec.md`, `plan.md` y `tasks.md`. No describe el estado del código. `<nombre>` va en kebab-case.
 
-## Archivos del cliente de navegador y sus pruebas
+## Archivos del cliente web y sus pruebas
 
-- `README.md` explica el arranque, las pantallas, los archivos y las comprobaciones.
-- `src/clients/http/create-http-server.js` crea el servidor sin elegir puerto para permitir pruebas aisladas.
-- `src/clients/http/start-http-server.js` arranca el servidor local y muestra su dirección o un error de arranque.
-- `src/clients/http/handle-request.js` elige entre peticiones de usuarios y archivos públicos y captura sus errores.
-- `src/clients/http/handle-users.js` adapta GET, PATCH y DELETE a las operaciones existentes, convirtiendo el id de la ruta tras comprobarlo.
-- `src/clients/http/read-json-body.js` lee un objeto JSON sin acumular más de 64 KiB de entrada.
-- `src/clients/http/send-json.js` envía respuestas JSON sin caché.
-- `src/clients/http/send-http-error.js` convierte errores conocidos en respuestas HTTP con frases en español.
-- `src/clients/http/serve-public-file.js` sirve únicamente los archivos declarados del navegador, con su tipo de contenido.
-- `src/clients/web/index.html` define las tres pantallas, formularios, etiquetas y la opción deshabilitada de notas.
+- `README.md` explica el arranque de cada cliente, las pantallas, los archivos y las comprobaciones.
+- `src/clients/web/index.html` define las tres pantallas, los formularios de alta y edición, sus etiquetas y la opción deshabilitada de notas.
 - `src/clients/web/styles.css` define la paleta compartida, la distribución adaptable y los estados visuales.
-- `src/clients/web/state.js` conserva el usuario seleccionado y si hay una operación pendiente.
-- `src/clients/web/main.js` conecta los eventos con sus funciones y carga la selección inicial.
-- `src/clients/web/show-screen.js` muestra una sección y mueve el foco a su encabezado.
-- `src/clients/web/show-message.js` muestra mensajes como texto, sin interpretar HTML.
-- `src/clients/web/load-user-selection.js` carga la lista y distingue carga, error y lista vacía.
-- `src/clients/web/select-user.js` recupera el usuario elegido por id antes de mostrar el menú.
-- `src/clients/web/show-user-menu.js` muestra los últimos datos guardados de la selección.
-- `src/clients/web/open-user-editor.js` rellena el formulario con los datos guardados.
-- `src/clients/web/navigate.js` gestiona los botones de navegación; no hay acción para notas.
-- `src/clients/web/save-user.js` envía nombre y email, evita envíos repetidos y conserva el formulario al fallar.
-- `src/clients/web/delete-selected-user.js` confirma el borrado y solo después lo solicita; al terminar recarga la lista.
-- `tests/http-client.test.js` comprueba integración, entradas incorrectas, persistencia, errores y archivos privados con una base temporal.
+- `src/clients/web/app.js` importa la lógica, gestiona las pantallas, los formularios, la confirmación del borrado y la traducción de errores.
+- `tests/database-server.test.js` comprueba el servidor de datos con una base temporal.
+- `tests/shared-database.test.js` comprueba que la lógica que usa la web y otro proceso Node, como un ejemplo de terminal, ven la misma base, y que sin servidor de datos se recibe el error de la operación.
 
-- `docs/WEB-CLIENT-GUIDE.md` explica el código del cliente y el recorrido de las operaciones para su lectura educativa.
+- `docs/WEB-CLIENT-GUIDE.md` explica el servidor de datos, el cliente web y el recorrido de las operaciones para su lectura educativa.

@@ -30,6 +30,9 @@
   `electron` de `package.json`; el instalador Windows con `electron:dist`.
 - `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001 y no
   repite sus reglas.
+- `src/clients/chrome/server.js` llama a `src/logic/`, escucha en el puerto
+  3002 y no repite sus reglas. La extensión en `src/clients/chrome/` solo
+  habla con esa API por `fetch`.
 - `src/clients/vscode/extension.cjs` registra la vista lateral webview,
   recibe mensajes del panel y llama a `src/logic/` con `import()`. No
   repite sus reglas. `panel.html`, `panel.js` y `panel.css` son la
@@ -42,17 +45,21 @@
   JavaScript, declara los globals de Node e ignora `.venv` y
   `node_modules`.
 - `agents/git-workflow-agent.md` reconoce el momento y llama al
-  subagente como un agente aparte. El padre no hace ese trabajo.
-- `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la
-  tarea se puede dejar escrita.
+  subagente como un agente aparte. El padre no hace ese trabajo. Si la
+  issue ya está escrita y toca hacer cambios, el momento es Empezar. Las
+  paradas de «Orden» en `AGENTS.md` siguen.
+- `agents/help-me-to-think.md` devuelve las preguntas que hagan falta,
+  cada una con respuesta recomendada, hasta que la tarea se puede dejar
+  escrita.
 - `agents/create-issue.md` crea la issue asignada a quien está
   autenticado. El cuerpo sale de la plantilla del tipo.
 - `agents/create-branch.md` crea la rama de trabajo. El tipo es el de
   la plantilla.
 - `agents/create-commit.md` hace un commit pequeño con ficheros
   nombrados.
-- `agents/create-pr.md` abre la pull request contra `staging` y la deja
-  en draft, sin enlazar la issue.
+- `agents/create-pr.md` abre la pull request contra `staging` en draft y
+  asignada al usuario autenticado con una sola invocación a
+  `create-pr-base-staging`, sin enlazar la issue.
 - `agents/launch-push.md` publica `HEAD` en `origin` y deja el upstream
   puesto.
 - `skills/grill-with-docs/SKILL.md` entrevista cuando el cambio vive en
@@ -75,7 +82,8 @@
   nombrados.
 - `skills/launch-push/SKILL.md` sube la rama actual y fija el upstream.
 - `skills/create-pr-base-staging/SKILL.md` abre la pull request con base
-  `staging`.
+  `staging`, en draft y asignada, con GitHub CLI y
+  `tools/create-pr-base-staging.sh`.
 - `skills/create-draft/SKILL.md` deja la pull request en draft.
 - `skills/link-pr-to-issue/SKILL.md` deja `Closes #N` en el cuerpo y
   enlaza la issue en Development. No llama a la API para cerrarla.
@@ -91,6 +99,8 @@
 - `tools/create-empty-commit.sh` crea el commit vacío de apertura.
 - `tools/commit-changes.sh` guarda los ficheros nombrados.
 - `tools/launch-push.sh` sube la rama y fija el upstream.
+- `tools/create-pr-base-staging.sh` crea la pull request contra
+  `staging` en draft y asignada al usuario autenticado.
 - `templates/issues/` tiene una plantilla por tipo: feat, fix, docs,
   refactor, test y chore. El cuerpo dice qué hay que hacer y cómo
   probarlo.

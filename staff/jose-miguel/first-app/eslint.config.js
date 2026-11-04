@@ -3,7 +3,7 @@ import js from "@eslint/js";
 
 export default defineConfig([
   {
-    ignores: [".venv/**", "node_modules/**"],
+    ignores: [".venv/**", "node_modules/**", "src/clients/vscode/extension.js"],
   },
   {
     files: ["**/*.js"],
@@ -20,6 +20,18 @@ export default defineConfig([
       globals: {
         console: "readonly",
         process: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/db/server.js", "src/clients/http/app.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        console: "readonly",
+        process: "readonly",
+        URL: "readonly",
       },
     },
   },
@@ -41,6 +53,41 @@ export default defineConfig([
       globals: {
         document: "readonly",
         fetch: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/chrome/server.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        console: "readonly",
+        process: "readonly",
+        URL: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/chrome/popup.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        document: "readonly",
+        fetch: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/vscode/panel.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        document: "readonly",
+        acquireVsCodeApi: "readonly",
+        window: "readonly",
       },
     },
   },

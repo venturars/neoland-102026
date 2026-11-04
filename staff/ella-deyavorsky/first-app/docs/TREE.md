@@ -31,8 +31,15 @@ first-app/
     clients/
       api/
         server.js
+      chrome/
+        manifest.json
+        popup.css
+        popup.html
+        popup.js
+        server.js
       terminal/
         api.txt
+        chrome.txt
         count-users-by-gender.txt
         create-user.txt
         create-users-table.txt
@@ -108,6 +115,7 @@ first-app/
     create-branch.sh
     create-branch-from-staging.sh
     create-empty-commit.sh
+    create-pr-base-staging.sh
     launch-push.sh
     pull-changes.sh
   templates/

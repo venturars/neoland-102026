@@ -50,6 +50,20 @@ first-app/
         app.js
         styles.css
         README.md
+      chrome/
+        server.js
+        manifest.json
+        index.html
+        popup.js
+        styles.css
+        README.md
+      vscode/
+        package.json
+        extension.js
+        index.html
+        panel.js
+        styles.css
+        README.md
   agents/
   skills/
   tools/
@@ -91,6 +105,14 @@ first-app/
         plan.md
         tasks.md
       electron-desktop-client/
+        spec.md
+        plan.md
+        tasks.md
+      chrome-user-extension/
+        spec.md
+        plan.md
+        tasks.md
+      vscode-sidebar-users/
         spec.md
         plan.md
         tasks.md

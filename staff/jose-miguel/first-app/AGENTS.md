@@ -88,6 +88,8 @@ Arranque con servidor SQL + cliente: **`docs/STARTUP.md`**.
 - Cliente browser: `pnpm server` + `pnpm browser`. Detalle en `src/clients/browser/README.md` y `docs/STARTUP.md`.
 - Cliente HTTP (Express): `pnpm server` + `pnpm http`. Detalle en `src/clients/http/README.md` y `docs/STARTUP.md`.
 - Cliente Electron: `pnpm server` + `pnpm electron`. Detalle en `src/clients/electron/README.md` y `docs/STARTUP.md`.
+- Cliente Chrome: `pnpm server` + `pnpm chrome` y cargar la extensión desde `src/clients/chrome`. Detalle en `src/clients/chrome/README.md` y `docs/STARTUP.md`.
+- Cliente VS Code: `pnpm server` + abrir `src/clients/vscode` en VS Code y F5. Detalle en `src/clients/vscode/README.md` y `docs/STARTUP.md`.
 - Tests: no hay tests automatizados. El script `test` de `package.json` es el placeholder de npm. El test manual son los `.txt` de `src/clients/terminal/` o sus notebooks en `src/clients/jupyter/`.
 - Lint/formato: `pnpm format` lanza Prettier. El formato es el estándar, sin configuración propia. `pnpm lint` lanza ESLint.
 - Dependencias: se instalan con pnpm, no con npm.

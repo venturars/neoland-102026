@@ -4,7 +4,7 @@ import {
   updateUserRow,
 } from "../queries/users.js";
 
-export function updateUser(id, changes) {
+export async function updateUser(id, changes) {
   // Check id before reading changes. A bad id must fail even when
   // the changes object is also missing or invalid.
   if (!Number.isInteger(id) || id <= 0) {
@@ -96,7 +96,7 @@ export function updateUser(id, changes) {
   let existing;
 
   try {
-    existing = findUserById(id);
+    existing = await findUserById(id);
   } catch {
     throw new Error("Unable to update user");
   }
@@ -111,7 +111,7 @@ export function updateUser(id, changes) {
     let owner;
 
     try {
-      owner = findUserByEmail(email);
+      owner = await findUserByEmail(email);
     } catch {
       throw new Error("Unable to update user");
     }
@@ -162,7 +162,7 @@ export function updateUser(id, changes) {
     try {
       // SQLite writes updated_at inside the update statement.
       // This function does not build that date and does not send it.
-      row = updateUserRow(id, nextName, nextEmail);
+      row = await updateUserRow(id, nextName, nextEmail);
     } catch {
       throw new Error("Unable to update user");
     }

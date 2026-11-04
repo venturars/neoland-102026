@@ -28,6 +28,12 @@ mi-primer-proyecto/
         users-gender-count.txt
       http/
         app.js
+      chrome/
+        server.js
+        manifest.json
+        index.html
+        popup.js
+        styles.css
       vscode/
         package.json
         extension.cjs

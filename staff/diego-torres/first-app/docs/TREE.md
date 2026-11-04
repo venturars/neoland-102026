@@ -29,6 +29,7 @@ first-app/
     clients/
       web/                (index.html, styles.css y un .js por función)
       electron/           (main.js, index.html, styles.css y un .js por función)
+      chrome/             (server.js, manifest.json, index.html, popup.js y styles.css)
       terminal/           (un .txt por operación)
       jupyter/            (un .ipynb por operación)
   docs/

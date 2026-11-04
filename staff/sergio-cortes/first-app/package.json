@@ -8,9 +8,10 @@
   },
   "scripts": {
     "server": "node src/db/server.js",
-    "web": "open -na \"Brave Browser\" --args --user-data-dir=/tmp/first-app-brave --allow-file-access-from-files \"file://$(pwd)/src/clients/web/index.html\"",
+    "web": "nc -z 127.0.0.1 3000 >/dev/null 2>&1 || { node src/db/server.js & DB=$!; trap \"kill $DB\" EXIT INT TERM; }; open -na \"Brave Browser\" --args --user-data-dir=/tmp/first-app-brave --allow-file-access-from-files \"file://$(pwd)/src/clients/web/index.html\"; wait",
     "http": "nc -z 127.0.0.1 3000 >/dev/null 2>&1 || { node src/db/server.js & DB=$!; trap \"kill $DB\" EXIT INT TERM; }; node src/clients/http/server.js",
     "electron": "nc -z 127.0.0.1 3000 >/dev/null 2>&1 || { node src/db/server.js & DB=$!; trap \"kill $DB\" EXIT INT TERM; }; electron src/clients/electron/main.js",
+    "chrome": "nc -z 127.0.0.1 3000 >/dev/null 2>&1 || { node src/db/server.js & DB=$!; trap \"kill $DB\" EXIT INT TERM; }; node src/clients/chrome/server.js",
     "jupyter": "sh scripts/jupyter.sh",
     "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/**/*.js\"",
     "lint": "eslint .",
@@ -23,6 +24,7 @@
     "@colors/colors": "1.6.1",
     "cli-table3": "0.6.5",
     "express": "5.3.0",
+    "fastify": "5.12.8",
     "openai": "^7.39.0"
   },
   "devDependencies": {

@@ -70,6 +70,20 @@ styles.css
 app.js
 http/
 app.js
+chrome/
+server.js
+manifest.json
+index.html
+popup.js
+styles.css
+vscode/
+package.json
+extension.js
+index.html
+app.js
+styles.css
+.vscode/
+launch.json
 
 ```
 
