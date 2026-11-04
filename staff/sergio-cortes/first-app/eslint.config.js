@@ -49,4 +49,21 @@ export default [
       },
     },
   },
+  {
+    files: ["src/clients/chrome/server.js"],
+    languageOptions: {
+      globals: {
+        console: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/chrome/popup.js"],
+    languageOptions: {
+      globals: {
+        document: "readonly",
+        fetch: "readonly",
+      },
+    },
+  },
 ];
