@@ -21,7 +21,7 @@
    Si la issue ya está escrita y el trabajo siguiente hace cambios, el momento es Empezar.
    Para cualquier otro paso, pide los datos que falten antes de continuar.
 3. **Procesamiento:** Llama y continúa. No espera un sí.
-   - Pensar la tarea: `agents/help-me-to-think.md`.
+   - Pensar la tarea: `agents/help-me-to-think.md`. Si no puedes reanudar el mismo subagente, pásale el historial completo de preguntas y respuestas en cada llamada.
    - Dejarla escrita: `agents/create-issue.md`. Si a continuación se van a hacer cambios, el momento siguiente es Empezar.
    - Empezar (con la issue ya escrita; prepara la rama nueva desde `staging` antes de hacer cambios), en este orden:
      1. `skills/pull-changes`, que adelanta `staging`.

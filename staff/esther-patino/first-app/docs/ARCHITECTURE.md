@@ -12,7 +12,7 @@
   - `src/db/users.sqlite` es el único fichero de la base de datos.
 
 - `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca.
-- `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la tarea se puede dejar escrita.
+- `agents/help-me-to-think.md` hace las preguntas que haga falta hasta que la tarea se puede dejar escrita.
 - `agents/create-issue.md` crea la issue con título en inglés y descripción en español, asignada a quien está autenticado.
 - `agents/create-branch.md` crea la rama desde `staging`. El tipo es el de la plantilla. Si no hay plantilla, elige la más cercana.
 - `agents/create-commit.md` hace un commit pequeño con ficheros nombrados.
