@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; style-src {{csp}}; script-src {{csp}};"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="{{style}}" />
+    <title>Usuarios</title>
+  </head>
+  <body>
+    <main>
+      <h1>Usuarios</h1>
+      <p id="status" role="status" aria-live="polite"></p>
+      <button id="refresh" type="button">Actualizar lista</button>
+
+      <section>
+        <h2>Buscar</h2>
+        <form id="search">
+          <label
+            >Buscar por
+            <select id="search-type">
+              <option value="searchName">Nombre</option>
+              <option value="searchEmail">Email</option>
+              <option value="searchId">ID</option>
+            </select>
+          </label>
+          <label
+            >Valor <input id="search-value" required autocomplete="off"
+          /></label>
+          <button type="submit">Buscar</button>
+        </form>
+      </section>
+
+      <section>
+        <h2>Listado</h2>
+        <ul id="users"></ul>
+        <p id="empty" hidden>No hay usuarios en la lista.</p>
+        <p id="empty-search" hidden>No hay usuarios que coincidan.</p>
+      </section>
+
+      <section>
+        <h2 id="form-title">Crear usuario</h2>
+        <form id="user-form">
+          <label>Nombre <input id="name" required autocomplete="off" /></label>
+          <label>Email <input id="email" required autocomplete="off" /></label>
+          <button id="save" type="submit">Crear</button>
+          <button id="cancel" type="button" hidden>Cancelar edición</button>
+        </form>
+      </section>
+
+      <section id="delete-section" hidden>
+        <h2>Borrar usuario</h2>
+        <p>Escribe el email guardado para confirmar el borrado.</p>
+        <form id="delete-form">
+          <label
+            >Email guardado
+            <input id="confirmation" required autocomplete="off"
+          /></label>
+          <button type="submit">Borrar usuario</button>
+          <button id="cancel-delete" type="button">Cancelar</button>
+        </form>
+      </section>
+    </main>
+    <script src="{{script}}"></script>
+  </body>
+</html>
