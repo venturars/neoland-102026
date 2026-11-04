@@ -52,7 +52,7 @@
 - `src/logic/list-users.js` lista los usuarios.
 - `src/logic/user-gender-count.js` cuenta usuarios por género.
 - `src/clients/terminal/` llama a `src/logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
-- `src/clients/web/` son las tres pantallas del navegador (HTML, CSS y JavaScript vanilla). Llama a `src/logic/` con `await`, como la terminal y Jupyter. Se abre con `pnpm web` desde `first-app` (Brave, archivo local). Tiene que estar en marcha `pnpm server`. Solo hay tres ficheros en la carpeta.
+- `src/clients/web/` son las tres pantallas del navegador (HTML, CSS y JavaScript vanilla). Llama a `src/logic/` con `await`, como la terminal y Jupyter. Se abre con `pnpm web` desde `first-app` (Brave, archivo local). El script `web` arranca antes `src/db/server.js` si nada escucha en `127.0.0.1:3000`, y lo para al salir. Si ya está en marcha (`pnpm server`), lo reutiliza. Solo hay tres ficheros en la carpeta.
   - `src/clients/web/index.html` define selección (lista y alta), menú, edición y el popover de borrado (campo de email para confirmar).
   - `src/clients/web/styles.css` es la hoja compartida (paleta crema/teal).
   - `src/clients/web/app.js` concentra la lógica de pantalla: estado del usuario elegido, cambio de pantalla, lista (`listUsers`), alta (`createUser`), selección (`findUserById`), guardado (`updateUser`), popover de borrado con comprobación de email y borrado (`deleteUser`), y el arranque (`initializeClient`).
@@ -68,7 +68,7 @@
   - `src/clients/chrome/index.html` define selección, menú, edición y el popover de borrado.
   - `src/clients/chrome/styles.css` es la hoja copiada (paleta crema/teal).
   - `src/clients/chrome/popup.js` concentra la lógica de pantalla y habla con la API por `fetch`.
-- `package.json` script `server` arranca el servidor de la base desde `first-app`. El script `web` abre la página en Brave. El script `http` arranca el cliente HTTP. El script `electron` arranca el cliente de escritorio. El script `chrome` arranca la API de Fastify; si el puerto 3000 está libre, arranca la base antes, como `http`.
+- `package.json` script `server` arranca el servidor de la base desde `first-app`. El script `web` abre la página en Brave; si el puerto 3000 está libre, arranca la base antes, como `http`. El script `http` arranca el cliente HTTP. El script `electron` arranca el cliente de escritorio. El script `chrome` arranca la API de Fastify; si el puerto 3000 está libre, arranca la base antes, como `http`.
 - `scripts/jupyter.sh` prepara `.venv` si hace falta, instala `notebook==7.6.3` y arranca Jupyter en `src/clients/jupyter/`. Funciona en Mac, Linux y Windows (con `sh`). `package.json` lo invoca con `pnpm jupyter`.
 - `src/clients/jupyter/` es el cuaderno, uno por cada `.txt` de `src/clients/terminal/`. El bloque muestra ese texto: arranca `node --input-type=module` y, dentro, los `import` y la llamada quedan igual. El `console.log` se sustituye por la tabla. `cli-table3` y `@colors/colors` pintan esa tabla con colores y encabezados. Si la función falla, se ve ese mensaje. En esa carpeta no hay ficheros `.py` ni `requirements.txt`. Se abre con `pnpm jupyter` desde `first-app`.
 - `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada fichero.
