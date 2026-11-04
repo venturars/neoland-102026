@@ -121,7 +121,7 @@ test(
         });
         assert.equal(malformed.status, 400);
       }
-      for (const origin of ["null", "file://"]) {
+      for (const origin of ["null", "file://", "https://unrelated.example"]) {
         const response = await fetch(
           "http://127.0.0.1:3001/users/gender-count",
           {
@@ -131,20 +131,10 @@ test(
         assert.equal(response.status, 200);
         assert.equal(
           response.headers.get("access-control-allow-origin"),
-          origin,
+          null,
         );
-        assert.equal(response.headers.get("vary"), "Origin");
         await response.arrayBuffer();
       }
-      const unrelatedOrigin = await fetch(
-        "http://127.0.0.1:3001/users/gender-count",
-        { headers: { Origin: "https://unrelated.example" } },
-      );
-      assert.equal(
-        unrelatedOrigin.headers.get("access-control-allow-origin"),
-        null,
-      );
-      await unrelatedOrigin.arrayBuffer();
 
       const keeper = await queries.insert({
         name: "Grace",

@@ -34,6 +34,12 @@ export default [
     languageOptions: { globals: { fetch: "readonly" } },
   },
   {
+    files: ["src/logic/users-gender-count.js"],
+    languageOptions: {
+      globals: { fetch: "readonly", AbortSignal: "readonly" },
+    },
+  },
+  {
     files: ["src/clients/vscode/**/*.cjs", "src/clients/electron/preload.cjs"],
     languageOptions: {
       sourceType: "commonjs",

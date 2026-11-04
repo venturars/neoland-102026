@@ -59,12 +59,6 @@ app.get("/users", async (request, response) => {
 });
 
 app.get("/users/gender-count", async (request, response) => {
-  const origin = request.get("Origin");
-  const fileOrigin = origin === "null" || origin === "file://";
-  if (fileOrigin) {
-    response.set("Access-Control-Allow-Origin", origin);
-    response.vary("Origin");
-  }
   try {
     const counts = await usersGenderCount();
     response.status(200);

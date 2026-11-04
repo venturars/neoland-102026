@@ -2,6 +2,7 @@ import { listUsers } from "../../logic/list-users.js";
 import { findUserById } from "../../logic/find-user-by-id.js";
 import { updateUser } from "../../logic/update-user.js";
 import { deleteUser } from "../../logic/delete-user.js";
+import { usersGenderCount } from "../../logic/users-gender-count.js";
 
 const selection = document.querySelector("#selection");
 const menu = document.querySelector("#menu");
@@ -235,12 +236,7 @@ document.querySelector("#gender-count").addEventListener("click", async () => {
   const result = document.querySelector("#gender-result");
   result.textContent = "Calculando…";
   try {
-    const response = await fetch("http://127.0.0.1:3001/users/gender-count");
-    const counts = await response.json();
-    const failed = !response.ok;
-    if (failed) {
-      throw new Error(counts.message);
-    }
+    const counts = await usersGenderCount();
     result.textContent = `Estimación por nombre: mujeres ${counts.women}, hombres ${counts.men}, sin determinar ${counts.genderUndefined}.`;
   } catch {
     result.textContent = "Could not classify the users";
