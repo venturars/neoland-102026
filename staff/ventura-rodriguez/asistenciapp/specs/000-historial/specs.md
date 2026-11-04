@@ -14,7 +14,7 @@ El agente actualiza esta tabla cada vez que una spec cambia de fase. Las specs r
 | `006` | [limite-por-ip-publica](../006-limite-por-ip-publica/spec.md) | #260 | 2026-10-23 | Funcionalidad | ✅ Implementada (2026-10-23): T01–T11, 102 tests | — | Límite de intentos de registro por IP y lista de bloqueo. El recuento, la duración del bloqueo y la IP con túnel los cambia la 008 |
 | `007` | [flujo-de-git](../007-flujo-de-git/spec.md) | #616 | 2026-10-30 | Proceso | ✅ Implementada (2026-10-30): T01–T06 | — | Flujo de git del curso y cinco momentos del humano |
 | `008` | [bloqueo-justo-y-reglas-claras](../008-bloqueo-justo-y-reglas-claras/spec.md) | #653 | 2026-10-30 | Funcionalidad | ✅ Implementada (2026-10-30): T01–T10, 114 tests | — | Solo cuentan los códigos fallados, el bloqueo caduca, IP real con túnel, constitución 4.0 y comandos por sistema |
-| `679` | [formato-de-specs-e-historial](../679-formato-de-specs-e-historial/spec.md) | #679 | 2026-10-30 | Proceso | ✅ Implementada (2026-11-03): T01–T15, 113 tests | — | Specs por número de issue, este historial, resumen único, constitución 4.1, borra `001`–`004` y quita las referencias a specs de tests y código |
+| `679` | [formato-de-specs-e-historial](../679-formato-de-specs-e-historial/spec.md) | #679 | 2026-10-30 | Proceso | ✅ Implementada (2026-11-04): T01–T17, 113 tests | — | Specs por número de issue, este historial, resumen único, constitución 4.1, borra `001`–`004` y quita las referencias a specs de tests y código |
 
 ## Ideas sin spec
 

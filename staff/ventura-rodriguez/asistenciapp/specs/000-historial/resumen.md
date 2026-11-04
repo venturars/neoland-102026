@@ -2,7 +2,7 @@
 
 Versión corta de las specs ya resumidas (`AGENTS.md` §3). Quien empieza una tarea lee este fichero en vez de esas specs. Si necesita el detalle (un criterio, una prueba, una nota), va a la original por el enlace de su encabezado: las specs resumidas se borran.
 
-Cada bloque se añade al final y no se reescribe. Al pasar de 300 líneas se sigue en `resumen-2.md`.
+Cada bloque se añade al final y no se reescribe. Todo el resumen vive en este único fichero.
 
 ---
 

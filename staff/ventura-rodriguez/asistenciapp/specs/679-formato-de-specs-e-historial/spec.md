@@ -1,6 +1,6 @@
 # Spec 679 · Formato de specs e historial
 
-> Estado: **Implementada** (v1.4, 2026-11-03) · Creada: 2026-10-30 · Tipo: **proceso**
+> Estado: **Implementada** (v1.5, 2026-11-04) · Creada: 2026-10-30 · Tipo: **proceso**
 
 Issue: #679.
 
@@ -33,6 +33,7 @@ Issue: #679.
 - **HU-01**: Como quien trabaja en esta carpeta, quiero que cada spec nueva lleve el número de su issue, para que dos specs nunca compartan nombre.
 - **HU-02**: Como agente, quiero que las specs antiguas tengan un resumen en un solo fichero, para leer menos sin perder lo que se decidió.
 - **HU-03**: Como quien trabaja en esta carpeta, quiero que las specs resumidas se borren y que se pueda volver a ellas con un enlace, para que la carpeta de specs no crezca sin fin y no se pierda el detalle.
+- **HU-09**: Como quien revisa, quiero que lo que solo existe por las specs antiguas vaya aparte y diga cuándo se quita, para que no se quede en los documentos cuando ya no haga falta.
 - **HU-08**: Como quien trabaja en esta carpeta, quiero que ni los tests ni el código nombren specs, para poder borrar una spec sin romper un test ni dejar comentarios que apuntan a nada.
 - **HU-04**: Como quien revisa, quiero un índice de todas las specs y otro de todas las enmiendas, cada uno en un solo sitio.
 - **HU-05**: Como agente, quiero que una funcionalidad diga a qué objetivo sirve, para pararme si no sirve a ninguno.
@@ -52,7 +53,7 @@ Issue: #679.
 ### Los resúmenes (HU-02, HU-03)
 
 - **CA-04**: **Dado** 8 specs sin resumir, **cuando** se aplica la regla, **entonces** las 4 más antiguas se resumen. No cuentan el historial, el resumen ni las specs descartadas.
-- **CA-21**: **Dado** el resumen, **cuando** se resumen más specs, **entonces** se añaden al final de un único fichero. Si ese fichero pasaría de 300 líneas, se sigue en otro.
+- **CA-21**: **Dado** el resumen, **cuando** se resumen más specs, **entonces** se añaden al final de un único fichero, que no se parte.
 - **CA-05**: **Dado** un resumen, **cuando** se lee, **entonces** dice, por cada spec, qué problema resolvió, qué decisiones siguen vigentes y qué cambió después, con un enlace a la spec original.
 - **CA-06**: **Dado** las specs que se resumen, **cuando** se escribe el resumen, **entonces** se borran en la misma pull request, sin editarlas antes.
 - **CA-22**: **Dado** una spec borrada, **cuando** se sigue cualquier enlace a ella (historial, resumen o README), **entonces** abre la spec completa tal como era, en una versión fija de la rama principal donde aún existía.
@@ -82,6 +83,10 @@ Issue: #679.
 
 - **CA-17**: **Dado** el manual, **cuando** se lee, **entonces** sigue diciendo que el git sigue el flujo de la carpeta y conserva el momento 2, pero no describe cómo funciona ese flujo por dentro.
 - **CA-18**: **Dado** los comandos del manual, **cuando** se leen, **entonces** no repiten las dependencias: están en la constitución.
+
+### Las specs antiguas, aparte (HU-09)
+
+- **CA-26**: **Dado** las specs anteriores al formato por issue, **cuando** la arquitectura o el manual las nombran, **entonces** lo hacen en una nota o una frase aparte, con una tarea pendiente que dice cuándo quitarla. Se quita en la pull request que borra la última de esas specs.
 
 ### Los tests y el código sin specs (HU-08)
 
@@ -119,3 +124,4 @@ Ninguna. El resumen lo escribe el agente, en el momento 4 de la spec que hace ll
 | 1.2 | 2026-11-03 | Un solo fichero de resumen, con un límite de 300 líneas (CA-21) | Quien trabaja en esta carpeta prefiere un fichero que leer en vez de uno por cada 4 specs |
 | 1.3 | 2026-11-03 | Las specs resumidas se borran con enlace permanente (HU-03, CA-02, CA-06, CA-07, CA-22). Qué se puede tocar de un bloque escrito (CA-23). Ni los tests ni el código nombran specs (HU-08, CA-24, CA-25) | La reunión pidió borrar las specs resumidas. Para borrarlas, los tests no pueden depender de ellas |
 | 1.4 | 2026-11-03 | Implementada | T10–T15 hechas; 113 tests en verde |
+| 1.5 | 2026-11-04 | El resumen no se parte (CA-21). Las specs antiguas, en una nota aparte que se quita con la última (HU-09, CA-26). Implementada: T16–T17 | Comentarios de la revisión de la pull request #680 |

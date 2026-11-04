@@ -1,6 +1,6 @@
 # Plan técnico 679 · Formato de specs e historial
 
-> Estado: **Implementado** (2026-11-03) · Spec: [spec.md](spec.md) v1.3 · Creado: 2026-10-30
+> Estado: **Implementado** (2026-11-03) · Spec: [spec.md](spec.md) v1.5 · Creado: 2026-10-30
 
 Issue: #679.
 
@@ -33,7 +33,7 @@ Un `000` nunca choca con una issue: GitHub no da la issue 0.
 
 `AGENTS.md` §3 gana:
 
-> Cuando hay **8 specs sin resumir**, las **4 más antiguas** se resumen al final de `specs/000-historial/resumen.md`. No cuentan `000-historial`, el resumen ni las specs descartadas. Por cada spec, el resumen dice qué resolvió, qué decisiones siguen vigentes y qué cambió después, con un enlace a la original. Lo ya resumido **no se reescribe**: en un bloque escrito solo se actualizan sus enlaces y se añaden líneas en «Qué cambió después», con la spec que lo cambió. Si añadir un bloque haría pasar el fichero de **300 líneas**, se sigue en `resumen-2.md` (después `resumen-3.md`, y así). Las specs resumidas **se borran** en la misma pull request, sin editarlas antes, y cada enlace a ellas pasa a un enlace permanente a su carpeta en un commit de `staging` donde aún existe. El resumen lo escribe el agente en el momento 4 de la spec que hace llegar a 8 las specs sin resumir, en la misma pull request.
+> Cuando hay **8 specs sin resumir**, las **4 más antiguas** se resumen al final de `specs/000-historial/resumen.md`. No cuentan `000-historial`, el resumen ni las specs descartadas. Por cada spec, el resumen dice qué resolvió, qué decisiones siguen vigentes y qué cambió después, con un enlace a la original. Lo ya resumido **no se reescribe**: en un bloque escrito solo se actualizan sus enlaces y se añaden líneas en «Qué cambió después», con la spec que lo cambió. Todo el resumen vive en ese único fichero, que no se parte. Las specs resumidas **se borran** en la misma pull request, sin editarlas antes, y cada enlace a ellas pasa a un enlace permanente a su carpeta en un commit de `staging` donde aún existe. El resumen lo escribe el agente en el momento 4 de la spec que hace llegar a 8 las specs sin resumir, en la misma pull request. Si al borrar specs ya no queda ninguna con número de tres dígitos, en esa misma pull request se quitan la «Nota (legado)» de `docs/ARCHITECTURE.md` y la frase de las specs de tres dígitos de este apartado.
 
 Cada bloque del resumen tiene, por spec: enlace a la original, **qué resolvió** (una o dos frases), **decisiones vigentes** y **qué cambió después** (con la spec que lo cambió).
 
@@ -147,6 +147,14 @@ En el bloque `Specs 001 a 004` de `resumen.md` solo cambian los cuatro enlaces y
 - Lo que hace cada test y cada función no cambia. Sale un test: `pytest` pasa con 113.
 - Comprobación: `grep -rnE "CA-[0-9]|[Ss]pec 0|plan §|specs/|T[0-9]{2} ·|\(T[0-9]{2}|T[0-9]{2}\)" tests app.py asistencia static` no encuentra nada (sin contar `__pycache__`). El patrón no usa `T[0-9]{2}` suelto: también casaría con las fechas de los tests (`2026-10-23T09:00`).
 
+### 2.13 Las specs antiguas, aparte (CA-26)
+
+- En el árbol de `docs/ARCHITECTURE.md`, la línea `<issue>-nombre/` pierde el comentario «001 a 008 conservan su número».
+- Al final de `docs/ARCHITECTURE.md`, una sección «Nota (legado)»: las specs `005` a `008` conservan su número de tres dígitos, y un **TODO** que pide borrarla en la pull request que borre la última de ellas.
+- `AGENTS.md` §3: «Las specs `001` a `008` conservan su nombre» pasa a nombrar `005` a `008`, con el mismo TODO.
+- La regla de resúmenes termina diciendo que esa pull request quita las dos cosas. Es la que resume `005` a `008`: hoy quedan cinco specs sin resumir (`005` a `008` y `679`), y al llegar a 8 las cuatro más antiguas son justo esas.
+- No hay test que lo compruebe: un test así dependería de las carpetas de specs (CA-24).
+
 ---
 
 ## 3. Comprobación de la constitución
@@ -175,7 +183,8 @@ En el bloque `Specs 001 a 004` de `resumen.md` solo cambian los cuatro enlaces y
 | CA-22 | Abrir los cuatro enlaces permanentes y el del README: cargan la carpeta |
 | CA-23 | Leer el bloque `Specs 001 a 004`: solo cambian los enlaces y hay líneas nuevas en «Qué cambió después» |
 | CA-24, CA-25 | El `grep` del §2.12 no encuentra nada |
-| CA-04, CA-07, CA-20, CA-21 | Leer la regla en `AGENTS.md` §3; existe `resumen.md` con el bloque `Specs 001 a 004` y no pasa de 300 líneas |
+| CA-04, CA-07, CA-20, CA-21 | Leer la regla en `AGENTS.md` §3; existe `resumen.md` con el bloque `Specs 001 a 004` y no hay `resumen-2.md` |
+| CA-26 | El árbol de `docs/ARCHITECTURE.md` no nombra las specs antiguas; la «Nota (legado)» y la frase de `AGENTS.md` §3 llevan su TODO |
 | CA-05 | Leer `resumen.md`: cuatro apartados con enlace, qué resolvió, decisiones vigentes y qué cambió |
 | CA-08, CA-10 | Leer `specs.md` y `AGENTS.md` §7 |
 | CA-09 | `enmienda.md` tiene de la 1.0 a la 4.1. `CONSTITUTION.md` no tiene la tabla |

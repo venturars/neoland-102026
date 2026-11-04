@@ -90,3 +90,13 @@ Cómo leer esta lista:
 - [x] **T15** · Cierre: `pytest` (113), los enlaces permanentes abren y la fila de la `679` en `specs.md` está al día.
   - *Cubre:* CA-19, CA-22.
   - *Hecha cuando:* todo lo anterior se cumple.
+
+## Fase G · Revisión de la pull request (spec v1.5)
+
+- [x] **T16** · Quitar el límite de 300 líneas y `resumen-2.md`: regla de `AGENTS.md` §3 y entrada de `resumen.md`.
+  - *Cubre:* CA-21.
+  - *Hecha cuando:* ningún documento nombra `resumen-2.md` ni el límite.
+
+- [x] **T17** · Nota «Legado» con TODO al final de `docs/ARCHITECTURE.md`, árbol sin el comentario, frase de `AGENTS.md` §3 con `005` a `008` y su TODO, y el cierre de la regla de resúmenes.
+  - *Cubre:* CA-26.
+  - *Hecha cuando:* el árbol no nombra specs antiguas y `pytest` pasa.
