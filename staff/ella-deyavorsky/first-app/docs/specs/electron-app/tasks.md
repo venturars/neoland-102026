@@ -1,41 +1,35 @@
-# Tasks — Electron desktop app
+# Tasks — Electron desktop app (simplified)
 
-Do the tasks in order. Inside a task, do the steps in order.
+Do the tasks in order. Inside a task, do the steps in order. Tasks 1 to 5 of the first version are done; this version replaces the client.
 
-## Task 1 — Update the docs
+## Task 1 — Serve the client
 
-- [x] Add "The request is not valid." to `docs/ERRORS.md`, with its meaning (the window sent a value of the wrong type). Result: the sentence is in the list before any code uses it.
-- [x] Add `electron/` with `main.js`, `preload.cjs`, `index.html`, `app.js` and `style.css` under `clients/` in `docs/TREE.md`. Result: the tree lists the new client.
-- [x] Add `electron/` to the `src/clients/` section of `docs/ARCHITECTURE.md`: it does not use `clients/web/`, `logic/` runs in the main process, the database program must be running, and the `.txt` per feature does not apply. Result: the entry is there and no layer sentence contradicts it.
-- [x] Add `pnpm electron` to "Commands" in `AGENTS.md`, saying it needs `pnpm start` running first. Result: the exception is written.
+- [ ] In `src/db/server.js`, add `"/electron/"` to `PUBLIC_FOLDERS` and to the prefixes checked before `"/"`. Result: `http://127.0.0.1:3000/electron/index.html` is served by the program, and `/` still serves the web client.
 
-## Task 2 — Check the packages
+## Task 2 — Rewrite the client
 
-- [x] Check the dependencies of `electron@45.2.2`, down to 3 layers, with the Socket MCP (`depscore`, `alerts`, `threat_feed`, as `AGENTS.md` says). Result: a list of packages and any alert, campaign or score below 50, written to the person.
-- [x] Stop and wait for the person to accept the packages. Result: no install before that.
+- [ ] Delete `src/clients/electron/preload.cjs`. Result: the folder has no preload.
+- [ ] Rename `style.css` to `styles.css` with `git mv`. Result: the file is `styles.css`.
+- [ ] Rewrite `main.js` with `/* global process */`: a window of 800x600 with no `webPreferences`, `loadURL("http://127.0.0.1:3000/electron/index.html")`, `activate` and `window-all-closed` (quit unless macOS). No IPC, no `success`/`failure`, no known messages, no type checks, no blocking. Result: the file is short and does only that.
+- [ ] Rewrite `index.html` with the list screen (create form, look-up form, list, error area) and the detail screen (id, name, email, created, updated, edit form with Save, Delete, Back, error area). No Content-Security-Policy. `<link>` to `styles.css` and `<script type="module" src="./app.js">`. Result: two screens, one visible at a time.
+- [ ] Rewrite `app.js` with `/* global document */`: import `createUser`, `deleteUser`, `findUserById`, `listUsers` and `updateUser` from `../../logic/`, call them with the real signatures, and write `error.message` unchanged in the error area of the screen. No `window.api`, no confirmation on Delete. Result: list, create, look up, edit and delete work.
+- [ ] In `package.json`, remove `"src/clients/electron/**/*.cjs"` from `format`. Keep the `electron` script and `electron@45.2.2`. Result: `format` has no `.cjs`.
 
-## Task 3 — Add Electron
+## Task 3 — Update the docs
 
-- [x] Run `pnpm add -D electron@45.2.2`. Result: `electron` is in `devDependencies` with the exact version, and `pnpm-lock.yaml` changes.
-- [x] In `package.json`, add the script `"electron": "electron src/clients/electron/main.js"` and add `"src/clients/electron/**/*.js"` and `"src/clients/electron/**/*.cjs"` to `format`. Result: the scripts are there.
+- [ ] `docs/TREE.md`: electron has `main.js`, `index.html`, `app.js` and `styles.css`. Result: no `preload.cjs`.
+- [ ] `docs/ARCHITECTURE.md`: rewrite the `electron/` entry and add `/electron/` to the `db/` entry as described in `plan.md`. Result: no mention of the preload, the IPC or the result shape.
+- [ ] `docs/ERRORS.md`: remove "The request is not valid.". Result: the list is as before this feature.
+- [ ] `AGENTS.md`: check it and fix any mention of the preload, the IPC, a policy, or a window that cannot create users. Result: it matches the new client.
 
-## Task 4 — Write the client
+## Task 4 — Run it
 
-- [x] Create `src/clients/electron/main.js` (ESM): one handler for `list-users`, `update-user` and `delete-user`, each checking its input, calling the function of `logic/` and returning `{ ok, value }` or `{ ok, error }`. Known sentences pass; anything else returns "The database failed." and `console.error(error)`. Open the `BrowserWindow` with `contextIsolation` on and `nodeIntegration` off, deny new windows, block navigation, and quit when the last window closes. Result: the main process matches the plan.
-- [x] Create `src/clients/electron/preload.cjs` with `contextBridge.exposeInMainWorld("api", ...)` and one function per action, no `ipcRenderer`. Result: the page has `window.api`.
-- [x] Create `src/clients/electron/index.html` with the three screens (list, menu, edit), a Content-Security-Policy `<meta>`, and a classic `<script src="app.js">`. Result: only its own files load.
-- [x] Create `src/clients/electron/style.css` with the `hidden` class and simple styles. Result: one screen is visible at a time.
-- [x] Create `src/clients/electron/app.js` starting with `/* global document, window, confirm */`. It calls `window.api`, reads `ok` and shows the error in a `<p>`. No imports, no classes. Result: list, edit and delete work as in `spec.md`.
-
-## Task 5 — Run it
-
-- [x] Run `pnpm start` in one terminal and `pnpm electron` in another. Result: a window opens with the real users.
-- [x] Edit a name and save, then list the users in the terminal. Result: the terminal shows the new name.
-- [x] Try an empty name, an email that is not valid and an email already used. Result: the message of the app is shown and nothing is saved.
-- [x] Delete a user and accept the confirmation. Result: the user is gone from the list.
-- [ ] Stop `pnpm start` and press an action. Result: "The database failed." is shown and the window does not crash.
-- [x] In the DevTools of the window, run `typeof require` and `typeof process`. Result: both are `"undefined"`.
-- [x] Run `pnpm format` and `pnpm lint`. Result: no errors, and `eslint.config.js` did not change.
-- [ ] Check that `pnpm start`, `pnpm browser` and the terminal client still work. Result: they behave as before.
-- [x] Say which systems were checked. Result: macOS is checked; Windows and Linux are written as "not verified" if nobody ran them.
-- [x] Stop. Result: the one-pass cycle is done.
+- [ ] Run `pnpm start` and `pnpm electron`. Result: an 800x600 window opens with the users.
+- [ ] Create a user, look it up by id, edit it and delete it. Result: each action works and the delete has no confirmation.
+- [ ] Try an empty name, an email that is not valid and an email already used. Result: the message of the app is shown in the list or in the detail.
+- [ ] On macOS, close the window and click the icon. Result: a window opens again.
+- [ ] Open `http://127.0.0.1:3000` in the browser. Result: the web client still works.
+- [ ] Run `pnpm lint` and `pnpm format`. Result: no errors, and `src/logic/` and `src/queries/` did not change.
+- [ ] Fix the description of PR #907 so it describes the app as it is now, not "no changes yet". Result: the description matches the change.
+- [ ] Say which systems were checked. Result: macOS is checked; Windows and Linux are "not verified" if nobody ran them.
+- [ ] Stop. Result: the cycle is done.
