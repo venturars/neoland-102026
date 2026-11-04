@@ -55,7 +55,17 @@ async function showUsers() {
 
   for (const user of users) {
     const item = document.createElement("li");
-    item.textContent = `${user.id}. ${user.name} (${user.email})`;
+    const id = document.createElement("span");
+    const name = document.createElement("span");
+    const email = document.createElement("span");
+
+    id.className = "user-id";
+    name.className = "user-name";
+    email.className = "user-email";
+    id.textContent = String(user.id);
+    name.textContent = user.name;
+    email.textContent = user.email;
+    item.append(id, name, email);
     userList.append(item);
   }
 }
@@ -78,7 +88,14 @@ function chooseUser(event) {
   }
 
   currentUser = user;
-  menuUser.textContent = `${user.name} · id ${user.id}`;
+  const name = document.createElement("span");
+  const id = document.createElement("span");
+
+  name.className = "user-name";
+  id.className = "user-id";
+  name.textContent = user.name;
+  id.textContent = `id ${user.id}`;
+  menuUser.replaceChildren(name, id);
   showScreen(menuScreen);
 }
 
