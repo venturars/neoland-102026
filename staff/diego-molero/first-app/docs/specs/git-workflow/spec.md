@@ -48,3 +48,9 @@ Diego solicita conservar las asociaciones entre nombres habituales de revisores 
 - **CA-14:** Solo se buscan los nombres ausentes; los resultados inequívocos se guardan. Una corrección explícita puede reemplazar un login anterior.
 - **CA-15:** La caché guarda solo nombres y logins públicos. Se excluyen autor y duplicados antes de solicitar revisión. Los errores transitorios de GitHub no borran asociaciones.
 - **CA-16:** Se comprueban persistencia, separación por repositorio, corrección y errores en una copia temporal, con UTF-8 y comentarios breves.
+
+### Ampliación de la caché · 4 de noviembre de 2026
+
+Diego pide recorrer los colaboradores actuales y guardar nombres posibles antes de que el aprendizaje futuro añada más asociaciones. Los alias se toman del nombre público o de aportaciones atribuidas a cada cuenta. Los nombres de pila compartidos por varias personas no se asignan.
+
+- **CA-17:** La caché incluye los logins de los colaboradores actuales y alias personales con identidad comprobada. Los colaboradores sin nombre vinculable conservan solo su login como clave.

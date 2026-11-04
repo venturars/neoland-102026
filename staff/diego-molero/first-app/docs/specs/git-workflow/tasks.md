@@ -45,3 +45,7 @@ Diego autoriza expresamente implementar, comprobar y entregar el bloque. No se a
 - [x] **W04:** Verificar casos relevantes en copia temporal, UTF-8, sintaxis y alcance; entregar PR en borrador sin pedir revisores ni fusionar.
 
 La comprobación en Windows usó una copia bajo .venv/reviewer-cache-check-957: aciertos con tildes y mayúsculas, ausencias, persistencia entre procesos, aislamiento entre repositorios, conflicto rechazado (exit 1), sustitución explícita, borrado y JSON dañado rechazado (exit 1). node --check y git diff --check correctos. Solo se usó Node local; no se pidieron revisiones reales para verificarlo. Linux/macOS pendientes.
+
+- [x] **W05:** Recorrer colaboradores actuales y sus nombres públicos o aportaciones, ampliar alias inequívocos y comprobar la caché ampliada.
+
+La API de GitHub devolvió 16 colaboradores. Se consultaron sus nombres públicos y, para perfiles sin nombre, las cuentas atribuidas a commits de carpetas personales. La caché ampliada contiene 46 alias y cubre los 16 logins; cada alias se consultó con la herramienta local sin fallos. `diego` y `sergio` quedan sin asociación por existir dos compañeros con cada nombre. `mdiazcaballero` conserva solo el login: su perfil no publica nombre y no se pudo atribuirle un nombre personal con la evidencia consultada. Se comprobaron sintaxis Node y `git diff --check` en Windows.
