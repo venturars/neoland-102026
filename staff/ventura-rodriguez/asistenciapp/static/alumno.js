@@ -1,5 +1,5 @@
-// AsistenciApp · página del alumno (T16 · CA-04 a CA-09)
-// Todo texto que viene del servidor o del usuario se pinta con textContent (CA-12).
+// AsistenciApp · página del alumno
+// Todo texto que viene del servidor o del usuario se pinta con textContent.
 
 const NAME_KEY = "asistenciapp.nombre";
 const sessionId = new URLSearchParams(location.search).get("s");
@@ -24,7 +24,7 @@ function hhmm(iso) {
   return new Date(iso).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
 }
 
-// Marca "ya me registré en ESTA clase" (CA-22, CA-23; plan §2.11).
+// Marca "ya me registré en ESTA clase".
 // Vive solo en este navegador: es disuasoria, no una prueba de identidad.
 function registrationKey() {
   return `asistenciapp.registro.${sessionId}`;
@@ -67,11 +67,11 @@ async function loadSession() {
     titleEl.textContent = data.title;
     const reg = savedRegistration();
     if (reg?.name && reg?.checkedAt) {
-      showAlreadyRegistered(reg); // CA-22
+      showAlreadyRegistered(reg);
       return;
     }
     if (!data.open) {
-      showMessage("error", "La asistencia de esta clase ya está cerrada."); // CA-09
+      showMessage("error", "La asistencia de esta clase ya está cerrada.");
       return;
     }
     form.hidden = false;
@@ -95,18 +95,18 @@ form.addEventListener("submit", async (event) => {
     });
     const data = await res.json();
 
-    if (res.status === 201) { // CA-04
+    if (res.status === 201) {
       rememberName(data.name);
       saveRegistration(data);
       form.hidden = true;
       showMessage("ok", `¡Listo, ${data.name}! Registrado a las ${hhmm(data.checkedAt)}.`);
-    } else if (res.ok && data.already) { // CA-07 (no marca el navegador: no se registró desde aquí)
+    } else if (res.ok && data.already) { // no marca el navegador: no se registró desde aquí
       form.hidden = true;
       showMessage("ok", `Ya estabas registrado a las ${hhmm(data.checkedAt)}.`);
-    } else if (res.status === 409) { // CA-09
+    } else if (res.status === 409) {
       form.hidden = true;
       showMessage("error", data.error);
-    } else { // CA-06, CA-08
+    } else {
       showMessage("error", data.error);
       (res.status === 400 ? nameInput : codeInput).select();
     }

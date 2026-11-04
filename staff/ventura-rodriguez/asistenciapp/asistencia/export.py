@@ -1,4 +1,4 @@
-"""Exportación de la lista de asistencia a CSV (plan §2.6, CA-14).
+"""Exportación de la lista de asistencia a CSV.
 
 Se llama export.py y no csv.py para no tapar el módulo `csv` estándar.
 """

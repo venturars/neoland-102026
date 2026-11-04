@@ -4,7 +4,7 @@ Pasa lista en una clase online (Discord, Google Meet o cualquier otra plataforma
 
 El profesor abre una sesión y comparte en la llamada un **código de 4 cifras** que cambia cada 30 segundos. Los alumnos abren un enlace, escriben su nombre y el código, y aparecen al momento en la lista del profesor. Al final de la clase, la lista se descarga para Excel o Google Sheets.
 
-> Proyecto hecho con _Spec-Driven Development_. Las reglas están en [CONSTITUTION.md](docs/CONSTITUTION.md), el manual para agentes de IA en [AGENTS.md](AGENTS.md) y la especificación en [specs/001-checkin-codigo/](specs/001-checkin-codigo/spec.md).
+> Proyecto hecho con _Spec-Driven Development_. Las reglas están en [CONSTITUTION.md](docs/CONSTITUTION.md), el manual para agentes de IA en [AGENTS.md](AGENTS.md) y el historial de specs en [specs/000-historial/specs.md](specs/000-historial/specs.md).
 
 ---
 
@@ -155,7 +155,7 @@ Con el entorno activado (sección 2):
 pytest            # o "pytest -v" para ver cada test
 ```
 
-Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una verificación manual; la tabla está en [plan.md §6](specs/001-checkin-codigo/plan.md).
+Cada spec tiene en su `plan.md` una tabla que dice qué test comprueba cada criterio. Las specs ya resumidas se consultan desde [el historial](specs/000-historial/specs.md).
 
 ---
 

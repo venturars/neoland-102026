@@ -1,4 +1,4 @@
-"""Tests de asistencia/tunnel.py · CA-20 y spec 008 CA-13.
+"""Tests de asistencia/tunnel.py.
 
 Las líneas son copias reales de la salida de cloudflared 2026.10.1.
 """
@@ -34,10 +34,10 @@ def test_ignores_other_lines(line):
     assert find_tunnel_url(line) is None
 
 
-def test_install_hint_for_macos_and_windows():  # 008 CA-13
+def test_install_hint_for_macos_and_windows():
     assert install_hint("darwin") == "brew install cloudflared"
     assert install_hint("win32") == "winget install --id Cloudflare.cloudflared"
 
 
-def test_install_hint_for_linux_points_to_the_downloads():  # 008 CA-13
+def test_install_hint_for_linux_points_to_the_downloads():
     assert "github.com/cloudflare/cloudflared/releases" in install_hint("linux")

@@ -1,4 +1,4 @@
-"""Lista de bloqueo y recuento de intentos en el archivo. Spec 006 CA-04, CA-06, CA-09 y spec 008 CA-03, CA-07."""
+"""Lista de bloqueo y recuento de intentos en el archivo."""
 
 import sqlite3
 
@@ -37,7 +37,7 @@ def test_a_blocked_ip_stays_blocked_after_reopening_the_file(tmp_path):
     assert storage.is_ip_blocked(path, "203.0.113.11") is False
 
 
-def test_an_expired_block_is_pruned(tmp_path):  # 008 CA-07
+def test_an_expired_block_is_pruned(tmp_path):
     path = tmp_path / "asistencia.db"
     storage.init_schema(path)
     storage.block_ip(path, "203.0.113.10", "2026-10-30T09:00:00.000+00:00")
@@ -49,7 +49,7 @@ def test_an_expired_block_is_pruned(tmp_path):  # 008 CA-07
     assert storage.is_ip_blocked(path, "203.0.113.11") is True
 
 
-def test_blocking_again_renews_the_time(tmp_path):  # 008 CA-03
+def test_blocking_again_renews_the_time(tmp_path):
     path = tmp_path / "asistencia.db"
     storage.init_schema(path)
     storage.block_ip(path, "203.0.113.10", "2026-10-30T09:00:00.000+00:00")

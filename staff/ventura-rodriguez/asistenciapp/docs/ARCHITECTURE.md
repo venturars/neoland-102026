@@ -37,7 +37,11 @@ asistenciapp/
 ├── AGENTS.md              # cómo se trabaja y cómo se escribe el código
 ├── README.md              # cómo arrancar la app (para humanos)
 ├── specs/
-│   └── NNN-nombre/
+│   ├── 000-historial/
+│   │   ├── specs.md       # todas las specs, en orden, con su estado
+│   │   ├── enmienda.md    # historial de enmiendas de la constitución
+│   │   └── resumen.md     # versión corta de las specs antiguas
+│   └── <issue>-nombre/    # una spec por issue
 │       ├── spec.md        # qué y por qué
 │       ├── plan.md        # cómo
 │       └── tasks.md       # pasos
@@ -74,3 +78,9 @@ asistenciapp/
 | `static/`                           | Pantalla           | HTML, CSS y JavaScript. No se enteran de la base                                    |
 
 ---
+
+## Nota (legado)
+
+Las specs `005` a `008` son anteriores al formato `<issue>-nombre` y conservan su número de tres dígitos.
+
+**TODO:** borrar esta nota en la pull request que borre la última spec con número de tres dígitos (`AGENTS.md` §3).
