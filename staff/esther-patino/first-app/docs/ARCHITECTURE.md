@@ -110,6 +110,13 @@
 - `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001 y no repite sus reglas. No sustituye a `src/db/server.js`.
   - `src/clients/http/app.js` crea, lista, ve, modifica y borra usuarios. Se arranca con `pnpm http`.
 
+- `src/clients/chrome/` llama a `src/logic/`, escucha en el puerto 3002 y no repite sus reglas. El popup es `index.html` y pide esa API. No sustituye a `src/db/server.js` ni al cliente HTTP.
+  - `src/clients/chrome/server.js` crea, lista, ve, modifica y borra usuarios. Se arranca con `pnpm chrome`.
+  - `src/clients/chrome/manifest.json` es el manifiesto de la extensión.
+  - `src/clients/chrome/index.html` es el popup.
+  - `src/clients/chrome/styles.css` es la hoja del popup.
+  - `src/clients/chrome/popup.js` pide las rutas de la API con `fetch` y no importa `src/logic/`.
+
 - `src/clients/web/` son las tres pantallas del navegador. Se abren desde el disco con `pnpm open`. Llaman a `src/logic/` y no piden `/api/users`.
   - `src/clients/web/index.html` define la lista, el menú y la modificación.
   - `src/clients/web/styles.css` es la hoja compartida.
