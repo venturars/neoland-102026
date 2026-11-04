@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <!-- The page only loads its own files and cannot make network requests. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self'"
+    />
+    <title>First App</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <header class="sidebar-header">
+        <h1>Usuarios</h1>
+        <button id="refresh" type="button" class="button-quiet">
+          Actualizar
+        </button>
+      </header>
+      <button id="new-user" type="button">Nuevo usuario</button>
+      <p id="empty-list" class="muted" hidden>Todavía no hay usuarios.</p>
+      <ul id="user-list" class="user-list"></ul>
+    </aside>
+
+    <main class="panel">
+      <p id="message" class="message" role="status" hidden></p>
+
+      <section id="create-view">
+        <h2>Nuevo usuario</h2>
+        <form id="create-form" novalidate>
+          <label>
+            Nombre
+            <input id="create-name" type="text" autocomplete="off" />
+          </label>
+          <label>
+            Email
+            <input id="create-email" type="text" autocomplete="off" />
+          </label>
+          <div class="actions">
+            <button type="submit">Crear usuario</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="detail-view" hidden>
+        <h2 id="detail-title"></h2>
+        <dl class="facts">
+          <dt>Id</dt>
+          <dd id="detail-id"></dd>
+          <dt>Creado</dt>
+          <dd id="detail-created"></dd>
+          <dt>Modificado</dt>
+          <dd id="detail-updated"></dd>
+        </dl>
+        <form id="edit-form" novalidate>
+          <label>
+            Nombre
+            <input id="edit-name" type="text" autocomplete="off" />
+          </label>
+          <label>
+            Email
+            <input id="edit-email" type="text" autocomplete="off" />
+          </label>
+          <div class="actions">
+            <button type="submit">Guardar cambios</button>
+            <button id="delete-user" type="button" class="button-danger">
+              Eliminar usuario
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
