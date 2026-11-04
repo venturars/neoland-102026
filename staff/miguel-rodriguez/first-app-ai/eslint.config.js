@@ -2,6 +2,10 @@ import js from "@eslint/js";
 
 export default [
   {
+    files: ["src/clients/electron/main.js"],
+    languageOptions: { globals: { URL: "readonly" } },
+  },
+  {
     ignores: [
       "**/node_modules/**",
       "**/.venv/**",
@@ -30,7 +34,7 @@ export default [
     languageOptions: { globals: { fetch: "readonly" } },
   },
   {
-    files: ["src/clients/vscode/**/*.cjs"],
+    files: ["src/clients/vscode/**/*.cjs", "src/clients/electron/preload.cjs"],
     languageOptions: {
       sourceType: "commonjs",
       globals: {
@@ -54,7 +58,13 @@ export default [
     },
   },
   {
-    files: ["src/clients/web/**/*.js"],
-    languageOptions: { globals: { document: "readonly", window: "readonly" } },
+    files: [
+      "src/clients/web/**/*.js",
+      "src/clients/electron/app.js",
+      "src/clients/chrome/popup.js",
+    ],
+    languageOptions: {
+      globals: { document: "readonly", window: "readonly", fetch: "readonly" },
+    },
   },
 ];
