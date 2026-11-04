@@ -13,7 +13,7 @@
     "browser": "powershell -NoProfile -Command \"$page = [uri](Resolve-Path 'src/clients/browser/index.html').Path; $browserProfile = Join-Path $env:TEMP 'mi-primer-proyecto-chrome'; $chrome = 'C:/Program Files/Google/Chrome/Application/chrome.exe'; if (-not (Test-Path $chrome)) { $chrome = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe' }; & $chrome ('--user-data-dir=' + $browserProfile) '--allow-file-access-from-files' $page.AbsoluteUri\"",
     "electron": "electron .",
     "electron:dist": "electron-builder --win",
-    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/http/**/*.js\" \"src/clients/browser/**/*.js\" \"src/clients/chrome/**/*.js\" \"src/clients/electron/**/*.js\"",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/http/**/*.js\" \"src/clients/browser/**/*.js\" \"src/clients/chrome/**/*.js\" \"src/clients/electron/**/*.js\" \"src/clients/vscode/**/*.js\" \"src/clients/vscode/**/*.cjs\"",
     "lint": "eslint ."
   },
   "dependencies": {

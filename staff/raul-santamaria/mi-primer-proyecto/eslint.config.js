@@ -24,4 +24,21 @@ export default defineConfig([
     plugins: { js },
     extends: ["js/recommended"],
   },
+  {
+    files: ["src/clients/vscode/extension.cjs"],
+    languageOptions: {
+      globals: { ...globals.node, ...globals.commonjs },
+      sourceType: "commonjs",
+    },
+    plugins: { js },
+    extends: ["js/recommended"],
+  },
+  {
+    files: ["src/clients/vscode/panel.js"],
+    languageOptions: {
+      globals: { ...globals.browser, acquireVsCodeApi: "readonly" },
+    },
+    plugins: { js },
+    extends: ["js/recommended"],
+  },
 ]);

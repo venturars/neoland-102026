@@ -33,6 +33,12 @@
 - `src/clients/chrome/server.js` llama a `src/logic/`, escucha en el puerto
   3002 y no repite sus reglas. La extensión en `src/clients/chrome/` solo
   habla con esa API por `fetch`.
+- `src/clients/vscode/extension.cjs` registra la vista lateral webview,
+  recibe mensajes del panel y llama a `src/logic/` con `import()`. No
+  repite sus reglas. `panel.html`, `panel.js` y `panel.css` son la
+  interfaz propia. El manifiesto está en
+  `src/clients/vscode/package.json`. Se depura abriendo esa carpeta en
+  VS Code y F5; la base tiene que estar en marcha con el script `server`.
 - `src/clients/jupyter/` es el cliente que se abre con el Jupyter de la app.
 - `start-jupyter.js` arranca el Jupyter del entorno de la app.
 - `eslint.config.js` aplica las reglas recomendadas de ESLint al
