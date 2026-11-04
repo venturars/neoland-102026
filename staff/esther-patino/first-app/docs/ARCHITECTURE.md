@@ -106,26 +106,10 @@
   - `src/clients/jupyter/remove-user.ipynb` valida borrar un usuario.
   - `src/clients/jupyter/users-gender-count.ipynb` valida el recuento por sexo del nombre.
 
-- `src/clients/http/` es el servidor local. El navegador entra por él y él llama a `src/logic/`.
-  - `src/clients/http/start-http-server.js` escucha en `127.0.0.1:3000`.
-  - `src/clients/http/handle-request.js` elige usuarios o un archivo público.
-  - `src/clients/http/handle-users.js` llama a listar, buscar, cambiar y borrar.
-  - `src/clients/http/read-json-body.js` lee un objeto JSON.
-  - `src/clients/http/send-json.js` envía JSON.
-  - `src/clients/http/send-http-error.js` responde un fallo con el mensaje de `src/logic/`.
-  - `src/clients/http/serve-public-file.js` sirve solo los archivos públicos declarados.
+- `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001 y no repite sus reglas. No sustituye a `src/db/server.js`.
+  - `src/clients/http/app.js` crea, lista, ve, modifica y borra usuarios. Se arranca con `pnpm http`.
 
-- `src/clients/web/` son las tres pantallas del navegador.
+- `src/clients/web/` son las tres pantallas del navegador. Se abren desde el disco con `pnpm open`. Llaman a `src/logic/` y no piden `/api/users`.
   - `src/clients/web/index.html` define la lista, el menú y la modificación.
   - `src/clients/web/styles.css` es la hoja compartida.
-  - `src/clients/web/main.js` conecta los controles con sus funciones.
-  - `src/clients/web/state.js` guarda el usuario elegido.
-  - `src/clients/web/show-screen.js` muestra una pantalla.
-  - `src/clients/web/show-message.js` muestra un mensaje.
-  - `src/clients/web/load-user-selection.js` carga la lista.
-  - `src/clients/web/select-user.js` elige un usuario por id.
-  - `src/clients/web/show-user-menu.js` muestra el menú.
-  - `src/clients/web/open-user-editor.js` abre la modificación.
-  - `src/clients/web/navigate.js` vuelve o abre la modificación.
-  - `src/clients/web/save-user.js` guarda el nombre y el email.
-  - `src/clients/web/delete-selected-user.js` borra el usuario elegido.
+  - `src/clients/web/app.js` es la lógica de las tres pantallas. Carga la lista con `listUsers()`, elige por id con `findUserById(id)`, guarda con `updateUser(id, { name, email })` y borra con `deleteUser(id)`.

@@ -10,6 +10,10 @@ mi-primer-proyecto/
   start-jupyter.js
   src/
     clients/
+      browser/
+        index.html
+        app.js
+        styles.css
       terminal/
         create-user.txt
         list-users.txt

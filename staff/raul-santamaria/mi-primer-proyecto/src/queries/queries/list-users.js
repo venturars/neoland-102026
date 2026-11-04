@@ -1,3 +1,3 @@
 export const LIST_USERS = `SELECT id, name, email, created_at, updated_at
 FROM users
-ORDER BY id`;
+ORDER BY id;`;

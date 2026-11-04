@@ -1,11 +1,14 @@
 # Arquitectura
 
-- `src/db/` abre la base de datos y no contiene reglas de negocio.
-- `src/db/server.js` abre `users.sqlite`, ejecuta SQL por HTTP y no exporta
-  la conexión.
+- `src/db/` guarda la base de datos y el servidor que la ejecuta. No contiene
+  reglas de negocio.
+- `src/db/server.js` abre la única conexión a SQLite, escucha en
+  `http://127.0.0.1:3000` y ejecuta el SQL que recibe por `POST /execute`.
+  No exporta la conexión.
 - `src/db/users.sqlite` es el único fichero de la base de datos.
-- `src/queries/queries/` guarda el SQL. Hay un fichero `.sql` por query.
-- `src/queries/users.js` lee esos ficheros, prepara el SQL y lo ejecuta.
+- `src/queries/queries/` guarda el texto de cada consulta. Hay un módulo
+  `.js` por query.
+- `src/queries/users.js` importa ese texto y pide la ejecución al servidor.
   No hay reglas de negocio en `src/queries/`.
 - `src/logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
   Una funcionalidad por fichero. No importa la base de datos: recibe el
@@ -19,7 +22,8 @@
 - `src/clients/terminal/` llama a `src/logic/` con `await` y muestra el
   resultado. Es el primer cliente y el test manual de cada funcionalidad.
 - `src/clients/browser/` llama a `src/logic/` con `await`, no repite sus
-  reglas y no se sirve la página.
+  reglas y no se sirve la página; se abre con el script `browser` de
+  `package.json`.
 - `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001 y no
   repite sus reglas.
 - `src/clients/jupyter/` es el cliente que se abre con el Jupyter de la app.

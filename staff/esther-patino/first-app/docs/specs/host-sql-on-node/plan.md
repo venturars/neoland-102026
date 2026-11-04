@@ -6,13 +6,13 @@ No es una funcionalidad nueva. Los ficheros de `src/logic/` se quedan. Sus funci
 
 No entra Socket. No se añade ningún paquete de Node. El servidor usa `node:http` y `node:sqlite`. La capa de consultas usa `fetch`, que ya está en Node y en el navegador.
 
-Esas comprobaciones ya están hechas: `fetch` a un servidor local devuelve la fila. `fetch` de un `file://` falla. `statement.get` sin fila devuelve `undefined` y en JSON esa ausencia es `null`. `statement.all` devuelve `[]`. `statement.run` devuelve `changes` como número.
+Esas comprobaciones ya están hechas: `fetch` a un servidor local devuelve la fila. `fetch` de un `file://` falla. `statement.get` sin fila devuelve `undefined` y en JSON esa ausencia es `null`. `statement.all` devuelve `[]`. `statement.run` devuelve `changes` como número. Esa comprobación del `file://` se queda. `docs/specs/open-screens-from-disk` abre la página desde el disco y llama a las reglas, que siguen pidiendo la ejecución a `http://127.0.0.1:3000/execute`.
 
 ## Decisión
 
 La base se usa por un servidor Node propio. `src/db/server.js` escucha en `http://127.0.0.1:3000`, solo responde a `/execute` y no exporta la conexión. `package.json` gana el script `server`.
 
-`pnpm start` sigue sirviendo las pantallas y también usa el puerto 3000. No se lanzan a la vez. Este cambio no mueve las pantallas.
+`pnpm start` sigue sirviendo las pantallas y también usa el puerto 3000. No se lanzan a la vez. Este cambio no mueve las pantallas. `docs/specs/open-screens-from-disk` sustituye después ese servicio: las pantallas se abren con `pnpm open` y la base sigue en `pnpm server`.
 
 Cada consulta vive en su módulo, aparte de `src/queries/users.js`. Ese módulo exporta el texto. `users.js` lo importa. No lee el disco. No hay una petición para leer el archivo: el texto viaja dentro del módulo, también en el navegador.
 
@@ -249,7 +249,7 @@ En `docs/tree.md`, `db/` muestra `server.js` y `users.sqlite`. `queries/queries/
 
 `docs/CONSTITUTIONS.md` dice que la base se abre desde ese servidor y que quien pide los datos no la abre.
 
-`docs/style.md` dice que la lógica no abre los `.sql` y que espera a la consulta. El comando de la base es `pnpm server`. `pnpm start` sigue siendo el de las pantallas.
+`docs/style.md` dice que la lógica no abre los `.sql` y que espera a la consulta. El comando de la base es `pnpm server`. El de las pantallas lo sustituye después `docs/specs/open-screens-from-disk`: es `pnpm open`.
 
 ## Errores
 

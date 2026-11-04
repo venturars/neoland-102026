@@ -58,3 +58,13 @@ Forma de cada comando: `-e "` en la primera línea, el código sangrado debajo y
 - Escribir SQL fuera de `queries/`.
 - Borrar, reiniciar o sobrescribir `db/users.sqlite`, ni dejar usuarios de prueba dentro.
 - Refactorizar o "mejorar" código que no se ha pedido tocar.
+
+## Paquetes
+Al añadir un paquete de Node o cambiar su versión, se comprueba con Socket antes de aceptar el plan. La referencia está en [MCPS/socket-mcp/mcp.txt](MCPS/socket-mcp/mcp.txt).
+- Entran el paquete, su versión exacta y sus dependencias hasta 3 capas. Las dependencias salen de `npm view`.
+- Las puntuaciones salen de `depscore`. Una por debajo de 50 se escribe.
+- Las alertas salen de `alerts`, con el `org_slug` de `organizations`. Una lista vacía es la lista de la organización: el resumen lo dice así y no escribe que esa versión no tenga alertas.
+- Las campañas salen de `threat_feed`. Si responde `403 threat_feed_not_entitled`, el resumen dice que la cuenta no tiene esa fuente.
+- Si una herramienta no contesta, el resumen dice el motivo. No deja el dato en blanco.
+- El resumen va en el plan. Quien acepta el plan decide si acepta las alertas.
+- Queda fuera: paquetes que no son de Node, un paquete cuya versión no cambia y más de 3 capas.
