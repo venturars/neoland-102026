@@ -45,6 +45,29 @@
               </button>
             </div>
           </form>
+          <div class="create-user">
+            <p class="eyebrow">Alta</p>
+            <h2>Crear usuario</h2>
+            <p class="description">Añade un usuario con nombre y email.</p>
+            <form id="create-user-form">
+              <div class="field">
+                <label for="create-user-name">Nombre</label>
+                <input id="create-user-name" name="name" type="text" />
+              </div>
+              <div class="field">
+                <label for="create-user-email">Email</label>
+                <input
+                  id="create-user-email"
+                  name="email"
+                  type="email"
+                  maxlength="64"
+                />
+              </div>
+              <div class="actions">
+                <button type="submit">Crear usuario</button>
+              </div>
+            </form>
+          </div>
         </section>
 
         <section id="menu-screen" data-screen hidden>

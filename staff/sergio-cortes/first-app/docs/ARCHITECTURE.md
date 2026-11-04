@@ -53,9 +53,9 @@
 - `src/logic/user-gender-count.js` cuenta usuarios por género.
 - `src/clients/terminal/` llama a `src/logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
 - `src/clients/web/` son las tres pantallas del navegador (HTML, CSS y JavaScript vanilla). Llama a `src/logic/` con `await`, como la terminal y Jupyter. Se abre con `pnpm web` desde `first-app` (Brave, archivo local). Tiene que estar en marcha `pnpm server`. Solo hay tres ficheros en la carpeta.
-  - `src/clients/web/index.html` define selección, menú, edición y el popover de borrado (campo de email para confirmar).
+  - `src/clients/web/index.html` define selección (lista y alta), menú, edición y el popover de borrado (campo de email para confirmar).
   - `src/clients/web/styles.css` es la hoja compartida (paleta crema/teal).
-  - `src/clients/web/app.js` concentra la lógica de pantalla: estado del usuario elegido, cambio de pantalla, lista (`listUsers`), selección (`findUserById`), guardado (`updateUser`), popover de borrado con comprobación de email y borrado (`deleteUser`), y el arranque (`initializeClient`).
+  - `src/clients/web/app.js` concentra la lógica de pantalla: estado del usuario elegido, cambio de pantalla, lista (`listUsers`), alta (`createUser`), selección (`findUserById`), guardado (`updateUser`), popover de borrado con comprobación de email y borrado (`deleteUser`), y el arranque (`initializeClient`).
 - `src/clients/electron/` es el cliente de escritorio. Copia de partida de `src/clients/web/` (`index.html`, `styles.css`, `app.js`) más `main.js`. Llama a `src/logic/` con `await`. Se abre con `pnpm electron` desde `first-app`. El script `electron` arranca antes `src/db/server.js` si nada escucha en `127.0.0.1:3000`, y lo para al salir. Si ya está en marcha (`pnpm server`), lo reutiliza. No modifica `src/clients/web/`.
   - `src/clients/electron/main.js` crea la ventana y carga el `index.html` de esta carpeta.
   - `src/clients/electron/index.html` define selección, menú, edición y el popover de borrado.
