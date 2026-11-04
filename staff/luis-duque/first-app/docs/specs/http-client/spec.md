@@ -4,7 +4,7 @@ Se puede probar cada consulta de usuarios que ya existe desde Postman, sin escri
 
 Cada petición entra lo mismo que ya entra en esa consulta. Crear entra el nombre y el email. Actualizar entra el id y el nombre, el email o los dos. Eliminar entra el id. Listar no entra nada. Buscar entra el id, el email o el nombre.
 
-Sale el resultado de esa consulta. Crear y actualizar muestran el usuario guardado: `id`, `name` y `email`. Buscar por id o por email muestra ese usuario. Si buscar por nombre encuentra uno, muestra ese usuario. Si encuentra varios, muestra esos usuarios. Listar muestra los usuarios, o ninguno si no hay. Eliminar muestra que ese usuario ya no está.
+Sale el resultado de esa consulta. Crear muestra el usuario guardado: `id`, `name` y `email`. Actualizar muestra el `id` y los campos enviados. Buscar por id o por email muestra ese usuario. Si buscar por nombre encuentra uno, muestra ese usuario. Si encuentra varios, muestra esos usuarios. Listar muestra los usuarios, o ninguno si no hay. Eliminar muestra que ese usuario ya no está.
 
 La petición pide la consulta que ya existe. No añade otra y no cambia lo que esa consulta ya hace. Crear, actualizar y eliminar siguen guardando el cambio. Buscar y listar no escriben.
 

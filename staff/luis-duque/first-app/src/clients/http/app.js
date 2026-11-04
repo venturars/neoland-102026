@@ -66,7 +66,7 @@ app.use(readJson);
 
 app.post("/users", async (request, response) => {
   try {
-    const body = request.body;
+    const body = request.body ?? {};
     const name = body.name;
     const email = body.email;
     const user = await createUser({ name, email });
@@ -123,7 +123,7 @@ app.get("/users/:id", async (request, response) => {
 app.patch("/users/:id", async (request, response) => {
   try {
     const id = request.params.id;
-    const body = request.body;
+    const body = request.body ?? {};
     const changes = {};
 
     if (body.name !== undefined) {
@@ -159,13 +159,21 @@ app.use((request, response) => {
 });
 
 app.use((error, request, response, next) => {
-  if (error instanceof SyntaxError && error.status === 400) {
+  if (response.headersSent) {
+    next(error);
+    return;
+  }
+
+  if (
+    error instanceof URIError ||
+    (error instanceof SyntaxError && error.status === 400)
+  ) {
     response.status(400);
     response.json({ message: error.message });
     return;
   }
 
-  next(error);
+  sendError(response, error);
 });
 
 app.listen(port, hostname, () => {
