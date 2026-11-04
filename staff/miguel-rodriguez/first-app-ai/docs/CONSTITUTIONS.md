@@ -74,14 +74,16 @@ Express (`pnpm http`, port 3001), the Chrome Fastify bridge (`pnpm chrome`,
 port 3002) and Nest (`pnpm nest`, port 3003) expose create, list, ID lookup, update,
 delete and the existing gender summary over loopback HTTP. Electron uses its own
 page and a restricted IPC bridge; the Chrome MV3 extension uses its own popup.
-VS Code and both new visual clients call the shared operations; the web uses
-Express for its summary. All clients require the data service and initialized
+VS Code, the web and both new visual clients call the shared operations. The
+classifier uses native fetch to the same local Ollama API in Node and the browser.
+All clients require the data service and initialized
 table. README documents startup and requests.
 No general-purpose CLI is implemented.
 
 ## Dependencies and package management
 
-The application uses Node built-ins and `openai@7.39.0`. HTTP adapters use
+The existing declaration `openai@7.39.0` is retained; the classifier transport now
+uses native fetch for browser compatibility. HTTP adapters use
 `express@5.3.0`, `fastify@5.12.8`, `@nestjs/common@12.3.3`,
 `@nestjs/core@12.3.3`, `@nestjs/platform-express@12.3.3`,
 `reflect-metadata@0.2.2` and `rxjs@7.8.2`. The desktop client uses the development

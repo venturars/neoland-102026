@@ -41,8 +41,8 @@ lockfile; no se desactiva el control de antigüedad para otros paquetes.
 
 ## Abrir el cliente web
 
-Ejecuta `pnpm web` con el servicio de datos en marcha. Para consultar el resumen
-por nombre, inicia también `pnpm http`.
+Ejecuta `pnpm web` con el servicio de datos en marcha. El resumen por nombre
+usa la misma operación compartida y consulta Ollama directamente.
 
 El comando abre `src/clients/web/index.html` como archivo en Chrome/Chromium,
 con permiso para cargar sus módulos locales y un perfil temporal separado.
@@ -75,6 +75,12 @@ Si cierras solo el panel, ejecuta de nuevo el comando en la ventana de desarroll
 
 ## Abrir Electron
 
+La primera vez, prepara el ejecutable de la versión instalada:
+
+```sh
+node node_modules/electron/install.js
+```
+
 Con los datos preparados, ejecuta `pnpm electron`. Abre una ventana propia para
 crear, seleccionar, buscar por ID, editar y eliminar contactos. El borrado pide
 el email guardado. El resumen usa la misma clasificación que Jupyter.
@@ -103,7 +109,10 @@ ofrecen `GET /users/gender-count`. El resultado contiene `women`, `men` y
 Una tabla vacía devuelve tres ceros sin modelo. Con contactos se necesita Ollama
 local en `http://127.0.0.1:11434/v1` y `llama3.2` disponible. Si falla, se muestra
 `Could not classify the users`; no se devuelve un conteo parcial ni se modifican
-los datos. La web consulta Express en el puerto 3001 para este resumen.
+los datos. La web importa la operación compartida; no necesita Express para
+consultar el resumen. Usa el lanzador `pnpm web`, cuyo origen file:// debe estar
+permitido por Ollama. Si otra instalación lo bloquea, revisa OLLAMA_ORIGINS para
+ese origen local concreto antes de reiniciar tu servicio.
 
 ## Abrir Jupyter
 

@@ -37,8 +37,10 @@ browser imports the shared list, ID lookup, update and delete operations as ES
 modules. It keeps presentation state in memory; saved contacts live in SQLite.
 Field errors present shared validation failures. Typed-email confirmation is a
 client precaution before calling delete, not authentication. Notes is disabled.
-Its summary button requests `GET /users/gender-count` from Express on port 3001;
-this keeps the Node-based classifier outside the browser.
+Its summary button imports and awaits `usersGenderCount` directly. That shared
+operation uses native fetch to the existing local Ollama API, so its module also
+loads in the file-based browser client. Prompts, batching and result handling
+remain in the operation, without an intermediate HTTP client.
 
 `scripts/web.js`, run by `pnpm web`, opens the HTML as a file in Chrome/Chromium
 with local-file module access and a separate temporary profile. It uses an
@@ -193,10 +195,16 @@ It awaits the existing logic, converts route IDs to numbers, and maps business
 errors to HTTP statuses and JSON messages. It listens on loopback port 3001 via
 `pnpm http`; queries still reach the separate data service on port 3000.
 The client does not serve web assets. The summary route precedes the ID route
-and permits the web client's file origin. Fastify and Nest offer the same six
+without a special browser-origin exception. Fastify and Nest offer the same six
 routes on their own ports. README documents the Postman requests.
 
 All adapters await the shared logic and use the data service on port 3000.
 They preserve the existing five-field contacts, validation, ordering and
 timestamps. Summary requests require Ollama only when contacts exist and return
 no partial result on a classifier failure.
+
+Electron and Chrome display the selected contact's five fields. Confirmed writes
+update local state before the optional list reload; a failed reload retains the
+confirmed result and reports that the list needs refreshing. The UI regressions
+are in `tests/client-ui-state.test.js`; classifier transport, batches and failures
+are checked in `tests/browser-classifier.test.js`.

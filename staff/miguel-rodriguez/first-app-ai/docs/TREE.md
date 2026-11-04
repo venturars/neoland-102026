@@ -230,7 +230,9 @@ first-app-ai/
 │       ├── refactor-pull-request.md
 │       └── test-pull-request.md
 ├── tests/
+│   ├── browser-classifier.test.js
 │   ├── client-apis.test.js
+│   ├── client-ui-state.test.js
 │   ├── serve-data-through-node.test.js
 │   ├── vscode-client.test.js
 │   └── web-client.test.js
