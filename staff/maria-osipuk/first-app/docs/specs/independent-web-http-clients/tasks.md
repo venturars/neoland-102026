@@ -1,6 +1,6 @@
 Issue: #790
 
-# Tareas de los clientes web y HTTP independientes
+# Tareas del cliente web independiente y la sustitución del cliente HTTP
 
 ## Servidor de datos y consultas
 
@@ -22,23 +22,23 @@ Issue: #790
    Resultado: cada línea se ejecuta con el servidor de datos y muestra su resultado.
 6. Hacer que `run_logic.py` espere todas las funciones y diga que hace falta el servidor de datos.
    Resultado: un cuaderno lista usuarios con el servidor arrancado.
-7. Crear `src/clients/http/app.js` con `POST`, `PATCH` y `DELETE` en el `3001`; borrar los archivos que reúne y ajustar `send-http-error.js`.
-   Resultado: `curl` crea, modifica y borra; `GET /api/users` da `405`.
+7. Borrar el cliente con `node:http` (`src/clients/http/`) y `tests/http-client.test.js`; lo sustituye `docs/specs/express-rest-client/`.
+   Resultado: `grep -r node:http src/clients` no encuentra nada.
 8. Reescribir `src/clients/web/` como `index.html`, `styles.css` y `app.js`, que importa la lógica; borrar los otros 11 módulos.
    Resultado: con `pnpm run web`, la web crea, modifica y borra en Chrome desde `file://`.
 
 ## Pruebas y comandos
 
-9. Actualizar `package.json` (`start`, `start:http`, `web`) y `eslint.config.js`.
+9. Actualizar `package.json` (`start`, `web`, `test` de una en una) y `eslint.config.js`.
    Resultado: `pnpm lint` pasa.
-10. Reescribir `tests/http-client.test.js` y crear `tests/database-server.test.js` y `tests/shared-database.test.js`.
+10. Crear `tests/database-server.test.js` y `tests/shared-database.test.js` (otro proceso Node y la lógica de la web sobre la misma base).
     Resultado: `pnpm test` pasa con bases temporales.
 
 ## Documentación
 
 11. Actualizar `README.md`, `docs/WEB-CLIENT-GUIDE.md`, `docs/ARCHITECTURE.md`, `docs/TREE.md`, `docs/DATABASE.md`, `docs/ERRORS.md` y `docs/STYLE.md`.
-    Resultado: las guías describen el servidor de datos, las consultas en `.js` y la lógica `async`.
-12. Enmendar `docs/CONSTITUTION.md` (apartados 1 y 3).
+    Resultado: las guías describen el servidor de datos, las consultas en `.js`, la lógica `async` y no nombran el cliente con `node:http`.
+12. Enmendar `docs/CONSTITUTION.md` (apartados 1 y 3); el cliente REST se añade en su propia spec.
     Resultado: el alcance de la web y la decisión del servidor de datos están escritos.
 13. `pnpm format` sobre los archivos del pedido, `pnpm lint`, `pnpm test` y la verificación manual del plan.
     Resultado: todo pasa y queda anotado lo que no se pudo comprobar.
