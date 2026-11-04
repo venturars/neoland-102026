@@ -37,5 +37,5 @@ consultas Socket en ese plan hasta que una persona recargue o espere.
 Queda fuera cambiar el número de capas de dependencias, decidir alertas por la
 persona, configurar notificaciones de email o Slack en socket.dev, usar Socket
 cuando la cuota no permite contestar, y **modificar** `AGENTS.md` o
-`docs/CONSTITUTIONS.md` (reglas solo en la referencia MCP y guías que la tarea
-autorice).
+`docs/CONSTITUTIONS.md`. Las reglas operativas van en una guía resumida en
+markdown, no duplicadas en la constitución.
