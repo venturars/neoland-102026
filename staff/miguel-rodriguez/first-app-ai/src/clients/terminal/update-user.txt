@@ -1,8 +1,14 @@
+# Requires pnpm server running in another terminal.
 # Run from the project directory after the separate initialization and creation snippets.
 # Replace the sample ID (1) with an existing user's ID.
 node --input-type=module <<'NODE'
 import { updateUser } from './src/logic/update-user.js';
 
-const user = updateUser(1, { name: "Ada Lovelace" });
-console.log(user);
+try {
+  const user = await updateUser(1, { name: "Ada Lovelace" });
+  console.log(user);
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+}
 NODE

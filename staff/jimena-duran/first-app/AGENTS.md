@@ -2,6 +2,8 @@
 
 El flujo de Git entra por [agents/git-workflow-agent.md](agents/git-workflow-agent.md). La guía de uso está en [docs/GIT-AUTOMATION.md](docs/GIT-AUTOMATION.md). Las autorizaciones y las pausas de esta app prevalecen sobre cualquier secuencia automática.
 
+Las plantillas por tipo de `templates/issues/` y `templates/pull-request/` definen la forma de las issues y PR. Los agentes y skills usan la del tipo o, si no existe, la más cercana; las reglas editoriales se consultan en sus comentarios.
+
 ## Orden
 
 1. El orquestador reconoce el momento y lanza al subagente correspondiente como agente real, con las instrucciones de su archivo. El padre coordina; no sustituye al agente de ese momento. Si no hay delegación disponible, informa y se detiene para acordar cómo continuar.
@@ -16,8 +18,8 @@ Las reglas generales y los enlaces a las guías por tema están en [CONSTITUTION
 
 ## Comandos disponibles
 
-- Ejecución: todavía no existe un comando de ejecución.
-- Pruebas de la aplicación: el script `test` de `package.json` es solo el marcador de pnpm. Las comprobaciones aisladas de Git están en `tools/tests/`; requieren autorización para los commits y publicaciones en sus repositorios temporales, según [GIT-AUTOMATION.md](docs/GIT-AUTOMATION.md).
+- Ejecución: `pnpm server` o `node src/db/server.js` inicia el servidor SQL local en `http://127.0.0.1:3000`. Mantenerlo abierto antes de ejecutar terminal o Jupyter; uso en [DATABASE.md](docs/DATABASE.md).
+- Pruebas de la aplicación: el script `test` de `package.json` es solo el marcador de pnpm. La comprobación de los originales Bash y sus ensayos temporales se documenta en [GIT-AUTOMATION.md](docs/GIT-AUTOMATION.md); no hay ensayos propios en `tools/tests/`.
 - Formato: `pnpm format` ejecuta Prettier con sus opciones predeterminadas; las reglas están en [STYLE.md](docs/STYLE.md). `pnpm lint` revisa el JavaScript con ESLint.
 
 ## Reglas de trabajo

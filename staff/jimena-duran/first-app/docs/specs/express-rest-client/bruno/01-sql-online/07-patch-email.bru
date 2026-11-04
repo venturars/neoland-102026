@@ -1,0 +1,22 @@
+meta {
+  name: patch-email
+  type: http
+  seq: 7
+}
+
+patch {
+  url: {{baseUrl}}/users/{{userId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "ada.lovelace@example.com"
+  }
+}
+
+tests {
+  test("Estado 200", function () { expect(res.getStatus()).to.equal(200); });
+  test("Conserva nombre", function () { expect(res.getBody().name).to.equal("Ada Lovelace"); expect(res.getBody().email).to.equal("ada.lovelace@example.com"); });
+}

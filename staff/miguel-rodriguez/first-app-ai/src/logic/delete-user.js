@@ -1,9 +1,9 @@
 import { findById, remove } from "../queries/users.js";
 
-export function deleteUser(id) {
+export async function deleteUser(id) {
   let user;
   try {
-    user = findById(id);
+    user = await findById(id);
   } catch {
     throw new Error("Could not delete the user");
   }
@@ -14,7 +14,7 @@ export function deleteUser(id) {
   }
 
   try {
-    remove(id);
+    await remove(id);
   } catch {
     throw new Error("Could not delete the user");
   }

@@ -4,7 +4,7 @@ Las guías están en [ARCHITECTURE.md](ARCHITECTURE.md), [TREE.md](TREE.md), [DA
 
 ## Desarrollos
 
-Un desarrollo nuevo no empieza en el código. Se escribe en `docs/specs/<nombre>/`. `<nombre>` va en kebab-case. El desarrollo abierto es `docs/specs/find-user-by-name/`.
+Un desarrollo nuevo no empieza en el código. Se escribe en `docs/specs/<nombre>/`. `<nombre>` va en kebab-case. El desarrollo abierto es `docs/specs/web-frontend/`.
 
 Pedir el cambio no abre el código. Primero se escribe `spec.md` y una persona lo lee. Después `plan.md` y lo lee. Después `tasks.md` y lo lee. El código, `package.json` y el resto de ficheros de la app se tocan cuando esa persona pide ejecutar las tareas.
 

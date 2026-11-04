@@ -10,7 +10,7 @@ This is the first app of the AI engineering course for junior students. It is a 
 
 The app is JavaScript, run by Node.js. `package.json` sets `"type": "module"`, so files use ESM: `import` and `export`. There is no web framework and no TypeScript.
 
-The database is SQLite through Node's built-in `node:sqlite`. `src/db/connection.js` opens `src/db/users.sqlite` with `DatabaseSync`. No database package is installed.
+The database is SQLite through Node's built-in `node:sqlite`. `src/db/connection.js` opens `src/db/users.sqlite` with `DatabaseSync`, and only the database program `src/db/server.js` uses it. Everything else asks that program. No database package is installed.
 
 Read this file together with `docs/CONSTITUTIONS.md`. The constitution explains the order of a `logic/` function and the specs. The other topics have one file each: `docs/ARCHITECTURE.md`, `docs/TREE.md`, `docs/DATABASE.md`, `docs/ERRORS.md`, and `docs/STYLE.md`.
 
@@ -47,18 +47,20 @@ The active spec is the approved description of the feature you are building now.
 ## Commands
 
 - Install dependencies with `pnpm install`.
-- `pnpm format` runs Prettier on the `.js` files of `src/db/`, `src/queries/` and `src/logic/`. The format is the standard one, with no config of its own. `pnpm lint` runs ESLint.
-- There are no execution commands yet. Do not add a `pnpm start` script or another way to run the whole app unless the spec asks for it.
+- `pnpm format` runs Prettier on the `.js` files of `src/db/`, `src/queries/`, `src/logic/` and `src/clients/web/`. The format is the standard one, with no config of its own. `pnpm lint` runs ESLint.
+- `pnpm start` runs the database program. Every client needs it running. `pnpm browser` opens the web client at `http://127.0.0.1:3000` (the program must be running). `pnpm jupyter` starts the notebooks. Do not add another way to run the whole app unless the spec asks for it.
 - There are no tests yet. `pnpm test` only prints that no test is specified, then stops.
 
 ## Packages
 
 When you add a Node package or change its version, validate it with the Socket MCP before the plan is accepted. `docs/CONSTITUTIONS.md` says this is required; this is how it is done.
 
-1. Check with Socket that the package and that exact version are not affected by a campaign, not affected by an alert, and have no stat below 50 points.
+1. Check with Socket whether the package and that exact version are affected by a campaign, are affected by an alert, or have a stat below 50 points, and report what you find. Do not reject: the person decides, as step 2 says. Each datum has its own tool, written in `MCPS/socket-mcp/mcp.txt`: stats with `depscore` (no session), alerts with `alerts` (filtered by the package name) and campaign with `threat_feed`. `alerts` and `threat_feed` need a session in the organization; `threat_feed` also needs the feature enabled, and the free plan answers 403 `threat_feed_not_entitled`.
 2. Do not decide an alert yourself. Comment it, and the person who accepts the plan decides.
 3. Check the dependencies of that package with the same criteria, down to 3 layers.
 4. Put a summary of this review in the plan, before the plan is accepted.
+
+A datum is written as "not found" only after its tool was called. If the tool cannot answer, the summary gives the reason, as the tool gave it. An empty `alerts` list is written as "no alert on a watched package", not as "no alerts". Only an alert of the same version as the plan counts. A stat below 50 is written; 50 does not count as below.
 
 ## Style
 
@@ -69,7 +71,7 @@ Before finishing a change in `logic/`, check it against the inputs in `docs/CONS
 ## When a task is done
 
 1. A new feature gets a new file in `src/clients/terminal/`, named like its logic file (`find-user-by-email.txt` for `src/logic/find-user-by-email.js`). It is pasted in the terminal with `first-app` as the current folder. It imports the function from `logic/` and prints the result with `console.log`.
-2. Check the change by pasting the matching file in `src/clients/terminal/`. There is still no `pnpm start`.
+2. Check the change by pasting the matching file in `src/clients/terminal/`, with `pnpm start` running.
 3. Run `pnpm format` and `pnpm lint` before showing the result.
 4. Show the result.
 5. Stop.

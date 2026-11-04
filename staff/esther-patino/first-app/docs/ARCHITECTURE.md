@@ -7,14 +7,14 @@
 - `scripts/` arranca Jupyter sobre `src/clients/jupyter/`.
   - `scripts/jupyter.js` arranca Jupyter sobre `src/clients/jupyter/`.
 
-- `src/db/` abre la base de datos y no tiene reglas de negocio.
-  - `src/db/connection.js` abre `src/db/users.sqlite`.
-  - `src/db/users.sqlite` es la base de datos del proyecto.
+- `src/db/` abre la base de datos y no contiene reglas de negocio.
+  - `src/db/server.js` es el único fichero de esa capa junto a la base. Abre la única conexión, guarda la dirección `http://127.0.0.1:3000` y ejecuta el SQL que recibe. No exporta la conexión.
+  - `src/db/users.sqlite` es el único fichero de la base de datos.
 
 - `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca.
 - `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la tarea se puede dejar escrita.
 - `agents/create-issue.md` crea la issue con título en inglés y descripción en español, asignada a quien está autenticado.
-- `agents/create-branch.md` crea la rama `número-tipo-descripcion`.
+- `agents/create-branch.md` crea la rama desde `staging`. El tipo es el de la plantilla. Si no hay plantilla, elige la más cercana.
 - `agents/create-commit.md` hace un commit pequeño con ficheros nombrados.
 - `agents/create-pr.md` abre la pull request contra `staging` y la deja en draft, sin enlazar la issue.
 - `agents/launch-push.md` publica `HEAD` en `origin` y deja el upstream puesto.
@@ -24,19 +24,19 @@
 - `skills/assign-author/SKILL.md` asigna la issue o la pull request al usuario autenticado.
 - `skills/check-status/SKILL.md` dice la rama, los cambios sin commit y el remoto.
 - `skills/pull-changes/SKILL.md` adelanta `staging` en fast-forward.
-- `skills/create-branch-from-staging/SKILL.md` abre la rama desde `staging`.
-- `skills/create-branch/SKILL.md` abre la rama desde una base que no es `staging`.
+- `skills/create-branch-from-staging/SKILL.md` abre la rama desde `staging`. El tipo es el de la plantilla.
+- `skills/create-branch/SKILL.md` abre la rama desde una base que no es `staging`. El tipo es el de la plantilla.
 - `skills/create-empty-commit/SKILL.md` hace el commit vacío `chore: open #N`.
 - `skills/commit-changes/SKILL.md` guarda un trozo con ficheros nombrados.
 - `skills/launch-push/SKILL.md` sube la rama actual y fija el upstream.
 - `skills/create-pr-base-staging/SKILL.md` abre la pull request con base `staging`.
 - `skills/create-draft/SKILL.md` deja la pull request en draft.
-- `skills/link-pr-to-issue/SKILL.md` deja `Closes #N` y cierra la issue al enlazar.
+- `skills/link-pr-to-issue/SKILL.md` deja `Closes #N` y no llama a la API para cerrar la issue. GitHub la cierra al fusionar en la rama por defecto. Fusionar solo en `staging` no la cierra.
 - `skills/assign-reviewers/SKILL.md` asigna a quienes miran la pull request y la saca de draft.
 - `tools/check-status.sh` escribe la rama, el remoto y los cambios.
 - `tools/pull-changes.sh` adelanta `staging` en fast-forward.
-- `tools/create-branch-from-staging.sh` crea la rama desde `staging`.
-- `tools/create-branch.sh` crea la rama desde otra base.
+- `tools/create-branch-from-staging.sh` crea la rama desde `staging`. No rechaza un tipo fuera de la lista de seis. La descripción va en minúsculas y con guiones.
+- `tools/create-branch.sh` crea la rama desde otra base. No rechaza un tipo fuera de la lista de seis. La descripción va en minúsculas y con guiones.
 - `tools/create-empty-commit.sh` crea el commit vacío de apertura.
 - `tools/commit-changes.sh` guarda los ficheros nombrados.
 - `tools/launch-push.sh` sube la rama y fija el upstream.
@@ -68,7 +68,7 @@
   - `plan.md` es la técnica.
   - `tasks.md` son los pasos.
 
-- `src/logic/` guarda las reglas de negocio.
+- `src/logic/` guarda las reglas de negocio. Cada función es async y espera a `src/queries/`.
   - `src/logic/shared.js` comprueba el nombre, el email y el id, y deja el usuario plano.
   - `src/logic/create-user.js` crea un usuario.
   - `src/logic/list-users.js` lista los usuarios.
@@ -79,21 +79,13 @@
   - `src/logic/delete-user.js` borra un usuario.
   - `src/logic/users-gender-count.js` cuenta los usuarios según el sexo que sugiere el nombre. No guarda el sexo.
 
-- `src/queries/` guarda el SQL y lo ejecuta. No hay reglas de negocio.
-  - `src/queries/users.js` lee los `.sql` y los ejecuta.
-  - `src/queries/queries/create-users-table.sql` crea la tabla `users`.
-  - `src/queries/queries/insert-user.sql` inserta un usuario.
-  - `src/queries/queries/find-all.sql` lee todos los usuarios.
-  - `src/queries/queries/find-by-email.sql` busca por email.
-  - `src/queries/queries/find-by-id.sql` busca por id.
-  - `src/queries/queries/find-by-name.sql` busca por nombre.
-  - `src/queries/queries/update-user.sql` cambia un usuario.
-  - `src/queries/queries/remove-user.sql` borra un usuario.
+- `src/queries/queries/` guarda el texto de cada consulta. Hay un módulo `.js` por consulta. Exporta el texto y no lo ejecuta.
+- `src/queries/users.js` importa ese texto y pide la ejecución al servidor. No importa `src/db/server.js`. No hay reglas de negocio en `src/queries/`.
 
 - `src/clients/` agrupa los clientes.
 
-- `src/clients/terminal/` llama a `src/logic/` y es el test manual.
-  - `src/clients/terminal/create-users-table.txt` prueba crear la tabla.
+- `src/clients/terminal/` llama con `await` y es el test manual.
+  - `src/clients/terminal/create-users-table.txt` llama a `src/queries/users.js` con `await` y no importa la conexión.
   - `src/clients/terminal/insert-user.txt` prueba crear un usuario.
   - `src/clients/terminal/find-all.txt` prueba listar los usuarios.
   - `src/clients/terminal/find-by-email.txt` prueba buscar por email.
@@ -113,3 +105,11 @@
   - `src/clients/jupyter/update-user.ipynb` valida cambiar un usuario.
   - `src/clients/jupyter/remove-user.ipynb` valida borrar un usuario.
   - `src/clients/jupyter/users-gender-count.ipynb` valida el recuento por sexo del nombre.
+
+- `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001 y no repite sus reglas. No sustituye a `src/db/server.js`.
+  - `src/clients/http/app.js` crea, lista, ve, modifica y borra usuarios. Se arranca con `pnpm http`.
+
+- `src/clients/web/` son las tres pantallas del navegador. Se abren desde el disco con `pnpm open`. Llaman a `src/logic/` y no piden `/api/users`.
+  - `src/clients/web/index.html` define la lista, el menú y la modificación.
+  - `src/clients/web/styles.css` es la hoja compartida.
+  - `src/clients/web/app.js` es la lógica de las tres pantallas. Carga la lista con `listUsers()`, elige por id con `findUserById(id)`, guarda con `updateUser(id, { name, email })` y borra con `deleteUser(id)`.

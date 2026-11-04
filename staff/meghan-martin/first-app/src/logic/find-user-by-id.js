@@ -1,6 +1,6 @@
 import { findById } from "../queries/users.js";
 
-export function findUserById(id) {
+export async function findUserById(id) {
   if (typeof id !== "number") {
     throw new Error("Invalid id");
   }
@@ -13,9 +13,14 @@ export function findUserById(id) {
 
   let user;
   try {
-    user = findById(id);
-  } catch {
-    throw new Error("Could not find the user");
+    user = await findById(id);
+  } catch (error) {
+    if (
+      error.message === "Database is not running. Start it with npm run db."
+    ) {
+      throw error;
+    }
+    throw new Error("Could not find the user", { cause: error });
   }
   if (!user) {
     throw new Error("User not found");

@@ -25,7 +25,7 @@ first-app/
         tasks.md
   src/
     db/
-      connections.js
+      server.js
       users.sqlite
     queries/
       queries/
@@ -41,6 +41,12 @@ first-app/
       list-users.js
       user-gender-count.js
     clients/
+      http/
+        server.js
+      web/
+        index.html
+        styles.css
+        app.js
       terminal/
         create-user-table.txt
         create-user.txt

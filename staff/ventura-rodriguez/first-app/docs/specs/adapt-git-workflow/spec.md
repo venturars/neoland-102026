@@ -11,8 +11,8 @@ Lo usa quien construye la app con IA.
 Entra una tarea de esta app. Sale la tarea escrita, con el título en
 inglés y el cuerpo en español. Al empezar, la rama sale de staging. Al
 guardar, entra ese trozo. Al pedir revisión, quien pide nombra a los
-revisores y la pull request deja de ser borrador. Enlazar la tarea no
-la cierra.
+revisores y la pull request deja de ser borrador. Al enlazar, el
+cuerpo lleva `Closes #N`. Quien enlaza no llama a la API para cerrarla.
 
 Ejemplo: se pide un cambio. Queda escrito qué hay que hacer y cómo
 probarlo. La rama nueva sale de staging. Se guarda el trozo pedido. Se
@@ -24,7 +24,7 @@ es antes de crear las tareas: una persona revisa la spec y el plan. La
 segunda es al crear las tareas.
 
 No hay un fallo de la lista «Errores». Si la rama no sale de staging,
-si el enlace cierra la tarea, o si la revisión se pide sin nombrar
+si el cuerpo no lleva `Closes #N`, o si la revisión se pide sin nombrar
 revisores, el flujo no está adaptado.
 
 Queda fuera cambiar las reglas de negocio, la base de datos, los

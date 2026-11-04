@@ -2,7 +2,9 @@
 
 ## 1. Qué hace la app
 
-first-app guarda usuarios. No es una web. Se usa desde la terminal, con Node. El CEO también valida esas funcionalidades desde los documentos de Jupyter.
+first-app guarda usuarios. No es una web. Se usa desde la terminal, con Node. También se elige, se cambia y se borra un usuario desde el navegador, en tres pantallas. El CEO también valida esas funcionalidades desde los documentos de Jupyter.
+
+También se crea, se lista, se ve, se cambia y se borra un usuario por HTTP, en el puerto 3001. La base sigue en el puerto 3000.
 
 Se puede crear un usuario, listarlos, buscar uno, cambiarlo y borrarlo.
 
@@ -26,7 +28,7 @@ Un usuario es un objeto con estos campos y ningún otro:
 
 ## 2. La base de datos
 
-La base de datos y las consultas están en `docs/database.md`.
+La base de datos y las consultas están en `docs/database.md`. La base se abre desde el servidor. Quien pide los datos no la abre.
 
 ## 3. Árbol y para qué es cada archivo
 
@@ -57,6 +59,8 @@ Cuando se termina de crear una funcionalidad, se crea un cliente.
 El cliente es un archivo en `src/clients/terminal/`. El nombre dice la acción, en kebab-case, y acaba en `.txt`.
 
 Ese archivo se pega en la terminal desde la raíz del repositorio. Entra en `first-app`, importa la función y hace `console.log` del resultado. No captura el error. Es la prueba manual de esa funcionalidad.
+
+El cliente de una funcionalidad nueva sigue siendo ese archivo. Este cambio añade el cliente de navegador y no añade un `.txt`. Este cambio añade el cliente HTTP y no añade un `.txt`.
 
 ## 8. Cómo se hace un desarrollo
 

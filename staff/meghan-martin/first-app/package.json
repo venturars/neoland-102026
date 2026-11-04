@@ -4,9 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"eslint.config.js\"",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/browser/**/*.js\" \"src/clients/rest/**/*.js\" \"eslint.config.js\"",
     "lint": "eslint .",
-    "jupyter": "test -x .venv/bin/jupyter-notebook || (test -d .venv || python3 -m venv .venv && .venv/bin/pip install notebook==7.6.3) && .venv/bin/jupyter notebook src/clients/jupyter"
+    "jupyter": "test -x .venv/bin/jupyter-notebook || (test -d .venv || python3 -m venv .venv && .venv/bin/pip install notebook==7.6.3) && .venv/bin/jupyter notebook src/clients/jupyter",
+    "db": "node src/db/server.js",
+    "browser": "open -na \"Google Chrome\" --args --user-data-dir=/tmp/first-app-chrome --allow-file-access-from-files \"file://$(pwd)/src/clients/browser/index.html\"",
+    "api": "node src/clients/rest/server.js"
   },
   "keywords": [],
   "author": "Meghan Martin",
@@ -14,7 +17,8 @@
   "type": "module",
   "dependencies": {
     "@colors/colors": "1.6.1",
-    "cli-table3": "0.6.5"
+    "cli-table3": "0.6.5",
+    "express": "5.3.0"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

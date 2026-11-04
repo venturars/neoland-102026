@@ -2,7 +2,7 @@
 node --input-type=module <<'EOF'
 import { deleteUser } from "./src/logic/delete-user.js";
 
-const result = deleteUser(1);
+const result = await deleteUser(1);
 
 console.log(result);
 EOF

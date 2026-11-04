@@ -1,0 +1,22 @@
+meta {
+  name: patch-invalid-email
+  type: http
+  seq: 14
+}
+
+patch {
+  url: {{baseUrl}}/users/{{userId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "invalid"
+  }
+}
+
+tests {
+  test("Estado 400", function () { expect(res.getStatus()).to.equal(400); });
+  test("Mensaje exacto", function () { expect(res.getBody()).to.deep.equal({ message: "Email is invalid" }); });
+}

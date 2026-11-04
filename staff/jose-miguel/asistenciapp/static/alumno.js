@@ -103,6 +103,9 @@ form.addEventListener("submit", async (event) => {
     } else if (res.ok && data.already) { // CA-07 (no marca el navegador: no se registró desde aquí)
       form.hidden = true;
       showMessage("ok", `Ya estabas registrado a las ${hhmm(data.checkedAt)}.`);
+    } else if (res.status === 403) {
+      form.hidden = true;
+      showMessage("error", data.error);
     } else if (res.status === 409) { // CA-09
       form.hidden = true;
       showMessage("error", data.error);

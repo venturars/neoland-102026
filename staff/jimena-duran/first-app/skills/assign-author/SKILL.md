@@ -1,16 +1,13 @@
----
-name: assign-author
-description: Asigna una issue o PR autorizada a la cuenta comprobada de Jimena sin cambiar su autoría.
----
+### Herramienta: ASSIGN_AUTHOR
 
-# Asignar a Jimena
+- **Descripción**: Úsala única y exclusivamente para asignar la issue o la pull request al usuario autenticado en el MCP. No la uses para asignar revisores.
+- **MCP**: El servidor remoto descrito en `MCPS/github-mcp-server/mcp.txt`.
 
-Recibe tipo de recurso y número o URL comprobados. Verifica cuenta `jiji-mena`, repositorio y asignaciones existentes antes de escribir. Asignar no cambia quién creó el recurso.
+#### Especificación de Argumentos
 
-Prefiere MCP GitHub si su identidad coincide con Jimena y soporta el paso. Si no es suficiente o pertenece a otra cuenta, informa y usa `gh` con la sesión comprobada. Desde PowerShell: `gh issue edit $number --repo $repository --add-assignee jiji-mena` o `gh pr edit $number --repo $repository --add-assignee jiji-mena`, según el recurso. Comprueba `$LASTEXITCODE`.
+1. **Objetivo** _(Obligatorio)_: El número de la issue o de la pull request.
+2. **Persona** _(Obligatorio)_: El login del usuario autenticado. No escribas otro nombre.
 
-Si ya está asignada, no escribas. Conserva las demás personas asignadas. Relee el recurso y devuelve la asignación real, o el error y la operación pendiente. No crees recursos ni asignes revisores desde esta skill.
+#### Reglas de Invocación Críticas
 
-En los comandos, `$repository` es el repositorio `owner/name` comprobado a partir de origin y del contexto de esta tarea. No lo tomes de un nombre personal fijo ni actúes sobre otro repositorio.
-
-Si una escritura falla o su respuesta es incierta, antes de reintentar o cambiar a gh aplica la [consulta del estado remoto](../../docs/GIT-AUTOMATION.md#consultar-el-estado-remoto-antes-de-reintentar): relee las asignaciones y reutiliza el resultado aplicado; reintenta solo lo confirmado como no aplicado y detente si no puede determinarse. La regla incluye la comprobación del almacén de Windows ante un 401 dentro del sandbox.
+- **Procesamiento de respuestas**: Confirma el login que quedó asignado. Si el MCP falla, comunica el error y no inventes el autor.

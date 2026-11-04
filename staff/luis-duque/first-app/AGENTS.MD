@@ -20,6 +20,10 @@ El código empieza solo cuando los tres ficheros ya están escritos y esa person
 
 Una operación que ya está en el código no se sustituye. La nueva es un fichero nuevo.
 
+## Diseño web
+
+`skills/frontend-design/SKILL.md` se tiene en cuenta solo cuando el trabajo es un diseño web. Si un desarrollo dice otra cosa, manda el desarrollo. No la uses en la terminal, en Jupyter, en la lógica, en las consultas ni en la base.
+
 ## Alcance
 
 No añadas pantalla, servidor ni framework. No añadas otro cliente salvo que te lo pidan.

@@ -1,6 +1,6 @@
 # Base de datos
 
-Hay una sola base de datos: `src/db/users.sqlite`. Hay una sola conexión: el `db` que exporta `src/db/connections.js`. No se abre otra base de datos ni otra conexión.
+Hay una sola base de datos: `src/db/users.sqlite`. Hay una sola conexión: la que abre `src/db/server.js` cuando arranca con `pnpm server` desde first-app. No se abre otra base de datos ni otra conexión.
 
 La tabla se llama `users`. Su formato es este:
 
@@ -15,4 +15,6 @@ El SQL no vive dentro de la función que lo ejecuta. Vive aparte.
 
 `src/queries/queries/` contiene solo SQL agnóstico. Cada sentencia está en su propio `.sql`, sin JavaScript.
 
-`src/queries/` contiene la función que llama a ese SQL. En este proyecto es `src/queries/user.js`: lee el `.sql`, lo guarda en una constante y, al final del fichero, la función exportada lo ejecuta con `run`, `all` o `get`.
+`src/db/server.js` lee esos ficheros al arrancar y los guarda por nombre de fichero. Atiende `POST /execute` con `method`, `file` y `params`. `exec` crea la tabla y no devuelve fila. `get` devuelve una fila, o `null` si no hay. `all` devuelve la lista. `run` devuelve `changes` y `lastInsertRowid`.
+
+`src/queries/user.js` pide ese resultado por HTTP. No abre la base ni lee los `.sql`. Cada función exportada es `async` y devuelve una promesa con el mismo valor que antes.

@@ -3,7 +3,7 @@ import { findByEmail } from "../queries/users.js";
 // An address of 64 characters or longer is rejected.
 const MAX_EMAIL_LENGTH = 64;
 
-export function findUserByEmail({ email }) {
+export async function findUserByEmail({ email }) {
   // Search in the same form used when the user was saved.
   const trimmedEmail = email.trim();
   const cleanedEmail = trimmedEmail.toLowerCase();
@@ -34,7 +34,7 @@ export function findUserByEmail({ email }) {
 
   let user;
   try {
-    user = findByEmail(cleanedEmail);
+    user = await findByEmail(cleanedEmail);
   } catch {
     throw new Error("The database failed.");
   }

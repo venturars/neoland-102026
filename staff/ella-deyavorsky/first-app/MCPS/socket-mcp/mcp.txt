@@ -1,0 +1,33 @@
+https://docs.socket.dev/docs/remote-socket-mcp
+
+Servidor remoto: https://mcp.socket.dev/
+
+`depscore` se usa sin sesión, sin token y sin header. `alerts`, `threat_feed` y `organizations` piden sesión en la organización `neoland1`: sin ella el servidor responde 401 `Authentication required for this tool` (comprobado el 30 de octubre de 2026). En Cursor, la entrada `socket-mcp` de mcp.json lleva solo la URL; la sesión la abre el cliente por OAuth y no se pone ningún token ni header:
+
+```json
+"socket-mcp": {
+  "url": "https://mcp.socket.dev/"
+}
+```
+
+Si `organizations` responde 401 o no devuelve `neoland1`, no hay sesión: se dice y no se sigue.
+
+Cada dato del análisis de un paquete de Node sale de la herramienta que lo da:
+
+- Stats: `depscore`. Da las cinco stats, de 0 a 100. No pide sesión.
+- Alertas: `alerts`. Pide sesión. Se llama siempre filtrando por el nombre del paquete.
+- Campaña: `threat_feed`. Pide sesión y la función activada.
+
+Lo que no puede cada una (revisión del 30 de octubre de 2026, organización `neoland1`, plan free):
+
+- `depscore` no lista alertas ni campañas. `eslint@10.13.0`, `@eslint/js@10.0.1` y `prettier@3.9.10` están por encima de 50 en las cinco stats.
+- `alerts` sin filtro lista todas las alertas abiertas de la organización, más de 100, y la respuesta es demasiado grande para leerla. Filtrando por `eslint` devuelve una alerta abierta: `deprecated` (medium) de `eslint` 9.39.2 en el repositorio `crochet4ever`. No es la versión del plan (10.13.0) ni este repositorio, así que no se aplica. Solo cuenta una alerta de la misma versión del plan. `alerts` lista paquetes que la organización ya vigila, no una versión que todavía no está en el repositorio. Una lista vacía se escribe «sin alerta en un paquete vigilado», no «sin alertas», y no dice que la versión esté limpia.
+- `threat_feed` responde 403 `threat_feed_not_entitled`: «Threat feed is not enabled for this organization». El plan free no incluye el threat feed. Una campaña no se puede leer con esta cuenta, y el resumen escribe ese motivo.
+
+Una stat por debajo de 50 se escribe; 50 no baja.
+
+No se escribe «no consta» sin haber llamado a la herramienta del dato. Si la herramienta no puede contestar, el resumen dice el motivo.
+
+La guía pública solo documenta `depscore`. El servidor también expone `organizations`, `package_files`, `package_file_contents` y `package_file_grep`. No hacen falta para campaña, alerta y stats.
+
+La página https://socket.dev/npm/package/eslint/alerts/10.13.0 no sirve de respaldo desde aquí: `curl` recibe 403 de Cloudflare.

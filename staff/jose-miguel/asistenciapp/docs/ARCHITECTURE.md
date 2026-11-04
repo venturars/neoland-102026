@@ -4,6 +4,8 @@ Este documento dice **cómo se organiza el código**.
 
 La forma es una arquitectura por capas: las reglas no saben dónde se guardan los datos ni cómo se dibuja la pantalla.
 
+El flujo de git vive junto al código. `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca. El detalle de cada momento está en `AGENTS.md`.
+
 ---
 
 ## 1. Tres partes
@@ -22,6 +24,11 @@ Las flechas solo van hacia dentro. Una parte de fuera puede llamar a una de dent
 
 ```
 asistenciapp/
+├── agents/                # orquestador y subagentes del flujo de git
+├── skills/                # skills invocadas por los agentes
+├── tools/                 # scripts de git (desde la raíz del repo)
+├── templates/             # plantillas de issue y pull request
+├── MCPS/                  # referencia del MCP de GitHub
 ├── docs/
 │   ├── CONSTITUTION.md    # reglas no negociables
 │   └── ARCHITECTURE.md    # este archivo
@@ -54,10 +61,11 @@ asistenciapp/
 | Archivo | Parte | Qué hace |
 | --- | --- | --- |
 | `asistencia/domain/codes.py` | Reglas | Calcula el código y dice si el que escribió el alumno vale |
+| `asistencia/domain/attempts.py` | Reglas | Dice si una dirección se pasó de intentos de registrarse; mensaje de bloqueo |
 | `asistencia/domain/names.py` | Reglas | Acepta o rechaza el nombre |
 | `asistencia/domain/session.py` | Reglas | Dice si la clase existe, si sigue abierta y si el código vale ahora |
-| `asistencia/usecases/attendance.py` | Acciones | Abre, cierra, lista, exporta, quita y registra |
-| `asistencia/storage/sqlite.py` | Almacén | Abre `data/asistencia.db`, guarda y lee |
+| `asistencia/usecases/attendance.py` | Acciones | Abre, cierra, lista, exporta, quita y registra; el registro comprueba tope por dirección de conexión |
+| `asistencia/storage/sqlite.py` | Almacén | Abre `data/asistencia.db`, guarda y lee; tablas de intentos de registrarse y direcciones bloqueadas |
 | `asistencia/export.py` | Acción de exportar | Da formato CSV a filas que ya están cargadas. No abre la base |
 | `asistencia/tunnel.py` | Borde | Publica el enlace para que los alumnos entren desde casa. No sabe de asistencia |
 | `app.py` | Pantalla | Recibe HTTP, llama a una acción y devuelve la respuesta |
