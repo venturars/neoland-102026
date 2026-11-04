@@ -117,6 +117,13 @@
   - `src/clients/chrome/styles.css` es la hoja del popup.
   - `src/clients/chrome/popup.js` pide las rutas de la API con `fetch` y no importa `src/logic/`.
 
+- `src/clients/electron/` abre su ventana. `main.js` llama a `src/logic/` y no repite sus reglas. La página no importa `src/logic/`. No sustituye a `src/db/server.js` ni a los clientes HTTP, Chrome o web. No escucha en un puerto.
+  - `src/clients/electron/main.js` crea, lista, ve, modifica y borra usuarios. Se arranca con `pnpm electron`.
+  - `src/clients/electron/preload.js` publica esas cinco llamadas. No importa `src/logic/`.
+  - `src/clients/electron/index.html` es la ventana.
+  - `src/clients/electron/styles.css` es la hoja de la ventana.
+  - `src/clients/electron/app.js` pide las cinco llamadas y no importa `src/logic/` ni `electron`.
+
 - `src/clients/web/` son las tres pantallas del navegador. Se abren desde el disco con `pnpm open`. Llaman a `src/logic/` y no piden `/api/users`.
   - `src/clients/web/index.html` define la lista, el menú y la modificación.
   - `src/clients/web/styles.css` es la hoja compartida.

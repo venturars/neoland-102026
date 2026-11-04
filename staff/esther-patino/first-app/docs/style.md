@@ -3,6 +3,7 @@
 - Base: `pnpm server` desde `first-app`. El servidor escucha en `127.0.0.1:3000`.
 - HTTP: `pnpm http` desde `first-app`. El cliente REST escucha en `127.0.0.1:3001`.
 - Chrome: `pnpm chrome` desde `first-app`. Esa API escucha en `127.0.0.1:3002`.
+- Electron: `pnpm electron` desde `first-app`. Abre la ventana de escritorio. La base sigue en `127.0.0.1:3000`. Este cliente no escucha en un puerto.
 - Pantallas: `pnpm open` desde `first-app`. Abre `src/clients/web/index.html` en el navegador. Se lanza a la vez que la base. Lanzarlo pide permiso para abrir el navegador.
 - Tests: los `.txt` de `src/clients/terminal/`. Se pegan en PowerShell desde la raíz del repositorio. El fragmento entra en `first-app` y no captura errores. No hay `npm test`.
 - Lint/formato: `format` lanza Prettier, sin fichero de configuración. `lint` lanza ESLint con `eslint.config.js`.
