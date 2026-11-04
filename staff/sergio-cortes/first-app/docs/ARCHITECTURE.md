@@ -1,7 +1,7 @@
 # Arquitectura
 
 - `eslint.config.js` aplica las reglas recomendadas de ESLint al JavaScript e ignora `.venv`, `node_modules` y los cuadernos Jupyter. Declara `console` como global solo para `src/clients/http/`. Declara `process` como global para `src/clients/electron/main.js` y `document` y `fetch` para `src/clients/electron/app.js`.
-- `agents/git-workflow-agent.md` reconoce el momento, llama al subagente o a la skill que toca y confirma cada paso antes del siguiente.
+- `agents/git-workflow-agent.md` reconoce el momento, llama al subagente o a la skill que toca y confirma cada paso antes del siguiente. Si la issue ya está escrita y el trabajo siguiente hace cambios, el momento es Empezar.
 - `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la tarea se puede dejar escrita.
 - `agents/create-issue.md` crea la issue asignada a quien está autenticado; el cuerpo sale de la plantilla del tipo en `templates/issues/`.
 - `agents/create-branch.md` crea la rama de trabajo; el tipo y el nombre de rama siguen la plantilla del tipo.
@@ -17,7 +17,7 @@
 - `skills/create-branch-from-staging/SKILL.md` abre la rama desde `staging`.
 - `skills/create-branch/SKILL.md` abre la rama desde una base que no es `staging`.
 - `skills/create-empty-commit/SKILL.md` hace el commit vacío `chore: open #N`.
-- `skills/commit-changes/SKILL.md` guarda un trozo con ficheros nombrados.
+- `skills/commit-changes/SKILL.md` guarda un trozo con ficheros nombrados; el mensaje nombra el fichero o la función y el cambio.
 - `skills/launch-push/SKILL.md` sube la rama actual y fija el upstream.
 - `skills/create-pr-base-staging/SKILL.md` abre la pull request con base `staging`, en draft y asignada, con el script de `tools/`.
 - `skills/create-draft/SKILL.md` pasa a draft una pull request que ya existe.
