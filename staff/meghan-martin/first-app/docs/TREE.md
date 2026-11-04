@@ -25,6 +25,11 @@ first-app/
         styles.css
       rest/
         server.js
+      electron/
+        main.js
+        index.html
+        app.js
+        styles.css
     users.js
   logic/
     create-user.js

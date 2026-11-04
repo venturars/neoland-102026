@@ -52,6 +52,11 @@ first-app/
         styles.css
       rest/
         server.js
+      electron/
+        main.js
+        index.html
+        app.js
+        styles.css
       jupyter/
         create-users-table.ipynb
         create-user.ipynb
@@ -90,6 +95,7 @@ first-app/
 - `src/clients/jupyter/*.ipynb` llaman a la misma acción que su `.txt`. Se abren con `npm run jupyter` desde `first-app`. No cambian `logic/`.
 - `src/clients/browser/` es una página: `index.html`, `app.js` y `styles.css`. `app.js` llama a las mismas acciones de `src/logic/`. Se abre con `npm run browser` desde `first-app`. La base tiene que estar en marcha.
 - `src/clients/rest/server.js` responde JSON en el puerto 3001. Llama a las mismas acciones de `src/logic/`. Se arranca con `npm run api` desde `first-app`. La base tiene que estar en marcha.
+- `src/clients/electron/` es una ventana: `main.js`, `index.html`, `app.js` y `styles.css`. `app.js` llama a las mismas acciones de `src/logic/`. Se abre con `npm run electron` desde `first-app`. La base tiene que estar en marcha.
 - Una acción nueva es un fichero nuevo en `src/logic/` y un `.txt` nuevo en `src/clients/terminal/`.
 
 ## Specs
