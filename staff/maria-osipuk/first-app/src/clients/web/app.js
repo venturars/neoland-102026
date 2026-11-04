@@ -6,7 +6,7 @@ import { updateUser } from "../../logic/update-user.js";
 
 // The browser imports the business functions directly. They work here
 // because they only use import and fetch: SQLite lives in the data server
-// (pnpm start), and this page does not go through the HTTP client.
+// (pnpm start), so this page needs no other server in between.
 
 // Each known message thrown by logic/ has one Spanish sentence.
 // This copy belongs to the web client; the other clients keep their own.
