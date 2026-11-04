@@ -11,7 +11,11 @@ Inglés y es uno de esta lista:
 | `Email is already used`        | Ese email ya está en otra fila.                                                                        |
 | `Invalid id`                   | El id no es un entero mayor o igual que 1.                                                             |
 | `User not found`               | Se busca, se cambia o se borra un id que no está, o se busca un email que no está.                     |
-| `Could not find the user`      | SQLite falla al leer los usuarios por nombre.                                                          |
+| `Could not create the user`    | No se llega a la base al crear un usuario.                                                             |
+| `Could not list the users`     | No se llega a la base al listar los usuarios.                                                          |
+| `Could not find the user`      | SQLite falla al leer los usuarios por nombre, o no se llega a la base al ver un usuario.               |
+| `Could not update the user`    | No se llega a la base al cambiar un usuario.                                                           |
+| `Could not delete the user`    | No se llega a la base al borrar un usuario.                                                            |
 | `Could not classify the users` | La IA no responde al contar el sexo de los usuarios ya guardados, o SQLite falla al leer los usuarios. |
 
 El email se guarda en minúsculas. `validateEmail` le quita los espacios de los extremos y lo pasa a minúsculas antes de mirar la longitud y la `@`.
