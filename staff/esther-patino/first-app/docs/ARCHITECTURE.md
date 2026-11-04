@@ -14,7 +14,7 @@
 - `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca.
 - `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la tarea se puede dejar escrita.
 - `agents/create-issue.md` crea la issue con título en inglés y descripción en español, asignada a quien está autenticado.
-- `agents/create-branch.md` crea la rama `número-tipo-descripcion`.
+- `agents/create-branch.md` crea la rama desde `staging`. El tipo es el de la plantilla. Si no hay plantilla, elige la más cercana.
 - `agents/create-commit.md` hace un commit pequeño con ficheros nombrados.
 - `agents/create-pr.md` abre la pull request contra `staging` y la deja en draft, sin enlazar la issue.
 - `agents/launch-push.md` publica `HEAD` en `origin` y deja el upstream puesto.
@@ -24,19 +24,19 @@
 - `skills/assign-author/SKILL.md` asigna la issue o la pull request al usuario autenticado.
 - `skills/check-status/SKILL.md` dice la rama, los cambios sin commit y el remoto.
 - `skills/pull-changes/SKILL.md` adelanta `staging` en fast-forward.
-- `skills/create-branch-from-staging/SKILL.md` abre la rama desde `staging`.
-- `skills/create-branch/SKILL.md` abre la rama desde una base que no es `staging`.
+- `skills/create-branch-from-staging/SKILL.md` abre la rama desde `staging`. El tipo es el de la plantilla.
+- `skills/create-branch/SKILL.md` abre la rama desde una base que no es `staging`. El tipo es el de la plantilla.
 - `skills/create-empty-commit/SKILL.md` hace el commit vacío `chore: open #N`.
 - `skills/commit-changes/SKILL.md` guarda un trozo con ficheros nombrados.
 - `skills/launch-push/SKILL.md` sube la rama actual y fija el upstream.
 - `skills/create-pr-base-staging/SKILL.md` abre la pull request con base `staging`.
 - `skills/create-draft/SKILL.md` deja la pull request en draft.
-- `skills/link-pr-to-issue/SKILL.md` deja `Closes #N`. La issue se cierra cuando se fusiona la pull request.
+- `skills/link-pr-to-issue/SKILL.md` deja `Closes #N` y no llama a la API para cerrar la issue. GitHub la cierra al fusionar en la rama por defecto. Fusionar solo en `staging` no la cierra.
 - `skills/assign-reviewers/SKILL.md` asigna a quienes miran la pull request y la saca de draft.
 - `tools/check-status.sh` escribe la rama, el remoto y los cambios.
 - `tools/pull-changes.sh` adelanta `staging` en fast-forward.
-- `tools/create-branch-from-staging.sh` crea la rama desde `staging`.
-- `tools/create-branch.sh` crea la rama desde otra base.
+- `tools/create-branch-from-staging.sh` crea la rama desde `staging`. No rechaza un tipo fuera de la lista de seis. La descripción va en minúsculas y con guiones.
+- `tools/create-branch.sh` crea la rama desde otra base. No rechaza un tipo fuera de la lista de seis. La descripción va en minúsculas y con guiones.
 - `tools/create-empty-commit.sh` crea el commit vacío de apertura.
 - `tools/commit-changes.sh` guarda los ficheros nombrados.
 - `tools/launch-push.sh` sube la rama y fija el upstream.
