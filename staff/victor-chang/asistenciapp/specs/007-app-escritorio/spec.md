@@ -1,6 +1,6 @@
 # Spec 007 · App de escritorio para el profesor
 
-> Estado: **Borrador** v0.1 (2026-11-04) · Creada: 2026-11-04 · Issue: #919
+> Estado: **Aprobada** v1.0 (2026-11-04) · Creada: 2026-11-04 · Issue: #919
 
 ---
 
@@ -114,3 +114,4 @@ Resueltas el 2026-11-04 con Victor en una sesión de preguntas (*grilling*) ante
 | Versión | Fecha | Cambio | Motivo |
 | --- | --- | --- | --- |
 | 0.1 | 2026-11-04 | Borrador inicial con P1–P6 resueltas | Issue #919: que cualquier profesor pueda usar AsistenciApp en macOS o Windows sin preparar nada |
+| 1.0 | 2026-11-04 | Aprobada por Victor, junto con la constitución 3.2 | — |
