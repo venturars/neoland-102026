@@ -8,9 +8,10 @@ No hay contraseña.
 Lo usa quien prueba la app sin abrir la página del navegador ni la ventana
 de escritorio.
 
-Se arranca este cliente en `http://127.0.0.1:3002`. La base sigue en el
+Se arranca este cliente en `http://127.0.0.1:3003`. La base sigue en el
 mismo sitio que el resto de la app. El cliente Express sigue en
-`http://127.0.0.1:3001`.
+`http://127.0.0.1:3001`. La API de la extensión Chrome sigue en
+`http://127.0.0.1:3002`.
 
 Al crear entran el nombre y el email. Al listar no entra nada. Al ver
 uno entra el id. Al modificar entra el id y el nombre, el email o los

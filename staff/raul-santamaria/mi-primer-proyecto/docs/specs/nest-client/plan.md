@@ -11,7 +11,7 @@ valida: un filtro de excepciones (o equivalente Nest) traduce
 `Error.message` al mismo HTTP que `src/clients/http/app.js`. Si el
 mensaje no está en la tabla, responde 500 con el `Could not …` de la
 acción. `updateUser({ id, name?, email? })`. `deleteUser({ id })`. Id de
-ruta como texto. `ORIGIN` `http://127.0.0.1:3002`. La base sigue en
+ruta como texto. `ORIGIN` `http://127.0.0.1:3003`. La base sigue en
 SQLite; no hay servidor SQL en el puerto 3000.
 
 Rutas: `POST /users` (201), `GET /users` (200), `GET /users/:id` (200),
@@ -65,5 +65,5 @@ vulnerability 100. Ninguna stat bajo 50.
 Tras `pnpm install`, el árbol de dependencias (3 capas) se compara con
 este plan; cualquier alerta que aparezca en aceptación del plan.
 
-Verificación: prueba manual HTTP en 3002; Express y Electron sin
+Verificación: prueba manual HTTP en 3003; Express y Electron sin
 cambios; `pnpm format` y `pnpm lint`.
