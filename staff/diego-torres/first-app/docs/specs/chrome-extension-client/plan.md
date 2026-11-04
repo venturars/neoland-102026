@@ -67,7 +67,8 @@ Los campos son `type="text"` y sin `required`, para que los mensajes sean los de
 - **Ver:** pide el id y muestra esos cinco datos.
 - **Modificar:** envía `name` y `email` solo si el campo tiene texto.
 - **Borrar:** pide el id. Al pulsar «Borrar» aparecen «Confirmar» y «Cancelar» en la misma ventana, con el id que se va a borrar. «Confirmar» borra, no muestra un usuario y vuelve a pedir la lista. «Cancelar» no hace nada. No se usa `confirm()`, porque un diálogo puede cerrar la ventana de la extensión.
-- **API parada:** cada `fetch` va dentro de un `try/catch`. Si falla o la respuesta no es JSON, se ve el `Could not …` de esa acción. Lo mismo pasa con un id vacío, porque esa ruta no existe y responde 404 sin cuerpo.
+- **API parada:** cada `fetch` va dentro de un `try/catch`. Si falla o la respuesta no es JSON, se ve el `Could not …` de esa acción.
+- **Id vacío:** Fastify lo atiende como un id que no existe, así que se ve `User not found`.
 
 ## Firma
 
