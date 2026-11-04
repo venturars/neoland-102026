@@ -1,6 +1,7 @@
-# Pega esto en la terminal, con el directorio actual en first-app
+# Pega esto en la terminal, con el directorio actual en first-app.
+# La base tiene que estar en marcha: npm run db
 node --input-type=module <<'EOF'
 import { listUsers } from "./src/logic/list-users.js";
-const result = listUsers();
+const result = await listUsers();
 console.log(result);
 EOF

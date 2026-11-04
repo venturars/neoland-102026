@@ -1,0 +1,16 @@
+meta {
+  name: preserve-grace
+  type: http
+  seq: 23
+}
+
+get {
+  url: {{baseUrl}}/users
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 200", function () { expect(res.getStatus()).to.equal(200); });
+  test("Borrar no afecta al otro usuario", function () { expect(res.getBody()).to.deep.equal([JSON.parse(bru.getVar("otherUser"))]); });
+}

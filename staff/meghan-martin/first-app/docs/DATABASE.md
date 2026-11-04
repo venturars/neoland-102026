@@ -1,8 +1,10 @@
 # Base de datos
 
-Hay una sola base: `src/db/users.sqlite`. Hay una sola conexión: el `db` que exporta `src/db/connection.js`. Si existe `USERS_DB_PATH`, se usa ese fichero. `src/db/users.sqlite` existe en disco y no se sube a git.
+Hay una sola base: `src/db/users.sqlite`. Hay una sola conexión: el `db` que exporta `src/db/connection.js`. Solo `src/db/server.js` la importa. Si existe `USERS_DB_PATH` en ese programa, se usa ese fichero. `src/db/users.sqlite` existe en disco y no se sube a git.
 
-El texto SQL vive en `src/queries/queries/`. Hay un fichero `.sql` por sentencia, con parámetros con nombre (`:id`, `:name`, `:email`). `src/queries/users.js` lo lee y lo ejecuta. Ahí no se decide si un email es válido.
+El programa se arranca con `npm run db` desde `first-app` y escucha en `http://127.0.0.1:3000`. Si no está en marcha, la operación termina con `Database is not running. Start it with npm run db.`
+
+El texto SQL vive en `src/queries/users-sql.js`, con parámetros con nombre (`:id`, `:name`, `:email`). `src/queries/users.js` pide cada sentencia por su nombre. Ahí no se decide si un email es válido.
 
 Tabla `users`:
 

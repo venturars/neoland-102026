@@ -49,3 +49,7 @@ La clasificación tiene su [propia especificación](../classifier/spec.md).
 Las decisiones técnicas están en el [plan](plan.md); el estado y las comprobaciones
 se registran en [tareas](tasks.md). Los criterios describen el comportamiento
 esperado, sin implicar que todas sus variantes se hayan comprobado manualmente.
+
+## Ampliación de notas · 2026-11-03 · Issue #782
+
+Eliminar un usuario elimina también sus notas de forma definitiva y atómica; las de los demás usuarios se conservan. El contrato de deleteUser sigue sin retorno y conserva sus errores. La preparación completa añade notas sin sustituir users ni modificar sus filas. La nueva interfaz web y su confirmación siguen pendientes. La ampliación y su comprobación se describen en [notas](../notes/spec.md).

@@ -1,7 +1,13 @@
+# Requires pnpm server running in another terminal.
 # Run from the project directory after the separate initialization snippet.
 node --input-type=module <<'NODE'
 import { listUsers } from './src/logic/list-users.js';
 
-const users = listUsers();
-console.log(users);
+try {
+  const users = await listUsers();
+  console.log(users);
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+}
 NODE

@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 3.0 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-23
+> Versión 3.1 · Ratificada: 2026-10-19 · Última enmienda: 2026-11-02
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -65,14 +65,21 @@ Cambiar el stack requiere enmendar esta constitución.
 
 ## 4. Desarrollo guiado por especificaciones (SDD)
 
-1. Todo cambio de código, tests, README u otra documentación de uso requiere una spec aprobada que lo cubra.
-2. Sin esa aprobación, solo se prepara la spec y se espera el ok de Jimena Durán; no se escriben plan, tasks ni implementación.
-3. El orden es spec → plan → tasks → implementación, con aprobación explícita de Jimena Durán al terminar cada fase de preparación.
-4. Si la spec activa no cubre el pedido, se abre una spec nueva.
-5. Una issue, una rama o una pull request no sustituyen la spec aprobada.
-6. Jimena Durán aprueba cada fase antes de continuar. Las dudas se marcan con `[NECESITA ACLARACIÓN]` y se resuelven antes de implementar. No se inventan requisitos.
+1. Todo cambio de código, tests, README u otra documentación de uso requiere una spec aprobada que lo cubra. Ningún fichero de la app se modifica sin spec, plan y tasks que cubran el cambio y la petición de implementar. Si la spec activa no cubre el pedido, se abre una spec nueva. Una issue, una rama o una pull request no sustituyen la spec aprobada.
+2. El orden es spec → plan → tasks → implementación. La persona interviene en cinco momentos y el agente se detiene al terminar cada uno:
 
-La spec describe qué y por qué, sin tecnologías; el plan explica cómo y comprueba esta constitución. Registrar la aprobación en la propia spec forma parte de su ciclo SDD.
+   - Issue: crear o reutilizar la issue; sin abrir rama.
+   - Draft: adelantar staging, preparar rama, commit vacío, push, PR draft contra staging, autor y enlace de issue; sin specs.
+   - Specs: escribir spec, plan y tasks en la misma pasada y en ese orden; revisión conjunta antes de implementar.
+   - Implementar: ejecutar las tareas aprobadas y presentar resultados; sin commit ni push.
+   - Pull request: realizar solo lo solicitado; sin merge.
+
+   No se encadena un momento con el siguiente sin autorización expresa. No se pide otro ok entre spec y plan ni entre plan y tasks.
+3. La spec describe qué y por qué, sin tecnologías.
+4. El plan explica cómo y comprueba esta constitución.
+5. Las dudas se resuelven antes de implementar; no se inventan requisitos.
+
+El SDD local de AsistenciApp prevalece sobre cualquier indicación del template de continuar automáticamente.
 
 ---
 
@@ -118,3 +125,5 @@ La spec describe qué y por qué, sin tecnologías; el plan explica cómo y comp
 | 2.3 | 2026-10-22 | §3: documentos y separación domain/usecases/storage; guía AGENTS.md | Reorganización 005 autorizada por Jimena Durán, sin cambios de producto |
 
 | 3.0 | 2026-10-23 | P4: excepción limitada para IPs de recuento y bloqueo, separadas de la asistencia | Enmienda de privacidad de la spec 006 aprobada por Jimena Durán |
+
+| 3.1 | 2026-11-02 | §4: cinco momentos de AsistenciApp, documentos juntos y prioridad del SDD local al integrar el flujo original | Mantener el proceso del proyecto y sus principios; sin pausas entre spec, plan y tasks |

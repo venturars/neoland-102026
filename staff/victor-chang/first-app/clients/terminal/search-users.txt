@@ -1,0 +1,31 @@
+# Feature: searchUsers — logic/search-users.js
+# Paste this whole block into Git Bash, with first-app as the current folder.
+# It uses the real database, db/users.sqlite, and removes the three practice users at the end.
+
+node --no-warnings --input-type=module -e '
+import { createUser } from "./logic/create-user.js";
+import { searchUsers } from "./logic/search-users.js";
+import { deleteUser } from "./logic/delete-user.js";
+
+const mark = `Zq${Date.now()}`;
+const adam = createUser(`${mark} Adam`, `practice-${Date.now()}-1@x.com`);
+const ada = createUser(`${mark} Ada`, `practice-${Date.now()}-2@x.com`);
+const maria = createUser(`${mark} María`, `practice-${Date.now()}-3@x.com`);
+
+// 1. A piece in other capitals, with spaces around: prints Ada then Adam, not María
+console.log(searchUsers(`  ${mark.toLowerCase()} AD  `));
+
+// 2. A percent sign is a plain character: prints []
+console.log(searchUsers("%"));
+
+// 3. Only spaces: prints "Name is empty"
+try {
+  searchUsers("   ");
+} catch (error) {
+  console.log(error.message);
+}
+
+deleteUser(adam.id);
+deleteUser(ada.id);
+deleteUser(maria.id);
+'

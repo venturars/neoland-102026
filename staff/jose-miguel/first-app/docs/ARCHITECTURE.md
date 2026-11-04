@@ -1,10 +1,10 @@
 # Arquitectura
 
 - `src/db/` abre la base de datos y no contiene reglas de negocio.
-- `src/db/connection.js` es la única conexión a la base de datos.
-- `src/db/users.sqlite` es el único fichero de la base de datos.
-- `src/queries/queries/` guarda el SQL. Hay un fichero `.sql` por query.
-- `src/queries/users.js` lee esos ficheros, prepara el SQL y lo ejecuta. No hay reglas de negocio en `src/queries/`.
+- `src/db/server.js` es el único fichero de esa capa junto a la base. Abre la única conexión, guarda la dirección `http://127.0.0.1:3000` y ejecuta el SQL que recibe. No exporta la conexión.
+- `src/db/users.sqlite` es el único fichero de la base de datos. Es local; no se versiona en git.
+- `src/queries/queries/` guarda el texto de cada consulta. Hay un módulo `.js` por consulta. Exporta el texto y no lo ejecuta.
+- `src/queries/users.js` importa ese texto y pide la ejecución al servidor. No importa `src/db/server.js`. No hay reglas de negocio en `src/queries/`.
 - `src/logic/` es el núcleo de la app. Aquí viven las reglas de negocio. Una funcionalidad por fichero.
 - `src/logic/create-user.js` crea un usuario.
 - `src/logic/update-user.js` actualiza un usuario.
@@ -13,13 +13,15 @@
 - `src/logic/find-user-by-email.js` busca un usuario por email.
 - `src/logic/find-user-by-name.js` busca usuarios por nombre.
 - `src/logic/find-user-by-id.js` busca un usuario por id.
-- `src/logic/create-users-table.js` crea la tabla de usuarios si no existe.
 - `src/logic/users-gender-count.js` cuenta los usuarios por género. Puede usar la librería `openai`.
-- `src/clients/` no importa SQL ni abre la base de datos. Solo llama a `src/logic/`.
-- `src/clients/terminal/` llama a `src/logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
-- `src/clients/jupyter/` es un notebook por cada `.txt` de `src/clients/terminal/`, con el mismo comando `node --input-type=module`. Se abre con `pnpm jupyter` desde `first-app`.
-- `scripts/jupyter.sh` prepara el `.venv` local e inicia Notebook sobre `src/clients/jupyter/`.
-- `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca.
+- `src/clients/` no importa SQL ni abre la base de datos. Solo llama a `src/logic/` (o `queries/` solo en `create-users-table`).
+- `src/clients/terminal/` llama a `src/logic/` con `await` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
+- `src/clients/terminal/create-users-table.txt` llama a `src/queries/users.js`.
+- `src/clients/jupyter/` es un notebook por cada `.txt` de `src/clients/terminal/`. Se abre con `pnpm jupyter` desde `first-app`.
+- `src/clients/browser/` llama a `src/logic/`. `index.html` se abre en el navegador con `pnpm browser`; no se sirve desde Node.
+- `scripts/start-jupyter.js` prepara el `.venv` local e inicia Notebook sobre `src/clients/jupyter/`.
+- `scripts/start-browser.js` abre el cliente browser con `file://` y permiso para módulos ES.
+- `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca. Los cambios de proyecto van en rama nueva y pull request en draft; antes de crear la issue comprueba que la tarea está clara (si no, `help-me-to-think`); al empezar, la issue ya está escrita y la rama sale de `staging` antes de tocar código.
 - `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la tarea se puede dejar escrita.
 - `agents/create-issue.md` crea la issue asignada a quien está autenticado; el cuerpo sale de la plantilla del tipo en `templates/issues/`.
 - `agents/create-branch.md` crea la rama de trabajo; el tipo y el nombre de rama siguen la plantilla del tipo.

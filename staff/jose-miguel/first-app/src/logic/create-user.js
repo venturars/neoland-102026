@@ -1,88 +1,60 @@
-import { findUserByEmail, insertUser } from "../queries/users.js";
+import { findByEmail, insert } from "../queries/users.js";
 
-const MAX_NAME_LENGTH = 100;
-const MAX_EMAIL_LENGTH = 255;
-
-export function createUser(input) {
-  const rawName = input[0];
-  let nameMissing = false;
-  if (rawName === undefined) {
-    nameMissing = true;
-  }
-  if (rawName === null) {
-    nameMissing = true;
-  }
-  let trimmedName = "";
-  if (!nameMissing) {
-    const nameAsText = String(rawName);
-    trimmedName = nameAsText.trim();
-  }
-  if (trimmedName === "") {
-    nameMissing = true;
-  }
-  if (nameMissing) {
-    throw new Error("Name is required");
-  }
-  const nameIsTooLong = trimmedName.length > MAX_NAME_LENGTH;
-  if (nameIsTooLong) {
-    throw new Error("Name cannot exceed 100 characters");
+export async function createUser(input) {
+  const rawName = input.name;
+  const name = rawName.trim();
+  if (name === "") {
+    throw new Error("Name is empty");
   }
 
-  const rawEmail = input[1];
-  let emailMissing = false;
-  if (rawEmail === undefined) {
-    emailMissing = true;
+  const rawEmail = input.email;
+  const trimmedEmail = rawEmail.trim();
+  const email = trimmedEmail.toLowerCase();
+  const parts = email.split("@");
+  const hasTwoParts = parts.length === 2;
+  let hasSingleAt = false;
+  if (hasTwoParts) {
+    const localPart = parts[0];
+    const domainPart = parts[1];
+    const hasLocalPart = localPart.length > 0;
+    const hasDomainPart = domainPart.length > 0;
+    if (hasLocalPart) {
+      if (hasDomainPart) {
+        hasSingleAt = true;
+      }
+    }
   }
-  if (rawEmail === null) {
-    emailMissing = true;
+  const emailIsTooLong = email.length > 64;
+  if (!hasSingleAt) {
+    throw new Error("Email is invalid");
   }
-  let trimmedEmail = "";
-  if (!emailMissing) {
-    const emailAsText = String(rawEmail);
-    const trimmedEmailRaw = emailAsText.trim();
-    trimmedEmail = trimmedEmailRaw.toLowerCase();
-  }
-  if (trimmedEmail === "") {
-    emailMissing = true;
-  }
-  if (emailMissing) {
-    throw new Error("Email is required");
-  }
-  const emailIsTooLong = trimmedEmail.length > MAX_EMAIL_LENGTH;
   if (emailIsTooLong) {
-    throw new Error("Email cannot exceed 255 characters");
-  }
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const emailIsValid = emailPattern.test(trimmedEmail);
-  if (!emailIsValid) {
-    throw new Error("Email is not valid");
+    throw new Error("Email is invalid");
   }
 
-  let existingUser;
-
+  let owner;
   try {
-    existingUser = findUserByEmail(trimmedEmail);
+    owner = await findByEmail(email);
   } catch {
     throw new Error("Could not create the user");
   }
 
-  if (existingUser) {
-    throw new Error("A user with that email already exists");
+  if (owner) {
+    throw new Error("Email is already used");
   }
 
-  let createdUser;
-
+  let user;
   try {
-    createdUser = insertUser(trimmedName, trimmedEmail);
+    user = await insert({ name, email });
   } catch {
     throw new Error("Could not create the user");
   }
 
   return {
-    id: createdUser.id,
-    name: createdUser.name,
-    email: createdUser.email,
-    createdAt: createdUser.created_at,
-    updatedAt: createdUser.updated_at,
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
   };
 }

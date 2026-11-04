@@ -1,7 +1,7 @@
 import { ConflictError, DatabaseError, ValidationError } from "./errors.js";
 import { findByEmail, insert } from "../queries/user.js";
 
-export function createUser(input) {
+export async function createUser(input) {
   const name = input.name;
   const email = input.email;
 
@@ -78,7 +78,7 @@ export function createUser(input) {
   let owner;
 
   try {
-    owner = findByEmail(email);
+    owner = await findByEmail(email);
   } catch {
     throw new DatabaseError("Could not create the user");
   }
@@ -90,7 +90,7 @@ export function createUser(input) {
   let user;
 
   try {
-    user = insert({ name, email });
+    user = await insert({ name, email });
   } catch {
     throw new DatabaseError("Could not create the user");
   }

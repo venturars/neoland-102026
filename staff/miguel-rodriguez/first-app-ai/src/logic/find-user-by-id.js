@@ -1,9 +1,9 @@
 import { findById } from "../queries/users.js";
 
-export function findUserById(id) {
+export async function findUserById(id) {
   let user;
   try {
-    user = findById(id);
+    user = await findById(id);
   } catch {
     throw new Error("Could not find the user");
   }

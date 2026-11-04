@@ -4,10 +4,10 @@ Each layer has one job. The files of each layer are listed in [TREE.md](TREE.md)
 
 ## Layers
 
-- `logic/` decides if an action is allowed. It does not contain SQL. It calls the functions exported by `src/queries/users.js`. It never reads a `.sql` file.
-- `queries/` talks to the database. It does not decide if a name or an email is valid. The SQL text lives in `src/queries/queries/`.
-- `db/` opens the database and stores it.
-- `clients/` runs the logic by hand. A client imports a function from `logic/` and prints the result. It has no rules.
+- `logic/` decides if an action is allowed. Its functions are async. It does not contain SQL. It calls the functions exported by `src/queries/users.js`. It never reads a `.sql` file.
+- `queries/` asks the database program for data with `fetch`. It does not decide if a name or an email is valid, and it imports nothing from Node, so it also runs in a browser. The SQL text lives in `src/db/queries/`.
+- `db/` is the database program. It opens the database, stores it, reads the SQL files and answers the queries over HTTP. It also serves the files of the web client.
+- `clients/` runs the logic by hand. A client imports a function from `logic/` and prints the result. It has no rules. The web client does it too, as a browser module.
 - `scripts/` holds the helper that starts the notebooks.
 - `agents/` holds the git workflow: an orchestrator and one subagent per moment. It has no rules of the app.
 - `skills/` holds one skill per git or GitHub step. The subagents call them.
@@ -38,20 +38,24 @@ One file per action. Each file exports one function. The order inside the functi
 
 ### src/queries/
 
-- `users.js` reads each `.sql` file and exports one function per file. It uses the one connection from `src/db/connection.js`. It contains no SQL string. Importing it does not create the table.
-- `src/queries/*.sql` holds one statement per file. The file names and the functions are in [DATABASE.md](DATABASE.md).
+- `users.js` exports one function per query. Each one sends a `POST` to the database program with `fetch`. It has no connection, no `.sql` path and no SQL string. The database program creates the table when it starts.
 
-A new query is a new `.sql` file in `src/queries/queries/` and a new function in `src/queries/users.js`.
+The `.sql` files are in `src/db/queries/`. The file names and the functions are in [DATABASE.md](DATABASE.md).
+
+A new query is a new `.sql` file in `src/db/queries/` and a new function in `src/queries/users.js`.
 
 ### src/db/
 
 - `connection.js` is the only file that opens the database. No other file creates a second connection.
+- `server.js` is the database program, started with `pnpm start`. It imports the connection, reads the files of `queries/`, answers `POST /queries/<name>` on `http://localhost:3000` and serves the `.html`, `.css` and `.js` files of `clients/web/`, `logic/` and `src/queries/`. It never serves `db/`.
+- `queries/` holds the `.sql` files, one statement per file.
 - `users.sqlite` stores the users.
 
 ### src/clients/
 
-- `terminal/` has one `.txt` file per feature, named like its logic file. You paste it into the terminal while `first-app` is the current folder. `create-users-table.txt` prepares the table.
+- `terminal/` has one `.txt` file per feature, named like its logic file. You paste it into the terminal while `first-app` is the current folder. `create-users-table.txt` calls `createUsersTable()` and lists the users.
 - `jupyter/` has one notebook per feature, plus `prepare-database.ipynb`, `00-welcome-and-index.ipynb` and a `README.md`. They open in the browser with `scripts/jupyter.sh`.
+- `web/` has `index.html`, `style.css` and `app.js`: three screens (choose a user, menu, edit) over the real users. `app.js` is a browser module that imports `logic/`. It opens at `http://localhost:3000` while the database program runs. The `.txt` per feature of `terminal/` does not apply here; it is tested by opening the page.
 
 ### scripts/
 
@@ -99,8 +103,8 @@ One folder per skill, each with a `SKILL.md`. A skill that runs a script names i
 
 ### templates/
 
-- `issues/basic_issue.md` is the body of the issue: what has to be done and how to test it.
-- `pull-request/basic-pull-request.md` is the body of the pull request. Its "Issue" section ends with `Closes #`.
+- `issues/<type>_issue.md` is the body of the issue, one per type: `feat`, `fix`, `refactor`, `docs`, `chore` and `test`. If the type has no template, the closest one is used.
+- `pull-request/<type>-pull-request.md` is the body of the pull request, one per type with the same six types. Its "Issue" section ends with `Closes #` and is left empty when the draft is opened.
 
 ### MCPS/
 

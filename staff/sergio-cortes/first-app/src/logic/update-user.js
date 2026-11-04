@@ -6,7 +6,7 @@ import {
 } from "./errors.js";
 import { findByEmail, findById, update } from "../queries/user.js";
 
-export function updateUser(input) {
+export async function updateUser(input) {
   const id = input.id;
   const name = input.name;
   const email = input.email;
@@ -88,7 +88,7 @@ export function updateUser(input) {
   let current;
 
   try {
-    current = findById(id);
+    current = await findById(id);
   } catch {
     throw new DatabaseError("Could not update the user");
   }
@@ -100,7 +100,7 @@ export function updateUser(input) {
   let owner;
 
   try {
-    owner = findByEmail(email);
+    owner = await findByEmail(email);
   } catch {
     throw new DatabaseError("Could not update the user");
   }
@@ -122,7 +122,7 @@ export function updateUser(input) {
   let user;
 
   try {
-    user = update({ id, name, email });
+    user = await update({ id, name, email });
   } catch {
     throw new DatabaseError("Could not update the user");
   }

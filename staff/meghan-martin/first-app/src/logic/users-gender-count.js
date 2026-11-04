@@ -3,9 +3,14 @@ import { findAll } from "../queries/users.js";
 export async function usersGenderCount() {
   let users;
   try {
-    users = findAll();
-  } catch {
-    throw new Error("Could not classify the users");
+    users = await findAll();
+  } catch (error) {
+    if (
+      error.message === "Database is not running. Start it with npm run db."
+    ) {
+      throw error;
+    }
+    throw new Error("Could not classify the users", { cause: error });
   }
 
   if (users.length === 0) {

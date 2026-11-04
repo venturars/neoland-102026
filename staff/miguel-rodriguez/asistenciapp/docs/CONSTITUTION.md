@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 4.1 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-25
+> Versión 4.2 · Ratificada: 2026-10-19 · Última enmienda: 2026-11-02
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -67,13 +67,11 @@ Cambiar el stack requiere enmendar esta constitución.
 
 ## 4. Desarrollo guiado por especificaciones (SDD)
 
-1. **No hay cambios de código, pruebas, README, instrucciones de uso u otra documentación de la app sin especificación aprobada.** Si el pedido no tiene una spec aprobada que lo cubra, solo se redacta `specs/NNN-nombre/spec.md`, se muestra y se espera el sí explícito de Miguel antes de preparar el plan o las tareas.
-2. El orden siempre es: **spec → plan → tasks → implementación**. Miguel aprueba por separado la spec antes del plan, el plan antes de las tareas y las tareas antes de implementar. No se salta ningún paso.
+1. **Ningún cambio de código, pruebas, README, instrucciones de uso u otra documentación se implementa sin spec, plan y tasks que lo cubran.** Si el pedido no cabe en la spec activa, requiere una nueva. Una issue, rama o PR no autoriza por sí sola implementar.
+2. El orden sigue siendo **spec → plan → tasks → implementación**. Miguel interviene en cinco momentos: issue, draft, las tres specs juntas, implementación y acción solicitada sobre la PR. Dentro del tercer momento no se pide otro ok entre documentos. El agente se detiene al terminar el momento; solo una petición expresa que abarque varios permite ejecutarlos en orden sin nuevas confirmaciones.
 3. La `spec.md` describe el **qué y el porqué**, nunca el cómo (no menciona tecnologías).
 4. El `plan.md` describe el **cómo** e incluye una sección que comprueba que cumple esta constitución.
-5. Las dudas se marcan como `[NECESITA ACLARACIÓN]` y se resuelven **antes** de implementar. No se inventan requisitos.
-
-6. Una issue, una rama o una PR no sustituye la especificación aprobada. Un pedido no cubierto por la spec activa requiere una nueva spec; no se amplía silenciosamente una terminada.
+5. Las dudas se marcan como `[NECESITA ACLARACIÓN]` y se resuelven **antes** de implementar. No se inventan requisitos. Un conflicto real detiene el trabajo afectado aunque exista autorización global.
 
 ---
 
@@ -121,3 +119,4 @@ Cambiar el stack requiere enmendar esta constitución.
 | 4.0 | 2026-10-24 | P4 y §6: plazas, reserva duradera y accesos temporales de carrera; 006 se conserva en clases normales | Texto del plan 008 aprobado por Miguel y ejecución de sus tareas autorizada; aplicación solo en copia local |
 
 | 4.1 | 2026-10-25 | P3: qrcode==8.2 sin extras de imágenes para QR SVG local | Texto exacto del plan 007 aprobado y ejecución de sus tareas autorizada por Miguel |
+| 4.2 | 2026-11-02 | §4: cinco momentos, spec/plan/tasks preparados juntos antes de implementar; acciones Git propias del proyecto | Encargo expreso de Miguel de terminar el trabajo pendiente del bootcamp y adaptar el flujo actualizado, incluida esta entrega completa; no se atribuyen aprobaciones documentales separadas ni se alteran principios o seguridad |

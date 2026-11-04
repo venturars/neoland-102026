@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 3.1 · Ratificada: 2026-10-19 · Última enmienda: 2026-11-02
+> Versión 3.2 · Ratificada: 2026-10-19 · Última enmienda: 2026-11-03
 
 Este documento recoge los principios y las decisiones fundamentales del producto. El proceso de trabajo está en [AGENTS.md](../AGENTS.md); los detalles técnicos, en las guías. Una propuesta que contradiga estos principios requiere una enmienda aprobada antes de implementarse.
 
@@ -46,7 +46,7 @@ Cambiar este conjunto requiere enmendar la constitución. Las versiones mínimas
 
 ## 4. Desarrollo guiado por especificaciones
 
-Todo cambio de la aplicación, incluida su documentación, debe estar cubierto por una spec local aprobada. Se conservan las fases de especificación, plan, tareas e implementación y la aprobación explícita entre ellas. Una issue o una PR no sustituye esas aprobaciones.
+Todo cambio de la aplicación, incluida su documentación, debe estar cubierto por una spec local. Se conservan las fases de especificación, plan, tareas e implementación, en ese orden. La persona responsable interviene en cinco momentos: la issue, el draft, las tres specs en la misma pasada, la implementación y lo que se pida sobre la PR. No hay un ok entre spec, plan y tareas. Una issue, una rama o una PR no autorizan el código.
 
 La spec define qué se necesita y por qué; el plan explica cómo cumplirlo y comprobarlo. Las dudas de requisitos se resuelven antes de implementar. El procedimiento concreto está en [AGENTS.md](../AGENTS.md).
 

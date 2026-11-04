@@ -7,7 +7,8 @@
     "node": ">=22"
   },
   "scripts": {
-    "start": "node src/clients/http/start-http-server.js",
+    "server": "node src/db/server.js",
+    "web": "open -na \"Brave Browser\" --args --user-data-dir=/tmp/first-app-brave --allow-file-access-from-files \"file://$(pwd)/src/clients/web/index.html\"",
     "jupyter": "sh scripts/jupyter.sh",
     "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/**/*.js\"",
     "lint": "eslint .",

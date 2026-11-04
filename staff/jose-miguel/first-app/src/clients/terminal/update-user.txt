@@ -1,7 +1,8 @@
-# Pegar en la terminal con el directorio actual en first-app.
+# Pega esto en la terminal, con el directorio actual en first-app
+node --input-type=module <<'EOF'
+import { updateUser } from "./src/logic/update-user.js";
 
-# Test 1: crea un usuario y lo actualiza (OK).
-node --input-type=module -e "import { createUser } from './src/logic/create-user.js'; import { updateUser } from './src/logic/update-user.js'; try { const user = createUser(['Ana', 'ana-update-' + Date.now() + '@mail.com']); console.log(updateUser(user.id, ['Ana Lopez', user.email])); } catch (error) { console.log(error.message); }"
+const result = await updateUser(1, { name: "Ada Lovelace" });
 
-# Test 2: id que no existe (error).
-node --input-type=module -e "import { updateUser } from './src/logic/update-user.js'; try { updateUser(999999, ['Ana Lopez', 'nadie@mail.com']); } catch (error) { console.log(error.message); }"
+console.log(result);
+EOF

@@ -1,4 +1,4 @@
-# Plan — cerrar la issue al fusionar la pull request
+# Plan — cerrar la issue al fusionar en la rama por defecto
 
 Issue: #706.
 
@@ -6,29 +6,19 @@ No es una funcionalidad nueva. No reemplaza ningún fichero de `logic/`. No hay 
 
 ## Ficheros
 
-Se tocan:
+Esta escritura toca la spec. No abre `skills/link-pr-to-issue/SKILL.md`. Ese fichero se toca después, en las tareas de `latest-orchestrator-rules`.
 
-- `skills/link-pr-to-issue/SKILL.md`
-- `agents/git-workflow-agent.md`
-- `docs/ARCHITECTURE.md`
-- `docs/specs/git-workflow-in-first-app/spec.md`
-- `docs/specs/git-workflow-in-first-app/plan.md`
+El cierre queda dicho aquí, en `spec.md` y en este plan. `agents/git-workflow-agent.md` ya deja `Closes #N` y la issue abierta al enlazar. El paso que cierra la issue con la API sale de ese orquestador en esas mismas tareas, no en esta escritura.
 
 No se toca `logic/`, `queries/`, `db/`, `clients/`, `scripts/`, `package.json` ni la plantilla de `exercises/`.
 
 ## Enlace
 
-En `skills/link-pr-to-issue/SKILL.md`, la línea del cuerpo pasa de `Related to #N` a `Closes #N`. Ese paso no cambia el estado de la issue. La barra Development sigue con `addCloseIssueReferences`.
+La línea del cuerpo es `Closes #N`. Ese paso no cambia el estado de la issue. La barra Development sigue con `addCloseIssueReferences`. Nadie llama a la API para cerrar la issue.
 
-La base de la pull request es `staging`. La rama por defecto es `main`. GitHub cierra la issue al fusionar en `main`. Fusionar en `staging` deja la issue abierta: se cierra justo después, si sigue abierta.
+La base de la pull request es `staging`. GitHub cierra la issue al fusionar la pull request que lleva `Closes #N` en la rama por defecto. Si esa rama sigue siendo `main`, fusionar en `staging` deja la issue abierta. No se cierra justo después.
 
-## Orquestador
-
-En `agents/git-workflow-agent.md`, al empezar, el enlace deja `Closes #N` y la issue sigue abierta. Cuando la pull request ya está fusionada, la skill cierra la issue si sigue abierta.
-
-## Arquitectura y spec anterior
-
-`docs/ARCHITECTURE.md` y la spec `git-workflow-in-first-app` dicen lo mismo: `Closes #N`, y la issue se cierra cuando se fusiona la pull request.
+Antes de escribir el cuerpo, el header de `MCPS/github-mcp-server/mcp.txt` está en `mcp.json`.
 
 ## Errores
 
@@ -36,4 +26,4 @@ No hay fallo de la lista «Errores».
 
 ## Decisión
 
-El trabajo sigue en la rama `589-feat-git-workflow-in-first-app`. La issue #589 y la pull request #592 ya están cerradas. No se abre otra rama.
+La issue #836 responde la pregunta: esta spec se modifica antes de tocar `skills/link-pr-to-issue/SKILL.md`. El camino es el de la plantilla. No se llama a la API para cerrar la issue.

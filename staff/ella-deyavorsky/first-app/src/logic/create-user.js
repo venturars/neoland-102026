@@ -3,7 +3,7 @@ import { findByEmail, insert } from "../queries/users.js";
 // An address of 64 characters or longer is rejected.
 const MAX_EMAIL_LENGTH = 64;
 
-export function createUser({ name, email }) {
+export async function createUser({ name, email }) {
   // Spaces around the name do not count.
   const cleanedName = name.trim();
   if (cleanedName === "") {
@@ -40,7 +40,7 @@ export function createUser({ name, email }) {
 
   let existingUser;
   try {
-    existingUser = findByEmail(cleanedEmail);
+    existingUser = await findByEmail(cleanedEmail);
   } catch {
     throw new Error("The database failed.");
   }
@@ -57,7 +57,7 @@ export function createUser({ name, email }) {
   }
 
   try {
-    return insert({ name: cleanedName, email: cleanedEmail });
+    return await insert({ name: cleanedName, email: cleanedEmail });
   } catch {
     throw new Error("The database failed.");
   }
