@@ -10,7 +10,7 @@ Un paso. Quien lo revisa marca `- [x]`.
   Las cinco dependencias raíz quedan en las versiones del plan. El árbol hasta 3 capas coincide con lo aceptado en el plan; si no, se para y esa versión vuelve a Socket.
 
 - [x] 3. Abrir `docs/TREE.md`, `docs/ARCHITECTURE.md` y `README.md`.
-  El árbol incluye `clients/nest/` con los cinco `.js` del plan. La arquitectura dice que `clients/nest/` llama a `logic/`, escucha en el puerto 3002 y no repite sus reglas. El README avisa de que este cliente no sigue `docs/STYLE.md` ni `docs/ERRORS.md` por dentro.
+  El árbol incluye `clients/nest/` con los cinco `.js` del plan. La arquitectura dice que `clients/nest/` llama a `logic/`, escucha en el puerto 3003 y no repite sus reglas. El README avisa de que este cliente no sigue `docs/STYLE.md` ni `docs/ERRORS.md` por dentro.
 
 - [x] 4. Abrir `eslint.config.js`.
   ESLint incluye `src/clients/nest/**/*.js` con las mismas reglas que el resto del JavaScript del proyecto.
@@ -25,7 +25,7 @@ Un paso. Quien lo revisa marca `- [x]`.
   Rutas del plan. El controlador delega en el servicio. El módulo registra controlador, servicio y el filtro de errores.
 
 - [x] 8. Crear `src/clients/nest/main.js`.
-  `NestFactory` escucha en `http://127.0.0.1:3002`. Al arrancar, la consola escribe esa URL. Otra ruta responde 404 con cuerpo vacío.
+  `NestFactory` escucha en `http://127.0.0.1:3003`. Al arrancar, la consola escribe esa URL. Otra ruta responde 404 con cuerpo vacío.
 
 - [x] 9. Lanzar `pnpm format` y `pnpm lint` desde `mi-primer-proyecto`.
   `pnpm format` escribe los ficheros de `src/clients/nest/`. `pnpm lint` termina bien.
@@ -33,7 +33,7 @@ Un paso. Quien lo revisa marca `- [x]`.
 - [x] 10. Lanzar `pnpm nest` con la base accesible como hasta ahora.
   `GET /no-existe` responde 404 y un cuerpo vacío. Flujo Ada: crear, listar, ver por id, renombrar a Ada Lovelace y borrar; mismos cuerpos y códigos que la spec.
 
-- [x] 11. Probar validaciones y fallo de base en el puerto 3002.
+- [x] 11. Probar validaciones y fallo de base en el puerto 3003.
   Nombre vacío, email inválido, email duplicado e id inexistente devuelven los mismos `{ message }` y HTTP que Express. Sin SQLite, las cinco rutas responden 500 con cada `Could not …`.
 
 - [x] 12. Comprobar que Express y Electron siguen igual.
