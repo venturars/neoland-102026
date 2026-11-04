@@ -39,3 +39,12 @@ Quien prepara una tarea necesita una plantilla acorde al tipo de cambio para exp
 - **CA-10:** Se retiran las plantillas básicas y sus referencias activas; títulos en inglés de menos de 72 caracteres, cuerpos y comentarios en español, UTF-8 y ramas con prefijo codex/.
 - **CA-11:** El orquestador conserva el enlace Closes #N, las PR nacen en borrador y los revisores solo se asignan cuando Diego los indica; scripts, delegación real y protecciones permanecen vigentes.
 - **CA-12:** Árbol y arquitectura describen las plantillas vigentes; comprobaciones documentales y recorridos Git aislados tienen evidencia real. La aplicación, datos y dependencias quedan fuera del cambio.
+
+## Iteración del 4 de noviembre de 2026 · Issue #957
+
+Diego solicita conservar las asociaciones entre nombres habituales de revisores y sus logins de GitHub. Da `molero → moolero12` y `jimena → jiji-mena` como asociaciones iniciales.
+
+- **CA-13:** La asignación de revisores consulta primero una caché persistente por repositorio. Los nombres se normalizan en mayúsculas, tildes y espacios.
+- **CA-14:** Solo se buscan los nombres ausentes; los resultados inequívocos se guardan. Una corrección explícita puede reemplazar un login anterior.
+- **CA-15:** La caché guarda solo nombres y logins públicos. Se excluyen autor y duplicados antes de solicitar revisión. Los errores transitorios de GitHub no borran asociaciones.
+- **CA-16:** Se comprueban persistencia, separación por repositorio, corrección y errores en una copia temporal, con UTF-8 y comentarios breves.

@@ -36,3 +36,12 @@ Diego autoriza expresamente implementar, comprobar y entregar el bloque. No se a
 - Revisión programática de 24 archivos previstos: UTF-8 estricto, enlaces locales existentes, ausencia de referencias a plantillas básicas y doce entradas del árbol. Las doce plantillas coinciden con la fuente compartida salvo el prefijo codex/ de su comentario de rama. Los siete scripts coinciden byte a byte con staging; src, scripts, dependencias, MCPS y orquestador no tienen diferencias. El contenido anterior de spec, plan y tasks se conserva como prefijo íntegro.
 - `git diff --check` sin incidencias. No se ejecutó la aplicación ni se accedió a la base personal, no se añadieron paquetes ni una suite de tests. Linux y macOS no ejecutados.
 - Commit de trabajo, publicación y PR en borrador se ejecutan después de estas comprobaciones con los roles correspondientes. Sus resultados finales quedan en la PR de esta issue; esta evidencia no da por hechas operaciones pendientes. El merge queda a cargo de Diego.
+
+## Iteración del 4 de noviembre de 2026 · Issue #957
+
+- [x] **W01:** Registrar criterios y plan de la caché antes de modificar el workflow.
+- [x] **W02:** Implementar la caché persistente y su consulta, alta y corrección local.
+- [x] **W03:** Integrar su uso en la asignación de revisores y actualizar arquitectura y árbol.
+- [x] **W04:** Verificar casos relevantes en copia temporal, UTF-8, sintaxis y alcance; entregar PR en borrador sin pedir revisores ni fusionar.
+
+La comprobación en Windows usó una copia bajo .venv/reviewer-cache-check-957: aciertos con tildes y mayúsculas, ausencias, persistencia entre procesos, aislamiento entre repositorios, conflicto rechazado (exit 1), sustitución explícita, borrado y JSON dañado rechazado (exit 1). node --check y git diff --check correctos. Solo se usó Node local; no se pidieron revisiones reales para verificarlo. Linux/macOS pendientes.

@@ -49,3 +49,10 @@ Autorización explícita de Diego para completar el plan, implementación, compr
 6. Entregar en codex/774-chore-update-git-templates mediante una PR en borrador contra staging, asignada a la cuenta autenticada y con Closes #774 añadido por el orquestador. No asignar revisores ni fusionar.
 
 La constitución se cumple: cambio exclusivo de automatización y documentación, UTF-8, comentarios explicativos, datos privados fuera de Git y conservación de contratos y dependencias.
+
+## Iteración del 4 de noviembre de 2026 · Issue #957
+
+1. Guardar `skills/assign-reviewers/reviewer-cache.json` en UTF-8 y versionado, agrupado por repositorio, con las dos asociaciones proporcionadas por Diego.
+2. Añadir `tools/reviewer-cache.js` con `get`, `set` y `remove` sin paquetes ni red. Normalizar nombre a minúsculas, sin tildes y con espacios compactados. `set` rechaza conflictos salvo corrección explícita con `--replace`; validar el archivo antes de escribir.
+3. Actualizar `assign-reviewers` y el orquestador: consultar primero la caché, resolver solo ausentes con las reglas actuales, guardar hallazgos inequívocos, excluir autor y duplicados. Ante un login incorrecto confirmado, corregirlo expresamente. No invalidar por errores transitorios.
+4. Actualizar arquitectura y árbol. Comprobar sintaxis, UTF-8 y casos de acierto, ausencia, separación, conflicto, corrección y archivo dañado en copia temporal. Entregar en PR borrador sin pedir revisores durante esta tarea.

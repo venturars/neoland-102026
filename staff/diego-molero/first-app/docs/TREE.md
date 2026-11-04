@@ -85,6 +85,7 @@ first-app/
       SKILL.md
     assign-reviewers/
       SKILL.md
+      reviewer-cache.json
     check-status/
       SKILL.md
     commit-changes/
@@ -212,6 +213,7 @@ first-app/
       test-pull-request.md
   tools/
     check-status.sh
+    reviewer-cache.js
     commit-changes.sh
     create-branch-from-staging.sh
     create-branch.sh
