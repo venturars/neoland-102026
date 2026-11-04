@@ -1,7 +1,14 @@
-# Adelantar staging
+### Herramienta: PULL_CHANGES
 
-Úsala al empezar, antes de abrir la rama. Siempre `staging`. No cambia la rama en la que estás.
+- **Descripción**: Úsala única y exclusivamente para adelantar `staging` con un fast-forward de `origin/staging`. El orquestador siempre actualiza `staging`, esté en la rama que esté. No la uses si `staging` exige un merge o un rebase.
+- **Comando de Terminal**: `staff/meghan-martin/first-app/tools/pull-changes.sh`
 
-`staff/meghan-martin/first-app/tools/pull-changes.sh`
+El comando se lanza desde el root del repositorio git (la carpeta que contenga el directorio .git).
 
-Solo fast-forward. Si `staging` local se ha separado de `origin/staging`, para. No uses stash ni `reset --hard`.
+#### Especificación de Argumentos
+
+No recibe argumentos. Adelanta la rama local `staging` a `origin/staging`. No cambia de rama.
+
+#### Reglas de Invocación Críticas
+
+- **Procesamiento de respuestas**: El script escribe en qué commit quedó `staging`. Si el código de salida no es 0, `staging` no se pudo adelantar. Comunica el texto y no fuerces la integración. La rama en la que estabas no importa.

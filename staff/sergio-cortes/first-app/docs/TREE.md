@@ -41,6 +41,8 @@ first-app/
       list-users.js
       user-gender-count.js
     clients/
+      http/
+        server.js
       web/
         index.html
         styles.css

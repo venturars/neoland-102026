@@ -70,6 +70,8 @@ first-app/
     create-empty-commit/SKILL.md
     create-issue/SKILL.md
     create-pr-base-staging/SKILL.md
+    frontend-design/LICENSE.txt
+    frontend-design/SKILL.md
     grill-me/SKILL.md
     grill-with-docs/SKILL.md
     launch-push/SKILL.md

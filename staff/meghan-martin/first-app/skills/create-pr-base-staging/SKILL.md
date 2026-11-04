@@ -1,12 +1,17 @@
-# Pull request contra staging
+### Herramienta: CREATE_PR_BASE_STAGING
 
-Úsala desde `agents/create-pr.md`. No enlaza la issue y no la deja en draft: eso son otros pasos.
+- **Descripción**: Úsala desde el agente `create-pr` para abrir la pull request con base `staging`. No la uses para enlazar la issue: eso es `link-pr-to-issue`. No la uses para dejarla en draft: eso es `create-draft`.
+- **MCP**: El servidor remoto descrito en `MCPS/github-mcp-server/mcp.txt`.
 
-El servidor es el de `MCPS/github-mcp-server/mcp.txt`.
+Fuente de la forma del cuerpo: [github-pr](https://www.skills.sh/gentleman-programming/gentleman-skills/github-pr), adaptada a esta plantilla. La base es `staging` y la descripción va en español.
 
-1. Base: `staging`.
-2. Cabeza: la rama que acaba de subirse.
-3. Título: el de la issue, en inglés, empieza por un verbo y tiene menos de 72 caracteres.
-4. Cuerpo: español, con `templates/pull-request/<tipo>-pull-request.md`. El tipo es el de la issue y la rama. En el draft las casillas se quedan sin marcar. La sección Issue se queda sin el número.
+#### Especificación de Argumentos
 
-Si ya hay una pull request de esa rama hacia `staging`, actualiza esa. No abras otra. Devuelve la URL.
+1. **Base** _(Obligatorio)_: `staging`.
+2. **Cabeza** _(Obligatorio)_: La rama que acaba de subirse.
+3. **Título** _(Obligatorio)_: El título de la issue.
+4. **Cuerpo** _(Obligatorio)_: Español, con la plantilla del tipo en `templates/pull-request/`. La sección Issue se deja vacía. Si ese fichero no está, usa `templates/pull-request/basic-pull-request.md`.
+
+#### Reglas de Invocación Críticas
+
+- **Procesamiento de respuestas**: Si ya hay una pull request de esa rama hacia `staging`, actualiza esa. No abras otra. Devuelve la URL. Si el MCP falla, comunica el error y no inventes el enlace.

@@ -7,6 +7,11 @@ Los errores de entrada y de negocio salen de `src/logic/errors.js`. Ese fichero 
 - `ConflictError`: el email ya existe. Mensaje: `"Email is already used"`.
 - `DatabaseError`: SQLite lanzó y ese error no sale de `src/logic/`. Mensajes: `"Could not create the user"`, `"Could not update the user"`, `"Could not delete the user"`, `"Could not list the users"`, `"Could not find the user"`, `"Could not classify the users"`. Este último lo lanza `usersGenderCount`.
 
+El cliente HTTP (`src/clients/http/server.js`) usa además dos mensajes que no lanza `src/logic/`:
+
+- `"Body is invalid"`, `ValidationError`, 400. El JSON está mal formado, falta el cuerpo o el cuerpo no es un objeto.
+- `"Internal error"`, 500. Cualquier error que no es de las cuatro clases anteriores. No se muestra el mensaje original.
+
 Una entrada o una regla de negocio que no llama a una query se comprueba con `if` y lanza esa clase con el mensaje. No va dentro de `try/catch`.
 
 Cada llamada a un querie va dentro de `try/catch`. Si la query lanza, el `catch` lanza la clase global de esa llamada, con su mensaje fijo. No relanza el error de SQLite. Si la query devuelve, la regla que mira ese resultado queda fuera del `try`: un `if` y el `throw` de la clase.

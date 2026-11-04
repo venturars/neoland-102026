@@ -23,6 +23,8 @@ first-app/
         index.html
         app.js
         styles.css
+      rest/
+        server.js
     users.js
   logic/
     create-user.js

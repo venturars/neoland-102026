@@ -28,6 +28,14 @@ export default defineConfig([
     },
   },
   {
+    files: ["src/clients/rest/server.js"],
+    languageOptions: {
+      globals: {
+        console: "readonly",
+      },
+    },
+  },
+  {
     files: ["src/clients/browser/app.js"],
     languageOptions: {
       globals: {
