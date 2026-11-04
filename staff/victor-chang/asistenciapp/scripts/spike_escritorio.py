@@ -22,6 +22,7 @@ from pathlib import Path
 
 import webview
 from flask import Flask, jsonify
+from flask.typing import ResponseReturnValue
 from werkzeug.serving import make_server
 
 T_MAIN = time.time()
@@ -62,18 +63,23 @@ document.getElementById("google").onclick = async () => {
 
 
 def log(message: str) -> None:
+    """Añade una línea con la hora a spike.log."""
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     with LOG.open("a", encoding="utf-8") as file:
         file.write(f"{time.strftime('%H:%M:%S')} {message}\n")
 
 
 class Tunnel:
+    """El proceso de cloudflared y su URL pública."""
+
     def __init__(self) -> None:
+        """Sin abrir todavía."""
         self.process: subprocess.Popen[str] | None = None
         self.url: str | None = None
         self.lock = threading.Lock()
 
     def open(self, port: int) -> str:
+        """Abre el túnel (o devuelve la URL si ya está abierto)."""
         with self.lock:
             if self.url:
                 return self.url
@@ -89,8 +95,7 @@ class Tunnel:
                 text=True,
             )
             deadline = time.time() + 30
-            assert self.process.stdout is not None
-            for line in self.process.stdout:
+            for line in self.process.stdout or []:
                 if "trycloudflare.com" in line and "https://" in line and "api." not in line:
                     start = line.index("https://")
                     self.url = line[start:].split()[0].rstrip("|").strip()
@@ -109,6 +114,7 @@ class Tunnel:
                 pass
 
     def close(self) -> None:
+        """Para cloudflared, matándolo si no sale en 5 s."""
         if self.process:
             self.process.terminate()
             try:
@@ -119,6 +125,7 @@ class Tunnel:
 
 
 def google_login() -> dict[str, object]:
+    """Pide el permiso de Meet en el navegador y lo prueba con una llamada a la API."""
     from google.auth.transport.requests import AuthorizedSession
     from google_auth_oauthlib.flow import InstalledAppFlow
 
@@ -144,11 +151,12 @@ def google_login() -> dict[str, object]:
 
 
 def build_app(tunnel: Tunnel, port_box: list[int]) -> Flask:
+    """La app de Flask del spike: la página y las rutas de túnel y Google."""
     app = Flask(__name__)
     app.add_url_rule("/", "index", lambda: PAGE)
 
     @app.post("/tunnel")
-    def open_tunnel():  # type: ignore[no-untyped-def]
+    def open_tunnel() -> ResponseReturnValue:
         try:
             return jsonify(url=tunnel.open(port_box[0]))
         except Exception as exc:  # noqa: BLE001 — spike: se informa de cualquier fallo
@@ -156,7 +164,7 @@ def build_app(tunnel: Tunnel, port_box: list[int]) -> Flask:
             return jsonify(error=str(exc)), 502
 
     @app.post("/google")
-    def google():  # type: ignore[no-untyped-def]
+    def google() -> ResponseReturnValue:
         try:
             return jsonify(google_login())
         except Exception as exc:  # noqa: BLE001
@@ -167,11 +175,16 @@ def build_app(tunnel: Tunnel, port_box: list[int]) -> Flask:
 
 
 class Api:
+    """Lo que la página puede llamar en Python (js_api)."""
+
     def __init__(self) -> None:
+        """Sin ventana hasta que se crea."""
         self.window: webview.Window | None = None
 
     def save_file(self, filename: str, content: str) -> bool:
-        assert self.window is not None
+        """Guarda el texto con BOM donde elija el profesor; False si cancela."""
+        if self.window is None:
+            return False
         chosen = self.window.create_file_dialog(webview.FileDialog.SAVE, save_filename=filename)
         if not chosen:
             log("save_file: cancelado")
@@ -183,6 +196,8 @@ class Api:
 
 
 def check_public_url(url: str) -> None:
+    """Espera hasta 60 s a que la URL pública responda."""
+    last = ""
     for attempt in range(1, 31):
         try:
             with urllib.request.urlopen(url, timeout=5) as response:  # noqa: S310
@@ -195,6 +210,7 @@ def check_public_url(url: str) -> None:
 
 
 def auto_run(window: webview.Window, tunnel: Tunnel, port: int) -> None:
+    """Modo SPIKE_AUTO: túnel, comprobación, CSV y cierre."""
     try:
         url = tunnel.open(port)
         log(f"auto: tunnel url {url}")
@@ -213,6 +229,7 @@ def auto_run(window: webview.Window, tunnel: Tunnel, port: int) -> None:
 
 
 def main() -> None:
+    """Servidor en un hilo, ventana y limpieza al cerrar."""
     log(f"--- start frozen={getattr(sys, 'frozen', False)} bundle={BUNDLE}")
     t0 = float(os.environ.get("SPIKE_T0", T_MAIN))
     tunnel = Tunnel()
@@ -224,7 +241,8 @@ def main() -> None:
 
     api = Api()
     window = webview.create_window("Spike 007", f"http://127.0.0.1:{server.server_port}/", js_api=api)
-    assert window is not None
+    if window is None:
+        raise SystemExit("pywebview no creó la ventana")
     api.window = window
 
     def on_loaded() -> None:
