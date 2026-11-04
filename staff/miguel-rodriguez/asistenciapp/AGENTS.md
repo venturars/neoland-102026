@@ -124,6 +124,7 @@ Una funcionalidad está terminada cuando:
 | `011-funciones-de-carrera-legibles` | Implementada y verificada; preparación completa autorizada por Miguel el 2026-10-26; revisión de compañeros pendiente | Resultados semánticos, permiso local de un uso y compatibilidad con 010; evidencia en specs/011-funciones-de-carrera-legibles/tasks.md |
 | `012-alumnos-y-personajes-en-almacenamiento` | Implementada y verificada; resultado aprobado por Miguel el 2026-10-27 | Issue #524, PR #525 en draft con base staging; 304 pruebas Python y 29 JavaScript; recorrido local verificado; evidencia en tasks.md; publicación autorizada, revisión de compañeros pendiente |
 | `013-flujo-de-git` | Implementación y verificación delegadas por Miguel el 2026-11-02; revisión de compañeros pendiente | Issue #761; cinco momentos y flujo Git local, sin cambios del producto |
+| `014-rondas-y-commits` | Implementada y verificada; publicación pendiente | Issue #1028, PR #1031 hacia staging; rondas, historial y mensajes concretos; autorización conjunta del 2026-11-04 y evidencia en tasks.md |
 | Bot de Discord (sin número asignado) | Idea futura | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
