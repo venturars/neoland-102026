@@ -20,32 +20,34 @@
         <p id="message" class="message" role="status" hidden></p>
 
         <section id="selection-screen" data-screen>
-          <p class="eyebrow">Usuarios</p>
-          <h2 id="selection-heading">Selecciona un usuario</h2>
-          <p class="description">
-            Elige un usuario de la lista para ver sus opciones.
-          </p>
-          <form id="selection-form">
-            <div class="field">
-              <label for="user-select">Usuario</label>
-              <select id="user-select" name="user" required>
-                <option value="">Cargando usuarios…</option>
-              </select>
-              <p id="selection-status" class="help">Cargando la lista…</p>
-            </div>
-            <div class="actions">
-              <button id="select-user" type="submit">Continuar</button>
-              <button
-                id="reload-users"
-                class="secondary"
-                type="button"
-                data-action="selection"
-              >
-                Actualizar lista
-              </button>
-            </div>
-          </form>
-          <div class="create-user">
+          <div class="panel">
+            <p class="eyebrow">Usuarios</p>
+            <h2 id="selection-heading">Selecciona un usuario</h2>
+            <p class="description">
+              Elige un usuario de la lista para ver sus opciones.
+            </p>
+            <form id="selection-form">
+              <div class="field">
+                <label for="user-select">Usuario</label>
+                <select id="user-select" name="user" required>
+                  <option value="">Cargando usuarios…</option>
+                </select>
+                <p id="selection-status" class="help">Cargando la lista…</p>
+              </div>
+              <div class="actions">
+                <button id="select-user" type="submit">Continuar</button>
+                <button
+                  id="reload-users"
+                  class="secondary"
+                  type="button"
+                  data-action="selection"
+                >
+                  Actualizar lista
+                </button>
+              </div>
+            </form>
+          </div>
+          <div class="panel">
             <p class="eyebrow">Alta</p>
             <h2>Crear usuario</h2>
             <p class="description">Añade un usuario con nombre y email.</p>

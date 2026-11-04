@@ -202,14 +202,17 @@ select:disabled {
   cursor: not-allowed;
 }
 
-.create-user {
-  margin-top: 1.5rem;
+.panel {
   padding: 1rem;
   border: 1px solid var(--color-border);
   border-radius: 0.5rem;
 }
 
-.create-user h2 {
+.panel + .panel {
+  margin-top: 1.5rem;
+}
+
+.panel h2 {
   margin-bottom: 0.5rem;
   font-size: 1.15rem;
 }
