@@ -1,0 +1,1 @@
+SELECT r.*,s.title,s.secret,s.opened_at,s.closed_at FROM races r JOIN sessions s ON s.id=r.session_id WHERE r.session_id=?

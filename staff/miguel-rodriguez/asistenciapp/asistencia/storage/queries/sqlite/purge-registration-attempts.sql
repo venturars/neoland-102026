@@ -1,0 +1,1 @@
+DELETE FROM registration_attempts WHERE attempted_at <= ?
