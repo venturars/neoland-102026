@@ -12,7 +12,6 @@ datos y configuración personal.
 
 ## Referencia y alcance
 
-Commit fijado: `02c6fa08bef40a0add29e99e8955eee9ce8f1ae5`.
 Se revisaron completos código HTTP, manifiesto, lockfile, spec, plan,
 tareas, arquitectura y árbol. `src/clients/http/app.js` coincide byte por
 byte con el cliente de ese commit, también después de Prettier.

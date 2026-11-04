@@ -90,7 +90,6 @@ No hay SQL.
 ## Autorización y referencia fijada
 
 Esta tarea autoriza spec, plan, tareas e implementación sin pausas SDD.
-El commit revisado es `02c6fa08bef40a0add29e99e8955eee9ce8f1ae5`.
 Se han leído completos el código HTTP, manifiesto, lockfile, spec, plan,
 tareas, árbol y arquitectura de ese commit. El cliente HTTP conserva su
 contenido exacto. Los scripts locales de navegador y los demás paquetes se
