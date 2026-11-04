@@ -16,6 +16,8 @@ El cliente `src/clients/browser/` contiene `index.html`, `app.js` y `styles.css`
 
 `src/logic/` es el núcleo estable de la aplicación. No se reemplaza por adaptadores, plugins o implementaciones intercambiables, y sus reglas no se trasladan a `src/queries/` ni a `src/clients/`. Cada operación tiene su propio archivo; una operación nueva no modifica otro archivo para reutilizarlo.
 
+El cliente `src/clients/electron/` abre una ventana de escritorio propia e importa las operaciones de `src/logic/`. No reutiliza `src/clients/browser/` ni sustituye al servidor SQL de `src/db/server.js`.
+
 Los contratos de funciones siguen [STYLE.md](STYLE.md); las salidas y los errores se definen en [ERRORS.md](ERRORS.md).
 
 `eslint.config.js` configura la revisión del JavaScript con las reglas
