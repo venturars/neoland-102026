@@ -55,6 +55,7 @@ En la terminal donde se ejecuta: `Ctrl + C`, y confirma con `y` si lo pide.
 | `prepare-database.ipynb` | `createUsersTable()` (paso técnico, en `queries/`) |
 | `create-user.ipynb` | `createUser` |
 | `list-users.ipynb` | `listUsers` |
+| `list-gmail-users.ipynb` | `listGmailUsers` |
 | `find-user-by-id.ipynb` | `findUserById` |
 | `find-user-by-email.ipynb` | `findUserByEmail` |
 | `update-user.ipynb` | `updateUser` |
