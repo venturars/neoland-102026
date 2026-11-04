@@ -1,39 +1,19 @@
-import { deleteUser as deleteUserRow, findUserById } from "../queries/users.js";
+import { findById, remove } from "../queries/users.js";
 
-export function deleteUser(id) {
-  let idMissing = false;
-  if (id === undefined) {
-    idMissing = true;
-  }
-  if (id === null) {
-    idMissing = true;
-  }
-  if (!idMissing) {
-    const idAsText = String(id);
-    const trimmedId = idAsText.trim();
-    if (trimmedId === "") {
-      idMissing = true;
-    }
-  }
-  if (idMissing) {
-    throw new Error("User does not exist");
-  }
-
-  let currentUser;
-
+export async function deleteUser(id) {
+  let current;
   try {
-    const numericId = Number(id);
-    currentUser = findUserById(numericId);
+    current = await findById(id);
   } catch {
     throw new Error("Could not delete the user");
   }
 
-  if (!currentUser) {
-    throw new Error("User does not exist");
+  if (!current) {
+    throw new Error("User not found");
   }
 
   try {
-    deleteUserRow(currentUser.id);
+    await remove(id);
   } catch {
     throw new Error("Could not delete the user");
   }

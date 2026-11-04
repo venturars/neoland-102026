@@ -36,6 +36,17 @@ CREATE TABLE IF NOT EXISTS checkins (
   checked_at  TEXT NOT NULL,
   UNIQUE (session_id, name_key)
 );
+
+CREATE TABLE IF NOT EXISTS registration_attempts (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  ip           TEXT NOT NULL,
+  attempted_at REAL NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS blocked_ips (
+  ip         TEXT PRIMARY KEY,
+  blocked_at TEXT NOT NULL
+);
 """
 
 
@@ -254,6 +265,126 @@ def list_checkins(path: PathArg, session_id: str) -> list[dict]:
             (session_id,),
         ).fetchall()
         return [dict(row) for row in rows]
+    finally:
+        conn.close()
+
+
+def add_registration_attempt(path: PathArg, ip: str, attempted_at: float) -> None:
+    """Anota un intento de registrarse desde esa IP.
+
+    :param path: ruta del archivo.
+    :param ip: IP pública estática del intento.
+    :param attempted_at: instante Unix, en segundos.
+    :return: None.
+    :rtype: None
+
+    Usage::
+
+      add_registration_attempt(path, ip, now)
+    """
+    conn = _connect(path)
+    try:
+        with conn:
+            conn.execute(
+                "INSERT INTO registration_attempts (ip, attempted_at) VALUES (?, ?)",
+                (ip, attempted_at),
+            )
+    finally:
+        conn.close()
+
+
+def count_registration_attempts(path: PathArg, ip: str, since: float) -> int:
+    """Cuenta los intentos de esa IP desde un instante, incluido ese instante.
+
+    :param path: ruta del archivo.
+    :param ip: IP pública estática.
+    :param since: instante Unix a partir del cual se cuenta.
+    :return: cuántos intentos hay.
+    :rtype: int
+
+    Usage::
+
+      total = count_registration_attempts(path, ip, now - 60)
+    """
+    conn = _connect(path)
+    try:
+        row = conn.execute(
+            """
+            SELECT COUNT(*) AS total
+            FROM registration_attempts
+            WHERE ip = ? AND attempted_at >= ?
+            """,
+            (ip, since),
+        ).fetchone()
+        return int(row["total"])
+    finally:
+        conn.close()
+
+
+def prune_registration_attempts(path: PathArg, older_than: float) -> None:
+    """Borra los intentos anteriores a un instante. No toca la lista de bloqueo.
+
+    :param path: ruta del archivo.
+    :param older_than: se borran los intentos con hora estrictamente menor.
+    :return: None.
+    :rtype: None
+
+    Usage::
+
+      prune_registration_attempts(path, now - 60)
+    """
+    conn = _connect(path)
+    try:
+        with conn:
+            conn.execute(
+                "DELETE FROM registration_attempts WHERE attempted_at < ?",
+                (older_than,),
+            )
+    finally:
+        conn.close()
+
+
+def is_ip_blocked(path: PathArg, ip: str) -> bool:
+    """Dice si esa IP está en la lista de bloqueo.
+
+    :param path: ruta del archivo.
+    :param ip: IP pública estática.
+    :return: True si está bloqueada.
+    :rtype: bool
+
+    Usage::
+
+      if is_ip_blocked(path, ip):
+          ...
+    """
+    conn = _connect(path)
+    try:
+        row = conn.execute("SELECT 1 FROM blocked_ips WHERE ip = ?", (ip,)).fetchone()
+        return row is not None
+    finally:
+        conn.close()
+
+
+def block_ip(path: PathArg, ip: str, blocked_at: str) -> None:
+    """Deja esa IP en la lista de bloqueo. Si ya estaba, no cambia la hora.
+
+    :param path: ruta del archivo.
+    :param ip: IP pública estática.
+    :param blocked_at: hora del bloqueo, en ISO UTC.
+    :return: None.
+    :rtype: None
+
+    Usage::
+
+      block_ip(path, ip, blocked_at)
+    """
+    conn = _connect(path)
+    try:
+        with conn:
+            conn.execute(
+                "INSERT OR IGNORE INTO blocked_ips (ip, blocked_at) VALUES (?, ?)",
+                (ip, blocked_at),
+            )
     finally:
         conn.close()
 

@@ -30,6 +30,10 @@ The form of individual code lines belongs in [STYLE.md](STYLE.md).
 
 ## Public business operations
 
+All public operations are asynchronous: callers await their results and catch
+rejections. The parameters, validation order and resolved values below remain
+unchanged.
+
 For contact-returning operations, a returned user is a new ordinary object containing exactly `id`, `name`, `email`, `createdAt`, and `updatedAt`. Business functions do not return SQLite row objects or result wrappers.
 
 | Signature | Behavior and return |
@@ -60,9 +64,10 @@ failure handling. See [DATABASE.md](DATABASE.md) for the storage and query detai
 
 ## Terminal examples
 
-Run examples from the project directory using a Node version supporting `node:sqlite`. Run the initialization snippet separately before business operations; creation must precede examples that need an existing contact. ID-lookup, update, and delete examples use a sample ID that the learner must replace with an existing ID. Use a disposable contact for permanent deletion.
+Start the local data service with `pnpm server` in a separate terminal. Run
+examples from the project directory using a Node version supporting `node:sqlite`. Run the initialization snippet separately before business operations; creation must precede examples that need an existing contact. ID-lookup, update, and delete examples use a sample ID that the learner must replace with an existing ID. Use a disposable contact for permanent deletion.
 
-Each example starts a separate Node process. Clients import and call the relevant operation and use `console.log`; initialization prints the table listing from `SELECT name FROM sqlite_master WHERE type = 'table'` using `db.prepare(...).all()`, including `users`, deletion prints `undefined`, and other examples print returned data. The classifier client awaits its async result and requires the local AI prerequisites documented in its example for nonempty data. No interactive application or general-purpose CLI is implemented.
+Each example starts a separate Node process. Clients import and call the relevant operation and use `console.log`; initialization awaits `createUsersTable()` and prints the result of `listTables()`, including `users`, deletion prints `undefined`, and other examples print returned data. The classifier client awaits its async result and requires the local AI prerequisites documented in its example for nonempty data. No interactive application or general-purpose CLI is implemented.
 
 ## Dependencies and package management
 

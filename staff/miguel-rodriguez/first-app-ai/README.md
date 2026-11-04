@@ -2,6 +2,21 @@
 
 Aplicación local de contactos. Los nueve documentos de Jupyter permiten ejecutar sus operaciones y leer los resultados desde el navegador.
 
+## Arrancar los datos
+
+Desde esta carpeta, con las dependencias del proyecto disponibles:
+
+```sh
+pnpm server
+```
+
+Deja esa terminal abierta. El servicio escucha en `http://127.0.0.1:3000` y abre
+`src/db/users.sqlite`; la tabla se prepara explícitamente en el primer notebook
+o con el ejemplo Terminal de inicialización. Terminal y Jupyter utilizan esos
+mismos datos. El servicio es local y no tiene autenticación.
+
+En otra terminal puedes usar los ejemplos de `src/clients/terminal/` o abrir Jupyter.
+
 ## Abrir Jupyter
 
 Requisitos: Node compatible con `node:sqlite` (`24.12.0` verificado), pnpm y Python 3.10 o posterior. En Windows, Python debe estar disponible mediante `py -3`.
@@ -31,7 +46,7 @@ Cada documento funciona tras **Kernel → Restart Kernel**; no necesita variable
 
 Preparar, crear, actualizar y eliminar trabajan sobre **`src/db/users.sqlite` de esta copia**. Las consultas conservan los contactos y las fechas. Para experimentar, copia el proyecto sin su base de datos y usa datos ficticios en esa copia.
 
-Para parar Notebook vuelve a la terminal y pulsa **Ctrl+C**; confirma la parada si Jupyter lo solicita. Cerrar una pestaña no para el servidor.
+Para parar el servicio de datos pulsa **Ctrl+C** en su terminal. Para parar Notebook vuelve a la terminal y pulsa **Ctrl+C**; confirma la parada si Jupyter lo solicita. Cerrar una pestaña no para el servidor.
 
 Los ejemplos anteriores siguen disponibles en `src/clients/terminal/`. Las reglas están en [la constitución](docs/CONSTITUTIONS.md) y la verificación del cliente en [las tareas](docs/specs/jupyter-client/tasks.md).
 

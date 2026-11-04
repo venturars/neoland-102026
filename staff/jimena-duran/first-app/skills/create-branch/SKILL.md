@@ -1,18 +1,18 @@
----
-name: create-branch
-description: Crea o recupera una rama desde una base distinta de staging solo cuando esa excepción está autorizada.
----
+### Herramienta: CREATE_BRANCH
 
-# Rama desde otra base
+- **Descripción**: Úsala cuando hay que abrir la rama desde una base que no es `staging`. Si la base es `staging`, usa `create-branch-from-staging`. No la uses para guardar un commit ni para abrir la pull request.
+- **Comando de Terminal**: `./staff/jimena-duran/first-app/tools/create-branch.sh "[BASE]" "[NUMERO]" "[TIPO]" "[DESCRIPCION]"`
 
-La ejecuta `agents/create-branch.md`. Usa `create-branch-from-staging` para staging; esta skill exige una base distinta autorizada, una issue existente, tipo y descripción kebab-case.
+El comando se lanza desde el root del repositorio git (la carpeta que contenga el directorio .git).
 
-Desde la raíz:
+#### Especificación de Argumentos
 
-```powershell
-& .\staff\jimena-duran\first-app\tools\create-branch.ps1 -Base $base -Issue $issueNumber -Type $type -Description $description
-```
+1. **BASE** _(Obligatorio)_: La rama de partida. Puede ser local (`main`) o remota (`origin/main`). No uses `staging`: para esa base está la otra skill.
+2. **NUMERO** _(Obligatorio)_: El número de la issue, solo dígitos.
+3. **TIPO** _(Obligatorio)_: El tipo de la plantilla.
+4. **DESCRIPCION** _(Obligatorio)_: La descripción de la rama.
 
-Añade `-BranchName $branchName` solo para un nombre expresamente autorizado. Desde `first-app`, usa `& .\tools\create-branch.ps1` con esos parámetros. Cada tarea aporta su propia rama; no hay una rama personal permanente.
+#### Reglas de Invocación Críticas
 
-No sobrescribas ramas existentes ni cambies la base en silencio. Devuelve rama y base verificadas. Si hay cambios bloqueantes, una base inexistente, divergencia o conflictos, informa al orquestador y detente antes de resolver. Esta skill no hace commit, push ni PR.
+- **Escapado de caracteres**: Si un argumento contiene comillas dobles (`"`), escápalas como `\"`.
+- **Procesamiento de respuestas**: El script escribe el nombre de la rama y la base usada. Si el código de salida no es 0, lee el error. Si la rama ya existía, el script se queda en ella: sigue desde ahí.

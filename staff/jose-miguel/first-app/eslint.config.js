@@ -12,4 +12,15 @@ export default defineConfig([
     },
     extends: ["js/recommended"],
   },
+  {
+    files: ["scripts/**/*.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        console: "readonly",
+        process: "readonly",
+      },
+    },
+  },
 ]);

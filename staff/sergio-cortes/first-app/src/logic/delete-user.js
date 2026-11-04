@@ -1,7 +1,7 @@
 import { DatabaseError, NotFoundError, ValidationError } from "./errors.js";
 import { findById, remove } from "../queries/user.js";
 
-export function deleteUser(id) {
+export async function deleteUser(id) {
   if (typeof id !== "number") {
     throw new ValidationError("Id is invalid");
   }
@@ -9,7 +9,7 @@ export function deleteUser(id) {
   let user;
 
   try {
-    user = findById(id);
+    user = await findById(id);
   } catch {
     throw new DatabaseError("Could not delete the user");
   }
@@ -19,7 +19,7 @@ export function deleteUser(id) {
   }
 
   try {
-    remove(id);
+    await remove(id);
   } catch {
     throw new DatabaseError("Could not delete the user");
   }

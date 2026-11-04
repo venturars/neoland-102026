@@ -1,103 +1,84 @@
-# AGENTS.md — Cómo trabajar en AsistenciApp
+# Instrucciones de trabajo — AsistenciApp
 
-Este archivo contiene solo instrucciones de trabajo. La constitución define las reglas del producto, la arquitectura explica el código y el README contiene los comandos de uso.
+Este manual define el proceso y los cinco momentos en que interviene la persona responsable. La constitución recoge los principios del producto; la arquitectura explica el código y el README, su uso.
 
-## 1. Fuentes de verdad
+## 1. Alcance, redacción y fuentes
 
-Lee estos documentos antes de editar, en este orden:
+Trabaja solo dentro de la raíz de esta aplicación y sobre el pedido autorizado. Usa roles generales y rutas relativas a esa raíz en la documentación. Los comandos conservan las rutas necesarias desde el directorio de ejecución indicado.
 
-1. `docs/CONSTITUTION.md`.
-2. `docs/ARCHITECTURE.md`.
-3. Este archivo.
-4. La spec local aprobada y sus `plan.md` y `tasks.md`.
+Evita nombres personales, comparaciones con otras copias y apartados de punto de partida ligados a ramas o commits.
 
-Busca specs **únicamente** en `staff/maria-osipuk/asistenciapp/specs/`. Una spec de otra app no autoriza cambios aquí.
+Antes de editar, lee la [constitución](docs/CONSTITUTION.md), la [arquitectura](docs/ARCHITECTURE.md), este manual y la spec local que cubre el cambio. Para escribir código consulta también [STYLE.md](docs/STYLE.md).
 
-La arquitectura es la fuente para `domain/`, `usecases/attendance.py`, `storage/sqlite.py`, `app.py` y `static/`. No repitas esa información en este archivo.
+Busca specs únicamente en `specs/` de esta app. Una spec de otra aplicación no autoriza cambios aquí. La arquitectura es la fuente para las responsabilidades y dependencias; no las copies en este manual.
 
-Si una petición contradice la constitución, detente y explica el conflicto antes de escribir.
+Una petición de explicación o revisión es de lectura. Una petición explícita de editar autoriza el trabajo dentro de su alcance y del momento en curso; nombrar un archivo no autoriza por sí solo a cambiarlo.
 
-## 2. Nueva tarea: Git Flow
+Si el pedido contradice un principio, explica el conflicto y presenta la enmienda antes de implementarlo. La constitución solo se modifica con aprobación explícita de la persona responsable.
 
-Toda tarea nueva sigue `docs/GIT-WORKFLOW.md` en la raíz de `neoland-102026`: issue, rama desde `staging` y pull request en draft hacia `staging`.
+## 2. Flujo Git y autorizaciones
 
-Cuando un mensaje describe una tarea nueva, abre solo `neoland-102026/docs/skills/create-issue/SKILL.md`, `.github/issue_template.md` y `scripts/new-issue.sh`. Enseña la persona asignada y el título, y espera autorización antes de crear la issue.
+Las operaciones de Git siguen el [orquestador local](agents/git-workflow-agent.md). Antes de elegir una operación, consulta [check-status](skills/check-status/SKILL.md).
 
-Nombrar un archivo no autoriza a modificarlo. La issue tampoco sustituye a la spec de esta app.
+Una tarea nueva se registra con una issue asignada a la cuenta autenticada, una rama desde `staging` y una PR en borrador hacia `staging`. Las [plantillas de issues](templates/issues/) y de [PR](templates/pull-request/) definen el título, el cuerpo y el tipo de rama.
 
-## 3. Desarrollo guiado por especificaciones
+El agente `create-pr` crea la PR. El orquestador llama después a [link-pr-to-issue](skills/link-pr-to-issue/SKILL.md) para dejar `Closes #N` y la asociación Development. El cierre automático depende de fusionar en la rama predeterminada; no cierres la issue manualmente.
 
-El orden obligatorio es `spec.md` → aprobación → `plan.md` → aprobación → `tasks.md` → aprobación → código.
+Los scripts de `tools/` se ejecutan desde la raíz del repositorio, con los argumentos de archivo relativos a ella. La [guía MCP](MCPS/github-mcp-server/mcp.txt) documenta la conexión remota y utiliza marcadores de credenciales. Modificar una configuración personal requiere autorización para ese cambio.
 
-| Fase | Contenido necesario |
-| --- | --- |
-| `spec.md` | Problema, usuarios, historias, criterios `CA-xx`, fuera de alcance y preguntas abiertas. Explica qué se necesita, sin tecnologías. |
-| `plan.md` | Arquitectura, datos, rutas, archivos y comprobación de P1–P6 y §5–§6 de la constitución. Justifica cualquier dependencia nueva. |
-| `tasks.md` | Pasos pequeños y ordenados. Cada tarea indica qué `CA-xx` cubre. Siempre que sea posible, el test va primero. |
-| Código | Se implementa una tarea cada vez y se marca `[x]` solo después de comprobarla. |
+Commit y push solo en el momento 2 (el commit vacío) y en el momento 5, cuando se piden. No se hace merge a `staging`. Una PR ya lista para revisión conserva su estado salvo petición expresa.
 
-Si falta una decisión, escribe `[NECESITA ACLARACIÓN: pregunta concreta]` y espera. No inventes requisitos.
+El orden de preparación es issue → rama → PR en borrador → spec local. Vale para cualquier cambio de un archivo de la app, incluida la documentación. Una issue, una rama o una PR no sustituye la spec local ni autoriza el código.
 
-Si ninguna spec local aprobada cubre el cambio, crea la siguiente carpeta `specs/NNN-nombre-en-kebab-case/` y empieza únicamente por `spec.md`.
+## 3. Cinco momentos
 
-Si el plan deja de ser correcto durante la implementación, actualízalo y pide aprobación antes de continuar.
+La persona responsable interviene solo en estos cinco momentos, en este orden. Cada uno lo pide ella; el agente se para al terminarlo y no empieza el siguiente.
 
-## 4. Reglas de implementación
+| Momento         | Qué queda escrito                                                                      | Qué no se hace        |
+| --------------- | -------------------------------------------------------------------------------------- | --------------------- |
+| 1. Issue        | Qué hay que hacer y cómo probarlo. Si falta definirla, la entrevista va aquí, una pregunta cada vez | Rama, specs, código   |
+| 2. Draft        | De un tirón: `staging` al día, rama, commit vacío, push, PR en borrador y `Closes #N`  | Specs y código        |
+| 3. Specs        | `spec.md`, `plan.md` y `tasks.md` en la misma pasada, sin ok entre ellos              | Código, commit y push |
+| 4. Implementar  | El cambio de las tasks                                                                 | Commit y push         |
+| 5. Pull request | Solo lo que se pida sobre esa PR: subir ficheros nombrados, pedir revisión u otra cosa | Merge a `staging`     |
 
-- Edita solo dentro de `staff/maria-osipuk/asistenciapp/`.
-- Implementa únicamente lo aprobado en la spec y las tasks.
-- Trabaja una tarea o una responsabilidad cada vez.
-- No añadas dependencias, funcionalidades, capas, refactors ni cambios de contrato no solicitados.
-- No hagas commit, push ni merge sin autorización.
-- No modifiques la constitución salvo para proponer una enmienda.
-- Si arrancas la app o el túnel, páralos al terminar y comprueba que el puerto 8000 queda libre.
+El código espera al momento 4, con las tres specs ya escritas. Crear archivos o pasar las pruebas no equivale a la aceptación de la persona responsable.
 
-## 5. Código para una desarrolladora junior
+## 4. SDD de esta aplicación
 
-El código nuevo y las partes modificadas deben ser:
+| Fase           | Contenido                                                                                                                             |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `spec.md`      | Problema, usuarios, historias, criterios `CA-xx`, fuera de alcance y preguntas abiertas. Explica el qué y el porqué, sin tecnologías. |
+| `plan.md`      | Arquitectura, datos, rutas, archivos, verificación y cumplimiento de P1–P6 y §5–§6 de la constitución. Justifica dependencias nuevas. |
+| `tasks.md`     | Pasos pequeños y ordenados, relacionados con sus `CA-xx`. Siempre que sea posible, el test va primero.                                |
+| Implementación | Una tarea cada vez. Marca `[x]` solo después de comprobar su resultado.                                                               |
 
-- **Sencillo:** usa el menor número de conceptos necesario.
-- **Explícito:** valida y transforma los datos en pasos visibles.
-- **Declarativo:** los nombres describen la intención, como `showLiveClassroom` o `isSessionOpen`.
-- **Lineal:** el caso principal se lee de arriba abajo y los errores terminan pronto.
-- **Descriptivo:** usa nombres descriptivos y completos; solo admite abreviaturas habituales, como `id`.
-- **Dividido:** cada función hace una sola cosa y coordina pasos con nombre.
+Si ninguna spec local cubre el cambio, crea en el momento 3 la siguiente carpeta `specs/NNN-nombre-en-kebab-case/` con los tres documentos. La spec abre con el número de la issue.
 
-Prefiere una solución más larga cuando sea más fácil de entender y explicar. Evita abstracciones prematuras, trucos de una línea, anidación profunda y ayudantes genéricos.
+Esta cobertura incluye código, tests, README y demás documentación de la aplicación. Las dudas necesarias para decidir alcance o comportamiento se preguntan en el momento 3 o se marcan como `[NECESITA ACLARACIÓN: pregunta concreta]`. No inventes requisitos.
 
-En Python, los parámetros y resultados llevan tipos. El docstring usa `:param`, `:return`, `:rtype` y `:raises`; un ejemplo breve puede añadirse en `Usage::`.
+Si durante la implementación la spec o el plan resultan incorrectos o incompletos, dilo y no inventes el cambio.
 
-No dupliques reglas, no conviertas silenciosamente un valor inválido y no crees funciones que solo trasladen otra llamada.
+## 5. Implementación y documentación
 
-La interfaz, los errores y la documentación se escriben en español. Los nombres y comentarios del código pueden estar en inglés.
-
-### Comentarios educativos
-
-Un comentario se escribe en inglés sencillo y con una frase completa. Solo se añade cuando explica algo que el código no puede mostrar por sí solo:
-
-- una decisión y su motivo;
-- un límite o caso especial;
-- una regla de negocio, privacidad o seguridad;
-- una entrada, salida o error importante;
-- el orden necesario entre dos pasos.
-
-Ejemplo útil:
-
-```js
-// Keep the first load silent so existing students are not announced as new arrivals.
-```
-
-Si un nombre más claro evita el comentario, mejora el nombre. No añadas comentarios que solo traduzcan la línea siguiente.
+- Implementa únicamente lo que cubren `spec.md`, `plan.md` y `tasks.md`, y conserva los contratos ajenos al pedido.
+- Usa código sencillo, explícito y lineal, con nombres descriptivos, según [STYLE.md](docs/STYLE.md).
+- Justifica dependencias, capas o refactors antes de incorporarlos; no los añadas como mejoras ajenas a la tarea.
+- Comprueba el comportamiento con datos temporales, sin sustituir la base real.
+- Actualiza arquitectura, estilo o README cuando cambie lo que describen. La constitución cambia solo mediante una enmienda de principios o decisiones fundamentales.
+- Conserva las specs históricas como registro de sus tareas; no las reescribas para describir una versión posterior de la app.
+- Si arrancas un proceso para comprobar la tarea, registra su puerto y detén únicamente ese proceso al terminar. No detengas procesos existentes ajenos a la comprobación.
 
 ## 6. Verificación y cierre
 
-Una tarea está terminada cuando:
+La implementación está preparada para revisión cuando:
 
-- todas sus casillas están en `[x]`;
+- las tareas implementadas y comprobadas están marcadas en `tasks.md`;
 - `pytest` pasa;
-- cada `CA-xx` tiene una prueba automática o una comprobación manual registrada;
-- `README.md` explica cualquier cambio visible;
-- la constitución y la arquitectura siguen siendo correctas;
-- la persona responsable ha probado y aprobado el resultado.
+- cada `CA-xx` tiene un test automatizado o, si es visual, una comprobación manual registrada;
+- las guías afectadas y el README describen el resultado real;
+- no hay cambios ajenos al alcance ni principios incumplidos.
 
-Al cerrar una fase, informa de los archivos modificados, qué hace el cambio, qué se comprobó, el resultado y lo que queda pendiente. No afirmes que algo funciona sin haberlo comprobado.
+La aceptación final corresponde a la persona responsable después de probar y aprobar el resultado. Pasar las pruebas no sustituye esa aceptación.
+
+Al cerrar un momento, informa de los archivos cambiados, el resultado, las comprobaciones, las limitaciones y lo pendiente. Distingue trabajo local de trabajo publicado y no afirmes que algo funciona o está aprobado sin evidencia.

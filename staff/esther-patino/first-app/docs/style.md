@@ -1,6 +1,7 @@
 ## Comandos
 
-- Ejecutar: no hay comando de arranque.
+- Base: `pnpm server` desde `first-app`. El servidor escucha en `127.0.0.1:3000`.
+- Pantallas: `pnpm start` desde `first-app`. También escucha en `127.0.0.1:3000`. No se lanzan a la vez.
 - Tests: los `.txt` de `src/clients/terminal/`. Se pegan en PowerShell desde la raíz del repositorio. El fragmento entra en `first-app` y no captura errores. No hay `npm test`.
 - Lint/formato: `format` lanza Prettier, sin fichero de configuración. `lint` lanza ESLint con `eslint.config.js`.
 
@@ -10,7 +11,7 @@ El código se escribe en inglés. El proyecto es para personas hispanohablantes:
 
 Ficheros en kebab-case, funciones y variables en camelCase, exportaciones con nombre e imports ESM con extensión `.js`. El SQL usa parámetros con nombre (`:id`, `:name`, `:email`). El contrato de `logic/` está en `docs/CONSTITUTIONS.md`. El manejo de errores está en `docs/errors.md`.
 
-El orden del cuerpo está en este archivo, más abajo. En una acción que guarda o borra: comprobar lo que llega, llamar a la consulta que busca, lanzar el error si no se puede seguir y llamar a la consulta que guarda o borra. Si guarda, devuelve el usuario plano. Borrar termina en `removeUser` y no devuelve el usuario. `listUsers` no guarda ni borra: lee con `findAll` y devuelve la lista. Si la tabla está vacía, devuelve `[]`. La lógica no abre los `.sql` y no inventa el `id` ni la hora.
+El orden del cuerpo está en este archivo, más abajo. En una acción que guarda o borra: comprobar lo que llega, llamar a la consulta que busca, lanzar el error si no se puede seguir y llamar a la consulta que guarda o borra. Si guarda, devuelve el usuario plano. Borrar termina en `removeUser` y no devuelve el usuario. `listUsers` no guarda ni borra: lee con `findAll` y devuelve la lista. Si la tabla está vacía, devuelve `[]`. La lógica no abre los `.sql`, espera a la consulta y no inventa el `id` ni la hora.
 
 El código tiene que leerse de arriba a abajo, con `if` y con nombres que digan qué hacen. Se evita el código que un programador sin IA no escribiría: envoltorios de resultado, clases de error, helpers genéricos y abstracciones que oculten los pasos.
 

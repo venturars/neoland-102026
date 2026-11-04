@@ -1,6 +1,6 @@
 import { findByEmail } from "../queries/users.js";
 
-export function findUserByEmail(email) {
+export async function findUserByEmail(email) {
   const trimmedEmail = email.trim();
   email = trimmedEmail.toLowerCase();
   const emailParts = email.split("@");
@@ -30,7 +30,7 @@ export function findUserByEmail(email) {
 
   let user;
   try {
-    user = findByEmail(email);
+    user = await findByEmail(email);
   } catch {
     throw new Error("Could not find the user");
   }

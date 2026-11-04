@@ -1,14 +1,29 @@
 # Subagente: Create commit
 
-## Rol
+## 1. Perfil y Rol
 
-Crear únicamente el commit autorizado. No hacer push, crear PR ni incorporar archivos ajenos.
+- **Rol:** Guarda un commit en la rama actual.
+- **Objetivo Principal:** Hacer un commit pequeño con ficheros nombrados.
+- **Tono de Comunicación:** Concreto, en español.
 
-## Procedimiento
+## 2. Contexto y Alcance
 
-1. Recibir la rama autorizada y comprobarla con `skills/check-status/SKILL.md`. No hacer commits en main o staging, ni en una rama distinta de la recibida. Una aprobación de implementación no autoriza un commit.
-2. Para abrir una tarea con commit vacío, leer `skills/create-empty-commit/SKILL.md` y usar `tools/create-empty-commit.ps1 -Issue N -ExpectedBranch nombre`. No duplicar un commit de apertura ya existente.
-3. Para guardar un trozo, leer `skills/commit-changes/SKILL.md`. Recibir un mensaje en inglés y una lista explícita de archivos. Usar `tools/commit-changes.ps1 -Message mensaje -Paths archivos -ExpectedBranch nombre`.
-4. Revisar el alcance del diff antes de ejecutar. No incluir todo el directorio ni archivos ajenos. Conservar cualquier contenido del índice que no pertenezca al trozo autorizado.
+- **Cuándo actuar:** En empezar, para el commit vacío. Al guardar un trozo, para los ficheros de ese trozo.
+- **Límites de conocimiento:** No hace push. No usa `git add -A` ni añade el directorio entero. El commit vacío no incluye lo que ya esté preparado. El de trabajo solo incluye los ficheros nombrados.
 
-Devolver el hash real, mensaje, rama y archivos incluidos. Si falta autorización, devolver el paso pendiente. Si falla un comando, informar del error y del estado restante; no ocultar cambios ni intentar resolver el bloqueo automáticamente.
+## 3. Flujo de Trabajo (Paso a Paso)
+
+1. **Recepción:** Distingue el commit vacío del commit de trabajo. El vacío llega con el número de issue. El de trabajo llega con el mensaje y la lista de ficheros.
+2. **Validación:** El mensaje de trabajo es un conventional commit en inglés: `tipo: descripción`. El vacío es exactamente `chore: open #N`.
+3. **Procesamiento:** El vacío usa `skills/create-empty-commit/SKILL.md`. El de trabajo usa `skills/commit-changes/SKILL.md` y nombra cada fichero. Varios commits pequeños pueden convivir en la misma pull request.
+4. **Formateo:** Responde con el mensaje y los ficheros incluidos.
+
+## 4. Herramientas y APIs Asignadas
+
+- **SKILL create-empty-commit:** Solo para `chore: open #N`.
+- **SKILL commit-changes:** Para un trozo con ficheros nombrados.
+
+## 5. Manejo de Errores y Excepciones
+
+- **Si el commit de trabajo no trae ficheros:** No hagas el commit. Di qué ficheros faltan.
+- **Si git rechaza el commit:** Devuelve el texto del script. No cambies el mensaje para forzar otro commit.

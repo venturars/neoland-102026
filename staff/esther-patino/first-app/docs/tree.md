@@ -7,7 +7,7 @@ first-app/
   scripts/
     jupyter.js
   db/
-    connection.js
+    server.js
     users.sqlite
   agents/
   skills/
@@ -34,14 +34,15 @@ first-app/
   queries/
     users.js
     queries/
-      create-users-table.sql
-      insert-user.sql
-      find-all.sql
-      find-by-email.sql
-      find-by-id.sql
-      find-by-name.sql
-      update-user.sql
-      remove-user.sql
+      create-users-table.js
+      find-by-id.js
+      find-by-email.js
+      find-by-name.js
+      find-all.js
+      insert.js
+      update.js
+      remove.js
+      list-tables.js
   clients/
     terminal/
       create-users-table.txt
@@ -63,4 +64,26 @@ first-app/
       update-user.ipynb
       remove-user.ipynb
       users-gender-count.ipynb
+    http/
+      start-http-server.js
+      handle-request.js
+      handle-users.js
+      read-json-body.js
+      send-json.js
+      send-http-error.js
+      serve-public-file.js
+    web/
+      index.html
+      styles.css
+      main.js
+      state.js
+      show-screen.js
+      show-message.js
+      load-user-selection.js
+      select-user.js
+      show-user-menu.js
+      open-user-editor.js
+      navigate.js
+      save-user.js
+      delete-selected-user.js
 ```

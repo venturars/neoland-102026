@@ -1,0 +1,5 @@
+// Ejemplo manual. Ejecución: docs/CONSTITUTIONS.md.
+import { updateNote } from "./src/logic/update-note.js";
+
+const result = updateNote(1, 1, { title: "Nota actualizada" });
+console.log(result);

@@ -1,0 +1,30 @@
+:root { font-family: system-ui, sans-serif; color: #193044; background: #edf3f4; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+.shell { width: min(100% - 2rem, 680px); margin: 0 auto; padding: 2rem 0 4rem; }
+.masthead { margin-bottom: 1.5rem; }
+.masthead h1 { margin: .2rem 0; font-size: clamp(2rem, 7vw, 3rem); }
+.masthead p { margin: .5rem 0; }
+.eyebrow { color: #17647b; font-size: .75rem; font-weight: 800; letter-spacing: .16em; }
+.panel { padding: clamp(1rem, 4vw, 2rem); background: white; border: 1px solid #cbdce0; border-radius: 1rem; box-shadow: 0 8px 30px #15364b12; }
+.panel[hidden], [hidden] { display: none !important; }
+h2 { margin: 0 0 1rem; }
+.stack { display: grid; gap: .85rem; margin-top: 1rem; }
+.actions { display: flex; flex-wrap: wrap; gap: .7rem; margin: 1rem 0; }
+button { min-height: 44px; padding: .65rem 1rem; border: 1px solid #126078; border-radius: .5rem; background: #126078; color: white; font: inherit; font-weight: 650; cursor: pointer; }
+button:hover { background: #094b60; }
+button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid #e2a832; outline-offset: 2px; }
+button:disabled { opacity: .55; cursor: wait; }
+button.secondary { background: white; color: #12536a; }
+button.secondary:hover { background: #e8f3f5; }
+button.danger { background: #a72736; border-color: #a72736; }
+button.danger:hover { background: #861d2a; }
+.card { padding: 1rem; border: 1px solid #cbdce0; border-radius: .65rem; overflow-wrap: anywhere; }
+.card h3 { margin: 0 0 .35rem; }
+.card p { margin: .2rem 0; white-space: pre-wrap; }
+.muted { color: #526875; }
+label { display: grid; gap: .35rem; font-weight: 650; }
+input, textarea { width: 100%; padding: .7rem; border: 1px solid #8199a4; border-radius: .5rem; font: inherit; color: inherit; }
+.danger-zone { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #d3dfe2; }
+.notice { padding: .85rem 1rem; border: 1px solid #b8d4db; border-radius: .5rem; background: #e3f1f4; }
+@media (max-width: 390px) { .shell { width: min(100% - 1rem, 680px); padding-top: 1rem; } .actions button { width: 100%; } }

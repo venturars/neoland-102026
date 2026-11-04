@@ -18,6 +18,8 @@ REMOVED = (
 REQUIRED = (
     "docs/CONSTITUTION.md",
     "docs/ARCHITECTURE.md",
+    "docs/STYLE.md",
+    "docs/CONSTITUTION-HISTORY.md",
     "asistencia/domain/__init__.py",
     "asistencia/domain/codes.py",
     "asistencia/domain/names.py",
@@ -141,11 +143,13 @@ def test_docs_match_the_structure_and_name_the_deferred_errors():
     agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
     architecture = (ROOT / "docs" / "ARCHITECTURE.md").read_text(encoding="utf-8")
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    style = (ROOT / "docs" / "STYLE.md").read_text(encoding="utf-8")
     for piece in ("domain/", "usecases/", "attendance.py", "storage/", "sqlite.py"):
         assert piece in architecture or piece in agents
     for piece in (":param", ":raises", "Usage::"):
-        assert piece in agents
-    assert "staff/maria-osipuk/asistenciapp/specs/" in agents
+        assert piece in style
+    assert "[STYLE.md](docs/STYLE.md)" in agents
+    assert "`specs/` de esta app" in agents
     for piece in ("Dominio", "acciones", "Almacenamiento", "navegador"):
         assert piece in architecture
     assert "１２３４" in architecture

@@ -1,0 +1,9 @@
+# Pega esto en la terminal, con el directorio actual en first-app
+node --input-type=module <<'EOF'
+import { createUsersTable, listTables } from "./src/queries/users.js";
+
+await createUsersTable();
+const result = await listTables();
+
+console.log(result);
+EOF

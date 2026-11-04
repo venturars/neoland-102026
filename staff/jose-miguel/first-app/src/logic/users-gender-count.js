@@ -1,47 +1,40 @@
 import OpenAI from "openai";
+import { findAll } from "../queries/users.js";
 
 const MODEL = "llama3.2";
-const BATCH_SIZE = 6;
-const BASE_URL = "http://127.0.0.1:11434/v1";
-const API_KEY = "ollama";
 
-const client = new OpenAI({
-  baseURL: BASE_URL,
-  apiKey: API_KEY,
-});
+export async function usersGenderCount() {
+  let users;
+  try {
+    users = await findAll();
+  } catch {
+    throw new Error("Could not classify the users");
+  }
 
-export async function usersGenderCount(names) {
+  if (users.length === 0) {
+    return { women: 0, men: 0, genderUndefined: 0 };
+  }
+
+  const openai = new OpenAI({
+    baseURL: "http://127.0.0.1:11434/v1",
+    apiKey: "ollama",
+  });
+
   let women = 0;
   let men = 0;
   let genderUndefined = 0;
 
-  let namesMissing = false;
-  if (!names) {
-    namesMissing = true;
-  }
-  if (names) {
-    if (names.length === 0) {
-      namesMissing = true;
-    }
-  }
-  if (namesMissing) {
-    return { women: 0, men: 0, genderUndefined: 0 };
-  }
+  for (let start = 0; start < users.length; start += 6) {
+    const batch = users.slice(start, start + 6);
+    const nameList = batch.map((user) => user.name);
+    const names = nameList.join("\n");
 
-  for (let start = 0; start < names.length; start = start + BATCH_SIZE) {
-    const batch = names.slice(start, start + BATCH_SIZE);
-    const namesText = batch.join("\n");
-    let answer;
-
+    let completion;
     try {
-      const completion = await client.chat.completions.create({
+      completion = await openai.chat.completions.create({
         model: MODEL,
+        temperature: 0,
         messages: [
-          {
-            role: "system",
-            content:
-              "Classify the gender of each name. Reply with one word per name, in the same order, one per line: women, men, or undefined.",
-          },
           { role: "user", content: "Carmen" },
           { role: "assistant", content: "women" },
           { role: "user", content: "Lucia" },
@@ -52,50 +45,95 @@ export async function usersGenderCount(names) {
           { role: "assistant", content: "men" },
           { role: "user", content: "Kim" },
           { role: "assistant", content: "undefined" },
-          { role: "user", content: namesText },
+          { role: "user", content: names },
         ],
+        response_format: {
+          type: "json_schema",
+          json_schema: {
+            name: "genders",
+            strict: true,
+            schema: {
+              type: "object",
+              properties: {
+                genders: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                    enum: ["women", "men", "undefined"],
+                  },
+                },
+              },
+              required: ["genders"],
+              additionalProperties: false,
+            },
+          },
+        },
       });
-
-      const firstChoice = completion.choices[0];
-      let message;
-      if (firstChoice) {
-        message = firstChoice.message;
-      }
-      let content = "";
-      if (message) {
-        content = message.content;
-      }
-      answer = content;
     } catch {
-      answer = "";
+      throw new Error("Could not classify the users");
     }
 
-    let answerText = "";
-    if (answer !== undefined) {
-      if (answer !== null) {
-        answerText = String(answer);
+    const choice = completion.choices[0];
+
+    let missingMessage = false;
+    if (!choice) {
+      missingMessage = true;
+    }
+    if (choice) {
+      if (!choice.message) {
+        missingMessage = true;
       }
     }
-    const trimmedAnswer = answerText.trim();
-    const lines = trimmedAnswer.split("\n");
+    if (missingMessage) {
+      genderUndefined += batch.length;
+      continue;
+    }
 
-    for (let index = 0; index < batch.length; index = index + 1) {
-      const rawLine = lines[index];
-      let lineText = "";
-      if (rawLine !== undefined) {
-        if (rawLine !== null) {
-          lineText = String(rawLine);
-        }
+    const text = choice.message.content;
+
+    let emptyText = false;
+    if (typeof text !== "string") {
+      emptyText = true;
+    }
+    if (typeof text === "string") {
+      const trimmedText = text.trim();
+      if (trimmedText === "") {
+        emptyText = true;
       }
-      const trimmedGender = lineText.trim();
-      const gender = trimmedGender.toLowerCase();
+    }
+    if (emptyText) {
+      genderUndefined += batch.length;
+      continue;
+    }
 
-      if (gender === "women") {
-        women = women + 1;
-      } else if (gender === "men") {
-        men = men + 1;
+    let genders;
+    try {
+      const parsed = JSON.parse(text);
+      genders = parsed.genders;
+    } catch {
+      genderUndefined += batch.length;
+      continue;
+    }
+
+    const gendersIsArray = Array.isArray(genders);
+    let sameCount = false;
+    if (gendersIsArray) {
+      const genderCount = genders.length;
+      const batchCount = batch.length;
+      sameCount = genderCount === batchCount;
+    }
+    if (!sameCount) {
+      genderUndefined += batch.length;
+      continue;
+    }
+
+    for (const word of genders) {
+      if (word === "women") {
+        women += 1;
+      } else if (word === "men") {
+        men += 1;
       } else {
-        genderUndefined = genderUndefined + 1;
+        genderUndefined += 1;
       }
     }
   }

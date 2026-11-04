@@ -29,41 +29,41 @@ try {
   let result;
   switch (operation) {
     case "create-users-table":
-      createUsersTable();
+      await createUsersTable();
       console.log("Tabla de usuarios disponible.");
       break;
     case "create-user": {
       const contactInput = args[0];
-      result = createUser(contactInput);
+      result = await createUser(contactInput);
       break;
     }
     case "list-users":
-      result = listUsers();
+      result = await listUsers();
       break;
     case "find-user-by-email": {
       const email = args[0];
-      result = findUserByEmail(email);
+      result = await findUserByEmail(email);
       break;
     }
     case "find-user-by-id": {
       const id = args[0];
-      result = findUserById(id);
+      result = await findUserById(id);
       break;
     }
     case "find-user-by-name": {
       const name = args[0];
-      result = findUserByName(name);
+      result = await findUserByName(name);
       break;
     }
     case "update-user": {
       const id = args[0];
       const changes = args[1];
-      result = updateUser(id, changes);
+      result = await updateUser(id, changes);
       break;
     }
     case "delete-user": {
       const id = args[0];
-      deleteUser(id);
+      await deleteUser(id);
       console.log("Contacto eliminado. La operación no devuelve datos.");
       break;
     }

@@ -6,35 +6,47 @@ first-app/
   package.json
   eslint.config.js
   scripts/
-    jupyter.sh
+    start-jupyter.js
+    start-browser.js
   src/
     db/
-      connection.js
+      server.js
       users.sqlite
     queries/
       users.js
       queries/
-        create-users-table.sql
-        find-all.sql
-        find-by-email.sql
-        find-by-id.sql
-        insert.sql
-        remove.sql
-        update.sql
+        create-users-table.js
+        find-all.js
+        find-by-email.js
+        find-by-id.js
+        find-by-name.js
+        insert.js
+        list-tables.js
+        remove.js
+        update.js
     logic/
       create-user.js
       update-user.js
       delete-user.js
       list-users.js
       find-user-by-email.js
+      find-user-by-name.js
+      find-user-by-id.js
       users-gender-count.js
     clients/
       terminal/
       jupyter/
+      browser/
+        index.html
+        app.js
+        styles.css
+        README.md
   agents/
   skills/
   tools/
   templates/
+    issues/
+    pull-request/
   MCPS/
   docs/
     ARCHITECTURE.md
@@ -44,8 +56,26 @@ first-app/
     STYLE.md
     CONSTITUTIONS.md
     specs/
+      per-type-templates/
+        spec.md
+        plan.md
+        tasks.md
+      user-lookup-clients/
+        spec.md
+        plan.md
+        tasks.md
+      host-sql-on-node-server/
+        spec.md
+        plan.md
+        tasks.md
+      browser-user-client/
+        spec.md
+        plan.md
+        tasks.md
       <nombre>/
         spec.md
         plan.md
         tasks.md
 ```
+
+`src/db/users.sqlite` vive en el árbol local; `.gitignore` de first-app y el monorepo evitan versionarlo.

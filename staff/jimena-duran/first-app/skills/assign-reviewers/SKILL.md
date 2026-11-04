@@ -1,18 +1,15 @@
----
-name: assign-reviewers
-description: Solicita revisión a las personas nombradas por Jimena y saca una PR de draft solo cuando ella pide que la revisen.
----
+### Herramienta: ASSIGN_REVIEWERS
 
-# Pedir revisión
+- **Descripción**: Úsala cuando el alumno nombra a quienes tienen que mirar la pull request. Resuelve el login dentro de este repositorio, asigna esos logins y sácala de draft. No la uses para asignar al autor.
+- **MCP**: El servidor remoto descrito en `MCPS/github-mcp-server/mcp.txt`.
 
-La ejecuta el orquestador cuando Jimena nombra a quienes deben revisar una PR existente. No inventes nombres. Comprueba que las cuentas existen, tienen acceso al repositorio y no son la autora. Si una identidad o permiso no puede verificarse, pregunta antes de asignar; no pruebes permisos mediante escrituras.
+#### Especificación de Argumentos
 
-Lee la PR, base staging y revisores actuales. Comprueba identidad `jiji-mena`; prefiere MCP si corresponde a esa cuenta y ofrece las operaciones. En caso contrario informa del motivo y usa `gh` autenticado como Jimena. Preserva revisores ya asignados y solicita solo los que falten.
+1. **Pull request** _(Obligatorio)_: El número o la URL.
+2. **Revisores** _(Obligatorio)_: Los nombres que dijo el alumno, separados por comas.
 
-Alternativa PowerShell, por cada login validado: `gh pr edit $number --repo $repository --add-reviewer $reviewerLogin`. Comprueba `$LASTEXITCODE` tras cada llamada. Cuando las asignaciones hayan terminado correctamente y Jimena haya pedido revisión, ejecuta `gh pr ready $number --repo $repository` solo si aún es draft; comprueba también su salida.
+#### Reglas de Invocación Críticas
 
-Relee lista de revisores y estado draft. Devuelve resultados reales y cualquier paso pendiente. Si una operación falla, informa antes de resolver; no sigas publicando la revisión a pesar del fallo. No hace merge, push ni abre PR. Si esta entrega prohíbe PR, no ejecutes el paso para probarlo.
-
-En los comandos, `$repository` es el repositorio `owner/name` comprobado a partir de origin y del contexto de esta tarea. No lo tomes de un nombre personal fijo ni actúes sobre otro repositorio.
-
-Antes de reintentar una escritura fallida o cambiar a gh, aplica la [consulta del estado remoto](../../docs/GIT-AUTOMATION.md#consultar-el-estado-remoto-antes-de-reintentar): relee revisores y draft por separado. Reutiliza los resultados aplicados, reintenta solo el paso confirmado como no aplicado y detente si no puede determinarse. Un fallo incierto no autoriza sacar la PR de draft. La regla incluye comprobar el almacén de Windows ante un 401 dentro del sandbox.
+- **Login**: Cada nombre se resuelve dentro de este repositorio. Primero un colaborador cuyo login o nombre coincida. Si no coincide, el login de quien hace commits aquí con ese nombre o ese correo. No elijas un usuario público que no colabora.
+- **Si no hay login de colaborador**: Dilo y no pidas la revisión de ese nombre.
+- **Procesamiento de respuestas**: Quita al autor de la lista si aparece. Deja la pull request lista para revisión. Si el MCP falla, comunica el error y no marques la revisión como pedida.
