@@ -6,8 +6,9 @@
   "description": "CRUD de usuarios con la lógica separada de SQLite y de la terminal",
   "scripts": {
     "jupyter": "node start-jupyter.js",
-    "http": "node src/clients/http/app.js",
-    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/http/**/*.js\"",
+    "server": "node src/db/server.js",
+    "browser": "powershell -NoProfile -Command \"$page = [uri](Resolve-Path 'src/clients/browser/index.html').Path; $browserProfile = Join-Path $env:TEMP 'mi-primer-proyecto-chrome'; $chrome = 'C:/Program Files/Google/Chrome/Application/chrome.exe'; if (-not (Test-Path $chrome)) { $chrome = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe' }; & $chrome ('--user-data-dir=' + $browserProfile) '--allow-file-access-from-files' $page.AbsoluteUri\"",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/browser/**/*.js\"",
     "lint": "eslint ."
   },
   "dependencies": {

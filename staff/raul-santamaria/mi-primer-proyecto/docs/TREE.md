@@ -10,6 +10,10 @@ mi-primer-proyecto/
   start-jupyter.js
   src/
     clients/
+      browser/
+        index.html
+        app.js
+        styles.css
       terminal/
         create-user.txt
         list-users.txt
@@ -21,7 +25,7 @@ mi-primer-proyecto/
         app.js
       jupyter/
     db/
-      connection.js
+      server.js
       users.sqlite
     logic/
       create-user.js
