@@ -1,5 +1,9 @@
 allowBuilds:
+  '@swc/core': true
   electron: true
   electron-winstaller: true
 minimumReleaseAgeExclude:
   - electron@45.2.2
+  - '@nestjs/common@12.3.3'
+  - '@nestjs/core@12.3.3'
+  - '@nestjs/platform-express@12.3.3'

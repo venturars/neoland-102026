@@ -28,6 +28,14 @@ mi-primer-proyecto/
         users-gender-count.txt
       http/
         app.js
+      nest/
+        bootstrap.mjs
+        main.js
+        app.module.js
+        users.controller.js
+        users.service.js
+        logic-exception.filter.js
+        logic-error.constants.js
       jupyter/
     db/
       server.js

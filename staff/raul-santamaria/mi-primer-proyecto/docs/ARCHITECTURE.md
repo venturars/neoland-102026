@@ -30,6 +30,9 @@
   `electron` de `package.json`; el instalador Windows con `electron:dist`.
 - `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001 y no
   repite sus reglas.
+- `src/clients/nest/` llama a `src/logic/`, escucha en el puerto 3002 y no
+  repite sus reglas. El código interno sigue convenciones Nest; no aplica
+  `docs/STYLE.md` ni `docs/ERRORS.md` en ese árbol.
 - `src/clients/jupyter/` es el cliente que se abre con el Jupyter de la app.
 - `start-jupyter.js` arranca el Jupyter del entorno de la app.
 - `eslint.config.js` aplica las reglas recomendadas de ESLint al
