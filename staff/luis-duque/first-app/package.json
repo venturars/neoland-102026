@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "jupyter": "sh scripts/jupyter.sh",
-    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\"",
+    "server": "node src/db/server.js",
+    "browser": "start \"\" \"%LOCALAPPDATA%\\BraveSoftware\\Brave-Browser\\Application\\brave.exe\" --user-data-dir=%TEMP%\\first-app-brave --no-first-run --no-default-browser-check --allow-file-access-from-files \"%CD%\\src\\clients\\browser\\index.html\"",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/browser/**/*.js\"",
     "lint": "eslint ."
   },
   "keywords": [],

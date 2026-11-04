@@ -4,7 +4,7 @@
 first-app/
   src/
     db/
-      connection.js
+      server.js
       users.sqlite
     logic/
       shared.js
@@ -35,17 +35,21 @@ first-app/
         find-user-by-email.ipynb
         find-user-by-name.ipynb
         users-gender.ipynb
+      browser/
+        index.html
+        app.js
+        styles.css
     queries/
       users.js
       queries/
-        create-table-users.sql
-        create-user.sql
-        update-user.sql
-        delete-user.sql
-        list-users.sql
-        find-user-by-id.sql
-        find-user-by-email.sql
-        find-user-by-name.sql
+        create-table-users.js
+        create-user.js
+        update-user.js
+        delete-user.js
+        list-users.js
+        find-user-by-id.js
+        find-user-by-email.js
+        find-user-by-name.js
   scripts/
     jupyter.sh
   eslint.config.js

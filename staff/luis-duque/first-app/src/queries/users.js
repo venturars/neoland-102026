@@ -1,85 +1,104 @@
-import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import { database } from "../db/connection.js";
+import { CREATE_TABLE_USERS } from "./queries/create-table-users.js";
+import { CREATE_USER } from "./queries/create-user.js";
+import { DELETE_USER } from "./queries/delete-user.js";
+import { FIND_USER_BY_EMAIL } from "./queries/find-user-by-email.js";
+import { FIND_USER_BY_ID } from "./queries/find-user-by-id.js";
+import { FIND_USER_BY_NAME } from "./queries/find-user-by-name.js";
+import { LIST_USERS } from "./queries/list-users.js";
+import { UPDATE_USER } from "./queries/update-user.js";
 
-const queriesFolder = path.join(path.dirname(fileURLToPath(import.meta.url)), "queries");
+const ORIGIN = "http://127.0.0.1:3000";
 
-function readQuery(fileName) {
-  return fs.readFileSync(path.join(queriesFolder, fileName), "utf8");
+async function execute(method, sql, params) {
+  const response = await fetch(`${ORIGIN}/execute`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ method, sql, params }),
+  });
+  const body = await response.json();
+
+  if (!response.ok) {
+    throw new Error(body.message);
+  }
+
+  return body;
 }
 
-const createTableUsersSql = readQuery("create-table-users.sql");
-const createUserSql = readQuery("create-user.sql");
-const updateUserSql = readQuery("update-user.sql");
-const deleteUserSql = readQuery("delete-user.sql");
-const listUsersSql = readQuery("list-users.sql");
-const findUserByIdSql = readQuery("find-user-by-id.sql");
-const findUserByEmailSql = readQuery("find-user-by-email.sql");
-const findUserByNameSql = readQuery("find-user-by-name.sql");
-
-export function createTableUsers() {
-  database.exec(createTableUsersSql);
+export async function createTableUsers() {
+  await execute("exec", CREATE_TABLE_USERS, []);
 }
 
-createTableUsers();
-
-export function createUser(name, email) {
-  const result = database.prepare(createUserSql).run(name, email);
+export async function createUser(name, email) {
+  await createTableUsers();
+  const body = await execute("run", CREATE_USER, [name, email]);
 
   return {
-    id: Number(result.lastInsertRowid),
+    id: Number(body.lastInsertRowid),
     name,
     email,
   };
 }
 
-export function updateUser(id, name, email) {
-  return database.prepare(updateUserSql).run(name, email, id).changes;
+export async function updateUser(id, name, email) {
+  await createTableUsers();
+  const body = await execute("run", UPDATE_USER, [name, email, id]);
+
+  return body.changes;
 }
 
-export function deleteUser(id) {
-  return database.prepare(deleteUserSql).run(id).changes;
+export async function deleteUser(id) {
+  await createTableUsers();
+  const body = await execute("run", DELETE_USER, [id]);
+
+  return body.changes;
 }
 
-export function listUsers() {
-  return database.prepare(listUsersSql).all().map((user) => ({
+export async function listUsers() {
+  await createTableUsers();
+  const body = await execute("all", LIST_USERS, []);
+
+  return body.rows.map((user) => ({
     id: Number(user.id),
     name: user.name,
     email: user.email,
   }));
 }
 
-export function findUserById(id) {
-  const user = database.prepare(findUserByIdSql).get(id);
+export async function findUserById(id) {
+  await createTableUsers();
+  const body = await execute("get", FIND_USER_BY_ID, [id]);
 
-  if (!user) {
+  if (body.row === null) {
     return undefined;
   }
 
   return {
-    id: Number(user.id),
-    name: user.name,
-    email: user.email,
+    id: Number(body.row.id),
+    name: body.row.name,
+    email: body.row.email,
   };
 }
 
-export function findUserByEmail(email) {
-  const user = database.prepare(findUserByEmailSql).get(email);
+export async function findUserByEmail(email) {
+  await createTableUsers();
+  const body = await execute("get", FIND_USER_BY_EMAIL, [email]);
 
-  if (!user) {
+  if (body.row === null) {
     return undefined;
   }
 
   return {
-    id: Number(user.id),
-    name: user.name,
-    email: user.email,
+    id: Number(body.row.id),
+    name: body.row.name,
+    email: body.row.email,
   };
 }
 
-export function findUserByName(name) {
-  return database.prepare(findUserByNameSql).all(name).map((user) => ({
+export async function findUserByName(name) {
+  await createTableUsers();
+  const body = await execute("all", FIND_USER_BY_NAME, [name]);
+
+  return body.rows.map((user) => ({
     id: Number(user.id),
     name: user.name,
     email: user.email,
