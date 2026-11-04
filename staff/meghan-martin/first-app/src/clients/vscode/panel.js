@@ -1,140 +1,127 @@
 const vscode = acquireVsCodeApi();
 
-const listScreen = document.querySelector("#list-screen");
-const personScreen = document.querySelector("#person-screen");
-const listError = document.querySelector("#list-error");
-const listNotice = document.querySelector("#list-notice");
-const personError = document.querySelector("#person-error");
+const message = document.querySelector("#message");
 const userList = document.querySelector("#user-list");
+const viewedUser = document.querySelector("#viewed-user");
 const createForm = document.querySelector("#create-form");
-const searchForm = document.querySelector("#search-form");
-const searchText = document.querySelector("#search-text");
+const createName = document.querySelector("#create-name");
+const createEmail = document.querySelector("#create-email");
+const viewForm = document.querySelector("#view-form");
+const viewId = document.querySelector("#view-id");
 const updateForm = document.querySelector("#update-form");
-const nameInput = document.querySelector("#name-input");
-const emailInput = document.querySelector("#email-input");
-const confirmEmail = document.querySelector("#confirm-email");
+const updateId = document.querySelector("#update-id");
+const updateName = document.querySelector("#update-name");
+const updateEmail = document.querySelector("#update-email");
+const deleteForm = document.querySelector("#delete-form");
+const deleteId = document.querySelector("#delete-id");
 
-let current = null;
+let pending = "";
 
-function showPerson(person) {
-  current = person;
-  document.querySelector("#person-id").textContent = String(person.id);
-  document.querySelector("#person-name").textContent = person.name;
-  document.querySelector("#person-email").textContent = person.email;
-  document.querySelector("#person-created").textContent = person.createdAt;
-  document.querySelector("#person-updated").textContent = person.updatedAt;
-  nameInput.value = person.name;
-  emailInput.value = person.email;
-  confirmEmail.value = "";
-  personError.textContent = "";
-  listScreen.hidden = true;
-  personScreen.hidden = false;
+function writeUser(user) {
+  viewedUser.textContent =
+    String(user.id) +
+    ". " +
+    user.name +
+    " (" +
+    user.email +
+    ") " +
+    user.createdAt +
+    " " +
+    user.updatedAt;
 }
 
-function showList(people, notice) {
-  current = null;
-  listScreen.hidden = false;
-  personScreen.hidden = true;
-  listNotice.textContent = notice || "";
+function writeList(users) {
   userList.replaceChildren();
-  for (const person of people) {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "row";
-    const id = document.createElement("span");
-    const name = document.createElement("span");
-    const email = document.createElement("span");
-    id.textContent = String(person.id);
-    name.textContent = person.name;
-    email.textContent = person.email;
-    button.append(id, name, email);
-    button.addEventListener("click", function () {
-      vscode.postMessage({ type: "open", id: person.id });
-    });
-    userList.append(button);
+  for (const user of users) {
+    const item = document.createElement("li");
+    item.textContent =
+      String(user.id) +
+      ". " +
+      user.name +
+      " (" +
+      user.email +
+      ") " +
+      user.createdAt +
+      " " +
+      user.updatedAt;
+    userList.append(item);
   }
+}
+
+function askList() {
+  pending = "list";
+  vscode.postMessage({ action: "list" });
 }
 
 window.addEventListener("message", function (event) {
   const result = event.data;
-  if (!result.ok) {
-    if (personScreen.hidden) {
-      listError.textContent = result.error;
-    } else {
-      personError.textContent = result.error;
+  if (result.message) {
+    message.textContent = result.message;
+    if (pending === "list") {
+      userList.replaceChildren();
     }
     return;
   }
-  listError.textContent = "";
-  personError.textContent = "";
-  if (result.clearCreate) {
-    createForm.reset();
-  }
-  if (result.mode === "person") {
-    showPerson(result.person);
+  if (pending === "list") {
+    writeList(result.users);
     return;
   }
-  showList(result.people, result.notice);
+  if (pending === "view") {
+    writeUser(result.user);
+    return;
+  }
+  if (pending === "create" || pending === "update") {
+    writeUser(result.user);
+    askList();
+    return;
+  }
+  if (pending === "delete") {
+    viewedUser.textContent = "";
+    askList();
+  }
 });
 
 createForm.addEventListener("submit", function (event) {
   event.preventDefault();
-  listError.textContent = "";
-  const data = new FormData(createForm);
+  message.textContent = "";
+  pending = "create";
   vscode.postMessage({
-    type: "create",
-    name: data.get("name"),
-    email: data.get("email"),
+    action: "create",
+    name: createName.value,
+    email: createEmail.value,
   });
 });
 
-searchForm.addEventListener("submit", function (event) {
+viewForm.addEventListener("submit", function (event) {
   event.preventDefault();
-  listError.textContent = "";
-  vscode.postMessage({
-    type: "search",
-    text: searchText.value,
-  });
-});
-
-document.querySelector("#clear-search").addEventListener("click", function () {
-  searchText.value = "";
-  listError.textContent = "";
-  vscode.postMessage({ type: "list" });
+  message.textContent = "";
+  pending = "view";
+  vscode.postMessage({ action: "view", id: viewId.value });
 });
 
 updateForm.addEventListener("submit", function (event) {
   event.preventDefault();
-  personError.textContent = "";
+  message.textContent = "";
+  const changes = {};
+  if (updateName.value !== "") {
+    changes.name = updateName.value;
+  }
+  if (updateEmail.value !== "") {
+    changes.email = updateEmail.value;
+  }
+  pending = "update";
   vscode.postMessage({
-    type: "update",
-    id: current.id,
-    name: nameInput.value,
-    email: emailInput.value,
+    action: "update",
+    id: updateId.value,
+    changes: changes,
   });
 });
 
-document.querySelector("#cancel-button").addEventListener("click", function () {
-  nameInput.value = current.name;
-  emailInput.value = current.email;
-  personError.textContent = "";
+deleteForm.addEventListener("submit", function (event) {
+  event.preventDefault();
+  message.textContent = "";
+  pending = "delete";
+  vscode.postMessage({ action: "delete", id: deleteId.value });
 });
 
-document
-  .querySelector("#delete-form")
-  .addEventListener("submit", function (event) {
-    event.preventDefault();
-    personError.textContent = "";
-    vscode.postMessage({
-      type: "delete",
-      id: current.id,
-      email: confirmEmail.value,
-    });
-  });
-
-document.querySelector("#back-button").addEventListener("click", function () {
-  personError.textContent = "";
-  vscode.postMessage({ type: "list" });
-});
-
-vscode.postMessage({ type: "list" });
+askList();

@@ -1,18 +1,24 @@
 {
   "name": "first-app-people",
-  "displayName": "First App People",
-  "version": "0.0.1",
-  "publisher": "first-app-local",
+  "displayName": "People",
+  "publisher": "first-app",
+  "version": "0.0.0",
+  "license": "MIT",
+  "type": "module",
+  "main": "./extension.js",
   "engines": {
-    "vscode": "^1.85.0"
+    "vscode": "^1.100.0"
   },
-  "main": "./extension.cjs",
+  "activationEvents": ["onView:firstApp.people"],
   "contributes": {
-    "commands": [
-      {
-        "command": "firstApp.openPeople",
-        "title": "First App: Open People"
-      }
-    ]
+    "views": {
+      "explorer": [
+        {
+          "type": "webview",
+          "id": "firstApp.people",
+          "name": "People"
+        }
+      ]
+    }
   }
 }

@@ -50,6 +50,6 @@ Abre Cursor Settings → MCP y comprueba que aparecen conectados. Abre una conve
 
 ## VS Code
 
-El panel de personas está en `src/clients/vscode/`. Desde `first-app`, deja `npm run db` en marcha. Abre esa carpeta en VS Code y pulsa F5. En la paleta de comandos elige `First App: Open People`.
+Desde `first-app`, deja `npm run db` en marcha y ejecuta `npm run vscode`. En el explorador de esa ventana está la vista People.
 
-Al cerrar VS Code se cierra el panel. Para volver a verlo, abre otra vez esa carpeta, pulsa F5 y elige el mismo comando. La base tiene que seguir en marcha.
+Al cerrar VS Code se cierra la vista. Para volver a verla, ejecuta otra vez `npm run vscode`. La base tiene que seguir en marcha.

@@ -27,10 +27,10 @@ first-app/
         server.js
       vscode/
         package.json
-        extension.cjs
-        panel.html
+        extension.js
+        index.html
         panel.js
-        panel.css
+        styles.css
     users.js
   logic/
     create-user.js

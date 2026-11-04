@@ -54,10 +54,10 @@ first-app/
         server.js
       vscode/
         package.json
-        extension.cjs
-        panel.html
+        extension.js
+        index.html
         panel.js
-        panel.css
+        styles.css
       jupyter/
         create-users-table.ipynb
         create-user.ipynb
@@ -96,7 +96,7 @@ first-app/
 - `src/clients/jupyter/*.ipynb` llaman a la misma acción que su `.txt`. Se abren con `npm run jupyter` desde `first-app`. No cambian `logic/`.
 - `src/clients/browser/` es una página: `index.html`, `app.js` y `styles.css`. `app.js` llama a las mismas acciones de `src/logic/`. Se abre con `npm run browser` desde `first-app`. La base tiene que estar en marcha.
 - `src/clients/rest/server.js` responde JSON en el puerto 3001. Llama a las mismas acciones de `src/logic/`. Se arranca con `npm run api` desde `first-app`. La base tiene que estar en marcha.
-- `src/clients/vscode/` es un panel: `package.json`, `extension.cjs`, `panel.html`, `panel.js` y `panel.css`. `extension.cjs` llama a las mismas acciones de `src/logic/`. Se abre la carpeta en VS Code, se pulsa F5 y el comando `First App: Open People`. Al cerrar VS Code se repite F5 y ese comando. La base tiene que estar en marcha.
+- `src/clients/vscode/` es una vista en el explorador: `package.json`, `extension.js`, `index.html`, `panel.js` y `styles.css`. `extension.js` llama a las mismas acciones de `src/logic/`. Se abre con `npm run vscode` desde `first-app`. Al cerrar VS Code se vuelve a ejecutar ese comando. La base tiene que estar en marcha.
 - Una acción nueva es un fichero nuevo en `src/logic/` y un `.txt` nuevo en `src/clients/terminal/`.
 
 ## Specs
