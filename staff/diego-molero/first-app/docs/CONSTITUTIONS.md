@@ -42,6 +42,7 @@ La automatización Git se define en `agents/`, `skills/`, `tools/` y `templates/
 - [Capas dentro de src](specs/move-layers-under-src/spec.md).
 - [Notas por usuario](specs/notes/spec.md) — persistencia y operaciones implementadas.
 - [Cliente web vanilla](specs/vanilla-web-client/spec.md) — HTTP y pantallas implementados.
+- [Frontend, Express y Postman](specs/finish-frontend-express-rest/spec.md) — alta web, API REST y recorrido importable.
 
 Las rutas vigentes están en arquitectura y TREE. Las evidencias anteriores conservan las rutas utilizadas cuando se ejecutaron sus comprobaciones; el traslado a `src/` no cambia los contratos de usuarios, búsqueda ni clasificador.
 
@@ -92,7 +93,17 @@ Preparar la base con `pnpm run db:init` antes de arrancar. En una base existente
 pnpm web
 ```
 
-Abrir `http://127.0.0.1:3000/`. El puerto se puede cambiar con `$env:PORT = "3001"` antes del comando. Detener con Ctrl+C. La selección de usuario no se guarda al recargar. Eliminar desde la web pide confirmación y borra también sus notas.
+Abrir `http://127.0.0.1:3000/`. El puerto se puede cambiar con `$env:PORT = "3001"` antes del comando. Detener con Ctrl+C. La web permite crear un usuario, seleccionarlo por ID, modificarlo y gestionar sus notas. La selección no se guarda al recargar. Eliminar desde la web pide confirmación y borra también sus notas. Express sirve la web y la API desde el mismo puerto.
+
+### Cliente REST con Postman
+
+Importar `src/clients/postman/users.postman_collection.json` en Postman y ajustar la variable `baseUrl` al puerto del servidor. La colección crea, lista, consulta, modifica y borra un usuario de prueba; ejecutar sobre una base de prueba porque el borrado es real. Con Postman CLI local:
+
+```powershell
+postman collection run src/clients/postman/users.postman_collection.json --env-var "baseUrl=http://127.0.0.1:3000" --no-report-events
+```
+
+La colección no necesita credenciales para la ejecución local. Publicar resultados en Postman Cloud requiere iniciar sesión aparte.
 
 ### Jupyter
 

@@ -8,8 +8,9 @@
 - `src/logic/` contiene una operación por fichero: crear, actualizar, borrar, listar, buscar por correo, ID o nombre y clasificar nombres, además de crear, listar, consultar, actualizar y borrar notas por usuario. Valida las entradas y aplica las reglas de cada spec.
 - `src/clients/terminal/` contiene ejemplos pequeños: importar, llamar y mostrar. Es la comprobación manual básica de cada operación.
 - `src/clients/jupyter/` presenta esas mismas operaciones en nueve notebooks con tablas. Python ejecuta Node en el directorio de la aplicación; las reglas permanecen en `src/logic/`.
-- `src/clients/http/` ofrece las rutas JSON y solo sirve los archivos públicos enumerados. Traduce los errores de logic a códigos HTTP y escucha en el equipo local.
-- `src/clients/web/` contiene cinco pantallas HTML, CSS y JavaScript vanilla. La selección del usuario vive en memoria y las acciones llaman a HTTP.
+- `src/clients/http/` contiene una aplicación Express que ofrece las rutas JSON y solo sirve los archivos públicos enumerados. Traduce los errores de logic a códigos HTTP y escucha en el equipo local.
+- `src/clients/web/` contiene seis pantallas HTML, CSS y JavaScript vanilla, incluido el alta de usuario. La selección vive en memoria y las acciones llaman a HTTP.
+- `src/clients/postman/` contiene el recorrido importable de usuarios REST y sus comprobaciones de respuesta.
 - `scripts/jupyter.sh` prepara el entorno local y arranca Notebook.
 - `docs/CONSTITUTIONS.md` contiene reglas compartidas, el índice de specs y los comandos de ejecución.
 - `docs/TREE.md`, `DATABASE.md`, `ERRORS.md` y `STYLE.md` describen el árbol, los datos, los errores y el estilo.
@@ -24,3 +25,5 @@ Las operaciones llaman directamente a queries. El clasificador usa fetch nativo 
 ## Notas y cliente web · Issues #778 y #782
 
 La [persistencia y lógica de notas](specs/notes/plan.md) está implementada en la issue #782. Sus cinco clientes de terminal y el notebook de preparación llaman a las operaciones actuales. El borrado de usuario conserva su firma y elimina las notas mediante la relación de cascada. El [cliente web](specs/vanilla-web-client/plan.md) añade HTTP y pantallas vanilla que llaman a logic. La interfaz confirma los borrados antes de hacer la petición.
+
+La [ampliación de frontend y API](specs/finish-frontend-express-rest/spec.md) permite dar de alta usuarios en la web y en `POST /api/users`, migra el transporte HTTP a Express sin mover las reglas de negocio y añade la colección Postman. El workflow incorpora la comprobación de una issue lista y la creación de rama y PR antes de editar.

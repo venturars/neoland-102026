@@ -13,7 +13,8 @@ export default defineConfig([
     extends: ["js/recommended"],
   },
   {
-    files: ["src/clients/web/**/*.js"],
+    // Las páginas de la web y de Electron usan las variables del navegador.
+    files: ["src/clients/web/**/*.js", "src/clients/electron/**/*.js"],
     languageOptions: {
       globals: {
         document: "readonly",

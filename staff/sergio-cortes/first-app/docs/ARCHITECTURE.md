@@ -1,12 +1,12 @@
 # Arquitectura
 
-- `eslint.config.js` aplica las reglas recomendadas de ESLint al JavaScript e ignora `.venv`, `node_modules` y los cuadernos Jupyter. Declara `console` como global solo para `src/clients/http/`.
-- `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca.
-- `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la tarea se puede dejar escrita.
+- `eslint.config.js` aplica las reglas recomendadas de ESLint al JavaScript e ignora `.venv`, `node_modules` y los cuadernos Jupyter. Declara `console` como global solo para `src/clients/http/`. Declara `process` como global para `src/clients/electron/main.js` y `document` y `fetch` para `src/clients/electron/app.js`.
+- `agents/git-workflow-agent.md` reconoce el momento, llama al subagente o a la skill que toca y confirma cada paso antes del siguiente. Si la issue ya está escrita y el trabajo siguiente hace cambios, el momento es Empezar.
+- `agents/help-me-to-think.md` hace las preguntas que hagan falta hasta que la tarea se pueda dejar escrita; el orquestador espera al alumno entre rondas.
 - `agents/create-issue.md` crea la issue asignada a quien está autenticado; el cuerpo sale de la plantilla del tipo en `templates/issues/`.
 - `agents/create-branch.md` crea la rama de trabajo; el tipo y el nombre de rama siguen la plantilla del tipo.
 - `agents/create-commit.md` hace un commit pequeño con ficheros nombrados.
-- `agents/create-pr.md` abre la pull request contra `staging` con la plantilla del tipo; la deja en draft, sin enlazar la issue.
+- `agents/create-pr.md` abre la pull request contra `staging` con la plantilla del tipo, en draft y asignada al usuario autenticado, en una misma invocación, sin enlazar la issue.
 - `agents/launch-push.md` publica `HEAD` en `origin` y deja el upstream puesto.
 - `skills/grill-with-docs/SKILL.md` entrevista cuando el cambio vive en este proyecto.
 - `skills/grill-me/SKILL.md` entrevista cuando el repositorio no responde.
@@ -17,10 +17,10 @@
 - `skills/create-branch-from-staging/SKILL.md` abre la rama desde `staging`.
 - `skills/create-branch/SKILL.md` abre la rama desde una base que no es `staging`.
 - `skills/create-empty-commit/SKILL.md` hace el commit vacío `chore: open #N`.
-- `skills/commit-changes/SKILL.md` guarda un trozo con ficheros nombrados.
+- `skills/commit-changes/SKILL.md` guarda un trozo con ficheros nombrados; el mensaje nombra el fichero o la función y el cambio.
 - `skills/launch-push/SKILL.md` sube la rama actual y fija el upstream.
-- `skills/create-pr-base-staging/SKILL.md` abre la pull request con base `staging`.
-- `skills/create-draft/SKILL.md` deja la pull request en draft.
+- `skills/create-pr-base-staging/SKILL.md` abre la pull request con base `staging`, en draft y asignada, con el script de `tools/`.
+- `skills/create-draft/SKILL.md` pasa a draft una pull request que ya existe.
 - `skills/link-pr-to-issue/SKILL.md` deja `Closes #N` en el cuerpo. No cierra la issue por API. GitHub la cierra al fusionar en la rama por defecto.
 - `skills/assign-reviewers/SKILL.md` asigna a quienes miran la pull request y la saca de draft.
 - `tools/check-status.sh` escribe la rama, el remoto y los cambios.
@@ -30,6 +30,7 @@
 - `tools/create-empty-commit.sh` crea el commit vacío de apertura.
 - `tools/commit-changes.sh` guarda los ficheros nombrados.
 - `tools/launch-push.sh` sube la rama y fija el upstream.
+- `tools/create-pr-base-staging.sh` crea la pull request con base `staging`, en draft y asignada al usuario autenticado.
 - `templates/issues/` lleva seis plantillas (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`). En el comentario HTML van la regla del título, el tipo y el nombre de rama.
 - `templates/pull-request/` lleva seis plantillas del mismo tipo. El cuerpo comparte secciones; la lista de comprobación cambia por tipo. La sección Issue es `Closes #`.
 - `MCPS/github-mcp-server/mcp.txt` es la dirección del MCP de GitHub y el header para que la escritura no abra un formulario.
@@ -55,8 +56,13 @@
   - `src/clients/web/index.html` define selección, menú, edición y el popover de borrado (campo de email para confirmar).
   - `src/clients/web/styles.css` es la hoja compartida (paleta crema/teal).
   - `src/clients/web/app.js` concentra la lógica de pantalla: estado del usuario elegido, cambio de pantalla, lista (`listUsers`), selección (`findUserById`), guardado (`updateUser`), popover de borrado con comprobación de email y borrado (`deleteUser`), y el arranque (`initializeClient`).
+- `src/clients/electron/` es el cliente de escritorio. Copia de partida de `src/clients/web/` (`index.html`, `styles.css`, `app.js`) más `main.js`. Llama a `src/logic/` con `await`. Se abre con `pnpm electron` desde `first-app`. El script `electron` arranca antes `src/db/server.js` si nada escucha en `127.0.0.1:3000`, y lo para al salir. Si ya está en marcha (`pnpm server`), lo reutiliza. No modifica `src/clients/web/`.
+  - `src/clients/electron/main.js` crea la ventana y carga el `index.html` de esta carpeta.
+  - `src/clients/electron/index.html` define selección, menú, edición y el popover de borrado.
+  - `src/clients/electron/styles.css` es la hoja copiada (paleta crema/teal).
+  - `src/clients/electron/app.js` concentra la lógica de pantalla, igual que el de navegador.
 - `src/clients/http/server.js` es el cliente HTTP con Express en `127.0.0.1:3001`. Solo acepta conexiones de este equipo y escribe esa dirección en la consola al arrancar. Un solo fichero con las rutas `GET /users`, `GET /users/:id`, `POST /users`, `PATCH /users/:id` y `DELETE /users/:id`. Llama a `src/logic/` directamente y un middleware de errores traduce la clase del error a su estado. Se arranca con `pnpm http`. El script `http` de `package.json` arranca antes `src/db/server.js` si nada escucha en `127.0.0.1:3000`, y lo para al salir. Si ya está en marcha (`pnpm server`), lo reutiliza.
-- `package.json` script `server` arranca el servidor de la base desde `first-app`. El script `web` abre la página en Brave. El script `http` arranca el cliente HTTP.
+- `package.json` script `server` arranca el servidor de la base desde `first-app`. El script `web` abre la página en Brave. El script `http` arranca el cliente HTTP. El script `electron` arranca el cliente de escritorio.
 - `scripts/jupyter.sh` prepara `.venv` si hace falta, instala `notebook==7.6.3` y arranca Jupyter en `src/clients/jupyter/`. Funciona en Mac, Linux y Windows (con `sh`). `package.json` lo invoca con `pnpm jupyter`.
 - `src/clients/jupyter/` es el cuaderno, uno por cada `.txt` de `src/clients/terminal/`. El bloque muestra ese texto: arranca `node --input-type=module` y, dentro, los `import` y la llamada quedan igual. El `console.log` se sustituye por la tabla. `cli-table3` y `@colors/colors` pintan esa tabla con colores y encabezados. Si la función falla, se ve ese mensaje. En esa carpeta no hay ficheros `.py` ni `requirements.txt`. Se abre con `pnpm jupyter` desde `first-app`.
 - `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada fichero.

@@ -50,6 +50,16 @@ Chrome/Chromium en PATH en Linux. Si está en otra ubicación, configura `CHROME
 con la ruta de su ejecutable. La apertura y el recorrido se verificaron en macOS.
 Abrir el HTML con doble clic en una sesión normal puede bloquear los módulos.
 
+## Abrir el cliente de VS Code
+
+Para abrir o volver a abrir el cliente:
+
+1. Desde `first-app-ai`, inicia `pnpm server` si el servicio no está en marcha. Prepara la tabla como se indica arriba si todavía no existe; repetir la preparación conserva los contactos.
+2. En VS Code 1.142.0 o posterior, abre `src/clients/vscode/` como carpeta y pulsa **F5**. Se abrirá una ventana **Extension Development Host**.
+3. En esa ventana, abre la paleta de comandos con **Cmd+Shift+P** (macOS) o **Ctrl+Shift+P** (Windows/Linux), busca **First App: Open Users** y pulsa Enter.
+
+Si cierras solo el panel, ejecuta de nuevo el comando en la ventana de desarrollo. Si cierras esa ventana o VS Code, repite los pasos anteriores. Cerrar la ventana de desarrollo no detiene el servicio; para detenerlo, pulsa **Ctrl+C** en su terminal. El panel utiliza la misma base local que los otros clientes. Para experimentar, utiliza una copia del proyecto sin su base y datos ficticios.
+
 ## Abrir Jupyter
 
 Requisitos: Node compatible con `node:sqlite` (`24.12.0` verificado), pnpm y Python 3.10 o posterior. En Windows, Python debe estar disponible mediante `py -3`.

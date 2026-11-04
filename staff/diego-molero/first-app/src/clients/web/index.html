@@ -15,8 +15,18 @@
       <section id="selection" class="panel" aria-labelledby="selection-title">
         <h2 id="selection-title" tabindex="-1">¿Quién eres?</h2>
         <p>Selecciona tu ID y nombre. No necesitas contraseña.</p>
+        <div class="actions"><button id="new-user" type="button">Crear usuario</button></div>
         <div id="users" class="stack"></div>
         <button id="retry-users" class="secondary" type="button" hidden>Reintentar</button>
+      </section>
+      <section id="user-create" class="panel" aria-labelledby="user-create-title" hidden>
+        <h2 id="user-create-title" tabindex="-1">Crear usuario</h2>
+        <p>Tu nombre e ID aparecerán en el listado de entrada.</p>
+        <form id="create-user-form" class="stack">
+          <label>Nombre<input id="create-user-name" name="name" autocomplete="name" required></label>
+          <label>Correo<input id="create-user-email" name="email" type="email" maxlength="64" autocomplete="email" required></label>
+          <div class="actions"><button id="create-user-cancel" class="secondary" type="button">Volver</button><button type="submit">Crear usuario</button></div>
+        </form>
       </section>
       <section id="menu" class="panel" aria-labelledby="menu-title" hidden>
         <h2 id="menu-title" tabindex="-1">Hola, <span id="current-name"></span></h2>

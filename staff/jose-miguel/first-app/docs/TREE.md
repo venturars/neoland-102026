@@ -41,6 +41,15 @@ first-app/
         app.js
         styles.css
         README.md
+      http/
+        app.js
+        README.md
+      electron/
+        main.js
+        index.html
+        app.js
+        styles.css
+        README.md
   agents/
   skills/
   tools/
@@ -50,6 +59,7 @@ first-app/
   MCPS/
   docs/
     ARCHITECTURE.md
+    STARTUP.md
     TREE.md
     DATABASE.md
     ERRORS.md
@@ -73,6 +83,14 @@ first-app/
         plan.md
         tasks.md
       sync-git-workflow-template/
+        spec.md
+        plan.md
+        tasks.md
+      http-rest-client/
+        spec.md
+        plan.md
+        tasks.md
+      electron-desktop-client/
         spec.md
         plan.md
         tasks.md

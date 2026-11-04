@@ -6,9 +6,10 @@
   "scripts": {
     "start": "node src/db/server.js",
     "browser": "node scripts/browser.js",
+    "electron": "electron src/clients/electron/main.js",
     "jupyter": "node scripts/jupyter.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/web/**/*.{js,html,css}\"",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/web/**/*.{js,html,css}\" \"src/clients/electron/**/*.{js,html,css}\"",
     "lint": "eslint ."
   },
   "keywords": [],
@@ -23,6 +24,7 @@
   "devDependencies": {
     "prettier": "3.9.10",
     "eslint": "10.13.0",
-    "@eslint/js": "10.0.1"
+    "@eslint/js": "10.0.1",
+    "electron": "45.2.2"
   }
 }

@@ -27,6 +27,7 @@
     "delete-note": "node --input-type=module < src/clients/terminal/delete-note.txt"
   },
   "dependencies": {
-    "cli-table3": "0.6.5"
+    "cli-table3": "0.6.5",
+    "express": "5.3.0"
   }
 }

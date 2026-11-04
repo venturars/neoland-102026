@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src {{csp}}; script-src {{csp}};">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="{{style}}">
+<title>First App Users</title>
+</head>
+<body>
+<main>
+<h1>Users</h1>
+<p id="status" role="status" aria-live="polite"></p>
+<button id="refresh" type="button">Refresh users</button>
+<section><h2>Search</h2><form id="search"><label>Search by <select id="search-type"><option value="name">Name</option><option value="email">Email</option><option value="id">ID</option></select></label><label>Value <input id="search-value" required></label><button>Search</button></form></section>
+<section><h2>Users</h2><ul id="users"></ul><p id="empty" hidden>No users found.</p></section>
+<section><h2 id="form-title">Create user</h2><form id="user-form"><label>Name <input id="name" required></label><label>Email <input id="email" required></label><button id="save">Create</button><button id="cancel" type="button" hidden>Cancel edit</button></form></section>
+<section id="delete-section" hidden><h2>Delete user</h2><p>Enter the saved email to confirm deletion.</p><form id="delete-form"><label>Saved email <input id="confirmation" required></label><button>Delete user</button><button id="cancel-delete" type="button">Cancel</button></form></section>
+</main><script src="{{script}}"></script>
+</body></html>

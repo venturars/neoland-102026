@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>First app</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Pantalla 1: lista -->
+    <section id="screen-list">
+      <h1>Usuarios</h1>
+
+      <h2>Crear usuario</h2>
+      <form id="create-form">
+        <label>Nombre <input id="create-name" type="text" /></label>
+        <label>Email <input id="create-email" type="text" /></label>
+        <button type="submit">Crear</button>
+      </form>
+
+      <h2>Ver por id</h2>
+      <form id="find-form">
+        <label>Id <input id="find-id" type="text" /></label>
+        <button type="submit">Ver</button>
+      </form>
+
+      <h2>Lista</h2>
+      <ul id="user-list"></ul>
+      <p id="list-empty" class="hidden">No hay usuarios.</p>
+      <p id="list-error" class="error"></p>
+    </section>
+
+    <!-- Pantalla 2: detalle -->
+    <section id="screen-detail" class="hidden">
+      <h1>Usuario</h1>
+      <p>Id: <span id="detail-id"></span></p>
+      <p>Nombre: <span id="detail-name"></span></p>
+      <p>Email: <span id="detail-email"></span></p>
+      <p>Creado: <span id="detail-created"></span></p>
+      <p>Actualizado: <span id="detail-updated"></span></p>
+
+      <h2>Editar</h2>
+      <form id="edit-form">
+        <label>Nombre <input id="edit-name" type="text" /></label>
+        <label>Email <input id="edit-email" type="text" /></label>
+        <button type="submit">Guardar</button>
+      </form>
+      <button id="btn-delete">Eliminar</button>
+      <button id="btn-back">Volver</button>
+      <p id="detail-error" class="error"></p>
+    </section>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

@@ -56,6 +56,11 @@ first-app/
         index.html
         style.css
         app.js
+      electron/
+        main.js
+        index.html
+        app.js
+        styles.css
   scripts/
     jupyter.sh
   agents/

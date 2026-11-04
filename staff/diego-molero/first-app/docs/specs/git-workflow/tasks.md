@@ -36,3 +36,11 @@ Diego autoriza expresamente implementar, comprobar y entregar el bloque. No se a
 - Revisión programática de 24 archivos previstos: UTF-8 estricto, enlaces locales existentes, ausencia de referencias a plantillas básicas y doce entradas del árbol. Las doce plantillas coinciden con la fuente compartida salvo el prefijo codex/ de su comentario de rama. Los siete scripts coinciden byte a byte con staging; src, scripts, dependencias, MCPS y orquestador no tienen diferencias. El contenido anterior de spec, plan y tasks se conserva como prefijo íntegro.
 - `git diff --check` sin incidencias. No se ejecutó la aplicación ni se accedió a la base personal, no se añadieron paquetes ni una suite de tests. Linux y macOS no ejecutados.
 - Commit de trabajo, publicación y PR en borrador se ejecutan después de estas comprobaciones con los roles correspondientes. Sus resultados finales quedan en la PR de esta issue; esta evidencia no da por hechas operaciones pendientes. El merge queda a cargo de Diego.
+
+## Iteración del 4 de noviembre de 2026 · Issue #855
+
+- [x] **V01:** Comparar la plantilla vigente de `staging` con la copia y documentar criterios CA-13 a CA-15.
+- [x] **V02:** Actualizar el orquestador y la validación de issue, conservando las decisiones y protecciones locales.
+- [x] **V03:** Comprobar los siete scripts, plantillas, referencias, UTF-8 y recorridos Git en repositorios temporales; registrar evidencia real.
+
+El 4 de noviembre, el comprobador aislado `.venv/git-template-check-20261104-855-elevated.py` pasó las siete sintaxis Bash y 14 recorridos con repositorios temporales y remoto bare local. Los siete scripts conservan el contenido de `staging`. Las plantillas existentes siguen siendo seis parejas por tipo y la selección no cambia. La validación añadida en agentes se coteja con la fuente vigente; se mantienen el prefijo `codex/`, la delegación real, el enlace por el orquestador y la alternativa `gh` sin tocar configuración personal.

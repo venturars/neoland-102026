@@ -14,6 +14,11 @@ mi-primer-proyecto/
         index.html
         app.js
         styles.css
+      electron/
+        main.js
+        index.html
+        app.js
+        styles.css
       terminal/
         create-user.txt
         list-users.txt
@@ -23,10 +28,6 @@ mi-primer-proyecto/
         users-gender-count.txt
       http/
         app.js
-      browser/
-        index.html
-        app.js
-        styles.css
       jupyter/
     db/
       server.js

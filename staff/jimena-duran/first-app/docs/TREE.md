@@ -24,6 +24,11 @@ first-app/
       styles.css
     clients/http/
       app.js
+    clients/electron/
+      main.js
+      index.html
+      app.js
+      styles.css
   agents/                 orquestador y subagentes del flujo de Git
   skills/                 instrucciones reutilizables por momento
   tools/                  siete scripts Bash originales del flujo de Git

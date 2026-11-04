@@ -1,0 +1,60 @@
+body {
+  margin: 0;
+  background: #f1f5f9;
+  color: #172033;
+  font-family: system-ui, sans-serif;
+}
+
+main {
+  max-width: 680px;
+  margin: 24px auto;
+  padding: 24px;
+  background: white;
+  border-radius: 8px;
+}
+
+form,
+label {
+  display: grid;
+  gap: 8px;
+}
+
+form {
+  margin-bottom: 20px;
+}
+input,
+button {
+  padding: 8px 12px;
+  border: 1px solid #94a3b8;
+  border-radius: 4px;
+  font: inherit;
+}
+button {
+  background: #e2e8f0;
+  cursor: pointer;
+}
+button:hover {
+  background: #cbd5e1;
+}
+ul {
+  padding: 0;
+  list-style: none;
+}
+li {
+  margin-bottom: 8px;
+}
+dt {
+  font-weight: bold;
+}
+dd {
+  margin: 0 0 12px;
+  overflow-wrap: anywhere;
+}
+.actions {
+  display: flex;
+  gap: 8px;
+}
+#error-message {
+  min-height: 1.5em;
+  color: #b91c1c;
+}

@@ -47,6 +47,11 @@ first-app/
         index.html
         styles.css
         app.js
+      electron/
+        main.js
+        index.html
+        styles.css
+        app.js
       terminal/
         create-user-table.txt
         create-user.txt

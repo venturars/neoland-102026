@@ -126,3 +126,11 @@ Postman se repitió tras el ajuste de nombres de variables: las tres fases
 terminaron con código 0. Puerto 3001 ocupado: el cliente terminó con código 1
 y comunicó EADDRINUSE. T09 pendiente de publicación; sin revisores solicitados.
 
+
+### Integración previa a revisión
+
+Se integró origin/staging en 39d73763 antes de pedir revisores. Los conflictos en
+package.json y TREE.md se resolvieron conservando REST y el cliente VS Code de
+#906. Los archivos de src/clients/vscode coinciden con staging. Formato, lint,
+los dos tests en serie y las tres colecciones Postman se repitieron correctamente
+sobre el árbol integrado. La base de #912 sigue siendo staging.
