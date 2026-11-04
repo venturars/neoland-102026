@@ -24,6 +24,20 @@ Terminal y Jupyter ya ofrecen el resumen. La web mantiene su flujo de selección
 edición y confirmación. La aplicación de escritorio tiene sus propias pantallas,
 no encapsula la página web. Chrome usa una extensión de permisos locales.
 
+## Correcciones autorizadas tras la revisión
+
+Miguel pidió el 2026-11-04 completar los tres hallazgos de revisión de esta PR.
+Electron y Chrome muestran también las fechas de creación y actualización del
+contacto seleccionado. Una escritura confirmada conserva su resultado aunque
+falle la recarga posterior: no vuelve a ofrecer crear el mismo contacto, no
+conserva el email anterior tras editar y retira el editor después de borrar.
+La pantalla informa del éxito y de la recarga pendiente por separado.
+
+La web consulta el resumen por la misma operación de negocio que los otros
+clientes; no depende de iniciar otro cliente HTTP para obtenerlo. Se conservan
+modelo, instrucciones, agrupación, categorías y errores del resumen existente.
+La compatibilidad del transporte con el navegador forma parte de esta corrección.
+
 ## Comprobación
 
 En copias y bases desechables recorrer creación, consulta, edición parcial,

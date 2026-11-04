@@ -8,7 +8,9 @@ Autorización conjunta de Miguel del 2026-11-04 descrita en la spec.
 - Electron: main.js abre index.html propio, con app.js/styles.css. preload.cjs
   expone una lista cerrada de operaciones por IPC; main llama a lógica. Mantener
   contextIsolation y renderer sin Node. La clasificación queda en el main, donde
-  funciona openai. pnpm electron, cierre de ventana y reapertura en macOS.
+  funciona la operación compartida. Preparar el binario con el install.js del
+  paquete instalado si pnpm no ejecuta su postinstall; documentar ese paso inicial.
+  pnpm electron, cierre de ventana y reapertura en macOS.
 - Chrome: manifest MV3 y popup propio. Solo host_permissions para loopback3002.
   server.js usa Fastify y llama a lógica; pnpm chrome. La extensión no importa
   módulos Node ni necesita permisos de sitios ajenos.
@@ -19,20 +21,49 @@ Autorización conjunta de Miguel del 2026-11-04 descrita en la spec.
   Chrome/Fastify y Nest ofrecen la misma ruta. Éxito200 y tres campos; fallo500
   con message Could not classify the users. Mantener CRUD201/200/204 y errores
   400/409/404/500 del cliente REST actual. IDs a número antes de llamar lógica.
-- Web: botón de resumen que consulta la API Express local. VS Code: acción
+- Web: botón de resumen que importa y espera usersGenderCount directamente. VS Code: acción
   genderCount en el host y botón en webview. Mantener su protocolo de peticiones,
   CSP y protección de edición. APIs/Electron usan la operación compartida.
-  La ruta de resumen de Express admite los orígenes locales `file://` y `null`,
-  con `Vary: Origin`; no habilita otros sitios. Los formularios nuevos dejan
+  Express conserva su ruta de resumen para sus consumidores HTTP; se retira
+  la excepción CORS que solo servía al rodeo del cliente web. Los formularios nuevos dejan
   validar nombre/email a la operación compartida, conservando sus mensajes.
 
 Cambios limitados a src/clients, package.json/lockfile, README, arquitectura,
-árbol, constitución y estos documentos. Añadir cobertura de los nuevos JS/CJS en
+árbol, constitución, la operación usersGenderCount y estos documentos. Añadir cobertura de los nuevos JS/CJS en
 format y los globals de los adaptadores al lint cuando corresponda.
 `pnpm-workspace.yaml` guarda las cuatro excepciones de antigüedad por versión
 exacta generadas por pnpm; no desactiva el control para otras versiones.
-`tests/client-apis.test.js` comprueba los contratos, los orígenes del resumen y
+`tests/client-apis.test.js` comprueba los contratos y
 los fallos de las tres APIs con una base desechable.
+
+## Correcciones de la revisión · 2026-11-04
+
+Autorizadas por Miguel al pedir terminar los tres hallazgos antes de fusionar.
+Esta sección reemplaza la decisión anterior de pasar el resumen web por Express
+y, solo para el transporte del clasificador, el uso del SDK descrito en el plan
+histórico de classifier. No se cambia su contrato de negocio.
+
+- usersGenderCount usa fetch nativo a la misma API local compatible con OpenAI,
+  POST http://127.0.0.1:11434/v1/chat/completions. Conserva exactamente el objeto
+  de petición, modelo, prompt, esquema, lotes secuenciales de seis, fallback por
+  respuesta inutilizable y error genérico por fallo de consulta/petición.
+  Un envío por lote y timeout explícito de diez minutos: no reproduce los dos
+  reintentos implícitos del SDK. No añade librería ni servidor; las dependencias
+  declaradas no se cambian en esta corrección.
+- El lanzador web sigue abriendo file:// con módulos locales. La prueba previa
+  confirmó Origin file:// y Ollama responde a su preflight con permiso; verificar
+  ese recorrido en navegador real. Origin null no está permitido por este
+  daemon: no se presenta el doble clic ordinario como método de arranque válido.
+- Electron y Chrome actualizan selección/formularios inmediatamente después
+  de confirmar cada escritura. La recarga de la lista tiene su propio manejo
+  de fallo y conserva el resultado confirmado. Si la recarga termina bien,
+  usar su contacto más reciente o retirar la selección si ya no existe; no
+  restaurar una instantánea anterior. Refresh explícito mantiene su significado.
+  Mostrar createdAt y updatedAt mediante textContent.
+- Añadir regresiones de estado tras fallo de recarga y de fechas visibles,
+  además de transporte del clasificador, lotes, fallback y ausencia de conteo
+  parcial. Probar el resumen web con Express detenido y sin petición al puerto
+  3001. Actualizar las guías y registrar evidencia nueva sin borrar la histórica.
 
 ## Verificación
 
