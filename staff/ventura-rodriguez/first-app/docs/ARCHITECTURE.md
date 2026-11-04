@@ -28,8 +28,7 @@
   API. No sustituye a `src/clients/http/` ni a `src/db/server.js`.
 - `agents/git-workflow-agent.md` reconoce el momento y llama al
   subagente como un agente aparte.
-- `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la
-  tarea se puede dejar escrita.
+- `agents/help-me-to-think.md` hace las preguntas que hagan falta para ayudar a pensar al alumno.
 - `agents/create-issue.md` crea la issue asignada a quien está
   autenticado. El cuerpo sale de la plantilla del tipo.
 - `agents/create-branch.md` crea la rama de trabajo. El tipo es el de
@@ -58,7 +57,8 @@
 - `skills/create-empty-commit/SKILL.md` hace el commit vacío
   `chore: open #N`.
 - `skills/commit-changes/SKILL.md` guarda un trozo con ficheros
-  nombrados.
+  nombrados. El mensaje nombra el fichero o la función y el
+  cambio.
 - `skills/launch-push/SKILL.md` sube la rama actual y fija el upstream.
 - `skills/create-pr-base-staging/SKILL.md` abre la pull request
   con base `staging`, en draft y asignada a quien está
