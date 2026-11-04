@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/browser/**/*.js\" \"src/clients/rest/**/*.js\" \"eslint.config.js\"",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/browser/**/*.js\" \"src/clients/rest/**/*.js\" \"src/clients/vscode/**/*.js\" \"src/clients/vscode/**/*.cjs\" \"eslint.config.js\"",
     "lint": "eslint .",
     "jupyter": "test -x .venv/bin/jupyter-notebook || (test -d .venv || python3 -m venv .venv && .venv/bin/pip install notebook==7.6.3) && .venv/bin/jupyter notebook src/clients/jupyter",
     "db": "node src/db/server.js",

@@ -1,0 +1,18 @@
+{
+  "name": "first-app-people",
+  "displayName": "First App People",
+  "version": "0.0.1",
+  "publisher": "first-app-local",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "main": "./extension.cjs",
+  "contributes": {
+    "commands": [
+      {
+        "command": "firstApp.openPeople",
+        "title": "First App: Open People"
+      }
+    ]
+  }
+}

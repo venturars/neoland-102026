@@ -25,6 +25,12 @@ first-app/
         styles.css
       rest/
         server.js
+      vscode/
+        package.json
+        extension.cjs
+        panel.html
+        panel.js
+        panel.css
     users.js
   logic/
     create-user.js

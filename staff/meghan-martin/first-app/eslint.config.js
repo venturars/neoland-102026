@@ -36,6 +36,26 @@ export default defineConfig([
     },
   },
   {
+    files: ["src/clients/vscode/extension.cjs"],
+    languageOptions: {
+      sourceType: "commonjs",
+      globals: {
+        console: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/vscode/panel.js"],
+    languageOptions: {
+      globals: {
+        FormData: "readonly",
+        acquireVsCodeApi: "readonly",
+        document: "readonly",
+        window: "readonly",
+      },
+    },
+  },
+  {
     files: ["src/clients/browser/app.js"],
     languageOptions: {
       globals: {
