@@ -22,9 +22,12 @@ Los clientes lo muestran como `Error: <mensaje>`.
 `classifyGender` usa por dentro `the model did not respond (<motivo>)`, cuando Ollama no contesta, y `the model did not respond (HTTP <estado>)`, cuando contesta con un error. Esos textos solo salen como `<motivo>` del último mensaje de la lista. Cuando un error se lanza dentro de un `catch`, el error original va en `cause`.
 
 ## Base parada
-Si el servidor de la base no está en marcha, `queries/users.js` lanza `Database is not running. Start it with pnpm db.`, con el error original en `cause`. Es el único mensaje que no lanza `logic/`. Sale tal cual en todas las operaciones, salvo en `classifyGender`, que lo envuelve: `Users could not be classified: Database is not running. Start it with pnpm db.`
+Si el servidor de la base no está en marcha, `queries/users.js` lanza `Database is not running. Start it with pnpm db.`, con el error original en `cause`. Es el único mensaje de las operaciones que no lanza `logic/`. Sale tal cual en todas las operaciones, salvo en `classifyGender`, que lo envuelve: `Users could not be classified: Database is not running. Start it with pnpm db.`
 
 Las respuestas de error del servidor (`Unknown query: <nombre>`, `Invalid request.`, `Not found.`, `Forbidden origin.` y los mensajes de SQLite) están en [ARCHITECTURE.md](ARCHITECTURE.md#servidor-de-la-base). `queries/` las lanza tal cual.
+
+## API de la extensión parada
+Si la API de la extensión de Chrome no está en marcha, `popup.js` muestra `Error: API is not running. Start it with pnpm chrome.` Es un mensaje de la extensión, no de `logic/`. Las respuestas de error de la API (`Invalid request.`, `Not found.` y `Forbidden origin.`) están en [ARCHITECTURE.md](ARCHITECTURE.md#extensión-de-chrome).
 
 ## Un mensaje nuevo
 Una operación nueva que necesite un mensaje que no está en la lista lo añade aquí en su misma tarea.

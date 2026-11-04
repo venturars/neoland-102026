@@ -31,6 +31,8 @@ La base de datos está en [DATABASE.md](DATABASE.md). El árbol completo, en [TR
 - `src/clients/browser/`: las pantallas del navegador (`index.html`, `styles.css` y `app.js`), que se abren desde el disco. `app.js` llama a `listUsers`, `updateUser` y `deleteUser`.
 - `src/clients/rest/server.js`: el cliente API REST, con Express. Una ruta por operación de `logic/`.
 - `src/clients/electron/`: el cliente de escritorio. `main.js` abre la ventana; `index.html`, `styles.css` y `app.js` son sus pantallas. `app.js` llama a `listUsers`, `createUser`, `updateUser` y `deleteUser`.
+- `src/clients/chrome/server.js`: la API de la extensión de Chrome, con Fastify. Llama a `listUsers`, `createUser`, `updateUser` y `deleteUser`.
+- `src/clients/chrome/extension/`: la extensión de Chrome (`manifest.json`, `popup.html`, `styles.css` y `popup.js`). Pide cada operación a su API.
 
 ## Una operación
 Una operación tiene, con el mismo nombre:
@@ -112,6 +114,27 @@ La página lleva una CSP: solo carga sus propios ficheros y solo puede llamar a 
 
 Si la variable `ELECTRON_RUN_AS_NODE` está puesta, Electron se comporta como Node y `main.js` falla al importar `BrowserWindow`. La terminal normal no la tiene.
 
+### Extensión de Chrome
+Se arranca con `pnpm db` y, en otra terminal, `pnpm chrome`, desde `first-app/`. `pnpm chrome` arranca la API de la extensión en `http://127.0.0.1:3001`, solo en este equipo, y se para con Ctrl+C. Usa Fastify (`fastify` 5.12.8). La extensión se carga una vez en Chrome: en `chrome://extensions`, con el modo desarrollador, **Cargar descomprimida** y la carpeta `src/clients/chrome/extension/`. Se abre con su icono.
+
+Chrome solo carga una extensión con los ficheros de su carpeta, así que la extensión no puede importar `logic/`. Por eso tiene dos partes:
+- La extensión: una ventanita con dos pantallas, la lista de usuarios con el alta y la ficha de un usuario, que se abre pulsándolo, con sus datos, guardar cambios y borrar con confirmación. `popup.js` pide cada operación a la API con `fetch`. Si la API responde con un error, lo muestra como `Error: <mensaje>`. Si no contesta, muestra `Error: API is not running. Start it with pnpm chrome.`
+- La API (`server.js`): un cliente como la API REST. Cada ruta llama a una función de `logic/` con `await` y responde en JSON. No valida nada.
+
+| Petición | Llama a | Bien |
+|---|---|---|
+| `GET /users` | `listUsers()` | 200 y la lista |
+| `POST /users` con `{ name, email }` | `createUser(name, email)` | 201 y el usuario |
+| `PATCH /users/<id>` con `{ name }`, `{ email }` o los dos | `updateUser(id, name, email)` | 200 y el usuario. Lo que no se envía o va vacío no cambia |
+| `DELETE /users/<id>` | `deleteUser(id)` | 200 y `{ id }` |
+
+Si `logic` lanza un error, la respuesta es `{ "error": "<mensaje>" }` con el mensaje tal cual. `getStatus` elige el código igual que en la API REST: 400 para los datos que no valen, 404 para `User not found:`, 409 para `Email already exists:`, 503 para `Database is not running.` y 500 para otro. Una ruta o un método que no existe da 404 y `Not found.`; un cuerpo que no es JSON, 400 y `Invalid request.`
+
+Solo atiende a la extensión:
+- El manifest lleva la parte pública de una clave (`key`), así que el id de la extensión es siempre el mismo. La API guarda ese origen en `EXTENSION_ORIGIN` y responde 403 y `Forbidden origin.` a una petición con otro `Origin`. Una sin `Origin`, como `curl`, pasa. Si se cambia la clave, cambia el id y hay que cambiar `EXTENSION_ORIGIN`.
+- La API no envía `Access-Control-Allow-Origin`: la extensión no lo necesita porque el manifest le da permiso para `http://127.0.0.1:3001` (`host_permissions`), y una web no puede leer las respuestas.
+- La CSP del manifest solo deja cargar los ficheros de la extensión y llamar a su API.
+
 ## Servidor de la base
 Se arranca con `pnpm db` desde `first-app/` y escucha en `http://127.0.0.1:4000`, solo en este equipo. Se para con Ctrl+C. Los clientes necesitan que esté en marcha.
 
@@ -128,6 +151,6 @@ Solo atiende `POST /query` con `{ "query": "<nombre>", "params": [ ... ] }`. Bus
 | `OPTIONS /query` | 204 y el permiso para el navegador |
 | SQLite falla | 500 y `{ "error": "<mensaje de SQLite>" }` |
 
-El navegador solo puede llamar a la base desde una página del disco abierta con `pnpm browser`: Chrome con `--allow-file-access-from-files` envía `Origin: file://`. Todas las respuestas llevan `Access-Control-Allow-Origin: file://`, nunca `*`, y `OPTIONS /query` contesta la pregunta que el navegador hace antes de cada `POST`. Una web (`http://` o `https://`) recibe 403, y un Chrome normal que abre un fichero del disco envía `Origin: null` y también recibe 403. Otra página del disco abierta en el perfil de la app sí podría llamar a la base: ese perfil es solo para esta app. La terminal, Jupyter y la ventana de escritorio no envían `Origin`, así que no les afecta.
+El navegador solo puede llamar a la base desde una página del disco abierta con `pnpm browser`: Chrome con `--allow-file-access-from-files` envía `Origin: file://`. Todas las respuestas llevan `Access-Control-Allow-Origin: file://`, nunca `*`, y `OPTIONS /query` contesta la pregunta que el navegador hace antes de cada `POST`. Una web (`http://` o `https://`) recibe 403, y un Chrome normal que abre un fichero del disco envía `Origin: null` y también recibe 403. Otra página del disco abierta en el perfil de la app sí podría llamar a la base: ese perfil es solo para esta app. La terminal, Jupyter, la ventana de escritorio y las APIs no envían `Origin`, así que no les afecta.
 
 `queries/users.js` lanza el `error` de la respuesta tal cual. Si no llega a conectar, lanza `Database is not running. Start it with pnpm db.` ([ERRORS.md](ERRORS.md#base-parada)).

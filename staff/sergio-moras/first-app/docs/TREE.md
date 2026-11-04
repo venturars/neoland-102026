@@ -5,7 +5,7 @@ Los ficheros de hoy, sin `node_modules/` ni `src/db/users.sqlite`, que no están
 ```
 first-app/
   AGENTS.md            cómo trabaja el agente
-  package.json         dependencias y scripts format, lint, db, browser, api y electron
+  package.json         dependencias y scripts format, lint, db, browser, api, electron y chrome
   pnpm-lock.yaml
   eslint.config.js
   .gitignore
@@ -34,6 +34,9 @@ first-app/
       electron/
         main.js        abre la ventana de escritorio
         index.html, styles.css y app.js   las pantallas de la ventana
+      chrome/
+        server.js      la API de la extensión, con Fastify
+        extension/     manifest.json, popup.html, styles.css y popup.js: lo que carga Chrome
   docs/
     CONSTITUTIONS.md
     ARCHITECTURE.md

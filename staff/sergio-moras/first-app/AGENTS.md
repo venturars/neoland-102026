@@ -43,9 +43,15 @@ El cliente de escritorio se abre desde `first-app/`, con `pnpm db` ya en marcha 
 pnpm electron
 ```
 
+La extensión de Chrome necesita su API, que se arranca desde `first-app/` con `pnpm db` ya en marcha en otra terminal. Escucha en `http://127.0.0.1:3001` y se para con Ctrl+C:
+```
+pnpm chrome
+```
+La extensión se carga una sola vez: en Chrome, `chrome://extensions`, activar el modo desarrollador, **Cargar descomprimida** y elegir `src/clients/chrome/extension/`. Se abre con su icono.
+
 Formato y revisión del JavaScript de la app, desde `first-app/`:
 ```
-pnpm format   # Prettier sobre los .js de src/logic/, src/queries/ y src/db/, el cliente de navegador, la API REST, el cliente de escritorio y eslint.config.js
+pnpm format   # Prettier sobre los .js de src/logic/, src/queries/ y src/db/, el cliente de navegador, la API REST, el cliente de escritorio, la extensión de Chrome con su API y eslint.config.js
 pnpm lint     # ESLint con las reglas recomendadas
 ```
 
