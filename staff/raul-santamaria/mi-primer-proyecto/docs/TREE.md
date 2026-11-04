@@ -34,6 +34,14 @@ mi-primer-proyecto/
         index.html
         popup.js
         styles.css
+      nest/
+        bootstrap.mjs
+        main.js
+        app.module.js
+        users.controller.js
+        users.service.js
+        logic-exception.filter.js
+        logic-error.constants.js
       vscode/
         package.json
         extension.cjs
