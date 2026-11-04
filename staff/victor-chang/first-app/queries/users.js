@@ -26,6 +26,10 @@ export function findByName(name) {
   return db.prepare(sql("find-users-by-name.sql")).all({ name });
 }
 
+export function search(text) {
+  return db.prepare(sql("search-users.sql")).all({ text });
+}
+
 export function insert(name, email) {
   const { lastInsertRowid } = db
     .prepare(sql("insert-user.sql"))

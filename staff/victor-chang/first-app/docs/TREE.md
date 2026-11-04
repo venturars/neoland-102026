@@ -17,6 +17,7 @@ first-app/
     get-user.js
     get-user-by-email.js
     find-user-by-name.js
+    search-users.js
     count-users-by-gender.js
     errors.js
     validate-user.js
@@ -25,7 +26,14 @@ first-app/
   clients/
     terminal/
     jupyter/
+    web/
+      index.html
+      styles.css
+      app.js
+      queries.js
   docs/
+    adr/
+      0001-browser-sqlite-connection.md
     ARCHITECTURE.md
     CONSTITUTION.md
     DATABASE.md
@@ -39,7 +47,9 @@ first-app/
         tasks.md
   scripts/
     jupyter.sh
+    web.sh
   AGENTS.md
+  GLOSSARY.md
   package.json
   pnpm-lock.yaml
   .venv/
