@@ -4,10 +4,10 @@ Do the tasks in order. Inside a task, do the steps in order.
 
 ## Task 1 — Update the docs
 
-- [ ] Add "The request is not valid." to `docs/ERRORS.md`, with its meaning (the window sent a value of the wrong type). Result: the sentence is in the list before any code uses it.
-- [ ] Add `electron/` with `main.js`, `preload.cjs`, `index.html`, `app.js` and `style.css` under `clients/` in `docs/TREE.md`. Result: the tree lists the new client.
-- [ ] Add `electron/` to the `src/clients/` section of `docs/ARCHITECTURE.md`: it does not use `clients/web/`, `logic/` runs in the main process, the database program must be running, and the `.txt` per feature does not apply. Result: the entry is there and no layer sentence contradicts it.
-- [ ] Add `pnpm electron` to "Commands" in `AGENTS.md`, saying it needs `pnpm start` running first. Result: the exception is written.
+- [x] Add "The request is not valid." to `docs/ERRORS.md`, with its meaning (the window sent a value of the wrong type). Result: the sentence is in the list before any code uses it.
+- [x] Add `electron/` with `main.js`, `preload.cjs`, `index.html`, `app.js` and `style.css` under `clients/` in `docs/TREE.md`. Result: the tree lists the new client.
+- [x] Add `electron/` to the `src/clients/` section of `docs/ARCHITECTURE.md`: it does not use `clients/web/`, `logic/` runs in the main process, the database program must be running, and the `.txt` per feature does not apply. Result: the entry is there and no layer sentence contradicts it.
+- [x] Add `pnpm electron` to "Commands" in `AGENTS.md`, saying it needs `pnpm start` running first. Result: the exception is written.
 
 ## Task 2 — Check the packages
 

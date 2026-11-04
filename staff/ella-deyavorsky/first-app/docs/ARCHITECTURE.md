@@ -7,7 +7,7 @@ Each layer has one job. The files of each layer are listed in [TREE.md](TREE.md)
 - `logic/` decides if an action is allowed. Its functions are async. It does not contain SQL. It calls the functions exported by `src/queries/users.js`. It never reads a `.sql` file.
 - `queries/` asks the database program for data with `fetch`. It does not decide if a name or an email is valid, and it imports nothing from Node, so it also runs in a browser. The SQL text lives in `src/db/queries/`.
 - `db/` is the database program. It opens the database, stores it, reads the SQL files and answers the queries over HTTP. It also serves the files of the web client.
-- `clients/` runs the logic by hand. A client imports a function from `logic/` and prints the result. It has no rules. The web client does it too, as a browser module.
+- `clients/` runs the logic by hand. A client imports a function from `logic/` and prints the result. It has no rules. The web client does it too, as a browser module. The Electron client does it in the main process of Electron.
 - `scripts/` holds the helper that starts the notebooks.
 - `agents/` holds the git workflow: an orchestrator and one subagent per moment. It has no rules of the app.
 - `skills/` holds one skill per git or GitHub step. The subagents call them.
@@ -56,6 +56,7 @@ A new query is a new `.sql` file in `src/db/queries/` and a new function in `src
 - `terminal/` has one `.txt` file per feature, named like its logic file. You paste it into the terminal while `first-app` is the current folder. `create-users-table.txt` calls `createUsersTable()` and lists the users.
 - `jupyter/` has one notebook per feature, plus `prepare-database.ipynb`, `00-welcome-and-index.ipynb` and a `README.md`. They open in the browser with `scripts/jupyter.sh`.
 - `web/` has `index.html`, `style.css` and `app.js`: three screens (choose a user, menu, edit) over the real users. `app.js` is a browser module that imports `logic/`. It opens at `http://localhost:3000` while the database program runs. The `.txt` per feature of `terminal/` does not apply here; it is tested by opening the page.
+- `electron/` is the desktop client: `main.js`, `preload.cjs`, `index.html`, `style.css` and `app.js`. It has its own page and does not use `web/`. `main.js` imports `logic/` and runs it in Node (the main process), because a window opened from a file cannot call the database program itself. The page asks `main.js` through the bridge in `preload.cjs`, and every answer is `{ ok: true, value }` or `{ ok: false, error }`. It does not start the database program: `pnpm start` must be running. It opens with `pnpm electron`. The `.txt` per feature of `terminal/` does not apply here; it is tested by opening the window.
 
 ### scripts/
 
