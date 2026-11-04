@@ -34,6 +34,14 @@ mi-primer-proyecto/
         index.html
         popup.js
         styles.css
+      vscode/
+        package.json
+        extension.cjs
+        panel.html
+        panel.js
+        panel.css
+        .vscode/
+          launch.json
       jupyter/
     db/
       server.js
