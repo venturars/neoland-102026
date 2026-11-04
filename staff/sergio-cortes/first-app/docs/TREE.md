@@ -52,6 +52,12 @@ first-app/
         index.html
         styles.css
         app.js
+      chrome/
+        server.js
+        manifest.json
+        index.html
+        styles.css
+        popup.js
       terminal/
         create-user-table.txt
         create-user.txt
