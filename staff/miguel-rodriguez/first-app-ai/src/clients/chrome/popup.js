@@ -86,18 +86,46 @@ async function refreshUsers() {
   selectedUser = undefined;
   editor.hidden = true;
   summary.textContent = "";
+  return contacts;
 }
 
 function showUser(user) {
   selectedUser = user;
-  users.value = user.id;
+  const id = String(user.id);
+  const options = Array.from(users.options);
+  let choice = options.find((option) => option.value === id);
+  if (!choice) {
+    choice = document.createElement("option");
+    choice.value = id;
+    users.append(choice);
+  }
+  choice.textContent = `${user.name} · ID ${user.id}`;
+  users.options[0].textContent = "Elige un contacto";
+  users.value = id;
   document.querySelector("#user-title").textContent =
     `${user.name} · ID ${user.id}`;
   document.querySelector("#edit-name").value = user.name;
   document.querySelector("#edit-email").value = user.email;
+  document.querySelector("#created-at").textContent = user.createdAt;
+  document.querySelector("#updated-at").textContent = user.updatedAt;
   deleteForm.reset();
   createForm.hidden = true;
   editor.hidden = false;
+}
+
+async function refreshAfterChange(text) {
+  const id = selectedUser?.id;
+  message.textContent = text;
+  summary.textContent = "";
+  try {
+    const contacts = await refreshUsers();
+    const user = contacts.find((contact) => contact.id === id);
+    if (user) {
+      showUser(user);
+    }
+  } catch {
+    message.textContent = `${text}. No se pudo actualizar la lista. Pulsa Actualizar.`;
+  }
 }
 
 document.querySelector("#refresh").addEventListener("click", () => {
@@ -113,6 +141,9 @@ document.querySelector("#new-user").addEventListener("click", () => {
 });
 
 users.addEventListener("change", () => {
+  if (busy) {
+    return;
+  }
   const value = users.value;
   selectedUser = undefined;
   editor.hidden = true;
@@ -146,10 +177,9 @@ createForm.addEventListener("submit", (event) => {
     const name = document.querySelector("#create-name").value;
     const email = document.querySelector("#create-email").value;
     const user = await call("create", [{ name, email }]);
-    await refreshUsers();
     createForm.reset();
     showUser(user);
-    message.textContent = "Contacto creado";
+    await refreshAfterChange("Contacto creado");
   });
 });
 
@@ -160,9 +190,8 @@ editForm.addEventListener("submit", (event) => {
     const email = document.querySelector("#edit-email").value;
     const id = selectedUser.id;
     const user = await call("update", [id, { name, email }]);
-    await refreshUsers();
     showUser(user);
-    message.textContent = "Contacto guardado";
+    await refreshAfterChange("Contacto guardado");
   });
 });
 
@@ -178,8 +207,23 @@ deleteForm.addEventListener("submit", (event) => {
     }
     const id = selectedUser.id;
     await call("delete", [id]);
-    await refreshUsers();
-    message.textContent = "Contacto eliminado";
+    selectedUser = undefined;
+    editor.hidden = true;
+    editForm.reset();
+    deleteForm.reset();
+    document.querySelector("#created-at").textContent = "";
+    document.querySelector("#updated-at").textContent = "";
+    const options = Array.from(users.options);
+    const choice = options.find((option) => option.value === String(id));
+    if (choice) {
+      choice.remove();
+    }
+    users.value = "";
+    const listIsEmpty = users.options.length === 1;
+    if (listIsEmpty) {
+      users.options[0].textContent = "Sin contactos";
+    }
+    await refreshAfterChange("Contacto eliminado");
   });
 });
 

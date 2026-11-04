@@ -20,7 +20,9 @@
         <button id="new-user" type="button">Nuevo contacto</button>
       </div>
       <label for="users">Seleccionar contacto</label>
-      <select id="users"><option value="">Cargando…</option></select>
+      <select id="users">
+        <option value="">Cargando…</option>
+      </select>
       <form id="find-form" class="find-form">
         <label for="find-id">Buscar por ID</label>
         <div class="actions">
@@ -33,21 +35,47 @@
         <label for="create-name">Nombre</label>
         <input id="create-name" autocomplete="name" required />
         <label for="create-email">Email</label>
-        <input id="create-email" type="text" inputmode="email" autocomplete="email" required />
+        <input
+          id="create-email"
+          type="text"
+          inputmode="email"
+          autocomplete="email"
+          required
+        />
         <button type="submit">Crear</button>
       </form>
       <section id="editor" hidden>
         <h2 id="user-title"></h2>
+        <dl class="dates">
+          <dt>Creado</dt>
+          <dd id="created-at"></dd>
+          <dt>Actualizado</dt>
+          <dd id="updated-at"></dd>
+        </dl>
         <form id="edit-form" novalidate>
           <label for="edit-name">Nombre</label>
           <input id="edit-name" autocomplete="name" required />
           <label for="edit-email">Email</label>
-          <input id="edit-email" type="text" inputmode="email" autocomplete="email" required />
+          <input
+            id="edit-email"
+            type="text"
+            inputmode="email"
+            autocomplete="email"
+            required
+          />
           <button type="submit">Guardar</button>
         </form>
         <form id="delete-form" novalidate>
-          <label for="delete-email">Escribe el email guardado para eliminar</label>
-          <input id="delete-email" type="text" inputmode="email" autocomplete="off" required />
+          <label for="delete-email"
+            >Escribe el email guardado para eliminar</label
+          >
+          <input
+            id="delete-email"
+            type="text"
+            inputmode="email"
+            autocomplete="off"
+            required
+          />
           <button class="danger" type="submit">Eliminar contacto</button>
         </form>
       </section>

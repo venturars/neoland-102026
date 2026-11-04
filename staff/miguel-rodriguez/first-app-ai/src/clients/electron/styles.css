@@ -105,3 +105,15 @@ form > button {
   color: #66635d;
   font-size: 14px;
 }
+
+.dates {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 12px;
+  font-size: 14px;
+}
+
+.dates dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
