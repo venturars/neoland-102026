@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Usuarios</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <h1>Usuarios</h1>
+
+    <ul id="user-list"></ul>
+    <p id="empty-list" hidden>No hay usuarios.</p>
+
+    <form id="user-form">
+      <h2 id="form-title">Nuevo usuario</h2>
+      <label>
+        Nombre
+        <input id="name" type="text" autocomplete="off" />
+      </label>
+      <label>
+        Email
+        <input id="email" type="text" autocomplete="off" />
+      </label>
+
+      <div class="buttons">
+        <button id="create-button" type="submit">Crear</button>
+        <button id="save-button" type="button" hidden>Guardar</button>
+        <button id="delete-button" type="button" hidden>Borrar</button>
+        <button id="new-button" type="button" hidden>Nuevo usuario</button>
+      </div>
+    </form>
+
+    <div id="confirm-delete" hidden>
+      <label>
+        Escribe el nombre del usuario para confirmar
+        <input id="confirm-name" type="text" autocomplete="off" />
+      </label>
+      <div class="buttons">
+        <button id="confirm-button" type="button">Confirmar borrado</button>
+        <button id="cancel-button" type="button">Cancelar</button>
+      </div>
+    </div>
+
+    <p id="error" role="alert"></p>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>
