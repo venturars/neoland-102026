@@ -28,6 +28,7 @@ Se crean, en `src/clients/electron/`, con una función exportada por fichero:
 - `show-message.js` — `showMessage(text, isError)`.
 - `load-users.js` — `loadUsers()`: abre la lista y la pinta con `listUsers()`.
 - `create-user-from-form.js` — `createUserFromForm(event)`: llama a `createUser({ name, email })`.
+- `show-user.js` — `showUser(user)`: pinta la ficha. La usan ver y guardar.
 - `open-user.js` — `openUser(id)`: llama a `findUserById(id)` y abre la ficha.
 - `save-user.js` — `saveUser(event)`: llama a `updateUser(id, { name, email })`.
 - `delete-current-user.js` — `deleteCurrentUser()`: pide `confirm`, llama a `deleteUser(id)` y vuelve a la lista.

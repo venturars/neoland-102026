@@ -6,7 +6,7 @@ El trabajo de git sigue `agents/git-workflow-agent.md` de esta carpeta. Las para
 
 first-app es una app de usuarios para alumnos junior. Se construye con IA siguiendo el sistema SDD.
 
-Está en Node, con módulos ES (`"type": "module"`). SQLite entra con `node:sqlite`. Las dependencias de paquete son `openai`, `cli-table3` y `@colors/colors`. Las de desarrollo son `prettier`, `eslint` y `@eslint/js`. Los scripts se lanzan con pnpm.
+Está en Node, con módulos ES (`"type": "module"`). SQLite entra con `node:sqlite`. Las dependencias de paquete son `openai`, `cli-table3` y `@colors/colors`. Las de desarrollo son `prettier`, `eslint`, `@eslint/js` y `electron`. Los scripts se lanzan con pnpm.
 
 La arquitectura está en `docs/CONSTITUCION.md` y en las guías que enlaza (`docs/ARCHITECTURE.md`, `docs/DATABASE.md`, `docs/ERRORS.md`, `docs/STYLE.md` y `docs/TREE.md`). Esta guía no las repite. Si una tarea y la constitución chocan, gana la constitución. Si la constitución, el código y esta guía se contradicen, se pregunta antes de escribir.
 
@@ -28,7 +28,7 @@ La implementación empieza cuando esa persona lo pide. Ejecuta `tasks.md` y no i
 
 El código vive en `src/`: `src/db/`, `src/queries/`, `src/logic/` y `src/clients/`. Qué sabe cada carpeta está en `docs/ARCHITECTURE.md`. La base y el servidor SQL están en `docs/DATABASE.md`.
 
-Ningún cliente funciona sin el servidor en marcha. Antes de usar la web, la terminal o Jupyter, se lanza `pnpm start` en otra terminal.
+Ningún cliente funciona sin el servidor en marcha. Antes de usar la web, Electron, la terminal o Jupyter, se lanza `pnpm start` en otra terminal.
 
 ## Paquetes
 
@@ -56,7 +56,9 @@ Desde esta carpeta, Jupyter se abre con `pnpm run jupyter`, en Linux y en Window
 
 `pnpm browser` abre `src/clients/web/index.html` como fichero en Google Chrome, con un perfil aparte y `--allow-file-access-from-files`. Se lanza en otra terminal, con `pnpm start` ya en marcha.
 
-`pnpm format` pasa Prettier por los `.js` de `src/db/`, `src/queries/` y `src/logic/`, y por los `.js`, `.html` y `.css` de `src/clients/web/`, con el formato estándar y sin configuración propia. `pnpm lint` pasa ESLint con las reglas recomendadas, según `eslint.config.js`.
+`pnpm electron` abre `src/clients/electron/` en una ventana de escritorio propia. Se lanza en otra terminal, con `pnpm start` ya en marcha.
+
+`pnpm format` pasa Prettier por los `.js` de `src/db/`, `src/queries/` y `src/logic/`, y por los `.js`, `.html` y `.css` de `src/clients/web/` y `src/clients/electron/`, con el formato estándar y sin configuración propia. `pnpm lint` pasa ESLint con las reglas recomendadas, según `eslint.config.js`.
 
 La dependencia `openai` es la del clasificador. `@colors/colors` y `cli-table3` son las tablas del cliente Jupyter. Se instalan con `pnpm install`.
 

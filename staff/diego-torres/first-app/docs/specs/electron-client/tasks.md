@@ -34,7 +34,7 @@ Issue: #935
    `loadUsers` pinta la lista con `textContent`, y sin usuarios muestra `No hay usuarios todavía`. Crear llama a `createUser`.
    `app.js` conecta los formularios y botones que ya existen, y abre la lista.
 
-9. Crea `open-user.js`, `save-user.js` y `delete-current-user.js`.
+9. Crea `show-user.js`, `open-user.js`, `save-user.js` y `delete-current-user.js`.
    Ver llama a `findUserById`. Guardar llama a `updateUser` y muestra `Datos guardados`. Eliminar pide `confirm`, llama a `deleteUser` y vuelve a la lista.
    Un fallo muestra `error.message`. Conecta estas funciones en `app.js`.
 
