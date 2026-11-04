@@ -37,6 +37,7 @@ for (const name of Object.keys(QUERIES)) {
 const PUBLIC_FOLDERS = {
   "/logic/": path.join(srcFolder, "logic"),
   "/queries/": path.join(srcFolder, "queries"),
+  "/electron/": path.join(srcFolder, "clients", "electron"),
   "/": path.join(srcFolder, "clients", "web"),
 };
 const CONTENT_TYPES = {
@@ -111,9 +112,9 @@ const server = http.createServer(async (request, response) => {
     if (pathname === "/") {
       pathname = "/index.html";
     }
-    // The longest prefix wins, so /logic/ is checked before /.
+    // The longest prefix wins, so /logic/ and /electron/ are checked before /.
     let filePath;
-    for (const prefix of ["/logic/", "/queries/", "/"]) {
+    for (const prefix of ["/logic/", "/queries/", "/electron/", "/"]) {
       if (pathname.startsWith(prefix)) {
         const relative = pathname.slice(prefix.length);
         filePath = path.join(PUBLIC_FOLDERS[prefix], relative);

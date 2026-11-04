@@ -47,8 +47,8 @@ The active spec is the approved description of the feature you are building now.
 ## Commands
 
 - Install dependencies with `pnpm install`.
-- `pnpm format` runs Prettier on the `.js` files of `src/db/`, `src/queries/`, `src/logic/`, `src/clients/web/` and `src/clients/api/`. The format is the standard one, with no config of its own. `pnpm lint` runs ESLint.
-- `pnpm start` runs the database program. Every client needs it running. `pnpm browser` opens the web client at `http://127.0.0.1:3000` (the program must be running). `pnpm api` starts the HTTP client on `http://127.0.0.1:3001` (the program must be running). `pnpm jupyter` starts the notebooks. Do not add another way to run the whole app unless the spec asks for it.
+- `pnpm format` runs Prettier on the `.js` files of `src/db/`, `src/queries/`, `src/logic/`, `src/clients/web/`, `src/clients/api/` and `src/clients/electron/`. The format is the standard one, with no config of its own. `pnpm lint` runs ESLint.
+- `pnpm start` runs the database program. Every client needs it running. `pnpm browser` opens the web client at `http://127.0.0.1:3000` (the program must be running). `pnpm api` starts the HTTP client on `http://127.0.0.1:3001` (the program must be running). `pnpm jupyter` starts the notebooks. `pnpm electron` opens the desktop window (the program must be running first, with `pnpm start`). Do not add another way to run the whole app unless the spec asks for it.
 - There are no tests yet. `pnpm test` only prints that no test is specified, then stops.
 
 ## Packages
