@@ -1,6 +1,6 @@
 import { findById } from "../queries/users.js";
 
-export function findUserById(id) {
+export async function findUserById(id) {
   const rawId = id;
   const numericId = Number(rawId);
   const idIsInteger = Number.isInteger(numericId);
@@ -16,7 +16,7 @@ export function findUserById(id) {
 
   let user;
   try {
-    user = findById(numericId);
+    user = await findById(numericId);
   } catch {
     throw new Error("Could not find the user");
   }

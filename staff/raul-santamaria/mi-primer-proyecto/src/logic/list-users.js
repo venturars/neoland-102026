@@ -1,8 +1,8 @@
 import { list } from "../queries/users.js";
 
-export function listUsers() {
+export async function listUsers() {
   try {
-    return list();
+    return await list();
   } catch {
     throw new Error("Could not list the users");
   }

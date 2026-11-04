@@ -19,9 +19,13 @@ mi-primer-proyecto/
         users-gender-count.txt
       http/
         app.js
+      browser/
+        index.html
+        app.js
+        styles.css
       jupyter/
     db/
-      connection.js
+      server.js
       users.sqlite
     logic/
       create-user.js

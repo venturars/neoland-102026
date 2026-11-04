@@ -1,6 +1,6 @@
 # Base de datos
 
-Hay una sola base: `db/users.sqlite`.
+Hay una sola base: `src/db/users.sqlite`.
 
 - `id`: `INTEGER PRIMARY KEY AUTOINCREMENT`.
 - `email`: `VARCHAR(64) NOT NULL UNIQUE`.
@@ -9,12 +9,15 @@ Hay una sola base: `db/users.sqlite`.
 - `updated_at`: fecha de última actualización. `TEXT` en ISO-8601 (`YYYY-MM-DD`).
 - Una fecha se guarda como `TEXT` en ISO-8601 (`YYYY-MM-DD`). SQLite no valida un tipo `DATE`.
 
-La conexión se abre al cargar `db/connection.js` y se queda abierta. Las queries no la abren ni la cierran.
+La conexión la abre `src/db/server.js` al arrancar `pnpm server`. No se exporta.
+Las queries no abren ni cierran la base: piden al servidor por HTTP.
 
-El SQLite de Node ejecuta cada sentencia en el momento. Las funciones de `queries/users.js` son síncronas.
+Las funciones de `src/queries/users.js` son async. Las de `src/logic/` también.
 
-El `CREATE TABLE` vive en una query de `queries/queries/`. `queries/users.js` la lee y la ejecuta al cargar el módulo.
+El `CREATE TABLE` vive en un módulo `.js` en `src/queries/queries/`.
+`src/db/server.js` lo ejecuta al arrancar.
 
 ## Queries
 
-Cada sentencia SQL es un fichero `.sql` en `queries/queries/`. Solo contiene SQL. `queries/users.js` lee esos ficheros y los ejecuta.
+Cada sentencia SQL es un módulo `.js` en `src/queries/queries/` que exporta
+el texto. `src/queries/users.js` lo envía al servidor en `http://127.0.0.1:3000`.

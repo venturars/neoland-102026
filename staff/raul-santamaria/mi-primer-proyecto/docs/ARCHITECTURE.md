@@ -1,7 +1,8 @@
 # Arquitectura
 
 - `src/db/` abre la base de datos y no contiene reglas de negocio.
-- `src/db/connection.js` es la única conexión a la base de datos.
+- `src/db/server.js` abre `users.sqlite`, ejecuta SQL por HTTP y no exporta
+  la conexión.
 - `src/db/users.sqlite` es el único fichero de la base de datos.
 - `src/queries/queries/` guarda el SQL. Hay un fichero `.sql` por query.
 - `src/queries/users.js` lee esos ficheros, prepara el SQL y lo ejecuta.
@@ -15,8 +16,10 @@
 - `src/logic/update-user.js` actualiza un usuario.
 - `src/logic/delete-user.js` borra un usuario.
 - `src/logic/users-gender-count.js` cuenta los usuarios por género.
-- `src/clients/terminal/` llama a `src/logic/` y muestra el resultado. Es el
-  primer cliente y el test manual de cada funcionalidad.
+- `src/clients/terminal/` llama a `src/logic/` con `await` y muestra el
+  resultado. Es el primer cliente y el test manual de cada funcionalidad.
+- `src/clients/browser/` llama a `src/logic/` con `await`, no repite sus
+  reglas y no se sirve la página.
 - `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001 y no
   repite sus reglas.
 - `src/clients/jupyter/` es el cliente que se abre con el Jupyter de la app.

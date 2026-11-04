@@ -26,12 +26,12 @@ const app = express();
 const readJson = express.json();
 app.use(readJson);
 
-app.post("/users", (request, response) => {
+app.post("/users", async (request, response) => {
   try {
     const body = request.body;
     const name = body.name;
     const email = body.email;
-    const user = createUser({ name, email });
+    const user = await createUser({ name, email });
     response.status(201);
     response.json(user);
   } catch (error) {
@@ -63,9 +63,9 @@ app.post("/users", (request, response) => {
   }
 });
 
-app.get("/users", (request, response) => {
+app.get("/users", async (request, response) => {
   try {
-    const users = listUsers();
+    const users = await listUsers();
     response.status(200);
     response.json(users);
   } catch (error) {
@@ -82,10 +82,10 @@ app.get("/users", (request, response) => {
   }
 });
 
-app.get("/users/:id", (request, response) => {
+app.get("/users/:id", async (request, response) => {
   try {
     const id = request.params.id;
-    const user = findUserById(id);
+    const user = await findUserById(id);
     response.status(200);
     response.json(user);
   } catch (error) {
@@ -112,7 +112,7 @@ app.get("/users/:id", (request, response) => {
   }
 });
 
-app.patch("/users/:id", (request, response) => {
+app.patch("/users/:id", async (request, response) => {
   try {
     const id = request.params.id;
     const body = request.body;
@@ -123,7 +123,7 @@ app.patch("/users/:id", (request, response) => {
     if (body.email !== undefined) {
       input.email = body.email;
     }
-    const user = updateUser(input);
+    const user = await updateUser(input);
     response.status(200);
     response.json(user);
   } catch (error) {
@@ -165,10 +165,10 @@ app.patch("/users/:id", (request, response) => {
   }
 });
 
-app.delete("/users/:id", (request, response) => {
+app.delete("/users/:id", async (request, response) => {
   try {
     const id = request.params.id;
-    deleteUser({ id });
+    await deleteUser({ id });
     response.status(204);
     response.end();
   } catch (error) {
