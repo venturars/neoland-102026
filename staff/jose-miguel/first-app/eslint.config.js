@@ -24,6 +24,18 @@ export default defineConfig([
     },
   },
   {
+    files: ["src/db/server.js", "src/clients/http/app.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        console: "readonly",
+        process: "readonly",
+        URL: "readonly",
+      },
+    },
+  },
+  {
     files: ["src/clients/electron/main.js"],
     languageOptions: {
       ecmaVersion: "latest",
@@ -51,6 +63,7 @@ export default defineConfig([
       sourceType: "module",
       globals: {
         console: "readonly",
+        process: "readonly",
         URL: "readonly",
       },
     },

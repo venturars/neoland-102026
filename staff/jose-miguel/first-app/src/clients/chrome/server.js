@@ -186,5 +186,15 @@ const listenOptions = {
   port,
   host: hostname,
 };
-await app.listen(listenOptions);
+try {
+  await app.listen(listenOptions);
+} catch (error) {
+  if (error.code === "EADDRINUSE") {
+    console.error(
+      `Port ${port} is already in use. Stop the other pnpm chrome or free port ${port}.`,
+    );
+    process.exit(1);
+  }
+  throw error;
+}
 console.log(ORIGIN);

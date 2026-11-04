@@ -20,6 +20,20 @@ El browser y el cliente HTTP **no sustituyen** a `pnpm server`: no sirven la bas
 
 Es el mismo motivo para browser y para HTTP: dos procesos Node distintos (puerto 3000 vs 3001), un solo dueño de SQLite.
 
+## Puertos Node en first-app
+
+Solo puede haber **un proceso por puerto**. Si repites el mismo comando en otra terminal, verás `EADDRINUSE` y un mensaje corto en consola.
+
+| Puerto | Comando | Rol |
+| --- | --- | --- |
+| 3000 | `pnpm server` | Servidor SQL |
+| 3001 | `pnpm http` | API Express (usuarios) |
+| 3002 | `pnpm chrome` | API Fastify (extensión Chrome) |
+
+Electron, browser y terminal **no abren** estos puertos; solo necesitan `pnpm server` en 3000 cuando usan la base.
+
+Para liberar un puerto en Windows: localiza la terminal donde corre el comando y **Ctrl+C**, o `netstat -ano | findstr :3000` (cambia el puerto), luego `taskkill /PID <pid> /F`.
+
 ## Clientes que necesitan `pnpm server`
 
 | Cliente | Segundo comando | Notas |
