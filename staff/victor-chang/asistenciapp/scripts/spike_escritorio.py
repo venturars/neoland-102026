@@ -77,6 +77,7 @@ class Tunnel:
         self.process: subprocess.Popen[str] | None = None
         self.url: str | None = None
         self.lock = threading.Lock()
+        self.on_change: list[object] = []
 
     def open(self, port: int) -> str:
         """Abre el túnel (o devuelve la URL si ya está abierto)."""
@@ -106,6 +107,7 @@ class Tunnel:
                 self.close()
                 raise RuntimeError("cloudflared no dio una URL en 30 s")
             threading.Thread(target=self._drain, daemon=True).start()
+            self._notify()
             return self.url
 
     def _drain(self) -> None:
@@ -122,6 +124,12 @@ class Tunnel:
             except subprocess.TimeoutExpired:
                 self.process.kill()
         self.process, self.url = None, None
+        self._notify()
+
+    def _notify(self) -> None:
+        for window in self.on_change:
+            # confirm_close se lee al cerrar; así el diálogo nativo sale solo con el túnel abierto.
+            window.confirm_close = self.url is not None  # type: ignore[attr-defined]
 
 
 def google_login() -> dict[str, object]:
@@ -240,27 +248,29 @@ def main() -> None:
     log(f"server: port {server.server_port}")
 
     api = Api()
-    window = webview.create_window("Spike 007", f"http://127.0.0.1:{server.server_port}/", js_api=api)
+    window = webview.create_window(
+        "Spike 007",
+        f"http://127.0.0.1:{server.server_port}/",
+        js_api=api,
+        text_select=True,
+        localization={
+            "global.quitConfirmation": "Los alumnos no podrán registrarse. ¿Cerrar igualmente?",
+            "global.quit": "Cerrar",
+            "global.cancel": "Cancelar",
+        },
+    )
     if window is None:
         raise SystemExit("pywebview no creó la ventana")
     api.window = window
+    tunnel.on_change.append(window)
 
     def on_loaded() -> None:
         log(f"window: loaded {time.time() - t0:.2f} s desde el lanzamiento ({time.time() - T_MAIN:.2f} s desde main)")
         if os.environ.get("SPIKE_AUTO") == "1":
             threading.Thread(target=auto_run, args=(window, tunnel, server.server_port), daemon=True).start()
 
-    def on_closing() -> bool:
-        if tunnel.url and os.environ.get("SPIKE_AUTO") != "1":
-            confirmed = window.create_confirmation_dialog(
-                "Cerrar Spike", "Los alumnos no podrán registrarse. ¿Cerrar igualmente?"
-            )
-            log(f"closing: confirmación={confirmed}")
-            return bool(confirmed)
-        return True
-
     window.events.loaded += on_loaded
-    window.events.closing += on_closing
+    window.events.closed += lambda: log("closing: ventana cerrada")
     webview.settings["ALLOW_DOWNLOADS"] = True
     try:
         webview.start()
