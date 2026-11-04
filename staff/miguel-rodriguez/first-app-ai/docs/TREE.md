@@ -74,6 +74,10 @@ first-app-ai/
 │       │   ├── plan.md
 │       │   ├── spec.md
 │       │   └── tasks.md
+│       ├── update-workflow-task-checks/
+│       │   ├── plan.md
+│       │   ├── spec.md
+│       │   └── tasks.md
 │       ├── update-git-workflow-templates/
 │       │   ├── plan.md
 │       │   ├── spec.md
