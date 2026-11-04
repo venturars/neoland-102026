@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Usuarios</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="page-header">
+        <p class="eyebrow">First App</p>
+        <p class="tagline">Cliente de escritorio</p>
+      </header>
+      <main class="card">
+        <h1>Usuarios</h1>
+        <p id="error-message" class="message" role="alert"></p>
+        <section id="users-screen">
+          <h2>Crear usuario</h2>
+          <form id="create-form" class="form" novalidate>
+            <label class="field">
+              <span class="field-label">Nombre</span>
+              <input id="create-name" name="name" type="text" />
+            </label>
+            <label class="field">
+              <span class="field-label">Email</span>
+              <input id="create-email" name="email" type="email" />
+            </label>
+            <button class="primary" type="submit">Crear</button>
+          </form>
+          <h2>Ver usuario</h2>
+          <form id="find-form" class="form" novalidate>
+            <label class="field">
+              <span class="field-label">Id</span>
+              <input id="find-id" name="id" type="text" />
+            </label>
+            <button type="submit">Ver</button>
+          </form>
+          <h2>Lista de usuarios</h2>
+          <ul id="users-list" class="user-list"></ul>
+        </section>
+        <section id="user-screen" hidden>
+          <h2>Ficha del usuario</h2>
+          <dl class="user-dl">
+            <dt>Id</dt>
+            <dd id="user-id"></dd>
+            <dt>Nombre</dt>
+            <dd id="user-name"></dd>
+            <dt>Email</dt>
+            <dd id="user-email"></dd>
+            <dt>Creado</dt>
+            <dd id="user-created"></dd>
+            <dt>Modificado</dt>
+            <dd id="user-updated"></dd>
+          </dl>
+          <form id="update-form" class="form" novalidate>
+            <label class="field">
+              <span class="field-label">Nombre</span>
+              <input id="update-name" name="name" type="text" />
+            </label>
+            <label class="field">
+              <span class="field-label">Email</span>
+              <input id="update-email" name="email" type="email" />
+            </label>
+            <button class="primary" type="submit">Guardar</button>
+          </form>
+          <div class="actions">
+            <button id="delete-user" class="danger" type="button">
+              Eliminar
+            </button>
+            <button id="back-to-list" class="secondary" type="button">
+              Volver
+            </button>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

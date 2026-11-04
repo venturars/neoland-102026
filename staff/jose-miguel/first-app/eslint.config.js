@@ -23,4 +23,25 @@ export default defineConfig([
       },
     },
   },
+  {
+    files: ["src/clients/electron/main.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        process: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/electron/app.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        document: "readonly",
+        fetch: "readonly",
+      },
+    },
+  },
 ]);
