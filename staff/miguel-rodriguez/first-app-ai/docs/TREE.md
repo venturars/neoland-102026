@@ -34,6 +34,10 @@ first-app-ai/
 │   ├── STYLE.md
 │   ├── TREE.md
 │   └── specs/
+│       ├── vscode-user-client/
+│       │   ├── plan.md
+│       │   ├── spec.md
+│       │   └── tasks.md
 │       ├── vanilla-web-client/
 │       │   ├── plan.md
 │       │   ├── spec.md
@@ -128,6 +132,14 @@ first-app-ai/
 │       └── SKILL.md
 ├── src/
 │   ├── clients/
+│   │   ├── vscode/
+│   │   │   ├── .vscode/
+│   │   │   │   └── launch.json
+│   │   │   ├── extension.cjs
+│   │   │   ├── package.json
+│   │   │   ├── panel.html
+│   │   │   ├── panel.js
+│   │   │   └── panel.css
 │   │   ├── web/
 │   │   │   ├── index.html
 │   │   │   ├── main.js

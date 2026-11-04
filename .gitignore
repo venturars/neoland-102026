@@ -25,6 +25,9 @@ npm-shrinkwrap.json
 
 # VS Code y Visual Studio
 .vscode/
+!/staff/miguel-rodriguez/first-app-ai/src/clients/vscode/.vscode/
+/staff/miguel-rodriguez/first-app-ai/src/clients/vscode/.vscode/*
+!/staff/miguel-rodriguez/first-app-ai/src/clients/vscode/.vscode/launch.json
 .vs/
 *.code-workspace
 *.suo

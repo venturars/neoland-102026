@@ -45,6 +45,13 @@ the launcher with Ctrl+C closes its browser and removes that profile.
 `src/db/server.js` handles only database requests on POST /execute and its CORS
 preflight; it does not serve the page or JavaScript files.
 
+`src/clients/vscode/` provides an independent VS Code extension. Its manifest and
+`extension.cjs` register a command and bridge panel messages to the existing user
+operations. `panel.html`, `panel.js`, and `panel.css` present the contact flows;
+the extension uses the same local data service and does not own business rules.
+Its `.vscode/launch.json` starts the Extension Development Host for local testing.
+`tests/vscode-client.test.js` checks the extension adapter.
+
 `src/clients/jupyter/` provides nine independent notebooks for those same operations
 and explicit table initialization. Initialization calls a query; it is not a new
 public business operation.

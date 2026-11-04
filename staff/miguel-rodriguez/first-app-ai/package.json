@@ -7,7 +7,7 @@
   },
   "scripts": {
     "jupyter": "node scripts/jupyter.js",
-    "format": "prettier --no-config --no-editorconfig --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/jupyter/**/*.js\" \"src/clients/web/**/*.js\" \"scripts/**/*.js\" \"eslint.config.js\"",
+    "format": "prettier --no-config --no-editorconfig --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/jupyter/**/*.js\" \"src/clients/web/**/*.js\" \"src/clients/vscode/**/*.js\" \"src/clients/vscode/**/*.cjs\" \"scripts/**/*.js\" \"eslint.config.js\"",
     "lint": "eslint .",
     "server": "node src/db/server.js",
     "web": "node scripts/web.js"
