@@ -6,6 +6,8 @@ Ficheros en kebab-case, funciones y variables en camelCase, exportaciones con no
 
 Una función por fichero. No hay clases, no hay `this` y no hay métodos.
 
+`src/clients/nest/` se aparta de esta guía: hay clases, métodos, `this`, decoradores y nombres de fichero con punto.
+
 Cada línea deja una sola acción en un nombre. Una acción es una llamada o una comprobación. `input.name` y `.trim()` van en líneas distintas. Prettier no las junta.
 
 Un fallo de la lista se comprueba con `if` y `throw new Error`, en su propia línea.
