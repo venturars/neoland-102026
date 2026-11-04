@@ -77,6 +77,7 @@ Estas dos diferencias quedan como adaptaciones locales aprobadas.
 ## Resultados de la comprobación
 
 - Al normalizar el prefijo local de `tools/`, `agents/`, `skills/`, `tools/`, `templates/` y `MCPS/github-mcp-server/` coinciden con el template, salvo las adaptaciones aprobadas en `agents/create-pr.md` y `skills/create-pr-base-staging/SKILL.md`.
+- `agents/git-workflow-agent.md` difiere del template solo en espacios: Prettier ajusta la sangría al formatear. Su contenido es el mismo.
 - Los ocho scripts pasan `bash -n` y tienen permiso de ejecución. `tools/check-status.sh` termina correctamente desde la raíz del repositorio.
 - `tools/create-pr-base-staging.sh` rechaza la falta de argumentos y un cuerpo inexistente. No se creó ninguna pull request de prueba, así que su caso correcto queda sin ejecutar.
 - No quedan referencias a la ruta genérica del template ni a las entrevistas de una sola pregunta en las instrucciones y guías vigentes.
