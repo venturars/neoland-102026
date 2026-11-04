@@ -26,6 +26,10 @@
 - `src/clients/chrome/` llama a `src/logic/` desde su API, escucha en
   el puerto 3002 y no repite sus reglas. La extensión solo llama a esa
   API. No sustituye a `src/clients/http/` ni a `src/db/server.js`.
+- El proceso de `src/clients/vscode/` llama a `src/logic/` y la vista
+  solo muestra el resultado. No hay API nueva. No sustituye a
+  `src/clients/http/`, ni a `src/clients/chrome/`, ni a
+  `src/db/server.js`.
 - `agents/git-workflow-agent.md` reconoce el momento y llama al
   subagente como un agente aparte.
 - `agents/help-me-to-think.md` hace las preguntas que hagan falta para ayudar a pensar al alumno.
