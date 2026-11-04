@@ -4,10 +4,11 @@ first-app/
   src/
     db/
       connection.js
+      server.js
       users.sqlite
     queries/
-      queries/
       users.js
+      users-sql.js
     logic/
       create-user.js
       update-user.js
@@ -19,10 +20,8 @@ first-app/
     clients/
       terminal/
       browser/
-        server.js
-        list.html
-        options.html
-        edit.html
+        index.html
+        app.js
         styles.css
     users.js
   logic/
@@ -55,6 +54,10 @@ first-app/
         plan.md
         tasks.md
       cliente-navegador/
+        spec.md
+        plan.md
+        tasks.md
+      servidor-base/
         spec.md
         plan.md
         tasks.md

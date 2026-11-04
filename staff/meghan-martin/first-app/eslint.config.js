@@ -19,13 +19,21 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/clients/browser/server.js"],
+    files: ["src/db/server.js"],
     languageOptions: {
       globals: {
         Buffer: "readonly",
-        URL: "readonly",
-        URLSearchParams: "readonly",
         console: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/browser/app.js"],
+    languageOptions: {
+      globals: {
+        clearTimeout: "readonly",
+        document: "readonly",
+        setTimeout: "readonly",
       },
     },
   },

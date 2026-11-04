@@ -24,16 +24,10 @@ first-app/
   src/
     db/
       connection.js
+      server.js
     queries/
       users.js
-      queries/
-        create-users-table.sql
-        find-all.sql
-        find-by-email.sql
-        find-by-id.sql
-        insert.sql
-        remove.sql
-        update.sql
+      users-sql.js
     logic/
       create-user.js
       list-users.js
@@ -53,10 +47,8 @@ first-app/
         find-user-by-id.txt
         users-gender-count.txt
       browser/
-        server.js
-        list.html
-        options.html
-        edit.html
+        index.html
+        app.js
         styles.css
       jupyter/
         create-users-table.ipynb
@@ -88,12 +80,13 @@ first-app/
 
 `src/db/users.sqlite` existe en disco y no se sube a git.
 
-- `src/db/connection.js` abre la única conexión y la exporta como `db`. No se abre otra base ni otra conexión.
-- `src/queries/queries/*.sql` son solo sentencias. `src/queries/users.js` las lee y las ejecuta. Ahí no se decide si un email es válido.
+- `src/db/connection.js` abre la única conexión y la exporta como `db`. Solo la importa `src/db/server.js`. No se abre otra base ni otra conexión.
+- `src/db/server.js` atiende en `http://127.0.0.1:3000`. Se arranca con `npm run db` desde `first-app`. Solo ejecuta las sentencias que ya están en `src/queries/users-sql.js`.
+- `src/queries/users-sql.js` guarda esas sentencias, con parámetros con nombre (`:id`, `:name`, `:email`). `src/queries/users.js` pide cada una por su nombre. Ahí no se decide si un email es válido.
 - `src/logic/` es la app. Cada acción es su propio fichero, con sus comprobaciones dentro. Un fichero ya creado no se reescribe para meter otra acción. Las reglas no se mueven a queries ni a clients.
 - `src/clients/terminal/*.txt` no son programas. Se pegan con el directorio actual en `first-app`. Solo ahí se imprime el resultado.
 - `src/clients/jupyter/*.ipynb` llaman a la misma acción que su `.txt`. Se abren con `npm run jupyter` desde `first-app`. No cambian `logic/`.
-- `src/clients/browser/` sirve tres páginas. Llama a las mismas acciones de `src/logic/`. Se abre con `npm run browser` desde `first-app`. No cambia `logic/`.
+- `src/clients/browser/` es una página: `index.html`, `app.js` y `styles.css`. `app.js` llama a las mismas acciones de `src/logic/`. Se abre con `npm run browser` desde `first-app`. La base tiene que estar en marcha.
 - Una acción nueva es un fichero nuevo en `src/logic/` y un `.txt` nuevo en `src/clients/terminal/`.
 
 ## Specs

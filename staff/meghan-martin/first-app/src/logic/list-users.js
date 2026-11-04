@@ -1,11 +1,16 @@
 import { findAll } from "../queries/users.js";
 
-export function listUsers() {
+export async function listUsers() {
   let rows;
   try {
-    rows = findAll();
-  } catch {
-    throw new Error("Could not list the users");
+    rows = await findAll();
+  } catch (error) {
+    if (
+      error.message === "Database is not running. Start it with npm run db."
+    ) {
+      throw error;
+    }
+    throw new Error("Could not list the users", { cause: error });
   }
 
   const people = rows.map((user) => {

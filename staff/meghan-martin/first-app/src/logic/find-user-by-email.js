@@ -1,6 +1,6 @@
 import { findByEmail } from "../queries/users.js";
 
-export function findUserByEmail(email) {
+export async function findUserByEmail(email) {
   if (typeof email !== "string") {
     throw new Error("Email is invalid");
   }
@@ -47,9 +47,14 @@ export function findUserByEmail(email) {
 
   let user;
   try {
-    user = findByEmail(normalizedEmail);
-  } catch {
-    throw new Error("Could not find the user");
+    user = await findByEmail(normalizedEmail);
+  } catch (error) {
+    if (
+      error.message === "Database is not running. Start it with npm run db."
+    ) {
+      throw error;
+    }
+    throw new Error("Could not find the user", { cause: error });
   }
   if (!user) {
     throw new Error("User not found");

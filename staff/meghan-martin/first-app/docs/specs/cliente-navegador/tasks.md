@@ -1,8 +1,7 @@
 # Tasks
 
-1. Escribir `spec.md` con la lista, las opciones, la edición y los tres fallos.
-2. Escribir `plan.md` con las páginas y las cuatro funciones que ya existen.
-3. Crear `src/clients/browser/` con el servidor y las tres pantallas.
-4. Añadir el script `browser` sin paquetes nuevos.
-5. Nombrar el cliente en la constitución, la arquitectura y el árbol.
-6. Desde `first-app`, lanzar `npm run format` y `npm run lint`.
+1. Dejar la lista, las opciones, la edición y la ventana de borrar en `index.html`.
+2. Mover los clics a `app.js`, llamando a las cuatro acciones que ya existen.
+3. Quitar el servidor de páginas y las tres páginas sueltas.
+4. Hacer que `npm run browser` abra el HTML.
+5. Desde `first-app`, con la base en marcha, abrir la página y probar guardar, cancelar y borrar.

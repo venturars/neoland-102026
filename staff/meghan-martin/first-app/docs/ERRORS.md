@@ -2,6 +2,10 @@
 
 Un fallo es `throw new Error("...")`. La frase va en inglés y es una de esta lista. No hay códigos ni clases de error propias. Cada plan dice cuál de estas frases corresponde a su fallo.
 
+Si la base no está arrancada:
+
+- `Database is not running. Start it with npm run db.`
+
 Si lo que entra no vale, o una regla no se cumple:
 
 - `Name is empty`
