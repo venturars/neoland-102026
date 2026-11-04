@@ -1,7 +1,12 @@
+// Abre la pantalla de selección y carga los usuarios.
 import { loadUserSelection } from "./load-user-selection.js";
+// Abre la pantalla de edición del usuario.
 import { openUserEditor } from "./open-user-editor.js";
+// Abre la pantalla de notas del usuario.
 import { showNotes } from "./show-notes.js";
+// Abre el menú con los datos del usuario.
 import { showUserMenu } from "./show-user-menu.js";
+// Datos compartidos: usuario seleccionado y si la app está ocupada.
 import { STATE } from "./state.js";
 
 // Cambia de pantalla según el atributo data-action del botón pulsado.

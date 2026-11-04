@@ -1,6 +1,10 @@
+// Busca un usuario por su id (viene de la capa de lógica).
 import { findUserById } from "../../logic/find-user-by-id.js";
+// Muestra mensajes en pantalla, normales o de error.
 import { showMessage } from "./show-message.js";
+// Abre el menú con los datos del usuario.
 import { showUserMenu } from "./show-user-menu.js";
+// Datos compartidos: usuario seleccionado y si la app está ocupada.
 import { STATE } from "./state.js";
 
 // Busca el usuario elegido en el desplegable y abre su menú.
