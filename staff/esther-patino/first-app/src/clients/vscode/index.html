@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="{{CSP}}" />
+    <title>First App · Usuarios</title>
+    <link rel="stylesheet" href="{{STYLE}}" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="app-header">
+        <p class="brand-mark">F</p>
+        <div>
+          <h1>First App</h1>
+          <p>Editor</p>
+        </div>
+      </header>
+      <main class="card">
+        <p id="message" class="message" role="status" hidden></p>
+        <p class="eyebrow">Usuarios</p>
+        <h2>Lista</h2>
+        <div class="actions">
+          <button id="list-users" type="button">Lista</button>
+        </div>
+        <ul id="user-list" class="user-list"></ul>
+        <form id="search-form">
+          <p class="eyebrow">Buscar</p>
+          <h2>Criterio</h2>
+          <div class="field">
+            <label for="search-criterion">Criterio</label>
+            <select id="search-criterion" name="criterion">
+              <option value="name">Nombre</option>
+              <option value="email">Correo</option>
+              <option value="id">Id</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="search-value">Valor</label>
+            <input id="search-value" name="value" type="text" />
+          </div>
+          <div class="actions">
+            <button id="search-users" type="submit">Buscar</button>
+          </div>
+        </form>
+        <form id="user-form">
+          <p class="eyebrow">Datos</p>
+          <h2>Usuario</h2>
+          <div class="field">
+            <label for="user-name">Nombre</label>
+            <input id="user-name" name="name" type="text" />
+          </div>
+          <div class="field">
+            <label for="user-email">Email</label>
+            <input id="user-email" name="email" type="text" />
+          </div>
+          <div class="actions">
+            <button id="create-user" type="button">Crear</button>
+            <button id="save-user" type="submit">Guardar</button>
+            <button id="delete-user" class="danger" type="button">
+              Borrar
+            </button>
+          </div>
+        </form>
+        <section id="user-card" hidden>
+          <p class="eyebrow">Ficha</p>
+          <h2>Usuario elegido</h2>
+          <p id="card-id"></p>
+          <p id="card-name"></p>
+          <p id="card-email"></p>
+          <p id="card-created"></p>
+          <p id="card-updated"></p>
+        </section>
+      </main>
+    </div>
+    <script nonce="{{NONCE}}" src="{{SCRIPT}}"></script>
+  </body>
+</html>
