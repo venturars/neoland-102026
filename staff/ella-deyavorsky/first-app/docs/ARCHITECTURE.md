@@ -88,8 +88,8 @@ One folder per skill, each with a `SKILL.md`. A skill that runs a script names i
 - `create-empty-commit/` makes the empty commit `chore: open #N`.
 - `commit-changes/` saves a piece with named files.
 - `launch-push/` pushes the current branch and sets the upstream.
-- `create-pr-base-staging/` opens the pull request with base `staging`.
-- `create-draft/` leaves the pull request in draft.
+- `create-pr-base-staging/` opens the pull request with base `staging`, in draft and assigned to the signed-in user, in one call.
+- `create-draft/` turns a pull request that already exists into a draft.
 - `link-pr-to-issue/` leaves `Closes #N` in the body and links the issue in Development. The issue closes when the pull request reaches the default branch, not when it is merged into `staging`.
 - `assign-reviewers/` assigns the people who review the pull request and takes it out of draft.
 
@@ -102,6 +102,7 @@ One folder per skill, each with a `SKILL.md`. A skill that runs a script names i
 - `create-empty-commit.sh` creates the empty opening commit.
 - `commit-changes.sh` saves the named files.
 - `launch-push.sh` pushes the branch and sets the upstream.
+- `create-pr-base-staging.sh` opens the pull request with base `staging`, in draft and assigned to the signed-in user, with `gh pr create`.
 
 ### templates/
 
