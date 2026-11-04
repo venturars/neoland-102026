@@ -66,7 +66,7 @@ El servidor remoto es el descrito en `MCPS/socket-mcp/mcp.txt`.
 
 ## Comandos
 
-- Ejecutar: desde first-app, `pnpm web` (página en Brave; arranca la base si el puerto 3000 está libre). `pnpm server` sigue siendo la base sola.
+- Ejecutar: desde first-app, `pnpm web` (página en Brave; arranca la base si el puerto 3000 está libre). `pnpm server` sigue siendo la base sola. Cliente VS Code: `pnpm server` y `pnpm vscode`; comando `First App: Abrir usuarios` (detalle en `README.md`).
 - Tests: no hay. El script `test` de `package.json` termina en error. No se añaden tests ni se cambia ese script.
 - Formato: `pnpm run format` (Prettier por defecto, sin `.prettierrc`).
 - Lint: `pnpm run lint` (ESLint con `eslint.config.js`).

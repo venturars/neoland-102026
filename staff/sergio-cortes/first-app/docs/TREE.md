@@ -2,6 +2,7 @@
 
 first-app/
   AGENTS.md
+  README.md
   eslint.config.js
   package.json
   agents/
@@ -58,6 +59,14 @@ first-app/
         index.html
         styles.css
         popup.js
+      vscode/
+        package.json
+        extension.js
+        index.html
+        styles.css
+        panel.js
+        .vscode/
+          launch.json
       terminal/
         create-user-table.txt
         create-user.txt
