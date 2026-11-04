@@ -14,5 +14,6 @@ Fuente: un commit es un conventional commit, como en [github-pr](https://www.ski
 
 #### Reglas de Invocación Críticas
 
+- **Mensaje técnico:** La descripción nombra el fichero o la función y el cambio. No uses un verbo suelto (`update files`, `fix bug`). Una sola línea. El commit vacío sigue siendo `chore: open #N`.
 - **Escapado de caracteres**: Si el mensaje contiene comillas dobles (`"`), escápalas como `\"`.
 - **Procesamiento de respuestas**: El script lista el mensaje y los ficheros. El commit lleva solo esos ficheros: lo que ya estuviera preparado se queda preparado. Si el código de salida no es 0, no reintentes metiendo más ficheros de los que nombró el alumno.
