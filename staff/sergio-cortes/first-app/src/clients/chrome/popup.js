@@ -39,6 +39,24 @@ async function findUserById(id) {
   return response.json();
 }
 
+async function createUser(input) {
+  const url = `${ORIGIN}/users`;
+  const payload = { name: input.name, email: input.email };
+  const body = JSON.stringify(payload);
+  const requestInit = {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body,
+  };
+  const response = await fetch(url, requestInit);
+
+  if (!response.ok) {
+    await throwApiError(response);
+  }
+
+  return response.json();
+}
+
 async function updateUser(input) {
   const idText = String(input.id);
   const url = `${ORIGIN}/users/${idText}`;
@@ -287,6 +305,50 @@ async function selectUser(event) {
   }
 }
 
+async function createNewUser(event) {
+  event.preventDefault();
+
+  if (STATE.isBusy) {
+    return;
+  }
+
+  const nameInput = document.getElementById("create-user-name");
+  const name = nameInput.value;
+  const emailInput = document.getElementById("create-user-email");
+  const email = emailInput.value;
+  const controls = document.querySelectorAll(
+    "#create-user-form input, #create-user-form button",
+  );
+  STATE.isBusy = true;
+  showMessage("", false);
+
+  for (const control of controls) {
+    control.disabled = true;
+  }
+
+  try {
+    await createUser({ name, email });
+    nameInput.value = "";
+    emailInput.value = "";
+    await loadUserSelection();
+  } catch (error) {
+    if (error instanceof Error) {
+      showMessage(error.message, true);
+    } else {
+      showMessage(
+        "No se ha podido crear el usuario. Comprueba la conexión y vuelve a intentarlo.",
+        true,
+      );
+    }
+  } finally {
+    STATE.isBusy = false;
+
+    for (const control of controls) {
+      control.disabled = false;
+    }
+  }
+}
+
 async function saveUser(event) {
   event.preventDefault();
 
@@ -433,6 +495,8 @@ function navigate(event) {
 function initializeClient() {
   const selectionForm = document.getElementById("selection-form");
   selectionForm.addEventListener("submit", selectUser);
+  const createForm = document.getElementById("create-user-form");
+  createForm.addEventListener("submit", createNewUser);
   const editForm = document.getElementById("edit-form");
   editForm.addEventListener("submit", saveUser);
   const deleteButton = document.getElementById("delete-user");
