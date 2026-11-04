@@ -8,7 +8,7 @@ Git work follows `agents/git-workflow-agent.md` in this folder. The stops are th
 
 This is the first app of the AI engineering course for junior students. It is a good app to build with spec-driven development (SDD): write the rules first, then write the code that follows them.
 
-The app is JavaScript, run by Node.js. `package.json` sets `"type": "module"`, so files use ESM: `import` and `export`. There is no web framework and no TypeScript.
+The app is JavaScript, run by Node.js. `package.json` sets `"type": "module"`, so files use ESM: `import` and `export`. The only web framework is Express, used only by the HTTP client in `src/clients/api/`. There is no TypeScript.
 
 The database is SQLite through Node's built-in `node:sqlite`. `src/db/connection.js` opens `src/db/users.sqlite` with `DatabaseSync`, and only the database program `src/db/server.js` uses it. Everything else asks that program. No database package is installed.
 
@@ -47,8 +47,8 @@ The active spec is the approved description of the feature you are building now.
 ## Commands
 
 - Install dependencies with `pnpm install`.
-- `pnpm format` runs Prettier on the `.js` files of `src/db/`, `src/queries/`, `src/logic/` and `src/clients/web/`. The format is the standard one, with no config of its own. `pnpm lint` runs ESLint.
-- `pnpm start` runs the database program. Every client needs it running. `pnpm browser` opens the web client at `http://127.0.0.1:3000` (the program must be running). `pnpm jupyter` starts the notebooks. Do not add another way to run the whole app unless the spec asks for it.
+- `pnpm format` runs Prettier on the `.js` files of `src/db/`, `src/queries/`, `src/logic/`, `src/clients/web/` and `src/clients/api/`. The format is the standard one, with no config of its own. `pnpm lint` runs ESLint.
+- `pnpm start` runs the database program. Every client needs it running. `pnpm browser` opens the web client at `http://127.0.0.1:3000` (the program must be running). `pnpm api` starts the HTTP client on `http://127.0.0.1:3001` (the program must be running). `pnpm jupyter` starts the notebooks. Do not add another way to run the whole app unless the spec asks for it.
 - There are no tests yet. `pnpm test` only prints that no test is specified, then stops.
 
 ## Packages
