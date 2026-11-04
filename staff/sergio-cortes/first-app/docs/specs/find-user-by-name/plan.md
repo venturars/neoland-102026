@@ -32,7 +32,7 @@ Devuelve una lista de `{ id, name, email, createdAt, updatedAt }`, ordenada por 
 ```sql
 SELECT *
 FROM users
-WHERE name = :name
+WHERE LOWER(name) = LOWER(:name)
 ORDER BY id
 ```
 

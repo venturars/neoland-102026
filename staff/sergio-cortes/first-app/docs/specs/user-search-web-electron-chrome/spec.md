@@ -6,7 +6,7 @@ Issue: #1029.
 
 Quien usa first-app en el navegador (`pnpm web`), en la ventana de escritorio (`pnpm electron`) o en la extensión de Chrome (`pnpm chrome`) debe poder buscar usuarios desde la primera pantalla, con el mismo comportamiento que el cliente de VS Code (#1018).
 
-En la pantalla de selección aparece un bloque «Buscar usuario» junto a la lista y al alta. La búsqueda pide un criterio (nombre, email o id) y el valor exacto. No se adivina el criterio ni se busca un trozo del nombre.
+En la pantalla de selección aparece un bloque «Buscar usuario» junto a la lista y al alta. La búsqueda pide un criterio (nombre, email o id) y el valor exacto. Para nombre y email, la comparación no distingue mayúsculas ni minúsculas (queries `find-by-name.sql` y `find-by-email.sql`). No se adivina el criterio ni se busca un trozo del nombre.
 
 Si la búsqueda devuelve un solo usuario, se abre la pantalla de menú de ese usuario. Si devuelve varios (solo puede pasar por nombre), el desplegable muestra esos resultados y hay que elegir uno y pulsar Continuar. Si no hay coincidencias, el desplegable se ve vacío. Actualizar la lista, crear, guardar o borrar vuelven a la pantalla de selección con todos los usuarios.
 
@@ -22,7 +22,7 @@ Quien ya gestiona usuarios desde web, Electron o Chrome y quiere localizar uno p
 
 ## Entrada
 
-Al buscar: criterio (nombre, email o id) y valor exacto, igual que en VS Code.
+Al buscar: criterio (nombre, email o id) y valor exacto; id tal cual; nombre y email sin distinguir mayúsculas, igual que en VS Code.
 
 Al elegir en el desplegable tras una búsqueda con varios resultados: el id del usuario, como en la selección normal.
 
@@ -30,7 +30,7 @@ Al elegir en el desplegable tras una búsqueda con varios resultados: el id del 
 
 El mismo resultado que ya devuelven listar y buscar en lógica, mostrado en pantalla. Tras un solo resultado, el menú muestra id, nombre y email de ese usuario.
 
-Ejemplo. Están Ada, ada@example.com, id 1, y Grace, grace@example.com, id 2. En web se elige criterio nombre y se busca Ada: se abre el menú de Ada. Buscar ada no la muestra. Criterio email y ada@example.com: mismo menú. Criterio id y 1: mismo menú. Si se busca un nombre inexistente, el desplegable queda vacío. En Electron y Chrome el flujo es el mismo con los mismos datos.
+Ejemplo. Están Ada, ada@example.com, id 1, y Grace, grace@example.com, id 2. En web se elige criterio nombre y se busca Ada: se abre el menú de Ada. Buscar ada abre el mismo menú. Criterio email y ada@example.com o ADA@example.com: mismo menú. Criterio id y 1: mismo menú. Si se busca un nombre inexistente, el desplegable queda vacío. En Electron y Chrome el flujo es el mismo con los mismos datos.
 
 ## Fallo
 
