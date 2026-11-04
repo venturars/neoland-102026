@@ -1,6 +1,6 @@
 # Plan técnico 007 · App de escritorio para el profesor
 
-> Versión 0.1 · Estado: **Borrador** (2026-11-04) · Spec: [spec.md](spec.md) v1.0 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Constitución v3.2 · Creado: 2026-11-04 · Issue: #919
+> Versión 1.0 · Estado: **Aprobado** (2026-11-04) · Spec: [spec.md](spec.md) v1.0 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Constitución v3.2 · Creado: 2026-11-04 · Issue: #919
 
 Este documento explica **cómo** se empaqueta AsistenciApp como app de escritorio para macOS (Apple Silicon) y Windows x64 sin cambiar sus reglas. El escritorio es **una entrada nueva** (C3): una ventana que muestra el mismo panel y llama a los mismos casos de uso. Dominio, casos de uso y base de datos no cambian. Las reglas se citan por su identificador (`C2`, `F4`…).
 
@@ -289,7 +289,7 @@ asistenciapp/
 
 ## 8. Decisiones
 
-Tomadas por Victor el 2026-11-04 en la sesión de preguntas previa a la spec (spec §7), salvo las marcadas como pendientes.
+Tomadas por Victor el 2026-11-04: §8.1–§8.6 en la sesión de preguntas previa a la spec (spec §7), y §8.7–§8.9 al aprobar este plan.
 
 1. **pywebview en vez de Electron.** Electron daría el mismo motor en todos los sistemas y descargas que funcionan sin más, pero añade Node.js como segundo lenguaje, ~150–200 MB por descarga, dos procesos que coordinar (Electron y el servidor de Python) y dos herramientas de empaquetado en cada compilación. Lo único que Electron resolvía mejor (guardar el CSV) son unas líneas en Python (§2.9). *Difícil de deshacer: cambiaría la receta de compilación y `desktop.py` entero.*
 2. **Llave de Google compartida, en producción sin verificar.** Quita los 15 minutos de preparación y el permiso semanal a cada profesor, a cambio de un aviso de Google la primera vez y un **tope de 100 profesores para siempre** (Google no lo reinicia). Una promoción del bootcamp cabe de sobra; si se acerca al tope, se verifica la app ante Google o se crea en el Google Workspace de Neoland (cuentas @neoland). La llave propia queda como alternativa (CA-16). *Difícil de deshacer: el tope consumido no se recupera.*
@@ -297,9 +297,9 @@ Tomadas por Victor el 2026-11-04 en la sesión de preguntas previa a la spec (sp
 4. **Solo Apple Silicon y Windows x64** en la v1.
 5. **Sin actualizaciones automáticas ni firma** en la v1.
 6. **Un solo punto de montaje** con modo escritorio, puerto libre, una sola instancia y confirmación al cerrar solo con clase online.
-7. **Pendiente: quién prueba en Windows.** Victor no tiene un PC con Windows. Propuesta: un compañero con Windows prueba la primera versión (T16) siguiendo la lista de §6; si no hay ninguno, una máquina virtual de Windows 11 en otro ordenador.
-8. **Pendiente: los datos que Victor ya tiene en `data/`.** Propuesta: no migrarlos solos; el README explica cómo copiar `asistencia.db` a la carpeta de datos de la app una vez (P2).
-9. **Pendiente: Windows sin instalador.** Propuesta: la v1 se descarga como carpeta comprimida con `AsistenciApp.exe` dentro (doble clic, sin instalar). Un instalador con acceso en el menú Inicio queda para más adelante.
+7. **Quién prueba en Windows.** Victor no tiene un PC con Windows: un compañero con Windows prueba la primera versión (T16) siguiendo la lista de §6; si no hay ninguno, una máquina virtual de Windows 11 en otro ordenador.
+8. **Los datos que Victor ya tiene en `data/`**: no se migran solos; el README explica cómo copiar `asistencia.db` a la carpeta de datos de la app una vez (P2).
+9. **Windows sin instalador**: la v1 se descarga como carpeta comprimida con `AsistenciApp.exe` dentro (doble clic, sin instalar). Un instalador con acceso en el menú Inicio queda para más adelante.
 
 ---
 
@@ -321,3 +321,4 @@ Tomadas por Victor el 2026-11-04 en la sesión de preguntas previa a la spec (sp
 | Versión | Fecha | Cambio | Motivo |
 | --- | --- | --- | --- |
 | 0.1 | 2026-11-04 | Borrador inicial | Spec 007 v1.0 aprobada por Victor |
+| 1.0 | 2026-11-04 | Aprobado por Victor, con §8.7–§8.9 decididas como se proponían; §8.3 explica por qué el repositorio de compilación es público | — |
