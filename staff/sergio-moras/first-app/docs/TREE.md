@@ -5,7 +5,7 @@ Los ficheros de hoy, sin `node_modules/` ni `src/db/users.sqlite`, que no están
 ```
 first-app/
   AGENTS.md            cómo trabaja el agente
-  package.json         dependencias y scripts format, lint, db, browser y api
+  package.json         dependencias y scripts format, lint, db, browser, api y electron
   pnpm-lock.yaml
   eslint.config.js
   .gitignore
@@ -31,6 +31,9 @@ first-app/
       browser/         index.html, styles.css y app.js, que se abren desde el disco
       rest/
         server.js      la API REST, con Express
+      electron/
+        main.js        abre la ventana de escritorio
+        index.html, styles.css y app.js   las pantallas de la ventana
   docs/
     CONSTITUTIONS.md
     ARCHITECTURE.md

@@ -38,9 +38,14 @@ La API REST se arranca desde `first-app/`, con `pnpm db` ya en marcha en otra te
 pnpm api
 ```
 
+El cliente de escritorio se abre desde `first-app/`, con `pnpm db` ya en marcha en otra terminal. Abre una ventana propia y se cierra cerrándola:
+```
+pnpm electron
+```
+
 Formato y revisión del JavaScript de la app, desde `first-app/`:
 ```
-pnpm format   # Prettier sobre los .js de src/logic/, src/queries/ y src/db/, el cliente de navegador, la API REST y eslint.config.js
+pnpm format   # Prettier sobre los .js de src/logic/, src/queries/ y src/db/, el cliente de navegador, la API REST, el cliente de escritorio y eslint.config.js
 pnpm lint     # ESLint con las reglas recomendadas
 ```
 

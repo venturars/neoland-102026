@@ -30,6 +30,7 @@ La base de datos está en [DATABASE.md](DATABASE.md). El árbol completo, en [TR
 - `src/clients/jupyter/<operación>.ipynb`: el documento que se ejecuta en Jupyter.
 - `src/clients/browser/`: las pantallas del navegador (`index.html`, `styles.css` y `app.js`), que se abren desde el disco. `app.js` llama a `listUsers`, `updateUser` y `deleteUser`.
 - `src/clients/rest/server.js`: el cliente API REST, con Express. Una ruta por operación de `logic/`.
+- `src/clients/electron/`: el cliente de escritorio. `main.js` abre la ventana; `index.html`, `styles.css` y `app.js` son sus pantallas. `app.js` llama a `listUsers`, `createUser`, `updateUser` y `deleteUser`.
 
 ## Una operación
 Una operación tiene, con el mismo nombre:
@@ -100,6 +101,17 @@ Si `logic` lanza un error, la respuesta es `{ "error": "<mensaje>" }` con el men
 
 Una ruta o un método que no existe da 404 y `Not found.`; un cuerpo que no es JSON, 400 y `Invalid request.` La API no da permiso a los navegadores (`Access-Control-Allow-Origin`), así que una página web no puede llamarla. Un mensaje nuevo en [ERRORS.md](ERRORS.md) se añade también a la tabla de `getStatus`.
 
+### Escritorio
+Se arranca con `pnpm db` y, en otra terminal, `pnpm electron`, desde `first-app/`. Abre una ventana propia con Electron (`electron` 45.2.2, en `devDependencies`). Al cerrarla, la aplicación sale. Tiene dos pantallas: la lista de usuarios con el alta, y la ficha de un usuario, que se abre pulsándolo, con sus datos, guardar cambios y borrar con confirmación.
+
+Electron tiene dos partes:
+- `main.js`, el proceso principal: abre la ventana y carga `index.html` desde su carpeta. La página no tiene acceso a Node, no puede ir a otra dirección y no puede abrir ventanas.
+- La página (`index.html`, `styles.css` y `app.js`): un cliente como el del navegador, con pantallas propias. `app.js` importa `logic/` y lo llama con `await`. Si `logic` lanza un error, la pantalla lo muestra como `Error: <mensaje>`.
+
+La página lleva una CSP: solo carga sus propios ficheros y solo puede llamar a `http://127.0.0.1:4000`. Cargada desde el disco, la ventana no envía cabecera `Origin`, así que la base la atiende sin cambios.
+
+Si la variable `ELECTRON_RUN_AS_NODE` está puesta, Electron se comporta como Node y `main.js` falla al importar `BrowserWindow`. La terminal normal no la tiene.
+
 ## Servidor de la base
 Se arranca con `pnpm db` desde `first-app/` y escucha en `http://127.0.0.1:4000`, solo en este equipo. Se para con Ctrl+C. Los clientes necesitan que esté en marcha.
 
@@ -116,6 +128,6 @@ Solo atiende `POST /query` con `{ "query": "<nombre>", "params": [ ... ] }`. Bus
 | `OPTIONS /query` | 204 y el permiso para el navegador |
 | SQLite falla | 500 y `{ "error": "<mensaje de SQLite>" }` |
 
-El navegador solo puede llamar a la base desde una página del disco abierta con `pnpm browser`: Chrome con `--allow-file-access-from-files` envía `Origin: file://`. Todas las respuestas llevan `Access-Control-Allow-Origin: file://`, nunca `*`, y `OPTIONS /query` contesta la pregunta que el navegador hace antes de cada `POST`. Una web (`http://` o `https://`) recibe 403, y un Chrome normal que abre un fichero del disco envía `Origin: null` y también recibe 403. Otra página del disco abierta en el perfil de la app sí podría llamar a la base: ese perfil es solo para esta app. La terminal y Jupyter no envían `Origin`, así que no les afecta.
+El navegador solo puede llamar a la base desde una página del disco abierta con `pnpm browser`: Chrome con `--allow-file-access-from-files` envía `Origin: file://`. Todas las respuestas llevan `Access-Control-Allow-Origin: file://`, nunca `*`, y `OPTIONS /query` contesta la pregunta que el navegador hace antes de cada `POST`. Una web (`http://` o `https://`) recibe 403, y un Chrome normal que abre un fichero del disco envía `Origin: null` y también recibe 403. Otra página del disco abierta en el perfil de la app sí podría llamar a la base: ese perfil es solo para esta app. La terminal, Jupyter y la ventana de escritorio no envían `Origin`, así que no les afecta.
 
 `queries/users.js` lanza el `error` de la respuesta tal cual. Si no llega a conectar, lanza `Database is not running. Start it with pnpm db.` ([ERRORS.md](ERRORS.md#base-parada)).
