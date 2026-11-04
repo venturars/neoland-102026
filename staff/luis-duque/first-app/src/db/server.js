@@ -52,20 +52,12 @@ const server = createServer((request, response) => {
     raw += chunk;
   });
   request.on("end", () => {
-    let body;
-
     try {
-      body = JSON.parse(raw);
-    } catch (error) {
-      send(response, 500, { message: error.message });
-      return;
-    }
+      const body = JSON.parse(raw);
+      const method = body.method;
+      const sql = body.sql;
+      const params = body.params;
 
-    const method = body.method;
-    const sql = body.sql;
-    const params = body.params;
-
-    try {
       if (method === "exec") {
         database.exec(sql);
         send(response, 200, { ok: true });
