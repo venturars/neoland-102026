@@ -13,7 +13,8 @@ Añadir el panel «Buscar usuario» en la primera pantalla de `src/clients/web/`
 3. **Chrome:** El popup no importa lógica. Añadir en `server.js` rutas GET que llamen a la misma lógica (p. ej. búsqueda por query: nombre devuelve array JSON; email e id devuelven un usuario o el error HTTP que ya use el manejador). En `popup.js`, funciones `fetch` equivalentes y la misma `searchUsers` que web, adaptada a promesas API.
 4. **Errores:** Validación y `User not found` en email/id se muestran como en el resto del cliente (`showMessage` con el texto de error). Búsqueda por nombre sin filas: lista vacía, sin error.
 5. **Documentación:** Actualizar `docs/ARCHITECTURE.md` (y `docs/TREE.md` solo si cambia el árbol) para describir búsqueda en web, electron y chrome. No tocar README salvo que la spec lo pida (fuera).
-6. **Dependencias:** Sin paquetes npm nuevos.
+6. **Nombre y email sin distinguir mayúsculas:** En `find-by-name.sql` y `find-by-email.sql`, comparar con `LOWER(columna) = LOWER(:param)`. Texto del panel en `index.html` de web, Electron y Chrome (mismo copy que VS Code). Reiniciar `pnpm server` tras cambiar los `.sql`.
+7. **Dependencias:** Sin paquetes npm nuevos.
 
 ## Validación Socket
 
@@ -26,7 +27,8 @@ No se añaden dependencias npm. No aplica revisión Socket en este plan.
 | Web | `index.html`, `app.js` |
 | Electron | `index.html`, `app.js` (mismo cambio que web si los ficheros son paralelos) |
 | Chrome | `index.html`, `popup.js`, `server.js` |
-| Docs | `docs/ARCHITECTURE.md` |
+| Queries | `src/queries/queries/find-by-name.sql`, `find-by-email.sql` |
+| Docs | `docs/ARCHITECTURE.md`, `docs/specs/user-search-web-electron-chrome/spec.md` |
 | SDD | `tasks.md` tras aprobar spec y plan |
 
 ## Comprobación

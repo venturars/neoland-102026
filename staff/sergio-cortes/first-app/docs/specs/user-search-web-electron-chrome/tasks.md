@@ -10,6 +10,8 @@ Rutas relativas a `staff/sergio-cortes/first-app/`. Marcar cada paso al completa
 4. Repetir el mismo cambio en `src/clients/electron/app.js`.
 5. En `src/clients/chrome/server.js`: rutas `GET /users/by-name` y `GET /users/by-email` (query) antes de `GET /users/:id`; importar la lógica de búsqueda.
 6. En `src/clients/chrome/popup.js`: helpers fetch de búsqueda, `fillUserSelect`, `rememberSelectedUser`, `searchUsers`; refactorizar `loadUserSelection`; registrar el formulario de búsqueda.
-7. Actualizar `docs/ARCHITECTURE.md` (búsqueda en web, electron, chrome y rutas Fastify).
-8. `pnpm run format` y `pnpm run lint`.
-9. Comprobar en web, electron y chrome los pasos de la issue #1029.
+7. En `src/queries/queries/find-by-name.sql` y `find-by-email.sql`, búsqueda con `LOWER` (ver spec). Reiniciar `pnpm server` para recargar el SQL.
+8. En los `index.html` de web, Electron y Chrome, texto del panel «Buscar usuario»: nombre y email sin distinguir mayúsculas.
+9. Actualizar `docs/ARCHITECTURE.md` y `docs/specs/user-search-web-electron-chrome/spec.md` (búsqueda, SQL y rutas Fastify).
+10. `pnpm run format` y `pnpm run lint`.
+11. Comprobar en web, electron y chrome los pasos de la issue #1029 (incluida búsqueda ada / ADA@example.com).
