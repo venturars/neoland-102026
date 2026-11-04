@@ -78,7 +78,9 @@ El cliente muestra `error.message` tal como llega.
 
 La tabla queda sin datos: las columnas dicen `sin comprobar` porque nadie ha consultado estos paquetes con Socket para este plan. Eso no dice que estén limpios.
 
-Las versiones salen de `npm view`, resolviendo cada rango a su versión más alta, desde `electron@45.2.2` y hasta 3 capas. Son 12 paquetes. No hay nada instalado todavía.
+Las versiones salen de `npm view`, resolviendo cada rango a su versión más alta, desde `electron@45.2.2` y hasta 3 capas. Son 13 paquetes.
+
+Corrección tras instalar: la primera versión de este plan decía 12. Faltaba `undici@7.30.1`, una dependencia opcional de `@electron/get` que salió en el `pnpm-lock.yaml`. Como `openai` lo admite como dependencia opcional, el lockfile también asocia `openai@7.39.0` a esa versión de `undici`. La versión de `openai` no cambia.
 
 | Capa | Paquete | Campaña | Alerta | Stats por debajo de 50 |
 | --- | --- | --- | --- | --- |
@@ -93,6 +95,7 @@ Las versiones salen de `npm view`, resolviendo cada rango a su versión más alt
 | 2 | `semver@7.8.6` | sin comprobar | sin comprobar | sin comprobar |
 | 2 | `sumchecker@3.0.1` | sin comprobar | sin comprobar | sin comprobar |
 | 2 | `undici-types@7.24.6` | sin comprobar | sin comprobar | sin comprobar |
+| 2 | `undici@7.30.1` (opcional) | sin comprobar | sin comprobar | sin comprobar |
 | 3 | `ms@2.1.3` | sin comprobar | sin comprobar | sin comprobar |
 
 Tras instalar, el `pnpm-lock.yaml` se compara con esta tabla. Si una versión no coincide, se para y esa versión vuelve a Socket.
