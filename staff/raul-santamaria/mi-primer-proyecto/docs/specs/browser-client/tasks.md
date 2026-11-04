@@ -2,45 +2,38 @@
 
 Un paso. Quien lo revisa marca `- [x]`.
 
-- [x] 1. Comprobar la precondición del plan.
-  Existe `src/db/server.js`, `package.json` tiene `server` y `pnpm server` deja la base en `http://127.0.0.1:3000`.
-  Pegar `src/clients/terminal/list-users.txt` con `await` en la llamada termina bien con el servidor en marcha.
-  Si falta algo de esto, parar y completar antes el desarrollo de base en servidor (issue #851).
+- [x] 1. Crear `src/db/server.js` como en el plan de referencia host-sql de Ventura.
+  `ORIGIN` `http://127.0.0.1:3000`. Abre `users.sqlite` junto al servidor. No exporta `db`.
+  Añadir script `server` en `package.json`. Quitar `src/db/connection.js` del flujo de queries.
 
-- [x] 2. Abrir `docs/TREE.md`, en `src/clients/`.
-  Añadir `browser/` con `index.html`, `app.js` y `styles.css`.
-  El resto del árbol no cambia salvo esas líneas.
+- [x] 2. Pasar cada `.sql` de `src/queries/queries/` a su módulo `.js` que exporta el texto SQL.
+  Borrar los `.sql`. Reescribir `src/queries/users.js` para `POST` a `/execute` con `fetch`, sin `node:fs` ni import de conexión local.
 
-- [x] 3. Abrir `docs/ARCHITECTURE.md`, junto a terminal y jupyter.
-  Documentar que `src/clients/browser/` llama a `src/logic/` sin repetir reglas y que la página no se sirve.
+- [x] 3. Hacer `async` las funciones de `src/logic/` que usan queries, sin cambiar entradas ni salidas de `docs/CONSTITUTIONS.md`.
+  Cada `try` espera a la query. `users-gender-count.js` sigue importando `openai`.
 
-- [x] 4. Abrir `package.json`.
-  Añadir el script `browser` que abre `src/clients/browser/index.html` por `file://` en Edge o Chrome en Windows, con permiso para módulos locales.
-  Conservar `server`.
+- [x] 4. Actualizar `src/clients/terminal/*.txt` y los bloques Node de `src/clients/jupyter/*.ipynb`.
+  Las llamadas a `logic/` usan `await`. Pegar `create-user.txt` con `pnpm server` en marcha sigue mostrando un usuario, no una promesa.
 
-- [x] 5. Crear `src/clients/browser/index.html`.
-  Tres secciones: lista, menú y modificar o eliminar. Texto visible en español.
-  Menú con volver, modificar usuario y notas desactivado. Enlazar `./styles.css` y `./app.js` como módulo.
+- [x] 5. Abrir `src/clients/http/app.js`.
+  Las rutas esperan a `createUser`, `listUsers`, `findUserById`, `updateUser` y `deleteUser`. El comportamiento HTTP no cambia.
 
-- [x] 6. Crear `src/clients/browser/styles.css`.
-  Estilo legible para las tres vistas. El botón de notas deshabilitado se distingue del resto.
+- [x] 6. Abrir `docs/TREE.md`, `docs/ARCHITECTURE.md` y `docs/DATABASE.md`.
+  `db/` muestra `server.js` y `users.sqlite`. Browser y servidor SQL quedan descritos como en el plan.
 
-- [x] 7. Crear `src/clients/browser/app.js`.
-  Importar `listUsers`, `updateUser` y `deleteUser` desde `../../logic/` con extensión `.js`. No importar `users-gender-count.js`.
-  Listar id, nombre y email; elegir fila abre menú; formulario desde el usuario activo; volver recarga lista; guardar usa `updateUser({ id, name, email })`; eliminar usa `deleteUser({ id })`.
+- [x] 7. Crear `src/clients/browser/index.html`.
+  Tres pantallas en español: lista, menú (volver, modificar, notas desactivado) y editar/eliminar. `type="module"` hacia `./app.js` y `./styles.css`.
 
-- [x] 8. Comprobar arranque con `pnpm server` y `pnpm browser` desde `mi-primer-proyecto`.
-  Se ve el listado sin contraseña. Lista vacía si no hay usuarios. Elegir un id abre el menú con ese usuario.
+- [x] 8. Crear `src/clients/browser/styles.css` y `src/clients/browser/app.js`.
+  Importa `listUsers`, `updateUser` y `deleteUser` con extensión `.js`. Usa `updateUser({ id, name, email })` y `deleteUser({ id })`.
+  Los errores se muestran con `error.message`. Notas no tiene acción.
 
-- [x] 9. Comprobar navegación del menú.
-  Notas no responde. Volver muestra otra vez el listado. Cerrar y reabrir la página vuelve al listado.
+- [x] 9. Añadir script `browser` en `package.json` para Windows (Chrome, perfil en `%TEMP%`, `--allow-file-access-from-files`, `file://` de `index.html`).
 
-- [x] 10. Comprobar edición y validaciones.
-  Modificar nombre y guardar: mismo id y datos actualizados. Nombre vacío, email inválido y email duplicado muestran los mensajes del plan.
-  Si el usuario ya no existe al guardar, se ve `No user exists with that id`.
+- [x] 10. Lanzar `pnpm format` y `pnpm lint` desde `mi-primer-proyecto`. Ambos terminan bien.
 
-- [x] 11. Comprobar borrado y base caída.
-  Eliminar desde la tercera pantalla: el usuario desaparece del listado. Con el servidor parado, listar muestra `Could not list the users`; guardar y eliminar muestran `Could not update the user` y `Could not delete the user`.
+- [x] 11. Con `pnpm server` en marcha, lanzar `pnpm browser`.
+  Lista con id, nombre y email; elegir usuario; volver; modificar Ada a Ada Lovelace; errores de validación; eliminar y comprobar que ya no sale.
 
-- [x] 12. Lanzar `pnpm format` y `pnpm lint` desde `mi-primer-proyecto`.
-  Ambos terminan sin errores.
+- [x] 12. Con la base parada, abrir la lista y guardar en editar.
+  Se ven `Could not list the users`, `Could not update the user` y `Could not delete the user` en pantalla.

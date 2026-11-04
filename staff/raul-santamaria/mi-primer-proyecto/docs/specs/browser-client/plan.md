@@ -1,54 +1,40 @@
 # Plan — cliente del navegador
 
-Issue: #851.
+Issue: #864.
 
-No es una funcionalidad nueva. No se reemplaza ningún fichero de `logic/`. No hay firma nueva. No hay SQL nuevo en este desarrollo. No hay paquete nuevo. No hay mensaje nuevo. No entra Socket.
+Incluye el servidor SQL en Node que exige la referencia del curso, porque
+hoy `src/queries/users.js` usa SQLite en proceso y el navegador no puede
+importarlo con `file://`. No hay paquete npm nuevo. No entra Socket.
 
-**Precondición:** en mi-primer-proyecto la base aún no está en un servidor Node. Antes de implementar este plan, la app debe tener `src/db/server.js`, `pnpm server`, `queries` hablando con ese servidor y funciones de `logic/` async (alcance de issue #851, patrón del curso en first-app). Este plan describe solo el cliente del navegador, como en el spec homónimo de referencia del staff.
+Patrón: `staff/ventura-rodriguez/first-app/docs/specs/host-sql-on-node-server/`
+y `browser-client/`. Las firmas de `logic/` siguen
+`docs/CONSTITUTIONS.md` de mi-primer-proyecto (`updateUser({ id, name,
+email })`, `deleteUser({ id })`, etc.). Las funciones pasan a `async` y
+los clientes terminal y Jupyter esperan con `await`. No se importa
+`users-gender-count.js` en el browser.
 
-El cliente importa lo que ya existe en `src/logic/` y pinta el resultado. Igual que un `.txt` de terminal: la llamada vive en el cliente; las reglas, en `logic/`.
+`src/db/server.js` escucha en `http://127.0.0.1:3000`. Script `server`.
+`src/queries/users.js` ejecuta SQL vía `fetch` al servidor. El SQL sigue
+en módulos bajo `src/queries/queries/` (como Ventura).
 
-Listar: `listUsers()`. Guardar: `updateUser({ id, name, email })`. Borrar: `deleteUser({ id })`. Los campos del formulario salen del usuario elegido en la lista. No se usa `users-gender-count.js` (depende de `openai`).
-
-El usuario activo se guarda en memoria en la página. “Volver” al listado vuelve a pedir la lista. Al reabrir la página, se empieza otra vez en el listado.
-
-Un solo HTML con tres bloques (`<section>`) y el atributo `hidden` para cambiar de vista. CSS aparte. `app.js` como módulo ES con imports relativos a `../../logic/`. Textos de botones y títulos en español; identificadores y código en inglés. En el menú, “Notas” va deshabilitado y sin manejador.
-
-`package.json` gana el script `browser`. Desde `mi-primer-proyecto`, `pnpm browser` abre `src/clients/browser/index.html` por `file://` en Edge o Chrome, con el flag que permita importar módulos locales en Windows. La base sigue en el puerto 3000 con `pnpm server`.
+Browser: `index.html`, `app.js`, `styles.css` en `src/clients/browser/`.
+`type="module"`, importa `listUsers`, `updateUser` y `deleteUser` desde
+`../../logic/`. Tres pantallas; texto visible en español. Botón notas
+desactivado. Script `browser` en `package.json`: en Windows abre Chrome
+con perfil en `%TEMP%` y `--allow-file-access-from-files` hacia el
+`file://` de `index.html` (como Jimena en first-app).
 
 ## Ficheros
 
-Se crean:
+Crean: `src/db/server.js`, `src/clients/browser/index.html`,
+`src/clients/browser/app.js`, `src/clients/browser/styles.css` y los
+módulos `.js` de consulta que pida el plan de referencia host-sql.
 
-- `src/clients/browser/index.html`
-- `src/clients/browser/app.js`
-- `src/clients/browser/styles.css`
-
-Se tocan:
-
-- `package.json`
-- `docs/ARCHITECTURE.md`
-- `docs/TREE.md`
-
-En el árbol, `src/clients/` incluye `browser/` con esos tres ficheros. En arquitectura, ese cliente llama a `logic/` y no duplica validaciones. La página no se sirve.
-
-## Firma
-
-No hay función nueva.
-
-## SQL
-
-No hay SQL en este desarrollo.
+Tocan: `src/queries/users.js`, ficheros de `src/logic/`, clientes
+terminal y Jupyter que llamen a `logic/`, `package.json`,
+`docs/ARCHITECTURE.md`, `docs/TREE.md`, `docs/DATABASE.md`.
 
 ## Errores
 
-| Fallo en la spec              | Mensaje                       |
-| ----------------------------- | ----------------------------- |
-| Nombre vacío                  | `Name is empty`               |
-| Email inválido                | `Email is invalid`            |
-| Email ya usado                | `Email is already used`       |
-| Id inválido                   | `User id is not valid`        |
-| Usuario inexistente           | `No user exists with that id` |
-| Base caída al listar          | `Could not list the users`    |
-| Base caída al guardar         | `Could not update the user`   |
-| Base caída al borrar          | `Could not delete the user`   |
+Los de la spec; mensajes en `docs/ERRORS.md`. El browser muestra
+`error.message` en pantalla. Un solo `tasks.md` cubre host-sql y browser.

@@ -4,6 +4,7 @@
   reglas de negocio.
 - `src/db/server.js` abre la única conexión a SQLite, escucha en
   `http://127.0.0.1:3000` y ejecuta el SQL que recibe por `POST /execute`.
+  No exporta la conexión.
 - `src/db/users.sqlite` es el único fichero de la base de datos.
 - `src/queries/queries/` guarda el texto de cada consulta. Hay un módulo
   `.js` por query.
@@ -18,13 +19,14 @@
 - `src/logic/update-user.js` actualiza un usuario.
 - `src/logic/delete-user.js` borra un usuario.
 - `src/logic/users-gender-count.js` cuenta los usuarios por género.
-- `src/clients/terminal/` llama a `src/logic/` y muestra el resultado. Es el
-  primer cliente y el test manual de cada funcionalidad.
+- `src/clients/terminal/` llama a `src/logic/` con `await` y muestra el
+  resultado. Es el primer cliente y el test manual de cada funcionalidad.
+- `src/clients/browser/` llama a `src/logic/` con `await`, no repite sus
+  reglas y no se sirve la página; se abre con el script `browser` de
+  `package.json`.
 - `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001 y no
   repite sus reglas.
 - `src/clients/jupyter/` es el cliente que se abre con el Jupyter de la app.
-- `src/clients/browser/` llama a `src/logic/` desde el navegador. La página
-  no se sirve por HTTP; se abre con el script `browser` de `package.json`.
 - `start-jupyter.js` arranca el Jupyter del entorno de la app.
 - `eslint.config.js` aplica las reglas recomendadas de ESLint al
   JavaScript, declara los globals de Node e ignora `.venv` y

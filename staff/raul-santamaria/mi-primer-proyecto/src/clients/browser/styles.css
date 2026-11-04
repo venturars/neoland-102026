@@ -5,8 +5,8 @@
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
-  background: #eef2ff;
-  color: #1e1b4b;
+  background: #f4f1ea;
+  color: #1c1917;
 }
 
 main {
@@ -14,7 +14,7 @@ main {
   margin: 2rem auto;
   padding: 1.5rem;
   background: #fff;
-  border: 1px solid #c7d2fe;
+  border: 1px solid #e7e5e4;
   border-radius: 12px;
 }
 
@@ -45,7 +45,7 @@ button {
   margin-top: 0.75rem;
   padding: 0.75rem 1rem;
   font: inherit;
-  border: 1px solid #c7d2fe;
+  border: 1px solid #d6d3d1;
   border-radius: 8px;
   background: #fff;
 }
@@ -56,12 +56,12 @@ button {
 }
 
 button:hover {
-  background: #eef2ff;
+  background: #fafaf9;
 }
 
 button:disabled {
-  color: #94a3b8;
-  background: #f1f5f9;
+  color: #a8a29e;
+  background: #f5f5f4;
   cursor: not-allowed;
 }
 

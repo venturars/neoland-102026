@@ -1,23 +1,50 @@
 # Cliente del navegador
 
-Issue: #851.
+Issue: #864.
 
-Alguien que prueba la app en el navegador elige un usuario guardado, entra en un menú sencillo y puede corregir sus datos o quitarlo del listado. No hay contraseña ni registro de sesión.
+Quien prueba la app elige quién es y, desde ahí, cambia o borra a ese
+usuario. No hay contraseña.
 
-Lo usa quien valida la app desde el ordenador, en Windows o en otro sistema.
+Lo usa quien prueba la app en el navegador.
 
-Desde `mi-primer-proyecto` se lanza el comando `browser`. Abre la interfaz como página local y permite ejecutar JavaScript en módulos. No hace falta un sitio que sirva HTML. La base de usuarios debe estar activa en segundo plano; si no, las pantallas no pueden listar ni guardar.
+Se abre con el comando `browser` de la app, desde `mi-primer-proyecto`.
+La base tiene que estar en marcha con el comando `server`, porque las
+acciones son las de la app y el navegador no abre SQLite directamente.
 
-Para identificarse, basta el id que aparece en la lista. Para cambiar datos, entran nombre y email. Para borrar, basta confirmar la acción en la pantalla de edición.
+Entra el id de un usuario de la lista. Si se modifica, entran el nombre
+y el email. Si se borra, entra la orden de borrarlo.
 
-En la pantalla inicial se ven todos los usuarios con id, nombre y email. Cada fila se puede pulsar para “ser” ese usuario. Sin filas, la pantalla queda vacía.
+La primera pantalla lista los usuarios. Cada uno se ve con su id, su
+nombre y su email. Se elige uno y no se pide contraseña. Si no hay
+usuarios, la lista está vacía.
 
-En la pantalla intermedia aparece quién se eligió y tres caminos: regresar al listado, ir a editar o borrar, y un acceso a notas que aún no funciona (el control no responde al clic).
+La segunda pantalla deja volver a la lista o modificar a ese usuario.
+También muestra el botón de notas, desactivado. No se puede pulsar.
 
-En la pantalla de edición se muestran nombre y email actuales, se pueden guardar cambios o eliminar al usuario. Tras un guardado correcto, el id no cambia y los datos visibles coinciden con lo guardado. Tras un borrado, ese id deja de salir al volver al listado.
+La tercera pantalla modifica o elimina al usuario elegido. Al guardar,
+se ve el usuario con el mismo id y los datos guardados. Al eliminar,
+ese usuario ya no sale en la lista.
 
-Ejemplo: existe el usuario 2, Luis, luis@example.com. Se elige el 2, se cambia el nombre a Luis García y se guarda. Sigue siendo el id 2 con email luis@example.com. Si se elimina, el 2 ya no aparece al listar.
+Ejemplo: en la lista está Ada, ada@example.com, con id 1. Se elige el
+1. Se cambia el nombre a Ada Lovelace. Se ve el id 1, el nombre Ada
+Lovelace y el email ada@example.com. Si se elimina, Ada ya no sale en
+la lista.
 
-Ante nombre vacío: `Name is empty`. Ante email mal formado: `Email is invalid`. Ante email de otro usuario: `Email is already used`. Ante id inválido en una operación: `User id is not valid`. Si el usuario ya no existe: `No user exists with that id`. Si la base no responde al listar: `Could not list the users`. Al guardar sin base: `Could not update the user`. Al borrar sin base: `Could not delete the user`.
+Si el nombre queda vacío, se ve `Name is empty`.
 
-Queda fuera contraseña, login, alta de usuarios desde el navegador, notas con contenido, servir la página por HTTP, API REST de usuarios, acciones nuevas, mensajes nuevos y cambiar las reglas que ya aplican en terminal o Jupyter.
+Si el email no vale, se ve `Email is invalid`.
+
+Si el email es de otro usuario, se ve `Email is already used`.
+
+Si ese usuario ya no está, se ve `No user exists with that id`.
+
+Si no se llega a la base al listar, se ve `Could not list the users`.
+
+Si no se llega al modificar, se ve `Could not update the user`.
+
+Si no se llega al borrar, se ve `Could not delete the user`.
+
+Queda fuera la contraseña, servir la página, activar el botón de notas,
+guardar notas, crear usuarios desde el navegador, usar la API REST,
+una acción nueva, un mensaje nuevo y cambiar lo que ya hace cada
+acción.
