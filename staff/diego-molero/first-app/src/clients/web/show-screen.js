@@ -1,4 +1,4 @@
-const screens = ["selection", "menu", "user-editor", "notes-list", "note-editor"];
+const screens = ["selection", "user-create", "menu", "user-editor", "notes-list", "note-editor"];
 
 // Oculta las demás pantallas y lleva el foco al título visible.
 export function showScreen(name) {
