@@ -29,7 +29,10 @@ La plantilla de la pull request es `.github/pull_request_template.md` de esta ap
 ## Comandos
 
 - No hay comando de arranque de la app. Cada acción se prueba pegando su `src/clients/terminal/*.txt` desde dentro de `first-app`.
-- `npm run jupyter`, desde `first-app`, abre la lista de notebooks. La primera vez prepara el Jupyter de esta app.
+- `npm run db`, desde `first-app`, abre la base en `http://127.0.0.1:3000` y se queda en marcha hasta Ctrl+C.
+- `npm run jupyter`, desde `first-app`, abre la lista de notebooks. La primera vez prepara el Jupyter de esta app. La base tiene que estar en marcha.
+- `npm run browser`, desde `first-app`, abre `src/clients/browser/index.html`. No sirve la página. La base tiene que estar en marcha.
+- `npm run api`, desde `first-app`, responde JSON en `http://127.0.0.1:3001`. La base tiene que estar en marcha.
 - No hay tests. `package.json` no tiene script `test`.
 - El lock que hay es `package-lock.json`. No hay `pnpm-lock.yaml`.
 - `npm run format` lanza Prettier. El formato es el estándar, sin configuración propia.

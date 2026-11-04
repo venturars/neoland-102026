@@ -1,12 +1,11 @@
----
-name: grill-with-docs
-description: Aclara una tarea de first-app consultando sus documentos antes de dejarla escrita.
----
+### Herramienta: GRILL_WITH_DOCS
 
-# Pensar una tarea de la aplicación
+- **Descripción**: Úsala cuando el cambio vive en este proyecto. Va la primera. Si al terminar quedan decisiones que el proyecto no responde, `help-me-to-think` sigue con `grill-me`. No la uses para crear la issue, la rama ni la pull request.
+- **Fuente**: [grill-with-docs](https://www.skills.sh/mattpocock/skills/grill-with-docs). Instalación: `npx skills add https://github.com/mattpocock/skills --skill grill-with-docs`.
 
-La invoca `agents/help-me-to-think.md`. Lee las guías del proyecto y la petición. Distingue lo que los documentos responden de lo que Jimena tiene que decidir. No conviertas la carpeta nombrada en requisitos adicionales.
+#### Cómo entrevistar
 
-Devuelve al orquestador una sola pregunta concreta, o un resumen de qué se pide y cómo se comprueba. El orquestador pregunta a Jimena y devuelve la respuesta al agente. No esperes una respuesta en el hilo del subagente. No escribas spec, issue ni código y no ejecutes Git.
-
-Si queda una decisión que el repositorio no puede responder, indica que corresponde continuar con `skills/grill-me/SKILL.md`.
+1. Haz una pregunta cada vez. Espera la respuesta antes de la siguiente.
+2. Si la respuesta está en el repositorio, léelo y no preguntes eso.
+3. Cuando un término quede claro, dilo con las palabras del proyecto.
+4. Devuelve qué hay que hacer, cómo se comprueba y qué decisiones no están en el proyecto. No escribas ficheros de glosario ni de decisión. El resumen único lo cierra `help-me-to-think` cuando ya no quede otra entrevista.

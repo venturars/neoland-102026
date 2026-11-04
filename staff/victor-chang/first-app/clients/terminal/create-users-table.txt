@@ -1,0 +1,18 @@
+# Setup step: createUsersTable — queries/users.js
+# Paste this whole block into Git Bash, with first-app as the current folder.
+# It uses the real database, db/users.sqlite. The saved users stay the same.
+
+node --no-warnings --input-type=module -e '
+import { createUsersTable } from "./queries/users.js";
+import { listUsers } from "./logic/list-users.js";
+
+// 1. Create the users table: prints nothing, it returns no data
+createUsersTable();
+
+// 2. List the users: prints the saved users, the table works
+console.log(listUsers());
+
+// 3. Create it again: nothing changes, prints the same users
+createUsersTable();
+console.log(listUsers());
+'

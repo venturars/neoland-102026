@@ -10,6 +10,8 @@
 
 #### Reglas de Invocación Críticas
 
+- **Comprobaciones**: Lee la lista de la plantilla de la PR y la evidencia disponible. Mientras esté en draft, las casillas permanecen sin marcar. Al pedir revisión, marca mediante MCP únicamente los puntos realmente verificados y conserva el resto del cuerpo, incluido Closes y el enlace existente. Si falta una comprobación necesaria, informa y detén la salida de draft y las solicitudes hasta resolverla; no inventes resultados ni marques casillas solo por recibir la petición. Verifica después el cuerpo y el estado reales.
+
 * **Login**: Cada nombre se resuelve dentro de este repositorio. Primero un colaborador cuyo login o nombre coincida. Si no coincide, el login de quien hace commits aquí con ese nombre o ese correo. No elijas un usuario público que no colabora.
 * **Si no hay login de colaborador**: Dilo y no pidas la revisión de ese nombre.
 * **Procesamiento de respuestas**: Quita al autor de la lista si aparece. Deja la pull request lista para revisión. Si el MCP falla, comunica el error y no marques la revisión como pedida.

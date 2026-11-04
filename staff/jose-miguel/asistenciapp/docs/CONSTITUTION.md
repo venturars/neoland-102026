@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 3.2 · Ratificada: 2026-10-19 · Última enmienda: 2026-11-01
+> Versión 3.3 · Ratificada: 2026-10-19 · Última enmienda: 2026-11-02
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -31,7 +31,7 @@ El registro de asistencia no depende de una plataforma concreta. Las integracion
 
 ### P4 · Privacidad mínima
 - Del alumno solo se guarda el **nombre que él mismo escribe** y la **hora del registro**.
-- **Prohibido** guardar emails, IPs, identificadores de dispositivo o cualquier dato no imprescindible.
+- **Prohibido** guardar emails, identificadores de dispositivo o cualquier dato no imprescindible. La dirección de red de la conexión es la excepción: se recuerda solo para contar los intentos de registrarse y para la lista de bloqueo. No forma parte del registro del alumno.
 - Los datos se **almacenan** solo en local (SQLite). Ningún servicio de terceros los guarda.
 - Para que los alumnos lleguen a la app desde sus casas, el tráfico puede **pasar cifrado (HTTPS)** por un proveedor de túnel (p. ej. Cloudflare). Ese proveedor no los almacena, pero técnicamente podría verlos en tránsito; por eso solo se envía lo imprescindible (nombre y código).
 
@@ -110,3 +110,4 @@ El detalle de cómo se relacionan esas carpetas está en `docs/ARCHITECTURE.md`.
 | 3.0 | 2026-10-22 | §4: la spec aprobada frena también las instrucciones de uso, las comprobaciones y el resto de documentación de uso. La tarea del bootcamp no sustituye a la spec. §7 y §8: la carpeta y quien aprueba son los de esta copia | Spec 002. Las reglas solo frenaban el código nuevo y nombraban otra carpeta y a otra persona |
 | 3.1 | 2026-10-26 | §3: el código se reparte en `docs/`, `asistencia/domain/`, `asistencia/usecases/`, `asistencia/storage/` y `app.py`. El archivo sigue en `data/` y las pantallas en `static/` | Spec 005. La organización de archivos y carpetas cambió. El propósito, la privacidad y las reglas de pasar lista siguen |
 | 3.2 | 2026-11-01 | §4: cinco momentos del humano, issue y draft antes de las specs, sin ok entre spec y plan; flujo de git del curso en esta carpeta | Spec 006. El agente deja de pedir ok tras cada fichero SDD y el git vive aquí |
+| 3.3 | 2026-11-02 | P4: excepción para recordar la dirección de la conexión solo en contador de intentos de registrarse y lista de bloqueo | Spec 007. Frena abuso del check-in sin guardar la IP en el pasar lista |

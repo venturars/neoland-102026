@@ -117,7 +117,7 @@ export async function countUsersByGender() {
   let users;
 
   try {
-    users = findAll();
+    users = await findAll();
   } catch {
     throw new Error("The database failed.");
   }

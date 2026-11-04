@@ -3,13 +3,13 @@ import { validateId } from "./shared.js";
 
 export { removeUser };
 
-export function deleteUser(id) {
+export async function deleteUser(id) {
   const userId = validateId(id);
 
-  const current = findById(userId);
+  const current = await findById(userId);
   if (!current) {
     throw new Error("User not found");
   }
 
-  removeUser(userId);
+  await removeUser(userId);
 }

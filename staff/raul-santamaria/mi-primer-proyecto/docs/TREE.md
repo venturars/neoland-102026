@@ -10,19 +10,31 @@ mi-primer-proyecto/
   start-jupyter.js
   src/
     clients/
+      browser/
+        index.html
+        app.js
+        styles.css
       terminal/
         create-user.txt
         list-users.txt
+        find-user-by-id.txt
         update-user.txt
         delete-user.txt
         users-gender-count.txt
+      http/
+        app.js
+      browser/
+        index.html
+        app.js
+        styles.css
       jupyter/
     db/
-      connection.js
+      server.js
       users.sqlite
     logic/
       create-user.js
       list-users.js
+      find-user-by-id.js
       update-user.js
       delete-user.js
       users-gender-count.js

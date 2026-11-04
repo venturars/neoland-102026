@@ -16,6 +16,10 @@ first-app/
       update-user.js
     queries/
       users.js
+    db/
+      connection.js
+      server.js
+      users.sqlite
       queries/
         create-users-table.sql
         find-all.sql
@@ -24,9 +28,6 @@ first-app/
         insert.sql
         remove.sql
         update.sql
-    db/
-      connection.js
-      users.sqlite
     clients/
       terminal/
         count-users-by-gender.txt
@@ -48,6 +49,10 @@ first-app/
         list-users.ipynb
         prepare-database.ipynb
         update-user.ipynb
+      web/
+        index.html
+        style.css
+        app.js
   scripts/
     jupyter.sh
   agents/
@@ -99,9 +104,19 @@ first-app/
     pull-changes.sh
   templates/
     issues/
-      basic_issue.md
+      feat_issue.md
+      fix_issue.md
+      refactor_issue.md
+      docs_issue.md
+      chore_issue.md
+      test_issue.md
     pull-request/
-      basic-pull-request.md
+      feat-pull-request.md
+      fix-pull-request.md
+      refactor-pull-request.md
+      docs-pull-request.md
+      chore-pull-request.md
+      test-pull-request.md
   MCPS/
     github-mcp-server/
       mcp.txt

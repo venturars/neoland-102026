@@ -1,18 +1,14 @@
----
-name: launch-push
-description: Publica la rama autorizada en origin y configura su upstream sin force push.
----
+### Herramienta: LAUNCH_PUSH
 
-# Publicar una rama
+- **Descripción**: Úsala única y exclusivamente para subir la rama actual a `origin` y fijar el upstream. No la uses para hacer commit. No la uses con force push.
+- **Comando de Terminal**: `./staff/jimena-duran/first-app/tools/launch-push.sh`
 
-La ejecuta `agents/launch-push.md` cuando Jimena autoriza publicar. Un commit o la aprobación de tareas no implica por sí solo autorización de push. Comprueba rama, remoto, upstream y commits salientes antes de ejecutar.
+El comando se lanza desde el root del repositorio git (la carpeta que contenga el directorio .git).
 
-Desde la raíz:
+#### Especificación de Argumentos
 
-```powershell
-& .\staff\jimena-duran\first-app\tools\launch-push.ps1 -ExpectedBranch $branchName
-```
+No recibe argumentos. Equivale a `git push -u origin HEAD`.
 
-Desde `first-app`, usa `& .\tools\launch-push.ps1` con la rama recibida de esta tarea. Nunca publiques main, staging ni una rama distinta; no hay nombre personal permanente en el script.
+#### Reglas de Invocación Críticas
 
-No uses `--force` ni `--force-with-lease`. Un rechazo o problema de autenticación se informa antes de resolverlo; no reescribas historial para conseguir publicar. Devuelve la rama remota y upstream comprobados. No crea PR. Si la entrega actual prohíbe push, este paso se omite y queda pendiente.
+- **Procesamiento de respuestas**: Si el código de salida es 0, la rama ya está en el remoto. Si no es 0, comunica el rechazo. No vuelvas a lanzarla con `--force` ni con `-f`.

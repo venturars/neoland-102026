@@ -1,8 +1,9 @@
 # Paste this in the terminal, with first-app as the current folder
+# The database program must be running (pnpm start)
 node --input-type=module <<'EOF'
 import { findUserById } from "./src/logic/find-user-by-id.js";
 
-const result = findUserById({ id: 9 });
+const result = await findUserById({ id: 9 });
 
 console.log(result);
 EOF

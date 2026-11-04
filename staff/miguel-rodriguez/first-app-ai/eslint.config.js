@@ -21,4 +21,16 @@ export default [
     },
     rules: js.configs.recommended.rules,
   },
+  {
+    files: ["src/db/server.js", "tests/**/*.js"],
+    languageOptions: { globals: { URL: "readonly" } },
+  },
+  {
+    files: ["src/queries/users.js", "tests/**/*.js"],
+    languageOptions: { globals: { fetch: "readonly" } },
+  },
+  {
+    files: ["src/clients/web/**/*.js"],
+    languageOptions: { globals: { document: "readonly", window: "readonly" } },
+  },
 ];

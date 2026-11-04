@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Users</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="importmap">
+      { "imports": { "/queries/users.js": "/clients/web/queries.js" } }
+    </script>
+    <script src="/node_modules/sql.js/dist/sql-wasm-browser.js"></script>
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <main class="phone">
+      <section id="open-screen" class="screen open-screen">
+        <h1 class="large-title">Users</h1>
+        <p class="open-text">
+          Choose the app's database file to see its users.
+        </p>
+        <button id="open-button" class="filled-button" type="button">
+          Open users.sqlite
+        </button>
+        <p id="open-message" class="open-message" hidden></p>
+      </section>
+
+      <section id="list-screen" class="screen" hidden>
+        <header class="nav-bar">
+          <span></span>
+          <button
+            id="add-button"
+            class="nav-button icon-button"
+            type="button"
+            aria-label="New user"
+          >
+            +
+          </button>
+        </header>
+        <h1 class="large-title">Users</h1>
+        <div class="search">
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <circle cx="7" cy="7" r="5" />
+            <line x1="11" y1="11" x2="14.5" y2="14.5" />
+          </svg>
+          <input
+            id="search-input"
+            type="search"
+            placeholder="Search"
+            autocomplete="off"
+            aria-label="Search users"
+          />
+        </div>
+        <div id="user-list" class="user-list"></div>
+        <p id="list-empty" class="list-empty" hidden></p>
+        <nav id="index-bar" class="index-bar" aria-label="Sections"></nav>
+      </section>
+
+      <section id="card-screen" class="screen" hidden>
+        <header class="nav-bar">
+          <button id="back-button" class="nav-button" type="button">
+            <span class="chevron" aria-hidden="true">‹</span> Users
+          </button>
+          <button id="edit-button" class="nav-button" type="button">
+            Edit
+          </button>
+        </header>
+        <div class="card-head">
+          <div id="card-avatar" class="avatar avatar-large"></div>
+          <h2 id="card-name" class="card-name"></h2>
+        </div>
+        <div class="group">
+          <div class="group-row field-row">
+            <span class="field-label">email</span>
+            <a id="card-email" class="field-value link"></a>
+          </div>
+        </div>
+        <p id="card-dates" class="card-dates"></p>
+      </section>
+    </main>
+
+    <dialog id="user-sheet" class="sheet">
+      <form id="user-form" method="dialog" novalidate>
+        <header class="sheet-bar">
+          <button id="cancel-button" class="nav-button" type="button">
+            Cancel
+          </button>
+          <h2 id="sheet-title" class="sheet-title">New User</h2>
+          <button id="done-button" class="nav-button bold" type="submit">
+            Done
+          </button>
+        </header>
+        <div id="sheet-avatar" class="avatar avatar-large sheet-avatar"></div>
+        <div class="group">
+          <label class="group-row input-row">
+            <input
+              id="name-input"
+              name="name"
+              type="text"
+              placeholder="Name"
+              autocomplete="off"
+            />
+            <span id="name-error" class="field-error" hidden></span>
+          </label>
+          <label class="group-row input-row">
+            <input
+              id="email-input"
+              name="email"
+              type="email"
+              placeholder="Email"
+              autocomplete="off"
+            />
+            <span id="email-error" class="field-error" hidden></span>
+          </label>
+        </div>
+        <div id="delete-group" class="group" hidden>
+          <button
+            id="delete-button"
+            class="group-row danger-button"
+            type="button"
+          >
+            Delete User
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="delete-sheet" class="action-sheet">
+      <div class="action-group">
+        <p class="action-text">This user will be deleted from users.sqlite.</p>
+        <button id="confirm-delete-button" class="action danger" type="button">
+          Delete User
+        </button>
+      </div>
+      <div class="action-group">
+        <button id="keep-button" class="action bold" type="button" autofocus>
+          Cancel
+        </button>
+      </div>
+    </dialog>
+
+    <dialog id="alert-box" class="alert-box">
+      <p id="alert-message" class="alert-message"></p>
+      <button id="alert-ok-button" class="alert-button" type="button">
+        OK
+      </button>
+    </dialog>
+  </body>
+</html>

@@ -66,7 +66,7 @@ El servidor remoto es el descrito en `MCPS/socket-mcp/mcp.txt`.
 
 ## Comandos
 
-- Ejecutar: no hay comando.
+- Ejecutar: desde first-app, `pnpm server` (base) y `pnpm web` (página en Brave).
 - Tests: no hay. El script `test` de `package.json` termina en error. No se añaden tests ni se cambia ese script.
 - Formato: `pnpm run format` (Prettier por defecto, sin `.prettierrc`).
 - Lint: `pnpm run lint` (ESLint con `eslint.config.js`).

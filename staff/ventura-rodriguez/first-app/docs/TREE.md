@@ -4,7 +4,7 @@ first-app/
   eslint.config.js
   src/
     db/
-      connection.js
+      server.js
       users.sqlite
     queries/
       queries/
@@ -21,6 +21,12 @@ first-app/
     clients/
       terminal/
       jupyter/
+      browser/
+        index.html
+        app.js
+        styles.css
+      http/
+        app.js
   agents/
   skills/
   tools/

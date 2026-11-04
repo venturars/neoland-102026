@@ -144,7 +144,7 @@ Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una 
 
 El [manual de trabajo](AGENTS.md) explica las reglas de AsistenciApp y el [orquestador Git](agents/git-workflow-agent.md) coordina las operaciones del repositorio.
 
-Cada cambio se desarrolla en este orden: **spec → aprobación → plan → aprobación → tareas → aprobación → implementación**. La issue, la rama y la PR en borrador permiten preparar el trabajo, y cada fase del SDD conserva su aprobación.
+Cada cambio pasa por cinco momentos, y el agente se para al terminar cada uno: **issue → draft → specs (spec, plan y tareas en la misma pasada) → implementación → pull request**. La issue, la rama y la PR en borrador permiten preparar el trabajo, pero no autorizan el código.
 
 - Las [plantillas de issues](templates/issues/) y las [plantillas de PR](templates/pull-request/) indican la forma de cada tipo de tarea.
 - Las [skills](skills/) describen las operaciones. Los siete scripts están en `tools/`; se ejecutan desde la raíz del repositorio con el comando indicado en cada skill. Los argumentos de archivos también son relativos a esa raíz.

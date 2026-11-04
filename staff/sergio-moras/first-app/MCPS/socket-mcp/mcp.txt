@@ -1,0 +1,22 @@
+https://docs.socket.dev/docs/remote-socket-mcp
+
+Servidor remoto: https://mcp.socket.dev/
+
+En Claude Code se conecta una vez, para todos los proyectos:
+
+claude mcp add --scope user --transport http socket-mcp https://mcp.socket.dev/
+
+Después, en el chat: /mcp → socket-mcp → Authenticate, e iniciar sesión en Socket en el navegador. El acceso es por navegador. No se guarda ningún token en el repositorio. Si una herramienta pide volver a iniciar sesión, se repite /mcp.
+
+Herramientas, con lo que devuelve el plan free (revisado el 2026-10-31):
+
+| Herramienta   | Sirve para                                                                 | Plan free |
+|---------------|----------------------------------------------------------------------------|-----------|
+| organizations | Saber el org_slug                                                          | Responde |
+| depscore      | Puntuaciones de 0 a 100: supplyChain, quality, maintenance, vulnerability y license. No lista alertas | Responde, también sin sesión |
+| alerts        | Alertas abiertas de la organización, con artifact_type npm y artifact_name | Responde. Una lista vacía es la lista de la organización: no dice que esa versión no tenga alertas |
+| threat_feed   | Campañas de ataque, con name y version                                     | 403 threat_feed_not_entitled: el plan free no incluye esa fuente |
+
+Sin el MCP conectado, solo depscore contesta. Se consulta así desde Git Bash, con la versión exacta de cada paquete. En PowerShell, curl es otro comando y no sirve:
+
+curl -s -X POST https://mcp.socket.dev/ -H "Content-Type: application/json" -H "Accept: application/json, text/event-stream" -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"depscore","arguments":{"packages":[{"ecosystem":"npm","depname":"cli-table3","version":"0.6.5"}]}}}'

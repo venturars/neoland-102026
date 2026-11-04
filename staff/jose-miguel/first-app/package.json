@@ -5,7 +5,9 @@
   "type": "module",
   "main": "src/logic/create-user.js",
   "scripts": {
-    "jupyter": "sh scripts/jupyter.sh",
+    "jupyter": "node scripts/start-jupyter.js",
+    "server": "node src/db/server.js",
+    "browser": "node scripts/start-browser.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\"",
     "lint": "eslint ."

@@ -1,37 +1,14 @@
-import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
-import { db } from "../db/connection.js";
+import { CREATE_USERS_TABLE } from "./queries/create-users-table.js";
+import { DELETE_USER } from "./queries/delete-user.js";
+import { FIND_USER_BY_EMAIL } from "./queries/find-user-by-email.js";
+import { FIND_USER_BY_ID } from "./queries/find-user-by-id.js";
+import { INSERT_USER } from "./queries/insert-user.js";
+import { LIST_USERS } from "./queries/list-users.js";
+import { UPDATE_USER } from "./queries/update-user.js";
 
-const fileUrl = import.meta.url;
-const filePath = fileURLToPath(fileUrl);
-const directory = dirname(filePath);
+const ORIGIN = "http://127.0.0.1:3000";
 
-const createUsersTablePath = join(
-  directory,
-  "queries",
-  "create-users-table.sql",
-);
-const createTableSql = readFileSync(createUsersTablePath, "utf8");
-const findByEmailPath = join(directory, "queries", "find-user-by-email.sql");
-const findByEmailSql = readFileSync(findByEmailPath, "utf8");
-const findByIdPath = join(directory, "queries", "find-user-by-id.sql");
-const findByIdSql = readFileSync(findByIdPath, "utf8");
-const insertPath = join(directory, "queries", "insert-user.sql");
-const insertSql = readFileSync(insertPath, "utf8");
-const listPath = join(directory, "queries", "list-users.sql");
-const listSql = readFileSync(listPath, "utf8");
-const updatePath = join(directory, "queries", "update-user.sql");
-const updateSql = readFileSync(updatePath, "utf8");
-const deletePath = join(directory, "queries", "delete-user.sql");
-const deleteSql = readFileSync(deletePath, "utf8");
-
-db.exec(createTableSql);
-
-export function findByEmail(email) {
-  const statement = db.prepare(findByEmailSql);
-  const row = statement.get(email);
-
+function mapRow(row) {
   if (!row) {
     return undefined;
   }
@@ -45,79 +22,73 @@ export function findByEmail(email) {
   };
 }
 
-export function findById(id) {
-  const statement = db.prepare(findByIdSql);
-  const row = statement.get(id);
-
-  if (!row) {
-    return undefined;
+async function execute(method, sql, params) {
+  const url = `${ORIGIN}/execute`;
+  const payload = JSON.stringify({ method, sql, params });
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: payload,
+  });
+  if (!response.ok) {
+    throw new Error("Query failed");
   }
-
-  return {
-    id: row.id,
-    name: row.name,
-    email: row.email,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at,
-  };
+  const body = await response.json();
+  return body;
 }
 
-export function insert(input) {
+export async function createUsersTable() {
+  await execute("exec", CREATE_USERS_TABLE, {});
+}
+
+export async function findByEmail(email) {
+  const body = await execute("get", FIND_USER_BY_EMAIL, { email });
+  return mapRow(body.row);
+}
+
+export async function findById(id) {
+  const body = await execute("get", FIND_USER_BY_ID, { id });
+  return mapRow(body.row);
+}
+
+export async function insert(input) {
   const now = new Date();
   const isoString = now.toISOString();
   const createdAt = isoString.slice(0, 10);
-  const statement = db.prepare(insertSql);
-  const result = statement.run(input.name, input.email, createdAt, createdAt);
-  const lastInsertRowid = result.lastInsertRowid;
-  const id = Number(lastInsertRowid);
-
-  return {
-    id,
+  const body = await execute("get", INSERT_USER, {
     name: input.name,
     email: input.email,
     createdAt,
     updatedAt: createdAt,
-  };
+  });
+  return mapRow(body.row);
 }
 
-export function list() {
-  const statement = db.prepare(listSql);
-  const rows = statement.all();
+export async function list() {
+  const body = await execute("all", LIST_USERS, {});
+  const rows = body.rows;
   const result = [];
 
   for (const row of rows) {
-    const user = {
-      id: row.id,
-      name: row.name,
-      email: row.email,
-      createdAt: row.created_at,
-      updatedAt: row.updated_at,
-    };
-    result.push(user);
+    result.push(mapRow(row));
   }
 
   return result;
 }
 
-export function update(input) {
+export async function update(input) {
   const now = new Date();
   const isoString = now.toISOString();
   const updatedAt = isoString.slice(0, 10);
-  const statement = db.prepare(updateSql);
-  statement.run(input.name, input.email, updatedAt, input.id);
-  const findStatement = db.prepare(findByIdSql);
-  const row = findStatement.get(input.id);
-
-  return {
-    id: row.id,
-    name: row.name,
-    email: row.email,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at,
-  };
+  const body = await execute("get", UPDATE_USER, {
+    id: input.id,
+    name: input.name,
+    email: input.email,
+    updatedAt,
+  });
+  return mapRow(body.row);
 }
 
-export function remove(id) {
-  const statement = db.prepare(deleteSql);
-  statement.run(id);
+export async function remove(id) {
+  await execute("run", DELETE_USER, { id });
 }
