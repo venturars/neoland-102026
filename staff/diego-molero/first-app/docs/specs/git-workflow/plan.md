@@ -49,3 +49,7 @@ Autorización explícita de Diego para completar el plan, implementación, compr
 6. Entregar en codex/774-chore-update-git-templates mediante una PR en borrador contra staging, asignada a la cuenta autenticada y con Closes #774 añadido por el orquestador. No asignar revisores ni fusionar.
 
 La constitución se cumple: cambio exclusivo de automatización y documentación, UTF-8, comentarios explicativos, datos privados fuera de Git y conservación de contratos y dependencias.
+
+## Iteración del 4 de noviembre de 2026 · Issue #855
+
+Comparar agentes y skills de `exercises/git-workflow-agent-template` en el `staging` actualizado. Incorporar la validación de una issue lista y la regla explícita de crear rama y PR en borrador antes de cambiar un proyecto. Conservar las diferencias locales justificadas: delegación real, autorizaciones ya dadas, comentarios y cuerpo en español, títulos cortos en inglés, selección de las doce plantillas, alternativa `gh`, ausencia de cambios automáticos de credenciales y scripts seguros. Revisar sintaxis, referencias, UTF-8 y recorridos aislados en repositorios temporales; registrar resultados en tareas.

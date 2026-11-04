@@ -3,52 +3,32 @@ import { createNote } from "../../logic/create-note.js";
 import { findNoteById } from "../../logic/find-note-by-id.js";
 import { updateNote } from "../../logic/update-note.js";
 import { deleteNote } from "../../logic/delete-note.js";
-import { readJsonBody } from "./read-json-body.js";
-import { sendJson } from "./send-json.js";
+import { parseId, requireJson, methodNotAllowed } from "./request-helpers.js";
 
-function idFromPath(value, kind) {
-  if (!/^\d+$/u.test(value)) {
-    throw new Error(`${kind} ID is invalid`);
-  }
-  const id = Number(value);
-  if (!Number.isSafeInteger(id) || id <= 0) {
-    throw new Error(`${kind} ID is invalid`);
-  }
-  return id;
-}
-
-// Cada ruta mantiene los dos identificadores hasta la lógica de notas.
-export async function handleNotes(request, response, path) {
-  const match = /^\/api\/users\/([^/]+)\/notes(?:\/([^/]+))?$/u.exec(path);
-  if (!match) {
-    return false;
-  }
-  const isCollection = match[2] === undefined;
-  const allowed = isCollection ? ["GET", "POST"] : ["GET", "PATCH", "DELETE"];
-  if (!allowed.includes(request.method)) {
-    response.setHeader("Allow", allowed.join(", "));
-    sendJson(response, 405, { message: "Método no permitido." });
-    return true;
-  }
-  const userId = idFromPath(match[1], "User");
-  if (isCollection) {
-    if (request.method === "GET") {
-      sendJson(response, 200, listNotes(userId));
-    } else {
-      const input = await readJsonBody(request);
-      sendJson(response, 201, createNote(userId, input));
+// El ID de usuario acompaña cada nota para impedir el acceso a notas ajenas.
+export function registerNoteRoutes(app) {
+  app.all("/api/users/:userId/notes", (request, response) => {
+    if (!["GET", "POST"].includes(request.method)) {
+      return methodNotAllowed(response, "GET, POST");
     }
-    return true;
-  }
-  const noteId = idFromPath(match[2], "Note");
-  if (request.method === "GET") {
-    sendJson(response, 200, findNoteById(userId, noteId));
-  } else if (request.method === "PATCH") {
-    const changes = await readJsonBody(request);
-    sendJson(response, 200, updateNote(userId, noteId, changes));
-  } else {
+    const userId = parseId(request.params.userId, "User");
+    if (request.method === "GET") return response.json(listNotes(userId));
+    requireJson(request);
+    return response.status(201).json(createNote(userId, request.body));
+  });
+
+  app.all("/api/users/:userId/notes/:noteId", (request, response) => {
+    if (!["GET", "PATCH", "DELETE"].includes(request.method)) {
+      return methodNotAllowed(response, "GET, PATCH, DELETE");
+    }
+    const userId = parseId(request.params.userId, "User");
+    const noteId = parseId(request.params.noteId, "Note");
+    if (request.method === "GET") return response.json(findNoteById(userId, noteId));
+    if (request.method === "PATCH") {
+      requireJson(request);
+      return response.json(updateNote(userId, noteId, request.body));
+    }
     deleteNote(userId, noteId);
-    sendJson(response, 204);
-  }
-  return true;
+    return response.sendStatus(204);
+  });
 }

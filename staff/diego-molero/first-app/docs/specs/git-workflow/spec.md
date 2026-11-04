@@ -39,3 +39,11 @@ Quien prepara una tarea necesita una plantilla acorde al tipo de cambio para exp
 - **CA-10:** Se retiran las plantillas básicas y sus referencias activas; títulos en inglés de menos de 72 caracteres, cuerpos y comentarios en español, UTF-8 y ramas con prefijo codex/.
 - **CA-11:** El orquestador conserva el enlace Closes #N, las PR nacen en borrador y los revisores solo se asignan cuando Diego los indica; scripts, delegación real y protecciones permanecen vigentes.
 - **CA-12:** Árbol y arquitectura describen las plantillas vigentes; comprobaciones documentales y recorridos Git aislados tienen evidencia real. La aplicación, datos y dependencias quedan fuera del cambio.
+
+## Iteración del 4 de noviembre de 2026 · Issue #855
+
+El workflow debe recoger las reglas vigentes de la plantilla compartida sin sustituir las decisiones locales ni las protecciones de scripts.
+
+- **CA-13:** Antes de crear una issue se verifica que problema, resultado, alcance y comprobación estén claros. Las dudas se razonan sin repetir decisiones resueltas.
+- **CA-14:** Todo cambio de proyecto parte de una issue y de una rama nueva desde `staging` antes de editar, y se entrega en una PR nueva en borrador. El tipo selecciona la pareja de plantillas vigente.
+- **CA-15:** El orquestador enlaza `Closes #N` y Development. Se conserva delegación real, prefijo `codex/`, comprobación de duplicados, alternativa `gh`, autorización anticipada y protecciones de los siete scripts; no se modifica configuración personal.

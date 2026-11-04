@@ -27,3 +27,5 @@ Los notebooks muestran el mensaje de Node cuando una operación falla. Si no enc
 ## Cliente HTTP
 
 HTTP conserva esos `Error` en logic y traduce sus mensajes para la interfaz: entrada incorrecta a 400, usuario o nota ausente a 404 y correo duplicado a 409. Un método no admitido devuelve 405 con `Allow`; JSON vacío o inválido devuelve 400, tipo distinto de JSON 415 y cuerpo superior a 1 MiB 413. Las rutas desconocidas devuelven 404. Los errores técnicos devuelven 500 con un mensaje genérico, sin detalles internos. Cada error HTTP usa `{ "message": "..." }` en español y UTF-8.
+
+Express recibe el JSON y limita el cuerpo a 1 MiB; `request-helpers.js` comprueba el tipo y los IDs antes de llamar a la lógica. El middleware de errores traduce el rechazo del analizador de JSON y los errores conocidos. Las rutas de notas conservan el ID del usuario para aislar los datos.

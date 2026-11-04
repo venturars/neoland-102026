@@ -26,4 +26,4 @@
 ## 5. Manejo de Errores y Excepciones
 
 - **Si el título llega a 72 caracteres:** Acórtalo en inglés y créala. No pares.
-- **Si falta cómo probarla:** Escribe la comprobación que se deduce de lo pedido; pregunta si exige inventar requisitos. No dejes la issue sin las dos secciones.
+- **Si falta cómo probarla:** Escribe la comprobación que se deduce de lo pedido; pregunta si exige inventar requisitos. No dejes la issue sin las dos secciones. Comprueba que el objetivo, el alcance y la verificación permiten empezar antes de crearla.
