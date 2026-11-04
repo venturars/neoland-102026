@@ -1,6 +1,6 @@
 ### Herramienta: CREATE_DRAFT
 
-- **Descripción**: Úsala desde el agente `create-pr` solo si la pull request ya existía antes de esta ejecución y hay que pasarla a draft. Las PR nuevas nacen en draft con `create-pr-base-staging`. No la uses para crearla ni para pedir revisión.
+- **Descripción**: Pasa una pull request a draft.
 - **MCP**: El servidor remoto descrito en `MCPS/github-mcp-server/mcp.txt`.
 
 #### Especificación de Argumentos
@@ -9,4 +9,4 @@
 
 #### Reglas de Invocación Críticas
 
-- **Procesamiento de respuestas**: Si ya está en draft, no la cambies. Si está lista para revisión, devuélvela a draft. Si no existe, dilo y no crees una.
+- **Procesamiento de respuestas**: Confirma el estado draft. Si ya está en draft, conserva ese estado. Si no existe, comunica el error.

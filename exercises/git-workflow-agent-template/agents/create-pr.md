@@ -15,17 +15,17 @@
 
 1. **Recepción:** Toma el título de la issue y la rama que acaba de subirse. No hace falta el número de issue.
 2. **Validación:** El cuerpo va en español y rellena la plantilla del tipo en `templates/pull-request/`. La sección Issue se deja vacía. Si el tipo no tiene plantilla, usa la más cercana.
-3. **Procesamiento:** Usa `skills/create-pr-base-staging/SKILL.md` para crearla directamente en draft y autoasignada al autor en la misma invocación. No crees una PR normal para convertirla después. `assign-author` y `create-draft` solo ajustan una PR que ya existía antes de esta ejecución.
-4. **Formateo:** Responde con el título, la base `staging`, el autor, que está en draft y la URL.
+3. **Procesamiento:** Usa `skills/create-pr-base-staging/SKILL.md` para crearla con base `staging`, directamente en draft y asignada al usuario autenticado en una misma invocación.
+4. **Formateo:** Responde con el título, la base `staging`, el autor, la persona asignada, el estado draft y la URL.
 
 ## 4. Herramientas y APIs Asignadas
 
-- **SKILL create-pr-base-staging:** Abre la pull request con base `staging`, en draft y autoasignada en una sola invocación.
-- **SKILL assign-author:** Corrige la asignación de una PR preexistente.
-- **SKILL create-draft:** Devuelve a draft una PR preexistente.
+- **SKILL create-pr-base-staging:** Crea la pull request.
+- **SKILL assign-author:** Asigna la PR al usuario autenticado.
+- **SKILL create-draft:** Pasa la PR a draft.
 - **templates/pull-request/:** La forma del cuerpo, una plantilla por tipo.
 
 ## 5. Manejo de Errores y Excepciones
 
-- **Si la pull request de esta rama ya existe:** Actualiza cuerpo, autor y draft. No toques el enlace con la issue. No abras otra.
-- **Si el MCP no devuelve la URL:** Di el error y no inventes el enlace.
+- **Si la pull request de esta rama ya existe:** Actualiza el cuerpo, la asignación con `assign-author` y el estado con `create-draft`, conservando el enlace con la issue.
+- **Si la herramienta no devuelve la URL:** Di el error y no inventes el enlace.
