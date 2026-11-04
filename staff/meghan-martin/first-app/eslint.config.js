@@ -36,6 +36,23 @@ export default defineConfig([
     },
   },
   {
+    files: ["src/clients/electron/main.js"],
+    languageOptions: {
+      globals: {
+        URL: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/electron/app.js"],
+    languageOptions: {
+      globals: {
+        FormData: "readonly",
+        document: "readonly",
+      },
+    },
+  },
+  {
     files: ["src/clients/browser/app.js"],
     languageOptions: {
       globals: {
