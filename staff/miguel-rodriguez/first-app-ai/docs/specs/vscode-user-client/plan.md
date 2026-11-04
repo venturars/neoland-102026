@@ -8,7 +8,7 @@ Crear una extensión de escritorio independiente en `src/clients/vscode/`, sin r
 
 La webview envía mensajes a la extensión. El punto de entrada acepta únicamente las acciones previstas, llama a las operaciones existentes en `src/logic/` y devuelve resultados o errores al panel. No ejecuta SQL ni duplica reglas de negocio. Las consultas existentes acceden al servicio local y a los mismos datos de los demás clientes. La API de webview y su comunicación están descritas en la [documentación oficial](https://code.visualstudio.com/api/extension-guides/webview); el manifiesto se define en la [referencia de extensiones](https://code.visualstudio.com/api/references/extension-manifest).
 
-Se propone un punto de entrada CommonJS que use la API `vscode` suministrada por el editor e importe dinámicamente los módulos ES existentes. Antes de dar por viable la implementación hay que probar en el Extension Development Host que la activación, los imports y las rutas funcionan en esta estructura. No se promete compatibilidad con VS Code web ni entornos remotos en esta tarea.
+Se propone un punto de entrada CommonJS que use la API `vscode` suministrada por el editor e importe dinámicamente los módulos ES existentes. Antes de dar por viable la implementación hay que probar en el Extension Development Host que la activación, los imports y las rutas funcionan en esta estructura. Se fija VS Code 1.142.0 como mínimo propuesto, versión instalada observada el 2026-11-04; verificar en su host que `fetch` nativo funciona con el servicio local. El servidor SQLite se ejecuta aparte con el Node compatible del proyecto. No se promete compatibilidad con VS Code web ni entornos remotos en esta tarea.
 
 ## Operaciones y comportamiento
 
@@ -20,14 +20,14 @@ Se propone un punto de entrada CommonJS que use la API `vscode` suministrada por
 
 ## Archivos y dependencias
 
-- Añadir el manifiesto, punto de entrada y recursos de interfaz bajo `src/clients/vscode/`; concretar sus nombres durante las tareas.
+- Añadir `src/clients/vscode/package.json` (manifiesto), `extension.cjs` (entrada CommonJS), `panel.html`, `panel.js` y `panel.css` (interfaz), y `tests/vscode-client.test.js` (adaptador y casos verificables). Añadir `.vscode/launch.json` dentro de `src/clients/vscode/`, configurado con `--extensionDevelopmentPath=${workspaceFolder}`. Abrir esa carpeta como proyecto en VS Code y pulsar F5 para iniciar el Extension Development Host; verificar activación, imports y `fetch` real. La ejecución y su compatibilidad se comprobarán antes de declarar terminada la implementación.
 - Añadir pruebas del adaptador y de los flujos relevantes, y documentar apertura, servicio y preparación de tabla en `README.md`. Actualizar `docs/ARCHITECTURE.md` y `docs/TREE.md` con los archivos y responsabilidades finales. Ajustar el alcance de formato o lint si es necesario para incluir los nuevos archivos.
 - Mantener las operaciones, consultas, esquema y servicio existentes. La tabla se prepara explícitamente y `pnpm server` se ejecuta por separado, como en los clientes actuales.
 - No se propone instalar paquetes Node: la API `vscode` la proporciona el editor y el cliente usa JavaScript. Si se identifica una dependencia necesaria, revisar sus versiones y capas con Socket según `AGENTS.md` y presentar los resultados a Miguel antes de aprobar el plan o instalarla.
 
 ## Verificación prevista
 
-En una copia desechable, iniciar el servicio y preparar la tabla, abrir la extensión mediante el Extension Development Host de VS Code y probar la activación real y los imports. Crear, listar, buscar por los tres criterios, editar y borrar; comprobar datos compartidos y persistencia desde otro cliente. Probar nombre con distinta capitalización, ID inválido, sin resultados, email inválido o duplicado, cancelación y confirmación incorrecta, contacto eliminado por otro cliente, servicio detenido y fallo al recargar tras guardar. Comprobar teclado y conservación del formulario al ocultar y mostrar el panel. Ejecutar las pruebas pertinentes existentes y nuevas, `pnpm format`, `pnpm lint` y `git diff --check`; no usar la base de trabajo para pruebas.
+En una copia desechable, iniciar el servicio y preparar la tabla, abrir la extensión mediante el Extension Development Host de VS Code y probar la activación real y los imports. Crear, listar, buscar por los tres criterios, editar y borrar; comprobar datos compartidos y persistencia desde otro cliente. Probar nombre con distinta capitalización, ID inválido y los límites de entero seguro y valores fuera de ellos, sin resultados, email inválido o duplicado, cancelación y confirmación incorrecta, contacto eliminado por otro cliente, servicio detenido y fallo al recargar tras guardar. Comprobar teclado y conservación del formulario al ocultar y mostrar el panel. Ejecutar las pruebas pertinentes existentes y nuevas, `pnpm format`, `pnpm lint` y `git diff --check`; no usar la base de trabajo para pruebas.
 
 ## Punto a contrastar
 

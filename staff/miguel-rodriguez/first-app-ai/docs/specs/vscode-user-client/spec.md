@@ -1,7 +1,7 @@
 # Cliente de usuarios en VS Code
 
 Issue: #904 · PR: #906, hacia staging.
-Spec aprobada por Miguel el 2026-11-04.
+Spec aprobada por Miguel el 2026-11-04; límite de ID aclarado después a petición de Miguel.
 
 ## Propósito
 
@@ -11,7 +11,7 @@ Como persona que usa first-app-ai, quiero gestionar los contactos desde un panel
 
 - Al abrir el panel se muestra la lista de contactos guardados, ordenados por ID. Si no hay contactos, se indica que la lista está vacía.
 - Se puede crear un contacto introduciendo nombre y email. Al guardar, se muestra el contacto creado y la lista actualizada. Si los datos no son válidos o el email ya está en uso, se explica el error y se conservan los datos introducidos para corregirlos.
-- Se puede buscar por nombre, email o ID y ver los resultados. La búsqueda por nombre devuelve todas las coincidencias exactas, distinguiendo mayúsculas y minúsculas; una búsqueda sin resultados se comunica claramente. Al buscar por ID, si el valor no es un número entero válido, se muestra un error y se permite corregirlo. Los criterios y resultados respetan las reglas de los usuarios existentes.
+- Se puede buscar por nombre, email o ID y ver los resultados. La búsqueda por nombre devuelve todas las coincidencias exactas, distinguiendo mayúsculas y minúsculas; una búsqueda sin resultados se comunica claramente. Al buscar por ID, si el valor no es un número entero seguro en JavaScript (entre −9.007.199.254.740.991 y 9.007.199.254.740.991), se muestra un error y se permite corregirlo. Los criterios y resultados respetan las reglas de los usuarios existentes.
 
   Por ejemplo, si hay contactos llamados «Ana» y «ana», buscar «Ana» devuelve solo los llamados «Ana»; buscar «ANA» no devuelve resultados.
 - Se puede seleccionar un contacto y modificar su nombre o email. Cancelar conserva los datos guardados; un error al guardar se muestra sin perder los cambios introducidos. El éxito se comunica cuando el cambio se ha guardado.
