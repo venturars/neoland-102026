@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { spawn } from "node:child_process";
-import { cp, mkdtemp, rm, symlink, rename } from "node:fs/promises";
+import { cp, mkdtemp, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -11,10 +11,10 @@ const root = fileURLToPath(new URL("../", import.meta.url));
 const origin = "http://127.0.0.1:3000";
 
 test(
-  "web files and browser imports are served without exposing project data",
+  "file client can query data but the database server does not serve files",
   { timeout: 30000 },
   async () => {
-    const folder = await mkdtemp(join(tmpdir(), "first-app-web-test-"));
+    const folder = await mkdtemp(join(tmpdir(), "first-app-file-test-"));
     let child;
     let exited;
     try {
@@ -43,64 +43,49 @@ test(
           throw new Error(`Server did not start: ${stderr}`);
         }),
       ]);
-      const home = await fetch(origin, { redirect: "manual" });
-      assert.equal(home.status, 302);
-      assert.equal(home.headers.get("location"), "/clients/web/index.html");
-      for (const [path, type] of [
-        ["/clients/web/index.html", "text/html"],
-        ["/clients/web/styles.css", "text/css"],
-        ["/clients/web/main.js", "text/javascript"],
-        ...["list-users", "find-user-by-id", "update-user", "delete-user"].map(
-          (name) => [`/logic/${name}.js`, "text/javascript"],
-        ),
-        ["/queries/users.js", "text/javascript"],
-        ...[
-          "create-users-table",
-          "find-all",
-          "find-by-email",
-          "find-by-id",
-          "find-by-name",
-          "insert",
-          "update",
-          "remove",
-          "list-tables",
-        ].map((name) => [`/queries/queries/${name}.js`, "text/javascript"]),
-      ]) {
-        const response = await fetch(origin + path);
-        assert.equal(response.status, 200, path);
-        assert.ok(response.headers.get("content-type").startsWith(type), path);
-        assert.ok((await response.text()).length > 0);
-      }
       for (const path of [
+        "/",
+        "/clients/web/index.html",
+        "/clients/web/styles.css",
+        "/clients/web/main.js",
+        "/logic/list-users.js",
+        "/queries/users.js",
+        "/queries/queries/find-all.js",
         "/db/users.sqlite",
         "/db/server.js",
         "/package.json",
-        "/AGENTS.md",
-        "/logic/users-gender-count.js",
-        "/clients/web/../../db/users.sqlite",
-        "/clients/web/%2e%2e/%2e%2e/db/users.sqlite",
       ]) {
-        assert.equal((await fetch(origin + path)).status, 404, path);
+        const response = await fetch(origin + path, { redirect: "manual" });
+        assert.equal(response.status, 404, path);
+        assert.equal(response.headers.get("location"), null);
       }
-      const uninitialized = await fetch(origin + "/execute", {
+      const options = await fetch(origin + "/execute", {
+        method: "OPTIONS",
+        headers: {
+          Origin: "null",
+          "Access-Control-Request-Method": "POST",
+          "Access-Control-Request-Headers": "content-type",
+        },
+      });
+      assert.equal(options.status, 204);
+      assert.equal(options.headers.get("access-control-allow-origin"), "*");
+      assert.match(options.headers.get("access-control-allow-methods"), /POST/);
+      assert.match(
+        options.headers.get("access-control-allow-headers"),
+        /content-type/,
+      );
+      const query = await fetch(origin + "/execute", {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: { Origin: "null", "content-type": "application/json" },
         body: JSON.stringify({
           method: "all",
-          sql: "SELECT * FROM users",
+          sql: "SELECT name FROM sqlite_master WHERE type = 'table'",
           params: {},
         }),
       });
-      assert.equal(uninitialized.status, 500);
-      const main = join(folder, "src/clients/web/main.js");
-      await rename(main, main + ".missing");
-      const missing = await fetch(origin + "/clients/web/main.js");
-      assert.equal(missing.status, 500);
-      assert.deepEqual(await missing.json(), {
-        error: "Could not load the file",
-      });
-      await rename(main + ".missing", main);
-      assert.equal((await fetch(origin + "/clients/web/main.js")).status, 200);
+      assert.equal(query.status, 200);
+      assert.equal(query.headers.get("access-control-allow-origin"), "*");
+      assert.deepEqual(await query.json(), { rows: [] });
     } finally {
       if (child && child.exitCode === null && child.signalCode === null)
         child.kill("SIGTERM");
