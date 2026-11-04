@@ -16,7 +16,7 @@ export async function updateUser(id, changes = {}) {
   const nextName = hasName ? validateNombre(changes.name) : null;
   const nextEmail = hasEmail ? validateEmail(changes.email) : null;
 
-  if (users.updateUser(userId, nextName, nextEmail) === 0) {
+  if ((await users.updateUser(userId, nextName, nextEmail)) === 0) {
     throw new Error(`User ${userId} was not found`);
   }
 

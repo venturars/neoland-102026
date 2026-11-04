@@ -22,7 +22,7 @@ Una operación que ya está en el código no se sustituye. La nueva es un ficher
 
 ## Alcance
 
-No añadas pantalla, servidor ni framework. No añadas otro cliente salvo que te lo pidan.
+La pantalla es el cliente de `src/clients/browser`. El servidor es `src/db/server.js` y solo ejecuta consultas. No añadas otro framework. No añadas otro cliente salvo que te lo pidan.
 
 No crees un `README`. La explicación para personas está en `docs/`.
 
@@ -32,19 +32,21 @@ No crees consultas ni funciones que no te hayan pedido. Las operaciones que ya e
 
 No uses `try/catch` en `src/queries/users.js`. Si SQLite rechaza un email repetido, deja salir ese error.
 
-No separes la lógica de la base de datos. `src/logic` llama a `src/queries`. `src/queries` usa la conexión de `src/db`.
+`src/logic` llama a `src/queries`. `src/queries` pide la ejecución a `src/db/server.js`. Ese servidor abre la base.
 
 ## Dónde va cada cosa
 
-Pon la conexión en `src/db`: `connection.js` y, cuando se abra la base, `users.sqlite`. Pon el esquema en `src/queries/queries/create-table-users.sql`.
+Pon el servidor en `src/db/server.js`, junto a `users.sqlite`. No exporta la conexión. Pon el esquema en `src/queries/queries/create-table-users.js`.
 
 Pon la validación y las operaciones en `src/logic`: `shared.js`, `create-user.js`, `update-user.js`, `delete-user.js`, `list-users.js`, `find-user-by-id.js`, `find-user-by-email.js`, `find-user-by-name.js` y `users-gender.js`. `shared.js` va dentro de `src/logic`, no en la raíz.
 
-Pon el cliente de Jupyter en `src/clients/jupyter`: un `.ipynb` por acción, con el mismo nombre que el txt. El bloque importa la función de `src/logic` y muestra una tabla de `cli-table3` con el encabezado `["cyan", "bold"]`. No valida, no escribe SQL y no abre la base. El script `jupyter` está en `package.json`. Se arranca con `pnpm jupyter` desde `first-app`, que llama a `scripts/jupyter.sh`. Crea el `.venv` de la app si falta, instala `notebook` `7.6.3` si falta el ejecutable y abre `src/clients/jupyter` en `127.0.0.1`. En Windows usa `Scripts` y `py -3`. En Mac y Linux usa `bin` y `python3`. No usa el Jupyter del equipo. En Windows la salida de Node se lee en UTF-8.
+Pon el cliente de Jupyter en `src/clients/jupyter`: un `.ipynb` por acción, con el mismo nombre que el txt. El bloque importa la función de `src/logic` y muestra una tabla de `cli-table3` con el encabezado `["cyan", "bold"]`. No valida, no escribe SQL y no abre la base. El script `jupyter` está en `package.json`. Se arranca con `pnpm jupyter` desde `first-app`, que llama a `scripts/jupyter.sh`. Crea el `.venv` de la app si falta, instala `notebook` `7.6.3` si falta el ejecutable y abre `src/clients/jupyter` en `127.0.0.1`. En Windows usa `Scripts` y `py -3`. En Mac y Linux usa `bin` y `python3`. No usa el Jupyter del equipo. En Windows la salida de Node se lee en UTF-8. Con `pnpm server` en marcha, listar, modificar y eliminar siguen igual.
+
+Pon el cliente del navegador en `src/clients/browser`: `index.html`, `app.js` y `styles.css`. `app.js` importa solo `listUsers`, `updateUser` y `deleteUser`. No llama a `/execute`. No valida, no escribe SQL y no abre la base. Se arranca con `pnpm browser` desde `first-app`, en Windows. El programa local se arranca con `pnpm server` y escucha en `127.0.0.1:3000`.
 
 Pon la entrada por terminal en `src/clients/terminal`: `create-user.txt`, `update-user.txt`, `delete-user.txt`, `list-users.txt`, `find-user-by-id.txt`, `find-user-by-email.txt`, `find-user-by-name.txt` y `users-gender.txt`. Cada archivo contiene una sola línea, y esa línea es el comando de cmd. El comando llama a la función de `src/logic` de su acción con `node --input-type=module -e` y el `import` `./staff/luis-duque/first-app/src/logic/...`. No valida, no escribe SQL y no abre la base. Tira esa línea desde cmd, en la raíz del repositorio, porque Node resuelve el `import` desde la carpeta de trabajo. No uses PowerShell y no pases el archivo por la entrada estándar. `create-user.txt` lleva el nombre y el email al final del comando. `update-user.txt` lleva el id y después `name=...`, `email=...` o los dos. `delete-user.txt` lleva el id. `list-users.txt` no lleva argumentos. `find-user-by-id.txt` lleva el id. `find-user-by-email.txt` lleva el email. `find-user-by-name.txt` lleva el nombre: importa `findUserByName` y hace `console.log` del resultado. `users-gender.txt` no lleva argumentos: importa `usersGender` y hace `console.log` del recuento.
 
-Pon la ejecución de todo el SQL en `src/queries/users.js`, también `create-table-users.sql`. Pon el texto de cada consulta en `src/queries/queries`, en `create-table-users.sql`, `create-user.sql`, `update-user.sql`, `delete-user.sql`, `list-users.sql`, `find-user-by-id.sql`, `find-user-by-email.sql` y `find-user-by-name.sql`. `src/db/connection.js` no lee ni ejecuta ninguna consulta.
+Pon la petición de todo el SQL en `src/queries/users.js`. Ese fichero pide `POST /execute` a `http://127.0.0.1:3000` y espera. No abre la base y no usa `try/catch`. Pon el texto de cada consulta en `src/queries/queries`, en `create-table-users.js`, `create-user.js`, `update-user.js`, `delete-user.js`, `list-users.js`, `find-user-by-id.js`, `find-user-by-email.js` y `find-user-by-name.js`. `src/db/server.js` es el único que abre `users.sqlite` y ejecuta SQL.
 
 Pon la explicación general del proyecto en `docs/ARCHITECTURE.md`. El árbol está en `docs/TREE.md`. La base y las consultas están en `docs/DATABASE.md`. Los fallos están en `docs/ERRORS.md`.
 

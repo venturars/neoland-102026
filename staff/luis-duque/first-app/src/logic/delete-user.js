@@ -7,7 +7,7 @@ import * as users from "../queries/users.js";
 export async function deleteUser(id) {
   const userId = validateId(id);
 
-  if (users.deleteUser(userId) === 0) {
+  if ((await users.deleteUser(userId)) === 0) {
     throw new Error(`User ${userId} was not found`);
   }
 }

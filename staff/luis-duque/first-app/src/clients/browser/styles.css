@@ -1,0 +1,17 @@
+section[hidden] {
+  display: none;
+}
+
+body {
+  font-family: sans-serif;
+  margin: 2rem;
+}
+
+.message {
+  min-height: 1.5rem;
+}
+
+button,
+input {
+  font: inherit;
+}
