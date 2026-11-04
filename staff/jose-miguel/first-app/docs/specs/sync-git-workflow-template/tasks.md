@@ -1,11 +1,12 @@
 # Tareas · Sincronizar flujo git con la plantilla del curso
 
-Issue: #858 · Plan: [plan.md](plan.md)
+Issue: #932 · Plan: [plan.md](plan.md)
 
-- [x] **T01** — Redactar spec, plan y tasks (CA-01…CA-06).
-- [x] **T02** — Copiar `agents/git-workflow-agent.md` desde plantilla @ `665b92a5` (CA-01).
-- [x] **T03** — Copiar `tools/*.sh` (CA-02).
-- [x] **T04** — Actualizar skills con rutas monorepo (CA-03) y `create-pr-base-staging`.
-- [x] **T05** — Actualizar bullet de orquestador en `docs/ARCHITECTURE.md` y `docs/TREE.md`.
-- [x] **T06** — Comprobar diffs; `pnpm format` y `pnpm lint` (CA-04…CA-06).
-- [x] **T07** — PR draft contra `staging` enlazada a #858.
+- [x] **T01** — Issue #932, rama `932-chore-sync-git-workflow-template`, PR draft #933.
+- [x] **T02** — Actualizar spec, plan y tasks (CA-01…CA-06).
+- [x] **T03** — Copiar `agents/git-workflow-agent.md` y `agents/create-pr.md` (CA-01).
+- [x] **T04** — Añadir `tools/create-pr-base-staging.sh` (CA-02).
+- [x] **T05** — Alinear `skills/create-pr-base-staging`, `create-draft`, `commit-changes` (CA-03).
+- [ ] **T06** — Actualizar `docs/ARCHITECTURE.md` y `docs/TREE.md`.
+- [ ] **T07** — Comprobar diffs; `pnpm format` y `pnpm lint` (CA-04…CA-06).
+- [ ] **T08** — Commits por trozo, push, PR lista para revisión.
