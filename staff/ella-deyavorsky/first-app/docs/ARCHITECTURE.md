@@ -30,6 +30,7 @@ One file per action. Each file exports one function. The order inside the functi
 
 - `create-user.js` creates a user from a name and an email.
 - `list-users.js` returns all users.
+- `list-gmail-users.js` returns the users whose email contains `@gmail`.
 - `find-user-by-email.js` returns the user with an email.
 - `find-user-by-id.js` returns the user with an id.
 - `update-user.js` changes the name, the email, or both of a user.
@@ -48,15 +49,15 @@ A new query is a new `.sql` file in `src/db/queries/` and a new function in `src
 
 - `connection.js` is the only file that opens the database. No other file creates a second connection.
 - `server.js` is the database program, started with `pnpm start`. It imports the connection, reads the files of `queries/`, answers `POST /queries/<name>` on `http://localhost:3000` and serves the `.html`, `.css` and `.js` files of `clients/web/`, `clients/electron/` (at `/electron/`), `logic/` and `src/queries/`. It never serves `db/`.
-- `queries/` holds the `.sql` files, one statement per file.
+- `queries/` holds the `.sql` files, one statement per file, such as `find-all.sql` and `find-gmail.sql`.
 - `users.sqlite` stores the users.
 
 ### src/clients/
 
 - `terminal/` has one `.txt` file per feature, named like its logic file. You paste it into the terminal while `first-app` is the current folder. `create-users-table.txt` calls `createUsersTable()` and lists the users.
 - `jupyter/` has one notebook per feature, plus `prepare-database.ipynb`, `00-welcome-and-index.ipynb` and a `README.md`. They open in the browser with `scripts/jupyter.sh`.
-- `api/` has `server.js`: an Express app started with `pnpm api` that listens on `http://127.0.0.1:3001`. Each route imports one function of `logic/` and turns its result or its error sentence into an HTTP answer. It has no rules; it only checks that the body has the right shape. The database program must be running.
-- `chrome/` has the Chrome extension, in one folder that Chrome loads: `server.js`, a Fastify app started with `pnpm chrome` that listens on `http://127.0.0.1:3002`, and the popup (`manifest.json`, `popup.html`, `popup.css`, `popup.js`). Each route of `server.js` imports one function of `logic/` and turns its result or its error sentence into an HTTP answer, with the same five routes as `api/`. The popup talks only to this program, never to `logic/` or to the database program. The database program must be running.
+- `api/` has `server.js`: an Express app started with `pnpm api` that listens on `http://127.0.0.1:3001`. Each route imports one function of `logic/` and turns its result or its error sentence into an HTTP answer. It has five routes for the users, plus `GET /users/gmail`. It has no rules; it only checks that the body has the right shape. The database program must be running.
+- `chrome/` has the Chrome extension, in one folder that Chrome loads: `server.js`, a Fastify app started with `pnpm chrome` that listens on `http://127.0.0.1:3002`, and the popup (`manifest.json`, `popup.html`, `popup.css`, `popup.js`). Each route of `server.js` imports one function of `logic/` and turns its result or its error sentence into an HTTP answer, with the same five routes as `api/`, plus `GET /users/gmail`. The popup talks only to this program, never to `logic/` or to the database program. The database program must be running.
 - `web/` has `index.html`, `style.css` and `app.js`: three screens (choose a user, menu, edit) over the real users. `app.js` is a browser module that imports `logic/`. It opens at `http://localhost:3000` while the database program runs. The `.txt` per feature of `terminal/` does not apply here; it is tested by opening the page.
 - `electron/` is the desktop client: `main.js`, `index.html`, `app.js` and `styles.css`. It has its own page and does not use `web/`. `main.js` only opens a window on `http://127.0.0.1:3000/electron/index.html`; the database program serves that page. `app.js` is a browser module that imports `logic/`, as `web/` does, and shows the message of any error as it is. It does not start the database program: `pnpm start` must be running. It opens with `pnpm electron`. The `.txt` per feature of `terminal/` does not apply here; it is tested by opening the window.
 
