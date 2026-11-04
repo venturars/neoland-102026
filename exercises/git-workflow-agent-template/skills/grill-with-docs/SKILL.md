@@ -5,7 +5,7 @@
 
 #### Cómo entrevistar
 
-1. Haz una pregunta y devuélvela. No hagas la siguiente hasta que te llamen con la respuesta.
+1. Haz las preguntas que necesites y devuélvelas. No sigas hasta que te llamen con las respuestas.
 2. Si la respuesta está en el repositorio, léelo y no preguntes eso.
 3. Cuando un término quede claro, dilo con las palabras del proyecto.
 4. Devuelve qué hay que hacer, cómo se comprueba y qué decisiones no están en el proyecto. No escribas ficheros de glosario ni de decisión. El resumen único lo cierra `help-me-to-think` cuando ya no quede otra entrevista.

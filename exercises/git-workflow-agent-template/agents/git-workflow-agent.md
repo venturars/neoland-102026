@@ -19,8 +19,8 @@
    - Si quedan dudas o contradicciones, llama a `agents/help-me-to-think.md`. No repitas entrevistas resueltas salvo cambios o decisiones nuevas.
 
    Para cualquier otro paso, pide los datos que falten antes de continuar.
-3. **Procesamiento:** Llama y continúa. No espera un sí. Excepción: durante la entrevista, espera la respuesta del alumno y vuelve a llamar al mismo subagente `help-me-to-think` con esa respuesta. Si no puedes reanudar el mismo subagente, pásale el historial completo de preguntas y respuestas en cada llamada.
-   - Pensar la tarea: `agents/help-me-to-think.md`.
+3. **Procesamiento:** Llama y continúa. No espera un sí.
+   - Pensar la tarea: `agents/help-me-to-think.md`. Si no puedes reanudar el mismo subagente, pásale el historial completo de preguntas y respuestas en cada llamada.
    - Dejarla escrita: `agents/create-issue.md`.
    - Empezar (con la issue ya escrita; prepara la rama nueva desde `staging` antes de hacer cambios), en este orden:
      1. `skills/pull-changes`, que adelanta `staging`.
