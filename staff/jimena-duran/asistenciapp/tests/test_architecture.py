@@ -36,7 +36,7 @@ def test_writing_and_architecture():
     architecture=(ROOT/"docs/ARCHITECTURE.md").read_text(encoding="utf-8")
     for term in ["domain/","usecases/","storage/","PostgreSQL","SQLAlchemy","Alembic"]: assert term in architecture
     constitution=(ROOT/"docs/CONSTITUTION.md").read_text(encoding="utf-8")
-    assert constitution.splitlines()[2].startswith("> Versión 3.0 ·")
+    assert constitution.splitlines()[2].startswith("> Versión 3.1 ·")
 
 def test_static_and_closed_specs_unchanged():
     # Referencia: bytes LF publicados en la base 180cd52 de la PR #246.

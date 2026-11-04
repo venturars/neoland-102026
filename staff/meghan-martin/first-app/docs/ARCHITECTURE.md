@@ -14,6 +14,7 @@
 - `src/logic/find-user-by-id.js` busca una persona por su número.
 - `src/logic/users-gender-count.js` cuenta las personas por género.
 - `src/clients/terminal/` llama a `src/logic/` y muestra el resultado. Es la prueba a mano de cada acción.
+- `src/clients/browser/` sirve la lista, las opciones y la edición. Llama a `listUsers`, `findUserById`, `updateUser` y `deleteUser`. No decide si un email vale.
 - `docs/ARCHITECTURE.md` dice qué hace cada capa y cada fichero.
 - `docs/TREE.md` es el dibujo de carpetas y ficheros.
 - `docs/DATABASE.md` es la base y las consultas.

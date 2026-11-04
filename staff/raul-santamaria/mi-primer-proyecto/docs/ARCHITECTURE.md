@@ -1,22 +1,30 @@
 # Arquitectura
 
-- `src/db/` abre la base de datos y no contiene reglas de negocio.
-- `src/db/connection.js` es la única conexión a la base de datos.
+- `src/db/` guarda la base de datos y el servidor que la ejecuta. No contiene
+  reglas de negocio.
+- `src/db/server.js` abre la única conexión a SQLite, escucha en
+  `http://127.0.0.1:3000` y ejecuta el SQL que recibe por `POST /execute`.
 - `src/db/users.sqlite` es el único fichero de la base de datos.
-- `src/queries/queries/` guarda el SQL. Hay un fichero `.sql` por query.
-- `src/queries/users.js` lee esos ficheros, prepara el SQL y lo ejecuta.
+- `src/queries/queries/` guarda el texto de cada consulta. Hay un módulo
+  `.js` por query.
+- `src/queries/users.js` importa ese texto y pide la ejecución al servidor.
   No hay reglas de negocio en `src/queries/`.
 - `src/logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
   Una funcionalidad por fichero. No importa la base de datos: recibe el
   almacén. Cuando una funcionalidad existe, no se mueve ni se sustituye.
 - `src/logic/create-user.js` crea un usuario.
 - `src/logic/list-users.js` lista los usuarios.
+- `src/logic/find-user-by-id.js` devuelve un usuario por id.
 - `src/logic/update-user.js` actualiza un usuario.
 - `src/logic/delete-user.js` borra un usuario.
 - `src/logic/users-gender-count.js` cuenta los usuarios por género.
 - `src/clients/terminal/` llama a `src/logic/` y muestra el resultado. Es el
   primer cliente y el test manual de cada funcionalidad.
+- `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001 y no
+  repite sus reglas.
 - `src/clients/jupyter/` es el cliente que se abre con el Jupyter de la app.
+- `src/clients/browser/` llama a `src/logic/` desde el navegador. La página
+  no se sirve por HTTP; se abre con el script `browser` de `package.json`.
 - `start-jupyter.js` arranca el Jupyter del entorno de la app.
 - `eslint.config.js` aplica las reglas recomendadas de ESLint al
   JavaScript, declara los globals de Node e ignora `.venv` y

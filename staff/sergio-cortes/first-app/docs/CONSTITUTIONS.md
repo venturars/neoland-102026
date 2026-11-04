@@ -61,7 +61,7 @@ Esos nombres son solo ejemplos; no hay que ampliar la lista en cada funcionalida
 
 Si la función usa varios datos, como `name`, `email` e `id`, recibe un solo `input` y lee ahí cada valor. Si el dato es uno solo, como `id`, `email` o `name`, el argumento es ese valor. No se mete en un objeto.
 
-Ningún fichero de `src/logic/` abre la base. Llaman a `src/queries/user.js`. Donde hay una fila, devuelven `id`, `name`, `email`, `createdAt` y `updatedAt`.
+Ningún fichero de `src/logic/` abre la base. Llaman a `src/queries/user.js`. Cada función exportada de `src/logic/` devuelve una promesa con el mismo valor que antes. Donde hay una fila, devuelven `id`, `name`, `email`, `createdAt` y `updatedAt`.
 
 El cuerpo sigue este orden, y no se mezcla:
 

@@ -1,12 +1,12 @@
 # Arquitectura
 
 - `eslint.config.js` aplica las reglas recomendadas de ESLint al JavaScript e ignora `.venv`, `node_modules` y los cuadernos Jupyter.
-- `agents/git-workflow-agent.md` reconoce el momento y llama al subagente como un agente aparte. El padre no hace ese trabajo.
+- `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca.
 - `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la tarea se puede dejar escrita.
-- `agents/create-issue.md` crea la issue con título en inglés y descripción en español, asignada a quien está autenticado.
-- `agents/create-branch.md` crea la rama `número-tipo-descripcion`.
+- `agents/create-issue.md` crea la issue asignada a quien está autenticado; el cuerpo sale de la plantilla del tipo en `templates/issues/`.
+- `agents/create-branch.md` crea la rama de trabajo; el tipo y el nombre de rama siguen la plantilla del tipo.
 - `agents/create-commit.md` hace un commit pequeño con ficheros nombrados.
-- `agents/create-pr.md` abre la pull request contra `staging` y la deja en draft, sin enlazar la issue.
+- `agents/create-pr.md` abre la pull request contra `staging` con la plantilla del tipo; la deja en draft, sin enlazar la issue.
 - `agents/launch-push.md` publica `HEAD` en `origin` y deja el upstream puesto.
 - `skills/grill-with-docs/SKILL.md` entrevista cuando el cambio vive en este proyecto.
 - `skills/grill-me/SKILL.md` entrevista cuando el repositorio no responde.
@@ -21,7 +21,7 @@
 - `skills/launch-push/SKILL.md` sube la rama actual y fija el upstream.
 - `skills/create-pr-base-staging/SKILL.md` abre la pull request con base `staging`.
 - `skills/create-draft/SKILL.md` deja la pull request en draft.
-- `skills/link-pr-to-issue/SKILL.md` deja `Related to #N` sin cerrar la issue.
+- `skills/link-pr-to-issue/SKILL.md` deja `Closes #N` en el cuerpo. No cierra la issue por API. GitHub la cierra al fusionar en la rama por defecto.
 - `skills/assign-reviewers/SKILL.md` asigna a quienes miran la pull request y la saca de draft.
 - `tools/check-status.sh` escribe la rama, el remoto y los cambios.
 - `tools/pull-changes.sh` adelanta `staging` en fast-forward.
@@ -30,16 +30,16 @@
 - `tools/create-empty-commit.sh` crea el commit vacío de apertura.
 - `tools/commit-changes.sh` guarda los ficheros nombrados.
 - `tools/launch-push.sh` sube la rama y fija el upstream.
-- `templates/issues/basic_issue.md` es el cuerpo de la issue: qué hay que hacer y cómo probarlo.
-- `templates/pull-request/basic-pull-request.md` es el cuerpo de la pull request.
-- `MCPS/github-mcp-server/mcp.txt` es la dirección del MCP de GitHub.
+- `templates/issues/` lleva seis plantillas (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`). En el comentario HTML van la regla del título, el tipo y el nombre de rama.
+- `templates/pull-request/` lleva seis plantillas del mismo tipo. El cuerpo comparte secciones; la lista de comprobación cambia por tipo. La sección Issue es `Closes #`.
+- `MCPS/github-mcp-server/mcp.txt` es la dirección del MCP de GitHub y el header para que la escritura no abra un formulario.
 - `MCPS/socket-mcp/mcp.txt` es la dirección del MCP de Socket.
 - `docs/specs/<nombre>/` es donde empieza un desarrollo. `<nombre>` es la funcionalidad, en kebab-case.
 - `src/db/` abre la base de datos y no contiene reglas de negocio.
-- `src/db/connections.js` es la única conexión a la base de datos.
+- `src/db/server.js` abre la única conexión a la base de datos, lee los `.sql` de `src/queries/queries/` por nombre de fichero y atiende `POST /execute` en `127.0.0.1:3000` con `{ method, file, params }`. `method` es `exec`, `get`, `all` o `run`. Se arranca con `pnpm server` desde first-app.
 - `src/db/users.sqlite` es el único fichero de la base de datos.
 - `src/queries/queries/` guarda el SQL en ficheros `.sql`. Hay un fichero por sentencia.
-- `src/queries/user.js` lee esos ficheros y los ejecuta. No hay reglas de negocio en `src/queries/`.
+- `src/queries/user.js` pide el resultado de esas operaciones al servidor de la base por HTTP. No hay reglas de negocio en `src/queries/`.
 - `src/logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
 - `src/logic/errors.js` exporta las clases de error compartidas. No es una funcionalidad de negocio.
 - `src/logic/create-user.js` crea un usuario.
@@ -51,6 +51,11 @@
 - `src/logic/list-users.js` lista los usuarios.
 - `src/logic/user-gender-count.js` cuenta usuarios por género.
 - `src/clients/terminal/` llama a `src/logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
+- `src/clients/web/` son las tres pantallas del navegador (HTML, CSS y JavaScript vanilla). Llama a `src/logic/` con `await`, como la terminal y Jupyter. Se abre con `pnpm web` desde `first-app` (Brave, archivo local). Tiene que estar en marcha `pnpm server`. Solo hay tres ficheros en la carpeta.
+  - `src/clients/web/index.html` define selección, menú, edición y el popover de borrado (campo de email para confirmar).
+  - `src/clients/web/styles.css` es la hoja compartida (paleta crema/teal).
+  - `src/clients/web/app.js` concentra la lógica de pantalla: estado del usuario elegido, cambio de pantalla, lista (`listUsers`), selección (`findUserById`), guardado (`updateUser`), popover de borrado con comprobación de email y borrado (`deleteUser`), y el arranque (`initializeClient`).
+- `package.json` script `server` arranca el servidor de la base desde `first-app`. El script `web` abre la página en Brave.
 - `scripts/jupyter.sh` prepara `.venv` si hace falta, instala `notebook==7.6.3` y arranca Jupyter en `src/clients/jupyter/`. Funciona en Mac, Linux y Windows (con `sh`). `package.json` lo invoca con `pnpm jupyter`.
 - `src/clients/jupyter/` es el cuaderno, uno por cada `.txt` de `src/clients/terminal/`. El bloque muestra ese texto: arranca `node --input-type=module` y, dentro, los `import` y la llamada quedan igual. El `console.log` se sustituye por la tabla. `cli-table3` y `@colors/colors` pintan esa tabla con colores y encabezados. Si la función falla, se ve ese mensaje. En esa carpeta no hay ficheros `.py` ni `requirements.txt`. Se abre con `pnpm jupyter` desde `first-app`.
 - `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada fichero.

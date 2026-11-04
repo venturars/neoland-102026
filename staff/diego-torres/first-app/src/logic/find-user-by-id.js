@@ -1,7 +1,17 @@
-export async function findUserById(store, id) {
-  const user = await store.findById(id);
-  if (!user) {
-    throw new Error(`There is no user with id ${id}`);
+import { findById } from "../queries/users.js";
+import { copyUser } from "./shared.js";
+
+export async function findUserById(id) {
+  let fila;
+  try {
+    fila = await findById(id);
+  } catch {
+    throw new Error("Could not find the user");
   }
-  return user;
+
+  if (!fila) {
+    throw new Error("User not found");
+  }
+
+  return copyUser(fila);
 }

@@ -1,5 +1,7 @@
 # AGENTS.md — Manual de trabajo para agentes de IA
 
+El flujo de trabajo de git de esta app es `agents/git-workflow-agent.md`, entero: pensar una tarea, dejarla escrita, empezar, guardar un trozo y pedir revisión. Ese flujo no quita las paradas del flujo SDD (§2).
+
 Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [CONSTITUTION.md](docs/CONSTITUTION.md) dice **qué reglas** se cumplen; este archivo dice **cómo se trabaja** día a día.
 
 ---
@@ -20,6 +22,8 @@ Si algo de lo que te piden contradice la constitución, **para y avisa** antes d
 ## 2. Flujo SDD paso a paso
 
 Cada funcionalidad recorre estas fases **en orden**. Al terminar cada una, el agente **se detiene** y pide la aprobación de Victor. No se avanza sin un "ok" explícito.
+
+«Aplica», «copia», «integra», «hazlo», «ajusta» o «estandariza» **no** abren ficheros ni saltan fases. Incluyen copiar plantillas, crear carpetas y tocar docs. Sin la fase en curso aprobada no se escribe nada del cambio. Una fase por respuesta: al cerrarla, para.
 
 | Fase | Archivo | Pregunta que responde | Puerta de salida |
 | --- | --- | --- | --- |
@@ -58,6 +62,11 @@ asistenciapp/
 │   ├── CONSTITUTION.md    # reglas no negociables
 │   └── ARCHITECTURE.md    # cómo se parte el código
 ├── AGENTS.md              # este archivo
+├── agents/                # orquestador y subagentes del flujo de git
+├── skills/                # skills del flujo de git
+├── tools/                 # scripts del flujo de git
+├── templates/             # plantillas de issues y pull requests
+├── MCPS/                  # notas del MCP de GitHub del flujo
 ├── README.md              # cómo arrancar la app (para humanos)
 ├── specs/
 │   └── NNN-nombre/
@@ -85,7 +94,7 @@ Las specs se numeran con tres dígitos y nombre en kebab-case: `001-checkin-codi
 
 ## 4. Comandos
 
-Ejecutar desde `staff/victor-chang/asistenciapp/`:
+Ejecutar desde `staff/luis-duque/asistenciapp/`:
 
 | Acción | Comando |
 | --- | --- |
@@ -102,11 +111,12 @@ Las únicas dependencias son Flask y pytest (constitución P3).
 
 ## 5. Reglas de comportamiento
 
-- **Solo se edita dentro de `staff/victor-chang/asistenciapp/`.**
+- **Solo se edita dentro de `staff/luis-duque/asistenciapp/`.**
 - **Pregunta antes de suponer.** Ante una ambigüedad, pregunta o márcala con `[NECESITA ACLARACIÓN]`.
 - **Explica lo que haces.** Victor está aprendiendo SDD: al cerrar cada fase, resume qué se ha hecho, por qué y qué tiene que revisar.
 - **Cambios pequeños.** Mejor varias tareas cortas que una enorme.
-- **Nada de commits ni pushes** sin que Victor lo pida.
+- **Commits y pushes** solo cuando el flujo de git (`agents/git-workflow-agent.md`) lo indica (empezar, guardar un trozo, pedir revisión) o cuando quien encarga el cambio lo pide.
+- **Una fase cada vez.** Al cerrar una fase, para. No encadenes plan, tasks ni implementación en la misma respuesta.
 - **Para todo lo que arranques.** Si levantas el servidor o `cloudflared` para probar, páralos al terminar y comprueba que el puerto queda libre: `lsof -nP -iTCP:8000 -sTCP:LISTEN` no debe mostrar nada. Ojo: en macOS el proceso aparece como `Python` (con mayúscula). (Incidencia del 2026-10-20 en T12.)
 - **No toques la constitución** salvo para proponer una enmienda, que solo Victor aprueba (constitución §8).
 
@@ -130,5 +140,6 @@ Una funcionalidad está terminada cuando:
 | --- | --- | --- |
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
 | `002-discord-bot` | Idea futura | Fuera del MVP |
+| `006-git-workflow` | 4. Implementar (T01–T10 hechos) | Issue #777 / PR #784. Pendiente de ok final |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.

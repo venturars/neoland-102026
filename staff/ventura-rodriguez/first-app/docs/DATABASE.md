@@ -1,6 +1,6 @@
 # Base de datos
 
-Hay una sola base de datos: `db/users.sqlite`. Hay una sola conexión: el `db` que exporta `db/connection.js`. No se abre otra base de datos ni otra conexión.
+Hay una sola base de datos: `db/users.sqlite`. Hay una sola conexión: la que abre `db/server.js`. No se exporta. No se abre otra base de datos ni otra conexión.
 
 Tabla `users`:
 
@@ -13,5 +13,5 @@ Tabla `users`:
 
 El SQL no vive dentro de la función que lo ejecuta.
 
-- `queries/queries/` tiene un fichero `.sql` por query. Ese fichero contiene solo el texto SQL, con parámetros con nombre (`:id`, `:name`, `:email`).
-- `queries/users.js` lee esos ficheros, prepara el texto con `db` y lo ejecuta. Las funciones de este fichero se pueden reutilizar desde `logic/`.
+- `queries/queries/` tiene un módulo `.js` por query. Ese fichero exporta el texto, con parámetros con nombre (`:id`, `:name`, `:email`).
+- `queries/users.js` importa ese texto y `db/server.js` lo ejecuta. Las funciones de este fichero se pueden reutilizar desde `logic/`.

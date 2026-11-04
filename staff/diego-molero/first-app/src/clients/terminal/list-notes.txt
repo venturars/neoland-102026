@@ -1,0 +1,5 @@
+// Ejemplo manual. Ejecución: docs/CONSTITUTIONS.md.
+import { listNotes } from "./src/logic/list-notes.js";
+
+const result = listNotes(1);
+console.log(result);

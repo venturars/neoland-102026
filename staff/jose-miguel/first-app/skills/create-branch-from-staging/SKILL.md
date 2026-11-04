@@ -8,10 +8,8 @@ El comando se lanza desde el root del repositorio git (la carpeta que contenga e
 #### Especificación de Argumentos
 
 1. **NUMERO** _(Obligatorio)_: El número de la issue, solo dígitos.
-2. **TIPO** _(Obligatorio)_: Uno de `feat`, `fix`, `docs`, `refactor`, `test` o `chore`.
-3. **DESCRIPCION** _(Obligatorio)_: Palabras en inglés, en minúsculas, separadas por guiones. Sin espacios.
-
-El nombre resultante es `número-tipo-descripcion`.
+2. **TIPO** _(Obligatorio)_: El tipo de la plantilla.
+3. **DESCRIPCION** _(Obligatorio)_: La descripción de la rama.
 
 #### Reglas de Invocación Críticas
 

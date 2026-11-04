@@ -1,16 +1,15 @@
----
-name: check-status
-description: Lee la rama, remoto, índice y cambios locales antes de seleccionar un momento del flujo de Git.
----
+### Herramienta: CHECK_STATUS
 
-# Leer el estado
+- **Descripción**: Úsala única y exclusivamente cuando necesites saber la rama actual, si hay cambios sin commit y si la rama sigue a un remoto.
 
-El orquestador la usa antes de elegir el momento. Desde la raíz del repositorio:
+- **Comando de Terminal**: `./staff/jimena-duran/first-app/tools/check-status.sh`
 
-```powershell
-& .\staff\jimena-duran\first-app\tools\check-status.ps1
-```
+El comando se lanza desde el root del repositorio git (la carpeta que contenga el directorio .git).
 
-Desde `first-app`, usa `& .\tools\check-status.ps1`. Las herramientas resuelven su propia ruta mediante `PSScriptRoot` y la raíz con Git; no cambies una ruta por otra de una persona distinta.
+#### Especificación de Argumentos
 
-Devuelve el estado real de rama, upstream, índice, cambios sin preparar y archivos sin seguimiento. No hagas fetch ni alteres el índice. Un estado con conflictos, operación Git en curso, HEAD separado o error se informa al orquestador antes de continuar; no se resuelve automáticamente.
+No recibe argumentos.
+
+#### Reglas de Invocación Críticas
+
+- **Procesamiento de respuestas**: El script escribe, en este orden, el repositorio, la rama, el remoto con los commits por subir y por bajar, el último commit, los ficheros preparados, los modificados sin preparar y los que no tienen seguimiento. Si el código de salida no es 0, lee el error y comunícalo. No inventes la rama ni los ficheros.

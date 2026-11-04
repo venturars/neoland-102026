@@ -49,7 +49,7 @@ export async function usersGenderCount() {
   let rows;
 
   try {
-    rows = findAll();
+    rows = await findAll();
   } catch {
     throw new DatabaseError("Could not classify the users");
   }

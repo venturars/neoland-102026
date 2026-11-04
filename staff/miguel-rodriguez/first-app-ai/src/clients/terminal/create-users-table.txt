@@ -1,9 +1,14 @@
+# Run from the project directory with pnpm server running in another terminal.
+# Initializes the table explicitly; repeating it preserves saved contacts.
 node --input-type=module <<'NODE'
-import { db } from './src/db/connection.js';
-import { createUsersTable } from './src/queries/users.js';
+import { createUsersTable, listTables } from './src/queries/users.js';
 
-createUsersTable();
-const statement = db.prepare("SELECT name FROM sqlite_master WHERE type = 'table'");
-const tables = statement.all();
-console.log(tables);
+try {
+  await createUsersTable();
+  const tables = await listTables();
+  console.log(tables);
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+}
 NODE

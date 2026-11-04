@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>First app</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="page-header">
+        <p class="eyebrow">First App</p>
+        <p class="tagline">Gestión de usuarios</p>
+      </header>
+
+      <main class="card">
+        <section id="list-screen" class="screen">
+          <h1>¿Quién eres?</h1>
+          <p class="lead">Elige un usuario de la lista. No se pide contraseña.</p>
+          <ul id="user-list" class="user-list"></ul>
+          <p id="list-message" class="message" role="alert"></p>
+        </section>
+
+        <section id="menu-screen" class="screen" hidden>
+          <h1>Tu usuario</h1>
+          <div class="user-summary">
+            <p id="menu-name" class="user-summary-name"></p>
+          </div>
+          <div class="actions">
+            <button id="edit-button" class="primary" type="button">
+              Modificar usuario
+            </button>
+            <button id="notes-button" type="button" disabled>Notas</button>
+            <button id="back-button" class="secondary" type="button">
+              Volver a la lista
+            </button>
+          </div>
+        </section>
+
+        <section id="edit-screen" class="screen" hidden>
+          <h1>Modificar o eliminar</h1>
+          <p id="edit-id" class="user-id"></p>
+          <form id="edit-form" class="form">
+            <label class="field">
+              <span class="field-label">Nombre</span>
+              <input id="name-input" name="name" type="text" required />
+            </label>
+            <label class="field">
+              <span class="field-label">Email</span>
+              <input id="email-input" name="email" type="email" required />
+            </label>
+            <div class="actions">
+              <button class="primary" type="submit">Guardar cambios</button>
+              <button id="edit-back-button" class="secondary" type="button">
+                Volver al menú
+              </button>
+            </div>
+          </form>
+          <div class="danger-zone">
+            <h2 class="danger-title">Eliminar usuario</h2>
+            <p class="danger-text">Esta acción no se puede deshacer.</p>
+            <button id="delete-button" class="danger" type="button">
+              Eliminar usuario
+            </button>
+          </div>
+          <p id="edit-message" class="message" role="alert"></p>
+        </section>
+      </main>
+    </div>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_security_privacy_amendment():
     text = (ROOT / "docs/CONSTITUTION.md").read_text(encoding="utf-8")
-    assert text.splitlines()[2].startswith("> Versión 3.0 ·")
+    assert text.splitlines()[2].startswith("> Versión 3.1 ·")
     privacy = text.split("### P4 · Privacidad mínima", 1)[1].split("### P5", 1)[0]
     assert "solo para contar intentos de registro y conservar la lista de bloqueo" in privacy
     assert "separada del nombre y de la hora de asistencia" in privacy

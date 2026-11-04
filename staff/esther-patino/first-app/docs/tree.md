@@ -1,66 +1,76 @@
 # Árbol
 
 first-app/
-  AGENTS.md
-  package.json
-  pnpm-lock.yaml
-  scripts/
-    jupyter.js
-  db/
-    connection.js
-    users.sqlite
-  agents/
-  skills/
-  tools/
-  templates/
-  MCPS/
-  docs/
-    CONSTITUTIONS.md
-    specs/
-      <nombre>/
-        spec.md
-        plan.md
-        tasks.md
-  logic/
-    shared.js
-    create-user.js
-    list-users.js
-    find-user-by-email.js
-    find-user-by-id.js
-    find-user-by-name.js
-    update-user.js
-    delete-user.js
-    users-gender-count.js
-  queries/
-    users.js
-    queries/
-      create-users-table.sql
-      insert-user.sql
-      find-all.sql
-      find-by-email.sql
-      find-by-id.sql
-      find-by-name.sql
-      update-user.sql
-      remove-user.sql
-  clients/
-    terminal/
-      create-users-table.txt
-      insert-user.txt
-      find-all.txt
-      find-by-email.txt
-      find-by-id.txt
-      find-user-by-name.txt
-      update-user.txt
-      remove-user.txt
-      users-gender-count.txt
-    jupyter/
-      create-users-table.ipynb
-      insert-user.ipynb
-      find-all.ipynb
-      find-by-email.ipynb
-      find-by-id.ipynb
-      find-user-by-name.ipynb
-      update-user.ipynb
-      remove-user.ipynb
-      users-gender-count.ipynb
+AGENTS.md
+package.json
+pnpm-lock.yaml
+scripts/
+jupyter.js
+db/
+server.js
+users.sqlite
+agents/
+skills/
+tools/
+templates/
+MCPS/
+docs/
+CONSTITUTIONS.md
+specs/
+<nombre>/
+spec.md
+plan.md
+tasks.md
+logic/
+shared.js
+create-user.js
+list-users.js
+find-user-by-email.js
+find-user-by-id.js
+find-user-by-name.js
+update-user.js
+delete-user.js
+users-gender-count.js
+queries/
+users.js
+queries/
+create-users-table.js
+find-by-id.js
+find-by-email.js
+find-by-name.js
+find-all.js
+insert.js
+update.js
+remove.js
+list-tables.js
+clients/
+terminal/
+create-users-table.txt
+insert-user.txt
+find-all.txt
+find-by-email.txt
+find-by-id.txt
+find-user-by-name.txt
+update-user.txt
+remove-user.txt
+users-gender-count.txt
+jupyter/
+create-users-table.ipynb
+insert-user.ipynb
+find-all.ipynb
+find-by-email.ipynb
+find-by-id.ipynb
+find-user-by-name.ipynb
+update-user.ipynb
+remove-user.ipynb
+users-gender-count.ipynb
+web/
+index.html
+styles.css
+app.js
+http/
+app.js
+
+```
+
 ```

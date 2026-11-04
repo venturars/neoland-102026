@@ -18,6 +18,12 @@ first-app/
       users-gender-count.js
     clients/
       terminal/
+      browser/
+        server.js
+        list.html
+        options.html
+        edit.html
+        styles.css
     users.js
   logic/
     create-user.js
@@ -45,6 +51,10 @@ first-app/
     GIT-AUTOMATION.md
     specs/
       <nombre>/
+        spec.md
+        plan.md
+        tasks.md
+      cliente-navegador/
         spec.md
         plan.md
         tasks.md

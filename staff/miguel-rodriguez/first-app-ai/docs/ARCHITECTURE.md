@@ -2,14 +2,16 @@
 
 ## Storage and business operations
 
-- `src/db/connection.js` owns the single database connection. Its file location and
-  initialization behavior are defined in [DATABASE.md](DATABASE.md).
-- `src/queries/queries/` contains one SQL file per query. `src/queries/users.js` loads and
-  executes those statements; it performs no business validation or printing.
-  [DATABASE.md](DATABASE.md) defines each query's parameters and return value.
+- `src/db/server.js` owns the module-relative SQLite connection and executes
+  requests on the loopback data service. Its storage contracts are in
+  [DATABASE.md](DATABASE.md).
+- `src/queries/queries/` exports one JavaScript SQL-text constant per query.
+  `src/queries/users.js` sends those statements and bound parameters to the data
+  service; its async functions return query results without business validation
+  or presentation.
 - `src/logic/` contains the public business operations. It validates input, checks
   business conditions, calls queries, and constructs ordinary returned data.
-  It does not manage the connection or print results. The
+  It awaits query results without managing the connection or printing results. The
   [constitution](CONSTITUTIONS.md#public-business-operations) defines the contracts;
   [ERRORS.md](ERRORS.md) defines their failures.
 
@@ -26,7 +28,7 @@
 
 ## Clients and startup
 
-`src/clients/terminal/` contains copyable `node --input-type=module` heredocs. They call
+`src/clients/terminal/` contains copyable `node --input-type=module` heredocs. They await
 the corresponding operations and print their results. Their usage is described
 in the [constitution](CONSTITUTIONS.md#terminal-examples).
 
@@ -49,14 +51,14 @@ public business operation.
 - `src/clients/jupyter/client.py` sends an operation and arguments as JSON to a Node
   subprocess in this project copy and displays its output.
 - `src/clients/jupyter/run-operation.js` selects an explicitly supported operation,
-  awaits the classifier when needed, and presents returned values as tables or
+  awaits each requested operation, and presents returned values as tables or
   displays client messages and errors. It does not replace business operations.
 - `scripts/jupyter.js` prepares the existing project-local environment, registers
   its kernel, and starts Jupyter on the loopback interface with the notebook
   folder as its root.
 - `requirements-jupyter.txt` lists the Python requirements for that client.
-- `package.json` holds minimal application metadata, ES module mode, the Jupyter
-  startup and development-check commands, and dependency declarations. `pnpm-lock.yaml` records the
+- `package.json` holds minimal application metadata, ES module mode, the
+  data-service and Jupyter startup commands and development-check commands, and dependency declarations. `pnpm-lock.yaml` records the
   resolved packages. Version and package rules remain in the
   [constitution](CONSTITUTIONS.md#dependencies-and-package-management).
 - `.gitignore` excludes generated local artifacts. `src/db/users.sqlite`, `.venv/`,
@@ -65,6 +67,12 @@ public business operation.
 
 Results are presented by clients rather than printed by business operations.
 Startup may report environment preparation; it does not introduce business logic.
+
+## Verification
+
+`tests/serve-data-through-node.test.js` checks the local data service, query
+results, business operations and failure handling in disposable project copies.
+Run it with `node --test tests/serve-data-through-node.test.js`.
 
 ## Development tools
 
@@ -109,7 +117,13 @@ agent documents. It does not duplicate their procedures. These are optional comp
 
 `skills/` describes each action and its inputs/results. The six Bash scripts in
 `tools/` implement local Git operations. `templates/` supplies the issue and PR
-bodies. `MCPS/github-mcp-server/mcp.txt` is a public server documentation reference,
+bodies: six issue templates and six PR templates for feat, fix, docs, refactor,
+test and chore. The chosen supported type is shared by the issue, branch and PR;
+new tasks without a specific template use the closest supported type. Draft
+checklists remain unchecked until review is requested and their items verified.
+The principal links the issue after PR creation; automatic closure follows the
+actual default branch, while PRs keep staging as their base.
+`MCPS/github-mcp-server/mcp.txt` is a public server documentation reference,
 not an installed connection or credential store. Setup and verification are in
 README.md; workflow permissions and SDD gates remain in AGENTS.md.
 

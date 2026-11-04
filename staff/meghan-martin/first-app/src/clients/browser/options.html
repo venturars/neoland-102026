@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Person</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main>
+      <!-- The chosen person. Empty if that id is not in the database. -->
+      <h1>{{name}}</h1>
+      <p class="muted">{{email}}</p>
+      <p class="error">{{error}}</p>
+      <p class="actions">
+        <a href="/">Back</a>
+        {{edit}}
+      </p>
+    </main>
+    <!-- "Saved", or nothing. -->
+    {{notice}}
+    <script>
+      // Same as the list: do not repeat the message on refresh,
+      // and remove it after 3 seconds.
+      const toast = document.querySelector(".toast");
+      if (toast) {
+        const params = new URLSearchParams(location.search);
+        params.delete("notice");
+        const query = params.toString();
+        const next = query ? `${location.pathname}?${query}` : location.pathname;
+        history.replaceState(null, "", next);
+        setTimeout(() => toast.remove(), 3000);
+      }
+    </script>
+  </body>
+</html>
