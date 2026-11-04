@@ -80,7 +80,8 @@
   Issue lleva `Closes #`.
 - `MCPS/github-mcp-server/mcp.txt` es la dirección del MCP de GitHub y
   el header para que la escritura vaya directa.
-- `MCPS/socket-mcp/mcp.txt` es la dirección del MCP de Socket.
+- `MCPS/socket-mcp/mcp.txt` es la referencia del MCP de Socket: herramientas,
+  filtros y reglas de relevancia al validar paquetes.
 - `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada
   fichero.
 - `docs/TREE.md` es el árbol de carpetas y ficheros.

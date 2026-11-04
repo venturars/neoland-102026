@@ -1,1 +1,68 @@
 https://docs.socket.dev/docs/remote-socket-mcp
+
+Servidor remoto: https://mcp.socket.dev/
+
+En Cursor, la entrada `socket-mcp` lleva solo la URL; la sesión la abre el
+cliente por OAuth:
+
+```json
+"socket-mcp": {
+  "url": "https://mcp.socket.dev/"
+}
+```
+
+Organización: `ai-engineering`. Repositorio de este proyecto en Socket:
+`neoland-102026`.
+
+Si `organizations` responde 401 o no devuelve `ai-engineering`, no hay sesión:
+se escribe el motivo y no se siguen herramientas que la piden.
+
+Cada dato del análisis de un paquete de Node sale de la herramienta que lo da:
+
+- Stats: `depscore`. Las cinco stats, de 0 a 100, con la versión exacta. No
+  pide sesión.
+- Alertas: `alerts`. Pide sesión. Siempre con `org_slug` `ai-engineering`,
+  `artifact_type` `npm` y `artifact_name` del paquete revisado.
+- Campaña: `threat_feed`. Pide sesión y la función activada en la org.
+
+Nunca llamar a `alerts` sin `artifact_name`. Sin filtro, la org devuelve cientos
+de alertas abiertas y la respuesta no cabe en el resumen del plan.
+
+Relevancia (qué entra en el plan):
+
+1. Solo cuenta una alerta si la versión de la fila coincide con la versión
+   exacta del plan para ese paquete.
+2. Si la fila nombra un repositorio distinto de `neoland-102026`, no aplica.
+3. No se escriben en el plan los tipos informativos `socketUpgradeAvailable` ni
+   avisos equivalentes de «hay versión más nueva» que no sean vulnerabilidad sobre
+   la versión elegida.
+4. Tras filtrar, si no queda ninguna alerta aplicable, se escribe «sin alerta
+   aplicable en paquete vigilado para esta versión». No se escribe «sin alertas»
+   ni se barre la org (p. ej. «primeras 500»).
+
+Cuota y créditos:
+
+- Si cualquier herramienta de Socket responde cuota agotada (HTTP 429,
+  `Insufficient quota for API route`, «insufficient quota» u otro equivalente del
+  MCP), se para toda la revisión Socket en esa validación.
+- No se reintenta en bucle ni se llama a otra herramienta de Socket para
+  rellenar datos. El resumen copia el motivo, indica qué datos faltan (stats,
+  alertas, campaña) y, si viene, `Retry-After`.
+- No se inventan stats ni alertas.
+
+Límites del plan free (revisión 4 de noviembre de 2026):
+
+- `depscore` no lista alertas ni campañas.
+- `alerts` lista paquetes que la org ya vigila; una lista vacía tras filtrar por
+  nombre no dice que la versión esté limpia si aún no está en el repo.
+- `threat_feed` puede responder 403 `threat_feed_not_entitled`. El resumen dice
+  que la cuenta no tiene threat feed.
+
+Una stat por debajo de 50 se escribe; 50 no baja.
+
+No se escribe «no consta» sin haber llamado a la herramienta del dato. Si la
+herramienta no puede contestar por otro motivo (401, 403 distinto de cuota), el
+resumen dice el motivo.
+
+La página pública de alertas de socket.dev no sirve de respaldo desde aquí:
+`curl` recibe 403 de Cloudflare.
