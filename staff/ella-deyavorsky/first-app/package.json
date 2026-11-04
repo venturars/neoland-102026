@@ -4,10 +4,11 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/db/server.js",
+    "api": "node src/clients/api/server.js",
     "browser": "open http://127.0.0.1:3000",
     "jupyter": "sh scripts/jupyter.sh",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/web/**/*.js\"",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/web/**/*.js\" \"src/clients/api/**/*.js\"",
     "lint": "eslint ."
   },
   "keywords": [],
@@ -18,6 +19,7 @@
   "packageManager": "pnpm@12.14.0",
   "dependencies": {
     "cli-table3": "0.6.5",
+    "express": "5.2.1",
     "openai": "^7.43.0"
   },
   "devDependencies": {

@@ -8,6 +8,7 @@ A failure throws an English sentence with `throw new Error(...)`. It is not retu
 - "No user was found." — no user has this id, or no user has this email.
 - "There is nothing to update." — an update was sent with no name and no email.
 - "The database failed." — SQLite failed, or the database program is not running. Every call to `queries/` is wrapped in try/catch and throws this sentence instead. The original message stays hidden.
+- "The request is not valid." — the HTTP client in `src/clients/api/` checked the request before calling `logic/` and found no body, or a `name` or `email` that is not text. `logic/` never throws it.
 - "The classifier failed." — Ollama did not answer. The original message stays hidden.
 
 A new failure is added to this list before it is used in code.
