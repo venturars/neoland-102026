@@ -13,9 +13,12 @@ mi-primer-proyecto/
       terminal/
         create-user.txt
         list-users.txt
+        find-user-by-id.txt
         update-user.txt
         delete-user.txt
         users-gender-count.txt
+      http/
+        app.js
       jupyter/
     db/
       connection.js
@@ -23,6 +26,7 @@ mi-primer-proyecto/
     logic/
       create-user.js
       list-users.js
+      find-user-by-id.js
       update-user.js
       delete-user.js
       users-gender-count.js

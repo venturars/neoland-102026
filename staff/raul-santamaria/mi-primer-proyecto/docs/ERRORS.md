@@ -16,6 +16,7 @@ En el paso 3, si SQLite falla, ese error no sale de `logic/`. Se lanza uno de es
 - `Could not update the user`
 - `Could not delete the user`
 - `Could not list the users`
+- `Could not find the user`
 - `Could not classify the users`
 
 En el paso 4, si todo va bien, la función devuelve el dato saneado. Si la operación no tiene datos, no devuelve nada.
