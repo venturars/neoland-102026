@@ -109,6 +109,14 @@ Una funcionalidad está terminada cuando:
 
 ## 7. Estado actual
 
+### Mantenimiento actual
+
+| Spec | Fase | Notas |
+| --- | --- | --- |
+| `015-consultas-y-legibilidad` | Implementada y verificada; publicación pendiente | Issue #1033, PR #1035 hacia staging; SQL separado y pasos de almacenamiento y dominio legibles; evidencia en tasks.md |
+
+### Historial de especificaciones
+
 | Spec | Fase | Notas |
 | --- | --- | --- |
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
