@@ -9,6 +9,8 @@ El browser importa `src/logic/` directamente. No hay rutas GET/POST de pantalla 
 
 ## Arranque
 
+Ver también [`docs/STARTUP.md`](../../../docs/STARTUP.md) (por qué hacen falta dos terminales).
+
 1. Terminal en la raíz de first-app (`staff/jose-miguel/first-app`).
 
 2. Servidor SQL:

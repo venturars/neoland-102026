@@ -1,6 +1,6 @@
 # Arquitectura
 
-- `eslint.config.js` aplica las reglas recomendadas de ESLint al JavaScript e ignora `.venv`, `node_modules` y los cuadernos Jupyter. Declara `console` como global solo para `src/clients/http/`.
+- `eslint.config.js` aplica las reglas recomendadas de ESLint al JavaScript e ignora `.venv`, `node_modules` y los cuadernos Jupyter. Declara `console` como global solo para `src/clients/http/`. Declara `process` como global para `src/clients/electron/main.js` y `document` y `fetch` para `src/clients/electron/app.js`.
 - `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca.
 - `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la tarea se puede dejar escrita.
 - `agents/create-issue.md` crea la issue asignada a quien está autenticado; el cuerpo sale de la plantilla del tipo en `templates/issues/`.
@@ -55,8 +55,13 @@
   - `src/clients/web/index.html` define selección, menú, edición y el popover de borrado (campo de email para confirmar).
   - `src/clients/web/styles.css` es la hoja compartida (paleta crema/teal).
   - `src/clients/web/app.js` concentra la lógica de pantalla: estado del usuario elegido, cambio de pantalla, lista (`listUsers`), selección (`findUserById`), guardado (`updateUser`), popover de borrado con comprobación de email y borrado (`deleteUser`), y el arranque (`initializeClient`).
+- `src/clients/electron/` es el cliente de escritorio. Copia de partida de `src/clients/web/` (`index.html`, `styles.css`, `app.js`) más `main.js`. Llama a `src/logic/` con `await`. Se abre con `pnpm electron` desde `first-app`. El script `electron` arranca antes `src/db/server.js` si nada escucha en `127.0.0.1:3000`, y lo para al salir. Si ya está en marcha (`pnpm server`), lo reutiliza. No modifica `src/clients/web/`.
+  - `src/clients/electron/main.js` crea la ventana y carga el `index.html` de esta carpeta.
+  - `src/clients/electron/index.html` define selección, menú, edición y el popover de borrado.
+  - `src/clients/electron/styles.css` es la hoja copiada (paleta crema/teal).
+  - `src/clients/electron/app.js` concentra la lógica de pantalla, igual que el de navegador.
 - `src/clients/http/server.js` es el cliente HTTP con Express en `127.0.0.1:3001`. Solo acepta conexiones de este equipo y escribe esa dirección en la consola al arrancar. Un solo fichero con las rutas `GET /users`, `GET /users/:id`, `POST /users`, `PATCH /users/:id` y `DELETE /users/:id`. Llama a `src/logic/` directamente y un middleware de errores traduce la clase del error a su estado. Se arranca con `pnpm http`. El script `http` de `package.json` arranca antes `src/db/server.js` si nada escucha en `127.0.0.1:3000`, y lo para al salir. Si ya está en marcha (`pnpm server`), lo reutiliza.
-- `package.json` script `server` arranca el servidor de la base desde `first-app`. El script `web` abre la página en Brave. El script `http` arranca el cliente HTTP.
+- `package.json` script `server` arranca el servidor de la base desde `first-app`. El script `web` abre la página en Brave. El script `http` arranca el cliente HTTP. El script `electron` arranca el cliente de escritorio.
 - `scripts/jupyter.sh` prepara `.venv` si hace falta, instala `notebook==7.6.3` y arranca Jupyter en `src/clients/jupyter/`. Funciona en Mac, Linux y Windows (con `sh`). `package.json` lo invoca con `pnpm jupyter`.
 - `src/clients/jupyter/` es el cuaderno, uno por cada `.txt` de `src/clients/terminal/`. El bloque muestra ese texto: arranca `node --input-type=module` y, dentro, los `import` y la llamada quedan igual. El `console.log` se sustituye por la tabla. `cli-table3` y `@colors/colors` pintan esa tabla con colores y encabezados. Si la función falla, se ve ese mensaje. En esa carpeta no hay ficheros `.py` ni `requirements.txt`. Se abre con `pnpm jupyter` desde `first-app`.
 - `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada fichero.

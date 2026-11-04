@@ -18,10 +18,11 @@
    - Si el problema, el resultado esperado, el alcance y cómo comprobarlo están claros y son coherentes con el proyecto, créala y explica brevemente por qué.
    - Si quedan dudas o contradicciones, llama a `agents/help-me-to-think.md`. No repitas entrevistas resueltas salvo cambios o decisiones nuevas.
 
+   Si la issue ya está escrita y el trabajo siguiente hace cambios, el momento es Empezar.
    Para cualquier otro paso, pide los datos que falten antes de continuar.
 3. **Procesamiento:** Llama y continúa. No espera un sí.
    - Pensar la tarea: `agents/help-me-to-think.md`. Si no puedes reanudar el mismo subagente, pásale el historial completo de preguntas y respuestas en cada llamada.
-   - Dejarla escrita: `agents/create-issue.md`.
+   - Dejarla escrita: `agents/create-issue.md`. Si a continuación se van a hacer cambios, el momento siguiente es Empezar.
    - Empezar (con la issue ya escrita; prepara la rama nueva desde `staging` antes de hacer cambios), en este orden:
      1. `skills/pull-changes`, que adelanta `staging`.
      2. `agents/create-branch.md` con la skill `create-branch-from-staging`.
