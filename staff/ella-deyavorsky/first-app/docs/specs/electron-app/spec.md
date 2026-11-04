@@ -18,7 +18,7 @@ There is no password, as in #807. Anyone who can open the app can see and change
 - The window has its own page, with its own `index.html`, `app.js` and `style.css`. It deliberately does not reuse the page of `src/clients/web/`.
 - The page uses the functions of `src/logic/`. The app has no rules of its own.
 - The users are the real ones, the same that the terminal, the notebooks and the browser page use. A change made in the window is seen in the others, and the other way round.
-- The window offers the same actions as the browser page: choose a user, edit name or email, delete (with confirmation).
+- The window offers list, choose a user, edit name or email, and delete (with confirmation). It has no form to create users; that stays in the other clients.
 - The command works on macOS, Windows and Linux.
 
 ## Example
@@ -28,6 +28,7 @@ A student runs `pnpm start` in one terminal and `pnpm electron` in another. A wi
 ## What goes wrong
 
 - Empty name, email that is not valid or already used: the message of the app is shown and nothing is saved.
+- The window sends something that is not text or a whole number: "The request is not valid." is shown and nothing is saved.
 - The database program is not running: the window shows the message of the app for that action ("The database failed.") and does not stay blank or crash.
 
 ## Out of scope
