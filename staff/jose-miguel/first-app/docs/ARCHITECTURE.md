@@ -20,6 +20,7 @@
 - `src/clients/jupyter/` es un notebook por cada `.txt` de `src/clients/terminal/`. Se abre con `pnpm jupyter` desde `first-app`.
 - `src/clients/browser/` llama a `src/logic/`. `index.html` se abre en el navegador con `pnpm browser`; no se sirve desde Node.
 - `src/clients/http/app.js` expone CRUD de usuarios con Express en `http://127.0.0.1:3001`; importa `src/logic/` y no repite reglas. Requiere `pnpm server` en el puerto 3000.
+- `src/clients/electron/` llama a `src/logic/` desde su ventana. Se abre con `pnpm electron` y requiere `pnpm server` en paralelo. No reutiliza el cliente browser.
 - `scripts/start-jupyter.js` prepara el `.venv` local e inicia Notebook sobre `src/clients/jupyter/`.
 - `scripts/start-browser.js` abre el cliente browser con `file://` y permiso para módulos ES.
 - `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca. Los cambios de proyecto van en rama nueva y pull request en draft; antes de crear la issue comprueba que la tarea está clara (si no, `help-me-to-think`); si la issue ya está escrita y el trabajo implica cambios, el momento es Empezar; al empezar, la rama sale de `staging` antes de tocar código.
