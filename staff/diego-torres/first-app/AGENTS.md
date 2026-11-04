@@ -28,7 +28,7 @@ La implementación empieza cuando esa persona lo pide. Ejecuta `tasks.md` y no i
 
 El código vive en `src/`: `src/db/`, `src/queries/`, `src/logic/` y `src/clients/`. Qué sabe cada carpeta está en `docs/ARCHITECTURE.md`. La base y el servidor SQL están en `docs/DATABASE.md`.
 
-Ningún cliente funciona sin el servidor en marcha. Antes de usar la web, Electron, la extensión de Chrome, la terminal o Jupyter, se lanza `pnpm start` en otra terminal.
+Ningún cliente funciona sin el servidor en marcha. Antes de usar la web, Electron, las extensiones de Chrome y de VS Code, la terminal o Jupyter, se lanza `pnpm start` en otra terminal.
 
 ## Paquetes
 
@@ -60,7 +60,9 @@ Desde esta carpeta, Jupyter se abre con `pnpm run jupyter`, en Linux y en Window
 
 `pnpm chrome` lanza `src/clients/chrome/server.js`, la API de la extensión en `http://127.0.0.1:3002`. Se lanza en otra terminal, con `pnpm start` ya en marcha. La extensión se carga a mano: en `chrome://extensions`, se activa el modo de desarrollador, se pulsa «Cargar extensión sin empaquetar» y se elige `src/clients/chrome/`.
 
-`pnpm format` pasa Prettier por los `.js` de `src/db/`, `src/queries/` y `src/logic/`, y por los `.js`, `.html` y `.css` de `src/clients/web/`, `src/clients/electron/` y `src/clients/chrome/`, con el formato estándar y sin configuración propia. `pnpm lint` pasa ESLint con las reglas recomendadas, según `eslint.config.js`.
+`pnpm vscode` lanza `scripts/vscode.js`, que abre una ventana de desarrollo del editor con la extensión de `src/clients/vscode/`. La vista Usuarios está en la barra lateral del explorador. Se lanza con `pnpm start` ya en marcha.
+
+`pnpm format` pasa Prettier por los `.js` de `src/db/`, `src/queries/` y `src/logic/`, y por los `.js`, `.html` y `.css` de `src/clients/web/`, `src/clients/electron/`, `src/clients/chrome/` y `src/clients/vscode/`, con el formato estándar y sin configuración propia. `pnpm lint` pasa ESLint con las reglas recomendadas, según `eslint.config.js`.
 
 La dependencia `openai` es la del clasificador. `@colors/colors` y `cli-table3` son las tablas del cliente Jupyter. `fastify` es la API de la extensión de Chrome. Se instalan con `pnpm install`.
 
