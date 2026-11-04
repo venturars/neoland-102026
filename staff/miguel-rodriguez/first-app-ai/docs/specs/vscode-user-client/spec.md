@@ -1,6 +1,7 @@
 # Cliente de usuarios en VS Code
 
 Issue: #904 · PR: #906, hacia staging.
+Spec aprobada por Miguel el 2026-11-04.
 
 ## Propósito
 
