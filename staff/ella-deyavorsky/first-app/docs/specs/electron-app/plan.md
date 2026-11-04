@@ -67,9 +67,7 @@ Run `pnpm start`, then `pnpm electron`: a window opens with the real users. Edit
 2. The page uses a classic script, as `clients/web/`, with `/* global document, window, confirm */` and no change in `eslint.config.js`.
 3. No create form and no find-by-id handler: the page only needs list, edit and delete. A create form can be a later feature.
 
-## Open questions (for the person who reviews)
+## Answers from the review
 
-1. The command for the database program is `pnpm start` in `package.json`; there is no `pnpm server`. Use `pnpm start`, or add a `server` script as an alias?
-2. Is it fine that `logic/` runs in the main process (decision 1)? Running it in the page would need a change in `queries/users.js` and a CORS header in `db/server.js`.
-
-`tasks.md` is not written until these are answered.
+1. The command for the database program stays `pnpm start`. No `server` alias is added.
+2. `logic/` runs in the main process.
