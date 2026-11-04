@@ -52,9 +52,13 @@ Abrir el HTML con doble clic en una sesión normal puede bloquear los módulos.
 
 ## Abrir el cliente de VS Code
 
-Con VS Code 1.142.0 o posterior y el servicio de datos iniciado con `pnpm server`, prepara la tabla como se indica arriba. Abre `src/clients/vscode/` como carpeta en VS Code y pulsa **F5** para abrir el Extension Development Host. En esa ventana, ejecuta el comando **First App: Open Users** desde la paleta de comandos. El panel permite listar, crear, buscar, editar y borrar contactos en la misma base local.
+Para abrir o volver a abrir el cliente:
 
-Para experimentar, utiliza una copia del proyecto sin su base y datos ficticios. Cerrar la ventana de desarrollo no detiene el servicio de datos.
+1. Desde `first-app-ai`, inicia `pnpm server` si el servicio no está en marcha. Prepara la tabla como se indica arriba si todavía no existe; repetir la preparación conserva los contactos.
+2. En VS Code 1.142.0 o posterior, abre `src/clients/vscode/` como carpeta y pulsa **F5**. Se abrirá una ventana **Extension Development Host**.
+3. En esa ventana, abre la paleta de comandos con **Cmd+Shift+P** (macOS) o **Ctrl+Shift+P** (Windows/Linux), busca **First App: Open Users** y pulsa Enter.
+
+Si cierras solo el panel, ejecuta de nuevo el comando en la ventana de desarrollo. Si cierras esa ventana o VS Code, repite los pasos anteriores. Cerrar la ventana de desarrollo no detiene el servicio; para detenerlo, pulsa **Ctrl+C** en su terminal. El panel utiliza la misma base local que los otros clientes. Para experimentar, utiliza una copia del proyecto sin su base y datos ficticios.
 
 ## Abrir Jupyter
 
