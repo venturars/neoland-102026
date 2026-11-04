@@ -69,7 +69,8 @@ sentencias. `queries/races/` contiene treinta y un textos para treinta y dos
 llamadas: cierre y limpieza reutilizan la revocación del secreto de entrada.
 Las seis consultas del catálogo permanecen en `queries/roster/`.
 
-Los archivos conservan el texto y los parámetros anteriores. La inicialización
+Los archivos conservan los tokens y parámetros anteriores; tres textos pierden
+únicamente espacio terminal heredado. La inicialización
 sigue usando executescript; las operaciones de carrera no hacen commits internos.
 Se conservan las fronteras actuales: los casos de uso coordinan las transacciones
 de carrera y sqlite.py mantiene sus contextos with connection. La gestión de

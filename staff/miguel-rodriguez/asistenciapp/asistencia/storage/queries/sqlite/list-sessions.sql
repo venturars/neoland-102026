@@ -3,4 +3,3 @@
         FROM sessions s LEFT JOIN checkins c ON c.session_id = s.id
         GROUP BY s.id
         ORDER BY s.opened_at DESC
-        

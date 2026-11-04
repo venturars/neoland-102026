@@ -71,4 +71,3 @@ CREATE TABLE IF NOT EXISTS race_operations (
   CHECK((state='reserved' AND result_kind IS NULL AND result_status IS NULL AND checkin_id IS NULL)
      OR (state='completed' AND result_kind IS NOT NULL AND result_status IS NOT NULL))
 );
-
