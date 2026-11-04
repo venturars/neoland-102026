@@ -32,4 +32,21 @@ export default [
       },
     },
   },
+  {
+    files: ["src/clients/electron/main.js"],
+    languageOptions: {
+      globals: {
+        process: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/electron/app.js"],
+    languageOptions: {
+      globals: {
+        document: "readonly",
+        fetch: "readonly",
+      },
+    },
+  },
 ];
