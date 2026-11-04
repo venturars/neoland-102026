@@ -105,3 +105,5 @@ Tras instalar, el `pnpm-lock.yaml` se compara con esta tabla. Si una versión no
 ## Decisión
 
 El 2026-11-04, con la comprobación sin hacer y sabiendo que `AGENTS.md` la pide antes de aceptar el plan, Diego aceptó la spec y el plan y decidió seguir sin Socket.
+
+Después de instalar apareció `undici@7.30.1`, que no estaba en la primera tabla. Diego también lo aceptó sin comprobarlo con Socket.
