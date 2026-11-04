@@ -3,7 +3,7 @@ import js from "@eslint/js";
 
 export default defineConfig([
   {
-    ignores: [".venv/**", "node_modules/**"],
+    ignores: [".venv/**", "node_modules/**", "src/clients/vscode/extension.js"],
   },
   {
     files: ["**/*.js"],
@@ -76,6 +76,18 @@ export default defineConfig([
       globals: {
         document: "readonly",
         fetch: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/vscode/panel.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        document: "readonly",
+        acquireVsCodeApi: "readonly",
+        window: "readonly",
       },
     },
   },
