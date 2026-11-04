@@ -2,7 +2,7 @@
 
 - `eslint.config.js` aplica las reglas recomendadas de ESLint al JavaScript e ignora `.venv`, `node_modules` y los cuadernos Jupyter. Declara `console` como global solo para `src/clients/http/`. Declara `process` como global para `src/clients/electron/main.js` y `document` y `fetch` para `src/clients/electron/app.js`.
 - `agents/git-workflow-agent.md` reconoce el momento, llama al subagente o a la skill que toca y confirma cada paso antes del siguiente. Si la issue ya está escrita y el trabajo siguiente hace cambios, el momento es Empezar.
-- `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la tarea se puede dejar escrita.
+- `agents/help-me-to-think.md` hace las preguntas que hagan falta hasta que la tarea se pueda dejar escrita; el orquestador espera al alumno entre rondas.
 - `agents/create-issue.md` crea la issue asignada a quien está autenticado; el cuerpo sale de la plantilla del tipo en `templates/issues/`.
 - `agents/create-branch.md` crea la rama de trabajo; el tipo y el nombre de rama siguen la plantilla del tipo.
 - `agents/create-commit.md` hace un commit pequeño con ficheros nombrados.
