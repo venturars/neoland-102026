@@ -61,3 +61,27 @@ Implementan [plan.md](plan.md), que cumple [spec.md](spec.md). Se ejecutan **en 
 - [x] `TREE.md`: `server.js` del navegador solo sirve ficheros.
 - [x] `AGENTS.md`: `pnpm db` antes de `pnpm browser`.
 - [x] La descripción de #769 incluye #820 (#819).
+
+## T11. Un solo servidor (plan 1.3)
+- [ ] Borrar `src/clients/browser/server.js`.
+- [ ] Mover `index.html`, `styles.css` y `app.js` de `public/` a `src/clients/browser/` con `git mv`.
+- [ ] `index.html`: enlazar `./styles.css` y `./app.js`.
+- [ ] `app.js`: importar de `../../logic/`.
+- [ ] `package.json`: el script `browser` abre Chrome como dice el plan.
+- [ ] `eslint.config.js`: el bloque del navegador para `src/clients/browser/**/*.js`.
+- [ ] `src/db/server.js`: `BROWSER_ORIGIN = "file://"`.
+
+## T12. Comprobación del cambio 1.3
+- [ ] Guardar la salida de `list-users.txt` antes de empezar.
+- [ ] `pnpm browser` abre Chrome en el perfil aparte con la lista de usuarios.
+- [ ] Las tres pantallas en Chrome desde `file://`, con un usuario temporal `tmp-768-5`: elegir, Notas desactivada, volver, modificar, los errores de la spec y la ventana de borrado cancelada y confirmada. Se prueba con Chrome sin ventana (`--headless`) y un script, y después a mano.
+- [ ] Con la base parada, la pantalla 1 enseña `Error: Database is not running. Start it with pnpm db.`
+- [ ] Con `curl` a la base: `Origin: file://` da el permiso; `Origin: null` y `Origin: http://127.0.0.1:3000` dan 403; la terminal sigue funcionando.
+- [ ] No queda ningún `tmp-768-*` y `list-users.txt` da lo mismo que al empezar.
+- [ ] `pnpm format` y `pnpm lint` sin errores.
+
+## T13. Guías y PR
+- [ ] `ARCHITECTURE.md`: la sección Navegador sin servidor, con `pnpm browser` abriendo Chrome, y el permiso `file://` del servidor de la base.
+- [ ] `TREE.md`: `src/clients/browser/` sin `server.js` ni `public/`.
+- [ ] `AGENTS.md`: `pnpm browser` abre Chrome; ya no hay nada que parar con Ctrl+C.
+- [ ] La descripción de #769: un solo servidor y Chrome.

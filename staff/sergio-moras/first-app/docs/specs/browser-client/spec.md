@@ -6,7 +6,7 @@ Issue: #768.
 Que quien usa first-app gestione su usuario desde el navegador, sin pegar comandos en la terminal. Las pantallas usan directamente las operaciones de usuarios que ya existen, las de `src/logic/`: las reglas y los mensajes de error no cambian.
 
 ## Cómo se usa
-Desde `first-app/` se arranca la base (`pnpm db`, de #819) y, en otra terminal, el cliente. Se abre en el navegador la dirección que indica el cliente. Hay tres pantallas, con los textos en español.
+Desde `first-app/` se arranca la base (`pnpm db`, de #819). En otra terminal, `pnpm browser` abre la app en Chrome, en una ventana con un perfil aparte. No hay que escribir ninguna dirección. Hay tres pantallas, con los textos en español.
 
 ### 1. Elegir quién soy
 - Sale la lista de usuarios guardados, de menor a mayor id, con su id, su nombre y su email.
@@ -50,5 +50,7 @@ Guardados: Ana (`ana@mail.com`, id 2) y Pedro (`pedro@mail.com`, id 18).
 - Crear usuarios, buscar por email o por nombre, y clasificar por género desde estas pantallas.
 - La pantalla de notas.
 - Frameworks o librerías de frontend.
+- Otros navegadores que no sean Chrome, y abrirla en el perfil de Chrome de siempre.
+- Servir la página: se abre desde el disco.
 - Una API propia del navegador: no hay rutas de datos, el navegador llama a `logic/`.
 - Cambiar `src/logic/`, `src/queries/`, la tabla o los clientes de terminal y Jupyter. De `src/db/` solo cambia el permiso del servidor de la base para el navegador.
