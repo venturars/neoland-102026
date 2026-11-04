@@ -2,7 +2,7 @@ Issue: #1011
 
 # Plan — Sincronizar el flujo de Git con el template
 
-Estado: borrador para revisión, con una pregunta abierta al final. `tasks.md` se escribe cuando esté resuelta.
+Estado: implementación autorizada por la persona responsable. La pregunta sobre las pull requests existentes se resolvió con la opción recomendada.
 
 ## Fuente
 
@@ -25,10 +25,10 @@ Es una actualización de las herramientas e instrucciones de trabajo. No cambia 
 | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `agents/git-workflow-agent.md`           | Se copia del template: elección del momento, decisión sobre la issue, comprobación de pasos y `create-pr` con una skill. |
 | `agents/help-me-to-think.md`             | Se copia del template: varias preguntas por ronda.                                                                       |
-| `agents/create-pr.md`                    | Se copia del template, salvo lo que decida la pregunta abierta.                                                          |
+| `agents/create-pr.md`                    | Se copia del template, conservando la regla local.                                                                       |
 | `skills/grill-me/SKILL.md`               | Se copia del template: varias preguntas por ronda.                                                                       |
 | `skills/grill-with-docs/SKILL.md`        | Se copia del template: varias preguntas por ronda.                                                                       |
-| `skills/create-draft/SKILL.md`           | Se copia del template, salvo lo que decida la pregunta abierta.                                                          |
+| `skills/create-draft/SKILL.md`           | Se copia del template.                                                                                                   |
 | `skills/commit-changes/SKILL.md`         | Se añade la regla del mensaje técnico y se conserva la ruta local.                                                       |
 | `skills/create-pr-base-staging/SKILL.md` | Se copia del template y el comando apunta a la ruta local de `tools/`.                                                   |
 | `tools/create-pr-base-staging.sh`        | Archivo nuevo, copiado del template, con permiso de ejecución.                                                           |
@@ -64,13 +64,21 @@ No se añaden ni se cambian paquetes, así que no hace falta revisión con Socke
 6. Aplicar Prettier solo a los archivos de este pedido, ejecutar `pnpm lint` y `git diff --check`.
 7. Revisar que el diff final solo contiene los archivos de este plan.
 
-## Pregunta abierta
+## Decisión sobre una pull request que ya existe
 
-El template y las instrucciones locales se contradicen sobre una pull request que ya existe:
+El template permitía devolver a draft una pull request en revisión sin que nadie lo pidiera. `AGENTS.md` solo saca una pull request de draft cuando la persona pide revisión, así que se conserva la protección local:
 
-- **Local** (`agents/create-pr.md`): conserva su estado de revisión y no vuelve a draft sin autorización.
-- **Template** (`agents/create-pr.md`): actualiza su estado con `create-draft`. Una pull request en revisión puede volver a draft sin que nadie lo pida.
+- `agents/create-pr.md` mantiene la regla local: conserva el estado de revisión y no vuelve a draft sin autorización.
+- `skills/create-pr-base-staging/SKILL.md` remite a esa regla en lugar de repetirla.
+- `skills/create-draft/SKILL.md` se copia del template, porque solo se usa cuando ese cambio está autorizado.
 
-`skills/create-draft/SKILL.md` cambia de redacción en la misma línea.
+Estas dos diferencias quedan como adaptaciones locales aprobadas.
 
-¿Se adopta el template o se conserva la protección local? Se recomienda copiar el template en todo lo demás y conservar la frase local en `agents/create-pr.md`, porque `AGENTS.md` solo saca una pull request de draft cuando la persona pide revisión, y evita que una ya revisada vuelva atrás sin avisar. Si se conserva, esa frase queda como adaptación local aprobada.
+## Resultados de la comprobación
+
+- Al normalizar el prefijo local de `tools/`, `agents/`, `skills/`, `tools/`, `templates/` y `MCPS/github-mcp-server/` coinciden con el template, salvo las adaptaciones aprobadas en `agents/create-pr.md` y `skills/create-pr-base-staging/SKILL.md`.
+- Los ocho scripts pasan `bash -n` y tienen permiso de ejecución. `tools/check-status.sh` termina correctamente desde la raíz del repositorio.
+- `tools/create-pr-base-staging.sh` rechaza la falta de argumentos y un cuerpo inexistente. No se creó ninguna pull request de prueba, así que su caso correcto queda sin ejecutar.
+- No quedan referencias a la ruta genérica del template ni a las entrevistas de una sola pregunta en las instrucciones y guías vigentes.
+- Prettier se aplicó solo a los archivos de este pedido. `pnpm lint` y `git diff --check` terminan sin errores.
+- Se revisaron `AGENTS.md` y `docs/CONSTITUTION.md`: no necesitan cambios, porque el flujo nuevo es compatible con el apartado 3 y no cambian el propósito, el alcance ni los principios.
