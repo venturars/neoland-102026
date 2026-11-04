@@ -123,4 +123,25 @@ test("a late initial refresh cannot overwrite a newer search", async () => {
   await oldSearch;
   assert.equal(element("status").textContent, "");
   assert.equal(element("users").children.length, 0);
+
+  element("name").value = "New User";
+  element("email").value = "new@example.com";
+  const create = element("user-form").handlers.submit({ preventDefault() {} });
+  const createRequest = messages.at(-1);
+  assert.equal(createRequest.action, "create");
+  receive({ data: { request: createRequest.request, value: { id: 2 } } });
+  await new Promise((resolve) => setImmediate(resolve));
+  const listRequest = messages.at(-1);
+  assert.equal(listRequest.action, "list");
+  receive({ data: { request: listRequest.request, error: "offline" } });
+  await create;
+  assert.equal(element("status").textContent, "User created. Could not refresh users: offline");
+  assert.equal(messages.filter((message) => message.action === "create").length, 1);
+  const retry = element("refresh").handlers.click();
+  const retryRequest = messages.at(-1);
+  assert.equal(retryRequest.action, "list");
+  receive({ data: { request: retryRequest.request, value: [{ id: 2, name: "New User", email: "new@example.com" }] } });
+  await retry;
+  assert.equal(element("users").children[0].children[0].textContent, "2: New User — new@example.com");
+  assert.equal(messages.filter((message) => message.action === "create").length, 1);
 });
