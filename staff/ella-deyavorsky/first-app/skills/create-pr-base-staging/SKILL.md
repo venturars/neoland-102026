@@ -1,17 +1,19 @@
 ### Herramienta: CREATE_PR_BASE_STAGING
 
-- **Descripción**: Úsala desde el agente `create-pr` para abrir la pull request con base `staging`. No la uses para enlazar la issue: eso es `link-pr-to-issue`. No la uses para dejarla en draft: eso es `create-draft`.
-- **MCP**: El servidor remoto descrito en `MCPS/github-mcp-server/mcp.txt`.
+- **Descripción**: Úsala desde el agente `create-pr` para abrir la pull request con base `staging`, directamente en draft y asignada al usuario autenticado en una misma invocación.
+- **Comando de Terminal**: `staff/ella-deyavorsky/first-app/tools/create-pr-base-staging.sh "[RAMA]" "[TITULO]" "[CUERPO]"`
 
-Fuente de la forma del cuerpo: [github-pr](https://www.skills.sh/gentleman-programming/gentleman-skills/github-pr), adaptada a esta plantilla. La base es `staging` y la descripción va en español.
+Ejecuta el comando desde la raíz del repositorio git. `[CUERPO]` es la ruta de un fichero temporal con la plantilla rellenada. Requiere GitHub CLI autenticado: esa cuenta será el autor de la PR y `--assignee "@me"` la persona asignada.
+
+Fuente de la forma del cuerpo: [github-pr](https://www.skills.sh/gentleman-programming/gentleman-skills/github-pr), adaptada a esta plantilla.
 
 #### Especificación de Argumentos
 
-1. **Base** _(Obligatorio)_: `staging`.
-2. **Cabeza** _(Obligatorio)_: La rama que acaba de subirse.
-3. **Título** _(Obligatorio)_: El título de la issue, en inglés.
-4. **Cuerpo** _(Obligatorio)_: Español, rellenando la plantilla del tipo en `templates/pull-request/<type>-pull-request.md`. La sección Issue se deja vacía. Si el tipo no tiene plantilla, usa la más cercana.
+1. **RAMA** _(Obligatorio)_: La rama subida, que se pasa como `--head`.
+2. **TITULO** _(Obligatorio)_: El título de la issue, en inglés.
+3. **CUERPO** _(Obligatorio)_: Fichero con la descripción en español, rellenando la plantilla del tipo en `templates/pull-request/<type>-pull-request.md`. Deja la sección Issue vacía. Si el tipo no tiene plantilla, usa la más cercana.
 
 #### Reglas de Invocación Críticas
 
-- **Procesamiento de respuestas**: Si ya hay una pull request de esa rama hacia `staging`, actualiza esa. No abras otra. Devuelve la URL. Si el MCP falla, comunica el error y no inventes el enlace.
+- **PR existente**: Comprueba si ya hay una PR de esa rama hacia `staging`. Reutilízala y actualiza el cuerpo conservando el enlace con la issue; usa `assign-author` y `create-draft` cuando haga falta.
+- **Procesamiento de respuestas**: Si el código de salida es 0, devuelve la URL y confirma draft y asignación. Si falla, comunica el error.
