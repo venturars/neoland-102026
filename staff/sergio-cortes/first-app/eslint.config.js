@@ -16,6 +16,14 @@ export default [
     },
   },
   {
+    files: ["src/clients/http/**/*.js"],
+    languageOptions: {
+      globals: {
+        console: "readonly",
+      },
+    },
+  },
+  {
     files: ["src/clients/web/**/*.js"],
     languageOptions: {
       globals: {
