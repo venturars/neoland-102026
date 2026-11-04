@@ -8,4 +8,4 @@ Issue: #858 · Plan: [plan.md](plan.md)
 - [x] **T04** — Actualizar skills con rutas monorepo (CA-03) y `create-pr-base-staging`.
 - [x] **T05** — Actualizar bullet de orquestador en `docs/ARCHITECTURE.md` y `docs/TREE.md`.
 - [x] **T06** — Comprobar diffs; `pnpm format` y `pnpm lint` (CA-04…CA-06).
-- [ ] **T07** — PR draft contra `staging` enlazada a #858.
+- [x] **T07** — PR draft contra `staging` enlazada a #858.
