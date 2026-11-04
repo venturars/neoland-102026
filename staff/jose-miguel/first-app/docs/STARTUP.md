@@ -27,6 +27,7 @@ Es el mismo motivo para browser y para HTTP: dos procesos Node distintos (puerto
 | Browser | `pnpm browser` | `file://` + módulos ES. Ver [`src/clients/browser/README.md`](../src/clients/browser/README.md). |
 | HTTP (Express) | `pnpm http` | API en `http://127.0.0.1:3001`. Ver [`src/clients/http/README.md`](../src/clients/http/README.md). |
 | Electron | `pnpm electron` | Ventana de escritorio. Ver [`src/clients/electron/README.md`](../src/clients/electron/README.md). |
+| Chrome | `pnpm chrome` + extensión cargada | API en `http://127.0.0.1:3002` y popup MV3. Ver [`src/clients/chrome/README.md`](../src/clients/chrome/README.md). |
 | Terminal / Jupyter | Pegar `.txt` o ejecutar notebook | Misma regla: servidor SQL antes. Directorio actual en `first-app`. |
 
 ## Pasos comunes

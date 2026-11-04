@@ -44,4 +44,26 @@ export default defineConfig([
       },
     },
   },
+  {
+    files: ["src/clients/chrome/server.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        console: "readonly",
+        URL: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/chrome/popup.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        document: "readonly",
+        fetch: "readonly",
+      },
+    },
+  },
 ]);
