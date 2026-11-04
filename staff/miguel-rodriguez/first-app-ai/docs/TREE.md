@@ -34,6 +34,10 @@ first-app-ai/
 │   ├── STYLE.md
 │   ├── TREE.md
 │   └── specs/
+│       ├── vanilla-web-client/
+│       │   ├── plan.md
+│       │   ├── spec.md
+│       │   └── tasks.md
 │       ├── align-code-with-guides/
 │       │   ├── plan.md
 │       │   ├── spec.md
@@ -87,7 +91,8 @@ first-app-ai/
 ├── pnpm-lock.yaml
 ├── requirements-jupyter.txt
 ├── scripts/
-│   └── jupyter.js
+│   ├── jupyter.js
+│   └── web.js
 ├── skills/
 │   ├── assign-author/
 │   │   └── SKILL.md
@@ -119,6 +124,10 @@ first-app-ai/
 │       └── SKILL.md
 ├── src/
 │   ├── clients/
+│   │   ├── web/
+│   │   │   ├── index.html
+│   │   │   ├── main.js
+│   │   │   └── styles.css
 │   │   ├── jupyter/
 │   │   │   ├── 01-create-users-table.ipynb
 │   │   │   ├── 02-create-user.ipynb
@@ -180,7 +189,8 @@ first-app-ai/
 │       ├── refactor-pull-request.md
 │       └── test-pull-request.md
 ├── tests/
-│   └── serve-data-through-node.test.js
+│   ├── serve-data-through-node.test.js
+│   └── web-client.test.js
 └── tools/
     ├── check-status.sh
     ├── commit-changes.sh

@@ -29,4 +29,8 @@ export default [
     files: ["src/queries/users.js", "tests/**/*.js"],
     languageOptions: { globals: { fetch: "readonly" } },
   },
+  {
+    files: ["src/clients/web/**/*.js"],
+    languageOptions: { globals: { document: "readonly", window: "readonly" } },
+  },
 ];

@@ -8,8 +8,9 @@ this connection does not create the users table.
 
 `src/queries/queries/*.js` export SQL text. `src/queries/users.js` imports it and
 sends `{ method, sql, params }` to `POST http://127.0.0.1:3000/execute` using native
-fetch. The server executes exec/get/all/run with bound parameters. It does not
-serve a web page. This unauthenticated service is for local use only.
+fetch. The server executes exec/get/all/run with bound parameters. It accepts the CORS
+preflight needed by the file-based web client; HTML, CSS and JavaScript load from
+disk through `pnpm web`. This unauthenticated service is for local use only.
 
 Query functions are async; callers await their results. A missing single row
 travels as null and is returned by queries as undefined. Lists remain arrays.

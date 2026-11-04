@@ -67,7 +67,10 @@ failure handling. See [DATABASE.md](DATABASE.md) for the storage and query detai
 Start the local data service with `pnpm server` in a separate terminal. Run
 examples from the project directory using a Node version supporting `node:sqlite`. Run the initialization snippet separately before business operations; creation must precede examples that need an existing contact. ID-lookup, update, and delete examples use a sample ID that the learner must replace with an existing ID. Use a disposable contact for permanent deletion.
 
-Each example starts a separate Node process. Clients import and call the relevant operation and use `console.log`; initialization awaits `createUsersTable()` and prints the result of `listTables()`, including `users`, deletion prints `undefined`, and other examples print returned data. The classifier client awaits its async result and requires the local AI prerequisites documented in its example for nonempty data. No interactive application or general-purpose CLI is implemented.
+Each example starts a separate Node process. Clients import and call the relevant operation and use `console.log`; initialization awaits `createUsersTable()` and prints the result of `listTables()`, including `users`, deletion prints `undefined`, and other examples print returned data. The classifier client awaits its async result and requires the local AI prerequisites documented in its example for nonempty data. A vanilla web client calls the same asynchronous operations for selection, editing
+and deletion. It confirms deletion by asking for the saved email; that is a client
+precaution, not an additional business-operation parameter or authentication.
+No general-purpose CLI is implemented.
 
 ## Dependencies and package management
 
