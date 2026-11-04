@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "first-app REST — SQLite ficticio",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
