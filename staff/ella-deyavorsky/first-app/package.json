@@ -8,7 +8,7 @@
     "jupyter": "sh scripts/jupyter.sh",
     "electron": "electron src/clients/electron/main.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/web/**/*.js\" \"src/clients/electron/**/*.js\" \"src/clients/electron/**/*.cjs\"",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/web/**/*.js\" \"src/clients/electron/**/*.js\"",
     "lint": "eslint ."
   },
   "keywords": [],
