@@ -63,6 +63,7 @@ export default [
       globals: {
         document: "readonly",
         fetch: "readonly",
+        URLSearchParams: "readonly",
       },
     },
   },

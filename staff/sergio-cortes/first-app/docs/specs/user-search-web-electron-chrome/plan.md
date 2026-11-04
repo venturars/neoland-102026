@@ -1,6 +1,6 @@
 # Plan: búsqueda en web, Electron y Chrome
 
-Issue: #1029 · PR: #1030. Parte de la [spec](spec.md) pendiente de aprobación.
+Issue: #1029 · PR: #1030. Parte de la [spec](spec.md) aprobada.
 
 ## Objetivo
 
