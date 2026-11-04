@@ -1,8 +1,8 @@
 // Pantallas del cliente de navegador: enseña una cada vez y llama a las funciones de logic/.
 
-import { listUsers } from "../../../logic/list-users.js";
-import { updateUser } from "../../../logic/update-user.js";
-import { deleteUser } from "../../../logic/delete-user.js";
+import { listUsers } from "../../logic/list-users.js";
+import { updateUser } from "../../logic/update-user.js";
+import { deleteUser } from "../../logic/delete-user.js";
 
 const SCREEN_IDS = ["select-screen", "options-screen", "edit-screen"];
 

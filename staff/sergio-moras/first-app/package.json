@@ -5,7 +5,7 @@
   "scripts": {
     "format": "prettier --write \"src/logic/**/*.js\" \"src/queries/**/*.js\" \"src/db/**/*.js\" \"src/clients/browser/**/*.{js,html,css}\" eslint.config.js",
     "lint": "eslint .",
-    "browser": "node --no-warnings src/clients/browser/server.js",
+    "browser": "start \"\" chrome --user-data-dir=\"%TEMP%\\first-app-chrome\" --allow-file-access-from-files --no-first-run --no-default-browser-check \"%CD%\\src\\clients\\browser\\index.html\"",
     "db": "node --no-warnings src/db/server.js"
   },
   "dependencies": {

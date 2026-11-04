@@ -10,7 +10,7 @@ const HOST = "127.0.0.1";
 const PORT = 4000;
 
 // La única página que puede llamar a la base desde el navegador: el cliente de navegador.
-const BROWSER_ORIGIN = "http://127.0.0.1:3000";
+const BROWSER_ORIGIN = "file://";
 
 // Access-Control-Allow-Origin es el permiso para que el navegador deje leer la respuesta.
 function sendJson(response, status, data) {

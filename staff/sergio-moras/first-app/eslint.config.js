@@ -16,7 +16,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/clients/browser/public/**/*.js"],
+    files: ["src/clients/browser/**/*.js"],
     languageOptions: {
       globals: {
         document: "readonly",
