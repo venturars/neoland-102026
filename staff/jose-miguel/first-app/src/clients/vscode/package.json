@@ -1,0 +1,43 @@
+{
+  "name": "first-app-jm-users",
+  "displayName": "First App · usuarios",
+  "description": "Panel lateral de usuarios para first-app (desarrollo local).",
+  "version": "0.1.0",
+  "publisher": "first-app-local",
+  "license": "ISC",
+  "type": "module",
+  "main": "./extension.js",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "activationEvents": [
+    "onView:firstAppJm.usersPanel",
+    "onCommand:firstAppJm.openUsers"
+  ],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "firstAppJm",
+          "title": "First App",
+          "icon": "$(organization)"
+        }
+      ]
+    },
+    "views": {
+      "firstAppJm": [
+        {
+          "type": "webview",
+          "id": "firstAppJm.usersPanel",
+          "name": "Usuarios"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "firstAppJm.openUsers",
+        "title": "First App: abrir panel de usuarios"
+      }
+    ]
+  }
+}
