@@ -1,7 +1,7 @@
 // Modifica el nombre y/o el email de un usuario, identificado por su id.
 // Para dejar un campo sin cambiar, se pasa "" en su lugar.
 
-import { selectUserByEmail, updateUserById } from '../queries/users.js';
+import { selectUserByEmail, updateUserById } from "../queries/users.js";
 
 // Forma mínima de un email: algo@algo.algo, sin espacios.
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -20,7 +20,7 @@ export function updateUser(id, name, email) {
     throw new Error(`Invalid id: ${id}`);
   }
   if (!trimmedName && !normalizedEmail) {
-    throw new Error('Provide a new name, a new email, or both.');
+    throw new Error("Provide a new name, a new email, or both.");
   }
 
   if (normalizedEmail) {

@@ -56,6 +56,8 @@ El flujo es `terminal → logic → queries → db/connection.js`.
 ### 7. Verificación obligatoria
 Un cambio no está terminado hasta que se ha ejecutado con los comandos reales, incluidos los casos de error (datos que faltan, email inválido o repetido, id inexistente o no numérico).
 
+Al terminar una tarea se lanzan `pnpm format` y `pnpm lint`. `pnpm lint` no da errores.
+
 *Motivo:* un código que no se ha ejecutado no está probado.
 
 ### 8. Paquetes validados
@@ -70,4 +72,4 @@ Un cambio no está terminado hasta que se ha ejecutado con los comandos reales, 
 - Un agente que vea una regla desactualizada o incompleta lo propone, pero no la cambia por su cuenta.
 - Cada modificación actualiza la versión y la fecha del final.
 
-**Versión:** 1.4.0 | **Ratificada:** 2026-10-19 | **Última modificación:** 2026-10-31
+**Versión:** 1.5.0 | **Ratificada:** 2026-10-19 | **Última modificación:** 2026-10-31
