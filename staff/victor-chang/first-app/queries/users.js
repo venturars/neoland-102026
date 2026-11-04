@@ -1,8 +1,13 @@
 import { readFileSync } from "node:fs";
+import { URL } from "node:url";
 import { db } from "../db/connection.js";
 
 function sql(file) {
   return readFileSync(new URL(`./queries/${file}`, import.meta.url), "utf8");
+}
+
+export function createUsersTable() {
+  db.exec(readFileSync(new URL("../db/schema.sql", import.meta.url), "utf8"));
 }
 
 export function findAll() {
@@ -15,6 +20,10 @@ export function findById(id) {
 
 export function findByEmail(email) {
   return db.prepare(sql("find-user-by-email.sql")).get({ email });
+}
+
+export function findByName(name) {
+  return db.prepare(sql("find-users-by-name.sql")).all({ name });
 }
 
 export function insert(name, email) {
