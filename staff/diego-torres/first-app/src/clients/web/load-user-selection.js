@@ -1,6 +1,10 @@
+// Devuelve la lista de usuarios (viene de la capa de lógica).
 import { listUsers } from "../../logic/list-users.js";
+// Muestra mensajes en pantalla, normales o de error.
 import { showMessage } from "./show-message.js";
+// Muestra una pantalla y oculta las demás.
 import { showScreen } from "./show-screen.js";
+// Datos compartidos: usuario seleccionado y si la app está ocupada.
 import { STATE } from "./state.js";
 
 // Muestra la pantalla de selección y rellena el desplegable con los usuarios.

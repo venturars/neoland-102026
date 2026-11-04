@@ -1,7 +1,12 @@
+// Elimina el usuario seleccionado, si se confirma.
 import { deleteSelectedUser } from "./delete-selected-user.js";
+// Abre la pantalla de selección y carga los usuarios.
 import { loadUserSelection } from "./load-user-selection.js";
+// Cambia de pantalla según el botón pulsado.
 import { navigate } from "./navigate.js";
+// Guarda los datos del formulario de edición.
 import { saveUser } from "./save-user.js";
+// Busca el usuario elegido y abre su menú.
 import { selectUser } from "./select-user.js";
 
 // Conecta cada formulario y botón con la función que lo atiende.

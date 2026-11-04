@@ -1,6 +1,10 @@
+// Guarda los cambios de un usuario (viene de la capa de lógica).
 import { updateUser } from "../../logic/update-user.js";
+// Muestra mensajes en pantalla, normales o de error.
 import { showMessage } from "./show-message.js";
+// Abre el menú con los datos del usuario.
 import { showUserMenu } from "./show-user-menu.js";
+// Datos compartidos: usuario seleccionado y si la app está ocupada.
 import { STATE } from "./state.js";
 
 // Guarda los datos del formulario de edición y vuelve al menú del usuario.

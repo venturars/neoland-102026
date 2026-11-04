@@ -1,4 +1,6 @@
+// Muestra una pantalla y oculta las demás.
 import { showScreen } from "./show-screen.js";
+// Datos compartidos: usuario seleccionado y si la app está ocupada.
 import { STATE } from "./state.js";
 
 // Abre el menú con los datos del usuario seleccionado.

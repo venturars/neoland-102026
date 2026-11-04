@@ -1,6 +1,10 @@
+// Borra un usuario en la base (viene de la capa de lógica).
 import { deleteUser } from "../../logic/delete-user.js";
+// Abre la pantalla de selección y carga los usuarios.
 import { loadUserSelection } from "./load-user-selection.js";
+// Muestra mensajes en pantalla, normales o de error.
 import { showMessage } from "./show-message.js";
+// Datos compartidos: usuario seleccionado y si la app está ocupada.
 import { STATE } from "./state.js";
 
 // Elimina el usuario seleccionado, si se confirma, y vuelve a la selección.
