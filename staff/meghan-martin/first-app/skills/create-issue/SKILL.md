@@ -1,11 +1,14 @@
-# Crear la issue
+### Herramienta: CREATE_ISSUE
 
-Úsala solo para dejar la tarea escrita. No abras la rama ni la pull request.
+- **Descripción**: Úsala única y exclusivamente para dejar la tarea escrita en GitHub. No la uses para abrir la rama ni la pull request.
+- **MCP**: El servidor remoto descrito en `MCPS/github-mcp-server/mcp.txt`.
 
-El servidor es el de `MCPS/github-mcp-server/mcp.txt`.
+#### Especificación de Argumentos
 
-1. Título: inglés, menos de 72 caracteres.
-2. Cuerpo: español. Rellena `templates/issues/basic_issue.md`.
-3. Persona asignada: quien está autenticado.
+1. **Título** _(Obligatorio)_: El título. La forma está en la plantilla del tipo.
+2. **Cuerpo** _(Obligatorio)_: Español. Rellena la plantilla del tipo en `templates/issues/`, con «Qué hay que hacer» y «Cómo probarlo». Si ese fichero no está, usa `templates/issues/basic_issue.md`.
+3. **Persona asignada** _(Obligatorio)_: El usuario autenticado en el MCP.
 
-Quédate con el número, el título y la URL. Si falla, dilo y no inventes el número.
+#### Reglas de Invocación Críticas
+
+- **Procesamiento de respuestas**: Quédate con el número, el título y la URL. Si el MCP devuelve un error, comunícalo y no inventes el número.

@@ -1,7 +1,16 @@
-# Commit vacío al empezar
+### Herramienta: CREATE_EMPTY_COMMIT
 
-Úsala una vez, al empezar, después de abrir la rama.
+- **Descripción**: Úsala única y exclusivamente para el commit vacío de apertura, `chore: open #N`. No la uses para guardar ficheros.
+- **Comando de Terminal**: `staff/meghan-martin/first-app/tools/create-empty-commit.sh "[NUMERO]"`
 
-`staff/meghan-martin/first-app/tools/create-empty-commit.sh NUMERO`
+El comando se lanza desde el root del repositorio git (la carpeta que contenga el directorio .git).
 
-El mensaje queda `chore: open #N`. No incluye ficheros preparados. No se hace en `main` ni en `staging`. Si hay un hook de git de verdad, para.
+Fuente del mensaje: el tipo `chore` de [github-pr](https://www.skills.sh/gentleman-programming/gentleman-skills/github-pr).
+
+#### Especificación de Argumentos
+
+1. **NUMERO** _(Obligatorio)_: El número de la issue, solo dígitos. El script escribe el mensaje `chore: open #N`.
+
+#### Reglas de Invocación Críticas
+
+- **Procesamiento de respuestas**: Si el código de salida es 0, el commit vacío ya está en la rama y no incluye ficheros preparados. Si no es 0, comunica el texto de git y no cambies el mensaje.
