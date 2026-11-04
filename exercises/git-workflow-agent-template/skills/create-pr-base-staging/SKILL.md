@@ -16,4 +16,4 @@ Fuente de la forma del cuerpo: [github-pr](https://www.skills.sh/gentleman-progr
 #### Reglas de Invocación Críticas
 
 - **PR existente**: Comprueba si ya hay una PR de esa rama hacia `staging`. Reutilízala y actualiza el cuerpo conservando el enlace con la issue; usa `assign-author` y `create-draft` cuando haga falta.
-- **Procesamiento de respuestas**: Si el código de salida es 0, devuelve la URL y confirma draft y asignación. Si falla, comunica el error y comprueba si llegó a crear la PR antes de reintentar.
+- **Procesamiento de respuestas**: Si el código de salida es 0, devuelve la URL y confirma draft y asignación. Si falla, comunica el error.

@@ -16,7 +16,7 @@
 1. **Recepción:** Toma el título de la issue y la rama que acaba de subirse. No hace falta el número de issue.
 2. **Validación:** El cuerpo va en español y rellena la plantilla del tipo en `templates/pull-request/`. La sección Issue se deja vacía. Si el tipo no tiene plantilla, usa la más cercana.
 3. **Procesamiento:** Usa `skills/create-pr-base-staging/SKILL.md` para crearla con base `staging`, directamente en draft y asignada al usuario autenticado en una misma invocación.
-4. **Formateo:** Responde con el título, la base `staging`, el autor, la persona asignada, el estado draft y la URL.
+4. **Formateo:** Responde con el título, la base `staging`, el autor, la persona asignada y la URL.
 
 ## 4. Herramientas y APIs Asignadas
 
