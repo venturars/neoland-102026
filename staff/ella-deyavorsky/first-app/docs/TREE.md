@@ -37,6 +37,11 @@ first-app/
         popup.html
         popup.js
         server.js
+      nest/
+        app.module.js
+        errors.filter.js
+        main.js
+        users.controller.js
       terminal/
         api.txt
         chrome.txt
@@ -47,6 +52,7 @@ first-app/
         find-user-by-email.txt
         find-user-by-id.txt
         list-users.txt
+        nest.txt
         update-user.txt
       jupyter/
         README.md
