@@ -2,44 +2,48 @@
 
 El trabajo de git sigue [agents/git-workflow-agent.md](agents/git-workflow-agent.md) de esta carpeta.
 
-Proyecto didáctico: base de datos de usuarios en SQLite, con `node:sqlite`. Las reglas inamovibles están en [docs/CONSTITUTIONS.md](docs/CONSTITUTIONS.md); si algo de este archivo la contradice, manda la constitución.
+Proyecto didáctico: base de datos de usuarios en SQLite, con `node:sqlite` y Node 24 (mínimo 22.5). Las reglas inamovibles están en [docs/CONSTITUTIONS.md](docs/CONSTITUTIONS.md); si algo de este archivo la contradice, manda la constitución.
 
-## Stack
-- Node 24 (mínimo 22.5), módulos ESM (`import`/`export`), sin dependencias externas.
-- Base de datos: `db/users.sqlite`, tabla `users` (`id`, `name`, `email` único, `created_at`, `updated_at`).
-
-## Estructura
-```
-clients/terminal/   .txt con los comandos que el usuario ejecuta a mano
-logic/      una función por operación: valida datos y llama a queries
-queries/    todo el SQL (users.js); no valida nada
-db/         connection.js (conexión y creación de la tabla) y users.sqlite
-docs/       CONSTITUTIONS.md
-```
-Flujo: `terminal → logic → queries → db/connection.js`.
+Antes de tocar código se leen la constitución y la guía del tema:
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): capas, ficheros, operaciones y clientes.
+- [docs/TREE.md](docs/TREE.md): el árbol de ficheros.
+- [docs/DATABASE.md](docs/DATABASE.md): la tabla y el SQL.
+- [docs/ERRORS.md](docs/ERRORS.md): los mensajes de error.
+- [docs/STYLE.md](docs/STYLE.md): nombres, líneas y formato.
 
 ## Comandos
-Están en `clients/terminal/`, un `.txt` por operación. Se copian y se pegan en la terminal (PowerShell o Git Bash) desde la raíz del proyecto (`first-app/`). Cada uno importa la función de `logic/`, la llama con valores de ejemplo y muestra el resultado o `Error: <mensaje>`. Los valores se cambian editando el comando. El flag `--no-warnings` oculta el aviso experimental de `node:sqlite`.
+Antes de nada se arranca la base desde `first-app/`, en una terminal aparte. Se queda en marcha en `http://127.0.0.1:4000` y se para con Ctrl+C. Sin ella, todo da `Error: Database is not running. Start it with pnpm db.`
 ```
-clients/terminal/createUser.txt
-clients/terminal/findUserByEmail.txt
-clients/terminal/listUsers.txt
-clients/terminal/updateUser.txt       # '' = no cambiar ese campo
-clients/terminal/deleteUser.txt
-clients/terminal/classifyGender.txt   # necesita Ollama en marcha
+pnpm db
 ```
-Forma de cada comando: `-e "` en la primera línea, el código sangrado debajo y `"` sola en la última. Dentro del código, solo comillas simples y sin `${...}`.
 
-## Estilo
-- Nombres (archivos, funciones, variables) y mensajes de error/salida: en **inglés**.
-- Comentarios: en **español**, solo donde haya algo no evidente, más un comentario inicial por archivo con su responsabilidad.
-- Código explícito y legible para un junior: sin expresiones condensadas ni trucos de sintaxis.
-- **Plantilla a copiar** para cualquier operación nueva de `logic`: [logic/createUser.js](logic/createUser.js) (comentario inicial, función exportada, errores con `throw new Error`). `logic/` no lee `process.argv`, no imprime y no llama a `process.exit`: eso lo hace el `.txt` de `clients/terminal/`, con [clients/terminal/createUser.txt](clients/terminal/createUser.txt) como plantilla.
+Los comandos de la app están en `src/clients/terminal/`, un `.txt` por operación. Se copian y se pegan en la terminal (PowerShell o Git Bash) desde la raíz del proyecto (`first-app/`). Los valores de ejemplo se cambian editando el comando. El flag `--no-warnings` oculta el aviso experimental de `node:sqlite`.
+```
+src/clients/terminal/create-user.txt
+src/clients/terminal/find-user-by-email.txt
+src/clients/terminal/find-user-by-name.txt
+src/clients/terminal/list-users.txt
+src/clients/terminal/update-user.txt       # '' = no cambiar ese campo
+src/clients/terminal/delete-user.txt
+src/clients/terminal/classify-gender.txt   # necesita Ollama en marcha
+```
+
+El cliente de navegador se abre desde `first-app/`, con `pnpm db` ya en marcha en otra terminal. Abre la app en Chrome, en una ventana con un perfil aparte. Se cierra cerrando esa ventana:
+```
+pnpm browser
+```
+
+Formato y revisión del JavaScript de la app, desde `first-app/`:
+```
+pnpm format   # Prettier sobre los .js de src/logic/, src/queries/ y src/db/, el cliente de navegador y eslint.config.js
+pnpm lint     # ESLint con las reglas recomendadas
+```
 
 ## Cómo verificar un cambio
-1. Ejecutar los comandos reales de la sección anterior.
+1. Arrancar `pnpm db` y ejecutar los comandos reales de la sección anterior.
 2. Probar también los casos de error: datos que faltan, email inválido o repetido, id inexistente o no numérico.
-3. Probar con usuarios temporales y borrarlos al terminar. Comprobar con `clients/terminal/listUsers.txt` que los datos existentes siguen intactos.
+3. Probar con usuarios temporales y borrarlos al terminar. Comprobar con `src/clients/terminal/list-users.txt` que los datos existentes siguen intactos.
+4. Lanzar `pnpm format` y `pnpm lint`. `pnpm lint` no da errores.
 
 ## Límites
 **Siempre**
@@ -55,8 +59,7 @@ Forma de cada comando: `-e "` en la primera línea, el código sangrado debajo y
 - Editar `docs/CONSTITUTIONS.md`: solo se modifica si el usuario lo pide de forma explícita. Si el agente detecta una regla desactualizada, la propone pero no la cambia por su cuenta.
 
 **Nunca**
-- Escribir SQL fuera de `queries/`.
-- Borrar, reiniciar o sobrescribir `db/users.sqlite`, ni dejar usuarios de prueba dentro.
+- Saltarse las reglas de la base de datos de [docs/DATABASE.md](docs/DATABASE.md) y del principio 4 de la constitución.
 - Refactorizar o "mejorar" código que no se ha pedido tocar.
 
 ## Paquetes
