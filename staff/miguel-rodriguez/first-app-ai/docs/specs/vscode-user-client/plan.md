@@ -1,6 +1,6 @@
 # Plan: cliente de usuarios en VS Code
 
-Issue: #904 · PR: #906. Parte de la [spec aprobada](spec.md). Pendiente de revisión y aprobación de Miguel.
+Issue: #904 · PR: #906. Parte de la [spec aprobada](spec.md). Plan aprobado por Miguel el 2026-11-04 tras revisión, al solicitar la preparación de tareas.
 
 ## Enfoque
 
@@ -21,7 +21,7 @@ Se propone un punto de entrada CommonJS que use la API `vscode` suministrada por
 ## Archivos y dependencias
 
 - Añadir `src/clients/vscode/package.json` (manifiesto), `extension.cjs` (entrada CommonJS), `panel.html`, `panel.js` y `panel.css` (interfaz), y `tests/vscode-client.test.js` (adaptador y casos verificables). Añadir `.vscode/launch.json` dentro de `src/clients/vscode/`, configurado con `--extensionDevelopmentPath=${workspaceFolder}`. Abrir esa carpeta como proyecto en VS Code y pulsar F5 para iniciar el Extension Development Host; verificar activación, imports y `fetch` real. La ejecución y su compatibilidad se comprobarán antes de declarar terminada la implementación.
-- Añadir pruebas del adaptador y de los flujos relevantes, y documentar apertura, servicio y preparación de tabla en `README.md`. Actualizar `docs/ARCHITECTURE.md` y `docs/TREE.md` con los archivos y responsabilidades finales. Ajustar el alcance de formato o lint si es necesario para incluir los nuevos archivos.
+- Añadir pruebas del adaptador y de los flujos relevantes, y documentar apertura, servicio y preparación de tabla en `README.md`. Actualizar `docs/ARCHITECTURE.md` y `docs/TREE.md` con los archivos y responsabilidades finales. Actualizar el comando de formato y `eslint.config.js` para incluir `extension.cjs` con su contexto CommonJS y el JavaScript del panel con sus globals; comprobar que ambos se analizan.
 - Mantener las operaciones, consultas, esquema y servicio existentes. La tabla se prepara explícitamente y `pnpm server` se ejecuta por separado, como en los clientes actuales.
 - No se propone instalar paquetes Node: la API `vscode` la proporciona el editor y el cliente usa JavaScript. Si se identifica una dependencia necesaria, revisar sus versiones y capas con Socket según `AGENTS.md` y presentar los resultados a Miguel antes de aprobar el plan o instalarla.
 
@@ -31,4 +31,4 @@ En una copia desechable, iniciar el servicio y preparar la tabla, abrir la exten
 
 ## Punto a contrastar
 
-El README y las guías de arquitectura/base describen de forma distinta cómo se abre el cliente web. No determina el diseño de esta extensión; verificar el comportamiento real antes de escribir instrucciones y resolver cualquier conflicto que afecte a este trabajo. El plan no afirma que el punto de entrada ni la ejecución F5 se hayan probado todavía.
+El README y arquitectura en esta rama coinciden en abrir el cliente web como archivo mediante `pnpm web`; el servicio solo procesa consultas. La extensión tiene su propio arranque. El plan no afirma que el punto de entrada ni la ejecución F5 se hayan probado todavía.
