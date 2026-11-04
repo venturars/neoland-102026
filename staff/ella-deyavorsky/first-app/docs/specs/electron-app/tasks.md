@@ -1,6 +1,8 @@
-# Tasks — Electron desktop app (simplified)
+# Tasks — Electron desktop app (simplified version)
 
-Do the tasks in order. Inside a task, do the steps in order. Tasks 1 to 5 of the first version are done; this version replaces the client.
+This is a new list. It replaces the five tasks of the first version (client with a preload and IPC), which were done and are in the history of this branch. The numbers below start again at 1 and mean only this list.
+
+Do the tasks in order. Inside a task, do the steps in order.
 
 ## Task 1 — Serve the client
 
@@ -10,7 +12,7 @@ Do the tasks in order. Inside a task, do the steps in order. Tasks 1 to 5 of the
 
 - [ ] Delete `src/clients/electron/preload.cjs`. Result: the folder has no preload.
 - [ ] Rename `style.css` to `styles.css` with `git mv`. Result: the file is `styles.css`.
-- [ ] Rewrite `main.js` with `/* global process */`: a window of 800x600 with no `webPreferences`, `loadURL("http://127.0.0.1:3000/electron/index.html")`, `activate` and `window-all-closed` (quit unless macOS). No IPC, no `success`/`failure`, no known messages, no type checks, no blocking. Result: the file is short and does only that.
+- [ ] Rewrite `main.js` with `/* global process */`: a window of 800x600 with no `webPreferences`, `loadURL("http://127.0.0.1:3000/electron/index.html")` (only `127.0.0.1`), `activate` and `window-all-closed` (quit unless macOS). No IPC, no `success`/`failure`, no known messages, no type checks, no blocking. Result: the file is short and does only that.
 - [ ] Rewrite `index.html` with the list screen (create form, look-up form, list, error area) and the detail screen (id, name, email, created, updated, edit form with Save, Delete, Back, error area). No Content-Security-Policy. `<link>` to `styles.css` and `<script type="module" src="./app.js">`. Result: two screens, one visible at a time.
 - [ ] Rewrite `app.js` with `/* global document */`: import `createUser`, `deleteUser`, `findUserById`, `listUsers` and `updateUser` from `../../logic/`, call them with the real signatures, and write `error.message` unchanged in the error area of the screen. No `window.api`, no confirmation on Delete. Result: list, create, look up, edit and delete work.
 - [ ] In `package.json`, remove `"src/clients/electron/**/*.cjs"` from `format`. Keep the `electron` script and `electron@45.2.2`. Result: `format` has no `.cjs`.

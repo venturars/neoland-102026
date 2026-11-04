@@ -12,10 +12,12 @@ A student who wants to list, create, look up, edit and delete users in a window 
 
 There is no password, as in #807. Anyone who can open the app can see and change every user.
 
+The window trusts whatever answers on `127.0.0.1:3000`. If another program took that port before the database program, the window would load its page. `main.js` opens only the address `127.0.0.1` (never `localhost` or another host) and the window has no Node (Electron's defaults), so the risk is low, but the app does not check who is behind the port.
+
 ## What is asked
 
 - A command, `pnpm electron`, that opens a window of 800x600. The database program must already be running (`pnpm start`, in another terminal). The app does not start it and does not stop it.
-- The window loads its own page from the database program, at `http://127.0.0.1:3000/electron/`. The page is `src/clients/electron/index.html`, with its own `app.js` and `styles.css`. It deliberately does not reuse the page of `src/clients/web/`.
+- The window loads its own page from the database program, at `http://127.0.0.1:3000/electron/index.html` (the program serves a file by its full name; `/electron/` alone gives 404). The page is `src/clients/electron/index.html`, with its own `app.js` and `styles.css`. It deliberately does not reuse the page of `src/clients/web/`.
 - The page uses the functions of `src/logic/` directly, as a browser module. There is no layer between the page and `logic/`, and the main process of Electron does nothing but open the window.
 - The users are the real ones, the same that the terminal, the notebooks and the browser page use.
 - On macOS, clicking the app icon with no window open opens a window again. When all windows close, the app quits, except on macOS.

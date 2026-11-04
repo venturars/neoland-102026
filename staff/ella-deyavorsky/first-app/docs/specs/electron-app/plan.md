@@ -4,14 +4,14 @@ A new client in `src/clients/electron/`, next to `web/`, `terminal/` and `jupyte
 
 ## Why the page comes from the database program
 
-The page has to call `logic/` itself, and `queries/users.js` calls the database program with `fetch` using a relative address when it runs in a page. A page opened from a file (`loadFile`) has no web address, so that address leads nowhere, and the program would not accept the request from a file page either (CORS). This was tested with a throwaway window: the page loads `logic/` as a module, but `listUsers()` fails with "The database failed." even with the program running.
+The page has to call `logic/` itself, and `queries/users.js` calls the database program with `fetch` using a relative address when it runs in a page. A page opened from a file (`loadFile`) has no web address, so that address leads nowhere, and the program would not accept the request from a file page either (CORS). This was tested with a throwaway Electron window outside the repo, with the program running on port 3000: a page opened with `loadFile` imported `./src/logic/list-users.js` as a module without error, and calling `listUsers()` printed `ERR The database failed.` in the page console.
 
 If the page itself comes from `http://127.0.0.1:3000`, the relative address works and there is no CORS. So `main.js` opens that address, and the database program serves the folder of this client. This needs one change in `src/db/server.js` (below). `queries/` does not change.
 
 ## How it works
 
 1. The person runs `pnpm start` (database program, port 3000) and then `pnpm electron`.
-2. `main.js` opens a `BrowserWindow` of 800x600 with no `webPreferences`, and loads `http://127.0.0.1:3000/electron/index.html`.
+2. `main.js` opens a `BrowserWindow` of 800x600 with no `webPreferences`, and loads `http://127.0.0.1:3000/electron/index.html`. The address uses `127.0.0.1` only. The window has Electron's default `webPreferences` (no Node in the page).
 3. `index.html` loads `app.js` with `<script type="module" src="./app.js">`. `app.js` imports `createUser`, `deleteUser`, `findUserById`, `listUsers` and `updateUser` from `../../logic/`. In the browser, the program serves them at `/logic/`. The address `../../logic/` from `/electron/app.js` resolves to `/logic/`, so the same import line works in the file and in the page.
 4. `main.js` listens to `activate` (macOS) to open a window again when there is none, and to `window-all-closed` to quit unless the system is macOS.
 
