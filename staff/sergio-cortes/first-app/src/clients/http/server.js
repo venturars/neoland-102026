@@ -127,6 +127,10 @@ app.use((error, req, res, next) => {
   res.status(500).json({ error: "Internal error" });
 });
 
-app.listen(PORT, HOST, () => {
+app.listen(PORT, HOST, (error) => {
+  if (error) {
+    throw error;
+  }
+
   console.log(`HTTP server listening on ${ORIGIN}:${PORT}`);
 });

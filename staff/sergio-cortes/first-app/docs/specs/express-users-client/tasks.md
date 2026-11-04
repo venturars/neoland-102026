@@ -6,9 +6,10 @@ Issue: #887.
    `package.json` queda con `express` en `5.3.0`, sin `^`. Cambia
    `pnpm-lock.yaml`. No se añade ninguna otra dependencia.
 
-2. Abrir `package.json`. Añadir el script
-   `"http": "node src/clients/http/server.js"`. No se tocan `format`, `lint`
-   ni `test`.
+2. Abrir `package.json`. Añadir el script `http`: si nada escucha en
+   `127.0.0.1:3000` (`nc -z`), arranca `src/db/server.js` en segundo plano y lo
+   para al salir; después ejecuta `node src/clients/http/server.js`. No se
+   tocan `format`, `lint` ni `test`.
 
 3. Abrir `docs/ERRORS.md`. Añadir `"Body is invalid"` (`ValidationError`) e
    `"Internal error"`, con una nota de que los lanza el cliente HTTP y no
@@ -34,8 +35,8 @@ Issue: #887.
      Cualquier otro responde 500 `Internal error`.
 
 5. Abrir `docs/TREE.md` y `docs/ARCHITECTURE.md`. Añadir
-   `src/clients/http/server.js`, el script `http` y que necesita `pnpm server`
-   en marcha.
+   `src/clients/http/server.js`, el script `http` y que arranca la base
+   si no está en marcha.
 
 6. Con `pnpm server` en una terminal y `pnpm http` en otra, probar con `curl`
    las 5 rutas en `http://127.0.0.1:3001`: éxito (200 y 201), `Id is invalid`

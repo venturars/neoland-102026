@@ -9,7 +9,7 @@
   "scripts": {
     "server": "node src/db/server.js",
     "web": "open -na \"Brave Browser\" --args --user-data-dir=/tmp/first-app-brave --allow-file-access-from-files \"file://$(pwd)/src/clients/web/index.html\"",
-    "http": "node src/clients/http/server.js",
+    "http": "nc -z 127.0.0.1 3000 >/dev/null 2>&1 || { node src/db/server.js & DB=$!; trap \"kill $DB\" EXIT INT TERM; }; node src/clients/http/server.js",
     "jupyter": "sh scripts/jupyter.sh",
     "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/**/*.js\"",
     "lint": "eslint .",

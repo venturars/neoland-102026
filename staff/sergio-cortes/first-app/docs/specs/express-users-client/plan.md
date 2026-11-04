@@ -25,7 +25,7 @@ Se tocan en la implementación (`tasks.md`):
 - `docs/ERRORS.md` (añadir `Body is invalid` e `Internal error`, ver
   «Errores»).
 - `docs/TREE.md` y `docs/ARCHITECTURE.md` (añadir `src/clients/http/server.js`,
-  el script `http` y que necesita `pnpm server` en marcha).
+  el script `http` y que arranca la base si no está en marcha).
 
 No se tocan `src/logic/`, `src/queries/`, `src/db/` ni los otros clientes. No
 se crea cliente `.txt` en `src/clients/terminal/`. La carpeta `src/clients/http/` no existe hoy: no hay conflicto
@@ -85,7 +85,7 @@ mensajes nuevos a `docs/ERRORS.md`, que la implementación deja escritos allí
 ## Arranque
 
 `package.json` añade el script `"http": "node src/clients/http/server.js"`. El
-script `format` ya cubre `src/clients/**/*.js`. Necesita `pnpm server` (puerto 3000) en marcha, porque `src/queries/user.js` pide a ese servidor.
+script `format` ya cubre `src/clients/**/*.js`. `src/queries/user.js` pide a la base en el puerto 3000. El script `http` comprueba con `nc -z` si algo escucha en `127.0.0.1:3000`. Si no, arranca `src/db/server.js` en segundo plano y lo para al salir. Si ya está en marcha (`pnpm server`), no hace nada. `server.js` no sabe nada de esto.
 
 ```mermaid
 flowchart LR
