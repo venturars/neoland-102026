@@ -41,6 +41,9 @@ first-app/
         app.js
         styles.css
         README.md
+      http/
+        app.js
+        README.md
   agents/
   skills/
   tools/
@@ -73,6 +76,10 @@ first-app/
         plan.md
         tasks.md
       sync-git-workflow-template/
+        spec.md
+        plan.md
+        tasks.md
+      http-rest-client/
         spec.md
         plan.md
         tasks.md
