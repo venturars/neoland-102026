@@ -1,11 +1,9 @@
 # Pega esto en PowerShell desde la carpeta first-app.
 $script = @'
-import { createUsersTable } from "./src/queries/users.js";
-import { db } from "./src/db/connection.js";
+import { createUsersTable, listTables } from "./src/queries/users.js";
 
-createUsersTable();
-const statement = db.prepare("SELECT name FROM sqlite_master WHERE type = 'table'");
-const tables = statement.all();
+await createUsersTable();
+const tables = await listTables();
 console.log(tables);
 '@
 $script | node --input-type=module

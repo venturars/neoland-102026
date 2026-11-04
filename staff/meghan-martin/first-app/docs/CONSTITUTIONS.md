@@ -2,7 +2,7 @@
 
 Este archivo es el reglamento de la app. Dice qué es y qué llevan spec, plan y tasks. El orden de trabajo de Cursor está en `AGENTS.md`.
 
-first-app es una app pequeña en Node. No es una web. Se usa desde la terminal. Guarda personas en SQLite. Más adelante puede crecer hacia login.
+first-app es una app pequeña en Node. Se usa desde la terminal y, además, desde el navegador para ver y cambiar las mismas personas. Guarda personas en SQLite. Más adelante puede crecer hacia login.
 
 ## Guías
 
@@ -24,16 +24,10 @@ first-app/
   src/
     db/
       connection.js
+      server.js
     queries/
       users.js
-      queries/
-        create-users-table.sql
-        find-all.sql
-        find-by-email.sql
-        find-by-id.sql
-        insert.sql
-        remove.sql
-        update.sql
+      users-sql.js
     logic/
       create-user.js
       list-users.js
@@ -52,6 +46,10 @@ first-app/
         find-user-by-email.txt
         find-user-by-id.txt
         users-gender-count.txt
+      browser/
+        index.html
+        app.js
+        styles.css
       jupyter/
         create-users-table.ipynb
         create-user.ipynb
@@ -82,11 +80,13 @@ first-app/
 
 `src/db/users.sqlite` existe en disco y no se sube a git.
 
-- `src/db/connection.js` abre la única conexión y la exporta como `db`. No se abre otra base ni otra conexión.
-- `src/queries/queries/*.sql` son solo sentencias. `src/queries/users.js` las lee y las ejecuta. Ahí no se decide si un email es válido.
+- `src/db/connection.js` abre la única conexión y la exporta como `db`. Solo la importa `src/db/server.js`. No se abre otra base ni otra conexión.
+- `src/db/server.js` atiende en `http://127.0.0.1:3000`. Se arranca con `npm run db` desde `first-app`. Solo ejecuta las sentencias que ya están en `src/queries/users-sql.js`.
+- `src/queries/users-sql.js` guarda esas sentencias, con parámetros con nombre (`:id`, `:name`, `:email`). `src/queries/users.js` pide cada una por su nombre. Ahí no se decide si un email es válido.
 - `src/logic/` es la app. Cada acción es su propio fichero, con sus comprobaciones dentro. Un fichero ya creado no se reescribe para meter otra acción. Las reglas no se mueven a queries ni a clients.
 - `src/clients/terminal/*.txt` no son programas. Se pegan con el directorio actual en `first-app`. Solo ahí se imprime el resultado.
 - `src/clients/jupyter/*.ipynb` llaman a la misma acción que su `.txt`. Se abren con `npm run jupyter` desde `first-app`. No cambian `logic/`.
+- `src/clients/browser/` es una página: `index.html`, `app.js` y `styles.css`. `app.js` llama a las mismas acciones de `src/logic/`. Se abre con `npm run browser` desde `first-app`. La base tiene que estar en marcha.
 - Una acción nueva es un fichero nuevo en `src/logic/` y un `.txt` nuevo en `src/clients/terminal/`.
 
 ## Specs
@@ -122,7 +122,7 @@ Tabla `users`:
 
 Una persona que devuelve logic es un objeto plano con exactamente `id`, `name`, `email`, `createdAt` y `updatedAt`. No se devuelve la fila cruda de SQLite.
 
-El email se recorta, se pasa a minúsculas y lleva un solo `@`, con las dos partes llenas, sin espacios y con longitud de hasta 64. Si no, no es un email válido.
+El email se recorta, se pasa a minúsculas y lleva un solo `@`, con las dos partes llenas, sin espacios y con longitud de hasta 64. La parte de después del `@` lleva un punto, y ningún lado del punto está vacío. Si no, no es un email válido.
 
 ## Cómo se lee una acción
 

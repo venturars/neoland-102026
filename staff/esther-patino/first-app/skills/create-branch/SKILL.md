@@ -9,7 +9,7 @@ El comando se lanza desde el root del repositorio git (la carpeta que contenga e
 
 1. **BASE** _(Obligatorio)_: La rama de partida. Puede ser local (`main`) o remota (`origin/main`). No uses `staging`: para esa base está la otra skill.
 2. **NUMERO** _(Obligatorio)_: El número de la issue, solo dígitos.
-3. **TIPO** _(Obligatorio)_: Uno de `feat`, `fix`, `docs`, `refactor`, `test` o `chore`.
+3. **TIPO** _(Obligatorio)_: El tipo de la plantilla. Si no hay plantilla para ese tipo, elige la más cercana. No preguntes.
 4. **DESCRIPCION** _(Obligatorio)_: Palabras en inglés, en minúsculas, separadas por guiones. Sin espacios.
 
 El nombre resultante es `número-tipo-descripcion`.

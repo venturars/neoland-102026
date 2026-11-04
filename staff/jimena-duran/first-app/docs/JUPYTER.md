@@ -4,6 +4,18 @@ Abre un documento, selecciona su celda y pulsa **▶** o **Shift+Enter**.
 La acción se ejecuta y muestra una tabla con encabezados cian. No hay que
 escribir código ni rellenar formularios.
 
+## Servidor SQL
+
+Antes de ejecutar celdas, iniciar el servidor desde first-app en otra terminal:
+
+```powershell
+node src/db/server.js
+```
+
+El script `pnpm server` es equivalente si pnpm está disponible. Los notebooks de usuarios ejecutan Node con await e importan logic directamente; el de preparar la tabla importa queries. El acceso a datos pasa por `http://127.0.0.1:3000/execute`. No abren SQLite ni llaman a otro cliente. Mantener el servidor abierto durante el recorrido y detener el proceso propio con Ctrl+C al terminar.
+
+Los nueve notebooks comparten la base de ese servidor. Reejecutar un listado muestra las escrituras realizadas desde otro cliente; una salida guardada no se actualiza automáticamente. Para comprobaciones, utilizar únicamente un servidor y usuarios ficticios de la misma copia desechable.
+
 ## Abrir
 
 Antes de ejecutar celdas en un checkout actualizado, comprueba el [traslado manual de SQLite](DATABASE.md#conservar-la-base-al-actualizar-un-checkout). Git no mueve la base ignorada de `db/` a `src/db/`.
@@ -33,12 +45,12 @@ Si falta la dependencia de Node, quien prepara la demo ejecuta previamente
 
 ## Recorrido
 
-1. `create-users-table.ipynb`: preparar la tabla sin borrar usuarios.
+1. `create-users-table.ipynb`: preparar la tabla y mostrar sus nombres mediante createUsersTable/listTables, sin borrar usuarios.
 2. `create-user.ipynb`: crear a Jimena Demo con demo.jimena.jupyter@example.com.
 3. `list-users.ipynb`: listar los usuarios.
 4. `find-user-by-id.ipynb`: buscar al usuario de demo por su ID real.
 5. `find-user-by-email.ipynb`: buscar por su correo.
-6. `find-users-by-name.ipynb`: buscar las coincidencias exactas de Jimena Demo.
+6. `find-user-by-name.ipynb`: buscar las coincidencias exactas de Jimena Demo.
 7. `update-user.ipynb`: cambiar su nombre a Jimena Demo Actualizada.
 8. `users-gender-count.ipynb`: mostrar los tres totales si Ollama y llama3.2 están preparados.
 9. `delete-user.ipynb`: eliminar al usuario de demo.

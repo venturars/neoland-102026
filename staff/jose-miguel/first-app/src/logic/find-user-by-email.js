@@ -1,54 +1,46 @@
-import { findUserByEmail as findUserRowByEmail } from "../queries/users.js";
+import { findByEmail } from "../queries/users.js";
 
-const MAX_EMAIL_LENGTH = 255;
-
-export function findUserByEmail(email) {
-  let emailMissing = false;
-  if (email === undefined) {
-    emailMissing = true;
+export async function findUserByEmail(email) {
+  const trimmedEmail = email.trim();
+  const normalizedEmail = trimmedEmail.toLowerCase();
+  const parts = normalizedEmail.split("@");
+  const hasTwoParts = parts.length === 2;
+  let hasSingleAt = false;
+  if (hasTwoParts) {
+    const localPart = parts[0];
+    const domainPart = parts[1];
+    const hasLocalPart = localPart.length > 0;
+    const hasDomainPart = domainPart.length > 0;
+    if (hasLocalPart) {
+      if (hasDomainPart) {
+        hasSingleAt = true;
+      }
+    }
   }
-  if (email === null) {
-    emailMissing = true;
+  const emailIsTooLong = normalizedEmail.length > 64;
+  if (!hasSingleAt) {
+    throw new Error("Email is invalid");
   }
-  let trimmedEmail = "";
-  if (!emailMissing) {
-    const emailAsText = String(email);
-    const trimmedEmailRaw = emailAsText.trim();
-    trimmedEmail = trimmedEmailRaw.toLowerCase();
-  }
-  if (trimmedEmail === "") {
-    emailMissing = true;
-  }
-  if (emailMissing) {
-    throw new Error("Email is required");
-  }
-  const emailIsTooLong = trimmedEmail.length > MAX_EMAIL_LENGTH;
   if (emailIsTooLong) {
-    throw new Error("Email cannot exceed 255 characters");
-  }
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const emailIsValid = emailPattern.test(trimmedEmail);
-  if (!emailIsValid) {
-    throw new Error("Email is not valid");
+    throw new Error("Email is invalid");
   }
 
   let user;
-
   try {
-    user = findUserRowByEmail(trimmedEmail);
+    user = await findByEmail(normalizedEmail);
   } catch {
     throw new Error("Could not find the user");
   }
 
   if (!user) {
-    throw new Error("User does not exist");
+    throw new Error("User not found");
   }
 
   return {
     id: user.id,
     name: user.name,
     email: user.email,
-    createdAt: user.created_at,
-    updatedAt: user.updated_at,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
   };
 }

@@ -1,10 +1,26 @@
-import { validateNewUser } from "./shared.js";
+import { findByEmail, insert } from "../queries/users.js";
+import { copyUser, validateNewUser } from "./shared.js";
 
-export async function createUser(store, data) {
-  const user = validateNewUser(data);
-  const existing = await store.findByEmail(user.email);
-  if (existing) {
-    throw new Error(`Email ${user.email} is already registered`);
+export async function createUser(data) {
+  const nuevo = validateNewUser(data);
+
+  let existente;
+  try {
+    existente = await findByEmail(nuevo.email);
+  } catch {
+    throw new Error("Could not create the user");
   }
-  return store.save(user);
+
+  if (existente) {
+    throw new Error("Email is already used");
+  }
+
+  let fila;
+  try {
+    fila = await insert(nuevo);
+  } catch {
+    throw new Error("Could not create the user");
+  }
+
+  return copyUser(fila);
 }

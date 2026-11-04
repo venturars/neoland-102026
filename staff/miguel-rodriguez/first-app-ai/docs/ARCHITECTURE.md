@@ -2,14 +2,16 @@
 
 ## Storage and business operations
 
-- `src/db/connection.js` owns the single database connection. Its file location and
-  initialization behavior are defined in [DATABASE.md](DATABASE.md).
-- `src/queries/queries/` contains one SQL file per query. `src/queries/users.js` loads and
-  executes those statements; it performs no business validation or printing.
-  [DATABASE.md](DATABASE.md) defines each query's parameters and return value.
+- `src/db/server.js` owns the module-relative SQLite connection and executes
+  requests on the loopback data service. Its storage contracts are in
+  [DATABASE.md](DATABASE.md).
+- `src/queries/queries/` exports one JavaScript SQL-text constant per query.
+  `src/queries/users.js` sends those statements and bound parameters to the data
+  service; its async functions return query results without business validation
+  or presentation.
 - `src/logic/` contains the public business operations. It validates input, checks
   business conditions, calls queries, and constructs ordinary returned data.
-  It does not manage the connection or print results. The
+  It awaits query results without managing the connection or printing results. The
   [constitution](CONSTITUTIONS.md#public-business-operations) defines the contracts;
   [ERRORS.md](ERRORS.md) defines their failures.
 
@@ -26,9 +28,22 @@
 
 ## Clients and startup
 
-`src/clients/terminal/` contains copyable `node --input-type=module` heredocs. They call
+`src/clients/terminal/` contains copyable `node --input-type=module` heredocs. They await
 the corresponding operations and print their results. Their usage is described
 in the [constitution](CONSTITUTIONS.md#terminal-examples).
+
+`src/clients/web/` provides the selection, menu and edit/delete screens. The
+browser imports the shared list, ID lookup, update and delete operations as ES
+modules. It keeps presentation state in memory; saved contacts live in SQLite.
+Field errors present shared validation failures. Typed-email confirmation is a
+client precaution before calling delete, not authentication. Notes is disabled.
+
+`scripts/web.js`, run by `pnpm web`, opens the HTML as a file in Chrome/Chromium
+with local-file module access and a separate temporary profile. It uses an
+explicit `CHROME_BIN` path or the platform's usual installation paths. Stopping
+the launcher with Ctrl+C closes its browser and removes that profile.
+`src/db/server.js` handles only database requests on POST /execute and its CORS
+preflight; it does not serve the page or JavaScript files.
 
 `src/clients/jupyter/` provides nine independent notebooks for those same operations
 and explicit table initialization. Initialization calls a query; it is not a new
@@ -49,14 +64,14 @@ public business operation.
 - `src/clients/jupyter/client.py` sends an operation and arguments as JSON to a Node
   subprocess in this project copy and displays its output.
 - `src/clients/jupyter/run-operation.js` selects an explicitly supported operation,
-  awaits the classifier when needed, and presents returned values as tables or
+  awaits each requested operation, and presents returned values as tables or
   displays client messages and errors. It does not replace business operations.
 - `scripts/jupyter.js` prepares the existing project-local environment, registers
   its kernel, and starts Jupyter on the loopback interface with the notebook
   folder as its root.
 - `requirements-jupyter.txt` lists the Python requirements for that client.
-- `package.json` holds minimal application metadata, ES module mode, the Jupyter
-  startup and development-check commands, and dependency declarations. `pnpm-lock.yaml` records the
+- `package.json` holds minimal application metadata, ES module mode, the
+  data-service and Jupyter startup commands and development-check commands, and dependency declarations. `pnpm-lock.yaml` records the
   resolved packages. Version and package rules remain in the
   [constitution](CONSTITUTIONS.md#dependencies-and-package-management).
 - `.gitignore` excludes generated local artifacts. `src/db/users.sqlite`, `.venv/`,
@@ -65,6 +80,17 @@ public business operation.
 
 Results are presented by clients rather than printed by business operations.
 Startup may report environment preparation; it does not introduce business logic.
+
+## Verification
+
+`tests/serve-data-through-node.test.js` checks the local data service, query
+results, business operations and failure handling in disposable project copies.
+`tests/web-client.test.js` checks file-origin query access and confirms that
+the database server does not serve web assets or other project files. Both use port 3000; run them sequentially:
+
+```sh
+node --test --test-concurrency=1 tests/serve-data-through-node.test.js tests/web-client.test.js
+```
 
 ## Development tools
 

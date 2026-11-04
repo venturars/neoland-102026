@@ -1,7 +1,7 @@
 // Crea un usuario nuevo.
 // Valida los datos y comprueba que el email no exista; después llama a queries.
 
-import { insertUser, selectUserByEmail } from '../queries/users.js';
+import { insertUser, selectUserByEmail } from "../queries/users.js";
 
 // Forma mínima de un email: algo@algo.algo, sin espacios.
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -15,10 +15,10 @@ export function createUser(name, email) {
   const normalizedEmail = email?.trim().toLowerCase();
 
   if (!trimmedName) {
-    throw new Error('Name is required.');
+    throw new Error("Name is required.");
   }
   if (!normalizedEmail) {
-    throw new Error('Email is required.');
+    throw new Error("Email is required.");
   }
   if (!EMAIL_PATTERN.test(normalizedEmail)) {
     throw new Error(`Invalid email: ${normalizedEmail}`);

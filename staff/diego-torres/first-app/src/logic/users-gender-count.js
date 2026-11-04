@@ -1,13 +1,14 @@
 import OpenAI from "openai";
+import { findAll } from "../queries/users.js";
 
 const MODEL = "llama3.2";
 
-export async function usersGenderCount(store) {
+export async function usersGenderCount() {
   let usuarios;
   try {
-    usuarios = await store.findAll();
+    usuarios = await findAll();
   } catch {
-    throw new Error("No se han podido clasificar los usuarios");
+    throw new Error("Could not classify the users");
   }
 
   if (usuarios.length === 0) {
@@ -25,7 +26,7 @@ export async function usersGenderCount(store) {
 
   for (let inicio = 0; inicio < usuarios.length; inicio += 6) {
     const lote = usuarios.slice(inicio, inicio + 6);
-    const nombres = lote.map((usuario) => usuario.nombre).join("\n");
+    const nombres = lote.map((usuario) => usuario.name).join("\n");
 
     let completion;
     try {
@@ -68,7 +69,7 @@ export async function usersGenderCount(store) {
         },
       });
     } catch {
-      throw new Error("No se han podido clasificar los usuarios");
+      throw new Error("Could not classify the users");
     }
 
     const choice = completion.choices[0];

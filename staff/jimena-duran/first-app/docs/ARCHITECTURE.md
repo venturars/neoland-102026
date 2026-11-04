@@ -1,8 +1,18 @@
 # Arquitectura
 
-La aplicación usa Node.js con módulos ES (`"type": "module"`) y una base SQLite gestionada por `node:sqlite`.
+La aplicación usa Node.js con módulos ES y SQLite gestionado por node:sqlite.
 
-Las cuatro capas viven bajo `src/`. `src/db/` solo abre la base; su conexión conserva `users.sqlite` junto al módulo y fuera de Git. El SQL permanece en `src/queries/queries/`; `src/queries/users.js` lo lee y lo ejecuta, sin reglas de negocio. Las decisiones de negocio viven en `src/logic/`. Los clientes de `src/clients/terminal/` invocan esa capa desde first-app y muestran su resultado; los notebooks están en `src/clients/jupyter/`.
+Las cuatro capas viven bajo src/. El servidor `src/db/server.js` abre únicamente `src/db/users.sqlite`, fuera de Git, y ejecuta SQL en `http://127.0.0.1:3000/execute`. No contiene reglas de usuarios ni sirve HTML.
+
+Cada consulta es un módulo .js de `src/queries/queries/` con una constante SQL y parámetros nombrados. `src/queries/users.js` importa esas constantes y usa fetch para acceder al servidor; no lee archivos con readFile ni abre SQLite.
+
+Las decisiones de negocio viven en `src/logic/`. Sus funciones esperan las consultas con await y mantienen sus reglas, resultados y errores. Los clientes de terminal y Jupyter importan logic directamente y esperan el resultado. La preparación de tabla utiliza queries y listTables, sin una conexión alternativa.
+
+Flujo: cliente → logic → queries → HTTP/JSON /execute → servidor SQL → users.sqlite. El cliente HTTP expone las operaciones de usuarios y llama directamente a logic; queries conserva la interfaz HTTP de datos con el servidor SQL. Los clientes comparten la base del servidor y no se llaman entre sí. Uso en [DATABASE.md](DATABASE.md) y [JUPYTER.md](JUPYTER.md).
+
+El cliente `src/clients/browser/` contiene `index.html`, `app.js` y `styles.css`. La página se abre mediante file:// e importa directamente listUsers, updateUser y deleteUser desde logic. El navegador conserva sus imports directos; el servidor SQL no sirve HTML ni incorpora una API de usuarios. `npm.cmd run browser` abre Chrome instalado con un perfil temporal separado y permiso para cargar módulos locales.
+
+`src/clients/http/app.js` importa y espera con await las cinco operaciones existentes de `src/logic/`. Express escucha en `http://127.0.0.1:3001`, sin repetir reglas de negocio. Se arranca con `pnpm http`; no sustituye al servidor SQL de `src/db/server.js`, que permanece en 3000.
 
 `src/logic/` es el núcleo estable de la aplicación. No se reemplaza por adaptadores, plugins o implementaciones intercambiables, y sus reglas no se trasladan a `src/queries/` ni a `src/clients/`. Cada operación tiene su propio archivo; una operación nueva no modifica otro archivo para reutilizarlo.
 

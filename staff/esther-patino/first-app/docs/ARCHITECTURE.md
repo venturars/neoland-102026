@@ -14,7 +14,7 @@
 - `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca.
 - `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la tarea se puede dejar escrita.
 - `agents/create-issue.md` crea la issue con título en inglés y descripción en español, asignada a quien está autenticado.
-- `agents/create-branch.md` crea la rama `número-tipo-descripcion`.
+- `agents/create-branch.md` crea la rama desde `staging`. El tipo es el de la plantilla. Si no hay plantilla, elige la más cercana.
 - `agents/create-commit.md` hace un commit pequeño con ficheros nombrados.
 - `agents/create-pr.md` abre la pull request contra `staging` y la deja en draft, sin enlazar la issue.
 - `agents/launch-push.md` publica `HEAD` en `origin` y deja el upstream puesto.
@@ -24,19 +24,19 @@
 - `skills/assign-author/SKILL.md` asigna la issue o la pull request al usuario autenticado.
 - `skills/check-status/SKILL.md` dice la rama, los cambios sin commit y el remoto.
 - `skills/pull-changes/SKILL.md` adelanta `staging` en fast-forward.
-- `skills/create-branch-from-staging/SKILL.md` abre la rama desde `staging`.
-- `skills/create-branch/SKILL.md` abre la rama desde una base que no es `staging`.
+- `skills/create-branch-from-staging/SKILL.md` abre la rama desde `staging`. El tipo es el de la plantilla.
+- `skills/create-branch/SKILL.md` abre la rama desde una base que no es `staging`. El tipo es el de la plantilla.
 - `skills/create-empty-commit/SKILL.md` hace el commit vacío `chore: open #N`.
 - `skills/commit-changes/SKILL.md` guarda un trozo con ficheros nombrados.
 - `skills/launch-push/SKILL.md` sube la rama actual y fija el upstream.
 - `skills/create-pr-base-staging/SKILL.md` abre la pull request con base `staging`.
 - `skills/create-draft/SKILL.md` deja la pull request en draft.
-- `skills/link-pr-to-issue/SKILL.md` deja `Closes #N`. La issue se cierra cuando se fusiona la pull request.
+- `skills/link-pr-to-issue/SKILL.md` deja `Closes #N` y no llama a la API para cerrar la issue. GitHub la cierra al fusionar en la rama por defecto. Fusionar solo en `staging` no la cierra.
 - `skills/assign-reviewers/SKILL.md` asigna a quienes miran la pull request y la saca de draft.
 - `tools/check-status.sh` escribe la rama, el remoto y los cambios.
 - `tools/pull-changes.sh` adelanta `staging` en fast-forward.
-- `tools/create-branch-from-staging.sh` crea la rama desde `staging`.
-- `tools/create-branch.sh` crea la rama desde otra base.
+- `tools/create-branch-from-staging.sh` crea la rama desde `staging`. No rechaza un tipo fuera de la lista de seis. La descripción va en minúsculas y con guiones.
+- `tools/create-branch.sh` crea la rama desde otra base. No rechaza un tipo fuera de la lista de seis. La descripción va en minúsculas y con guiones.
 - `tools/create-empty-commit.sh` crea el commit vacío de apertura.
 - `tools/commit-changes.sh` guarda los ficheros nombrados.
 - `tools/launch-push.sh` sube la rama y fija el upstream.
@@ -106,26 +106,10 @@
   - `src/clients/jupyter/remove-user.ipynb` valida borrar un usuario.
   - `src/clients/jupyter/users-gender-count.ipynb` valida el recuento por sexo del nombre.
 
-- `src/clients/http/` es el servidor local. El navegador entra por él y él llama a `src/logic/`.
-  - `src/clients/http/start-http-server.js` escucha en `127.0.0.1:3000`.
-  - `src/clients/http/handle-request.js` elige usuarios o un archivo público.
-  - `src/clients/http/handle-users.js` llama a listar, buscar, cambiar y borrar.
-  - `src/clients/http/read-json-body.js` lee un objeto JSON.
-  - `src/clients/http/send-json.js` envía JSON.
-  - `src/clients/http/send-http-error.js` responde un fallo con el mensaje de `src/logic/`.
-  - `src/clients/http/serve-public-file.js` sirve solo los archivos públicos declarados.
+- `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001 y no repite sus reglas. No sustituye a `src/db/server.js`.
+  - `src/clients/http/app.js` crea, lista, ve, modifica y borra usuarios. Se arranca con `pnpm http`.
 
-- `src/clients/web/` son las tres pantallas del navegador.
+- `src/clients/web/` son las tres pantallas del navegador. Se abren desde el disco con `pnpm open`. Llaman a `src/logic/` y no piden `/api/users`.
   - `src/clients/web/index.html` define la lista, el menú y la modificación.
   - `src/clients/web/styles.css` es la hoja compartida.
-  - `src/clients/web/main.js` conecta los controles con sus funciones.
-  - `src/clients/web/state.js` guarda el usuario elegido.
-  - `src/clients/web/show-screen.js` muestra una pantalla.
-  - `src/clients/web/show-message.js` muestra un mensaje.
-  - `src/clients/web/load-user-selection.js` carga la lista.
-  - `src/clients/web/select-user.js` elige un usuario por id.
-  - `src/clients/web/show-user-menu.js` muestra el menú.
-  - `src/clients/web/open-user-editor.js` abre la modificación.
-  - `src/clients/web/navigate.js` vuelve o abre la modificación.
-  - `src/clients/web/save-user.js` guarda el nombre y el email.
-  - `src/clients/web/delete-selected-user.js` borra el usuario elegido.
+  - `src/clients/web/app.js` es la lógica de las tres pantallas. Carga la lista con `listUsers()`, elige por id con `findUserById(id)`, guarda con `updateUser(id, { name, email })` y borra con `deleteUser(id)`.

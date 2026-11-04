@@ -1,6 +1,6 @@
 import { findById, remove } from "../queries/users.js";
 
-export function deleteUser(id) {
+export async function deleteUser(id) {
   if (typeof id !== "number") {
     throw new Error("Invalid id");
   }
@@ -13,17 +13,27 @@ export function deleteUser(id) {
 
   let current;
   try {
-    current = findById(id);
-  } catch {
-    throw new Error("Could not delete the user");
+    current = await findById(id);
+  } catch (error) {
+    if (
+      error.message === "Database is not running. Start it with npm run db."
+    ) {
+      throw error;
+    }
+    throw new Error("Could not delete the user", { cause: error });
   }
   if (!current) {
     throw new Error("User not found");
   }
 
   try {
-    remove(id);
-  } catch {
-    throw new Error("Could not delete the user");
+    await remove(id);
+  } catch (error) {
+    if (
+      error.message === "Database is not running. Start it with npm run db."
+    ) {
+      throw error;
+    }
+    throw new Error("Could not delete the user", { cause: error });
   }
 }

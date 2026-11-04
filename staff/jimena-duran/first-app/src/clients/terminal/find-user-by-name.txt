@@ -1,0 +1,9 @@
+# Pega esto en PowerShell desde la carpeta first-app.
+$script = @'
+import { findUserByName } from "./src/logic/find-user-by-name.js";
+
+const result = await findUserByName("Jimena");
+
+console.log(result);
+'@
+$script | node --input-type=module

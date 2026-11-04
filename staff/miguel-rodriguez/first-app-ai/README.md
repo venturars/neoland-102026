@@ -2,6 +2,54 @@
 
 Aplicación local de contactos. Los nueve documentos de Jupyter permiten ejecutar sus operaciones y leer los resultados desde el navegador.
 
+## Arrancar los datos
+
+Desde esta carpeta, con las dependencias del proyecto disponibles:
+
+```sh
+pnpm server
+```
+
+Deja esa terminal abierta. El servicio escucha en `http://127.0.0.1:3000` y abre
+`src/db/users.sqlite`; la tabla se prepara explícitamente en el primer notebook
+o con el ejemplo Terminal de inicialización. Terminal y Jupyter utilizan esos
+mismos datos. El servicio es local y no tiene autenticación.
+
+En otra terminal puedes usar los ejemplos de `src/clients/terminal/` o abrir Jupyter.
+
+## Abrir el cliente web
+
+Con `pnpm server` en ejecución, prepara la tabla una vez desde otra terminal:
+
+```sh
+node --input-type=module -e 'import { createUsersTable } from "./src/queries/users.js"; await createUsersTable();'
+```
+
+Después ejecuta:
+
+```sh
+pnpm web
+```
+
+El comando abre `src/clients/web/index.html` como archivo en Chrome/Chromium,
+con permiso para cargar sus módulos locales y un perfil temporal separado.
+Selecciona tu ID, modifica nombre/email
+o vuelve sin guardar. Para eliminar, escribe el email guardado que muestra la
+confirmación. Notas queda como opción futura.
+
+La web usa los mismos contactos que Terminal y Jupyter. No crea ejemplos; una
+base vacía muestra una lista vacía. Para añadir contactos usa la operación de
+creación de Terminal o Jupyter. Repetir la preparación conserva los contactos.
+Los errores de nombre/email aparecen junto al campo; los fallos de conexión
+permiten reintentar. Pulsa Ctrl+C en la terminal de `pnpm web` para cerrar el
+cliente y eliminar su perfil temporal. El servidor de datos sigue
+en su propia terminal.
+
+El lanzador busca Chrome en las ubicaciones habituales de macOS/Windows y
+Chrome/Chromium en PATH en Linux. Si está en otra ubicación, configura `CHROME_BIN`
+con la ruta de su ejecutable. La apertura y el recorrido se verificaron en macOS.
+Abrir el HTML con doble clic en una sesión normal puede bloquear los módulos.
+
 ## Abrir Jupyter
 
 Requisitos: Node compatible con `node:sqlite` (`24.12.0` verificado), pnpm y Python 3.10 o posterior. En Windows, Python debe estar disponible mediante `py -3`.
@@ -31,7 +79,7 @@ Cada documento funciona tras **Kernel → Restart Kernel**; no necesita variable
 
 Preparar, crear, actualizar y eliminar trabajan sobre **`src/db/users.sqlite` de esta copia**. Las consultas conservan los contactos y las fechas. Para experimentar, copia el proyecto sin su base de datos y usa datos ficticios en esa copia.
 
-Para parar Notebook vuelve a la terminal y pulsa **Ctrl+C**; confirma la parada si Jupyter lo solicita. Cerrar una pestaña no para el servidor.
+Para parar el servicio de datos pulsa **Ctrl+C** en su terminal. Para parar Notebook vuelve a la terminal y pulsa **Ctrl+C**; confirma la parada si Jupyter lo solicita. Cerrar una pestaña no para el servidor.
 
 Los ejemplos anteriores siguen disponibles en `src/clients/terminal/`. Las reglas están en [la constitución](docs/CONSTITUTIONS.md) y la verificación del cliente en [las tareas](docs/specs/jupyter-client/tasks.md).
 

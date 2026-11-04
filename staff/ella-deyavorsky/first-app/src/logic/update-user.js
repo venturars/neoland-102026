@@ -3,7 +3,7 @@ import { findByEmail, findById, update } from "../queries/users.js";
 // An address of 64 characters or longer is rejected.
 const MAX_EMAIL_LENGTH = 64;
 
-export function updateUser({ id, name, email }) {
+export async function updateUser({ id, name, email }) {
   let nothingToUpdate = false;
   if (name === undefined) {
     if (email === undefined) {
@@ -16,7 +16,7 @@ export function updateUser({ id, name, email }) {
 
   let currentUser;
   try {
-    currentUser = findById(id);
+    currentUser = await findById(id);
   } catch {
     throw new Error("The database failed.");
   }
@@ -73,7 +73,7 @@ export function updateUser({ id, name, email }) {
 
     let existingUser;
     try {
-      existingUser = findByEmail(nextEmail);
+      existingUser = await findByEmail(nextEmail);
     } catch {
       throw new Error("The database failed.");
     }
@@ -94,7 +94,11 @@ export function updateUser({ id, name, email }) {
   }
 
   try {
-    return update({ id: currentUser.id, name: nextName, email: nextEmail });
+    return await update({
+      id: currentUser.id,
+      name: nextName,
+      email: nextEmail,
+    });
   } catch {
     throw new Error("The database failed.");
   }

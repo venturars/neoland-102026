@@ -34,6 +34,10 @@ first-app-ai/
 │   ├── STYLE.md
 │   ├── TREE.md
 │   └── specs/
+│       ├── vanilla-web-client/
+│       │   ├── plan.md
+│       │   ├── spec.md
+│       │   └── tasks.md
 │       ├── align-code-with-guides/
 │       │   ├── plan.md
 │       │   ├── spec.md
@@ -74,6 +78,10 @@ first-app-ai/
 │       │   ├── plan.md
 │       │   ├── spec.md
 │       │   └── tasks.md
+│       ├── serve-data-through-node/
+│       │   ├── plan.md
+│       │   ├── spec.md
+│       │   └── tasks.md
 │       └── split-sdd-guides/
 │           ├── plan.md
 │           ├── spec.md
@@ -83,7 +91,8 @@ first-app-ai/
 ├── pnpm-lock.yaml
 ├── requirements-jupyter.txt
 ├── scripts/
-│   └── jupyter.js
+│   ├── jupyter.js
+│   └── web.js
 ├── skills/
 │   ├── assign-author/
 │   │   └── SKILL.md
@@ -115,6 +124,10 @@ first-app-ai/
 │       └── SKILL.md
 ├── src/
 │   ├── clients/
+│   │   ├── web/
+│   │   │   ├── index.html
+│   │   │   ├── main.js
+│   │   │   └── styles.css
 │   │   ├── jupyter/
 │   │   │   ├── 01-create-users-table.ipynb
 │   │   │   ├── 02-create-user.ipynb
@@ -138,7 +151,7 @@ first-app-ai/
 │   │       ├── update-user.txt
 │   │       └── users-gender-count.txt
 │   ├── db/
-│   │   └── connection.js
+│   │   └── server.js
 │   ├── logic/
 │   │   ├── create-user.js
 │   │   ├── delete-user.js
@@ -150,14 +163,15 @@ first-app-ai/
 │   │   └── users-gender-count.js
 │   └── queries/
 │       ├── queries/
-│       │   ├── create-users-table.sql
-│       │   ├── find-all.sql
-│       │   ├── find-by-email.sql
-│       │   ├── find-by-id.sql
-│       │   ├── find-by-name.sql
-│       │   ├── insert.sql
-│       │   ├── remove.sql
-│       │   └── update.sql
+│       │   ├── create-users-table.js
+│       │   ├── find-all.js
+│       │   ├── find-by-email.js
+│       │   ├── find-by-id.js
+│       │   ├── find-by-name.js
+│       │   ├── insert.js
+│       │   ├── list-tables.js
+│       │   ├── remove.js
+│       │   └── update.js
 │       └── users.js
 ├── templates/
 │   ├── issues/
@@ -174,6 +188,9 @@ first-app-ai/
 │       ├── fix-pull-request.md
 │       ├── refactor-pull-request.md
 │       └── test-pull-request.md
+├── tests/
+│   ├── serve-data-through-node.test.js
+│   └── web-client.test.js
 └── tools/
     ├── check-status.sh
     ├── commit-changes.sh

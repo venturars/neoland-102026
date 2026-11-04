@@ -21,7 +21,6 @@ No se tocan `package.json`, el código ni las specs ya escritas.
 
 No hay fichero de `logic/` al que se parezca. El cambio deja una regla de trabajo. La constitución manda el qué. `AGENTS.md` manda el cómo, igual que ya manda el orden de un cambio.
 
-
 ## Errores
 
 Ningún fallo de esta spec usa un mensaje de la sección 6. El fallo se ve en el plan: sin el resumen no se acepta, y una alerta no queda aceptada hasta que la persona lo dice.

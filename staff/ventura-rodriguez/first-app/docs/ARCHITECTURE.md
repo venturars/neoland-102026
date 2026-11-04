@@ -20,13 +20,15 @@
 - `src/clients/jupyter/` es el cliente que se abre con el Jupyter de la app.
 - `src/clients/browser/` llama a `src/logic/`.
 - `src/clients/browser/index.html` se abre en el navegador.
+- `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001.
 - `agents/git-workflow-agent.md` reconoce el momento y llama al
   subagente como un agente aparte. El padre no hace ese trabajo.
 - `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la
   tarea se puede dejar escrita.
-- `agents/create-issue.md` crea la issue con título en inglés y
-  descripción en español, asignada a quien está autenticado.
-- `agents/create-branch.md` crea la rama `número-tipo-descripcion`.
+- `agents/create-issue.md` crea la issue asignada a quien está
+  autenticado. El cuerpo sale de la plantilla del tipo.
+- `agents/create-branch.md` crea la rama de trabajo. El tipo es el de
+  la plantilla.
 - `agents/create-commit.md` hace un commit pequeño con ficheros
   nombrados.
 - `agents/create-pr.md` abre la pull request contra `staging` y la deja
@@ -55,8 +57,8 @@
 - `skills/create-pr-base-staging/SKILL.md` abre la pull request con base
   `staging`.
 - `skills/create-draft/SKILL.md` deja la pull request en draft.
-- `skills/link-pr-to-issue/SKILL.md` deja el enlace en Development y
-  `Related to #N` en el cuerpo, sin cerrar la issue.
+- `skills/link-pr-to-issue/SKILL.md` deja `Closes #N` en el cuerpo y
+  enlaza la issue en Development. No llama a la API para cerrarla.
 - `skills/assign-reviewers/SKILL.md` asigna a quienes miran la pull
   request y la saca de draft.
 - `tools/check-status.sh` escribe la rama, el remoto y los cambios.
@@ -66,11 +68,13 @@
 - `tools/create-empty-commit.sh` crea el commit vacío de apertura.
 - `tools/commit-changes.sh` guarda los ficheros nombrados.
 - `tools/launch-push.sh` sube la rama y fija el upstream.
-- `templates/issues/basic_issue.md` es el cuerpo de la issue: qué hay
-  que hacer y cómo probarlo.
-- `templates/pull-request/basic-pull-request.md` es el cuerpo de la
-  pull request.
-- `MCPS/github-mcp-server/mcp.txt` es la dirección del MCP de GitHub.
+- `templates/issues/` tiene una plantilla por tipo: feat, fix, docs,
+  refactor, test y chore. El cuerpo dice qué hay que hacer y cómo
+  probarlo.
+- `templates/pull-request/` tiene una plantilla por tipo. La sección
+  Issue lleva `Closes #`.
+- `MCPS/github-mcp-server/mcp.txt` es la dirección del MCP de GitHub y
+  el header para que la escritura vaya directa.
 - `MCPS/socket-mcp/mcp.txt` es la dirección del MCP de Socket.
 - `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada
   fichero.

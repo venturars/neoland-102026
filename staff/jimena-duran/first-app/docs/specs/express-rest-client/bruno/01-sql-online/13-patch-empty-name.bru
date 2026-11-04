@@ -1,0 +1,22 @@
+meta {
+  name: patch-empty-name
+  type: http
+  seq: 13
+}
+
+patch {
+  url: {{baseUrl}}/users/{{userId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": " "
+  }
+}
+
+tests {
+  test("Estado 400", function () { expect(res.getStatus()).to.equal(400); });
+  test("Mensaje exacto", function () { expect(res.getBody()).to.deep.equal({ message: "Name is empty" }); });
+}
