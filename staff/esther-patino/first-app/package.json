@@ -12,6 +12,7 @@
     "server": "node src/db/server.js",
     "http": "node src/clients/http/app.js",
     "chrome": "node src/clients/chrome/server.js",
+    "electron": "electron src/clients/electron/main.js",
     "format": "prettier --write .",
     "lint": "eslint ."
   },
@@ -23,6 +24,7 @@
     "openai": "7.42.0"
   },
   "devDependencies": {
+    "electron": "45.2.2",
     "eslint": "10.13.0",
     "prettier": "3.9.10"
   }
