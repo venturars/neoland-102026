@@ -26,5 +26,6 @@
 - `docs/specs/<nombre>/` es un cambio. `<nombre>` va en kebab-case. Ahí están su spec, su plan y sus tareas.
 - `docs/GIT-AUTOMATION.md` es el flujo de git en la terminal del Mac.
 - `agents/` dice cada momento de git. `agents/git-workflow-agent.md` elige el momento.
-- `skills/` es un paso de git. `tools/` son los scripts de shell. `templates/` es la forma de la issue y de la pull request. `MCPS/` apunta al servidor de GitHub.
+- `skills/` es un paso de git. `tools/` son los scripts de shell. `MCPS/` apunta al servidor de GitHub.
+- `templates/` tiene seis formas de issue y seis de pull request, para `feat`, `fix`, `docs`, `refactor`, `test` y `chore`. El mismo tipo vale para la issue, la rama y la pull request. En el draft las casillas siguen vacías hasta pedir revisión. El orquestador escribe `Closes #N`. La base sigue siendo `staging`, y el cierre automático depende de la rama por defecto real.
 - `MCPS/socket-mcp/mcp.txt` es la dirección del MCP de Socket.

@@ -24,6 +24,8 @@ El ejemplo de terminal es obligatorio. Un logic ya creado no se reemplaza.
 
 Cada tarea nueva sigue `docs/GIT-WORKFLOW.md` aunque el prompt no nombre ese fichero. Es una issue, una rama desde `staging` y una pull request en draft hacia `staging`.
 
+Las formas de la issue y de la pull request están en `templates/`, una por tipo. El enlace es `Closes #N`. Al pedir revisión se marcan solo las casillas que se han comprobado.
+
 La plantilla de la pull request es `.github/pull_request_template.md` de esta app. Si el workspace es el repositorio de la clase, la ruta es `staff/meghan-martin/first-app/.github/pull_request_template.md`.
 
 ## Comandos
