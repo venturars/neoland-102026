@@ -4,8 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>First App · Usuarios</title>
-    <link rel="stylesheet" href="/styles.css" />
-    <script type="module" src="/main.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="app.js"></script>
   </head>
   <body>
     <div class="app">
@@ -107,8 +107,17 @@
         <p class="eyebrow">Confirmar eliminación</p>
         <h2 id="delete-popover-title">Eliminar usuario</h2>
         <p id="delete-popover-text" class="description"></p>
+        <div class="field">
+          <label for="delete-confirm-email">Email del usuario</label>
+          <input
+            id="delete-confirm-email"
+            name="deleteConfirmEmail"
+            type="email"
+            autocomplete="off"
+          />
+        </div>
         <div class="actions popover-actions">
-          <button id="delete-confirm-yes" class="danger" type="button">
+          <button id="delete-confirm-yes" class="danger" type="button" disabled>
             Confirmar eliminación
           </button>
           <button id="delete-confirm-no" class="secondary" type="button">

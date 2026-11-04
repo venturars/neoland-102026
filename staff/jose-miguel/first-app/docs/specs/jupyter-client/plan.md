@@ -22,7 +22,7 @@ Segundo cliente en `clients/jupyter/`. Un `.ipynb` por cada `clients/terminal/<n
 
 Script `jupyter` en `package.json`: `sh scripts/jupyter.sh`.
 
-El shell (basado en el de Ventura):
+El script de arranque:
 
 1. Crea `.venv` si falta (Python 3 / `py -3` en Windows).
 2. Instala `notebook==7.6.3` si hace falta.

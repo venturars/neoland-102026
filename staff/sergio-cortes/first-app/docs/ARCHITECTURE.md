@@ -1,6 +1,6 @@
 # Arquitectura
 
-- `eslint.config.js` aplica las reglas recomendadas de ESLint al JavaScript e ignora `.venv`, `node_modules` y los cuadernos Jupyter.
+- `eslint.config.js` aplica las reglas recomendadas de ESLint al JavaScript e ignora `.venv`, `node_modules` y los cuadernos Jupyter. Declara `console` como global solo para `src/clients/http/`. Declara `process` como global para `src/clients/electron/main.js` y `document` y `fetch` para `src/clients/electron/app.js`.
 - `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca.
 - `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la tarea se puede dejar escrita.
 - `agents/create-issue.md` crea la issue asignada a quien está autenticado; el cuerpo sale de la plantilla del tipo en `templates/issues/`.
@@ -36,10 +36,10 @@
 - `MCPS/socket-mcp/mcp.txt` es la dirección del MCP de Socket.
 - `docs/specs/<nombre>/` es donde empieza un desarrollo. `<nombre>` es la funcionalidad, en kebab-case.
 - `src/db/` abre la base de datos y no contiene reglas de negocio.
-- `src/db/connections.js` es la única conexión a la base de datos.
+- `src/db/server.js` abre la única conexión a la base de datos, lee los `.sql` de `src/queries/queries/` por nombre de fichero y atiende `POST /execute` en `127.0.0.1:3000` con `{ method, file, params }`. `method` es `exec`, `get`, `all` o `run`. Se arranca con `pnpm server` desde first-app.
 - `src/db/users.sqlite` es el único fichero de la base de datos.
 - `src/queries/queries/` guarda el SQL en ficheros `.sql`. Hay un fichero por sentencia.
-- `src/queries/user.js` lee esos ficheros y los ejecuta. No hay reglas de negocio en `src/queries/`.
+- `src/queries/user.js` pide el resultado de esas operaciones al servidor de la base por HTTP. No hay reglas de negocio en `src/queries/`.
 - `src/logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
 - `src/logic/errors.js` exporta las clases de error compartidas. No es una funcionalidad de negocio.
 - `src/logic/create-user.js` crea un usuario.
@@ -51,29 +51,17 @@
 - `src/logic/list-users.js` lista los usuarios.
 - `src/logic/user-gender-count.js` cuenta usuarios por género.
 - `src/clients/terminal/` llama a `src/logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
-- `src/clients/http/` es el servidor local en `127.0.0.1:3000`. Expone la API REST y sirve los estáticos del navegador. Llama a `src/logic/` como la terminal y Jupyter.
-  - `src/clients/http/start-http-server.js` arranca el servidor.
-  - `src/clients/http/handle-request.js` enruta API y ficheros públicos.
-  - `src/clients/http/handle-users.js` atiende `/api/users`.
-  - `src/clients/http/read-json-body.js` lee el cuerpo JSON de una petición.
-  - `src/clients/http/send-json.js` responde con JSON.
-  - `src/clients/http/send-http-error.js` mapea errores de logic a HTTP.
-  - `src/clients/http/serve-public-file.js` sirve la allowlist de `src/clients/web/`.
-- `src/clients/web/` son las tres pantallas del navegador (HTML, CSS y JavaScript vanilla).
-  - `src/clients/web/index.html` define selección, menú y edición.
+- `src/clients/web/` son las tres pantallas del navegador (HTML, CSS y JavaScript vanilla). Llama a `src/logic/` con `await`, como la terminal y Jupyter. Se abre con `pnpm web` desde `first-app` (Brave, archivo local). Tiene que estar en marcha `pnpm server`. Solo hay tres ficheros en la carpeta.
+  - `src/clients/web/index.html` define selección, menú, edición y el popover de borrado (campo de email para confirmar).
   - `src/clients/web/styles.css` es la hoja compartida (paleta crema/teal).
-  - `src/clients/web/main.js` conecta controles y arranca la carga inicial.
-  - `src/clients/web/state.js` guarda el usuario elegido.
-  - `src/clients/web/show-screen.js` muestra una pantalla.
-  - `src/clients/web/show-message.js` muestra un mensaje.
-  - `src/clients/web/load-user-selection.js` carga la lista.
-  - `src/clients/web/select-user.js` elige un usuario por id.
-  - `src/clients/web/show-user-menu.js` muestra el menú.
-  - `src/clients/web/open-user-editor.js` abre la edición.
-  - `src/clients/web/navigate.js` vuelve o abre pantallas.
-  - `src/clients/web/save-user.js` guarda nombre y email.
-  - `src/clients/web/delete-selected-user.js` abre el popover de borrado, confirma o cancela y llama a la API.
-- `package.json` script `start` arranca el cliente HTTP desde `first-app`.
+  - `src/clients/web/app.js` concentra la lógica de pantalla: estado del usuario elegido, cambio de pantalla, lista (`listUsers`), selección (`findUserById`), guardado (`updateUser`), popover de borrado con comprobación de email y borrado (`deleteUser`), y el arranque (`initializeClient`).
+- `src/clients/electron/` es el cliente de escritorio. Copia de partida de `src/clients/web/` (`index.html`, `styles.css`, `app.js`) más `main.js`. Llama a `src/logic/` con `await`. Se abre con `pnpm electron` desde `first-app`. El script `electron` arranca antes `src/db/server.js` si nada escucha en `127.0.0.1:3000`, y lo para al salir. Si ya está en marcha (`pnpm server`), lo reutiliza. No modifica `src/clients/web/`.
+  - `src/clients/electron/main.js` crea la ventana y carga el `index.html` de esta carpeta.
+  - `src/clients/electron/index.html` define selección, menú, edición y el popover de borrado.
+  - `src/clients/electron/styles.css` es la hoja copiada (paleta crema/teal).
+  - `src/clients/electron/app.js` concentra la lógica de pantalla, igual que el de navegador.
+- `src/clients/http/server.js` es el cliente HTTP con Express en `127.0.0.1:3001`. Solo acepta conexiones de este equipo y escribe esa dirección en la consola al arrancar. Un solo fichero con las rutas `GET /users`, `GET /users/:id`, `POST /users`, `PATCH /users/:id` y `DELETE /users/:id`. Llama a `src/logic/` directamente y un middleware de errores traduce la clase del error a su estado. Se arranca con `pnpm http`. El script `http` de `package.json` arranca antes `src/db/server.js` si nada escucha en `127.0.0.1:3000`, y lo para al salir. Si ya está en marcha (`pnpm server`), lo reutiliza.
+- `package.json` script `server` arranca el servidor de la base desde `first-app`. El script `web` abre la página en Brave. El script `http` arranca el cliente HTTP. El script `electron` arranca el cliente de escritorio.
 - `scripts/jupyter.sh` prepara `.venv` si hace falta, instala `notebook==7.6.3` y arranca Jupyter en `src/clients/jupyter/`. Funciona en Mac, Linux y Windows (con `sh`). `package.json` lo invoca con `pnpm jupyter`.
 - `src/clients/jupyter/` es el cuaderno, uno por cada `.txt` de `src/clients/terminal/`. El bloque muestra ese texto: arranca `node --input-type=module` y, dentro, los `import` y la llamada quedan igual. El `console.log` se sustituye por la tabla. `cli-table3` y `@colors/colors` pintan esa tabla con colores y encabezados. Si la función falla, se ve ese mensaje. En esa carpeta no hay ficheros `.py` ni `requirements.txt`. Se abre con `pnpm jupyter` desde `first-app`.
 - `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada fichero.

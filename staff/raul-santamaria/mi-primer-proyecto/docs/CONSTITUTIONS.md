@@ -80,6 +80,10 @@ Salida: el usuario creado, con `id`, `name`, `email`, `createdAt` y `updatedAt`.
 Entrada: ninguna.  
 Salida: la lista de usuarios, cada uno con `id`, `name`, `email`, `createdAt` y `updatedAt`.
 
+`findUserById(id)`  
+Entrada: id.  
+Salida: el usuario, con `id`, `name`, `email`, `createdAt` y `updatedAt`.
+
 `updateUser({ id, name, email })`  
 Entrada: id y los campos enviados (`name`, `email`).  
 Salida: el usuario ya actualizado, con `id`, `name`, `email`, `createdAt` y `updatedAt`. `updatedAt` pasa a ser el día del cambio.

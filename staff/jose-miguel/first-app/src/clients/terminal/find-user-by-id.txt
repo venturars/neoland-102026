@@ -1,7 +1,8 @@
-# Pegar en la terminal con el directorio actual en first-app.
+# Pega esto en la terminal, con el directorio actual en first-app
+node --input-type=module <<'EOF'
+import { findUserById } from "./src/logic/find-user-by-id.js";
 
-# Test 1: crea usuario y lo busca por id (OK).
-node --input-type=module -e "import { createUser } from './src/logic/create-user.js'; import { findUserById } from './src/logic/find-user-by-id.js'; try { const user = createUser(['Ana', 'ana-id-' + Date.now() + '@mail.com']); console.log(findUserById(user.id)); } catch (error) { console.log(error.message); }"
+const result = await findUserById(3);
 
-# Test 2: id que no existe (error).
-node --input-type=module -e "import { findUserById } from './src/logic/find-user-by-id.js'; try { findUserById(999999); } catch (error) { console.log(error.message); }"
+console.log(result);
+EOF

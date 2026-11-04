@@ -10,6 +10,7 @@
   },
   "scripts": {
     "jupyter": "sh scripts/jupyter.sh",
+    "web": "node src/clients/http/start-http-server.js",
     "db:init": "node --input-type=module < src/clients/terminal/create-users-table.txt",
     "create-user": "node --input-type=module < src/clients/terminal/create-user.txt",
     "update-user": "node --input-type=module < src/clients/terminal/update-user.txt",
@@ -18,7 +19,12 @@
     "find-user-by-email": "node --input-type=module < src/clients/terminal/find-user-by-email.txt",
     "find-user-by-id": "node --input-type=module < src/clients/terminal/find-user-by-id.txt",
     "find-user-by-name": "node --input-type=module < src/clients/terminal/find-user-by-name.txt",
-    "classify": "node --input-type=module < src/clients/terminal/users-gender-count.txt"
+    "classify": "node --input-type=module < src/clients/terminal/users-gender-count.txt",
+    "create-note": "node --input-type=module < src/clients/terminal/create-note.txt",
+    "list-notes": "node --input-type=module < src/clients/terminal/list-notes.txt",
+    "find-note-by-id": "node --input-type=module < src/clients/terminal/find-note-by-id.txt",
+    "update-note": "node --input-type=module < src/clients/terminal/update-note.txt",
+    "delete-note": "node --input-type=module < src/clients/terminal/delete-note.txt"
   },
   "dependencies": {
     "cli-table3": "0.6.5"

@@ -1,25 +1,20 @@
-import { listUsers as listUserRows } from "../queries/users.js";
+import { findAll } from "../queries/users.js";
 
-export function listUsers() {
-  let rows;
-
+export async function listUsers() {
+  let users;
   try {
-    rows = listUserRows();
+    users = await findAll();
   } catch {
     throw new Error("Could not list the users");
   }
 
-  const users = [];
-
-  for (const row of rows) {
-    users.push({
-      id: row.id,
-      name: row.name,
-      email: row.email,
-      createdAt: row.created_at,
-      updatedAt: row.updated_at,
-    });
-  }
-
-  return users;
+  return users.map((user) => {
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
+  });
 }

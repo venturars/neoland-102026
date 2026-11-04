@@ -1,2 +1,3 @@
 # Paste this in the terminal, with the current directory set to first-app
-node --input-type=module -e "import { db } from './src/db/connection.js'; import { createSqliteStore } from './src/queries/users.js'; createSqliteStore(db); const q = String.fromCharCode(39); console.log(db.prepare('SELECT name FROM sqlite_master WHERE type = ' + q + 'table' + q).all());"
+# First start the server in another terminal: pnpm start
+node --input-type=module -e "import { createUsersTable } from './src/queries/users.js'; await createUsersTable(); console.log('Table users ready');"

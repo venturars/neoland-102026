@@ -1,0 +1,22 @@
+# Pega esto en la terminal, con first-app como carpeta actual
+# El programa de la base de datos debe estar en marcha (pnpm start)
+# El cliente HTTP debe estar en marcha (pnpm api), en el puerto 3001
+
+# Crear un usuario
+curl -i -X POST http://127.0.0.1:3001/users \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Ady", "email": "ady@example.com"}'
+
+# Listar los usuarios
+curl -i http://127.0.0.1:3001/users
+
+# Consultar un usuario por id
+curl -i http://127.0.0.1:3001/users/1
+
+# Cambiar el nombre, el email o los dos (lo que no se envía se queda igual)
+curl -i -X PATCH http://127.0.0.1:3001/users/1 \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Ada"}'
+
+# Borrar un usuario
+curl -i -X DELETE http://127.0.0.1:3001/users/1

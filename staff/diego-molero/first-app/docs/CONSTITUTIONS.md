@@ -1,6 +1,6 @@
 # Constitución — first-app
 
-first-app permite gestionar usuarios y clasificar sus nombres mediante IA local. Las specs recogen los requisitos, la implementación prevista y las comprobaciones de cada desarrollo.
+first-app permite gestionar usuarios, guardar sus notas y clasificar sus nombres mediante IA local. Las specs recogen los requisitos, la implementación prevista y las comprobaciones de cada desarrollo.
 
 ## Guías
 
@@ -15,7 +15,7 @@ first-app permite gestionar usuarios y clasificar sus nombres mediante IA local.
 
 Una operación por fichero de `src/logic/`. Las operaciones llaman directamente a `src/queries/`, validan entradas y devuelven datos ordinarios: un usuario, una lista o un recuento. Borrar no devuelve datos. Los fallos se señalan con Error, sin códigos ni clases propios.
 
-Crear recibe un objeto con name y email. Actualizar recibe ID y objeto de cambios; undefined conserva el valor guardado. Los mensajes, validaciones y orden de cada operación están en su plan.
+Crear un usuario recibe un objeto con name y email. Actualizar recibe ID y objeto de cambios; undefined conserva el valor guardado. Los mensajes, validaciones y orden de cada operación están en su plan.
 
 Hay una única conexión por proceso y una base local en `src/db/users.sqlite`, junto al módulo de conexión. La creación de tablas es explícita y repetible; importar no crea tablas. Se conserva el esquema y las fechas UTC. Los cambios de esquema requieren migración. El traslado de una base existente a `src/db/` conserva sus bytes; no se inicializa una base vacía para sustituirla.
 
@@ -40,6 +40,8 @@ La automatización Git se define en `agents/`, `skills/`, `tools/` y `templates/
 - [Código conforme a las guías](specs/align-code-with-guides/spec.md).
 - [Automatización Git](specs/git-workflow/spec.md).
 - [Capas dentro de src](specs/move-layers-under-src/spec.md).
+- [Notas por usuario](specs/notes/spec.md) — persistencia y operaciones implementadas.
+- [Cliente web vanilla](specs/vanilla-web-client/spec.md) — HTTP y pantallas implementados.
 
 Las rutas vigentes están en arquitectura y TREE. Las evidencias anteriores conservan las rutas utilizadas cuando se ejecutaron sus comprobaciones; el traslado a `src/` no cambia los contratos de usuarios, búsqueda ni clasificador.
 
@@ -65,6 +67,32 @@ pnpm run delete-user
 ```
 
 Los clientes de terminal pasan JavaScript a Node por stdin; no necesitan Bash. El ejemplo crea Ada con ada@example.com, consulta ese correo y el ID 1 y actualiza o elimina ese ID. Se editan los datos del ejemplo cuando sea necesario. Repetir el alta comunica el correo duplicado; repetir la inicialización conserva los datos.
+
+### Notas
+
+La preparación anterior añade notes e índice en una transacción y comprueba el esquema antes de confirmar; conserva usuarios y notas existentes. Antes de migrar una base personal, cerrar los procesos que la usan y guardar una copia local. Un esquema de notas incompatible produce error y rollback; no se borra ni repara automáticamente.
+
+En una base nueva, crear primero un usuario y revisar su ID; los siguientes ejemplos usan userId 1 y noteId 1:
+
+```powershell
+pnpm run create-note
+pnpm run list-notes
+pnpm run find-note-by-id
+pnpm run update-note
+pnpm run delete-note
+```
+
+Los datos de estos clientes se editan en sus ejemplos de terminal, igual que los de usuarios. Crear recibe title y content; actualizar permite uno o ambos. El título es obligatorio y se recorta; el contenido admite vacío y conserva su texto. Una nota borrada no reutiliza su ID, por lo que se revisan los IDs antes de repetir los ejemplos. Eliminar un usuario desde cualquier cliente elimina también sus notas definitivamente; los ejemplos de terminal ejecutan la llamada explícita sin una confirmación interactiva. La interfaz web pide confirmación.
+
+### Cliente web
+
+Preparar la base con `pnpm run db:init` antes de arrancar. En una base existente, cerrar otros procesos y guardar una copia local antes de la migración. El servidor no crea tablas por sí mismo. Desde `first-app`:
+
+```powershell
+pnpm web
+```
+
+Abrir `http://127.0.0.1:3000/`. El puerto se puede cambiar con `$env:PORT = "3001"` antes del comando. Detener con Ctrl+C. La selección de usuario no se guarda al recargar. Eliminar desde la web pide confirmación y borra también sus notas.
 
 ### Jupyter
 

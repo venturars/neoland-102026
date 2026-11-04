@@ -1,6 +1,6 @@
 import { findByEmail } from "../queries/users.js";
 
-export function findUserByEmail(email) {
+export async function findUserByEmail(email) {
   if (typeof email !== "string") {
     throw new Error("Email is invalid");
   }
@@ -32,12 +32,29 @@ export function findUserByEmail(email) {
   if (emailHasSpace) {
     throw new Error("Email is invalid");
   }
+  // The part after @ must contain a dot, like example.com.
+  // maria2@.com is rejected because one side of the dot is empty.
+  const domainLabels = parts[1].split(".");
+  let domainIsValid = domainLabels.length >= 2;
+  for (const label of domainLabels) {
+    if (label.length === 0) {
+      domainIsValid = false;
+    }
+  }
+  if (!domainIsValid) {
+    throw new Error("Email is invalid");
+  }
 
   let user;
   try {
-    user = findByEmail(normalizedEmail);
-  } catch {
-    throw new Error("Could not find the user");
+    user = await findByEmail(normalizedEmail);
+  } catch (error) {
+    if (
+      error.message === "Database is not running. Start it with npm run db."
+    ) {
+      throw error;
+    }
+    throw new Error("Could not find the user", { cause: error });
   }
   if (!user) {
     throw new Error("User not found");

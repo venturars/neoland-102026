@@ -3,9 +3,9 @@ import { toUser, validateEmail } from "./shared.js";
 
 export { findByEmail };
 
-export function findUserByEmail(email) {
+export async function findUserByEmail(email) {
   const normalizedEmail = validateEmail(email);
-  const user = findByEmail(normalizedEmail);
+  const user = await findByEmail(normalizedEmail);
 
   if (!user) {
     throw new Error("User not found");

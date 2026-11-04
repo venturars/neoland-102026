@@ -7,7 +7,10 @@
     "node": ">=22"
   },
   "scripts": {
-    "start": "node src/clients/http/start-http-server.js",
+    "server": "node src/db/server.js",
+    "web": "open -na \"Brave Browser\" --args --user-data-dir=/tmp/first-app-brave --allow-file-access-from-files \"file://$(pwd)/src/clients/web/index.html\"",
+    "http": "nc -z 127.0.0.1 3000 >/dev/null 2>&1 || { node src/db/server.js & DB=$!; trap \"kill $DB\" EXIT INT TERM; }; node src/clients/http/server.js",
+    "electron": "nc -z 127.0.0.1 3000 >/dev/null 2>&1 || { node src/db/server.js & DB=$!; trap \"kill $DB\" EXIT INT TERM; }; electron src/clients/electron/main.js",
     "jupyter": "sh scripts/jupyter.sh",
     "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/**/*.js\"",
     "lint": "eslint .",
@@ -19,10 +22,12 @@
   "dependencies": {
     "@colors/colors": "1.6.1",
     "cli-table3": "0.6.5",
+    "express": "5.3.0",
     "openai": "^7.39.0"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
+    "electron": "45.2.2",
     "eslint": "10.13.0",
     "prettier": "3.9.10"
   }

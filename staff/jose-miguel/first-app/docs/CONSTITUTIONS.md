@@ -5,6 +5,7 @@ Reglas estables del proyecto. El código se adapta a este documento, no al revé
 ## Guías
 
 - `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada fichero.
+- `docs/STARTUP.md` explica cómo arrancar `pnpm server` y los clientes que dependen de él.
 - `docs/TREE.md` es el árbol.
 - `docs/DATABASE.md` es la base de datos y las queries.
 - `docs/ERRORS.md` es la lista de errores.
@@ -18,7 +19,7 @@ Cada funcionalidad es un fichero. Un fichero de `logic/` ya creado no se reempla
 
 ### Un fichero de logic
 
-Un fichero, una función. El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `listUsers`, `findUserByEmail`, `findUserByName`, `findUserById`, `createUsersTable`). Los parámetros van en la firma, con su nombre. `createUser` recibe un array con nombre y email en las posiciones 0 y 1. `updateUser` recibe el `id` y un array con los cambios en las posiciones 0 y 1.
+Un fichero, una función. El nombre es la acción (`createUser`, `updateUser`, `deleteUser`, `listUsers`, `findUserByEmail`, `findUserByName`, `findUserById`). Los parámetros van en la firma, con su nombre. `createUser` recibe un objeto con `name` y `email`. `updateUser` recibe el `id` y un objeto con los cambios. Un campo `undefined` de ese objeto conserva el valor guardado. Las funciones son `async` y devuelven promesas.
 
 Ejemplos de firma:
 
@@ -29,7 +30,6 @@ Ejemplos de firma:
 - `findUserByEmail(email)`
 - `findUserByName(name)`
 - `findUserById(id)`
-- `createUsersTable()`
 
 El cuerpo sigue este orden y **no se mezcla**:
 
@@ -44,9 +44,9 @@ La forma de cada línea está en `docs/STYLE.md`.
 
 Reglas de los datos:
 
-- El nombre es obligatorio, se recorta, máximo 100 caracteres.
-- El email es obligatorio, se recorta, se guarda en minúsculas, máximo 255 caracteres, y tiene formato de email.
-- El email no puede repetirse.
+- El nombre es obligatorio y se recorta; si queda vacío, `Name is empty`.
+- El email es obligatorio, se recorta, se guarda en minúsculas, máximo 64 caracteres, con un `@` que separa parte local y dominio no vacías.
+- El email no puede repetirse (`Email is already used`).
 
 ## SDD
 

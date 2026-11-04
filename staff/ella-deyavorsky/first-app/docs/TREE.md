@@ -16,6 +16,10 @@ first-app/
       update-user.js
     queries/
       users.js
+    db/
+      connection.js
+      server.js
+      users.sqlite
       queries/
         create-users-table.sql
         find-all.sql
@@ -24,11 +28,11 @@ first-app/
         insert.sql
         remove.sql
         update.sql
-    db/
-      connection.js
-      users.sqlite
     clients/
+      api/
+        server.js
       terminal/
+        api.txt
         count-users-by-gender.txt
         create-user.txt
         create-users-table.txt
@@ -52,6 +56,11 @@ first-app/
         index.html
         style.css
         app.js
+      electron/
+        main.js
+        index.html
+        app.js
+        styles.css
   scripts/
     jupyter.sh
   agents/

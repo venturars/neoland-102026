@@ -1,7 +1,14 @@
-# Pedir revisión
+### Herramienta: ASSIGN_REVIEWERS
 
-Úsala al empezar, después de enlazar la issue. Los revisores de esta app son Miguel (`mglnglxx`) y Jimena (`jiji-mena`).
+- **Descripción**: Úsala al empezar, después de enlazar la issue. Los revisores de esta app son Miguel (`mglnglxx`) y Jimena (`jiji-mena`). No la uses para asignar al autor.
+- **MCP**: El servidor remoto descrito en `MCPS/github-mcp-server/mcp.txt`.
 
-Pide la revisión a esos dos logins. Quita a quien abre la pull request si aparece en la lista. Después, saca la pull request de draft.
+#### Especificación de Argumentos
 
-Si falla, dilo y no marques la revisión como pedida.
+1. **Pull request** _(Obligatorio)_: El número o la URL.
+2. **Revisores** _(Obligatorio)_: `mglnglxx` y `jiji-mena`.
+
+#### Reglas de Invocación Críticas
+
+- **Login**: Pide la revisión a esos dos logins. No elijas a otra persona.
+- **Procesamiento de respuestas**: Quita a quien abre la pull request si aparece en la lista. Deja la pull request lista para revisión. Si el MCP falla, comunica el error y no marques la revisión como pedida.

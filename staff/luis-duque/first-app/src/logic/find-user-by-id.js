@@ -6,7 +6,7 @@ import * as users from "../queries/users.js";
  */
 export async function findUserById(id) {
   const userId = validateId(id);
-  const user = users.findUserById(userId);
+  const user = await users.findUserById(userId);
 
   if (!user) {
     throw new Error(`User ${userId} was not found`);

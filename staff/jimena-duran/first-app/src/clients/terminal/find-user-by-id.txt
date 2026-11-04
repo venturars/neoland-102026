@@ -2,7 +2,7 @@
 $script = @'
 import { findUserById } from "./src/logic/find-user-by-id.js";
 
-const result = findUserById(3);
+const result = await findUserById(3);
 
 console.log(result);
 '@

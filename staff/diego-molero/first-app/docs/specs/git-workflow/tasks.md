@@ -17,3 +17,22 @@ Implementación y comprobación completadas por los agentes y el principal el 20
 ## Cierre de verificación por el principal
 
 Los subagentes alcanzaron su límite de uso; el principal completó las comprobaciones pendientes. `python -X utf8 .venv/git-workflow-check-663-20261030.py` superó 14 recorridos en repositorios nuevos con remoto bare local: sintaxis de siete scripts, estado sin commits, ramas locales y remotas, commits vacíos y de rutas literales, conservación de staged ajeno, rechazos de directorios/patrones y ramas protegidas, push con upstream y fast-forward sin perder la rama. No se probaron esas operaciones en el repositorio compartido. Las guías comunes se integraron por el principal; UTF-8 y enlaces revisados. Las operaciones reales de entrega se registran en la PR de la issue #663. Linux/macOS no ejecutados.
+
+## Iteración del 3 de noviembre de 2026 · Issue #774
+
+Diego autoriza expresamente implementar, comprobar y entregar el bloque. No se atribuye una revisión individual distinta de la aprobación del plan en el chat.
+
+- [x] **U01:** Registrar esta ampliación en spec, plan y tareas antes de cambiar la automatización. CA-09 a CA-12.
+- [x] **U02:** Incorporar doce plantillas, adaptar el prefijo y retirar las dos básicas. CA-09, CA-10.
+- [x] **U03:** Actualizar selección por tipo y referencias de agentes/skills, conservando enlace, delegación y protecciones. CA-09 a CA-11.
+- [x] **U04:** Actualizar arquitectura y árbol, revisar UTF-8, enlaces, fuente y scripts intactos. CA-10, CA-12.
+- [x] **U05:** Ejecutar y registrar recorridos Git aislados; comprobar el alcance y preparar la entrega en borrador sin merge. CA-11, CA-12.
+
+### Evidencia de esta iteración · 2026-11-03
+
+- Issue #774 creada mediante gh tras confirmar que el MCP solo abrió un formulario; identidad y ausencia de duplicados verificadas por el subagente. staging actualizado en fast-forward a acf36184; rama codex/774-chore-update-git-templates y apertura vacía 7209aafc publicadas con upstream.
+- Documentos ampliados antes de implementar. Doce plantillas incorporadas con comentarios explicativos y prefijo codex/; dos básicas retiradas; selección por tipo y responsabilidad del orquestador revisadas en los dos agentes y las tres skills afectadas.
+- El principal ejecutó `python -X utf8 staff/diego-molero/first-app/.venv/git-template-check-20261103.py` en Windows con acceso para Bash: 14 recorridos/comprobaciones correctos y sintaxis de siete scripts. Solo repositorios temporales y remoto bare local bajo .venv; las rutas se verifican antes de operar. Incluye conservación del índice ajeno, rutas literales, rechazo de ramas protegidas/HEAD separado/force, ramas locales y remotas, fast-forward y rechazo de divergencia.
+- Revisión programática de 24 archivos previstos: UTF-8 estricto, enlaces locales existentes, ausencia de referencias a plantillas básicas y doce entradas del árbol. Las doce plantillas coinciden con la fuente compartida salvo el prefijo codex/ de su comentario de rama. Los siete scripts coinciden byte a byte con staging; src, scripts, dependencias, MCPS y orquestador no tienen diferencias. El contenido anterior de spec, plan y tasks se conserva como prefijo íntegro.
+- `git diff --check` sin incidencias. No se ejecutó la aplicación ni se accedió a la base personal, no se añadieron paquetes ni una suite de tests. Linux y macOS no ejecutados.
+- Commit de trabajo, publicación y PR en borrador se ejecutan después de estas comprobaciones con los roles correspondientes. Sus resultados finales quedan en la PR de esta issue; esta evidencia no da por hechas operaciones pendientes. El merge queda a cargo de Diego.

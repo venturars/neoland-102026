@@ -12,4 +12,12 @@ export default defineConfig([
     plugins: { js },
     extends: ["js/recommended"],
   },
+  {
+    files: ["src/clients/browser/**/*.js", "src/clients/electron/app.js"],
+    languageOptions: {
+      globals: globals.browser,
+    },
+    plugins: { js },
+    extends: ["js/recommended"],
+  },
 ]);

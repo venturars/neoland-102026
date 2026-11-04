@@ -19,7 +19,7 @@ The rest of the rules live in their own files:
 
 ## One logic file per action
 
-A new feature is a new file in `logic/`. Do not add a second feature to a file in `logic/` that already exists. A new query is a new function in `src/queries/users.js` and a new `.sql` file in `src/queries/queries/`. The file name is the function name in kebab-case.
+A new feature is a new file in `logic/`. Do not add a second feature to a file in `logic/` that already exists. A new query is a new function in `src/queries/users.js` and a new `.sql` file in `src/db/queries/`. The file name is the function name in kebab-case.
 
 The actions are listed in [TREE.md](TREE.md).
 

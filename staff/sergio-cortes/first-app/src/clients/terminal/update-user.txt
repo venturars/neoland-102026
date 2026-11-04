@@ -2,7 +2,7 @@
 node --input-type=module <<'EOF'
 import { updateUser } from "./src/logic/update-user.js";
 
-const result = updateUser({
+const result = await updateUser({
   id: 1,
   name: "Ada Lovelace",
   email: "ada@example.com",

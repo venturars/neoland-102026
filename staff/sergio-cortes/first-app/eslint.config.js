@@ -19,12 +19,29 @@ export default [
     files: ["src/clients/http/**/*.js"],
     languageOptions: {
       globals: {
-        process: "readonly",
+        console: "readonly",
       },
     },
   },
   {
     files: ["src/clients/web/**/*.js"],
+    languageOptions: {
+      globals: {
+        document: "readonly",
+        fetch: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/electron/main.js"],
+    languageOptions: {
+      globals: {
+        process: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/electron/app.js"],
     languageOptions: {
       globals: {
         document: "readonly",

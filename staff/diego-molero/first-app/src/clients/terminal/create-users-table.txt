@@ -1,8 +1,8 @@
 // Ejemplo manual. Ejecución: docs/CONSTITUTIONS.md.
-import { createUsersTable } from "./src/queries/users.js";
+import { initializeDatabase } from "./src/queries/initialize-database.js";
 import { db } from "./src/db/connection.js";
 
-createUsersTable();
+initializeDatabase();
 const statement = db.prepare("SELECT name FROM sqlite_master WHERE type = 'table'");
 const tables = statement.all();
 console.log(tables);
