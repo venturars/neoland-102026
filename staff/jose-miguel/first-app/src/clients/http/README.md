@@ -2,6 +2,8 @@
 
 CRUD de usuarios por HTTP. Las reglas están en `src/logic/`; hace falta la base SQL en marcha.
 
+Guía general de arranque (dos terminales): [`docs/STARTUP.md`](../../../docs/STARTUP.md).
+
 ## Arranque
 
 Desde `first-app`:

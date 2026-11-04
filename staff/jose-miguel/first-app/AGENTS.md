@@ -6,7 +6,7 @@ El trabajo de git sigue `agents/git-workflow-agent.md` de esta carpeta. Las para
 
 first-app es la primera app del curso de IA Engineer para alumnos junior. Sirve para construirla con IA siguiendo el sistema SDD.
 
-Está en Node, con módulos ES (`"type": "module"`) y SQLite (`node:sqlite`, fichero `src/db/users.sqlite`, local y fuera de git). Las reglas de base están en `docs/CONSTITUTIONS.md`. Esa guía enlaza a la arquitectura, el árbol, la base de datos, los errores y el estilo.
+Está en Node, con módulos ES (`"type": "module"`) y SQLite (`node:sqlite`, fichero `src/db/users.sqlite`, local y fuera de git). Las reglas de base están en `docs/CONSTITUTIONS.md`. Esa guía enlaza a la arquitectura, el árbol, la base de datos, los errores y el estilo. Para arrancar clientes con dos terminales (`pnpm server` + browser o HTTP), ver `docs/STARTUP.md`.
 
 ## Orden
 
@@ -81,10 +81,12 @@ Queda fuera comprobar paquetes que no son de Node, comprobar un paquete cuya ver
 
 ## Comandos
 
-- Ejecutar: pegar el contenido de `src/clients/terminal/` en la terminal, con el directorio actual en `first-app`.
-- Jupyter: `pnpm jupyter` desde `first-app` (ejecuta `node scripts/start-jupyter.js`; abre Notebook sobre `src/clients/jupyter/`; la primera vez crea `.venv` e instala Notebook).
-- Cliente browser: `pnpm server` en una terminal (SQL en `http://127.0.0.1:3000`) y `pnpm browser` en otra (abre `src/clients/browser/index.html` con módulos ES). Detalle en `src/clients/browser/README.md`.
-- Cliente HTTP (Express): `pnpm server` y, en otra terminal, `pnpm http` (`http://127.0.0.1:3001`). Detalle en `src/clients/http/README.md`.
+Arranque con servidor SQL + cliente: **`docs/STARTUP.md`**.
+
+- Ejecutar: pegar el contenido de `src/clients/terminal/` en la terminal, con el directorio actual en `first-app` (con `pnpm server` en otra terminal si el fragmento usa la base).
+- Jupyter: `pnpm jupyter` desde `first-app` (ejecuta `node scripts/start-jupyter.js`; abre Notebook sobre `src/clients/jupyter/`; la primera vez crea `.venv` e instala Notebook). Celdas con logic suelen necesitar `pnpm server` en paralelo.
+- Cliente browser: `pnpm server` + `pnpm browser`. Detalle en `src/clients/browser/README.md` y `docs/STARTUP.md`.
+- Cliente HTTP (Express): `pnpm server` + `pnpm http`. Detalle en `src/clients/http/README.md` y `docs/STARTUP.md`.
 - Tests: no hay tests automatizados. El script `test` de `package.json` es el placeholder de npm. El test manual son los `.txt` de `src/clients/terminal/` o sus notebooks en `src/clients/jupyter/`.
 - Lint/formato: `pnpm format` lanza Prettier. El formato es el estándar, sin configuración propia. `pnpm lint` lanza ESLint.
 - Dependencias: se instalan con pnpm, no con npm.

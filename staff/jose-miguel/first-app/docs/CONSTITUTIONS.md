@@ -5,6 +5,7 @@ Reglas estables del proyecto. El código se adapta a este documento, no al revé
 ## Guías
 
 - `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada fichero.
+- `docs/STARTUP.md` explica cómo arrancar `pnpm server` y los clientes que dependen de él.
 - `docs/TREE.md` es el árbol.
 - `docs/DATABASE.md` es la base de datos y las queries.
 - `docs/ERRORS.md` es la lista de errores.
