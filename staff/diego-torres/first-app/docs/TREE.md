@@ -8,6 +8,7 @@ first-app/
   scripts/
     jupyter.js
     browser.js
+    vscode.js
   src/
     db/
       server.js           (todo el servidor de datos)
@@ -30,6 +31,7 @@ first-app/
       web/                (index.html, styles.css y un .js por función)
       electron/           (main.js, index.html, styles.css y un .js por función)
       chrome/             (server.js, manifest.json, index.html, popup.js y styles.css)
+      vscode/             (package.json, extension.js, index.html, panel.js y styles.css)
       terminal/           (un .txt por operación)
       jupyter/            (un .ipynb por operación)
   docs/
