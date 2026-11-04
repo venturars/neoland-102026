@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Usuarios</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Usuarios</h1>
+      <form id="create-form">
+        <h2>Crear</h2>
+        <label for="create-name">Nombre</label>
+        <input type="text" id="create-name" />
+        <label for="create-email">Email</label>
+        <input type="text" id="create-email" />
+        <button>Crear</button>
+      </form>
+      <section>
+        <h2>Lista</h2>
+        <ul id="user-list"></ul>
+      </section>
+      <form id="view-form">
+        <h2>Ver</h2>
+        <label for="view-id">Id</label>
+        <input type="text" id="view-id" />
+        <button>Ver</button>
+      </form>
+      <p id="viewed-user"></p>
+      <form id="update-form">
+        <h2>Modificar</h2>
+        <label for="update-id">Id</label>
+        <input type="text" id="update-id" />
+        <label for="update-name">Nombre</label>
+        <input type="text" id="update-name" />
+        <label for="update-email">Email</label>
+        <input type="text" id="update-email" />
+        <button>Modificar</button>
+      </form>
+      <form id="delete-form">
+        <h2>Borrar</h2>
+        <label for="delete-id">Id</label>
+        <input type="text" id="delete-id" />
+        <button>Borrar</button>
+      </form>
+      <p id="message"></p>
+    </main>
+    <script src="./panel.js"></script>
+  </body>
+</html>

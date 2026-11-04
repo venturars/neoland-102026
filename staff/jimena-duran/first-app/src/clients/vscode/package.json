@@ -1,0 +1,24 @@
+{
+  "name": "users",
+  "displayName": "Usuarios",
+  "publisher": "first-app",
+  "version": "0.0.0",
+  "license": "MIT",
+  "type": "module",
+  "main": "./extension.js",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "activationEvents": ["onView:firstApp.users"],
+  "contributes": {
+    "views": {
+      "explorer": [
+        {
+          "type": "webview",
+          "id": "firstApp.users",
+          "name": "Usuarios"
+        }
+      ]
+    }
+  }
+}
