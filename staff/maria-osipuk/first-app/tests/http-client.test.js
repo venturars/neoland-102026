@@ -1,9 +1,50 @@
 import assert from "node:assert/strict";
+import { spawn } from "node:child_process";
 import { once } from "node:events";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { test } from "node:test";
+
+const CLIENT = "http://127.0.0.1:3001";
+
+async function send(method, route, body) {
+  const options = { method };
+
+  if (body !== undefined) {
+    options.headers = { "content-type": "application/json" };
+    options.body = body;
+  }
+
+  const url = CLIENT + route;
+  const response = await fetch(url, options);
+  const text = await response.text();
+  let json = null;
+
+  if (text !== "") {
+    json = JSON.parse(text);
+  }
+
+  return { status: response.status, text, json };
+}
+
+async function sendUser(method, route, user) {
+  const body = JSON.stringify(user);
+
+  return send(method, route, body);
+}
+
+async function waitForClient(client) {
+  // If the port is taken the child exits. The test must stop there, or
+  // its requests would reach a client that uses the real database.
+  const started = once(client.stdout, "data");
+  const exited = once(client, "exit");
+  const failed = exited.then(() => {
+    throw new Error("The REST client did not start");
+  });
+
+  await Promise.race([started, failed]);
+}
 
 async function testHttpClient() {
   const folder = mkdtempSync(path.join(tmpdir(), "first-app-http-"));
@@ -12,7 +53,7 @@ async function testHttpClient() {
 
   let dataServer;
   let database;
-  let server;
+  let client;
 
   try {
     // The queries always ask 127.0.0.1:3000, so the temporary data server
@@ -24,164 +65,161 @@ async function testHttpClient() {
     dataServer.listen(3000, "127.0.0.1");
     await once(dataServer, "listening");
 
-    const http = await import("../src/clients/http/app.js");
-    server = http.createHttpServer();
-    server.listen(0, "127.0.0.1");
-    await once(server, "listening");
+    client = spawn(process.execPath, ["src/clients/http/app.js"], {
+      stdio: ["ignore", "pipe", "ignore"],
+    });
+    await waitForClient(client);
 
-    const address = server.address();
-    const baseUrl = "http://127.0.0.1:" + address.port;
-    const collectionUrl = baseUrl + "/api/users";
+    // The correct case of the spec, in order.
+    const emptyList = await send("GET", "/users");
+    assert.equal(emptyList.status, 200);
+    assert.deepEqual(emptyList.json, []);
 
-    async function send(url, method, value) {
-      const response = await fetch(url, {
-        method: method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(value),
-      });
-      return response;
+    const created = await sendUser("POST", "/users", {
+      name: "Ada",
+      email: "ada@example.com",
+    });
+    assert.equal(created.status, 201);
+    assert.equal(created.json.name, "Ada");
+    assert.equal(created.json.email, "ada@example.com");
+    assert.equal(typeof created.json.createdAt, "string");
+    assert.equal(typeof created.json.updatedAt, "string");
+
+    const route = "/users/" + created.json.id;
+
+    const listed = await send("GET", "/users");
+    assert.equal(listed.status, 200);
+    assert.equal(listed.json.length, 1);
+
+    const found = await send("GET", route);
+    assert.equal(found.status, 200);
+    assert.deepEqual(found.json, created.json);
+
+    const updated = await sendUser("PATCH", route, { name: "Ada Lovelace" });
+    assert.equal(updated.status, 200);
+    assert.equal(updated.json.id, created.json.id);
+    assert.equal(updated.json.name, "Ada Lovelace");
+    assert.equal(updated.json.email, "ada@example.com");
+
+    // Bad data answers the message of logic/ and creates nothing.
+    const emptyName = await sendUser("POST", "/users", {
+      name: "  ",
+      email: "other@example.com",
+    });
+    assert.equal(emptyName.status, 400);
+    assert.deepEqual(emptyName.json, { message: "User name is required" });
+
+    const badEmail = await sendUser("POST", "/users", {
+      name: "Grace",
+      email: "grace",
+    });
+    assert.equal(badEmail.status, 400);
+    assert.deepEqual(badEmail.json, { message: "User email is invalid" });
+
+    const usedEmail = await sendUser("POST", "/users", {
+      name: "Grace",
+      email: "ada@example.com",
+    });
+    assert.equal(usedEmail.status, 409);
+    assert.deepEqual(usedEmail.json, {
+      message: "User email is already registered",
+    });
+
+    const afterErrors = await send("GET", "/users");
+    assert.equal(afterErrors.json.length, 1);
+
+    // A missing body and broken JSON are the client's fault, not a 500,
+    // and they never show the HTML error page of Express.
+    const noBody = await send("POST", "/users");
+    assert.equal(noBody.status, 400);
+    assert.deepEqual(noBody.json, { message: "User name is required" });
+
+    const brokenJson = await send("POST", "/users", "{ broken");
+    assert.equal(brokenJson.status, 400);
+    assert.deepEqual(brokenJson.json, { message: "Request JSON is invalid" });
+
+    // A valid id that nobody has.
+    const missingMessage = { message: "User does not exist" };
+    const missingGet = await send("GET", "/users/999");
+    assert.equal(missingGet.status, 404);
+    assert.deepEqual(missingGet.json, missingMessage);
+
+    const missingPatch = await sendUser("PATCH", "/users/999", { name: "X" });
+    assert.equal(missingPatch.status, 404);
+    assert.deepEqual(missingPatch.json, missingMessage);
+
+    const missingDelete = await send("DELETE", "/users/999");
+    assert.equal(missingDelete.status, 404);
+    assert.deepEqual(missingDelete.json, missingMessage);
+
+    // 1e3 is the case that must not turn into the number 1000.
+    const invalidMessage = { message: "User id must be a positive integer" };
+
+    for (const id of ["abc", "0", "1.5", "1e3"]) {
+      const invalidRoute = "/users/" + id;
+
+      const invalidGet = await send("GET", invalidRoute);
+      assert.equal(invalidGet.status, 400);
+      assert.deepEqual(invalidGet.json, invalidMessage);
+
+      const invalidPatch = await sendUser("PATCH", invalidRoute, { name: "X" });
+      assert.equal(invalidPatch.status, 400);
+      assert.deepEqual(invalidPatch.json, invalidMessage);
+
+      const invalidDelete = await send("DELETE", invalidRoute);
+      assert.equal(invalidDelete.status, 400);
+      assert.deepEqual(invalidDelete.json, invalidMessage);
     }
 
-    let response = await send(collectionUrl, "POST", {
-      name: "  Example One  ",
-      email: "  ONE@EXAMPLE.COM ",
-    });
-    assert.equal(response.status, 201);
-    const first = await response.json();
-    assert.deepEqual(first, {
-      id: first.id,
-      name: "Example One",
-      email: "one@example.com",
-    });
+    const unknownRoute = await send("GET", "/no-existe");
+    assert.equal(unknownRoute.status, 404);
+    assert.equal(unknownRoute.text, "");
 
-    response = await send(collectionUrl, "POST", {
-      name: "Example Two",
-      email: "two@example.com",
-    });
-    assert.equal(response.status, 201);
-    const second = await response.json();
+    const removed = await send("DELETE", route);
+    assert.equal(removed.status, 204);
+    assert.equal(removed.text, "");
 
-    // Creating with invalid data or a used email fails with a clear error.
-    const invalidUsers = [
-      { name: "   ", email: "new@example.com" },
-      { email: "new@example.com" },
-      { name: "New", email: "invalid" },
-      { name: "New", email: "a".repeat(65) + "@example.com" },
-    ];
+    const afterDelete = await send("GET", "/users");
+    assert.deepEqual(afterDelete.json, []);
 
-    for (const user of invalidUsers) {
-      response = await send(collectionUrl, "POST", user);
-      assert.equal(response.status, 400);
-      const problem = await response.json();
-      assert.equal(typeof problem.error, "string");
-    }
-
-    response = await send(collectionUrl, "POST", {
-      name: "Copy",
-      email: "one@example.com",
-    });
-    assert.equal(response.status, 409);
-
-    // A partial update keeps the absent email and ignores fields that
-    // the client is not allowed to edit, such as the id.
-    const userUrl = collectionUrl + "/" + first.id;
-    response = await send(userUrl, "PATCH", {
-      name: "  Nombre con acento: Á  ",
-      id: second.id,
-      createdAt: "changed",
-    });
-    assert.equal(response.status, 200);
-    let saved = await response.json();
-    assert.deepEqual(saved, {
-      id: first.id,
-      name: "Nombre con acento: Á",
-      email: "one@example.com",
-    });
-
-    response = await send(userUrl, "PATCH", {
-      email: "  UPDATED@EXAMPLE.COM  ",
-    });
-    assert.equal(response.status, 200);
-    saved = await response.json();
-    assert.equal(saved.email, "updated@example.com");
-
-    const invalidChanges = [
-      { name: "   " },
-      { name: 123 },
-      { email: "invalid" },
-      { email: null },
-      { email: "name@@example.com" },
-    ];
-
-    for (const changes of invalidChanges) {
-      response = await send(userUrl, "PATCH", changes);
-      assert.equal(response.status, 400);
-    }
-
-    response = await send(userUrl, "PATCH", { email: second.email });
-    assert.equal(response.status, 409);
-
-    for (const body of ["{", "null", "[]", '"text"']) {
-      response = await fetch(userUrl, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: body,
-      });
-      assert.equal(response.status, 400);
-    }
-
-    response = await fetch(userUrl, { method: "PATCH", body: "name=value" });
-    assert.equal(response.status, 400);
-    response = await send(userUrl, "PATCH", { name: "x".repeat(70_000) });
-    assert.equal(response.status, 413);
-
-    for (const id of ["0", "-1", "1.5", "1abc", "9007199254740993"]) {
-      response = await fetch(collectionUrl + "/" + id, { method: "DELETE" });
-      assert.equal(response.status, 400);
-    }
-
-    response = await send(collectionUrl + "/999999", "PATCH", { name: "X" });
-    assert.equal(response.status, 404);
-
-    // Listing, reading one user and the web page are no longer here.
-    response = await fetch(collectionUrl);
-    assert.equal(response.status, 405);
-    assert.equal(response.headers.get("allow"), "POST");
-    response = await fetch(userUrl);
-    assert.equal(response.status, 405);
-    assert.equal(response.headers.get("allow"), "PATCH, DELETE");
-
-    for (const otherPath of ["/", "/styles.css", "/app.js", "/api/other"]) {
-      response = await fetch(baseUrl + otherPath);
-      assert.equal(response.status, 404);
-    }
-
-    response = await fetch(userUrl, { method: "DELETE" });
-    assert.equal(response.status, 204);
-    assert.equal(await response.text(), "");
-    response = await fetch(userUrl, { method: "DELETE" });
-    assert.equal(response.status, 404);
-
-    // With the data server stopped, the client answers 500 in Spanish
-    // and does not show what failed inside.
+    // Without the data server each operation answers its own message.
     const closed = once(dataServer, "close");
     dataServer.close();
     await closed;
-    response = await send(collectionUrl, "POST", {
-      name: "Late",
-      email: "late@example.com",
+
+    const downCreate = await sendUser("POST", "/users", {
+      name: "Ada",
+      email: "ada@example.com",
     });
-    assert.equal(response.status, 500);
-    assert.deepEqual(await response.json(), {
-      error: "No se ha podido crear el usuario.",
-    });
+    assert.equal(downCreate.status, 500);
+    assert.deepEqual(downCreate.json, { message: "Unable to create user" });
+
+    const downList = await send("GET", "/users");
+    assert.equal(downList.status, 500);
+    assert.deepEqual(downList.json, { message: "Unable to list users" });
+
+    const downGet = await send("GET", "/users/1");
+    assert.equal(downGet.status, 500);
+    assert.deepEqual(downGet.json, { message: "Unable to find user" });
+
+    const downPatch = await sendUser("PATCH", "/users/1", { name: "X" });
+    assert.equal(downPatch.status, 500);
+    assert.deepEqual(downPatch.json, { message: "Unable to update user" });
+
+    const downDelete = await send("DELETE", "/users/1");
+    assert.equal(downDelete.status, 500);
+    assert.deepEqual(downDelete.json, { message: "Unable to find user" });
   } finally {
-    for (const openServer of [server, dataServer]) {
-      if (openServer && openServer.listening) {
-        const closed = once(openServer, "close");
-        openServer.close();
-        await closed;
-      }
+    if (client) {
+      const exited = once(client, "exit");
+      client.kill();
+      await exited;
+    }
+
+    if (dataServer && dataServer.listening) {
+      const closed = once(dataServer, "close");
+      dataServer.close();
+      await closed;
     }
 
     if (database) {
@@ -199,6 +237,6 @@ async function testHttpClient() {
 }
 
 test(
-  "The HTTP client creates, updates and deletes users on a temporary database",
+  "The REST client answers the five routes and their errors",
   testHttpClient,
 );

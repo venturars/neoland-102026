@@ -1,140 +1,277 @@
-import { error, log } from "node:console";
-import { once } from "node:events";
-import { createServer } from "node:http";
+import { error as logError, log } from "node:console";
+
+import express from "express";
 
 import { createUser } from "../../logic/create-user.js";
 import { deleteUser } from "../../logic/delete-user.js";
+import { findUserById } from "../../logic/find-user-by-id.js";
+import { listUsers } from "../../logic/list-users.js";
 import { updateUser } from "../../logic/update-user.js";
-import { readJsonBody } from "./read-json-body.js";
-import { sendHttpError } from "./send-http-error.js";
-import { sendJson } from "./send-json.js";
 
-// The data server already uses 3000, so this client listens on 3001.
+// This client only turns HTTP into calls to logic/ and back. The rules
+// stay in logic/ and the SQL stays in the data server (pnpm start).
 const HOSTNAME = "127.0.0.1";
 const PORT = 3001;
 
-export function createHttpServer() {
-  // Keep creation separate from listening so a test can choose a free port.
-  return createServer(handleRequest);
-}
+// The messages thrown by logic/. This client answers them in English,
+// as they are, and only decides which HTTP status each one gets.
+const ID_IS_INVALID = "User id must be a positive integer";
+const NAME_IS_REQUIRED = "User name is required";
+const EMAIL_IS_INVALID = "User email is invalid";
+const EMAIL_IS_REGISTERED = "User email is already registered";
+const USER_DOES_NOT_EXIST = "User does not exist";
+const UNABLE_TO_CREATE = "Unable to create user";
+const UNABLE_TO_LIST = "Unable to list users";
+const UNABLE_TO_FIND = "Unable to find user";
+const UNABLE_TO_UPDATE = "Unable to update user";
+const UNABLE_TO_DELETE = "Unable to delete user";
 
-async function handleRequest(request, response) {
+// This message is born here: a broken body fails before reaching logic/.
+const REQUEST_JSON_IS_INVALID = "Request JSON is invalid";
+
+const app = express();
+const readJson = express.json();
+app.use(readJson);
+
+app.post("/users", async (request, response) => {
   try {
-    // The base is only used to read a relative path. No external URL is fetched.
-    const requestUrl = new URL(request.url, "http://" + HOSTNAME);
-    const pathname = requestUrl.pathname;
+    // Without a JSON body Express 5 leaves body undefined. An empty
+    // object lets logic/ answer that the name is missing.
+    let body = request.body;
 
-    if (pathname === "/api/users") {
-      await handleUsersCollection(request, response);
-      return;
+    if (body === undefined) {
+      body = {};
     }
 
-    if (pathname.startsWith("/api/users/")) {
-      await handleUserResource(request, response, pathname);
-      return;
-    }
-
-    // This client no longer serves the web page or any other file.
-    throw new Error("HTTP resource does not exist");
+    const name = body.name;
+    const email = body.email;
+    const user = await createUser(name, email);
+    response.status(201);
+    response.json(user);
   } catch (error) {
-    // Every failed request gets a safe response, including an unexpected failure.
-    sendHttpError(response, error);
+    if (error instanceof Error) {
+      const message = error.message;
+
+      if (message === NAME_IS_REQUIRED) {
+        response.status(400);
+        response.json({ message });
+        return;
+      }
+
+      if (message === EMAIL_IS_INVALID) {
+        response.status(400);
+        response.json({ message });
+        return;
+      }
+
+      if (message === EMAIL_IS_REGISTERED) {
+        response.status(409);
+        response.json({ message });
+        return;
+      }
+    }
+
+    // Anything else answers the message of this operation, so an
+    // unknown text never reaches the person who made the request.
+    response.status(500);
+    response.json({ message: UNABLE_TO_CREATE });
   }
-}
+});
 
-async function handleUsersCollection(request, response) {
-  // The collection only creates. Listing users is not part of this client.
-  if (request.method !== "POST") {
-    response.setHeader("Allow", "POST");
-    throw new Error("HTTP method is not allowed");
+app.get("/users", async (request, response) => {
+  try {
+    const users = await listUsers();
+    response.status(200);
+    response.json(users);
+  } catch {
+    response.status(500);
+    response.json({ message: UNABLE_TO_LIST });
   }
+});
 
-  const body = await readJsonBody(request);
+app.get("/users/:id", async (request, response) => {
+  try {
+    // The route gives text and logic/ needs a number. The number is used
+    // only if it writes back the same text: "1e3" would silently become
+    // 1000, so it stays as text and logic/ rejects it.
+    const idText = request.params.id;
+    const idNumber = Number(idText);
+    const idNumberText = String(idNumber);
+    let id = idText;
 
-  // createUser validates and normalizes both values, so they pass as they came.
-  const user = await createUser(body.name, body.email);
-  sendJson(response, 201, {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-  });
-}
+    if (idNumberText === idText) {
+      id = idNumber;
+    }
 
-async function handleUserResource(request, response, pathname) {
-  const parts = pathname.split("/");
+    const user = await findUserById(id);
+    response.status(200);
+    response.json(user);
+  } catch (error) {
+    if (error instanceof Error) {
+      const message = error.message;
 
-  if (parts.length !== 4) {
-    throw new Error("HTTP resource does not exist");
+      if (message === ID_IS_INVALID) {
+        response.status(400);
+        response.json({ message });
+        return;
+      }
+
+      if (message === USER_DOES_NOT_EXIST) {
+        response.status(404);
+        response.json({ message });
+        return;
+      }
+    }
+
+    response.status(500);
+    response.json({ message: UNABLE_TO_FIND });
   }
+});
 
-  // A route contains text. Check the whole segment before converting it,
-  // so values such as "1abc" or "1.5" cannot select a different user.
-  const rawId = parts[3];
-  const hasOnlyDigits = /^[1-9][0-9]*$/.test(rawId);
+app.patch("/users/:id", async (request, response) => {
+  try {
+    const idText = request.params.id;
+    const idNumber = Number(idText);
+    const idNumberText = String(idNumber);
+    let id = idText;
 
-  if (!hasOnlyDigits) {
-    throw new Error("User id must be a positive integer");
-  }
+    if (idNumberText === idText) {
+      id = idNumber;
+    }
 
-  const id = Number(rawId);
+    let body = request.body;
 
-  if (!Number.isSafeInteger(id)) {
-    throw new Error("User id must be a positive integer");
-  }
+    if (body === undefined) {
+      body = {};
+    }
 
-  if (request.method === "PATCH") {
-    const body = await readJsonBody(request);
+    // updateUser looks at which keys exist, so a field that was not sent
+    // must not be in changes: that is how it keeps the stored value.
     const changes = {};
 
-    // Copy only editable properties, without inventing values for absent ones.
-    // The existing function still validates and normalizes their actual values.
-    if (Object.hasOwn(body, "name")) {
+    if (body.name !== undefined) {
       changes.name = body.name;
     }
 
-    if (Object.hasOwn(body, "email")) {
+    if (body.email !== undefined) {
       changes.email = body.email;
     }
 
     const user = await updateUser(id, changes);
-    sendJson(response, 200, {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-    });
-    return;
+    response.status(200);
+    response.json(user);
+  } catch (error) {
+    if (error instanceof Error) {
+      const message = error.message;
+
+      if (message === ID_IS_INVALID) {
+        response.status(400);
+        response.json({ message });
+        return;
+      }
+
+      if (message === NAME_IS_REQUIRED) {
+        response.status(400);
+        response.json({ message });
+        return;
+      }
+
+      if (message === EMAIL_IS_INVALID) {
+        response.status(400);
+        response.json({ message });
+        return;
+      }
+
+      if (message === EMAIL_IS_REGISTERED) {
+        response.status(409);
+        response.json({ message });
+        return;
+      }
+
+      if (message === USER_DOES_NOT_EXIST) {
+        response.status(404);
+        response.json({ message });
+        return;
+      }
+    }
+
+    response.status(500);
+    response.json({ message: UNABLE_TO_UPDATE });
   }
+});
 
-  if (request.method === "DELETE") {
-    await deleteUser(id);
-    response.statusCode = 204;
-    response.end();
-    return;
-  }
-
-  // Reading one user is not part of this client either.
-  response.setHeader("Allow", "PATCH, DELETE");
-  throw new Error("HTTP method is not allowed");
-}
-
-export async function startHttpServer() {
-  const server = createHttpServer();
-
-  // Listen only on this computer. Opening the page does not add a login.
-  server.listen(PORT, HOSTNAME);
-  await once(server, "listening");
-
-  log("First App HTTP: http://" + HOSTNAME + ":" + PORT);
-}
-
-// Tests import createHttpServer without starting the real one.
-if (import.meta.main) {
+app.delete("/users/:id", async (request, response) => {
   try {
-    await startHttpServer();
-  } catch {
-    error(
-      "No se ha podido iniciar el cliente HTTP. Comprueba si el puerto 3001 está ocupado.",
+    const idText = request.params.id;
+    const idNumber = Number(idText);
+    const idNumberText = String(idNumber);
+    let id = idText;
+
+    if (idNumberText === idText) {
+      id = idNumber;
+    }
+
+    await deleteUser(id);
+    response.status(204);
+    response.end();
+  } catch (error) {
+    if (error instanceof Error) {
+      const message = error.message;
+
+      if (message === ID_IS_INVALID) {
+        response.status(400);
+        response.json({ message });
+        return;
+      }
+
+      if (message === USER_DOES_NOT_EXIST) {
+        response.status(404);
+        response.json({ message });
+        return;
+      }
+
+      // deleteUser looks for the user first, so without the data server
+      // this is the message that arrives, not the one about deleting.
+      if (message === UNABLE_TO_FIND) {
+        response.status(500);
+        response.json({ message });
+        return;
+      }
+    }
+
+    response.status(500);
+    response.json({ message: UNABLE_TO_DELETE });
+  }
+});
+
+app.use((request, response) => {
+  response.status(404);
+  response.end();
+});
+
+// Express knows this is the error step because it has four arguments.
+// Each route catches its own errors, so only a body that could not be
+// read arrives here. Without this step Express answers an HTML page
+// with the stack trace, which shows internal details.
+app.use((error, request, response, next) => {
+  if (response.headersSent) {
+    next(error);
+    return;
+  }
+
+  response.status(400);
+  response.json({ message: REQUEST_JSON_IS_INVALID });
+});
+
+// Listen only on this computer, like the data server.
+app.listen(PORT, HOSTNAME, (error) => {
+  if (error) {
+    logError(
+      "No se ha podido iniciar el cliente REST. Comprueba si el puerto 3001 está ocupado.",
     );
     process.exitCode = 1;
+    return;
   }
-}
+
+  log("First App REST client: http://" + HOSTNAME + ":" + PORT);
+});
