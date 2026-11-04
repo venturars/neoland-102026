@@ -44,15 +44,17 @@ try {
 
 Cada cliente tiene su propia copia de las frases en español, para que pueda cambiarse o quitarse sin afectar a los demás. Un mensaje desconocido muestra una frase genérica, nunca el texto original.
 
-## Cliente HTTP
-
-`src/clients/http/send-http-error.js` traduce los mensajes conocidos a frases en español. Conserva los errores de negocio existentes: no añade clases ni códigos a `src/logic/`.
-
-Los errores de validación o de JSON usan 400, un usuario inexistente 404, un email ocupado 409 y los fallos de operación 500. Un recurso no disponible usa 404, un método no permitido 405 y un cuerpo mayor de 64 KiB 413. El cliente recibe `{ error }` con el mensaje; nunca recibe rutas internas ni detalles de SQLite.
+La excepción es el cliente REST, que no presenta frases a una persona: responde con el mensaje en inglés de `src/logic/`.
 
 ## Navegador
 
 `src/clients/web/app.js` captura el error de la función de `src/logic/` y lo traduce con su tabla `MESSAGES`. Los errores de operación añaden que se compruebe que el servidor de datos está arrancado. Conserva los campos escritos cuando falla un alta o un guardado. Una lista vacía solo se muestra después de una carga correcta sin usuarios.
+
+## Cliente REST
+
+`src/clients/http/app.js` captura el error en cada ruta y responde JSON con la clave `message` y el estado que corresponde: `400` si la entrada no es válida, `404` si el usuario no existe y `409` si el email ya está registrado. Un error de operación o un mensaje desconocido responde `500` con el `Unable to` de esa ruta, nunca con otro texto.
+
+`Request JSON is invalid` es el único mensaje propio del cliente, porque un cuerpo que no se puede leer falla antes de llegar a `src/logic/`. Responde `400`, sin la página de error de Express.
 
 ## Jupyter
 

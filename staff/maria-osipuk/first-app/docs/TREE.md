@@ -14,10 +14,7 @@ first-app/
 ├── src/
 │   ├── clients/
 │   │   ├── http/
-│   │   │   ├── app.js
-│   │   │   ├── read-json-body.js
-│   │   │   ├── send-http-error.js
-│   │   │   └── send-json.js
+│   │   │   └── app.js
 │   │   ├── jupyter/
 │   │   │   ├── actualizar-usuario.ipynb
 │   │   │   ├── bienvenida.ipynb
@@ -141,6 +138,10 @@ first-app/
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
 │   │   ├── classifier/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── express-rest-client/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md

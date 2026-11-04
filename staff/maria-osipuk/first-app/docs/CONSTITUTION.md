@@ -6,7 +6,7 @@ Esta constitución recoge el propósito, el alcance y los principios del proyect
 
 First App es una aplicación educativa de gestión de usuarios. Su objetivo es aprender a separar responsabilidades y seguir el recorrido de los datos mediante código sencillo y comprensible.
 
-Permite crear, buscar, listar, modificar y borrar usuarios, y realizar un recuento mediante clasificación local de nombres. Las operaciones se pueden utilizar desde terminal y Jupyter. El cliente web permite crear un usuario, seleccionar uno existente y modificar o borrar sus datos. El cliente HTTP ofrece crear, modificar y borrar. Cada cliente es independiente de los demás.
+Permite crear, buscar, listar, modificar y borrar usuarios, y realizar un recuento mediante clasificación local de nombres. Las operaciones se pueden utilizar desde terminal y Jupyter. El cliente web permite crear un usuario, seleccionar uno existente y modificar o borrar sus datos. El cliente REST permite crear, listar, ver, modificar y borrar usuarios por HTTP. Cada cliente es independiente de los demás.
 
 La selección de usuario no acredita su identidad. La autenticación y la gestión de notas están fuera del alcance actual. Ampliar ese alcance requiere una tarea específica.
 
@@ -20,7 +20,7 @@ La selección de usuario no acredita su identidad. La autenticación y la gesti�
 
 ## 3. Decisiones tecnológicas
 
-El proyecto utiliza Node.js y SQLite, con datos almacenados localmente. SQLite queda detrás de un servidor de datos local, el único proceso que abre la base; las reglas de negocio y las consultas no dependen de Node, para que cualquier cliente, también el navegador, las use directamente. El cliente web usa HTML, CSS y JavaScript vanilla. La clasificación de nombres utiliza un servicio local de modelos.
+El proyecto utiliza Node.js y SQLite, con datos almacenados localmente. SQLite queda detrás de un servidor de datos local, el único proceso que abre la base; las reglas de negocio y las consultas no dependen de Node, para que cualquier cliente, también el navegador, las use directamente. El cliente web usa HTML, CSS y JavaScript vanilla. El cliente REST usa Express. La clasificación de nombres utiliza un servicio local de modelos.
 
 pnpm es el gestor de paquetes Node del proyecto. Las dependencias nuevas y los cambios de versión requieren una revisión de necesidad y seguridad antes de aprobar el plan. Las versiones, la configuración y el procedimiento de revisión se consultan en las guías técnicas.
 

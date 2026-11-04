@@ -63,9 +63,9 @@ Se reutilizan las responsabilidades existentes antes de crear funciones o consul
 
 ## Excepciones
 
-Aprobadas en la tarea de clientes web y HTTP independientes:
+Aprobadas en la tarea del cliente web independiente:
 
-- `src/clients/web/app.js` y `src/clients/http/app.js` reúnen las funciones de su cliente en un solo archivo.
+- `src/clients/web/app.js` reúne las funciones de su cliente en un solo archivo.
 - `execute(method, sql, params)` de `src/queries/users.js` es el único envoltorio de `fetch` hacia el servidor de datos.
 
 ## Comentarios

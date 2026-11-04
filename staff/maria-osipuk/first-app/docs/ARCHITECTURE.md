@@ -12,9 +12,9 @@ Cada cuaderno de operación tiene el escenario, las instrucciones y una celda. S
 
 Los cuadernos se abren con `./scripts/jupyter.sh` desde `first-app`. Usan el Jupyter del `.venv` y el kernel `first-app`, y necesitan el servidor de datos arrancado. No crean usuarios de ejemplo.
 
-`src/clients/web/` es el cliente de navegador, con tres pantallas: selección (con el alta de usuario), menú y edición. `index.html` define sus controles y `styles.css` su diseño adaptable con lila y fondo continuo con matices lilas y rosados. `app.js` importa las funciones de `src/logic/` directamente, lee los formularios y traduce los errores. No pasa por el cliente HTTP. Se abre desde `file://` con `pnpm run web`. La selección se mantiene en memoria; recargar vuelve a la lista. «Ir a notas» está deshabilitada, sin pantalla ni petición asociada.
+`src/clients/web/` es el cliente de navegador, con tres pantallas: selección (con el alta de usuario), menú y edición. `index.html` define sus controles y `styles.css` su diseño adaptable con lila y fondo continuo con matices lilas y rosados. `app.js` importa las funciones de `src/logic/` directamente, lee los formularios y traduce los errores. Se abre desde `file://` con `pnpm run web`. La selección se mantiene en memoria; recargar vuelve a la lista. «Ir a notas» está deshabilitada, sin pantalla ni petición asociada.
 
-`src/clients/http/` es el cliente HTTP, construido con `node:http`. `app.js` conecta crear, modificar y borrar con las funciones de `src/logic/`. Traduce entradas y errores de transporte; no contiene validación de negocio ni SQL. Se arranca con `pnpm run start:http` y escucha en `127.0.0.1:3001`.
+`src/clients/http/` es el cliente REST, construido con Express. `app.js` conecta crear, listar, ver, modificar y borrar con las funciones de `src/logic/`. Traduce la petición y la respuesta; no contiene validación de negocio ni SQL. Se arranca con `pnpm run http`, escucha en `127.0.0.1:3001` y necesita el servidor de datos arrancado. No sustituye a `src/db/server.js`.
 
 `src/logic/` es el núcleo de la aplicación. Contiene las funcionalidades para crear, buscar, actualizar, borrar y listar usuarios, y para contarlos según el género del nombre. Aplica las reglas de negocio y decide qué resultado recibe el cliente.
 
@@ -30,7 +30,7 @@ Las funciones de `src/logic/` son `async` y no importan módulos `node:*`, para 
 
 `src/db/users.sqlite` es la base de la aplicación. Si el servidor de datos arranca con `FIRST_APP_DATABASE_FILE`, abre esa ruta; todos los clientes usan entonces ese archivo.
 
-Todos los clientes (terminal, Jupyter, web y HTTP) llaman a la lógica; la lógica llama a las consultas; las consultas piden al servidor de datos que ejecute el SQL. Ningún cliente importa archivos de otro. El cuaderno de preparar la tabla llama a `createUsersTable`, igual que su cliente de terminal.
+Todos los clientes (terminal, Jupyter, web y REST) llaman a la lógica; la lógica llama a las consultas; las consultas piden al servidor de datos que ejecute el SQL. Ningún cliente importa archivos de otro. El cuaderno de preparar la tabla llama a `createUsersTable`, igual que su cliente de terminal.
 
 ## Flujo de git
 
@@ -51,7 +51,7 @@ Las skills que lanzan un script usan los de `tools/`, siempre desde la raíz del
 - `AGENTS.md` guarda el proceso SDD, los comandos y el cierre de una tarea. Enlaza a las guías con las reglas del código y al flujo de git de `agents/git-workflow-agent.md`.
 - `.gitignore` deja fuera `node_modules/`, `.env`, los archivos de SQLite, los checkpoints de Jupyter y el log del cliente Jupyter.
 - `.prettierignore` evita que Prettier entre en `.venv/`, `node_modules/` y el archivo de bloqueo generado por pnpm.
-- `package.json` declara los módulos ESM, `packageManager` con `pnpm@10.34.7`, los comandos `pnpm start` (servidor de datos), `pnpm run start:http`, `pnpm run web`, `pnpm test` (de una prueba en una), `pnpm format` y `pnpm lint`, y el control que impide instalar con otro gestor.
+- `package.json` declara los módulos ESM, `packageManager` con `pnpm@10.34.7`, los comandos `pnpm start` (servidor de datos), `pnpm run web`, `pnpm run http`, `pnpm test` (de una prueba en una), `pnpm format` y `pnpm lint`, y el control que impide instalar con otro gestor.
 - `pnpm-lock.yaml` fija las versiones de las dependencias de la aplicación y de las herramientas de desarrollo.
 - `eslint.config.js` limita ESLint a los archivos JavaScript, ignora el entorno y las dependencias, activa las reglas `no-undef` y `no-unused-vars`, y limita `fetch` a las consultas y las pruebas y los globals del navegador a `src/clients/web/`.
 - `scripts/jupyter.sh` entra en la raíz de `first-app` y abre los cuadernos con el Jupyter del `.venv`.
@@ -99,18 +99,13 @@ Las skills que lanzan un script usan los de `tools/`, siempre desde la raíz del
 - `AGENTS.md` recoge el proceso SDD y sus aprobaciones, los paquetes con pnpm y Socket, y qué documento se actualiza según lo que cambie.
 - `docs/specs/<nombre>/` describe un pedido, con `spec.md`, `plan.md` y `tasks.md`. No describe el estado del código. `<nombre>` va en kebab-case.
 
-## Archivos de los clientes web y HTTP y sus pruebas
+## Archivos del cliente web y sus pruebas
 
 - `README.md` explica el arranque de cada cliente, las pantallas, los archivos y las comprobaciones.
-- `src/clients/http/app.js` crea el servidor HTTP, enruta `/api/users` y `/api/users/:id`, adapta POST, PATCH y DELETE a la lógica y arranca en `3001` cuando se ejecuta directamente.
-- `src/clients/http/read-json-body.js` lee un objeto JSON sin acumular más de 64 KiB de entrada.
-- `src/clients/http/send-json.js` envía respuestas JSON sin caché.
-- `src/clients/http/send-http-error.js` convierte errores conocidos en respuestas HTTP con frases en español.
 - `src/clients/web/index.html` define las tres pantallas, los formularios de alta y edición, sus etiquetas y la opción deshabilitada de notas.
 - `src/clients/web/styles.css` define la paleta compartida, la distribución adaptable y los estados visuales.
 - `src/clients/web/app.js` importa la lógica, gestiona las pantallas, los formularios, la confirmación del borrado y la traducción de errores.
 - `tests/database-server.test.js` comprueba el servidor de datos con una base temporal.
-- `tests/http-client.test.js` comprueba crear, modificar y eliminar por HTTP, sus errores y el servidor de datos parado.
-- `tests/shared-database.test.js` comprueba que HTTP, la lógica que usa la web y otro proceso Node ven la misma base.
+- `tests/shared-database.test.js` comprueba que la lógica que usa la web y otro proceso Node, como un ejemplo de terminal, ven la misma base, y que sin servidor de datos se recibe el error de la operación.
 
-- `docs/WEB-CLIENT-GUIDE.md` explica el servidor de datos, los dos clientes y el recorrido de las operaciones para su lectura educativa.
+- `docs/WEB-CLIENT-GUIDE.md` explica el servidor de datos, el cliente web y el recorrido de las operaciones para su lectura educativa.

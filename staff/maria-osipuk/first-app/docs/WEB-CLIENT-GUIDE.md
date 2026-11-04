@@ -1,6 +1,6 @@
-# Cómo funcionan el navegador, el HTTP y el servidor de datos
+# Cómo funcionan el navegador y el servidor de datos
 
-Esta guía recorre el código de los clientes web y HTTP y del servidor de datos. Las rutas parten de la raíz de `first-app`.
+Esta guía recorre el código del cliente web y del servidor de datos. Las rutas parten de la raíz de `first-app`.
 
 ## 1. Por qué existe el servidor de datos
 
@@ -16,7 +16,7 @@ src/logic/create-user.js
             └─ import { DatabaseSync } from "node:sqlite"  ← abría la base
 ```
 
-Basta con que un archivo de la cadena importe algo de Node para que el navegador no pueda importar ninguno de los de arriba. Por eso la web no podía usar `src/logic/` y tenía que pedirlo todo al cliente HTTP con `fetch("/api/users")`. Si el HTTP cambiaba o no estaba arrancado, la web se rompía.
+Basta con que un archivo de la cadena importe algo de Node para que el navegador no pueda importar ninguno de los de arriba. Por eso la web no podía usar `src/logic/` y tenía que pedirlo todo al cliente HTTP con `fetch("/api/users")`. Si el HTTP cambiaba o no estaba arrancado, la web se rompía. Una vez resuelto, el cliente HTTP dejó de hacer falta y se eliminó.
 
 Ahora SQLite vive en un proceso aparte, `src/db/server.js`, y la cadena no toca Node:
 
@@ -27,7 +27,7 @@ src/logic/create-user.js
        └─ fetch("http://127.0.0.1:3000/execute")             ← pide al servidor que lo ejecute
 ```
 
-`import` y `fetch` existen en Node y en el navegador, así que la misma lógica funciona en terminal, Jupyter, HTTP y en Chrome.
+`import` y `fetch` existen en Node y en el navegador, así que la misma lógica funciona en terminal, Jupyter y en Chrome.
 
 ## 2. Por qué las consultas pasan de `.sql` a `.js`
 
@@ -46,12 +46,12 @@ El SQL no cambia: solo cambia el envoltorio. Sigue habiendo un archivo por consu
 
 ## 3. Qué hace cada capa
 
-| Capa              | Archivo                                                                | Qué hace                                                                               |
-| ----------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| Cliente           | `src/clients/web/app.js`, `src/clients/http/app.js`, terminal, Jupyter | Recoge datos, llama a una función de la lógica y presenta el resultado o el error.     |
-| Lógica            | `src/logic/*.js`                                                       | Valida, normaliza y aplica las reglas. Llama a las consultas con `await`.              |
-| Consultas         | `src/queries/users.js`                                                 | Envía el SQL y sus parámetros al servidor con `execute()` y devuelve las filas.        |
-| Servidor de datos | `src/db/server.js`                                                     | Recibe `{ method, sql, params }` y lo ejecuta en SQLite. Es el único que abre la base. |
+| Capa              | Archivo                                     | Qué hace                                                                               |
+| ----------------- | ------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Cliente           | `src/clients/web/app.js`, terminal, Jupyter | Recoge datos, llama a una función de la lógica y presenta el resultado o el error.     |
+| Lógica            | `src/logic/*.js`                            | Valida, normaliza y aplica las reglas. Llama a las consultas con `await`.              |
+| Consultas         | `src/queries/users.js`                      | Envía el SQL y sus parámetros al servidor con `execute()` y devuelve las filas.        |
+| Servidor de datos | `src/db/server.js`                          | Recibe `{ method, sql, params }` y lo ejecuta en SQLite. Es el único que abre la base. |
 
 Como todos los clientes pasan por el mismo servidor, todos ven la misma base al mismo tiempo. No hay nada que sincronizar: hay una sola copia de los datos.
 
@@ -106,24 +106,9 @@ Las funciones de apoyo son `showScreen` (muestra una sección y lleva el foco a 
 5. La lógica devuelve el usuario saneado. `saveUser` lo guarda en `STATE`, muestra el menú y anuncia «Datos guardados».
 6. Si algo falla, el `catch` muestra la frase traducida y el formulario conserva lo escrito. `finally` desbloquea los controles.
 
-## 6. El cliente HTTP
-
-`src/clients/http/app.js` crea su servidor en `127.0.0.1:3001` y adapta tres peticiones a la lógica:
-
-| Petición                | Función de la lógica      | Respuesta             |
-| ----------------------- | ------------------------- | --------------------- |
-| `POST /api/users`       | `createUser(name, email)` | `201` con el usuario. |
-| `PATCH /api/users/:id`  | `updateUser(id, changes)` | `200` con el usuario. |
-| `DELETE /api/users/:id` | `deleteUser(id)`          | `204` sin cuerpo.     |
-
-Comprueba el texto del id antes de convertirlo, copia solo `name` y `email` del cuerpo y responde `404` a cualquier otra ruta y `405` con `Allow` a otro método. Los archivos pequeños que conserva son `read-json-body.js` (lee como mucho 64 KiB de JSON), `send-json.js` y `send-http-error.js` (su propia copia de las frases en español).
-
-`app.js` solo escucha si se ejecuta directamente (`import.meta.main`). Las pruebas lo importan y eligen un puerto libre.
-
-## 7. Pruebas
+## 6. Pruebas
 
 - `tests/database-server.test.js`: el servidor de datos con una base temporal, sus cuatro `method` y sus respuestas `404` y `500` sin detalles.
-- `tests/http-client.test.js`: crear, modificar y eliminar por HTTP, con datos inválidos, email ocupado, JSON roto, ids incorrectos, rutas que ya no existen y el servidor de datos parado.
-- `tests/shared-database.test.js`: lo creado por HTTP aparece en `listUsers()` (el camino de la web), lo guardado con `updateUser()` se ve por HTTP y lo creado desde otro proceso, como un ejemplo de terminal, aparece también.
+- `tests/shared-database.test.js`: lo creado desde otro proceso, como un ejemplo de terminal, aparece en `listUsers()` (el camino de la web); lo guardado con `updateUser()` lo encuentra ese otro proceso; y con el servidor parado, `listUsers()` falla con `Unable to list users`.
 
-Las dos últimas arrancan su servidor de datos temporal en el `3000`, porque `src/queries/users.js` siempre pregunta ahí. Si el servidor real está arrancado, fallan al escuchar y no envían ninguna consulta: la base real nunca se toca. `pnpm test` las ejecuta de una en una.
+Esta última arranca su servidor de datos temporal en el `3000`, porque `src/queries/users.js` siempre pregunta ahí. Si el servidor real está arrancado, falla al escuchar y no envía ninguna consulta: la base real nunca se toca. `pnpm test` las ejecuta de una en una.
