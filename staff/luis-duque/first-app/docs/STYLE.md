@@ -30,7 +30,7 @@ El único que abre la base y ejecuta SQL es `src/db/server.js`. La conexión no 
 
 No escribas SQL en `src/logic` y no abras SQLite desde ahí. Valida y llama a la función de `src/queries/users.js` con el mismo nombre: `createUser`, `updateUser`, `deleteUser`, `listUsers`, `findUserById`, `findUserByEmail` o `findUserByName`. Importa ese archivo como módulo, porque `src/logic` ya exporta una función con ese nombre.
 
-No escribas SQL ni validación en `src/clients`. El cliente de terminal solo llama a `createUser`, `updateUser`, `deleteUser`, `listUsers`, `findUserById`, `findUserByEmail`, `findUserByName` o `usersGender`. El cliente del navegador solo llama a `listUsers`, `updateUser` y `deleteUser`. El cliente HTTP es la excepción a un archivo por acción: solo `src/clients/http/app.js`. Llama a `createUser`, `updateUser`, `deleteUser`, `listUsers`, `findUserById`, `findUserByEmail` y `findUserByName`. No valida, no escribe SQL y no abre la base.
+No escribas SQL ni validación en `src/clients`. El cliente de terminal solo llama a `createUser`, `updateUser`, `deleteUser`, `listUsers`, `findUserById`, `findUserByEmail`, `findUserByName` o `usersGender`. El cliente del navegador solo llama a `listUsers`, `updateUser` y `deleteUser`.
 
 No valides dentro de `src/queries`. Ejecuta la consulta que corresponde.
 

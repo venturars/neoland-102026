@@ -26,7 +26,7 @@ Una operación que ya está en el código no se sustituye. La nueva es un ficher
 
 ## Alcance
 
-La pantalla es el cliente de `src/clients/browser`. El cliente HTTP es `src/clients/http/app.js`, con Express `5.3.0`: es la excepción ya aceptada a no añadir otro framework. El servidor es `src/db/server.js` y solo ejecuta consultas. No añadas otro framework. No añadas otro cliente salvo que te lo pidan.
+La pantalla es el cliente de `src/clients/browser`. El servidor es `src/db/server.js` y solo ejecuta consultas. No añadas otro framework. No añadas otro cliente salvo que te lo pidan.
 
 No crees un `README`. La explicación para personas está en `docs/`.
 
@@ -47,8 +47,6 @@ Pon la validación y las operaciones en `src/logic`: `shared.js`, `create-user.j
 Pon el cliente de Jupyter en `src/clients/jupyter`: un `.ipynb` por acción, con el mismo nombre que el txt. El bloque importa la función de `src/logic` y muestra una tabla de `cli-table3` con el encabezado `["cyan", "bold"]`. No valida, no escribe SQL y no abre la base. El script `jupyter` está en `package.json`. Se arranca con `pnpm jupyter` desde `first-app`, que llama a `scripts/jupyter.sh`. Crea el `.venv` de la app si falta, instala `notebook` `7.6.3` si falta el ejecutable y abre `src/clients/jupyter` en `127.0.0.1`. En Windows usa `Scripts` y `py -3`. En Mac y Linux usa `bin` y `python3`. No usa el Jupyter del equipo. En Windows la salida de Node se lee en UTF-8. Con `pnpm server` en marcha, listar, modificar y eliminar siguen igual.
 
 Pon el cliente del navegador en `src/clients/browser`: `index.html`, `app.js` y `styles.css`. `app.js` importa solo `listUsers`, `updateUser` y `deleteUser`. No llama a `/execute`. No valida, no escribe SQL y no abre la base. Se arranca con `pnpm browser` desde `first-app`, en Windows. El programa local se arranca con `pnpm server` y escucha en `127.0.0.1:3000`.
-
-Pon el cliente HTTP en un solo fichero, `src/clients/http/app.js`. Ese fichero importa `createUser`, `updateUser`, `deleteUser`, `listUsers`, `findUserById`, `findUserByEmail` y `findUserByName`. No importa `usersGender`. No llama a `/execute`. No valida, no escribe SQL y no abre la base. `GET /users/email/:email` y `GET /users/name/:name` van antes de `GET /users/:id`. Se arranca con `pnpm http` desde `first-app` y escucha en `127.0.0.1:3001`. Express queda en `5.3.0`.
 
 Pon la entrada por terminal en `src/clients/terminal`: `create-user.txt`, `update-user.txt`, `delete-user.txt`, `list-users.txt`, `find-user-by-id.txt`, `find-user-by-email.txt`, `find-user-by-name.txt` y `users-gender.txt`. Cada archivo contiene una sola línea, y esa línea es el comando de cmd. El comando llama a la función de `src/logic` de su acción con `node --input-type=module -e` y el `import` `./staff/luis-duque/first-app/src/logic/...`. No valida, no escribe SQL y no abre la base. Tira esa línea desde cmd, en la raíz del repositorio, porque Node resuelve el `import` desde la carpeta de trabajo. No uses PowerShell y no pases el archivo por la entrada estándar. `create-user.txt` lleva el nombre y el email al final del comando. `update-user.txt` lleva el id y después `name=...`, `email=...` o los dos. `delete-user.txt` lleva el id. `list-users.txt` no lleva argumentos. `find-user-by-id.txt` lleva el id. `find-user-by-email.txt` lleva el email. `find-user-by-name.txt` lleva el nombre: importa `findUserByName` y hace `console.log` del resultado. `users-gender.txt` no lleva argumentos: importa `usersGender` y hace `console.log` del recuento.
 

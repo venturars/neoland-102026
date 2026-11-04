@@ -39,8 +39,6 @@ first-app/
         index.html
         app.js
         styles.css
-      http/
-        app.js
     queries/
       users.js
       queries/

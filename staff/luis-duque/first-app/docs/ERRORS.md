@@ -11,5 +11,3 @@ Si no hay ninguno con ese nombre, lanza `User ${name} was not found` y no cambia
 Si Ollama no contesta, o la lectura falla, se detiene y lanza un `Error` con el texto `no se han podido clasificar usuarios`.
 
 Si el programa local no está en marcha, la operación no se completa y se ve el fallo de esa llamada.
-
-Si el cliente HTTP no está en marcha, Postman no completa la petición.
