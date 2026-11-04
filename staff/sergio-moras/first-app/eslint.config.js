@@ -16,7 +16,11 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/clients/browser/**/*.js", "src/clients/electron/**/*.js"],
+    files: [
+      "src/clients/browser/**/*.js",
+      "src/clients/electron/**/*.js",
+      "src/clients/chrome/extension/**/*.js",
+    ],
     languageOptions: {
       globals: {
         document: "readonly",
