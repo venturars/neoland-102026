@@ -44,6 +44,12 @@ first-app/
       http/
         app.js
         README.md
+      electron/
+        main.js
+        index.html
+        app.js
+        styles.css
+        README.md
   agents/
   skills/
   tools/
@@ -81,6 +87,10 @@ first-app/
         plan.md
         tasks.md
       http-rest-client/
+        spec.md
+        plan.md
+        tasks.md
+      electron-desktop-client/
         spec.md
         plan.md
         tasks.md
