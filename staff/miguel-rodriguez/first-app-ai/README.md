@@ -50,6 +50,12 @@ Chrome/Chromium en PATH en Linux. Si está en otra ubicación, configura `CHROME
 con la ruta de su ejecutable. La apertura y el recorrido se verificaron en macOS.
 Abrir el HTML con doble clic en una sesión normal puede bloquear los módulos.
 
+## Abrir el cliente de VS Code
+
+Con VS Code 1.142.0 o posterior y el servicio de datos iniciado con `pnpm server`, prepara la tabla como se indica arriba. Abre `src/clients/vscode/` como carpeta en VS Code y pulsa **F5** para abrir el Extension Development Host. En esa ventana, ejecuta el comando **First App: Open Users** desde la paleta de comandos. El panel permite listar, crear, buscar, editar y borrar contactos en la misma base local.
+
+Para experimentar, utiliza una copia del proyecto sin su base y datos ficticios. Cerrar la ventana de desarrollo no detiene el servicio de datos.
+
 ## Abrir Jupyter
 
 Requisitos: Node compatible con `node:sqlite` (`24.12.0` verificado), pnpm y Python 3.10 o posterior. En Windows, Python debe estar disponible mediante `py -3`.

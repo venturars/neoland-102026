@@ -1,6 +1,6 @@
 # Tareas: cliente de usuarios en VS Code
 
-Issue: #904 · PR: #906. Basadas en la [spec](spec.md) y el [plan](plan.md) aprobados. Pendientes de revisión y aprobación de Miguel; no se ha implementado la extensión.
+Issue: #904 · PR: #906. Basadas en la [spec](spec.md) y el [plan](plan.md) aprobados. Tareas aprobadas por Miguel el 2026-11-04; implementación y verificación en curso.
 
 - [ ] **Preparación.** Comprobar el estado y los documentos vigentes, y preparar una copia desechable sin la base de trabajo. Confirmar VS Code 1.142.0 o posterior y el Node compatible del servidor; iniciar el servicio y preparar la tabla en la copia desechable. Resultado: entorno y datos de prueba identificados sin modificar datos reales.
 - [ ] **Extensión y arranque.** Crear el manifiesto, `extension.cjs` y la configuración F5 previstos. Registrar el comando y abrir un panel propio. En el Extension Development Host verificar activación, importación de las operaciones ES y `fetch` al servicio local. Si no funcionan, detener el trabajo y revisar el plan antes de continuar.
@@ -9,3 +9,11 @@ Issue: #904 · PR: #906. Basadas en la [spec](spec.md) y el [plan](plan.md) apro
 - [ ] **Pruebas.** Añadir `tests/vscode-client.test.js` para los casos verificables del adaptador y flujos. Con el servicio y la tabla de la copia desechable preparados, probar en VS Code real creación, listado, búsquedas por nombre/email/ID, edición, borrado y datos compartidos con otro cliente. Probar la lista con la tabla vacía, mayúsculas, límites de ID y valores fuera de ellos, sin resultados, datos inválidos, email duplicado, cancelación, confirmación incorrecta, contacto eliminado desde otro cliente, servicio detenido y fallo al recargar después de guardar. Comprobar persistencia y teclado.
 - [ ] **Documentación y herramientas.** Actualizar README con arranque y preparación; reflejar archivos y responsabilidades en `docs/TREE.md` y `docs/ARCHITECTURE.md`. Incluir `extension.cjs` y el JavaScript del panel en formato y lint, con los contextos y globals adecuados; comprobar que se analizan.
 - [ ] **Verificación final.** Ejecutar las pruebas pertinentes nuevas y existentes, `pnpm format`, `pnpm lint` y `git diff --check`; registrar comandos y resultados reales. Revisar spec, plan, tareas, archivos y alcance frente a la issue, sin modificar la base de trabajo. Si una prueba o comprobación falla, corregirla o informar del bloqueo antes de finalizar.
+
+
+## Comprobaciones realizadas
+
+- Extension Development Host: activación, importación y acceso al servicio con tabla vacía; crear, buscar por nombre, editar y borrar un contacto ficticio; error al detener el servicio.
+- `node --test --test-concurrency=1 tests/serve-data-through-node.test.js tests/web-client.test.js tests/vscode-client.test.js`: 5 pruebas superadas en la última ejecución. `pnpm format`, `pnpm lint` y `git diff --check`: sin errores.
+- Tras el ajuste de concurrencia, el panel volvió a abrirse en VS Code y se comprobó creación con teclado y confirmación incorrecta/cancelación. Las pruebas automáticas cubren operaciones con SQLite en memoria y respuestas fuera de orden.
+- Pendiente de verificación manual completa: todas las acciones por teclado, cambios de pestaña, búsquedas por email e ID en la interfaz, persistencia tras reabrir y fallo de actualización después de guardar. No se marcan estas tareas como terminadas.

@@ -30,6 +30,30 @@ export default [
     languageOptions: { globals: { fetch: "readonly" } },
   },
   {
+    files: ["src/clients/vscode/**/*.cjs"],
+    languageOptions: {
+      sourceType: "commonjs",
+      globals: {
+        Buffer: "readonly",
+        __dirname: "readonly",
+        require: "readonly",
+        module: "readonly",
+        console: "readonly",
+      },
+    },
+    rules: js.configs.recommended.rules,
+  },
+  {
+    files: ["src/clients/vscode/panel.js"],
+    languageOptions: {
+      globals: {
+        document: "readonly",
+        window: "readonly",
+        acquireVsCodeApi: "readonly",
+      },
+    },
+  },
+  {
     files: ["src/clients/web/**/*.js"],
     languageOptions: { globals: { document: "readonly", window: "readonly" } },
   },
