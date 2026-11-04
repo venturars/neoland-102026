@@ -26,6 +26,6 @@ Si no hay usuarios, se ve que la lista está vacía. No es un fallo.
 
 Lo que cambia es quién pide los datos. El navegador pide la lista, la lectura de un id, el cambio y el borrado a las mismas reglas que ya usa la terminal. Esas reglas se las piden al programa que ya está encendido y guarda la base. No aparece otra puerta de usuarios.
 
-Las pantallas se abren en una dirección de este equipo, distinta de la de ese programa. Las dos pueden estar encendidas a la vez. Abrir el archivo de la pantalla desde el disco no llega a ese programa.
+La forma de abrir las pantallas la sustituye `docs/specs/open-screens-from-disk`. La página se abre desde el disco. Las reglas siguen pidiéndose al programa que guarda la base. Las dos pueden estar abiertas a la vez.
 
 Queda fuera lo que ya quedaba fuera en `docs/specs/vanilla-user-client`: pedir contraseña, crear un usuario desde estas pantallas, la pantalla de notas, contar usuarios según el sexo del nombre, y cambiar lo que ya se puede hacer desde la terminal y desde Jupyter. También queda fuera cambiar las reglas, los mensajes y el programa que guarda la base.

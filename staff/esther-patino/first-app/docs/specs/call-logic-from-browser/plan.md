@@ -108,6 +108,8 @@ Un fallo de `src/logic/` se muestra con ese mensaje, sin traducirlo. Si el progr
 
 Los dos se lanzan a la vez. Las pantallas se abren en `http://127.0.0.1:3001`.
 
+`docs/specs/open-screens-from-disk` sustituye este arranque. No hay puerto 3001 ni `src/clients/http/`. `pnpm open` abre el archivo de la página.
+
 ## Respuesta
 
 No se modifican `docs/ARCHITECTURE.md`, `docs/tree.md` ni `docs/style.md` antes de `tasks.md`. Esas modificaciones van en `tasks.md`, junto con el código. El código se escribe cuando se pidan esas tareas.

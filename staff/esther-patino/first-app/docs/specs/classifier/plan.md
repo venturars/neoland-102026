@@ -72,13 +72,13 @@ Si no hay mensaje, o no hay una línea por nombre, cada nombre de ese lote suma 
 
 ## Errores
 
-| Fallo de la spec                         | Mensaje                                                          |
-| ---------------------------------------- | ---------------------------------------------------------------- |
-| SQLite falla al leer                     | `Could not classify the users`                                   |
-| El modelo no responde o la llamada falla | `Could not classify the users`                                   |
-| No hay mensaje                           | no es un fallo: esos nombres suman a `undefinedUser` y se sigue  |
-| No hay una línea por nombre              | no es un fallo: esos nombres suman a `undefinedUser` y se sigue  |
-| Un valor no es `women` ni `men`          | no es un fallo: ese valor suma a `undefinedUser`                 |
+| Fallo de la spec                         | Mensaje                                                         |
+| ---------------------------------------- | --------------------------------------------------------------- |
+| SQLite falla al leer                     | `Could not classify the users`                                  |
+| El modelo no responde o la llamada falla | `Could not classify the users`                                  |
+| No hay mensaje                           | no es un fallo: esos nombres suman a `undefinedUser` y se sigue |
+| No hay una línea por nombre              | no es un fallo: esos nombres suman a `undefinedUser` y se sigue |
+| Un valor no es `women` ni `men`          | no es un fallo: ese valor suma a `undefinedUser`                |
 
 Si la llamada falla, no se devuelve un recuento parcial.
 

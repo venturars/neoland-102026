@@ -8,7 +8,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "start": "node src/clients/http/start-http-server.js",
+    "open": "cmd /c start \"\" \"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\" --allow-file-access-from-files --user-data-dir=\"%TEMP%\\first-app-screens\" --new-window \"%CD%\\src\\clients\\web\\index.html\"",
     "server": "node src/db/server.js",
     "format": "prettier --write .",
     "lint": "eslint ."
