@@ -1,0 +1,108 @@
+:root {
+  font-family: system-ui, sans-serif;
+  color: #242424;
+  background: #faf9f6;
+}
+
+body {
+  width: 380px;
+  margin: 0;
+}
+
+main {
+  max-width: 600px;
+  margin: 24px auto;
+  padding: 0 20px 24px;
+}
+
+h1 {
+  margin: 0 0 20px;
+  font-size: 36px;
+}
+
+h2 {
+  margin: 0 0 16px;
+  font-size: 22px;
+}
+
+label {
+  display: block;
+  margin: 14px 0 6px;
+}
+
+input,
+select,
+button {
+  box-sizing: border-box;
+  font: inherit;
+  border: 1px solid #b8b5ad;
+  border-radius: 5px;
+  padding: 10px 12px;
+}
+
+input,
+select {
+  width: 100%;
+  background: white;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  color: white;
+  background: #4935a8;
+  border-color: #4935a8;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid #4935a8;
+  outline-offset: 3px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.actions input {
+  min-width: 0;
+}
+
+form > button {
+  margin-top: 14px;
+}
+
+#create-form,
+#editor,
+.summary {
+  margin-top: 32px;
+}
+
+#delete-form {
+  margin-top: 24px;
+}
+
+.danger {
+  background: #a32b28;
+  border-color: #a32b28;
+}
+
+#message {
+  min-height: 24px;
+}
+
+#message[data-error="true"] {
+  color: #a32b28;
+}
+
+.hint {
+  color: #66635d;
+  font-size: 14px;
+}

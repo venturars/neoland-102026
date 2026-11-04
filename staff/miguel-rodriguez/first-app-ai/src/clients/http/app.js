@@ -1,4 +1,5 @@
 import express from "express";
+import { usersGenderCount } from "../../logic/users-gender-count.js";
 import { createUser } from "../../logic/create-user.js";
 import { listUsers } from "../../logic/list-users.js";
 import { findUserById } from "../../logic/find-user-by-id.js";
@@ -54,6 +55,23 @@ app.get("/users", async (request, response) => {
   } catch {
     response.status(500);
     response.json({ message: "Could not list the users" });
+  }
+});
+
+app.get("/users/gender-count", async (request, response) => {
+  const origin = request.get("Origin");
+  const fileOrigin = origin === "null" || origin === "file://";
+  if (fileOrigin) {
+    response.set("Access-Control-Allow-Origin", origin);
+    response.vary("Origin");
+  }
+  try {
+    const counts = await usersGenderCount();
+    response.status(200);
+    response.json(counts);
+  } catch {
+    response.status(500);
+    response.json({ message: "Could not classify the users" });
   }
 });
 

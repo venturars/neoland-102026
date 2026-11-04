@@ -181,3 +181,18 @@ $("delete-form").addEventListener("submit", async (event) => {
   }
 });
 refresh().catch((error) => status(error.message));
+
+$("gender-count").addEventListener("click", async () => {
+  if (busy) return;
+  setBusy(true);
+  $("gender-result").textContent = "Calculating…";
+  try {
+    const counts = await call("genderCount");
+    $("gender-result").textContent =
+      `Name-based estimate: women ${counts.women}, men ${counts.men}, undefined ${counts.genderUndefined}.`;
+  } catch (error) {
+    $("gender-result").textContent = error.message;
+  } finally {
+    setBusy(false);
+  }
+});

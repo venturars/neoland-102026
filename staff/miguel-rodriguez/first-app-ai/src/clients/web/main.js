@@ -228,3 +228,23 @@ document.querySelector("#cancel").addEventListener("click", () => {
   showMenu(selectedUser);
 });
 loadContacts();
+
+document.querySelector("#gender-count").addEventListener("click", async () => {
+  if (busy) return;
+  setBusy(true);
+  const result = document.querySelector("#gender-result");
+  result.textContent = "Calculando…";
+  try {
+    const response = await fetch("http://127.0.0.1:3001/users/gender-count");
+    const counts = await response.json();
+    const failed = !response.ok;
+    if (failed) {
+      throw new Error(counts.message);
+    }
+    result.textContent = `Estimación por nombre: mujeres ${counts.women}, hombres ${counts.men}, sin determinar ${counts.genderUndefined}.`;
+  } catch {
+    result.textContent = "Could not classify the users";
+  } finally {
+    setBusy(false);
+  }
+});

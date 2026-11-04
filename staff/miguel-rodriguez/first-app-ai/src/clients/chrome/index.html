@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src http://127.0.0.1:3002; object-src 'none'; base-uri 'none'"
+    />
+    <title>Contactos · Chrome</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="popup.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <h1>Contactos</h1>
+      <p id="message" role="status" aria-live="polite"></p>
+      <div class="actions">
+        <button id="refresh" type="button">Actualizar</button>
+        <button id="new-user" type="button">Nuevo contacto</button>
+      </div>
+      <label for="users">Seleccionar contacto</label>
+      <select id="users"><option value="">Cargando…</option></select>
+      <form id="find-form" class="find-form">
+        <label for="find-id">Buscar por ID</label>
+        <div class="actions">
+          <input id="find-id" type="number" min="1" step="1" required />
+          <button type="submit">Buscar</button>
+        </div>
+      </form>
+      <form id="create-form" hidden novalidate>
+        <h2>Nuevo contacto</h2>
+        <label for="create-name">Nombre</label>
+        <input id="create-name" autocomplete="name" required />
+        <label for="create-email">Email</label>
+        <input id="create-email" type="text" inputmode="email" autocomplete="email" required />
+        <button type="submit">Crear</button>
+      </form>
+      <section id="editor" hidden>
+        <h2 id="user-title"></h2>
+        <form id="edit-form" novalidate>
+          <label for="edit-name">Nombre</label>
+          <input id="edit-name" autocomplete="name" required />
+          <label for="edit-email">Email</label>
+          <input id="edit-email" type="text" inputmode="email" autocomplete="email" required />
+          <button type="submit">Guardar</button>
+        </form>
+        <form id="delete-form" novalidate>
+          <label for="delete-email">Escribe el email guardado para eliminar</label>
+          <input id="delete-email" type="text" inputmode="email" autocomplete="off" required />
+          <button class="danger" type="submit">Eliminar contacto</button>
+        </form>
+      </section>
+      <section class="summary">
+        <h2>Resumen por nombre</h2>
+        <button id="gender-count" type="button">Consultar resumen</button>
+        <p id="summary" aria-live="polite"></p>
+        <p class="hint">Estimación por nombre.</p>
+      </section>
+    </main>
+  </body>
+</html>

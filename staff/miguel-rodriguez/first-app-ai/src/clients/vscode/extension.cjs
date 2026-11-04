@@ -4,6 +4,7 @@ async function execute(message) {
   const { action, id, name, email, confirmation } = message;
   const operations = {
     list: ["list-users", "listUsers"],
+    genderCount: ["users-gender-count", "usersGenderCount"],
     create: ["create-user", "createUser"],
     name: ["find-user-by-name", "findUserByName"],
     email: ["find-user-by-email", "findUserByEmail"],
@@ -33,7 +34,7 @@ async function execute(message) {
   }
   const [file, exportName] = operations[action];
   const operation = (await import(`../../logic/${file}.js`))[exportName];
-  if (action === "list") return operation();
+  if (action === "list" || action === "genderCount") return operation();
   if (action === "create") return operation({ name, email });
   if (action === "name") return operation(name);
   if (action === "email") return operation(email);
