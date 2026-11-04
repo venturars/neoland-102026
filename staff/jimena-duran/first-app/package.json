@@ -5,11 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/http/**/*.js\"",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/http/**/*.js\" \"src/clients/electron/**/*.js\"",
     "lint": "eslint .",
     "server": "node src/db/server.js",
     "browser": "powershell -NoProfile -Command \"$page = [uri](Resolve-Path 'src/clients/browser/index.html').Path; $browserProfile = Join-Path $env:TEMP 'first-app-chrome'; & 'C:/Program Files/Google/Chrome/Application/chrome.exe' ('--user-data-dir=' + $browserProfile) '--allow-file-access-from-files' $page.AbsoluteUri\"",
-    "http": "node src/clients/http/app.js"
+    "http": "node src/clients/http/app.js",
+    "electron": "electron src/clients/electron/main.js"
   },
   "keywords": [],
   "author": "Jimena Durán",
@@ -22,6 +23,7 @@
   "devDependencies": {
     "prettier": "3.9.10",
     "eslint": "10.13.0",
-    "@eslint/js": "10.0.1"
+    "@eslint/js": "10.0.1",
+    "electron": "45.2.2"
   }
 }
