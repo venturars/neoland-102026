@@ -28,6 +28,7 @@ first-app/
       users-gender-count.js
     clients/
       web/                (index.html, styles.css y un .js por función)
+      electron/           (main.js, index.html, styles.css y un .js por función)
       terminal/           (un .txt por operación)
       jupyter/            (un .ipynb por operación)
   docs/
