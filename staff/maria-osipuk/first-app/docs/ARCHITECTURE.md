@@ -38,7 +38,7 @@ Todos los clientes (terminal, Jupyter, web y REST) llaman a la lógica; la lógi
 
 - Pensar la tarea: `agents/help-me-to-think.md`, que entrevista con `skills/grill-with-docs` si el cambio vive en esta app y con `skills/grill-me` si no.
 - Dejarla escrita: `agents/create-issue.md`, con `skills/create-issue` y la plantilla del tipo en `templates/issues/`.
-- Empezar: `skills/pull-changes` adelanta `staging`. `agents/create-branch.md` abre la rama con `skills/create-branch-from-staging`. `agents/create-commit.md` hace el commit vacío con `skills/create-empty-commit`. `agents/launch-push.md` sube la rama con `skills/launch-push`. `agents/create-pr.md` abre la pull request en draft con `skills/create-pr-base-staging`, `skills/assign-author` y `skills/create-draft`, y la plantilla del tipo en `templates/pull-request/`. Por último, el orquestador enlaza la issue con `skills/link-pr-to-issue`, añade `Closes #N` y comprueba la asociación en Development. No cierra la issue manualmente.
+- Empezar: `skills/pull-changes` adelanta `staging`. `agents/create-branch.md` abre la rama con `skills/create-branch-from-staging`. `agents/create-commit.md` hace el commit vacío con `skills/create-empty-commit`. `agents/launch-push.md` sube la rama con `skills/launch-push`. `agents/create-pr.md` abre la pull request en draft y asignada con `skills/create-pr-base-staging` y la plantilla del tipo en `templates/pull-request/`. Por último, el orquestador enlaza la issue con `skills/link-pr-to-issue`, añade `Closes #N` y comprueba la asociación en Development. No cierra la issue manualmente.
 - Guardar un trozo: `agents/create-commit.md` con `skills/commit-changes`, y `agents/launch-push.md`.
 - Que la revisen: `skills/assign-reviewers` asigna a los revisores que nombra la persona responsable y saca la pull request de draft.
 
@@ -86,7 +86,7 @@ Las skills que lanzan un script usan los de `tools/`, siempre desde la raíz del
 - `src/clients/jupyter/run_logic.py` arranca Node, espera cada función con `await` y comunica los cuadernos con las funciones existentes.
 - `agents/` guarda los siete subagentes del flujo de git: el orquestador y los seis que llama.
 - `skills/` guarda una carpeta por skill, cada una con su `SKILL.md`. Dice cuándo se usa, qué argumentos lleva y cómo se leen sus respuestas.
-- `tools/` guarda los siete scripts de git que lanzan las skills. Se ejecutan desde la raíz del repositorio y no admiten force push.
+- `tools/` guarda los ocho scripts de git que lanzan las skills. Se ejecutan desde la raíz del repositorio y no admiten force push.
 - `templates/issues/` guarda las seis plantillas de issues por tipo. Cada una define la forma del título y del cuerpo de su tarea.
 - `templates/pull-request/` guarda las seis plantillas de pull requests por tipo, con la lista de comprobación y la referencia `Closes #N`.
 - `MCPS/github-mcp-server/mcp.txt` documenta el servidor remoto de GitHub y el header de configuración de Cursor incluido en el template. Su ejemplo utiliza un marcador de credencial.

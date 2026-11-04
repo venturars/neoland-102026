@@ -105,6 +105,7 @@ first-app/
 │   ├── create-branch-from-staging.sh
 │   ├── create-branch.sh
 │   ├── create-empty-commit.sh
+│   ├── create-pr-base-staging.sh
 │   ├── launch-push.sh
 │   └── pull-changes.sh
 ├── templates/
@@ -178,6 +179,10 @@ first-app/
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
 │   │   ├── split-sdd-guides/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── sync-git-workflow-template/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
