@@ -28,8 +28,7 @@ La base de datos está en [DATABASE.md](DATABASE.md). El árbol completo, en [TR
 - `src/logic/classify-gender.js`: cuenta hombres, mujeres y no definidos con un modelo de Ollama. Exporta también `countGenders`, que hace el conteo sobre una lista.
 - `src/clients/terminal/<operación>.txt`: el comando que se pega en la terminal.
 - `src/clients/jupyter/<operación>.ipynb`: el documento que se ejecuta en Jupyter.
-- `src/clients/browser/server.js`: el servidor del cliente de navegador. Solo sirve las pantallas y los módulos de `logic/` y `queries/` que importan.
-- `src/clients/browser/public/`: las pantallas del navegador (`index.html`, `styles.css` y `app.js`). `app.js` llama a `listUsers`, `updateUser` y `deleteUser`.
+- `src/clients/browser/`: las pantallas del navegador (`index.html`, `styles.css` y `app.js`), que se abren desde el disco. `app.js` llama a `listUsers`, `updateUser` y `deleteUser`.
 
 ## Una operación
 Una operación tiene, con el mismo nombre:
@@ -61,20 +60,15 @@ Cada `.ipynb` tiene un bloque de texto (qué hace, qué pasa en la base, qué co
 - muestra el resultado en una tabla de `cli-table3` con el encabezado en color, o el `Error: <mensaje>`.
 
 ### Navegador
-Se arranca con `pnpm db` y, en otra terminal, `pnpm browser`, desde `first-app/`. Se abre `http://127.0.0.1:3000`. Tiene tres pantallas: elegir el usuario en una lista, sus opciones (volver, modificar y notas, que está desactivada) y modificar o eliminar.
+Se arranca con `pnpm db` y, en otra terminal, `pnpm browser`, desde `first-app/`. `pnpm browser` abre `src/clients/browser/index.html` en Chrome, en una ventana con un perfil aparte. Tiene tres pantallas: elegir el usuario en una lista, sus opciones (volver, modificar y notas, que está desactivada) y modificar o eliminar.
 
-`public/app.js` importa `listUsers`, `updateUser` y `deleteUser` de `logic/` y las llama con `await`, como la terminal. Funciona porque `queries/users.js` solo usa `fetch` para hablar con el servidor de la base. Si `logic` lanza un error, la pantalla lo muestra como `Error: <mensaje>`.
+`app.js` importa `listUsers`, `updateUser` y `deleteUser` de `logic/` y las llama con `await`, como la terminal. Funciona porque `queries/users.js` solo usa `fetch` para hablar con el servidor de la base. Si `logic` lanza un error, la pantalla lo muestra como `Error: <mensaje>`.
 
-`server.js`, con `node:http`, solo sirve ficheros, porque el navegador no carga módulos desde `file://`. No llama a `logic` ni tiene rutas de datos. Escucha solo en `127.0.0.1`. Las rutas son las de `src/`, para que los `import` relativos de `app.js` y de `logic/` funcionen igual que en el disco:
+No hay servidor del navegador: la página se abre desde el disco (`file://`) y Chrome lee de ahí los módulos de `logic/` y `queries/`. Por seguridad, Chrome no carga módulos desde `file://`, así que `pnpm browser` lo abre con:
+- `--user-data-dir="%TEMP%\first-app-chrome"`: un perfil solo para esta app, aparte del Chrome de siempre.
+- `--allow-file-access-from-files`: quita ese bloqueo, solo en ese perfil.
 
-| Petición `GET` | Fichero de `src/` |
-|---|---|
-| `/` | `clients/browser/public/index.html` |
-| `/clients/browser/public/styles.css`, `/clients/browser/public/app.js` | El mismo |
-| `/logic/list-users.js`, `/logic/update-user.js`, `/logic/delete-user.js` | El mismo |
-| `/queries/users.js` | El mismo |
-
-Cualquier otra ruta o método da 404 y `Not found.` Así no se puede pedir `users.sqlite`, `users-sql.js` ni otro fichero. Si `app.js` importa una función nueva de `logic/`, su fichero se añade a esta lista.
+El comando usa `start` de `cmd`, que es lo que usa `pnpm` en Windows. Para cerrar la app se cierra la ventana de Chrome.
 
 ## Servidor de la base
 Se arranca con `pnpm db` desde `first-app/` y escucha en `http://127.0.0.1:4000`, solo en este equipo. Se para con Ctrl+C. Los clientes necesitan que esté en marcha.
@@ -88,10 +82,10 @@ Solo atiende `POST /query` con `{ "query": "<nombre>", "params": [ ... ] }`. Bus
 | El cuerpo no es JSON, o falta `query` de texto o `params` en lista | 400 y `{ "error": "Invalid request." }` |
 | Otra ruta u otro método | 404 y `{ "error": "Not found." }` |
 | `POST` sin `Content-Type: application/json` | 400 y `{ "error": "Invalid request." }` |
-| Trae una cabecera `Origin` que no es `http://127.0.0.1:3000` | 403 y `{ "error": "Forbidden origin." }` |
+| Trae una cabecera `Origin` que no es `file://` | 403 y `{ "error": "Forbidden origin." }` |
 | `OPTIONS /query` | 204 y el permiso para el navegador |
 | SQLite falla | 500 y `{ "error": "<mensaje de SQLite>" }` |
 
-El navegador solo puede llamar a la base desde el cliente de navegador. Todas las respuestas llevan `Access-Control-Allow-Origin: http://127.0.0.1:3000`, nunca `*`, y `OPTIONS /query` contesta la pregunta que el navegador hace antes de cada `POST`. Una página de otra dirección recibe 403. La terminal y Jupyter no envían `Origin`, así que no les afecta.
+El navegador solo puede llamar a la base desde una página del disco abierta con `pnpm browser`: Chrome con `--allow-file-access-from-files` envía `Origin: file://`. Todas las respuestas llevan `Access-Control-Allow-Origin: file://`, nunca `*`, y `OPTIONS /query` contesta la pregunta que el navegador hace antes de cada `POST`. Una web (`http://` o `https://`) recibe 403, y un Chrome normal que abre un fichero del disco envía `Origin: null` y también recibe 403. Otra página del disco abierta en el perfil de la app sí podría llamar a la base: ese perfil es solo para esta app. La terminal y Jupyter no envían `Origin`, así que no les afecta.
 
 `queries/users.js` lanza el `error` de la respuesta tal cual. Si no llega a conectar, lanza `Database is not running. Start it with pnpm db.` ([ERRORS.md](ERRORS.md#base-parada)).

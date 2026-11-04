@@ -28,9 +28,7 @@ first-app/
     clients/
       terminal/        un .txt por operación
       jupyter/         un .ipynb por operación
-      browser/
-        server.js      solo sirve las pantallas y los módulos que importan
-        public/        index.html, styles.css y app.js
+      browser/         index.html, styles.css y app.js, que se abren desde el disco
   docs/
     CONSTITUTIONS.md
     ARCHITECTURE.md

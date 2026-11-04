@@ -28,7 +28,7 @@ src/clients/terminal/delete-user.txt
 src/clients/terminal/classify-gender.txt   # necesita Ollama en marcha
 ```
 
-El cliente de navegador se arranca desde `first-app/`, con `pnpm db` ya en marcha en otra terminal, y se abre en `http://127.0.0.1:3000`. Se para con Ctrl+C:
+El cliente de navegador se abre desde `first-app/`, con `pnpm db` ya en marcha en otra terminal. Abre la app en Chrome, en una ventana con un perfil aparte. Se cierra cerrando esa ventana:
 ```
 pnpm browser
 ```
