@@ -59,6 +59,12 @@ first-app/
         app.js
         styles.css
         icon.svg
+      nest/
+        main.js
+        app.module.js
+        users.controller.js
+        users.service.js
+        http-exception.filter.js
     queries/
       users.js
       queries/
@@ -72,6 +78,7 @@ first-app/
         find-user-by-name.js
   scripts/
     jupyter.sh
+  babel.config.json
   eslint.config.js
   package.json
   pnpm-lock.yaml
