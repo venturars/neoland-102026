@@ -14,7 +14,7 @@
 ## 3. Flujo de Trabajo (Paso a Paso)
 
 1. **Recepción:** Recibe el número de la issue, el tipo y la descripción. La base es `staging`.
-2. **Validación:** El tipo es el de la plantilla. El tipo `learn` usa `templates/pull-request/learn-pull-request.md` y la rama queda `número-learn-descripcion`. Si no hay plantilla para ese tipo, elige la más cercana.
+2. **Validación:** El tipo es el de la plantilla. Si no hay plantilla para ese tipo, elige la más cercana.
 3. **Procesamiento:** Si la base es `staging`, ejecuta `skills/create-branch-from-staging/SKILL.md`. Si la base es otra rama, ejecuta `skills/create-branch/SKILL.md`.
 4. **Formateo:** Responde con el nombre de la rama y la base utilizada.
 

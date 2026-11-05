@@ -1,7 +1,6 @@
 <!--
   Título en inglés, menos de 72 caracteres, empieza por un verbo.
-  Tipo learn. La rama será número-learn-descripcion.
-  El cuerpo sigue la plantilla de pull request de Como_Estructurar_Tus_Proyectos.
+  Tipo knowledge. La rama será número-knowledge-descripcion.
   Al abrir el draft, Descripción y Cómo se ha Probado salen de la issue.
   Las casillas se quedan sin marcar. Se marcan al pedir revisión.
   El número de la issue solo va en la línea Closes #.
