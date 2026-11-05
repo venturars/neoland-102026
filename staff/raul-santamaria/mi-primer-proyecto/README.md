@@ -44,6 +44,8 @@ Chrome no carga esta extensión desde la terminal. Ábrela así:
 - `corepack pnpm browser` — cliente del navegador (requiere `pnpm server`).
 - `corepack pnpm electron` — cliente de escritorio (arranca el servidor).
 - `corepack pnpm http` — API REST Express en el puerto 3001.
+- `corepack pnpm node-http` — API REST con `node:http` en el puerto **3004** (requiere `pnpm server`).
+- `corepack pnpm node-http-jupyter` — notebooks de esa API (requiere `pnpm server` y `pnpm node-http`).
 - `corepack pnpm nest` — API Nest en el puerto **3003** (requiere `pnpm server`).
 
 El código de `src/clients/nest/` usa convenciones Nest y no sigue
