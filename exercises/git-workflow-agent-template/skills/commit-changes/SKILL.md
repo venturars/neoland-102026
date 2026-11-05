@@ -15,7 +15,7 @@ Fuente: un commit es un conventional commit, como en [github-pr](https://www.ski
 #### Reglas de Invocación Críticas
 
 - **Mensaje técnico:** Primera línea `tipo: descripción` o `tipo(ámbito): descripción`, en inglés, en imperativo, sin punto final. Dice qué cambió. Apunta a 50 caracteres, máximo 72. Sin rutas de fichero, sin verbos sueltos (`update files`), sin pasado (`added`). Un cambio incompatible lleva `!` tras el tipo: `feat(api)!: …`. El commit vacío sigue siendo `chore: open #N`, sin cuerpo.
-- **Desglose:** Tras una línea en blanco, el detalle técnico de este commit, en inglés. Cada línea cabe en 72 caracteres. Nombra las funciones, los campos o los ficheros implicados. Explica por qué se hizo y, si el diff no lo deja claro, qué cambió. No repite la primera línea. Si la pull request tiene varios commits, cubre solo este. En un commit trivial puede omitirse. El commit vacío no lo lleva.
+- **Desglose:** Tras una línea en blanco, el detalle técnico de este commit, en inglés. Cada línea cabe en 72 caracteres. Nombra las funciones, los campos o los ficheros implicados. Explica por qué se hizo y, si el diff no lo deja claro, qué cambió. No repite la primera línea. Si la pull request tiene varios commits, cubre solo este. En un commit trivial puede omitirse.
 - **Pie:** Tras otra línea en blanco, la referencia a la issue: `Closes #N` o `Refs #N`. Si el tipo lleva `!`, añade `BREAKING CHANGE:` y qué deja de funcionar.
 - **Ejemplo:** Muestra la forma. No se copia.
 
