@@ -15,6 +15,17 @@ corepack pnpm nest
 El servidor SQL escucha en http://127.0.0.1:3000 y NestJS en
 http://127.0.0.1:3003. Mantén ambas terminales abiertas.
 El comando `nest` compila JavaScript con Babel antes de arrancar.
+Abre http://127.0.0.1:3003/ para gestionar usuarios desde Swagger UI:
+
+1. Abre `POST /users`, pulsa **Try it out**, introduce nombre y un email
+   libre y pulsa **Execute**. Devuelve 201 con el usuario y su id.
+2. Ejecuta `GET /users` para listar y `GET /users/{id}` para consultar
+   el id recibido. Ambas operaciones devuelven 200.
+3. Ejecuta `PATCH /users/{id}` con ese id y solo el nombre, solo el email
+   o ambos. Devuelve 200 y conserva los campos omitidos.
+4. Ejecuta `DELETE /users/{id}` con ese id. Devuelve 204 sin cuerpo;
+   volver a consultarlo devuelve 404 con `User not found`.
+
 La tabla debe existir según [DATABASE.md](docs/DATABASE.md).
 Para probar con datos ficticios utiliza una copia desechable de la app.
 
