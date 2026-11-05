@@ -21,6 +21,10 @@ specs/
 spec.md
 plan.md
 tasks.md
+bruno-http-client/
+spec.md
+plan.md
+tasks.md
 logic/
 shared.js
 create-user.js
@@ -70,6 +74,7 @@ styles.css
 app.js
 http/
 app.js
+bruno/
 nest/
 .babelrc.json
 main.js
