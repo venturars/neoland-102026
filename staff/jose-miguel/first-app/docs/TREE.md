@@ -7,6 +7,7 @@ first-app/
   eslint.config.js
   scripts/
     start-jupyter.js
+    start-jupyter-node-http.js
     start-browser.js
     run-bruno.js
   src/
@@ -77,6 +78,10 @@ first-app/
         users.service.js
         http-exception.filter.js
         README.md
+      node-http/
+        server.js
+        README.md
+        jupyter/
   agents/
   skills/
   tools/
@@ -138,6 +143,10 @@ first-app/
         plan.md
         tasks.md
       bruno-http-collection/
+        spec.md
+        plan.md
+        tasks.md
+      node-http-users-client/
         spec.md
         plan.md
         tasks.md
