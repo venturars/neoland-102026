@@ -4,7 +4,7 @@ Esta colección prueba el cliente HTTP de `src/clients/api/` (puerto 3001) con l
 
 ## Antes de empezar
 
-1. Instala Bruno desde su web oficial (usabruno.com).
+1. Instala Bruno desde su web oficial (usebruno.com).
 2. En `first-app`, arranca el programa de la base de datos: `pnpm start`.
 3. En otra terminal, arranca el cliente HTTP: `pnpm api`.
 
