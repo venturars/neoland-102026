@@ -249,6 +249,9 @@ async function findByNameFromForm(event) {
   showMessage("", false);
   showViewedUser(null);
 
+  // Guarda la cuenta para saber si, al responder, sigue siendo lo último.
+  const accion = ultimaAccion;
+
   let users;
   try {
     // El nombre puede llevar espacios o acentos: se prepara para la dirección.
@@ -261,9 +264,20 @@ async function findByNameFromForm(event) {
     );
   } catch (error) {
     // Si falla, lo escrito se queda para poder corregirlo.
-    showMessage(error.message, true);
+    // Un error que llega tarde no se enseña.
+    if (accion === ultimaAccion) {
+      showMessage(error.message, true);
+    }
     return;
   }
+
+  // Si ya se ha pedido otra cosa, esta respuesta llega tarde: no se enseña.
+  if (accion !== ultimaAccion) {
+    return;
+  }
+
+  // Empieza de cero, para no mezclar con otra búsqueda.
+  foundUsers.replaceChildren();
 
   // Una lista vacía no es un error: solo se avisa.
   if (users.length === 0) {

@@ -89,6 +89,9 @@ function showUsers(users) {
 
 // Pinta los usuarios encontrados, o avisa si no hay ninguno.
 function showFoundUsers(users) {
+  // Empieza de cero, para no mezclar con otra búsqueda.
+  foundList.replaceChildren();
+
   // Una lista vacía no es un error: solo se avisa.
   if (users.length === 0) {
     showMessage("No hay usuarios con ese nombre", false);
@@ -122,6 +125,11 @@ function handleReply(event) {
     if (requestId !== ultimaAccion) {
       return;
     }
+  }
+
+  // Una búsqueda que llega tarde tampoco se enseña.
+  if (action === "find-by-name" && requestId !== ultimaAccion) {
+    return;
   }
 
   // Si falla, lo escrito se queda para corregirlo.
