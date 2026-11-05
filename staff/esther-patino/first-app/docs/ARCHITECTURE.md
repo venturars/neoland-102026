@@ -110,7 +110,7 @@
 - `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001 y no repite sus reglas. No sustituye a `src/db/server.js`.
   - `src/clients/http/app.js` crea, lista, ve, modifica y borra usuarios. Se arranca con `pnpm http`.
 
-- `src/clients/nest/` llama a `src/logic/`, escucha en el puerto 3003 y no repite sus reglas. Las clases quedan en el módulo y en el controlador. `pnpm nest` lo compila con Babel a `src/clients/nest-run` y arranca ese `main.js`. No sustituye a `src/db/server.js` ni al cliente HTTP.
+- `src/clients/nest/` llama a `src/logic/`, escucha en el puerto 3003 y no repite sus reglas. Las clases quedan en el módulo y en el controlador. `pnpm nest` lo compila con Babel a `src/clients/nest-run` y arranca ese `main.js`. También expone Swagger UI en `/api` del mismo puerto. No sustituye a `src/db/server.js` ni al cliente HTTP.
 
 - `src/clients/chrome/` llama a `src/logic/`, escucha en el puerto 3002 y no repite sus reglas. El popup es `index.html` y pide esa API. No sustituye a `src/db/server.js` ni al cliente HTTP.
   - `src/clients/chrome/server.js` crea, lista, ve, modifica y borra usuarios. Se arranca con `pnpm chrome`.

@@ -8,6 +8,7 @@ import {
   Req,
   Res,
 } from "@nestjs/common";
+import { ApiBody, ApiExcludeEndpoint, ApiTags } from "@nestjs/swagger";
 import { createUser } from "../../logic/create-user.js";
 import { deleteUser } from "../../logic/delete-user.js";
 import { findUserById } from "../../logic/find-user-by-id.js";
@@ -25,9 +26,21 @@ const COULD_NOT_FIND_THE_USER = "Could not find the user";
 const COULD_NOT_UPDATE_THE_USER = "Could not update the user";
 const COULD_NOT_DELETE_THE_USER = "Could not delete the user";
 
+const USER_BODY = {
+  schema: {
+    type: "object",
+    properties: {
+      name: { type: "string" },
+      email: { type: "string" },
+    },
+  },
+};
+
+@ApiTags("users")
 @Controller()
 class UsersController {
   @Post("users")
+  @ApiBody(USER_BODY)
   async create(request, response) {
     try {
       const body = request.body;
@@ -118,6 +131,7 @@ class UsersController {
   }
 
   @Patch("users/:id")
+  @ApiBody(USER_BODY)
   async update(request, response) {
     try {
       const rawId = request.params.id;
@@ -205,6 +219,7 @@ class UsersController {
   }
 
   @All("*path")
+  @ApiExcludeEndpoint()
   async miss(response) {
     response.status(404);
     response.end();
