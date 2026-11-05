@@ -61,7 +61,6 @@ const CREATE_USER_BODY_SCHEMA = {
 
 const UPDATE_USER_BODY_SCHEMA = {
   type: "object",
-  required: ["name", "email"],
   properties: {
     name: { type: "string", example: "Ada Lovelace" },
     email: { type: "string", example: "ada@example.com" },
