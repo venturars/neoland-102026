@@ -13,20 +13,21 @@ Estas tareas esperan a que se lean la spec y el plan. Hasta entonces no se insta
 
 3. Abre `src/clients/nest/main.js`.
    Importa `DocumentBuilder` y `SwaggerModule` de `@nestjs/swagger`.
-   Tras crear la app, configura el documento y monta la página en la ruta `api`.
+   Tras crear la app, configura el documento con el título `Users Neoland` y la versión `0.0.0`, y monta la página en la raíz.
    `ORIGIN` y el `console.log` al arrancar siguen igual.
 
 4. Abre `src/clients/nest/users.controller.js`.
-   Añade `@ApiTags("users")`.
-   En crear y en cambiar, añade `@ApiBody` con `name` y `email` como texto.
+   En crear, añade `@ApiBody` con `name` y `email` obligatorios y los ejemplos `Ada` y `ada@example.com`.
+   En cambiar, añade `@ApiBody` con esos dos campos y los ejemplos `Ada Lovelace` y `ada@example.com`.
+   En ver, cambiar y borrar, añade `@ApiParam` para el id, con el ejemplo `1`.
 
 5. Abre `docs/ARCHITECTURE.md`, `docs/CONSTITUTIONS.md`, `README.md` y `AGENTS.md`.
-   Dicen que el cliente Nest también tiene la página en `http://127.0.0.1:3003/api`.
+   Dicen que el cliente Nest también tiene la página en `http://127.0.0.1:3003`.
    `docs/TREE.md` nombra `docs/specs/swagger-nest/`.
    `docs/STYLE.md` y `docs/ERRORS.md` no se tocan.
 
 6. Arranca `npm run db` y `npm run nest` desde `first-app`.
-   Abre `http://127.0.0.1:3003/api`.
+   Abre `http://127.0.0.1:3003`.
    Comprueba las cinco acciones y un nombre vacío, como en la issue.
 
 7. Desde `first-app`, lanza `npm run format` y `npm run lint`.

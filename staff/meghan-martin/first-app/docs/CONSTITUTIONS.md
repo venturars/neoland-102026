@@ -102,7 +102,7 @@ first-app/
 - `src/clients/browser/` es una página: `index.html`, `app.js` y `styles.css`. `app.js` llama a las mismas acciones de `src/logic/`. Se abre con `npm run browser` desde `first-app`. La base tiene que estar en marcha.
 - `src/clients/rest/server.js` responde JSON en el puerto 3001. Llama a las mismas acciones de `src/logic/`. Se arranca con `npm run api` desde `first-app`. La base tiene que estar en marcha.
 - `src/clients/electron/` es una ventana: `main.js`, `index.html`, `app.js` y `styles.css`. `app.js` llama a las mismas acciones de `src/logic/`. Se abre con `npm run electron` desde `first-app`. La base tiene que estar en marcha.
-- `src/clients/nest/` es otra API HTTP: `main.js`, `app.module.js`, `users.controller.js`, `users.service.js` y `http-exception.filter.js`. Llama a las mismas acciones de `src/logic/`. Se arranca con `npm run nest` desde `first-app` y escucha en el puerto 3003. La página Swagger está en `http://127.0.0.1:3003/api`. La base tiene que estar en marcha. Este cliente se aparta de [STYLE.md](STYLE.md) y de [ERRORS.md](ERRORS.md). Esas dos guías no cambian para el resto.
+- `src/clients/nest/` es otra API HTTP: `main.js`, `app.module.js`, `users.controller.js`, `users.service.js` y `http-exception.filter.js`. Llama a las mismas acciones de `src/logic/`. Se arranca con `npm run nest` desde `first-app` y escucha en el puerto 3003. La página Swagger está en `http://127.0.0.1:3003`. La base tiene que estar en marcha. Este cliente se aparta de [STYLE.md](STYLE.md) y de [ERRORS.md](ERRORS.md). Esas dos guías no cambian para el resto.
 - Una acción nueva es un fichero nuevo en `src/logic/` y un `.txt` nuevo en `src/clients/terminal/`.
 
 ## Specs

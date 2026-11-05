@@ -6,13 +6,13 @@ No es una acción nueva de personas. No se toca `src/logic/`, `src/queries/` ni 
 
 El cliente Nest sigue llamando a las mismas funciones y devolviendo lo mismo. Este cambio monta Swagger UI con `@nestjs/swagger` al arrancar `src/clients/nest/main.js`. El documento sale de las rutas que ya tiene `users.controller.js`. No cambian paths, métodos, cuerpos ni códigos.
 
-La página está en la ruta `api`. La URL es `http://127.0.0.1:3003/api`. El puerto y el host siguen saliendo de `ORIGIN` en `main.js`. Al arrancar, la consola sigue escribiendo `http://127.0.0.1:3003`.
+La página está en la raíz. La URL es `http://127.0.0.1:3003`. El puerto y el host siguen saliendo de `ORIGIN` en `main.js`. Al arrancar, la consola sigue escribiendo esa misma URL.
 
 `npm run nest` sigue compilando con Babel a `dist/` y arrancando `dist/clients/nest/main.js`. El script no cambia.
 
-En `main.js`, después de `NestFactory.create`, `DocumentBuilder` pone el título `Users API`, una descripción breve y la versión `1.0`. `SwaggerModule.createDocument` genera el JSON. `SwaggerModule.setup` sirve la página en `api`.
+En `main.js`, después de `NestFactory.create`, `DocumentBuilder` pone el título `Users Neoland` y la versión `0.0.0`. `SwaggerModule.createDocument` genera el JSON. `SwaggerModule.setup` sirve la página en la raíz.
 
-En `users.controller.js` se añade `@ApiTags("users")`. Crear y cambiar llevan `@ApiBody` con `name` y `email` como texto, para que la página muestre esos dos campos. El controlador no tiene una ruta comodín, así que no hace falta excluir ninguna.
+En `users.controller.js`, crear lleva `@ApiBody` con `name` y `email` obligatorios y los ejemplos `Ada` y `ada@example.com`. Cambiar lleva `@ApiBody` con esos dos campos y los ejemplos `Ada Lovelace` y `ada@example.com`. Ver, cambiar y borrar llevan `@ApiParam` para el id, con el ejemplo `1`. El controlador no tiene una ruta comodín, así que no hace falta excluir ninguna.
 
 Las respuestas no cambian:
 
@@ -57,7 +57,7 @@ Se tocan, cuando se pida el código:
 
 `package.json` añade `@nestjs/swagger` en `12.1.0`, al lado de `@nestjs/common@12.3.3` y `@nestjs/core@12.3.3`. La versión queda exacta, sin rango. No se añaden `class-validator`, `class-transformer`, `typescript` ni `@fastify/static`.
 
-`docs/ARCHITECTURE.md`, `docs/CONSTITUTIONS.md`, `README.md` y `AGENTS.md` dicen que el cliente Nest también tiene la página en `http://127.0.0.1:3003/api`. `docs/TREE.md` nombra esta spec. `docs/STYLE.md` y `docs/ERRORS.md` no cambian.
+`docs/ARCHITECTURE.md`, `docs/CONSTITUTIONS.md`, `README.md` y `AGENTS.md` dicen que el cliente Nest también tiene la página en `http://127.0.0.1:3003`. `docs/TREE.md` nombra esta spec. `docs/STYLE.md` y `docs/ERRORS.md` no cambian.
 
 No se tocan el resto de clientes ni la base.
 

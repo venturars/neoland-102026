@@ -50,6 +50,6 @@ Abre Cursor Settings → MCP y comprueba que aparecen conectados. Abre una conve
 
 ## Nest
 
-Desde `first-app`, deja `npm run db` en marcha y ejecuta `npm run nest`. Responde en `http://127.0.0.1:3003`. La página para probar las peticiones está en `http://127.0.0.1:3003/api`.
+Desde `first-app`, deja `npm run db` en marcha y ejecuta `npm run nest`. Responde en `http://127.0.0.1:3003`. La página para probar las peticiones está en `http://127.0.0.1:3003`.
 
 Este cliente se aparta de `docs/STYLE.md` y de `docs/ERRORS.md`: usa clases, métodos, `this` y decoradores, y traduce las frases de error que ya existen. Esas dos guías siguen igual para el resto de la app. No sustituye al cliente HTTP del puerto 3001.

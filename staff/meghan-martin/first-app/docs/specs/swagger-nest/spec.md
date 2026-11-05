@@ -6,7 +6,7 @@ Quien prueba el cliente Nest quiere ver y lanzar las peticiones desde el navegad
 
 Lo usa quien ya prueba crear, listar, ver, cambiar y borrar personas en `http://127.0.0.1:3003`.
 
-Se deja la base en marcha y se arranca el cliente Nest desde `first-app`. En el mismo programa hay una página. Muestra las cinco acciones que ese cliente ya tiene. Se elige una, se rellenan los datos y se envía. La respuesta se ve en la página.
+Se deja la base en marcha y se arranca el cliente Nest desde `first-app`. En el mismo programa hay una página en `http://127.0.0.1:3003`. Muestra las cinco acciones que ese cliente ya tiene. Se elige una, se rellenan los datos y se envía. La respuesta se ve en la página.
 
 Las acciones son las de siempre:
 
