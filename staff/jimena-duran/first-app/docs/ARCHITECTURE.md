@@ -20,6 +20,8 @@ El cliente `src/clients/browser/` contiene `index.html`, `app.js` y `styles.css`
 `http://127.0.0.1:3003`. Un módulo registra controlador, servicio y filtro
 de transporte. El servicio importa las funciones existentes de `logic/`;
 no repite validaciones ni accede directamente a SQLite.
+La raíz `/` sirve Swagger UI en el mismo origen. Los metadatos de cuerpos
+e ids documentan las cinco rutas actuales sin añadir validaciones.
 `corepack pnpm nest` limpia el `dist/` local, compila `src/` con Babel
 manteniendo ESM y arranca `dist/clients/nest/main.js`. Los imports relativos
 usan la copia compilada de logic y queries, que sigue llamando al servidor
