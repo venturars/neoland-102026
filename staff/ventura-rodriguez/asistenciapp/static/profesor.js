@@ -1,9 +1,9 @@
-// AsistenciApp · panel del profesor (T17 panel · T18 vista de sesión)
-// El token va en el fragmento (#t=…): el navegador nunca lo envía en la URL (plan §2.2).
+// AsistenciApp · panel del profesor y vista de sesión
+// El token va en el fragmento (#t=…): el navegador nunca lo envía en la URL.
 // La navegación también usa el fragmento: #t=<token> (panel) y #t=<token>&s=<id> (sesión).
-// Todo texto que viene del servidor se pinta con textContent (CA-12).
+// Todo texto que viene del servidor se pinta con textContent.
 
-const POLL_MS = 2000; // CA-10: la lista se actualiza en ≤ 5 s
+const POLL_MS = 2000; // la lista se actualiza en ≤ 5 s
 
 const $ = (id) => document.getElementById(id);
 const statusEl = $("status");
@@ -12,7 +12,7 @@ const views = { panel: $("panel-view"), session: $("session-view") };
 let pollTimer = null;
 let countdownTimer = null;
 let currentSession = null;
-let pendingRemoval = null; // id del registro que espera confirmación (CA-24)
+let pendingRemoval = null; // id del registro que espera confirmación
 let renderedListKey = ""; // para no repintar la lista si no ha cambiado
 
 // ---------- utilidades ----------
@@ -79,12 +79,12 @@ function stopTimers() {
   pollTimer = countdownTimer = null;
 }
 
-// ---------- panel (T17) ----------
+// ---------- panel ----------
 
 async function renderPanel() {
   showView("panel");
   document.title = "Panel del profesor · AsistenciApp";
-  const sessions = await (await api("/api/sessions")).json(); // CA-16
+  const sessions = await (await api("/api/sessions")).json();
 
   const list = $("sessions");
   list.replaceChildren();
@@ -132,7 +132,7 @@ $("new-session").addEventListener("submit", async (event) => {
     const res = await api("/api/sessions", {
       method: "POST",
       body: JSON.stringify({ title: $("session-title").value }),
-    }); // CA-01, CA-02
+    });
     const session = await res.json();
     $("session-title").value = "";
     location.hash = hrefFor(session.id);
@@ -143,7 +143,7 @@ $("new-session").addEventListener("submit", async (event) => {
   }
 });
 
-// ---------- descarga (CA-14) ----------
+// ---------- descarga ----------
 
 async function downloadCsv(sessionId) {
   const res = await api(`/api/sessions/${encodeURIComponent(sessionId)}/export`);
@@ -161,7 +161,7 @@ async function downloadCsv(sessionId) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-// ---------- vista de sesión (T18) ----------
+// ---------- vista de sesión ----------
 
 function renderSession(data) {
   currentSession = data;
@@ -169,7 +169,7 @@ function renderSession(data) {
   $("s-title").textContent = data.title;
   $("s-link").textContent = data.studentUrl;
 
-  // Código y cuenta atrás (CA-03), o aviso de cerrada (CA-13)
+  // Código y cuenta atrás, o aviso de cerrada
   $("code-card").hidden = !data.open;
   $("s-closed").hidden = data.open;
   $("close").hidden = !data.open;
@@ -181,7 +181,7 @@ function renderSession(data) {
   renderList(data);
 }
 
-// Lista en vivo y total (CA-10, CA-11) con botón "Quitar" (CA-24).
+// Lista en vivo y total, con botón "Quitar".
 // Solo se repinta si algo cambió: así no se pierde el foco del teclado cada 2 s (P5)
 // y la confirmación pendiente sobrevive al polling.
 function renderList(data) {
@@ -216,7 +216,7 @@ function checkinRow(c) {
     li.className = "confirm-row";
     const question = document.createElement("span");
     question.className = "name";
-    question.textContent = `¿Quitar a ${c.name}?`; // CA-12: texto literal
+    question.textContent = `¿Quitar a ${c.name}?`; // texto literal
     const actions = document.createElement("span");
     actions.className = "row-actions";
     actions.append(
@@ -228,7 +228,7 @@ function checkinRow(c) {
   }
   const name = document.createElement("span");
   name.className = "name";
-  name.textContent = c.name; // CA-12: siempre texto literal
+  name.textContent = c.name; // siempre texto literal
   const actions = document.createElement("span");
   actions.className = "row-actions";
   const time = document.createElement("span");
@@ -333,7 +333,7 @@ $("download").addEventListener("click", () => {
   if (currentSession) downloadCsv(currentSession.id).catch(handleError);
 });
 
-// Cerrar con confirmación dentro de la página (CA-13)
+// Cerrar con confirmación dentro de la página
 $("close").addEventListener("click", () => {
   $("confirm-close").hidden = false;
   $("confirm-no").focus();
@@ -381,7 +381,7 @@ async function route() {
   }
 }
 
-// CA-21: aviso si el panel se abre en una dirección local
+// Aviso si el panel se abre en una dirección local
 $("local-warning").hidden = !["localhost", "127.0.0.1", "[::1]"].includes(location.hostname);
 
 window.addEventListener("hashchange", route);

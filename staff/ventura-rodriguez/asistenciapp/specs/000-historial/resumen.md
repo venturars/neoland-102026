@@ -1,0 +1,80 @@
+# Resumen de specs
+
+Versión corta de las specs ya resumidas (`AGENTS.md` §3). Quien empieza una tarea lee este fichero en vez de esas specs. Si necesita el detalle (un criterio, una prueba, una nota), va a la original por el enlace de su encabezado: las specs resumidas se borran.
+
+Cada bloque se añade al final y no se reescribe. Todo el resumen vive en este único fichero.
+
+---
+
+## Specs 001 a 004
+
+> Escrito: 2026-10-30, con la spec 679 (issue #679).
+
+---
+
+### 001 · [checkin-codigo](https://github.com/venturars/neoland-102026/tree/90d8be4e5f19ef4d3bab29dacdc29904393a2e82/staff/ventura-rodriguez/asistenciapp/specs/001-checkin-codigo)
+
+**Qué resolvió.** Pasar lista en una clase online en menos de un minuto, en cualquier plataforma, con una lista guardada y descargable.
+
+**Decisiones vigentes.**
+- El profesor abre una clase desde su **panel privado**, al que entra con un **enlace secreto**, sin contraseña. Ve un código de **4 dígitos** que cambia cada **30 s**. Se acepta también el código anterior.
+- El alumno escribe su nombre (hasta 60 caracteres) y el código. Un mismo nombre (sin distinguir mayúsculas, tildes ni espacios) no se duplica en la clase.
+- El profesor ve la lista en vivo, cierra la clase, descarga un CSV (`;`, columnas *Nombre* y *Hora*) y consulta clases anteriores.
+- Con `--tunel`, los alumnos entran desde sus casas.
+- Un registro por navegador y clase. Es disuasorio, no una prueba de identidad.
+- El profesor puede **quitar** registros, con confirmación. No puede **añadirlos** ni **editarlos**.
+- Todo nombre se muestra como texto literal. Todas las pantallas sirven en un móvil de ~400 px.
+
+**Qué cambió después.**
+- «Sin límite de intentos» (decisión 1 de su plan): la **006** añadió un límite por IP y la **008** lo dejó en solo códigos fallados, con un bloqueo que caduca.
+- La «futura spec `002`» para Discord no llegó: el bot sigue como idea sin spec, y el número `002` lo usó otra spec.
+- La **679** la borró; está en el enlace de su encabezado.
+
+---
+
+### 002 · [spec-antes-del-cambio](https://github.com/venturars/neoland-102026/tree/90d8be4e5f19ef4d3bab29dacdc29904393a2e82/staff/ventura-rodriguez/asistenciapp/specs/002-spec-antes-del-cambio)
+
+**Qué resolvió.** El agente cambiaba el README o los tests sin spec, porque las reglas solo frenaban las funcionalidades nuevas. Además, las reglas nombraban otra carpeta y a otra persona.
+
+**Decisiones vigentes.**
+- Ningún fichero de la app cambia sin una spec que lo cubra: código, tests, README y documentación de uso.
+- El orden es spec → plan → tareas → cambio.
+- Un pedido que no cabe en la spec activa abre otra spec.
+- Una issue, una rama o una pull request no autorizan el cambio.
+- La carpeta es `staff/ventura-rodriguez/asistenciapp/`, y aprueba quien trabaja en ella.
+
+**Qué cambió después.**
+- «Esperar el ok entre la spec y el plan» (CA-02): la **007** lo quitó. La spec, el plan y las tareas se escriben en la misma pasada, dentro de los cinco momentos.
+- «Ningún fichero de la app»: la **679** lo dejó en «ningún fichero de esta carpeta» (constitución §4).
+- La **679** la borró; está en el enlace de su encabezado.
+
+---
+
+### 003 · [activar-el-entorno](https://github.com/venturars/neoland-102026/tree/90d8be4e5f19ef4d3bab29dacdc29904393a2e82/staff/ventura-rodriguez/asistenciapp/specs/003-activar-el-entorno)
+
+**Qué resolvió.** En el README, el paso que solo activa el entorno se titulaba «Arrancar la app», y parecía que la app ya estaba en marcha.
+
+**Decisiones vigentes.**
+- El README separa **activar el entorno** (en cada terminal) de **arrancar la app**.
+- Bajo «Arrancar la app» solo están las dos formas de ponerla en marcha: la clase online (`--tunel`) y la prueba en el propio ordenador.
+
+**Qué cambió después.**
+- La **008** añadió a esos pasos los comandos de macOS, Linux y Windows. La separación sigue igual.
+- La **679** la borró; está en el enlace de su encabezado.
+
+---
+
+### 004 · [quitar-referencias-personales](https://github.com/venturars/neoland-102026/tree/90d8be4e5f19ef4d3bab29dacdc29904393a2e82/staff/ventura-rodriguez/asistenciapp/specs/004-quitar-referencias-personales)
+
+**Qué resolvió.** Las instrucciones y las notas nombraban a una persona y usaban su carpeta personal.
+
+**Decisiones vigentes.**
+- El README entra en la carpeta con un usuario genérico: `cd staff/<usuario>/asistenciapp`, en sus dos pasos.
+- La documentación no nombra a esa persona ni su carpeta personal, ni la sustituye por otra persona.
+- Las notas de decisiones y de pruebas conservan su fecha y su resultado.
+- Lo comprueba `tests/test_personal_references.py`, que deja fuera solo la carpeta de la propia spec 004.
+
+**Qué cambió después.**
+- Nada. La **008** mantuvo las dos líneas `cd staff/<usuario>/asistenciapp` al reescribir el README.
+- La **679** la borró; está en el enlace de su encabezado.
+- La **679** quitó el test que leía las notas de la `001`; el test de nombres ya no excluye ninguna carpeta.
