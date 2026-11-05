@@ -1,63 +1,61 @@
 <!--
   Título en inglés, menos de 72 caracteres, empieza por un verbo.
   Tipo learn. La rama será número-learn-descripcion.
-  Al abrir el draft, Por qué, Qué se ha desarrollado y Cómo comprobarlo salen de la issue.
-  Decisiones técnicas, Qué he aprendido y Herramientas y agentes se completan al pedir revisión,
-  cuando ya hay commits además del commit vacío.
+  El cuerpo sigue la plantilla de pull request de Como_Estructurar_Tus_Proyectos.
+  Al abrir el draft, Descripción y Cómo se ha Probado salen de la issue.
   Las casillas se quedan sin marcar. Se marcan al pedir revisión.
   El número de la issue solo va en la línea Closes #.
 -->
 
-## Por qué
-
-<!--
-  El motivo, en una o dos frases. El detalle está en la issue.
--->
-
-## Qué se ha desarrollado
-
-<!--
-  Qué puede usar otra persona después de este cambio.
-  Al abrir el draft, una frase tomada de la issue.
--->
-
-## Decisiones técnicas
-
-<!--
-  Qué opciones había y por qué se eligió esta.
-  Sin nombres de carpetas, rutas ni herramientas de una sola persona.
-  Al abrir el draft, déjalo en blanco.
--->
-
-## Qué he aprendido
-
-<!--
-  Una idea que ahora sabes explicar y antes no.
-  Al abrir el draft, déjalo en blanco.
--->
-
-## Herramientas y agentes
-
-<!--
-  Qué hiciste tú, qué hizo un agente y qué revisarías la próxima vez.
-  Sin citar un modelo, una ruta ni una configuración personal.
-  Al abrir el draft, déjalo en blanco.
--->
-
-## Cómo comprobarlo
-
-<!--
-  Pasos para ver el cambio. En el draft, los de la issue.
--->
-
-1.
-
-## Lista de comprobación
-
-- [ ] Un compañero entiende qué se ha desarrollado
-- [ ] Las decisiones y lo aprendido están escritos
-- [ ] El uso de agentes queda explicado
-
-## Issue
+## 🔗 Issue(s) Relacionado(s)
 
 Closes #
+
+## 📝 Descripción
+
+[Describe aquí tus cambios...]
+
+## 🚀 Tipo de Cambio
+
+- [ ] 🐛 Corrección de Bug (cambio no disruptivo que soluciona un problema)
+- [ ] ✨ Nueva Característica (cambio no disruptivo que añade funcionalidad)
+- [ ] 💥 Cambio Disruptivo (Breaking Change) (corrección o característica que causaría que la funcionalidad existente no funcione como se esperaba)
+- [ ] 🧪 Tests (añadir tests faltantes o corregir tests existentes)
+- [ ] 🧹 Refactorización (cambio no disruptivo que ni arregla un bug ni añade funcionalidad)
+- [ ] 🎨 Estilos (cambios que no afectan el significado del código: espacios, formato, puntos y comas faltantes, etc.)
+- [ ] 📖 Documentación (solo cambios en la documentación)
+- [ ] ⚙️ Build/CI (cambios en el sistema de build, dependencias, configuración de CI/CD)
+- [ ] 🔧 Chore (otros cambios que no modifican archivos src o de test)
+
+## ✅ ¿Cómo se ha Probado Esto?
+
+- [ ] Test A: [Describe el test manual o automático]
+- [ ] Test B: [Describe otro test]
+
+**Configuración de Prueba:**
+* Firmware version:
+* Hardware:
+* Toolchain:
+* SDK:
+
+*(Adapta la sección de configuración de prueba si es relevante para tu proyecto)*
+
+## ☑️ Checklist del Contribuidor
+
+- [ ] ¿He leído la guía de [**CONTRIBUTING.md**](../CONTRIBUTING.md)?
+- [ ] Mi código sigue las guías de estilo de este proyecto.
+- [ ] He realizado una auto-revisión de mi propio código (`self-review`).
+- [ ] He comentado mi código, particularmente en áreas difíciles de entender. *(si aplica)*
+- [ ] He añadido/actualizado la documentación relevante.
+- [ ] He añadido tests que prueban que mi solución es efectiva o que mi característica funciona.
+- [ ] Todos los tests nuevos y existentes pasan localmente con mis cambios.
+- [ ] He verificado que mi PR está dirigido a la rama correcta (ej: `main` o `develop`).
+- [ ] He enlazado el Issue correspondiente (si existe) usando `Closes #issue_number`.
+
+## 🖼️ Capturas de Pantalla / GIFs (si aplica)
+
+[Inserta aquí capturas/GIFs]
+
+## 📝 Notas Adicionales para el Revisor (Opcional)
+
+[Añade aquí cualquier nota adicional...]

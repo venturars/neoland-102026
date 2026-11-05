@@ -14,7 +14,7 @@
 ## 3. Flujo de Trabajo (Paso a Paso)
 
 1. **Recepción:** Toma el título de la issue y la rama que acaba de subirse. No hace falta el número de issue.
-2. **Validación:** El cuerpo va en español y rellena la plantilla del tipo en `templates/pull-request/`. El tipo `learn` usa `templates/pull-request/learn-pull-request.md`. En esa plantilla, al abrir el draft, Por qué, Qué se ha desarrollado y Cómo comprobarlo salen de la issue, y Decisiones técnicas, Qué he aprendido y Herramientas y agentes se dejan en blanco. La sección Issue se deja vacía. Si el tipo no tiene plantilla, usa la más cercana.
+2. **Validación:** El cuerpo va en español y rellena la plantilla del tipo en `templates/pull-request/`. El tipo `learn` usa `templates/pull-request/learn-pull-request.md`, con las secciones de esa plantilla. Al abrir el draft, Descripción y Cómo se ha Probado salen de la issue. Las casillas y las notas se dejan en blanco. La línea `Closes #` se deja vacía. Si el tipo no tiene plantilla, usa la más cercana.
 3. **Procesamiento:** Usa `skills/create-pr-base-staging/SKILL.md` para crearla con base `staging`, directamente en draft y asignada al usuario autenticado en una misma invocación.
 4. **Formateo:** Responde con el título, la base `staging`, el autor, la persona asignada y la URL.
 
@@ -27,5 +27,5 @@
 
 ## 5. Manejo de Errores y Excepciones
 
-- **Si la pull request de esta rama ya existe:** Actualiza el cuerpo, la asignación con `assign-author` y el estado con `create-draft`, conservando el enlace con la issue. Si el tipo es `learn` y ya hay commits además del vacío, rellena Decisiones técnicas, Qué he aprendido y Herramientas y agentes.
+- **Si la pull request de esta rama ya existe:** Actualiza el cuerpo, la asignación con `assign-author` y el estado con `create-draft`, conservando el enlace con la issue. Si el tipo es `learn` y ya hay commits además del vacío, rellena Descripción, Tipo de Cambio, Cómo se ha Probado y las notas para el revisor.
 - **Si la herramienta no devuelve la URL:** Di el error y no inventes el enlace.
