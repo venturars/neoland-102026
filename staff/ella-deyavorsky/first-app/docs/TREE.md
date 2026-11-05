@@ -13,6 +13,7 @@ first-app/
       delete-user.js
       find-user-by-email.js
       find-user-by-id.js
+      list-gmail-users.js
       list-users.js
       update-user.js
     queries/
@@ -26,6 +27,7 @@ first-app/
         find-all.sql
         find-by-email.sql
         find-by-id.sql
+        find-gmail.sql
         insert.sql
         remove.sql
         update.sql
@@ -52,6 +54,7 @@ first-app/
         delete-user.txt
         find-user-by-email.txt
         find-user-by-id.txt
+        list-gmail-users.txt
         list-users.txt
         nest.txt
         update-user.txt
@@ -63,6 +66,7 @@ first-app/
         delete-user.ipynb
         find-user-by-email.ipynb
         find-user-by-id.ipynb
+        list-gmail-users.ipynb
         list-users.ipynb
         prepare-database.ipynb
         update-user.ipynb

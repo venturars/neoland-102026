@@ -83,6 +83,9 @@ function startScreen() {
   addClick("reload-button", () => {
     send({ action: "list" });
   });
+  addClick("gmail-button", () => {
+    send({ action: "list-gmail" });
+  });
   addClick("create-button", () => {
     const name = readBox("create-name");
     const email = readBox("create-email");

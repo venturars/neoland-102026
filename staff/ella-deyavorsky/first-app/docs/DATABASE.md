@@ -10,7 +10,7 @@ The `users` table has one row per user:
 - `created_at` — the date `YYYY-MM-DD HH:MM:SS`. SQL fills it with `datetime('now', 'localtime')`. Not with a JavaScript date.
 - `updated_at` — the same date format. SQL fills it with `datetime('now', 'localtime')` when the row is created. Not with a JavaScript date. The update query sets it again each time the row changes.
 
-Each SQL statement lives in its own `.sql` file under `src/db/queries/`. The database program reads those files. `src/queries/users.js` exports the functions, asks the program for each query with `fetch`, and contains no SQL. The query functions are `createUsersTable`, `insert`, `findById`, `findByEmail`, `findAll`, `update`, and `remove`. Each function asks the program to run the `.sql` file with the same name in kebab-case. The query files rename `created_at` and `updated_at` to `createdAt` and `updatedAt` with `AS` in the SQL.
+Each SQL statement lives in its own `.sql` file under `src/db/queries/`. The database program reads those files. `src/queries/users.js` exports the functions, asks the program for each query with `fetch`, and contains no SQL. The query functions are `createUsersTable`, `insert`, `findById`, `findByEmail`, `findAll`, `findGmail`, `update`, and `remove`. Each function asks the program to run the `.sql` file with the same name in kebab-case. The query files rename `created_at` and `updated_at` to `createdAt` and `updatedAt` with `AS` in the SQL.
 
 ## Queries
 
@@ -23,6 +23,7 @@ The query functions are:
 - `findById(id)` runs `find-by-id.sql`. The id is a plain value.
 - `findByEmail(email)` runs `find-by-email.sql`. The email is a plain value.
 - `findAll` runs `find-all.sql`.
+- `findGmail` runs `find-gmail.sql`. It takes nothing. It returns the users whose email contains `@gmail`, oldest id first. The text `@gmail` is fixed in the SQL, and `LIKE` ignores capitals.
 - `update` runs `update.sql`. It takes an object.
 - `remove(id)` runs `remove.sql`. The id is a plain value.
 

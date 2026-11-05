@@ -2,6 +2,7 @@
 import { fastify } from "fastify";
 import { createUser } from "../../logic/create-user.js";
 import { listUsers } from "../../logic/list-users.js";
+import { listGmailUsers } from "../../logic/list-gmail-users.js";
 import { findUserById } from "../../logic/find-user-by-id.js";
 import { updateUser } from "../../logic/update-user.js";
 import { deleteUser } from "../../logic/delete-user.js";
@@ -54,6 +55,18 @@ app.post("/users", async (request, reply) => {
 app.get("/users", async (request, reply) => {
   try {
     const users = await listUsers();
+    reply.code(200).send(users);
+  } catch (error) {
+    if (error.message !== "The database failed.") {
+      console.error(error);
+    }
+    reply.code(500).send({ error: "The database failed." });
+  }
+});
+
+app.get("/users/gmail", async (request, reply) => {
+  try {
+    const users = await listGmailUsers();
     reply.code(200).send(users);
   } catch (error) {
     if (error.message !== "The database failed.") {

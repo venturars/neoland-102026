@@ -12,6 +12,7 @@ import {
 } from "@nestjs/common";
 import { createUser } from "../../logic/create-user.js";
 import { listUsers } from "../../logic/list-users.js";
+import { listGmailUsers } from "../../logic/list-gmail-users.js";
 import { findUserById } from "../../logic/find-user-by-id.js";
 import { updateUser } from "../../logic/update-user.js";
 import { deleteUser } from "../../logic/delete-user.js";
@@ -39,6 +40,12 @@ export class UsersController {
   @Get("users")
   async list() {
     return listUsers();
+  }
+
+  // Declared before users/:id, or gmail would be read as an id.
+  @Get("users/gmail")
+  async listGmail() {
+    return listGmailUsers();
   }
 
   @Get("users/:id")
