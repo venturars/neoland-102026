@@ -3,6 +3,7 @@
 first-app/
   AGENTS.md
   README.md
+  babel.config.json
   eslint.config.js
   package.json
   agents/
@@ -44,6 +45,12 @@ first-app/
     clients/
       http/
         server.js
+      nest/
+        main.js
+        app.module.js
+        users.controller.js
+        users.service.js
+        http-exception.filter.js
       web/
         index.html
         styles.css

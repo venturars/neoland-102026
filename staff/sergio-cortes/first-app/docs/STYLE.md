@@ -6,6 +6,8 @@ Ficheros en kebab-case. Funciones en camelCase. El nombre es la acción. Una fun
 
 Una función por fichero. No hay clases, no hay `this` y no hay métodos, salvo las clases definidas en `src/logic/errors.js`. Pueden añadirse más clases de error en ese fichero.
 
+Excepción: `src/clients/nest/` puede usar clases, `this`, métodos y decoradores. Los nombres de fichero que exige la convención de la tecnología, solo cuando hace falta.
+
 Excepción: `src/clients/web/app.js`, `src/clients/electron/app.js`, `src/clients/chrome/popup.js`, `src/clients/vscode/panel.js` y `src/clients/vscode/extension.js` pueden tener varias funciones en el mismo fichero.
 
 Cada línea deja una sola acción en un nombre. Una acción es una llamada o una comprobación. `input.name` y `.trim()` van en líneas distintas. Prettier no las junta.

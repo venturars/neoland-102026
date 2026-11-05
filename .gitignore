@@ -1,6 +1,9 @@
 # Electron build output (mi-primer-proyecto)
 **/mi-primer-proyecto/dist-electron/
 
+# Babel output
+dist/
+
 # Dependencias y locks de npm (cualquier carpeta)
 node_modules/
 package-lock.json

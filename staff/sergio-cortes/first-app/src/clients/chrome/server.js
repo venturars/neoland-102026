@@ -84,45 +84,99 @@ app.patch("/users/:id", async (request) => {
   return user;
 });
 
-app.delete("/users/:id", async (request) => {
+app.delete("/users/:id", async (request, reply) => {
   const id = parseUserId(request.params.id);
-  const user = await deleteUser(id);
+  await deleteUser(id);
 
-  return user;
+  reply.status(204);
+  return;
+});
+
+app.setNotFoundHandler((request, reply) => {
+  reply.status(404);
+  reply.send();
 });
 
 app.setErrorHandler((error, request, reply) => {
   if (error.code === "FST_ERR_CTP_INVALID_JSON_BODY") {
-    reply.status(400).send({ error: "Body is invalid" });
+    reply.status(400).send({ message: "Body is invalid" });
+
+    return;
+  }
+
+  if (error.code === "FST_ERR_CTP_EMPTY_JSON_BODY") {
+    reply.status(400).send({ message: "Body is invalid" });
 
     return;
   }
 
   if (error instanceof ValidationError) {
-    reply.status(400).send({ error: error.message });
+    reply.status(400).send({ message: error.message });
 
     return;
   }
 
   if (error instanceof NotFoundError) {
-    reply.status(404).send({ error: error.message });
+    reply.status(404).send({ message: error.message });
 
     return;
   }
 
   if (error instanceof ConflictError) {
-    reply.status(409).send({ error: error.message });
+    reply.status(409).send({ message: error.message });
 
     return;
   }
 
   if (error instanceof DatabaseError) {
-    reply.status(500).send({ error: error.message });
+    reply.status(500).send({ message: error.message });
 
     return;
   }
 
-  reply.status(500).send({ error: "Internal error" });
+  const url = request.url;
+  const path = url.split("?")[0];
+  let couldNot = "";
+
+  if (request.method === "GET") {
+    if (path === "/users") {
+      couldNot = "Could not list the users";
+    }
+  }
+
+  if (request.method === "GET") {
+    if (path !== "/users") {
+      if (path.startsWith("/users/")) {
+        couldNot = "Could not find the user";
+      }
+    }
+  }
+
+  if (request.method === "POST") {
+    if (path === "/users") {
+      couldNot = "Could not create the user";
+    }
+  }
+
+  if (request.method === "PATCH") {
+    if (path.startsWith("/users/")) {
+      couldNot = "Could not update the user";
+    }
+  }
+
+  if (request.method === "DELETE") {
+    if (path.startsWith("/users/")) {
+      couldNot = "Could not delete the user";
+    }
+  }
+
+  if (couldNot === "") {
+    reply.status(404).send();
+
+    return;
+  }
+
+  reply.status(500).send({ message: couldNot });
 });
 
 await app.listen({ port: PORT, host: HOST });

@@ -7,7 +7,7 @@ const STATE = {
 
 async function throwApiError(response) {
   const body = await response.json();
-  const message = body.error;
+  const message = body.message;
 
   if (typeof message === "string") {
     throw new Error(message);
@@ -85,8 +85,6 @@ async function deleteUser(id) {
   if (!response.ok) {
     await throwApiError(response);
   }
-
-  return response.json();
 }
 
 function getDeletePopover() {
