@@ -3,6 +3,7 @@
 ```text
 first-app/
   AGENTS.md
+  babel.config.json
   eslint.config.js
   package.json
   src/
