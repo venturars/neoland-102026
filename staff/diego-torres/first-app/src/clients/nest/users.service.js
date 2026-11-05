@@ -13,6 +13,8 @@ import { findUserByName } from "../../logic/find-user-by-name.js";
 import { listUsers } from "../../logic/list-users.js";
 // Modifica un usuario (viene de la capa de lógica).
 import { updateUser } from "../../logic/update-user.js";
+// Cuenta los usuarios por género (viene de la capa de lógica).
+import { usersGenderCount } from "../../logic/users-gender-count.js";
 
 // Llama a la lógica. Las reglas no se repiten aquí.
 @Injectable()
@@ -25,6 +27,11 @@ export class UsersService {
   // Devuelve todos los usuarios.
   list() {
     return listUsers();
+  }
+
+  // Cuenta los usuarios por el género de su nombre.
+  countByGender() {
+    return usersGenderCount();
   }
 
   // Devuelve el usuario con ese id.

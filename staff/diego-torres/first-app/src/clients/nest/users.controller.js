@@ -51,6 +51,13 @@ export class UsersController {
     return this.usersService.findByName(name);
   }
 
+  // GET /users/gender-count cuenta los usuarios por género.
+  // Va antes que /users/:id. Si no, "gender-count" se tomaría por un id.
+  @Get("gender-count")
+  countByGender() {
+    return this.usersService.countByGender();
+  }
+
   // GET /users/:id devuelve un usuario.
   // Bind(Param("id")) pasa el id de la ruta a la función.
   @Get(":id")

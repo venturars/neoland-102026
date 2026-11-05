@@ -66,7 +66,7 @@ Desde esta carpeta, Jupyter se abre con `pnpm run jupyter`, en Linux y en Window
 
 `pnpm format` pasa Prettier por los `.js` de `src/db/`, `src/queries/` y `src/logic/`, y por los `.js`, `.html` y `.css` de `src/clients/web/`, `src/clients/electron/`, `src/clients/chrome/` y `src/clients/vscode/`, y por los `.js` de `src/clients/nest/`, con el formato estándar y sin configuración propia. `pnpm lint` pasa ESLint con las reglas recomendadas, según `eslint.config.js`. Los ficheros de `src/clients/nest/` se leen con `@babel/eslint-parser`, por sus decoradores.
 
-La dependencia `openai` es la del clasificador. `@colors/colors` y `cli-table3` son las tablas del cliente Jupyter. `fastify` es la API de la extensión de Chrome. Los paquetes `@nestjs/*`, `reflect-metadata`, `rxjs` y `@babel/*` son la API de Nest. Se instalan con `pnpm install`.
+La dependencia `openai` es la del clasificador. Lo usan la terminal, Jupyter, la API de Chrome, la extensión de VS Code y la API de Nest, y necesita Ollama con `llama3.2` en marcha. `@colors/colors` y `cli-table3` son las tablas del cliente Jupyter. `fastify` es la API de la extensión de Chrome. Los paquetes `@nestjs/*`, `reflect-metadata`, `rxjs` y `@babel/*` son la API de Nest. Se instalan con `pnpm install`.
 
 ## Estilo
 

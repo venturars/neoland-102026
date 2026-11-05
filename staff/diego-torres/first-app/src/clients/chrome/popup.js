@@ -16,6 +16,8 @@ const deleteConfirm = document.getElementById("delete-confirm");
 const deleteQuestion = document.getElementById("delete-question");
 const findName = document.getElementById("find-name");
 const foundUsers = document.getElementById("found-users");
+const genderButton = document.getElementById("gender-count");
+const genderResult = document.getElementById("gender-result");
 
 // Id que espera confirmación para borrarse.
 let pendingDeleteId = "";
@@ -44,6 +46,8 @@ function userText(user) {
 function showViewedUser(user) {
   // Otra acción puede cambiar los usuarios: quita la búsqueda anterior.
   foundUsers.replaceChildren();
+  // Otra acción puede cambiar los usuarios: quita el recuento anterior.
+  genderResult.hidden = true;
 
   viewedUser.textContent = user === null ? "" : userText(user);
   viewedUser.hidden = user === null;
@@ -263,6 +267,40 @@ async function findByNameFromForm(event) {
   }
 }
 
+// Escribe los tres números del recuento en una línea.
+function genderText(counts) {
+  const { women, men, genderUndefined } = counts;
+  return `Mujeres: ${women} · Hombres: ${men} · No definidos: ${genderUndefined}`;
+}
+
+// Pide el recuento por género y lo enseña.
+async function countByGender() {
+  showViewedUser(null);
+
+  // Desactiva el botón para no pedir dos recuentos a la vez.
+  genderButton.disabled = true;
+
+  // La IA puede tardar: avisa de que está trabajando.
+  showMessage("Contando…", false);
+
+  try {
+    const counts = await callApi(
+      "GET",
+      "/users/gender-count",
+      undefined,
+      "Could not classify the users",
+    );
+    showMessage("", false);
+    genderResult.textContent = genderText(counts);
+    genderResult.hidden = false;
+  } catch (error) {
+    showMessage(error.message, true);
+  } finally {
+    // Haya salido bien o mal, el botón vuelve a funcionar.
+    genderButton.disabled = false;
+  }
+}
+
 // Conecta cada formulario y botón con la función que lo atiende.
 document
   .getElementById("create-form")
@@ -277,6 +315,7 @@ document.getElementById("delete-no").addEventListener("click", cancelDelete);
 document
   .getElementById("find-name-form")
   .addEventListener("submit", findByNameFromForm);
+genderButton.addEventListener("click", countByGender);
 
 // Al abrir la ventana, carga la lista.
 showUsers();
