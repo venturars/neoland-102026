@@ -20,6 +20,9 @@ const genderResult = document.getElementById("gender-result");
 // Id que espera confirmación para borrarse.
 let pendingDeleteId = "";
 
+// Cuenta las acciones. Sirve para reconocer una respuesta que llega tarde.
+let ultimaAccion = 0;
+
 // Sube al principio de la ventana: con una lista larga, los formularios quedan muy abajo.
 function scrollToTopIf(hasSomethingToShow) {
   if (hasSomethingToShow) {
@@ -42,6 +45,11 @@ function userText(user) {
 
 // Enseña un usuario debajo de los mensajes, o nada si no hay usuario.
 function showViewedUser(user) {
+  // Cada acción nueva empieza aquí, sin usuario: suma una a la cuenta.
+  if (user === null) {
+    ultimaAccion += 1;
+  }
+
   // Otra acción puede cambiar los usuarios: quita el recuento anterior.
   genderResult.hidden = true;
 
@@ -210,6 +218,10 @@ async function confirmDelete() {
   const id = pendingDeleteId;
   cancelDelete();
 
+  // Borrar también es una acción nueva: limpia lo que hubiera en pantalla.
+  showMessage("", false);
+  showViewedUser(null);
+
   try {
     await callApi(
       "DELETE",
@@ -237,6 +249,9 @@ function genderText(counts) {
 async function countByGender() {
   showViewedUser(null);
 
+  // Guarda la cuenta para saber si, al responder, sigue siendo lo último.
+  const accion = ultimaAccion;
+
   // Desactiva el botón para no pedir dos recuentos a la vez.
   genderButton.disabled = true;
 
@@ -250,11 +265,20 @@ async function countByGender() {
       undefined,
       "Could not classify the users",
     );
+
+    // Si ya se ha hecho otra cosa, esta respuesta llega tarde: no se enseña.
+    if (accion !== ultimaAccion) {
+      return;
+    }
+
     showMessage("", false);
     genderResult.textContent = genderText(counts);
     genderResult.hidden = false;
   } catch (error) {
-    showMessage(error.message, true);
+    // Un error que llega tarde tampoco se enseña.
+    if (accion === ultimaAccion) {
+      showMessage(error.message, true);
+    }
   } finally {
     // Haya salido bien o mal, el botón vuelve a funcionar.
     genderButton.disabled = false;

@@ -16,6 +16,9 @@ const genderResult = byId("gender-result");
 // Id que espera confirmación para borrarse.
 let pendingDeleteId = "";
 
+// Cuenta las acciones. Sirve para reconocer una respuesta que llega tarde.
+let ultimaAccion = 0;
+
 // Sube al principio: los avisos están arriba.
 function scrollToTop() {
   document.documentElement.scrollTop = 0;
@@ -40,6 +43,11 @@ function userText(user) {
 
 // Enseña un usuario, o nada si no hay usuario.
 function showViewedUser(user) {
+  // Cada acción nueva empieza aquí, sin usuario: suma una a la cuenta.
+  if (user === null) {
+    ultimaAccion += 1;
+  }
+
   // Otra acción puede cambiar los usuarios: quita el recuento anterior.
   genderResult.hidden = true;
 
@@ -54,7 +62,9 @@ function showViewedUser(user) {
 function send(request) {
   showMessage("", false);
   showViewedUser(null);
-  vscode.postMessage(request);
+
+  // La extensión devuelve esta cuenta con la respuesta.
+  vscode.postMessage({ ...request, requestId: ultimaAccion });
 }
 
 // Vacía los campos que se le indican.
@@ -82,11 +92,16 @@ function genderText(counts) {
 
 // Atiende cada respuesta de la extensión.
 function handleReply(event) {
-  const { action, error, users, user, genderCount } = event.data;
+  const { action, error, users, user, genderCount, requestId } = event.data;
 
   // Haya salido bien o mal, el botón del recuento vuelve a funcionar.
   if (action === "gender-count") {
     genderButton.disabled = false;
+
+    // Si ya se ha hecho otra cosa, esta respuesta llega tarde: no se enseña.
+    if (requestId !== ultimaAccion) {
+      return;
+    }
   }
 
   // Si falla, lo escrito se queda para corregirlo.
