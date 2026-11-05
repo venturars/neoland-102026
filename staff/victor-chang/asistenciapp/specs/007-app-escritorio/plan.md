@@ -1,6 +1,6 @@
 # Plan técnico 007 · App de escritorio para el profesor
 
-> Versión 1.1 · Estado: **Aprobado** (2026-11-05) · Spec: [spec.md](spec.md) v1.0 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Constitución v3.2 · Creado: 2026-11-04 · Issue: #919
+> Versión 1.2 · Estado: **Aprobado** (2026-11-05) · Spec: [spec.md](spec.md) v1.1 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Constitución v3.2 · Creado: 2026-11-04 · Issue: #919
 
 Este documento explica **cómo** se empaqueta AsistenciApp como app de escritorio para macOS (Apple Silicon) y Windows x64 sin cambiar sus reglas. El escritorio es **una entrada nueva** (C3): una ventana que muestra el mismo panel y llama a los mismos casos de uso. Dominio, casos de uso y base de datos no cambian. Las reglas se citan por su identificador (`C2`, `F4`…).
 
@@ -88,6 +88,8 @@ Ni `domain/` ni `usecases/` cambian.
 6. en un `finally`: `tunnel.close()`, `server.stop()`, soltar el bloqueo (S7, F4).
 
 `main()` se divide en `_run_terminal()` (lo de hoy) y `_run_desktop()` para no pasar de ~40 líneas (M2).
+
+**Siempre en claro (CA-19, v1.2).** La ventana abre `profesor.html?tema=claro#t=…`: en la consulta y no en el fragmento, para que no se pierda al navegar ni al recargar. `static/tema.js`, cargado en el `<head>` del panel **sin `defer`** (se aplica antes de pintar, sin parpadeo), pone `data-tema="claro"` en `<html>`, y el bloque oscuro de `styles.css` pasa a `:root:not([data-tema="claro"])`. En un navegador y en las páginas de los alumnos no hay parámetro: siguen el modo del sistema, como pide la spec 006 (CA-06).
 
 ### 2.3 Configuración por sistema (CA-05, CA-06, CA-18; F5)
 
@@ -273,6 +275,7 @@ asistenciapp/
 | CA-16 | `test_config`: llave propia en la carpeta del usuario antes que la incluida; mensaje de `MeetLoginNotCompletedError` con la frase del tope |
 | CA-17 | `test_desktop`: `save_file` con un diálogo falso escribe el contenido con BOM; si se cancela, devuelve `False` sin escribir. Manual: guardar en los dos sistemas y abrir en Excel |
 | CA-18 | Los 498 tests de hoy siguen en verde; `test_app`: sin `--ventana` ni `sys.frozen`, el arranque de siempre |
+| CA-19 | `test_static`: el bloque oscuro se salta con `data-tema="claro"`, `tema.js` va sin `defer` en el `<head>` del panel y lee `?tema=claro`, y las páginas de alumnos no lo cargan; `test_app`: la ventana abre `?tema=claro`. Manual: con el sistema en oscuro, panel claro (también tras navegar y recargar); sin parámetro y en la página del alumno, oscuro |
 
 ---
 
@@ -349,3 +352,4 @@ Tomadas por Victor el 2026-11-04: §8.1–§8.6 en la sesión de preguntas previ
 | 0.1 | 2026-11-04 | Borrador inicial | Spec 007 v1.0 aprobada por Victor |
 | 1.0 | 2026-11-04 | Aprobado por Victor, con §8.7–§8.9 decididas como se proponían; §8.3 explica por qué el repositorio de compilación es público | — |
 | 1.1 | 2026-11-05 | Resultados del spike (§0); confirmación nativa al cerrar en vez de un diálogo desde `closing` (§2.7, §6); ventana con texto seleccionable (§2.2); app de Google publicada con sus páginas en GitHub Pages (§2.8); comprobación de `cloudflared` por *digest* de GitHub y firma de Cloudflare, y "arrastrar a Aplicaciones" (§2.11) | Spike de la tarea T01. Aprobado por Victor |
+| 1.2 | 2026-11-05 | Panel de escritorio siempre en claro (§2.2, §6; spec v1.1 CA-19) | Decisión de Victor al probar la app empaquetada (T14) |

@@ -178,7 +178,10 @@ def _open_desktop(config: Config) -> None:
     with server.start(app) as running:
         tunnel.port = running.port
         try:
-            panel = f"http://127.0.0.1:{running.port}/profesor.html#t={context.of(app).teacher_token}"
+            # ?tema=claro: la ventana va siempre en claro (spec 007 · CA-19). En la consulta y no en el
+            # fragmento, para que no se pierda al navegar dentro del panel.
+            token = context.of(app).teacher_token
+            panel = f"http://127.0.0.1:{running.port}/profesor.html?tema=claro#t={token}"
             desktop.run_window(panel, tunnel)
         finally:
             tunnel.close()

@@ -26,8 +26,10 @@
   color-scheme: light;
 }
 
+/* Modo oscuro del sistema (spec 006 · CA-06), salvo en la ventana de escritorio, que va siempre en
+   claro: tema.js le pone data-tema="claro" (spec 007 · CA-19). */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-tema="claro"]) {
     --bg: #161616;
     --surface: #222222;
     --text: #f2f2f2;

@@ -127,7 +127,11 @@ def color_tokens(css):
 
 def themes():
     light = re.search(r"^:root\s*{([^}]*)}", STYLES, re.MULTILINE)
-    dark = re.search(r"@media\s*\(prefers-color-scheme:\s*dark\)\s*{\s*:root\s*{([^}]*)}", STYLES)
+    # spec 007 · CA-19: el bloque oscuro se salta con data-tema="claro" (la ventana de escritorio).
+    dark = re.search(
+        r"@media\s*\(prefers-color-scheme:\s*dark\)\s*{\s*:root(?::not\(\[data-tema=\"claro\"\]\))?\s*{([^}]*)}",
+        STYLES,
+    )
     assert light and dark
     light_tokens = color_tokens(light.group(1))
     return {"claro": light_tokens, "oscuro": {**light_tokens, **color_tokens(dark.group(1))}}
@@ -219,6 +223,30 @@ def test_panel_uses_its_single_api_function(path):  # U3
 
 def test_there_is_only_one_fetch():  # U3: toda llamada pasa por api()
     assert PANEL_JS.count("fetch(") == 1
+
+
+def test_dark_mode_is_skipped_when_the_page_asks_for_light():  # spec 007 · CA-19
+    assert re.search(
+        r"@media\s*\(prefers-color-scheme:\s*dark\)\s*{\s*:root:not\(\[data-tema=\"claro\"\]\)\s*{", STYLES
+    )
+    assert STYLES.count("prefers-color-scheme") == 1  # no hay otras reglas oscuras que se salten la marca
+
+
+def test_the_panel_sets_the_theme_before_painting():  # CA-19: sin parpadeo en oscuro
+    head = PANEL.split("</head>", 1)[0]
+    script = re.search(r"<script\b[^>]*\bsrc=\"tema\.js\"[^>]*>", head)
+    assert script and "defer" not in script.group(0) and "async" not in script.group(0)
+
+
+def test_light_theme_comes_from_the_address():  # CA-19: ?tema=claro, solo en la ventana (app.py)
+    theme_js = (STATIC_DIR / "tema.js").read_text(encoding="utf-8")
+    assert "location.search" in theme_js and '"tema"' in theme_js and '"claro"' in theme_js
+    assert "dataset.tema" in theme_js
+
+
+@pytest.mark.parametrize("page", ["alumno.html", "index.html"])
+def test_student_pages_still_follow_the_system(page):  # spec 006 · CA-06: los alumnos, como su móvil
+    assert "tema.js" not in (STATIC_DIR / page).read_text(encoding="utf-8")
 
 
 def test_csv_uses_the_window_save_dialog_only_when_it_exists():  # CA-17 · plan §2.9

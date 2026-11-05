@@ -216,7 +216,7 @@ def get(url, token=None, method="GET"):
 
 def panel_parts(url):
     """De `http://127.0.0.1:<puerto>/profesor.html#t=<token>` saca (base, puerto, token)."""
-    match = re.fullmatch(r"(http://127\.0\.0\.1:(\d+))/profesor\.html#t=(\S+)", url)
+    match = re.fullmatch(r"(http://127\.0\.0\.1:(\d+))/profesor\.html\?tema=claro#t=(\S+)", url)
     assert match, url
     return match.group(1), int(match.group(2)), match.group(3)
 
@@ -239,7 +239,8 @@ def test_ventana_opens_the_panel_in_a_window(desktop_env):  # CA-01, plan §2.2
     desktop_env.on_start = lambda webview: answers.append(get(webview.created[0]["url"].split("#")[0]))
     app.main()
     [window] = desktop_env.created
-    panel_parts(window["url"])  # http://127.0.0.1:<puerto libre>/profesor.html#t=<token>
+    # http://127.0.0.1:<puerto libre>/profesor.html?tema=claro#t=<token>: siempre en claro (spec 007 · CA-19)
+    panel_parts(window["url"])
     assert answers[0][0] == 200  # mientras la ventana está abierta, el servidor responde
     assert desktop_env.started == 1
 

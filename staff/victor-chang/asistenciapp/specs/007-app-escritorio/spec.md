@@ -1,6 +1,6 @@
 # Spec 007 · App de escritorio para el profesor
 
-> Estado: **Aprobada** v1.0 (2026-11-04) · Creada: 2026-11-04 · Issue: #919
+> Estado: **Aprobada** v1.1 (2026-11-05) · Creada: 2026-11-04 · Issue: #919
 
 ---
 
@@ -44,6 +44,7 @@ Formato: **Dado** (situación inicial) · **Cuando** (acción) · **Entonces** (
 - **CA-02**: **Dado** el primer arranque, **cuando** el sistema avisa de que la app es de un desarrollador no identificado, **entonces** la página de descarga explica paso a paso cómo abrirla igualmente en macOS y en Windows.
 - **CA-03**: **Dado** la app ya abierta, **cuando** el profesor la abre otra vez, **entonces** ve "AsistenciApp ya está abierta" y no se abre una segunda copia.
 - **CA-04**: **Dado** el panel, **entonces** muestra la versión de la app, y la página de descarga lista las versiones publicadas.
+- **CA-19** *(v1.1)*: **Dado** un ordenador en modo oscuro, **cuando** el profesor abre la app de escritorio, **entonces** el panel se ve en **modo claro**. Las páginas de los alumnos siguen el modo de su propio dispositivo (spec 006 · CA-06).
 
 ### Mis datos (HU-02)
 - **CA-05**: **Dado** un profesor con clases anteriores, **cuando** cierra la app y la vuelve a abrir, o instala una versión nueva, **entonces** sus clases, listas y permiso de Google siguen ahí.
@@ -115,3 +116,4 @@ Resueltas el 2026-11-04 con Victor en una sesión de preguntas (*grilling*) ante
 | --- | --- | --- | --- |
 | 0.1 | 2026-11-04 | Borrador inicial con P1–P6 resueltas | Issue #919: que cualquier profesor pueda usar AsistenciApp en macOS o Windows sin preparar nada |
 | 1.0 | 2026-11-04 | Aprobada por Victor, junto con la constitución 3.2 | — |
+| 1.1 | 2026-11-05 | CA-19: el panel de la app de escritorio, siempre en modo claro; los alumnos siguen su sistema. Decidido por Victor | Al probar la app empaquetada (T14), el panel salía en oscuro porque el Mac de Victor está en modo oscuro |
