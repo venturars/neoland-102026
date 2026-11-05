@@ -14,6 +14,7 @@ first-app/
   MCPS/
   scripts/
     jupyter.sh
+    jupyter-node-http.sh
   docs/
     ARCHITECTURE.md
     TREE.md
@@ -47,6 +48,14 @@ first-app/
       http/
         server.js
         bruno/
+      node-http/
+        server.js
+        jupyter/
+          create-user.ipynb
+          list-users.ipynb
+          find-user-by-id.ipynb
+          update-user.ipynb
+          delete-user.ipynb
       nest/
         main.js
         app.module.js
