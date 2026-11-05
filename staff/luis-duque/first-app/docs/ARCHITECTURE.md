@@ -1,8 +1,8 @@
 # Arquitectura
 
-Aplicación de gestión de usuarios. Permite crear, actualizar, eliminar, listar y buscar usuarios con `id`, `name` y `email`. También cuenta el género de los nombres ya guardados, sin pedir nombres nuevos y sin modificar los datos. Las consultas se ejecutan en un programa local, en `127.0.0.1:3000`, que solo ejecuta consultas. La entrada es una llamada a una función de `src/logic`, un archivo de `src/clients/terminal` ejecutado desde la terminal, un documento de `src/clients/jupyter`, las pantallas de `src/clients/browser`, o Postman contra el cliente HTTP. La salida de crear, actualizar y eliminar se guarda en SQLite. El recuento de género solo se muestra.
+Aplicación de gestión de usuarios. Permite crear, actualizar, eliminar, listar y buscar usuarios con `id`, `name` y `email`. También cuenta el género de los nombres ya guardados, sin pedir nombres nuevos y sin modificar los datos. Las consultas se ejecutan en un programa local, en `127.0.0.1:3000`, que solo ejecuta consultas. La entrada es una llamada a una función de `src/logic`, un archivo de `src/clients/terminal` ejecutado desde la terminal, un documento de `src/clients/jupyter`, las pantallas de `src/clients/browser`, la ventana de `src/clients/electron`, o Postman contra el cliente HTTP. La salida de crear, actualizar y eliminar se guarda en SQLite. El recuento de género solo se muestra.
 
-El `id` lo asigna la base de datos. El email se guarda en minúsculas y no se puede repetir. `package.json` incluye las dependencias `openai` `7.39.0` y `express` `5.3.0`, y declara pnpm `12.15.0` como gestor de paquetes. pnpm escribe `pnpm-lock.yaml`.
+El `id` lo asigna la base de datos. El email se guarda en minúsculas y no se puede repetir. `package.json` incluye las dependencias `openai` `7.39.0`, `express` `5.3.0` y `electron` `45.2.3`, y declara pnpm `12.15.0` como gestor de paquetes. pnpm escribe `pnpm-lock.yaml`.
 
 ## Componentes
 
@@ -19,6 +19,8 @@ Contar el género no valida datos de entrada y no escribe en la base. Se pide co
 **Cliente del navegador.** Es otra forma de listar, modificar y eliminar, en pantallas simples. Importa la lógica. No hay otra vía de usuarios entre la pantalla y esa lógica. Se abre con `pnpm browser` desde `first-app`, en Windows. La lista elige un usuario por id. El menú vuelve a la lista, abre modificar o abre notas. Notas se ve y no guarda nada. Guardar o eliminar vuelve a la lista. No comprueba los datos y no abre la base.
 
 **Cliente HTTP.** Es otra forma de crear, actualizar, eliminar, listar y buscar, desde Postman. Importa la lógica. No cuenta el género. Responde en `127.0.0.1:3001`. Se arranca con `pnpm http` desde `first-app`, con el programa local en marcha. Actualizar devuelve el `id` y los campos enviados. No comprueba los datos y no abre la base. Terminal, Jupyter y las pantallas siguen igual.
+
+**Cliente Electron.** Es otra forma de listar, crear, modificar y eliminar, en una ventana de escritorio. Importa la lógica. No busca y no cuenta el género. No incluye notas. Se abre con `pnpm electron` desde `first-app`, con el programa local en marcha. No comprueba los datos y no abre la base. La terminal, Jupyter, las pantallas y el cliente HTTP siguen igual.
 
 **Consultas.** Pide al programa local que ejecute el SQL, también el que crea la tabla si no existe, y el de la operación que pidió la lógica. No abre la base. No revisa los datos: inserta, modifica, borra o lee.
 
