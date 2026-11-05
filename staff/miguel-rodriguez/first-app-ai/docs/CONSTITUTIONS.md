@@ -70,8 +70,8 @@ examples from the project directory using a Node version supporting `node:sqlite
 Each example starts a separate Node process. Clients import and call the relevant operation and use `console.log`; initialization awaits `createUsersTable()` and prints the result of `listTables()`, including `users`, deletion prints `undefined`, and other examples print returned data. The classifier client awaits its async result and requires the local AI prerequisites documented in its example for nonempty data. A vanilla web client calls the same asynchronous operations for selection, editing
 and deletion. It confirms deletion by asking for the saved email; that is a client
 precaution, not an additional business-operation parameter or authentication.
-Express (`pnpm http`, port 3001), the Chrome Fastify bridge (`pnpm chrome`,
-port 3002) and Nest (`pnpm nest`, port 3003) expose create, list, ID lookup, update,
+Express (`pnpm http`, port 3001) and the Chrome Fastify bridge (`pnpm chrome`,
+port 3002) expose create, list, ID lookup, update,
 delete and the existing gender summary over loopback HTTP. Electron uses its own
 page and a restricted IPC bridge; the Chrome MV3 extension uses its own popup.
 VS Code, the web and both new visual clients call the shared operations. The
@@ -84,11 +84,8 @@ No general-purpose CLI is implemented.
 
 The existing declaration `openai@7.39.0` is retained; the classifier transport now
 uses native fetch for browser compatibility. HTTP adapters use
-`express@5.3.0`, `fastify@5.12.8`, `@nestjs/common@12.3.3`,
-`@nestjs/core@12.3.3`, `@nestjs/platform-express@12.3.3`,
-`reflect-metadata@0.2.2` and `rxjs@7.8.2`. The desktop client uses the development
-dependency `electron@45.2.2`. Nest classes and decorators stay in its JavaScript
-adapter; business operations remain functions. The Jupyter client uses
+`express@5.3.0` and `fastify@5.12.8`. The desktop client uses the development
+dependency `electron@45.2.2`. The Jupyter client uses
 `cli-table3@0.6.5` for colored table headers. Its project-local Python environment
 uses `notebook==7.6.3` and `ipykernel==7.1.0` from `requirements-jupyter.txt`.
 These client dependencies preserve the business contracts and classifier. pnpm
@@ -98,9 +95,8 @@ Development checks use exact versions `prettier@3.9.10`, `eslint@10.13.0`, and
 `@eslint/js@10.0.1`. These development dependencies do not change application
 contracts or provide runtime business functionality.
 
-`pnpm-workspace.yaml` limits release-age exceptions to `electron@45.2.2`,
-`@nestjs/common@12.3.3`, `@nestjs/core@12.3.3` and
-`@nestjs/platform-express@12.3.3`. Other packages retain the release-age control.
+`pnpm-workspace.yaml` limits release-age exceptions to `electron@45.2.2`.
+Other packages retain the release-age control.
 
 - Use pnpm. Do not mix package managers or introduce `package-lock.json` or `yarn.lock`.
 - Add dependencies only when required by an approved implementation plan.

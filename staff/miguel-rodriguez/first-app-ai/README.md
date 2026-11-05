@@ -32,12 +32,12 @@ usas los clientes. Cada API se inicia en otra terminal:
 | Escritorio | `pnpm electron` | Ventana de Electron |
 | Chrome | `pnpm chrome` | API del popup en `http://127.0.0.1:3002` |
 | Express | `pnpm http` | `http://127.0.0.1:3001` |
-| Nest | `pnpm nest` | `http://127.0.0.1:3003` |
 
-`pnpm-workspace.yaml` conserva excepciones de antigüedad de publicación solo para
-`electron@45.2.2`, `@nestjs/common@12.3.3`, `@nestjs/core@12.3.3` y
-`@nestjs/platform-express@12.3.3`, las versiones revisadas. pnpm mantiene el
+`pnpm-workspace.yaml` conserva una excepción de antigüedad de publicación solo para
+`electron@45.2.2`, la versión revisada. pnpm mantiene el
 lockfile; no se desactiva el control de antigüedad para otros paquetes.
+
+El cliente Nest se desarrolla por separado en la [issue #1044](https://github.com/venturars/neoland-102026/issues/1044).
 
 ## Abrir el cliente web
 
@@ -86,7 +86,7 @@ crear, seleccionar, buscar por ID, editar y eliminar contactos. El borrado pide
 el email guardado. El resumen usa la misma clasificación que Jupyter.
 
 Electron llama a las operaciones desde su proceso principal; no necesita las
-APIs Express, Fastify o Nest. Cierra la aplicación con **Salir/Quit**; en macOS
+APIs Express o Fastify. Cierra la aplicación con **Salir/Quit**; en macOS
 cerrar solo la ventana conserva la aplicación y puedes reabrirla desde el Dock.
 
 ## Cargar la extensión de Chrome
@@ -102,7 +102,7 @@ detiene Fastify desde su terminal; el servicio de datos se detiene por separado.
 
 ## Consultar el resumen por nombre
 
-Web, VS Code, Electron y Chrome tienen un botón de resumen. Las tres APIs
+Web, VS Code, Electron y Chrome tienen un botón de resumen. Las dos APIs
 ofrecen `GET /users/gender-count`. El resultado contiene `women`, `men` y
 `genderUndefined`: son estimaciones por nombre, no identidades verificadas.
 
@@ -169,8 +169,7 @@ Prepara la tabla de esta copia y deja `pnpm server` abierto. En otra terminal:
 pnpm http
 ```
 
-Express escucha en `http://127.0.0.1:3001`. Para probar Nest, ejecuta `pnpm nest`
-y usa `http://127.0.0.1:3003` con las mismas peticiones. Fastify ofrece las mismas
+Express escucha en `http://127.0.0.1:3001`. Fastify ofrece las mismas
 rutas en `http://127.0.0.1:3002`. En Postman usa **Body → raw → JSON** para POST y
 PATCH, con `Content-Type: application/json`.
 

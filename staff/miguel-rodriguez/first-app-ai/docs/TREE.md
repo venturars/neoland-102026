@@ -153,8 +153,6 @@ first-app-ai/
 │   │   │   ├── main.js
 │   │   │   ├── preload.cjs
 │   │   │   └── styles.css
-│   │   ├── nest/
-│   │   │   └── app.js
 │   │   ├── http/
 │   │   │   └── app.js
 │   │   ├── vscode/

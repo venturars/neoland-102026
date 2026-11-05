@@ -70,10 +70,9 @@ call the Fastify adapter in `server.js`. The adapter converts numeric IDs and
 calls the same business operations, including the classifier. `pnpm chrome`
 starts the adapter; Chrome loads the folder as an unpacked extension.
 
-`src/clients/nest/app.js` defines the Nest controller, module and error filter
-in JavaScript, applying framework decorators as function calls. These classes
-adapt HTTP requests; they do not duplicate business rules. `pnpm nest` starts
-the loopback API on port 3003.
+The Nest client is a separate development tracked in
+[issue #1044](https://github.com/venturars/neoland-102026/issues/1044).
+Its earlier implementation was withdrawn from this delivery on 2026-11-05.
 
 `src/clients/jupyter/` provides nine independent notebooks for those same operations
 and explicit table initialization. Initialization calls a query; it is not a new
@@ -103,7 +102,7 @@ public business operation.
 - `package.json` holds minimal application metadata, ES module mode, the
   client startup commands, development-check commands and dependency declarations.
   `pnpm-lock.yaml` records the resolved packages. `pnpm-workspace.yaml` holds
-  exact-version release-age exceptions for the three Nest packages and Electron.
+  the exact-version release-age exception for Electron.
   Version and package rules remain in the
   [constitution](CONSTITUTIONS.md#dependencies-and-package-management).
 - `.gitignore` excludes generated local artifacts. `src/db/users.sqlite`, `.venv/`,
@@ -153,7 +152,7 @@ is defined in [AGENTS.md](../AGENTS.md).
 Socket package validation, guide separation, formatting/lint checks, and alignment
 with the architecture and style guides. Their individual documents
 record the request, approved approach, tasks, decisions, and verification.
-`complete-user-clients/` covers Electron, Chrome, Nest and the added summary
+`complete-user-clients/` covers Electron, Chrome and the added summary
 controls in the existing clients.
 
 ## Git workflow
@@ -195,8 +194,8 @@ It awaits the existing logic, converts route IDs to numbers, and maps business
 errors to HTTP statuses and JSON messages. It listens on loopback port 3001 via
 `pnpm http`; queries still reach the separate data service on port 3000.
 The client does not serve web assets. The summary route precedes the ID route
-without a special browser-origin exception. Fastify and Nest offer the same six
-routes on their own ports. README documents the Postman requests.
+without a special browser-origin exception. Fastify offers the same six
+routes on its own port. README documents the Postman requests.
 
 All adapters await the shared logic and use the data service on port 3000.
 They preserve the existing five-field contacts, validation, ordering and
