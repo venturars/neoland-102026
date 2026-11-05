@@ -128,7 +128,7 @@ un cliente Nest en la entrega actual. Esta enmienda precede a los cambios.
 - [x] N04 · Acotar la prueba de APIs a Express y Chrome/Fastify.
 - [x] N05 · Actualizar guías, árbol y constitución con los clientes presentes.
 - [x] N06 · Verificar en copias desechables y cotejar los archivos protegidos.
-- [ ] N07 · Publicar la corrección en #1025 hacia staging después de su revisión.
+- [x] N07 · Publicar la corrección en #1025 hacia staging después de su revisión.
 
 ### Comprobaciones de la retirada
 
@@ -150,4 +150,7 @@ un cliente Nest en la entrega actual. Esta enmienda precede a los cambios.
   permanecen idénticos. La revisión Socket anterior conserva su fecha y alcance.
 - Copia de pruebas retirada y puertos 23000–23002 libres. Los cuatro procesos
   de demostración en 3000–3003 permanecen abiertos y no se modificaron sus datos.
-  La publicación de esta retirada sigue pendiente; no se hicieron commits ni push.
+  La retirada se publicó tras revisión del principal y un segundo subagente:
+  6fd8d257 (SDD), 7fb39305 (retirada) y 282dc522 (guías). El remoto se comprobó
+  en 282dc522, sin force push. Issue #1024 y PR #1025 reflejan la separación a
+  #1044 y #1050; la base permanece staging y las issues siguen abiertas.
