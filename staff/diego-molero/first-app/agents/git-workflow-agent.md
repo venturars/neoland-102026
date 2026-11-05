@@ -36,7 +36,7 @@ Para GitHub lee `MCPS/github-mcp-server/mcp.txt`: identifica cuenta y repositori
      5. `agents/create-pr.md` con `create-pr-base-staging`, `assign-author` y `create-draft`. Este agente no enlaza la issue.
      6. `skills/link-pr-to-issue`. El orquestador siempre enlaza la issue.
    - Guardar un trozo: `agents/create-commit.md` con los ficheros de ese trozo y `agents/launch-push.md`.
-   - Que la revisen: el alumno nombra revisores. Se usa la skill `assign-reviewers`. La pull request sale de draft.
+   - Que la revisen: el alumno nombra revisores. Se usa la skill `assign-reviewers`, que consulta primero su caché de nombres por repositorio y busca solo las ausencias. La pull request sale de draft.
 4. **Formateo:** Responde con lo que hizo cada paso: número de issue, nombre de rama, mensaje de commit o URL de la pull request.
 
 ## 4. Herramientas y APIs Asignadas

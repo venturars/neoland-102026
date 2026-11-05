@@ -13,6 +13,63 @@ first-app/
     help-me-to-think.md
     launch-push.md
   docs/
+    specs/
+      align-code-with-guides/
+        plan.md
+        spec.md
+        tasks.md
+      classifier/
+        plan.md
+        spec.md
+        tasks.md
+      find-user-by-name/
+        plan.md
+        spec.md
+        tasks.md
+      finish-frontend-express-rest/
+        plan.md
+        spec.md
+        tasks.md
+      git-workflow/
+        plan.md
+        spec.md
+        tasks.md
+      jupyter-client/
+        plan.md
+        spec.md
+        tasks.md
+      jupyter-cross-platform/
+        plan.md
+        spec.md
+        tasks.md
+      jupyter-script-untrack-sqlite/
+        plan.md
+        spec.md
+        tasks.md
+      move-layers-under-src/
+        plan.md
+        spec.md
+        tasks.md
+      notes/
+        plan.md
+        spec.md
+        tasks.md
+      socket-package-validation/
+        plan.md
+        spec.md
+        tasks.md
+      split-sdd-guides/
+        plan.md
+        spec.md
+        tasks.md
+      users/
+        plan.md
+        spec.md
+        tasks.md
+      vanilla-web-client/
+        plan.md
+        spec.md
+        tasks.md
     ARCHITECTURE.md
     CONSTITUTIONS.md
     DATABASE.md
@@ -32,6 +89,7 @@ first-app/
       SKILL.md
     assign-reviewers/
       SKILL.md
+      reviewer-cache.json
     check-status/
       SKILL.md
     commit-changes/
@@ -161,6 +219,7 @@ first-app/
       test-pull-request.md
   tools/
     check-status.sh
+    reviewer-cache.js
     commit-changes.sh
     create-branch-from-staging.sh
     create-branch.sh
