@@ -18,7 +18,7 @@ Ningún cliente funciona sin el servidor en marcha (`pnpm start`). La web no la 
 | `src/queries/users.js` | Envía cada frase al servidor con `fetch` y devuelve las filas |
 | `src/logic/shared.js` | Qué es un nombre y un email válidos, y la copia de salida de un usuario |
 | `src/logic/<operación>.js` | Una operación por fichero: crear, modificar, borrar, listar y las tres búsquedas |
-| `src/logic/users-gender-count.js` | Cuenta usuarios por el género del nombre. No guarda nada |
+| `src/logic/users-gender-count.js` | Cuenta usuarios por el género del nombre. No guarda nada. Lo usan la terminal, Jupyter, la API de Chrome, la extensión de VS Code y la API de Nest |
 | `src/logic/index.js` | Reexporta las operaciones |
 | `src/clients/web/*` | Cliente de navegador en HTML, CSS y JS vanilla. Se abre como fichero e importa `src/logic/` con rutas relativas |
 | `scripts/browser.js` | Abre `src/clients/web/index.html` en Chrome, con un perfil aparte y `--allow-file-access-from-files` |
