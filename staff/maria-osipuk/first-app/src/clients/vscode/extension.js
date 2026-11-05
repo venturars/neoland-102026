@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import * as vscode from "vscode";
 
 import {
+  countUsersAction,
   createUserAction,
   deleteUserAction,
   findUserAction,
@@ -48,6 +49,10 @@ async function runAction(message) {
 
   if (action === "list") {
     return listUsersAction();
+  }
+
+  if (action === "count") {
+    return countUsersAction();
   }
 
   if (action === "create") {

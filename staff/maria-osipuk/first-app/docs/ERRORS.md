@@ -40,6 +40,14 @@ try {
 }
 ```
 
+## Recuento por género
+
+`Could not classify the users.` es la frase que ven quienes piden el recuento por género en los clientes HTTP, Nest, de escritorio, de Chrome y de VS Code cuando el clasificador local falla. No nace en `src/logic/`, que lanza `Unable to classify names` y `Unable to list users` y los conserva para la terminal y Jupyter: nace en cada cliente, como `Request JSON is invalid`.
+
+Los clientes HTTP, Nest y la API de Chrome responden `GET /users/gender-count` con `500` y esa frase ante `Unable to classify names` o un error desconocido, nunca con otro texto. `Unable to list users` conserva su mensaje, como en el listado. La ventana de escritorio y el panel de VS Code muestran la frase en inglés tal cual, fuera de su tabla `MESSAGES`; `Unable to list users` usa la frase en español de su tabla. La extensión de Chrome muestra el `message` de la API tal cual.
+
+Sin usuarios no hay error: el recuento responde tres ceros sin contactar con el clasificador.
+
 ## Traducción en cada cliente
 
 Cada cliente tiene su propia copia de las frases en español, para que pueda cambiarse o quitarse sin afectar a los demás. Un mensaje desconocido muestra una frase genérica, nunca el texto original.
@@ -72,7 +80,7 @@ Los cuadernos de `src/clients/node-http/jupyter/` muestran el `message` tal cual
 
 ## Cliente de escritorio
 
-`src/clients/electron/user-actions.js` captura el error de `src/logic/` y responde `{ error }` con su mensaje en inglés. No lo relanza, porque un error lanzado en un manejador de Electron llega a la página con texto añadido delante. `src/clients/electron/app.js` lo traduce con su tabla `MESSAGES` y conserva los campos escritos cuando falla un alta o un guardado. Una lista vacía solo se muestra después de una carga correcta sin usuarios.
+`src/clients/electron/user-actions.js` captura el error de `src/logic/` y responde `{ error }` con su mensaje en inglés. No lo relanza, porque un error lanzado en un manejador de Electron llega a la página con texto añadido delante. `src/clients/electron/app.js` lo traduce con su tabla `MESSAGES`, salvo el del recuento, que muestra su frase en inglés y conserva los campos escritos cuando falla un alta o un guardado. Una lista vacía solo se muestra después de una carga correcta sin usuarios.
 
 ## Cliente de Chrome
 
@@ -84,7 +92,7 @@ Los cuadernos de `src/clients/node-http/jupyter/` muestran el `message` tal cual
 
 ## Cliente de VS Code
 
-`src/clients/vscode/user-actions.js` captura el error de `src/logic/` y responde `{ error }` con su mensaje en inglés, porque un mensaje entre las dos partes del cliente no puede llevar un `Error` lanzado. `src/clients/vscode/view.js` lo traduce con su tabla `MESSAGES` y conserva los campos escritos cuando falla un alta o un guardado. Una lista vacía solo se muestra después de una carga correcta sin usuarios.
+`src/clients/vscode/user-actions.js` captura el error de `src/logic/` y responde `{ error }` con su mensaje en inglés, porque un mensaje entre las dos partes del cliente no puede llevar un `Error` lanzado. `src/clients/vscode/view.js` lo traduce con su tabla `MESSAGES`, salvo el del recuento, que muestra su frase en inglés y conserva los campos escritos cuando falla un alta o un guardado. Una lista vacía solo se muestra después de una carga correcta sin usuarios.
 
 ## Jupyter
 

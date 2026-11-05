@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
+import { countUsersByGender } from "../../logic/count-users-by-gender.js";
 import { createUser } from "../../logic/create-user.js";
 import { deleteUser } from "../../logic/delete-user.js";
 import { findUserById } from "../../logic/find-user-by-id.js";
@@ -20,6 +21,11 @@ export class UsersService {
   async list() {
     const users = await listUsers();
     return users;
+  }
+
+  async countByGender() {
+    const counts = await countUsersByGender();
+    return counts;
   }
 
   async find(id) {

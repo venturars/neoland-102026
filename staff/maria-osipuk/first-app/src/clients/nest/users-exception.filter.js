@@ -13,6 +13,11 @@ const UNABLE_TO_FIND = "Unable to find user";
 const UNABLE_TO_UPDATE = "Unable to update user";
 const UNABLE_TO_DELETE = "Unable to delete user";
 
+// This message is born here, not in logic/: the terminal and Jupyter keep
+// the logic messages. Any failure of the count that is not a failed read
+// of the users answers this sentence.
+const COULD_NOT_CLASSIFY = "Could not classify the users.";
+
 // This message is born here: a broken body fails before reaching logic/.
 const REQUEST_JSON_IS_INVALID = "Request JSON is invalid";
 
@@ -115,6 +120,20 @@ export class UsersExceptionFilter {
 
     if (request.method === "DELETE" && isUserPath) {
       unableTo = UNABLE_TO_DELETE;
+    }
+
+    // The count is also under /users/, so it is decided after the rule
+    // above. A failed read of the users keeps its own message.
+    const isCount = request.method === "GET" && path === "/users/gender-count";
+
+    if (isCount) {
+      unableTo = COULD_NOT_CLASSIFY;
+
+      if (exception instanceof Error) {
+        if (exception.message === UNABLE_TO_LIST) {
+          unableTo = UNABLE_TO_LIST;
+        }
+      }
     }
 
     // No operation matches: the route does not exist.

@@ -10,6 +10,29 @@ body {
   display: none;
 }
 
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin: 0 0 8px;
+  border-bottom: 1px solid var(--vscode-panel-border, transparent);
+}
+
+.tab {
+  padding: 4px 10px;
+  border: 0;
+  background: transparent;
+  color: var(--vscode-foreground);
+  cursor: pointer;
+}
+
+.tab:hover {
+  background: var(--vscode-list-hoverBackground);
+}
+
+.tab.is-active {
+  border-bottom: 2px solid var(--vscode-focusBorder);
+}
+
 h2 {
   margin: 16px 0 8px;
   font-size: 1.1em;

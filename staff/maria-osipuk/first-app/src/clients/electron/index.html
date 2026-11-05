@@ -11,65 +11,113 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <aside class="sidebar">
-      <header class="sidebar-header">
-        <h1>Usuarios</h1>
-        <button id="refresh" type="button" class="button-quiet">
-          Actualizar
-        </button>
-      </header>
-      <button id="new-user" type="button">Nuevo usuario</button>
-      <p id="empty-list" class="muted" hidden>Todavía no hay usuarios.</p>
-      <ul id="user-list" class="user-list"></ul>
-    </aside>
+    <nav class="tabs" role="tablist">
+      <button
+        id="tab-users"
+        type="button"
+        role="tab"
+        class="tab is-active"
+        aria-selected="true"
+      >
+        Usuarios
+      </button>
+      <button
+        id="tab-count"
+        type="button"
+        role="tab"
+        class="tab"
+        aria-selected="false"
+      >
+        Recuento
+      </button>
+    </nav>
 
-    <main class="panel">
-      <p id="message" class="message" role="status" hidden></p>
+    <div id="users-tab" class="users-tab">
+      <aside class="sidebar">
+        <header class="sidebar-header">
+          <h1>Usuarios</h1>
+          <button id="refresh" type="button" class="button-quiet">
+            Actualizar
+          </button>
+        </header>
+        <button id="new-user" type="button">Nuevo usuario</button>
+        <p id="empty-list" class="muted" hidden>Todavía no hay usuarios.</p>
+        <ul id="user-list" class="user-list"></ul>
+      </aside>
 
-      <section id="create-view">
-        <h2>Nuevo usuario</h2>
-        <form id="create-form" novalidate>
-          <label>
-            Nombre
-            <input id="create-name" type="text" autocomplete="off" />
-          </label>
-          <label>
-            Email
-            <input id="create-email" type="text" autocomplete="off" />
-          </label>
-          <div class="actions">
-            <button type="submit">Crear usuario</button>
-          </div>
-        </form>
-      </section>
+      <main class="panel">
+        <p id="message" class="message" role="status" hidden></p>
 
-      <section id="detail-view" hidden>
-        <h2 id="detail-title"></h2>
-        <dl class="facts">
-          <dt>Id</dt>
-          <dd id="detail-id"></dd>
-          <dt>Creado</dt>
-          <dd id="detail-created"></dd>
-          <dt>Modificado</dt>
-          <dd id="detail-updated"></dd>
-        </dl>
-        <form id="edit-form" novalidate>
-          <label>
-            Nombre
-            <input id="edit-name" type="text" autocomplete="off" />
-          </label>
-          <label>
-            Email
-            <input id="edit-email" type="text" autocomplete="off" />
-          </label>
-          <div class="actions">
-            <button type="submit">Guardar cambios</button>
-            <button id="delete-user" type="button" class="button-danger">
-              Eliminar usuario
-            </button>
-          </div>
-        </form>
-      </section>
+        <section id="create-view">
+          <h2>Nuevo usuario</h2>
+          <form id="create-form" novalidate>
+            <label>
+              Nombre
+              <input id="create-name" type="text" autocomplete="off" />
+            </label>
+            <label>
+              Email
+              <input id="create-email" type="text" autocomplete="off" />
+            </label>
+            <div class="actions">
+              <button type="submit">Crear usuario</button>
+            </div>
+          </form>
+        </section>
+
+        <section id="detail-view" hidden>
+          <h2 id="detail-title"></h2>
+          <dl class="facts">
+            <dt>Id</dt>
+            <dd id="detail-id"></dd>
+            <dt>Creado</dt>
+            <dd id="detail-created"></dd>
+            <dt>Modificado</dt>
+            <dd id="detail-updated"></dd>
+          </dl>
+          <form id="edit-form" novalidate>
+            <label>
+              Nombre
+              <input id="edit-name" type="text" autocomplete="off" />
+            </label>
+            <label>
+              Email
+              <input id="edit-email" type="text" autocomplete="off" />
+            </label>
+            <div class="actions">
+              <button type="submit">Guardar cambios</button>
+              <button id="delete-user" type="button" class="button-danger">
+                Eliminar usuario
+              </button>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <main id="count-tab" class="panel" hidden>
+      <h2>Recuento por género</h2>
+      <p class="muted">
+        Cuenta los usuarios guardados según el género que sugiere su nombre.
+      </p>
+      <p
+        id="count-message"
+        class="message message-error"
+        role="status"
+        hidden
+      ></p>
+      <div class="actions count-actions">
+        <button id="count-button" type="button">Pedir recuento</button>
+      </div>
+      <p id="count-loading" class="muted" hidden>Contando usuarios...</p>
+      <dl id="count-result" class="facts" hidden>
+        <dt>Mujeres</dt>
+        <dd id="count-female"></dd>
+        <dt>Hombres</dt>
+        <dd id="count-male"></dd>
+        <dt>Indefinidos</dt>
+        <dd id="count-undefined"></dd>
+      </dl>
     </main>
 
     <script type="module" src="./app.js"></script>
