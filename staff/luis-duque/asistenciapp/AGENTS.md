@@ -1,6 +1,6 @@
 # AGENTS.md — Manual de trabajo para agentes de IA
 
-El flujo de trabajo de git de esta app es `agents/git-workflow-agent.md`, entero: pensar una tarea, dejarla escrita, empezar, guardar un trozo y pedir revisión. Ese flujo no quita las paradas del flujo SDD (§2).
+El flujo de trabajo de git de esta app es `agents/git-workflow-agent.md`, entero: pensar una tarea, dejarla escrita, empezar, guardar un trozo y pedir revisión. Un pedido que cambie algo en este proyecto entra primero por ese flujo. Si ya nombra el momento, se usa ese. Si la tarea ya está en curso, el pedido sigue en su momento o en su fase. Se piensa la tarea solo si es nueva. Una pregunta sobre el proyecto, o un mensaje que no provoque un cambio, se responde y no abre el flujo. Ese flujo no quita las paradas del flujo SDD (§2). Pedir el cambio no escribe `spec.md` como primera respuesta. Con la rama abierta, la fase siguiente es la spec, luego el plan y luego las tareas. La spec no espera a pedir revisión.
 
 Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [CONSTITUTION.md](docs/CONSTITUTION.md) dice **qué reglas** se cumplen; este archivo dice **cómo se trabaja** día a día.
 
@@ -8,7 +8,9 @@ Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en 
 
 ## 1. Antes de hacer nada: lectura obligatoria
 
-Lee en este orden al empezar cualquier tarea:
+La primera respuesta a un pedido que cambie el proyecto es un momento de `agents/git-workflow-agent.md`, no esta lectura y no `spec.md`.
+
+Cuando ese flujo ya está en un momento y toca trabajar una fase, lee en este orden:
 
 1. `docs/CONSTITUTION.md`: las reglas no negociables.
 2. Este archivo (`AGENTS.md`).
@@ -21,7 +23,7 @@ Si algo de lo que te piden contradice la constitución, **para y avisa** antes d
 
 ## 2. Flujo SDD paso a paso
 
-Cada funcionalidad recorre estas fases **en orden**. Al terminar cada una, el agente **se detiene** y pide la aprobación de Victor. No se avanza sin un "ok" explícito.
+Cada funcionalidad recorre estas fases **en orden**. No son la primera respuesta al pedido: el flujo de git va antes y no se salta estas paradas. Al terminar cada una, el agente **se detiene** y pide la aprobación de Victor. No se avanza sin un "ok" explícito.
 
 «Aplica», «copia», «integra», «hazlo», «ajusta» o «estandariza» **no** abren ficheros ni saltan fases. Incluyen copiar plantillas, crear carpetas y tocar docs. Sin la fase en curso aprobada no se escribe nada del cambio. Una fase por respuesta: al cerrarla, para.
 
@@ -141,5 +143,6 @@ Una funcionalidad está terminada cuando:
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
 | `002-discord-bot` | Idea futura | Fuera del MVP |
 | `006-git-workflow` | 4. Implementar (T01–T10 hechos) | Issue #777 / PR #784. Pendiente de ok final |
+| `007-workflow-first` | 3. Tareas, pendiente de ejecutar | Issue #1038 |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.

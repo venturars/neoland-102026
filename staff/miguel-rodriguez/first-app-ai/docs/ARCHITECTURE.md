@@ -135,6 +135,9 @@ record the request, approved approach, tasks, decisions, and verification.
 It checks task readiness against project context, asks for missing decisions and
 retains resolved answers. Starting a task completes branch and draft PR setup,
 including issue links, before project edits; resuming reuses completed steps.
+Interview rounds return the necessary questions with recommendations; the principal
+waits for answers and passes their history when resuming. Commit subjects identify
+the file or function and its concrete change.
 The six other agent documents define task clarification, issue creation, branch
 creation, commits, pushes and pull requests. The principal runs status, staging
 updates, issue linking and reviewer assignment through their respective skills.

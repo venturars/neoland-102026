@@ -7,7 +7,9 @@ import {
   NotFoundError,
   ValidationError,
 } from "../../logic/errors.js";
+import { findUserByEmail } from "../../logic/find-user-by-email.js";
 import { findUserById } from "../../logic/find-user-by-id.js";
+import { findUserByName } from "../../logic/find-user-by-name.js";
 import { listUsers } from "../../logic/list-users.js";
 import { updateUser } from "../../logic/update-user.js";
 
@@ -51,6 +53,20 @@ app.get("/users", async () => {
   const users = await listUsers();
 
   return users;
+});
+
+app.get("/users/by-name", async (request) => {
+  const name = request.query.name;
+  const users = await findUserByName(name);
+
+  return users;
+});
+
+app.get("/users/by-email", async (request) => {
+  const email = request.query.email;
+  const user = await findUserByEmail(email);
+
+  return user;
 });
 
 app.get("/users/:id", async (request) => {

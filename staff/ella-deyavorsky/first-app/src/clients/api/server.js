@@ -2,6 +2,7 @@
 import express from "express";
 import { createUser } from "../../logic/create-user.js";
 import { listUsers } from "../../logic/list-users.js";
+import { listGmailUsers } from "../../logic/list-gmail-users.js";
 import { findUserById } from "../../logic/find-user-by-id.js";
 import { updateUser } from "../../logic/update-user.js";
 import { deleteUser } from "../../logic/delete-user.js";
@@ -57,6 +58,18 @@ app.post("/users", async (request, response) => {
 app.get("/users", async (request, response) => {
   try {
     const users = await listUsers();
+    response.status(200).json(users);
+  } catch (error) {
+    if (error.message !== "The database failed.") {
+      console.error(error);
+    }
+    response.status(500).json({ error: "The database failed." });
+  }
+});
+
+app.get("/users/gmail", async (request, response) => {
+  try {
+    const users = await listGmailUsers();
     response.status(200).json(users);
   } catch (error) {
     if (error.message !== "The database failed.") {
