@@ -11,7 +11,8 @@
     "browser": "start \"\" \"%LOCALAPPDATA%\\BraveSoftware\\Brave-Browser\\Application\\brave.exe\" --user-data-dir=%TEMP%\\first-app-brave --no-first-run --no-default-browser-check --allow-file-access-from-files \"%CD%\\src\\clients\\browser\\index.html\"",
     "electron": "electron src/clients/electron/main.js",
     "chrome": "node src/clients/chrome/server.js",
-    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/browser/**/*.js\" \"src/clients/http/**/*.js\" \"src/clients/electron/**/*.js\" \"src/clients/chrome/**/*.js\"",
+    "vscode": "code --extensionDevelopmentPath=\"%CD%\\src\\clients\\vscode\" \"%CD%\"",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/browser/**/*.js\" \"src/clients/http/**/*.js\" \"src/clients/electron/**/*.js\" \"src/clients/chrome/**/*.js\" \"src/clients/vscode/**/*.js\"",
     "lint": "eslint ."
   },
   "keywords": [],
