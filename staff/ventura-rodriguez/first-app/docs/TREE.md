@@ -3,6 +3,7 @@
 first-app/
   README.md
   eslint.config.js
+  babel.config.json
   src/
     db/
       server.js
@@ -45,6 +46,12 @@ first-app/
         index.html
         panel.js
         styles.css
+      nest/
+        main.js
+        app.module.js
+        users.controller.js
+        users.service.js
+        http-exception.filter.js
   agents/
   skills/
   tools/
