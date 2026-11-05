@@ -10,6 +10,7 @@ const viewedUser = byId("viewed-user");
 const userList = byId("user-list");
 const deleteId = byId("delete-id");
 const deleteConfirm = byId("delete-confirm");
+const foundList = byId("found-users");
 
 // Id que espera confirmación para borrarse.
 let pendingDeleteId = "";
@@ -38,6 +39,9 @@ function userText(user) {
 
 // Enseña un usuario, o nada si no hay usuario.
 function showViewedUser(user) {
+  // Otra acción puede cambiar los usuarios: quita la búsqueda anterior.
+  foundList.replaceChildren();
+
   viewedUser.textContent = user === null ? "" : userText(user);
   viewedUser.hidden = user === null;
   if (user !== null) {
@@ -69,9 +73,25 @@ function showUsers(users) {
   }
 }
 
+// Pinta los usuarios encontrados, o avisa si no hay ninguno.
+function showFoundUsers(users) {
+  // Una lista vacía no es un error: solo se avisa.
+  if (users.length === 0) {
+    showMessage("No hay usuarios con ese nombre", false);
+    return;
+  }
+
+  // Se pinta con textContent, porque viene de la base.
+  for (const user of users) {
+    const item = document.createElement("li");
+    item.textContent = userText(user);
+    foundList.append(item);
+  }
+}
+
 // Atiende cada respuesta de la extensión.
 function handleReply(event) {
-  const { action, error, users, user } = event.data;
+  const { action, error, users, user, foundUsers } = event.data;
 
   // Si falla, lo escrito se queda para corregirlo.
   if (error !== undefined) {
@@ -83,6 +103,9 @@ function handleReply(event) {
   }
   if (user !== undefined) {
     showViewedUser(user);
+  }
+  if (foundUsers !== undefined) {
+    showFoundUsers(foundUsers);
   }
 
   // Si ha salido bien, vacía el formulario de esa acción.
@@ -150,6 +173,12 @@ function confirmDelete() {
   send({ action: "delete", id });
 }
 
+// Pide los usuarios con el nombre escrito.
+function findByNameFromForm(event) {
+  event.preventDefault();
+  send({ action: "find-by-name", name: byId("find-name").value });
+}
+
 // Conecta formularios, botones y respuestas.
 byId("create-form").addEventListener("submit", createFromForm);
 byId("view-form").addEventListener("submit", viewFromForm);
@@ -157,6 +186,7 @@ byId("update-form").addEventListener("submit", updateFromForm);
 byId("delete-form").addEventListener("submit", askToDelete);
 byId("delete-yes").addEventListener("click", confirmDelete);
 byId("delete-no").addEventListener("click", cancelDelete);
+byId("find-name-form").addEventListener("submit", findByNameFromForm);
 window.addEventListener("message", handleReply);
 
 // Al abrir la vista, pide la lista.

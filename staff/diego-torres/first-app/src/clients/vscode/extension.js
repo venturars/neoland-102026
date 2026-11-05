@@ -9,6 +9,8 @@ import { createUser } from "../../logic/create-user.js";
 import { deleteUser } from "../../logic/delete-user.js";
 // Busca un usuario por su id (viene de la capa de lógica).
 import { findUserById } from "../../logic/find-user-by-id.js";
+// Busca usuarios por su nombre (viene de la capa de lógica).
+import { findUserByName } from "../../logic/find-user-by-name.js";
 // Devuelve la lista de usuarios (viene de la capa de lógica).
 import { listUsers } from "../../logic/list-users.js";
 // Modifica un usuario (viene de la capa de lógica).
@@ -30,6 +32,9 @@ async function runAction(message) {
   }
   if (action === "view") {
     return { user: await findUserById(id) };
+  }
+  if (action === "find-by-name") {
+    return { foundUsers: await findUserByName(name) };
   }
   if (action === "update") {
     return { user: await updateUser(id, changes) };

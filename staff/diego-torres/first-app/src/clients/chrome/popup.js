@@ -14,6 +14,8 @@ const updateEmail = document.getElementById("update-email");
 const deleteId = document.getElementById("delete-id");
 const deleteConfirm = document.getElementById("delete-confirm");
 const deleteQuestion = document.getElementById("delete-question");
+const findName = document.getElementById("find-name");
+const foundUsers = document.getElementById("found-users");
 
 // Id que espera confirmación para borrarse.
 let pendingDeleteId = "";
@@ -40,6 +42,9 @@ function userText(user) {
 
 // Enseña un usuario debajo de los mensajes, o nada si no hay usuario.
 function showViewedUser(user) {
+  // Otra acción puede cambiar los usuarios: quita la búsqueda anterior.
+  foundUsers.replaceChildren();
+
   viewedUser.textContent = user === null ? "" : userText(user);
   viewedUser.hidden = user === null;
   scrollToTopIf(user !== null);
@@ -222,6 +227,42 @@ async function confirmDelete() {
   await showUsers();
 }
 
+// Busca los usuarios con el nombre escrito y los enseña.
+async function findByNameFromForm(event) {
+  event.preventDefault();
+  showMessage("", false);
+  showViewedUser(null);
+
+  let users;
+  try {
+    // El nombre puede llevar espacios o acentos: se prepara para la dirección.
+    const name = encodeURIComponent(findName.value);
+    users = await callApi(
+      "GET",
+      `/users/by-name?name=${name}`,
+      undefined,
+      "Could not find the user",
+    );
+  } catch (error) {
+    // Si falla, lo escrito se queda para poder corregirlo.
+    showMessage(error.message, true);
+    return;
+  }
+
+  // Una lista vacía no es un error: solo se avisa.
+  if (users.length === 0) {
+    showMessage("No hay usuarios con ese nombre", false);
+    return;
+  }
+
+  // Pinta cada usuario con textContent, porque viene de la base.
+  for (const user of users) {
+    const item = document.createElement("li");
+    item.textContent = userText(user);
+    foundUsers.append(item);
+  }
+}
+
 // Conecta cada formulario y botón con la función que lo atiende.
 document
   .getElementById("create-form")
@@ -233,6 +274,9 @@ document
 document.getElementById("delete-form").addEventListener("submit", askToDelete);
 document.getElementById("delete-yes").addEventListener("click", confirmDelete);
 document.getElementById("delete-no").addEventListener("click", cancelDelete);
+document
+  .getElementById("find-name-form")
+  .addEventListener("submit", findByNameFromForm);
 
 // Al abrir la ventana, carga la lista.
 showUsers();
