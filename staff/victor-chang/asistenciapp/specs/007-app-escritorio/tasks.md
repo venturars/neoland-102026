@@ -162,6 +162,11 @@ Cómo leer esta lista:
   - `AsistenciApp.spec`: `static/`, la llave (desde un archivo que no está en git) y `cloudflared`; `--windowed --onedir`; icono;
   - compilar el `.app` en el Mac de Victor y comprobar: tamaño < 100 MB, panel en < 10 s, datos en `~/Library/Application Support/AsistenciApp/`, "Abrir igualmente" la primera vez.
   - *Cubre:* CA-01, CA-02, CA-05 (en macOS) y los requisitos no funcionales.
+  - **En curso (2026-11-05):** `AsistenciApp.spec` en la carpeta de la app. Lee de fuera `ASISTENCIA_BUILD_CLOUDFLARED` (obligatoria) y `ASISTENCIA_BUILD_GOOGLE_CLIENT` (opcional, debe llamarse `google-client.json`; sin ella avisa de que no habrá Meet), mete `static/`, la llave y `cloudflared`, quita las herramientas de desarrollo y, en macOS, crea el `.app` con la versión de `attendance/__init__.py`, el identificador `io.github.changvictor.asistenciapp` y macOS 14 como mínimo. `build/` y `dist/` en `.gitignore`. `pywebview` y `pyinstaller` ya estaban en `requirements.txt` desde T11.
+    - Compilado en el Mac de Victor (con el `cloudflared` 2026.10.7 comprobado en T01 y su llave de Google): `AsistenciApp.app` de **78 MB** (37 MB de `cloudflared`), firma *ad hoc*; `AsistenciApp-1.0.0-macos.dmg` de **41 MB**.
+    - Arranque automático con `HOME` en una carpeta temporal: el panel responde en **1,5 s** la primera vez y **0,4 s** después; sirve `profesor.html`, `styles.css`, las letras y `alumno.html`; la base de datos se crea en `~/Library/Application Support/AsistenciApp/`; al cerrarla no queda ningún proceso.
+    - **Icono:** de momento el de PyInstaller por defecto; el proyecto no tiene imagen propia (pregunta a Victor).
+    - **Falta (Victor):** abrir el `.dmg` marcado como descargado, "Abrir igualmente" y comprobar la ventana.
 - [ ] **T15** 👤 · Repositorio público y primera *Release*:
   - **Victor:** crear el repositorio público `ChangVictor/asistenciapp` (vacío) y su secreto de Actions `GOOGLE_CLIENT_JSON` con la llave.
   - `scripts/publicar.sh` (copia con `git subtree split` y empuja `main` y la etiqueta) y `.github/workflows/publicar.yml` (trabajos de macOS y Windows de plan §2.11, comprobación de la versión, *Release* con los dos archivos).

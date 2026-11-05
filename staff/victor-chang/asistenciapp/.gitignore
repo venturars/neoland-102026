@@ -2,3 +2,6 @@ data/
 .venv/
 __pycache__/
 .pytest_cache/
+# PyInstaller (spec 007 · T14): lo que se genera al compilar la app de escritorio
+build/
+dist/
