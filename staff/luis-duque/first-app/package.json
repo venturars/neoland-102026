@@ -10,7 +10,8 @@
     "http": "node src/clients/http/app.js",
     "browser": "start \"\" \"%LOCALAPPDATA%\\BraveSoftware\\Brave-Browser\\Application\\brave.exe\" --user-data-dir=%TEMP%\\first-app-brave --no-first-run --no-default-browser-check --allow-file-access-from-files \"%CD%\\src\\clients\\browser\\index.html\"",
     "electron": "electron src/clients/electron/main.js",
-    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/browser/**/*.js\" \"src/clients/http/**/*.js\" \"src/clients/electron/**/*.js\"",
+    "chrome": "node src/clients/chrome/server.js",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/browser/**/*.js\" \"src/clients/http/**/*.js\" \"src/clients/electron/**/*.js\" \"src/clients/chrome/**/*.js\"",
     "lint": "eslint ."
   },
   "keywords": [],
@@ -23,6 +24,7 @@
     "cli-table3": "0.6.5",
     "electron": "45.2.3",
     "express": "5.3.0",
+    "fastify": "5.12.8",
     "openai": "7.39.0"
   },
   "devDependencies": {
