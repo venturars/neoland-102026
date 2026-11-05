@@ -8,9 +8,9 @@ Issue: #1038.
 
 Un pedido que cambia la app se lee como escribir la spec, y el flujo de git no llega a arrancar. Quien pide el cambio necesita que la primera respuesta sea ese flujo: pensar una tarea, dejarla escrita, empezar, guardar un trozo o pedir revisión.
 
-Si el pedido ya nombra el momento, se usa ese. Si no nombra ninguno, se piensa la tarea. Una pregunta sobre el proyecto, o un mensaje que no provoque un cambio, se responde y no abre el flujo.
+Si el pedido ya nombra el momento, se usa ese. Si la tarea ya está en curso, el pedido sigue en su momento o en su fase. Se piensa la tarea solo si es nueva. Una pregunta sobre el proyecto, o un mensaje que no provoque un cambio, se responde y no abre el flujo.
 
-Pedir el cambio no escribe la spec como primera respuesta. Las paradas de especificar, planificar, desglosar e implementar siguen. La spec 006 deja el flujo instalado y no cubre este pedido.
+Pedir el cambio no escribe la spec como primera respuesta. Con la rama ya abierta, la fase siguiente es la spec, y se para. Luego el plan, y se para. Luego las tareas, y se para. La spec no espera a pedir revisión. Las paradas de especificar, planificar, desglosar e implementar siguen. La spec 006 deja el flujo instalado y no cubre este pedido.
 
 ## 2. Usuarios
 
@@ -22,7 +22,7 @@ Pedir el cambio no escribe la spec como primera respuesta. Las paradas de especi
 ## 3. Historias de usuario
 
 - HU-01: Como quien pide un cambio, quiero que la primera respuesta sea un momento del flujo de git y no la spec.
-- HU-02: Como quien pide un cambio sin nombrar el momento, quiero que se piense la tarea antes de escribir nada.
+- HU-02: Como quien pide un cambio nuevo sin nombrar el momento, quiero que se piense la tarea antes de escribir nada. Si la tarea ya está en curso, quiero que el pedido siga en su fase.
 - HU-03: Como quien pregunta por la app, quiero la respuesta sin que se abra el flujo ni se cree una spec.
 - HU-04: Como quien manda un mensaje que no cambia la app, quiero lo mismo que en una pregunta.
 - HU-05: Como quien aprueba, quiero que la spec, el plan, las tareas y la implementación sigan siendo paradas.
@@ -31,7 +31,7 @@ Pedir el cambio no escribe la spec como primera respuesta. Las paradas de especi
 ## 4. Criterios de aceptación
 
 - CA-01 (HU-01): Dado un pedido que cambia asistenciapp, cuando llega, entonces la primera respuesta es un momento del flujo de git y no se crea `spec.md`.
-- CA-02 (HU-02): Dado un pedido de cambio que no nombra el momento, cuando llega, entonces se piensa la tarea y no se escribe la spec como primera respuesta.
+- CA-02 (HU-02): Dado un pedido de cambio nuevo que no nombra el momento, cuando llega, entonces se piensa la tarea y no se escribe la spec como primera respuesta. Dada una tarea ya en curso, cuando el pedido no nombra un momento, entonces sigue en su fase. Con la rama abierta, la fase siguiente es la spec, luego el plan y luego las tareas. No se abre otra entrevista. La spec no espera a pedir revisión.
 - CA-03 (HU-03): Dada una pregunta sobre el proyecto, cuando se responde, entonces no arranca el flujo y no se crea `spec.md`.
 - CA-04 (HU-04): Dado un mensaje que no provoca un cambio en el proyecto, cuando se responde, entonces no arranca el flujo y no se crea `spec.md`.
 - CA-05 (HU-05): Dado el manual y el orquestador, cuando se leen, entonces un cambio entra por el flujo de git y las paradas de spec, plan, tareas e implementación siguen.

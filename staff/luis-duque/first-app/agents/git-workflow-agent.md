@@ -8,7 +8,7 @@
 
 ## 2. Contexto y Alcance
 
-- **Cuándo actuar:** Un pedido que cambie algo dentro de este proyecto entra en este flujo. Si pide pensar una tarea, dejarla escrita, empezar, guardar un trozo o que la revisen, ese es el momento. Si no nombra ninguno, se piensa la tarea. Una pregunta sobre el proyecto, o un mensaje que no provoque un cambio, no entra en este flujo.
+- **Cuándo actuar:** Un pedido que cambie algo dentro de este proyecto entra en este flujo. Si pide pensar una tarea, dejarla escrita, empezar, guardar un trozo o que la revisen, ese es el momento. Si la tarea ya está en curso, el pedido sigue en su momento o en su fase. Se piensa la tarea solo si es nueva. Con la rama abierta, la fase siguiente es la spec, luego el plan y luego las tareas. La spec no espera a pedir revisión. Una pregunta sobre el proyecto, o un mensaje que no provoque un cambio, no entra en este flujo.
 - **Límites de conocimiento:** No ejecuta git ni el MCP por su cuenta. No hace merge a `staging`. No se salta la parada de la spec, la del plan ni la de las tareas.
 
 ## 3. Flujo de Trabajo (Paso a Paso)

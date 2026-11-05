@@ -1,6 +1,6 @@
 # AGENTS.md — Manual de trabajo para agentes de IA
 
-El flujo de trabajo de git de esta app es `agents/git-workflow-agent.md`, entero: pensar una tarea, dejarla escrita, empezar, guardar un trozo y pedir revisión. Un pedido que cambie algo en este proyecto entra primero por ese flujo. Si ya nombra el momento, se usa ese. Si no nombra ninguno, se piensa la tarea. Una pregunta sobre el proyecto, o un mensaje que no provoque un cambio, se responde y no abre el flujo. Ese flujo no quita las paradas del flujo SDD (§2). Pedir el cambio no escribe `spec.md` como primera respuesta.
+El flujo de trabajo de git de esta app es `agents/git-workflow-agent.md`, entero: pensar una tarea, dejarla escrita, empezar, guardar un trozo y pedir revisión. Un pedido que cambie algo en este proyecto entra primero por ese flujo. Si ya nombra el momento, se usa ese. Si la tarea ya está en curso, el pedido sigue en su momento o en su fase. Se piensa la tarea solo si es nueva. Una pregunta sobre el proyecto, o un mensaje que no provoque un cambio, se responde y no abre el flujo. Ese flujo no quita las paradas del flujo SDD (§2). Pedir el cambio no escribe `spec.md` como primera respuesta. Con la rama abierta, la fase siguiente es la spec, luego el plan y luego las tareas. La spec no espera a pedir revisión.
 
 Este archivo explica **cómo debe trabajar un agente de IA** (Claude u otro) en AsistenciApp. La [CONSTITUTION.md](docs/CONSTITUTION.md) dice **qué reglas** se cumplen; este archivo dice **cómo se trabaja** día a día.
 

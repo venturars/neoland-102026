@@ -8,7 +8,7 @@ No hay código de aplicación nuevo, ni dependencia nueva, ni cambios en tests. 
 
 Se toca `AGENTS.md`.
 
-Al inicio, un pedido que cambie este proyecto entra primero por `agents/git-workflow-agent.md`. Si ya nombra el momento, se usa ese. Si no nombra ninguno, se piensa la tarea. Una pregunta sobre el proyecto, o un mensaje que no provoque un cambio, se responde y no abre el flujo. Ese flujo no quita las paradas del flujo SDD (§2). Pedir el cambio no escribe `spec.md` como primera respuesta.
+Al inicio, un pedido que cambie este proyecto entra primero por `agents/git-workflow-agent.md`. Si ya nombra el momento, se usa ese. Si la tarea ya está en curso, el pedido sigue en su momento o en su fase. Se piensa la tarea solo si es nueva. Una pregunta sobre el proyecto, o un mensaje que no provoque un cambio, se responde y no abre el flujo. Ese flujo no quita las paradas del flujo SDD (§2). Pedir el cambio no escribe `spec.md` como primera respuesta. Con la rama abierta, la fase siguiente es la spec, luego el plan y luego las tareas. La spec no espera a pedir revisión.
 
 En §1, la primera respuesta a un pedido que cambie el proyecto es un momento de ese flujo, no la lectura obligatoria y no `spec.md`. La lectura sigue cuando el flujo ya está en un momento y toca una fase.
 
@@ -16,7 +16,7 @@ En §2, las cuatro fases siguen en orden y no son la primera respuesta. Sin la f
 
 En §7 entra una fila de `007-workflow-first`: fase 2, plan, pendiente de lectura. Issue #1038.
 
-Se toca `agents/git-workflow-agent.md`, en «Cuándo actuar». Un pedido que cambie algo dentro de este proyecto entra en el flujo. Si nombra un momento, ese es el momento. Si no nombra ninguno, se piensa la tarea. Una pregunta, o un mensaje que no provoque un cambio, no entra. Sigue sin saltar la parada de la spec, la del plan ni la de las tareas, y sin hacer merge a `staging`.
+Se toca `agents/git-workflow-agent.md`, en «Cuándo actuar». Un pedido que cambie algo dentro de este proyecto entra en el flujo. Si nombra un momento, ese es el momento. Si la tarea ya está en curso, sigue en su fase. Se piensa la tarea solo si es nueva. Con la rama abierta, la fase siguiente es la spec, luego el plan y luego las tareas. La spec no espera a pedir revisión. Una pregunta, o un mensaje que no provoque un cambio, no entra. Sigue sin saltar la parada de la spec, la del plan ni la de las tareas, y sin hacer merge a `staging`.
 
 No se toca `docs/CONSTITUTION.md`. No se tocan `app.py`, `asistencia/`, `static/`, `tests/`, `requirements.txt`, `pytest.ini` ni `README.md`. No se reescribe la spec 006. No se toca el `AGENTS.md` de la raíz del repositorio.
 

@@ -1,6 +1,6 @@
 # Instrucciones del agente
 
-El flujo de trabajo de git de esta app es `agents/git-workflow-agent.md`, entero: pensar una tarea, dejarla escrita, empezar, guardar un trozo y pedir revisión. Un pedido que cambie algo en este proyecto entra primero por ese flujo. Si ya nombra el momento, se usa ese. Si no nombra ninguno, se piensa la tarea. Una pregunta sobre el proyecto, o un mensaje que no provoque un cambio, se responde y no abre el flujo. Ese flujo no quita las paradas de «Desarrollos».
+El flujo de trabajo de git de esta app es `agents/git-workflow-agent.md`, entero: pensar una tarea, dejarla escrita, empezar, guardar un trozo y pedir revisión. Un pedido que cambie algo en este proyecto entra primero por ese flujo. Si ya nombra el momento, se usa ese. Si la tarea ya está en curso, el pedido sigue en su momento o en su fase. Se piensa la tarea solo si es nueva. Una pregunta sobre el proyecto, o un mensaje que no provoque un cambio, se responde y no abre el flujo. Ese flujo no quita las paradas de «Desarrollos». Con la rama abierta, la fase siguiente es la spec, luego el plan y luego las tareas. La spec no espera a pedir revisión.
 
 Trabajas en `staff/luis-duque/first-app`. Estas instrucciones son para ti. Léelas antes de cambiar código y síguelas. Escríbelas para que otro agente las entienda sin conocer el historial del chat. No escribas nombres de personas.
 
@@ -14,7 +14,7 @@ Un cambio nuevo es un desarrollo: una función, una dependencia, la configuraci�
 
 «Hazlo», «estandariza», «implementa» o «cámbialo» no abren el código. Una skill, una issue o un «no uses la skill» tampoco. Hasta que pidan ejecutar las tareas no toques código, `package.json`, `pnpm-lock.yaml`, `src/logic`, `src/queries`, `src/db` ni `src/clients`.
 
-`spec.md` se escribe y se para. Una persona lo lee. Luego `plan.md` y para. Si la constitución, el código y la spec dicen lo mismo, escribe `tasks.md` y para. Si no, la pregunta queda al final del plan y no hay tareas. En este proceso no toques ningún otro fichero.
+Con la rama ya abierta, `spec.md` se escribe y se para, antes de pedir revisión. Una persona lo lee. Luego `plan.md` y para. Si la constitución, el código y la spec dicen lo mismo, escribe `tasks.md` y para. Si no, la pregunta queda al final del plan y no hay tareas. En este proceso no toques ningún otro fichero.
 
 El código empieza solo cuando los tres ficheros ya están escritos y esa persona pide ejecutar `tasks.md`. Ejecuta `tasks.md`. No inventes pasos. No vuelvas a escribir la spec, el plan ni las tareas en bucle.
 
