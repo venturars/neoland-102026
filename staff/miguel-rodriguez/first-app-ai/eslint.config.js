@@ -2,6 +2,10 @@ import js from "@eslint/js";
 
 export default [
   {
+    files: ["src/clients/electron/main.js"],
+    languageOptions: { globals: { URL: "readonly" } },
+  },
+  {
     ignores: [
       "**/node_modules/**",
       "**/.venv/**",
@@ -30,6 +34,12 @@ export default [
     languageOptions: { globals: { fetch: "readonly" } },
   },
   {
+    files: ["src/logic/users-gender-count.js"],
+    languageOptions: {
+      globals: { fetch: "readonly", AbortSignal: "readonly" },
+    },
+  },
+  {
     files: ["src/clients/vscode/**/*.cjs"],
     languageOptions: {
       sourceType: "commonjs",
@@ -54,7 +64,13 @@ export default [
     },
   },
   {
-    files: ["src/clients/web/**/*.js"],
-    languageOptions: { globals: { document: "readonly", window: "readonly" } },
+    files: [
+      "src/clients/web/**/*.js",
+      "src/clients/electron/app.js",
+      "src/clients/chrome/popup.js",
+    ],
+    languageOptions: {
+      globals: { document: "readonly", window: "readonly", fetch: "readonly" },
+    },
   },
 ];

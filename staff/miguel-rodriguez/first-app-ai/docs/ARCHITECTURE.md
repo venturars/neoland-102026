@@ -37,6 +37,10 @@ browser imports the shared list, ID lookup, update and delete operations as ES
 modules. It keeps presentation state in memory; saved contacts live in SQLite.
 Field errors present shared validation failures. Typed-email confirmation is a
 client precaution before calling delete, not authentication. Notes is disabled.
+Its summary button imports and awaits `usersGenderCount` directly. That shared
+operation uses native fetch to the existing local Ollama API, so its module also
+loads in the file-based browser client. Prompts, batching and result handling
+remain in the operation, without an intermediate HTTP client.
 
 `scripts/web.js`, run by `pnpm web`, opens the HTML as a file in Chrome/Chromium
 with local-file module access and a separate temporary profile. It uses an
@@ -50,7 +54,25 @@ preflight; it does not serve the page or JavaScript files.
 operations. `panel.html`, `panel.js`, and `panel.css` present the contact flows;
 the extension uses the same local data service and does not own business rules.
 Its `.vscode/launch.json` starts the Extension Development Host for local testing.
-`tests/vscode-client.test.js` checks the extension adapter.
+`tests/vscode-client.test.js` checks the extension adapter. Its `genderCount`
+message calls the existing classifier in the extension host and returns aggregate
+counts to the panel.
+
+`src/clients/electron/main.js` opens the desktop client's own `index.html`.
+Its module renderer imports the shared business operations directly, including
+the browser-compatible classifier. The window retains context isolation and
+runs without Node integration. Its CSP permits only the local data and Ollama
+services. It does not reuse the web client's page.
+
+`src/clients/chrome/manifest.json` registers a Manifest V3 popup with only the
+local port-3002 host permission. Its own `index.html`, `popup.js` and `styles.css`
+call the Fastify adapter in `server.js`. The adapter converts numeric IDs and
+calls the same business operations, including the classifier. `pnpm chrome`
+starts the adapter; Chrome loads the folder as an unpacked extension.
+
+The Nest client is a separate development tracked in
+[issue #1044](https://github.com/venturars/neoland-102026/issues/1044).
+Its earlier implementation was withdrawn from this delivery on 2026-11-05.
 
 `src/clients/jupyter/` provides nine independent notebooks for those same operations
 and explicit table initialization. Initialization calls a query; it is not a new
@@ -78,12 +100,14 @@ public business operation.
   folder as its root.
 - `requirements-jupyter.txt` lists the Python requirements for that client.
 - `package.json` holds minimal application metadata, ES module mode, the
-  data-service and Jupyter startup commands and development-check commands, and dependency declarations. `pnpm-lock.yaml` records the
-  resolved packages. Version and package rules remain in the
+  client startup commands, development-check commands and dependency declarations.
+  `pnpm-lock.yaml` records the resolved packages. `pnpm-workspace.yaml` holds
+  the exact-version release-age exception for Electron.
+  Version and package rules remain in the
   [constitution](CONSTITUTIONS.md#dependencies-and-package-management).
 - `.gitignore` excludes generated local artifacts. `src/db/users.sqlite`, `.venv/`,
   dependency installations and caches are runtime files, not source inventory.
-- `README.md` explains how to start and use the Jupyter client.
+- `README.md` explains how to prepare the data service and start each client.
 
 Results are presented by clients rather than printed by business operations.
 Startup may report environment preparation; it does not introduce business logic.
@@ -128,6 +152,8 @@ is defined in [AGENTS.md](../AGENTS.md).
 Socket package validation, guide separation, formatting/lint checks, and alignment
 with the architecture and style guides. Their individual documents
 record the request, approved approach, tasks, decisions, and verification.
+`complete-user-clients/` covers Electron, Chrome and the added summary
+controls in the existing clients.
 
 ## Git workflow
 
@@ -165,8 +191,27 @@ coverage; AGENTS.md retains the detailed dependency-validation procedure.
 
 ## REST client
 
-`src/clients/http/app.js` adapts five user operations to HTTP using Express.
+`src/clients/http/app.js` adapts create, list, ID lookup, update, delete and
+the existing gender summary to HTTP using Express.
 It awaits the existing logic, converts route IDs to numbers, and maps business
 errors to HTTP statuses and JSON messages. It listens on loopback port 3001 via
 `pnpm http`; queries still reach the separate data service on port 3000.
-The client does not serve web assets. README documents the Postman requests.
+The client does not serve web assets. The summary route precedes the ID route
+without a special browser-origin exception. Fastify offers the same six
+routes on its own port. README documents the Postman requests.
+
+All adapters await the shared logic and use the data service on port 3000.
+They preserve the existing five-field contacts, validation, ordering and
+timestamps. Summary requests require Ollama only when contacts exist and return
+no partial result on a classifier failure.
+
+Electron and Chrome display the selected contact's five fields. Confirmed writes
+update local state before the optional list reload; a failed reload retains the
+confirmed result and reports that the list needs refreshing. The UI regressions
+are in `tests/client-ui-state.test.js`; classifier transport, batches and failures
+are checked in `tests/browser-classifier.test.js`.
+
+
+VS Code registra firstAppUsers como WebviewView de Explorer; el comando
+firstApp.openUsers la enfoca. El host llama a las operaciones compartidas,
+conservando los campos omitidos y mostrando las cinco propiedades del contacto.
