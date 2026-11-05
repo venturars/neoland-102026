@@ -30,7 +30,11 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/db/server.js", "src/clients/http/app.js"],
+    files: [
+      "src/db/server.js",
+      "src/clients/http/app.js",
+      "src/clients/node-http/server.js",
+    ],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",

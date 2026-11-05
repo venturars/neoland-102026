@@ -30,6 +30,7 @@ Solo puede haber **un proceso por puerto**. Si repites el mismo comando en otra 
 | 3001 | `pnpm http` | API Express (usuarios) |
 | 3002 | `pnpm chrome` | API Fastify (extensión Chrome) |
 | 3003 | `pnpm nest` | API Nest (usuarios) y Swagger UI en el navegador |
+| 3004 | `pnpm node-http` | API node:http (usuarios) |
 
 Electron, browser y terminal **no abren** estos puertos; solo necesitan `pnpm server` en 3000 cuando usan la base.
 
@@ -45,6 +46,7 @@ Para liberar un puerto en Windows: localiza la terminal donde corre el comando y
 | Chrome | `pnpm chrome` + extensión cargada | API en `http://127.0.0.1:3002` y popup MV3. Ver [`src/clients/chrome/README.md`](../src/clients/chrome/README.md). |
 | VS Code | F5 desde `src/clients/vscode` | Panel lateral; ver [`src/clients/vscode/README.md`](../src/clients/vscode/README.md). |
 | Nest | `pnpm nest` | API y Swagger UI en `http://127.0.0.1:3003`. Ver [`src/clients/nest/README.md`](../src/clients/nest/README.md). |
+| node-http | `pnpm node-http` | API en `http://127.0.0.1:3004`. Jupyter: `pnpm jupyter-node-http`. Ver [`src/clients/node-http/README.md`](../src/clients/node-http/README.md). |
 | Terminal / Jupyter | Pegar `.txt` o ejecutar notebook | Misma regla: servidor SQL antes. Directorio actual en `first-app`. |
 
 ## Pasos comunes
