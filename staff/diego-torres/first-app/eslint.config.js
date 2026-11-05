@@ -33,6 +33,17 @@ export default defineConfig([
     },
   },
   {
+    // La vista de VS Code usa el navegador y la API del editor.
+    files: ["src/clients/vscode/panel.js"],
+    languageOptions: {
+      globals: {
+        document: "readonly",
+        window: "readonly",
+        acquireVsCodeApi: "readonly",
+      },
+    },
+  },
+  {
     files: ["src/queries/**/*.js"],
     languageOptions: {
       globals: {

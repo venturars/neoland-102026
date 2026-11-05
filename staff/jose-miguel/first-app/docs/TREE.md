@@ -57,6 +57,13 @@ first-app/
         popup.js
         styles.css
         README.md
+      vscode/
+        package.json
+        extension.js
+        index.html
+        panel.js
+        styles.css
+        README.md
   agents/
   skills/
   tools/
@@ -102,6 +109,10 @@ first-app/
         plan.md
         tasks.md
       chrome-user-extension/
+        spec.md
+        plan.md
+        tasks.md
+      vscode-sidebar-users/
         spec.md
         plan.md
         tasks.md

@@ -1,6 +1,6 @@
 # First App
 
-Aplicación educativa de gestión de usuarios con Node.js y SQLite. Tiene clientes de terminal, Jupyter, navegador y REST. El navegador usa HTML, CSS y JavaScript vanilla, sin frameworks.
+Aplicación educativa de gestión de usuarios con Node.js y SQLite. Tiene clientes de terminal, Jupyter, navegador, REST y escritorio. El navegador usa HTML, CSS y JavaScript vanilla, sin frameworks.
 
 ## Arrancar
 
@@ -14,12 +14,13 @@ Arranca el **servidor de datos** en `http://127.0.0.1:3000`. Es el único proces
 
 Con el servidor de datos arrancado, cada cliente se usa por separado:
 
-| Cliente   | Cómo se abre                                                         |
-| --------- | -------------------------------------------------------------------- |
-| Navegador | `pnpm run web` abre Chrome con `src/clients/web/index.html`.         |
-| Terminal  | Copiar una línea de `src/clients/terminal/`.                         |
-| Jupyter   | `./scripts/jupyter.sh` abre los cuadernos de `src/clients/jupyter/`. |
-| REST      | `pnpm run http` arranca el cliente en `http://127.0.0.1:3001`.       |
+| Cliente    | Cómo se abre                                                         |
+| ---------- | -------------------------------------------------------------------- |
+| Navegador  | `pnpm run web` abre Chrome con `src/clients/web/index.html`.         |
+| Terminal   | Copiar una línea de `src/clients/terminal/`.                         |
+| Jupyter    | `./scripts/jupyter.sh` abre los cuadernos de `src/clients/jupyter/`. |
+| REST       | `pnpm run http` arranca el cliente en `http://127.0.0.1:3001`.       |
+| Escritorio | `pnpm run electron` abre la aplicación en su propia ventana.         |
 
 `pnpm run web` abre Chrome con un perfil temporal y `--allow-file-access-from-files`, porque la página se abre desde `file://` e importa módulos JavaScript de `src/logic/`. Chrome bloquea esos imports sin esa opción.
 
@@ -45,6 +46,15 @@ Un error responde JSON con la clave `message`. Para no tocar la base real, arran
 
 Los cambios guardados se conservan al reiniciar. Recargar la página vuelve a la selección.
 
+## Qué muestra la aplicación de escritorio
+
+`pnpm run electron` abre una ventana propia. El primer arranque necesita internet y tarda más, porque descarga el binario de Electron. Si falla con `does not provide an export named 'BrowserWindow'`, la terminal tiene definida `ELECTRON_RUN_AS_NODE`: ejecutar antes `unset ELECTRON_RUN_AS_NODE`.
+
+- **Lista, a la izquierda:** los usuarios, el botón «Actualizar» y el botón «Nuevo usuario».
+- **Panel, a la derecha:** el alta o, al elegir un usuario, su detalle para guardar cambios o eliminarlo.
+
+Eliminar pide confirmación con un diálogo del sistema. Cerrar la ventana termina la aplicación, también en macOS.
+
 ## Dónde está el código
 
 - `src/db/server.js`: el servidor de datos. Recibe SQL por `POST /execute` y lo ejecuta en SQLite.
@@ -52,6 +62,7 @@ Los cambios guardados se conservan al reiniciar. Recargar la página vuelve a la
 - `src/logic/`: validación y operaciones de usuarios que comparten todos los clientes.
 - `src/clients/web/`: `index.html`, `styles.css` y `app.js`. Importa `src/logic/` directamente.
 - `src/clients/http/app.js`: el cliente REST con Express. Importa `src/logic/` directamente.
+- `src/clients/electron/`: la aplicación de escritorio. Su proceso principal llama a `src/logic/`, y su página le pide las acciones mediante `preload.cjs`.
 
 El recorrido es cliente → lógica → consultas → servidor de datos → SQLite. Ningún cliente abre la base directamente. Las guías completas están en `docs/CONSTITUTION.md` y sus enlaces.
 

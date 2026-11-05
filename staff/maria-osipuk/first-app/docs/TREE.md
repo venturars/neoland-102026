@@ -13,6 +13,13 @@ first-app/
 │   └── jupyter.sh
 ├── src/
 │   ├── clients/
+│   │   ├── electron/
+│   │   │   ├── app.js
+│   │   │   ├── index.html
+│   │   │   ├── main.js
+│   │   │   ├── preload.cjs
+│   │   │   ├── styles.css
+│   │   │   └── user-actions.js
 │   │   ├── http/
 │   │   │   └── app.js
 │   │   ├── jupyter/
@@ -105,6 +112,7 @@ first-app/
 │   ├── create-branch-from-staging.sh
 │   ├── create-branch.sh
 │   ├── create-empty-commit.sh
+│   ├── create-pr-base-staging.sh
 │   ├── launch-push.sh
 │   └── pull-changes.sh
 ├── templates/
@@ -138,6 +146,10 @@ first-app/
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
 │   │   ├── classifier/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── electron-desktop-client/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
@@ -181,6 +193,10 @@ first-app/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
+│   │   ├── sync-git-workflow-template/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
 │   │   ├── update-git-workflow-template/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
@@ -198,6 +214,7 @@ first-app/
 │   └── WEB-CLIENT-GUIDE.md
 └── tests/
     ├── database-server.test.js
+    ├── electron-client.test.js
     ├── http-client.test.js
     └── shared-database.test.js
 ```
