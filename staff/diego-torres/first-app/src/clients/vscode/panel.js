@@ -150,6 +150,12 @@ function confirmDelete() {
   send({ action: "delete", id });
 }
 
+// Pide el usuario con el email escrito.
+function findByEmailFromForm(event) {
+  event.preventDefault();
+  send({ action: "find-by-email", email: byId("find-email").value });
+}
+
 // Conecta formularios, botones y respuestas.
 byId("create-form").addEventListener("submit", createFromForm);
 byId("view-form").addEventListener("submit", viewFromForm);
@@ -157,6 +163,7 @@ byId("update-form").addEventListener("submit", updateFromForm);
 byId("delete-form").addEventListener("submit", askToDelete);
 byId("delete-yes").addEventListener("click", confirmDelete);
 byId("delete-no").addEventListener("click", cancelDelete);
+byId("find-email-form").addEventListener("submit", findByEmailFromForm);
 window.addEventListener("message", handleReply);
 
 // Al abrir la vista, pide la lista.

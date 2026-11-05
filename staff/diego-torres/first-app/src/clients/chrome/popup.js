@@ -14,6 +14,7 @@ const updateEmail = document.getElementById("update-email");
 const deleteId = document.getElementById("delete-id");
 const deleteConfirm = document.getElementById("delete-confirm");
 const deleteQuestion = document.getElementById("delete-question");
+const findEmail = document.getElementById("find-email");
 
 // Id que espera confirmación para borrarse.
 let pendingDeleteId = "";
@@ -222,6 +223,28 @@ async function confirmDelete() {
   await showUsers();
 }
 
+// Busca el usuario con el email escrito y lo enseña.
+async function findByEmailFromForm(event) {
+  event.preventDefault();
+  showMessage("", false);
+  showViewedUser(null);
+
+  try {
+    // Un email puede llevar un +: se prepara para la dirección.
+    const email = encodeURIComponent(findEmail.value);
+    const user = await callApi(
+      "GET",
+      `/users/by-email?email=${email}`,
+      undefined,
+      "Could not find the user",
+    );
+    showViewedUser(user);
+  } catch (error) {
+    // Si falla, lo escrito se queda para poder corregirlo.
+    showMessage(error.message, true);
+  }
+}
+
 // Conecta cada formulario y botón con la función que lo atiende.
 document
   .getElementById("create-form")
@@ -233,6 +256,9 @@ document
 document.getElementById("delete-form").addEventListener("submit", askToDelete);
 document.getElementById("delete-yes").addEventListener("click", confirmDelete);
 document.getElementById("delete-no").addEventListener("click", cancelDelete);
+document
+  .getElementById("find-email-form")
+  .addEventListener("submit", findByEmailFromForm);
 
 // Al abrir la ventana, carga la lista.
 showUsers();

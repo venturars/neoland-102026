@@ -7,6 +7,8 @@ import * as vscode from "vscode";
 import { createUser } from "../../logic/create-user.js";
 // Borra un usuario (viene de la capa de lógica).
 import { deleteUser } from "../../logic/delete-user.js";
+// Busca un usuario por su email (viene de la capa de lógica).
+import { findUserByEmail } from "../../logic/find-user-by-email.js";
 // Busca un usuario por su id (viene de la capa de lógica).
 import { findUserById } from "../../logic/find-user-by-id.js";
 // Devuelve la lista de usuarios (viene de la capa de lógica).
@@ -30,6 +32,9 @@ async function runAction(message) {
   }
   if (action === "view") {
     return { user: await findUserById(id) };
+  }
+  if (action === "find-by-email") {
+    return { user: await findUserByEmail(email) };
   }
   if (action === "update") {
     return { user: await updateUser(id, changes) };
