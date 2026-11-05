@@ -116,7 +116,13 @@ No da permiso CORS a nadie. Esto no es autenticación: un programa de este orden
 
 `@Bind` y `@Dependencies` funcionan traducidos con Babel. El JSON mal formado llega al filtro y responde 400 sin cuerpo.
 
-La base caída se simuló haciendo fallar `fetch` en una copia de la API, porque `pnpm start` ya estaba en marcha y no se paró. No se probó apagando el servidor de verdad.
+Con `src/db/server.js` parado de verdad y `pnpm nest` en marcha, las cinco rutas dan 500 con su `Could not …`.
+
+El filtro responde con el mensaje que lanza la lógica. Solo elige el `Could not …` por método y ruta si lo lanzado no viene de la lógica.
+
+La comprobación de `Host` y `Origin` va antes de leer el cuerpo: con `Origin` o un `Host` ajeno y un JSON roto responde 403, no 400, y con un cuerpo que no termina responde 403 sin esperarlo. `app.use` se registra al crear la app, y Nest no añade su lector del cuerpo hasta `init()`, dentro de `listen`.
+
+En marcha, la API ejecuta la copia de `dist/`. Comparada con `src/` sin espacios, comentarios ni comas finales, 18 de 19 ficheros de `logic/` y `queries/` son iguales. `users-gender-count.js` difiere en el formato que Babel reescribe, y la API no lo carga.
 
 `pnpm format` cambia los saltos de línea de CRLF a LF en todos los ficheros de su alcance, con `core.autocrlf` activo. Esos cambios no son de esta tarea y se restauran.
 

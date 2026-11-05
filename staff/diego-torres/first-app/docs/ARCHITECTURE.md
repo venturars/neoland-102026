@@ -27,8 +27,8 @@ Ningún cliente funciona sin el servidor en marcha (`pnpm start`). La web no la 
 | `src/clients/chrome/*` | Extensión de Chrome: `manifest.json`, `index.html`, `popup.js` y `styles.css`. Solo llama a su API, porque una extensión no carga ficheros de fuera de su carpeta |
 | `src/clients/vscode/*` | Extensión de VS Code con una vista lateral. `extension.js` corre en Node y llama a `src/logic/`. `panel.js` solo habla con `extension.js` y pinta las respuestas |
 | `scripts/vscode.js` | Abre el editor en modo desarrollo con la extensión de `src/clients/vscode/` |
-| `src/clients/nest/*` | API de usuarios con Nest, en `127.0.0.1:3003`. La lanza `pnpm nest`. Llama a `src/logic/`, no tiene reglas y comprueba `Host` y `Origin` |
-| `scripts/nest.js` | Traduce los decoradores con Babel a `dist/`, que no está en git, y arranca la API. La configuración está en `babel.config.json` |
+| `src/clients/nest/*` | API de usuarios con Nest, en `127.0.0.1:3003`. La lanza `pnpm nest`. Usa la lógica de `src/logic/`, no tiene reglas y comprueba `Host` y `Origin`. En marcha ejecuta la copia de `dist/`, no `src/` tal cual: un cambio en `src/logic/` no llega hasta relanzar `pnpm nest` |
+| `scripts/nest.js` | Traduce `src/logic/`, `src/queries/` y `src/clients/nest/` con Babel a `dist/`, que no está en git, y arranca la API desde `dist/`. La configuración está en `babel.config.json` |
 | `src/clients/terminal/*.txt` | Un cliente por operación, para pegar en la terminal |
 | `src/clients/jupyter/*.ipynb` | Un cuaderno por operación, que abre `pnpm run jupyter` |
 
