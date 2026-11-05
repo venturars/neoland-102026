@@ -32,12 +32,12 @@ Do the tasks in order. Inside a task, do the steps in order. `docs/CONSTITUTIONS
 
 ## Task 4 — Run it
 
-- [ ] Run `pnpm format` and `pnpm lint`. Result: both end without errors.
-- [ ] Run `pnpm start`, then `pnpm nest`. Result: the client prints `Nest client on http://127.0.0.1:3003`.
+- [x] Run `pnpm format` and `pnpm lint`. Result: both end without errors.
+- [x] Run `pnpm start`, then `pnpm nest`. Result: the client prints `Nest client on http://127.0.0.1:3003`.
 - [ ] Open `http://127.0.0.1:3003/docs` in the browser. Result: the six routes appear under "users", each with its line, its inputs and its statuses.
 - [ ] From the page, run the six steps of the example of the spec: create Ada, list, list Gmail, update the name, delete, list again. Result: 201, 200, 200, 200, 204 and an empty list, as the spec says.
 - [ ] From the page, send one error of each status: an empty name (400), an unknown id (404), a repeated email (409). Result: each answers its sentence in `{ "error": "<sentence>" }`.
 - [ ] Stop the database program and send a request from the page. Result: 500 "The database failed.", and the page itself still loads.
-- [ ] Run `curl -i http://127.0.0.1:3003/nothing`. Result: 404 with an empty body.
-- [ ] Run `curl -i http://127.0.0.1:3003/users` and `curl -i http://127.0.0.1:3003/users/gmail`. Result: both answer 200 as before.
-- [ ] Open `http://127.0.0.1:3003/docs-json`. Result: it lists the six routes. The page keeps working with the defaults.
+- [x] Run `curl -i http://127.0.0.1:3003/nothing`. Result: 404 with an empty body.
+- [x] Run `curl -i http://127.0.0.1:3003/users` and `curl -i http://127.0.0.1:3003/users/gmail`. Result: both answer 200 as before.
+- [x] Open `http://127.0.0.1:3003/docs-json`. Result: it lists the six routes. The page keeps working with the defaults.
