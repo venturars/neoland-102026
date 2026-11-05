@@ -71,6 +71,7 @@ first-app/
   MCPS/
   docs/
     ARCHITECTURE.md
+    SOCKET.md
     TREE.md
     DATABASE.md
     ERRORS.md

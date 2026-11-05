@@ -96,6 +96,7 @@
 - `MCPS/github-mcp-server/mcp.txt` es la dirección del MCP de GitHub y
   el header para que la escritura vaya directa.
 - `MCPS/socket-mcp/mcp.txt` es la dirección del MCP de Socket.
+- `docs/SOCKET.md` son las reglas al validar paquetes con Socket.
 - `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada
   fichero.
 - `docs/TREE.md` es el árbol de carpetas y ficheros.

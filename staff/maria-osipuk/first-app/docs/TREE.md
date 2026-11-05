@@ -11,6 +11,7 @@ first-app/
 ├── package.json
 ├── pnpm-lock.yaml
 ├── scripts/
+│   ├── jupyter-node-http.sh
 │   └── jupyter.sh
 ├── src/
 │   ├── clients/
@@ -46,6 +47,14 @@ first-app/
 │   │   │   ├── users-exception.filter.js
 │   │   │   ├── users.controller.js
 │   │   │   └── users.service.js
+│   │   ├── node-http/
+│   │   │   ├── app.js
+│   │   │   └── jupyter/
+│   │   │       ├── create-user.ipynb
+│   │   │       ├── delete-user.ipynb
+│   │   │       ├── find-user-by-id.ipynb
+│   │   │       ├── list-users.ipynb
+│   │   │       └── update-user.ipynb
 │   │   ├── terminal/
 │   │   │   ├── count-users-by-gender.txt
 │   │   │   ├── create-user.txt
@@ -210,6 +219,10 @@ first-app/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
+│   │   ├── node-http-client/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
 │   │   ├── prettier-and-eslint/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
@@ -255,6 +268,7 @@ first-app/
     ├── electron-client.test.js
     ├── http-client.test.js
     ├── nest-client.test.js
+    ├── node-http-client.test.js
     ├── shared-database.test.js
     └── vscode-client.test.js
 ```

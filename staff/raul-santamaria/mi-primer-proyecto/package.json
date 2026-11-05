@@ -7,14 +7,16 @@
   "description": "CRUD de usuarios con la lógica separada de SQLite y de la terminal",
   "scripts": {
     "jupyter": "node start-jupyter.js",
+    "node-http-jupyter": "node start-node-http-jupyter.js",
     "server": "node src/db/server.js",
     "http": "node src/clients/http/app.js",
+    "node-http": "node src/clients/node-http/app.js",
     "nest": "node src/clients/nest/bootstrap.mjs",
     "chrome": "node src/clients/chrome/server.js",
     "browser": "powershell -NoProfile -Command \"$page = [uri](Resolve-Path 'src/clients/browser/index.html').Path; $browserProfile = Join-Path $env:TEMP 'mi-primer-proyecto-chrome'; $chrome = 'C:/Program Files/Google/Chrome/Application/chrome.exe'; if (-not (Test-Path $chrome)) { $chrome = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe' }; & $chrome ('--user-data-dir=' + $browserProfile) '--allow-file-access-from-files' $page.AbsoluteUri\"",
     "electron": "electron .",
     "electron:dist": "electron-builder --win",
-    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/http/**/*.js\" \"src/clients/nest/*.js\" \"src/clients/browser/**/*.js\" \"src/clients/chrome/**/*.js\" \"src/clients/electron/**/*.js\" \"src/clients/vscode/**/*.js\" \"src/clients/vscode/**/*.cjs\"",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/http/**/*.js\" \"src/clients/node-http/**/*.js\" \"src/clients/nest/*.js\" \"src/clients/browser/**/*.js\" \"src/clients/chrome/**/*.js\" \"src/clients/electron/**/*.js\" \"src/clients/vscode/**/*.js\" \"src/clients/vscode/**/*.cjs\"",
     "lint": "eslint ."
   },
   "dependencies": {
