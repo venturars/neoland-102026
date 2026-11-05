@@ -14,9 +14,14 @@ const updateEmail = document.getElementById("update-email");
 const deleteId = document.getElementById("delete-id");
 const deleteConfirm = document.getElementById("delete-confirm");
 const deleteQuestion = document.getElementById("delete-question");
+const genderButton = document.getElementById("gender-count");
+const genderResult = document.getElementById("gender-result");
 
 // Id que espera confirmación para borrarse.
 let pendingDeleteId = "";
+
+// Cuenta las acciones. Sirve para reconocer una respuesta que llega tarde.
+let ultimaAccion = 0;
 
 // Sube al principio de la ventana: con una lista larga, los formularios quedan muy abajo.
 function scrollToTopIf(hasSomethingToShow) {
@@ -40,6 +45,14 @@ function userText(user) {
 
 // Enseña un usuario debajo de los mensajes, o nada si no hay usuario.
 function showViewedUser(user) {
+  // Cada acción nueva empieza aquí, sin usuario: suma una a la cuenta.
+  if (user === null) {
+    ultimaAccion += 1;
+  }
+
+  // Otra acción puede cambiar los usuarios: quita el recuento anterior.
+  genderResult.hidden = true;
+
   viewedUser.textContent = user === null ? "" : userText(user);
   viewedUser.hidden = user === null;
   scrollToTopIf(user !== null);
@@ -205,6 +218,10 @@ async function confirmDelete() {
   const id = pendingDeleteId;
   cancelDelete();
 
+  // Borrar también es una acción nueva: limpia lo que hubiera en pantalla.
+  showMessage("", false);
+  showViewedUser(null);
+
   try {
     await callApi(
       "DELETE",
@@ -222,6 +239,52 @@ async function confirmDelete() {
   await showUsers();
 }
 
+// Escribe los tres números del recuento en una línea.
+function genderText(counts) {
+  const { women, men, genderUndefined } = counts;
+  return `Mujeres: ${women} · Hombres: ${men} · No definidos: ${genderUndefined}`;
+}
+
+// Pide el recuento por género y lo enseña.
+async function countByGender() {
+  showViewedUser(null);
+
+  // Guarda la cuenta para saber si, al responder, sigue siendo lo último.
+  const accion = ultimaAccion;
+
+  // Desactiva el botón para no pedir dos recuentos a la vez.
+  genderButton.disabled = true;
+
+  // La IA puede tardar: avisa de que está trabajando.
+  showMessage("Contando…", false);
+
+  try {
+    const counts = await callApi(
+      "GET",
+      "/users/gender-count",
+      undefined,
+      "Could not classify the users",
+    );
+
+    // Si ya se ha hecho otra cosa, esta respuesta llega tarde: no se enseña.
+    if (accion !== ultimaAccion) {
+      return;
+    }
+
+    showMessage("", false);
+    genderResult.textContent = genderText(counts);
+    genderResult.hidden = false;
+  } catch (error) {
+    // Un error que llega tarde tampoco se enseña.
+    if (accion === ultimaAccion) {
+      showMessage(error.message, true);
+    }
+  } finally {
+    // Haya salido bien o mal, el botón vuelve a funcionar.
+    genderButton.disabled = false;
+  }
+}
+
 // Conecta cada formulario y botón con la función que lo atiende.
 document
   .getElementById("create-form")
@@ -233,6 +296,7 @@ document
 document.getElementById("delete-form").addEventListener("submit", askToDelete);
 document.getElementById("delete-yes").addEventListener("click", confirmDelete);
 document.getElementById("delete-no").addEventListener("click", cancelDelete);
+genderButton.addEventListener("click", countByGender);
 
 // Al abrir la ventana, carga la lista.
 showUsers();
