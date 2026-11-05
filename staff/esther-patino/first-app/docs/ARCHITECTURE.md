@@ -4,8 +4,9 @@
 - `package.json` declara el proyecto. Los scripts `format` y `lint` lanzan Prettier y ESLint.
 - `pnpm-lock.yaml` fija las versiones de las dependencias.
 
-- `scripts/` arranca Jupyter sobre `src/clients/jupyter/`.
+- `scripts/` arranca Jupyter sobre `src/clients/jupyter/` o sobre `src/clients/node-http/jupyter/`.
   - `scripts/jupyter.js` arranca Jupyter sobre `src/clients/jupyter/`.
+  - `scripts/jupyter-node-http.js` arranca Jupyter sobre `src/clients/node-http/jupyter/`.
 
 - `src/db/` abre la base de datos y no contiene reglas de negocio.
   - `src/db/server.js` es el único fichero de esa capa junto a la base. Abre la única conexión, guarda la dirección `http://127.0.0.1:3000` y ejecuta el SQL que recibe. No exporta la conexión.
@@ -109,6 +110,14 @@
 
 - `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001 y no repite sus reglas. No sustituye a `src/db/server.js`.
   - `src/clients/http/app.js` crea, lista, ve, modifica, borra y cuenta usuarios. Se arranca con `pnpm http`. La página no existe: la ruta llama a `src/logic/`.
+
+- `src/clients/node-http/` llama a `src/logic/`, escucha en el puerto 3004 y no repite sus reglas. No sustituye a `src/clients/http/` ni a `src/db/server.js`.
+  - `src/clients/node-http/app.js` crea, lista, ve, modifica y borra usuarios con `node:http`. Se arranca con `pnpm node-http`.
+  - `src/clients/node-http/jupyter/post-user.ipynb` valida crear por HTTP.
+  - `src/clients/node-http/jupyter/list-users.ipynb` valida listar por HTTP.
+  - `src/clients/node-http/jupyter/get-user-by-id.ipynb` valida ver uno por HTTP.
+  - `src/clients/node-http/jupyter/patch-user.ipynb` valida modificar por HTTP.
+  - `src/clients/node-http/jupyter/delete-user.ipynb` valida borrar por HTTP.
 
 - `src/clients/nest/` llama a `src/logic/`, escucha en el puerto 3003 y no repite sus reglas. Las clases quedan en el módulo y en el controlador. `pnpm nest` lo compila con Babel a `src/clients/nest-run` y arranca ese `main.js`. No sustituye a `src/db/server.js` ni al cliente HTTP. También cuenta usuarios. La página no existe: la ruta llama a `src/logic/`.
 
