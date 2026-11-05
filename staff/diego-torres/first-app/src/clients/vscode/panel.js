@@ -10,6 +10,7 @@ const viewedUser = byId("viewed-user");
 const userList = byId("user-list");
 const deleteId = byId("delete-id");
 const deleteConfirm = byId("delete-confirm");
+const foundList = byId("found-users");
 const genderButton = byId("gender-count");
 const genderResult = byId("gender-result");
 
@@ -48,6 +49,8 @@ function showViewedUser(user) {
     ultimaAccion += 1;
   }
 
+  // Otra acción puede cambiar los usuarios: quita la búsqueda anterior.
+  foundList.replaceChildren();
   // Otra acción puede cambiar los usuarios: quita el recuento anterior.
   genderResult.hidden = true;
 
@@ -84,6 +87,25 @@ function showUsers(users) {
   }
 }
 
+// Pinta los usuarios encontrados, o avisa si no hay ninguno.
+function showFoundUsers(users) {
+  // Empieza de cero, para no mezclar con otra búsqueda.
+  foundList.replaceChildren();
+
+  // Una lista vacía no es un error: solo se avisa.
+  if (users.length === 0) {
+    showMessage("No hay usuarios con ese nombre", false);
+    return;
+  }
+
+  // Se pinta con textContent, porque viene de la base.
+  for (const user of users) {
+    const item = document.createElement("li");
+    item.textContent = userText(user);
+    foundList.append(item);
+  }
+}
+
 // Escribe los tres números del recuento en una línea.
 function genderText(counts) {
   const { women, men, genderUndefined } = counts;
@@ -92,7 +114,8 @@ function genderText(counts) {
 
 // Atiende cada respuesta de la extensión.
 function handleReply(event) {
-  const { action, error, users, user, genderCount, requestId } = event.data;
+  const { action, error, users, user, foundUsers, genderCount, requestId } =
+    event.data;
 
   // Haya salido bien o mal, el botón del recuento vuelve a funcionar.
   if (action === "gender-count") {
@@ -102,6 +125,11 @@ function handleReply(event) {
     if (requestId !== ultimaAccion) {
       return;
     }
+  }
+
+  // Una búsqueda que llega tarde tampoco se enseña.
+  if (action === "find-by-name" && requestId !== ultimaAccion) {
+    return;
   }
 
   // Si falla, lo escrito se queda para corregirlo.
@@ -114,6 +142,9 @@ function handleReply(event) {
   }
   if (user !== undefined) {
     showViewedUser(user);
+  }
+  if (foundUsers !== undefined) {
+    showFoundUsers(foundUsers);
   }
   if (genderCount !== undefined) {
     showMessage("", false);
@@ -186,6 +217,18 @@ function confirmDelete() {
   send({ action: "delete", id });
 }
 
+// Pide el usuario con el email escrito.
+function findByEmailFromForm(event) {
+  event.preventDefault();
+  send({ action: "find-by-email", email: byId("find-email").value });
+}
+
+// Pide los usuarios con el nombre escrito.
+function findByNameFromForm(event) {
+  event.preventDefault();
+  send({ action: "find-by-name", name: byId("find-name").value });
+}
+
 // Pide el recuento por género a la extensión.
 function countByGender() {
   send({ action: "gender-count" });
@@ -204,6 +247,8 @@ byId("update-form").addEventListener("submit", updateFromForm);
 byId("delete-form").addEventListener("submit", askToDelete);
 byId("delete-yes").addEventListener("click", confirmDelete);
 byId("delete-no").addEventListener("click", cancelDelete);
+byId("find-email-form").addEventListener("submit", findByEmailFromForm);
+byId("find-name-form").addEventListener("submit", findByNameFromForm);
 genderButton.addEventListener("click", countByGender);
 window.addEventListener("message", handleReply);
 

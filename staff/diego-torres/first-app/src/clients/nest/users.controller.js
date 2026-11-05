@@ -10,6 +10,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from "@nestjs/common";
 
 // El servicio que llama a la lógica.
@@ -39,6 +40,24 @@ export class UsersController {
   @Get()
   list() {
     return this.usersService.list();
+  }
+
+  // GET /users/by-email?email= busca un usuario por su email.
+  // Va antes que /users/:id. Si no, "by-email" se tomaría por un id.
+  // Bind(Query("email")) pasa a la función el email que llega en la dirección.
+  @Get("by-email")
+  @Bind(Query("email"))
+  findByEmail(email) {
+    return this.usersService.findByEmail(email);
+  }
+
+  // GET /users/by-name?name= busca usuarios por su nombre.
+  // Va antes que /users/:id. Si no, "by-name" se tomaría por un id.
+  // Bind(Query("name")) pasa a la función el nombre que llega en la dirección.
+  @Get("by-name")
+  @Bind(Query("name"))
+  findByName(name) {
+    return this.usersService.findByName(name);
   }
 
   // GET /users/gender-count cuenta los usuarios por género.
