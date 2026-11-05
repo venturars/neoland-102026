@@ -1,6 +1,13 @@
 # Plan — A Swagger UI page for the Nest client
 
-**Status: waiting for review.** The questions at the end need an answer before `tasks.md`.
+**Status: reviewed.** The person accepted every recommendation on 2026-11-05 ("Decisions", below). The questions at the end stay as the record of what was found.
+
+## Decisions
+
+- **1:** the page is at `/docs`.
+- **2:** the defaults stay: `/docs-json` and `/docs-yaml` are served by the package.
+- **3:** the install script of `@scarf/scarf` is not run: the package is added with `--ignore-scripts`.
+- **4:** `js-yaml` 5.5.0 is accepted. The Socket review, its gaps and the alerts on 4.1.1 are accepted.
 
 ## Summary
 
