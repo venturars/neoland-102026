@@ -14,6 +14,11 @@ mi-primer-proyecto/
         index.html
         app.js
         styles.css
+      electron/
+        main.js
+        index.html
+        app.js
+        styles.css
       terminal/
         create-user.txt
         list-users.txt
@@ -23,10 +28,28 @@ mi-primer-proyecto/
         users-gender-count.txt
       http/
         app.js
-      browser/
+      chrome/
+        server.js
+        manifest.json
         index.html
-        app.js
+        popup.js
         styles.css
+      nest/
+        bootstrap.mjs
+        main.js
+        app.module.js
+        users.controller.js
+        users.service.js
+        logic-exception.filter.js
+        logic-error.constants.js
+      vscode/
+        package.json
+        extension.cjs
+        panel.html
+        panel.js
+        panel.css
+        .vscode/
+          launch.json
       jupyter/
     db/
       server.js

@@ -26,6 +26,10 @@ first-app/
         plan.md
         spec.md
         tasks.md
+      finish-frontend-express-rest/
+        plan.md
+        spec.md
+        tasks.md
       git-workflow/
         plan.md
         spec.md
@@ -85,6 +89,7 @@ first-app/
       SKILL.md
     assign-reviewers/
       SKILL.md
+      reviewer-cache.json
     check-status/
       SKILL.md
     commit-changes/
@@ -114,14 +119,15 @@ first-app/
   src/
     clients/
       http/
+        app.js
         handle-notes.js
-        handle-request.js
         handle-users.js
-        read-json-body.js
+        request-helpers.js
         send-http-error.js
-        send-json.js
         serve-public-file.js
         start-http-server.js
+      postman/
+        users.postman_collection.json
       jupyter/
         create-user.ipynb
         create-users-table.ipynb
@@ -157,6 +163,7 @@ first-app/
         state.js
         styles.css
         user-editor.js
+        user-create.js
         user-menu.js
         user-selection.js
     db/
@@ -212,6 +219,7 @@ first-app/
       test-pull-request.md
   tools/
     check-status.sh
+    reviewer-cache.js
     commit-changes.sh
     create-branch-from-staging.sh
     create-branch.sh

@@ -12,6 +12,6 @@ También desde `first-app`:
 
 El script busca la raíz del repositorio. No importa en cuál de los dos sitios estés.
 
-La rama sale de `staging` y se llama `número-tipo-descripcion`. La pull request se abre contra `staging`. Luego se pide revisión a Miguel (`mglnglxx`) y a Jimena (`jiji-mena`) y sale de draft. Enlazar la issue escribe `Related to #N`. Ese enlace no cierra la issue.
+La rama sale de `staging` y se llama `número-tipo-descripcion`. El tipo es `feat`, `fix`, `docs`, `refactor`, `test` o `chore`, el mismo de la issue y de la pull request. La pull request se abre contra `staging`. Luego se pide revisión a Miguel (`mglnglxx`) y a Jimena (`jiji-mena`) y sale de draft. Antes se marcan solo las casillas comprobadas. Enlazar la issue escribe `Closes #N`. Hay que mirar la rama por defecto: si es `staging`, ese merge cierra la issue.
 
 No se hace commit ni push en `main` ni en `staging`. No se fuerza el push.

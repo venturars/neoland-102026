@@ -6,9 +6,13 @@
   "scripts": {
     "start": "node src/db/server.js",
     "browser": "node scripts/browser.js",
+    "electron": "electron src/clients/electron/main.js",
+    "chrome": "node src/clients/chrome/server.js",
+    "vscode": "node scripts/vscode.js",
+    "nest": "node scripts/nest.js",
     "jupyter": "node scripts/jupyter.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/web/**/*.{js,html,css}\"",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/web/**/*.{js,html,css}\" \"src/clients/electron/**/*.{js,html,css}\" \"src/clients/chrome/**/*.{js,html,css}\" \"src/clients/vscode/**/*.{js,html,css}\" \"src/clients/nest/**/*.js\"",
     "lint": "eslint ."
   },
   "keywords": [],
@@ -17,12 +21,24 @@
   "type": "module",
   "dependencies": {
     "@colors/colors": "1.6.1",
+    "@nestjs/common": "12.3.3",
+    "@nestjs/core": "12.3.3",
+    "@nestjs/platform-express": "12.3.3",
     "cli-table3": "0.6.5",
-    "openai": "7.39.0"
+    "fastify": "5.12.8",
+    "openai": "7.39.0",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2"
   },
   "devDependencies": {
     "prettier": "3.9.10",
     "eslint": "10.13.0",
-    "@eslint/js": "10.0.1"
+    "@eslint/js": "10.0.1",
+    "electron": "45.2.2",
+    "@babel/cli": "8.1.0",
+    "@babel/core": "8.1.0",
+    "@babel/eslint-parser": "8.0.7",
+    "@babel/plugin-proposal-decorators": "8.0.2",
+    "@babel/preset-env": "8.0.7"
   }
 }

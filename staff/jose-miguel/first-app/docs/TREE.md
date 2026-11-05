@@ -41,6 +41,36 @@ first-app/
         app.js
         styles.css
         README.md
+      http/
+        app.js
+        README.md
+      electron/
+        main.js
+        index.html
+        app.js
+        styles.css
+        README.md
+      chrome/
+        server.js
+        manifest.json
+        index.html
+        popup.js
+        styles.css
+        README.md
+      vscode/
+        package.json
+        extension.js
+        index.html
+        panel.js
+        styles.css
+        README.md
+      nest/
+        main.js
+        app.module.js
+        users.controller.js
+        users.service.js
+        http-exception.filter.js
+        README.md
   agents/
   skills/
   tools/
@@ -50,6 +80,7 @@ first-app/
   MCPS/
   docs/
     ARCHITECTURE.md
+    STARTUP.md
     TREE.md
     DATABASE.md
     ERRORS.md
@@ -73,6 +104,26 @@ first-app/
         plan.md
         tasks.md
       sync-git-workflow-template/
+        spec.md
+        plan.md
+        tasks.md
+      http-rest-client/
+        spec.md
+        plan.md
+        tasks.md
+      electron-desktop-client/
+        spec.md
+        plan.md
+        tasks.md
+      chrome-user-extension/
+        spec.md
+        plan.md
+        tasks.md
+      vscode-sidebar-users/
+        spec.md
+        plan.md
+        tasks.md
+      nest-http-client/
         spec.md
         plan.md
         tasks.md

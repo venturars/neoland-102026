@@ -81,6 +81,21 @@ export async function findAll() {
   }
 }
 
+export async function findGmail() {
+  try {
+    const response = await fetch(DATABASE_URL + "/queries/find-gmail", {
+      method: "POST",
+      body: JSON.stringify({}),
+    });
+    if (!response.ok) {
+      throw new Error("The database program answered with an error.");
+    }
+    return await response.json();
+  } catch {
+    throw new Error("The database failed.");
+  }
+}
+
 export async function update(input) {
   try {
     const response = await fetch(DATABASE_URL + "/queries/update", {

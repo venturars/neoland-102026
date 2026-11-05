@@ -1,0 +1,159 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #1c1917;
+  background: linear-gradient(165deg, #e8e4dc 0%, #f5f2eb 45%, #ebe6de 100%);
+}
+
+.page {
+  max-width: 32rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 2rem;
+}
+
+.page-header {
+  margin-bottom: 1rem;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #78716c;
+}
+
+.tagline {
+  margin: 0.25rem 0 0;
+  font-size: 0.9375rem;
+  color: #57534e;
+}
+
+.card {
+  padding: 1.5rem 1.25rem;
+  background: #fff;
+  border: 1px solid rgb(28 25 23 / 8%);
+  border-radius: 16px;
+  box-shadow:
+    0 1px 2px rgb(28 25 23 / 6%),
+    0 12px 40px rgb(28 25 23 / 8%);
+}
+
+h1 {
+  margin: 0 0 0.75rem;
+  font-size: 1.375rem;
+  font-weight: 650;
+}
+
+h2 {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+#user-screen[hidden],
+#users-screen[hidden] {
+  display: none;
+}
+
+.message {
+  margin: 0 0 0.75rem;
+  min-height: 1.5rem;
+  font-size: 0.9375rem;
+  color: #b45309;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.field-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #57534e;
+}
+
+input {
+  padding: 0.5rem 0.625rem;
+  border: 1px solid rgb(28 25 23 / 15%);
+  border-radius: 8px;
+  font: inherit;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  border: 1px solid rgb(28 25 23 / 12%);
+  border-radius: 8px;
+  font: inherit;
+  cursor: pointer;
+  background: #fafaf9;
+}
+
+button.primary {
+  background: #1c1917;
+  color: #fafaf9;
+  border-color: #1c1917;
+}
+
+button.secondary {
+  background: transparent;
+}
+
+button.danger {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+.user-list {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.user-list button {
+  width: 100%;
+  text-align: left;
+}
+
+.user-dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 1rem;
+  margin: 0 0 1rem;
+}
+
+.user-dl dt {
+  font-weight: 600;
+  color: #57534e;
+}
+
+.user-dl dd {
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}

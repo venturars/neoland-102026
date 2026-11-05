@@ -24,6 +24,8 @@ El ejemplo de terminal es obligatorio. Un logic ya creado no se reemplaza.
 
 Cada tarea nueva sigue `docs/GIT-WORKFLOW.md` aunque el prompt no nombre ese fichero. Es una issue, una rama desde `staging` y una pull request en draft hacia `staging`.
 
+Las formas de la issue y de la pull request están en `templates/`, una por tipo. El enlace es `Closes #N`. Al pedir revisión se marcan solo las casillas que se han comprobado.
+
 La plantilla de la pull request es `.github/pull_request_template.md` de esta app. Si el workspace es el repositorio de la clase, la ruta es `staff/meghan-martin/first-app/.github/pull_request_template.md`.
 
 ## Comandos
@@ -33,6 +35,7 @@ La plantilla de la pull request es `.github/pull_request_template.md` de esta ap
 - `npm run jupyter`, desde `first-app`, abre la lista de notebooks. La primera vez prepara el Jupyter de esta app. La base tiene que estar en marcha.
 - `npm run browser`, desde `first-app`, abre `src/clients/browser/index.html`. No sirve la página. La base tiene que estar en marcha.
 - `npm run api`, desde `first-app`, responde JSON en `http://127.0.0.1:3001`. La base tiene que estar en marcha.
+- `npm run electron`, desde `first-app`, abre una ventana de escritorio. La base tiene que estar en marcha.
 - No hay tests. `package.json` no tiene script `test`.
 - El lock que hay es `package-lock.json`. No hay `pnpm-lock.yaml`.
 - `npm run format` lanza Prettier. El formato es el estándar, sin configuración propia.

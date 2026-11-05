@@ -12,11 +12,11 @@
   - `src/db/users.sqlite` es el único fichero de la base de datos.
 
 - `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca.
-- `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la tarea se puede dejar escrita.
+- `agents/help-me-to-think.md` hace las preguntas que haga falta hasta que la tarea se puede dejar escrita.
 - `agents/create-issue.md` crea la issue con título en inglés y descripción en español, asignada a quien está autenticado.
 - `agents/create-branch.md` crea la rama desde `staging`. El tipo es el de la plantilla. Si no hay plantilla, elige la más cercana.
 - `agents/create-commit.md` hace un commit pequeño con ficheros nombrados.
-- `agents/create-pr.md` abre la pull request contra `staging` y la deja en draft, sin enlazar la issue.
+- `agents/create-pr.md` abre la pull request contra `staging`, en draft y asignada a quien está autenticado, en una sola invocación, sin enlazar la issue.
 - `agents/launch-push.md` publica `HEAD` en `origin` y deja el upstream puesto.
 - `skills/grill-with-docs/SKILL.md` entrevista cuando el cambio vive en este proyecto.
 - `skills/grill-me/SKILL.md` entrevista cuando el repositorio no responde.
@@ -29,8 +29,8 @@
 - `skills/create-empty-commit/SKILL.md` hace el commit vacío `chore: open #N`.
 - `skills/commit-changes/SKILL.md` guarda un trozo con ficheros nombrados.
 - `skills/launch-push/SKILL.md` sube la rama actual y fija el upstream.
-- `skills/create-pr-base-staging/SKILL.md` abre la pull request con base `staging`.
-- `skills/create-draft/SKILL.md` deja la pull request en draft.
+- `skills/create-pr-base-staging/SKILL.md` abre la pull request con base `staging`, en draft y asignada a quien está autenticado, en una sola invocación.
+- `skills/create-draft/SKILL.md` pasa a draft una pull request que ya existe.
 - `skills/link-pr-to-issue/SKILL.md` deja `Closes #N` y no llama a la API para cerrar la issue. GitHub la cierra al fusionar en la rama por defecto. Fusionar solo en `staging` no la cierra.
 - `skills/assign-reviewers/SKILL.md` asigna a quienes miran la pull request y la saca de draft.
 - `tools/check-status.sh` escribe la rama, el remoto y los cambios.
@@ -40,6 +40,7 @@
 - `tools/create-empty-commit.sh` crea el commit vacío de apertura.
 - `tools/commit-changes.sh` guarda los ficheros nombrados.
 - `tools/launch-push.sh` sube la rama y fija el upstream.
+- `tools/create-pr-base-staging.sh` crea la pull request con base `staging`, en draft y asignada a quien está autenticado.
 - `templates/issues/feat_issue.md` es el cuerpo de la issue de tipo feat.
 - `templates/issues/fix_issue.md` es el cuerpo de la issue de tipo fix.
 - `templates/issues/docs_issue.md` es el cuerpo de la issue de tipo docs.
@@ -107,9 +108,32 @@
   - `src/clients/jupyter/users-gender-count.ipynb` valida el recuento por sexo del nombre.
 
 - `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001 y no repite sus reglas. No sustituye a `src/db/server.js`.
-  - `src/clients/http/app.js` crea, lista, ve, modifica y borra usuarios. Se arranca con `pnpm http`.
+  - `src/clients/http/app.js` crea, lista, ve, modifica, borra y cuenta usuarios. Se arranca con `pnpm http`. La página no existe: la ruta llama a `src/logic/`.
 
-- `src/clients/web/` son las tres pantallas del navegador. Se abren desde el disco con `pnpm open`. Llaman a `src/logic/` y no piden `/api/users`.
+- `src/clients/nest/` llama a `src/logic/`, escucha en el puerto 3003 y no repite sus reglas. Las clases quedan en el módulo y en el controlador. `pnpm nest` lo compila con Babel a `src/clients/nest-run` y arranca ese `main.js`. No sustituye a `src/db/server.js` ni al cliente HTTP. También cuenta usuarios. La página no existe: la ruta llama a `src/logic/`.
+
+- `src/clients/chrome/` llama a `src/logic/`, escucha en el puerto 3002 y no repite sus reglas. El popup es `index.html` y pide esa API. No sustituye a `src/db/server.js` ni al cliente HTTP.
+  - `src/clients/chrome/server.js` crea, lista, ve, modifica, borra y cuenta usuarios. Se arranca con `pnpm chrome`.
+  - `src/clients/chrome/manifest.json` es el manifiesto de la extensión.
+  - `src/clients/chrome/index.html` es el popup. Tiene la pestaña Recuento.
+  - `src/clients/chrome/styles.css` es la hoja del popup.
+  - `src/clients/chrome/popup.js` pide las rutas de la API con `fetch` y no importa `src/logic/`.
+
+- `src/clients/vscode/` abre su panel en una pestaña. `extension.js` llama a `src/logic/` y no repite sus reglas. La página no importa `src/logic/`. No sustituye a `src/db/server.js` ni a los clientes HTTP, Chrome, Electron o web. No escucha en un puerto.
+  - `src/clients/vscode/extension.js` crea, lista, busca, ve, modifica, borra y cuenta usuarios. Se abre con el comando «Abrir usuarios».
+  - `src/clients/vscode/package.json` es el manifiesto de la extensión.
+  - `src/clients/vscode/index.html` es el panel. Tiene la pestaña Recuento.
+  - `src/clients/vscode/styles.css` es la hoja del panel.
+  - `src/clients/vscode/app.js` pide las acciones y no importa `src/logic/` ni `vscode`.
+
+- `src/clients/electron/` abre su ventana. `main.js` llama a `src/logic/` y no repite sus reglas. La página no importa `src/logic/`. No sustituye a `src/db/server.js` ni a los clientes HTTP, Chrome o web. No escucha en un puerto.
+  - `src/clients/electron/main.js` crea, lista, ve, modifica, borra y cuenta usuarios. Se abre con `pnpm electron`.
+  - `src/clients/electron/preload.js` publica las llamadas. No importa `src/logic/`.
+  - `src/clients/electron/index.html` es la ventana. Tiene la pestaña Recuento.
+  - `src/clients/electron/styles.css` es la hoja de la ventana.
+  - `src/clients/electron/app.js` pide las llamadas y no importa `src/logic/` ni `electron`.
+
+- `src/clients/web/` son las tres pantallas del navegador. Se abren desde el disco con `pnpm open`. Llaman a `src/logic/` y no piden `/api/users`. No cuentan usuarios.
   - `src/clients/web/index.html` define la lista, el menú y la modificación.
   - `src/clients/web/styles.css` es la hoja compartida.
   - `src/clients/web/app.js` es la lógica de las tres pantallas. Carga la lista con `listUsers()`, elige por id con `findUserById(id)`, guarda con `updateUser(id, { name, email })` y borra con `deleteUser(id)`.

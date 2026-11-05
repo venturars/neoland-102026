@@ -1,6 +1,6 @@
 import { findUserByEmail as findUserRowByEmail } from "../queries/users.js";
 
-export function findUserByEmail(email) {
+export async function findUserByEmail(email) {
   // An email of another type is not turned into text.
   // The caller passes the address itself, not an object that wraps it.
   if (typeof email !== "string") {
@@ -47,7 +47,7 @@ export function findUserByEmail(email) {
   let user;
 
   try {
-    user = findUserRowByEmail(normalizedEmail);
+    user = await findUserRowByEmail(normalizedEmail);
   } catch {
     throw new Error("Unable to find user");
   }

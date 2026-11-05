@@ -1,0 +1,99 @@
+/* Aspecto general de la ventana. */
+body {
+  margin: 0;
+  background: #f4f5f7;
+  color: #1f2933;
+  font-family: system-ui, sans-serif;
+}
+
+.app {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* Formularios: cada etiqueta encima de su campo. */
+label {
+  display: block;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+input {
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px;
+  border: 1px solid #9aa5b1;
+  border-radius: 4px;
+}
+
+/* Botones: normal, secundario y peligroso. */
+button {
+  margin-top: 12px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background: #2457a6;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+button.secondary {
+  background: #616e7c;
+}
+
+button.danger {
+  background: #b42318;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+/* Lista de usuarios: cada usuario es un botón de todo el ancho. */
+.user-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.user-list button {
+  width: 100%;
+  margin-top: 4px;
+  background: #ffffff;
+  color: #1f2933;
+  border: 1px solid #cbd2d9;
+  text-align: left;
+}
+
+/* Datos de la ficha: nombre del dato a la izquierda y valor a la derecha. */
+.user-data {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 16px;
+}
+
+.user-data dt {
+  font-weight: 600;
+}
+
+.user-data dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Mensajes: verde para un aviso y rojo para un error. */
+.message {
+  padding: 8px 12px;
+  border-radius: 4px;
+  background: #e3f6e8;
+  color: #14532d;
+}
+
+.message.error {
+  background: #fde8e6;
+  color: #b42318;
+}

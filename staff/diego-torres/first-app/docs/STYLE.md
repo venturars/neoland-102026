@@ -10,4 +10,6 @@ Comillas dobles, punto y coma, indentación de 2 espacios. Es el formato estánd
 
 El código se lee de arriba abajo, con `if` y con nombres que dicen qué hacen. No se añaden envoltorios de resultado, clases ni capas de más.
 
+**Aviso:** `src/clients/nest/` usa clases y decoradores porque Nest los exige. Es la única excepción. El resto del proyecto sigue igual.
+
 En el navegador, los textos que vienen de la base se ponen con `textContent`, nunca con `innerHTML`.

@@ -43,5 +43,8 @@ def exceeds_limits(previous: list[float], instant: float) -> bool:
 
         exceeds_limits([100.0] * 5, 100.5)
     """
-    return (1 + sum(t > instant - 1 for t in previous) > 5
-            or 1 + sum(t > instant - 60 for t in previous) > 20)
+    attempts_in_second = 1 + sum(attempted_at > instant - 1 for attempted_at in previous)
+    if attempts_in_second > 5:
+        return True
+    attempts_in_minute = 1 + sum(attempted_at > instant - 60 for attempted_at in previous)
+    return attempts_in_minute > 20

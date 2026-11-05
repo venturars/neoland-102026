@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>First App</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <p id="message" class="message" role="status" hidden></p>
+
+    <section id="list-view">
+      <h1>Usuarios</h1>
+      <p id="loading" class="muted">Cargando usuarios...</p>
+      <p id="empty-list" class="muted" hidden>Todavía no hay usuarios.</p>
+      <ul id="user-list" class="user-list"></ul>
+
+      <h2>Nuevo usuario</h2>
+      <form id="create-form" novalidate>
+        <label>
+          Nombre
+          <input id="create-name" type="text" autocomplete="off" />
+        </label>
+        <label>
+          Email
+          <input id="create-email" type="text" autocomplete="off" />
+        </label>
+        <div class="actions">
+          <button type="submit">Crear usuario</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="detail-view" hidden>
+      <h1 id="detail-title"></h1>
+      <dl class="facts">
+        <dt>Id</dt>
+        <dd id="detail-id"></dd>
+        <dt>Email</dt>
+        <dd id="detail-email"></dd>
+        <dt>Creado</dt>
+        <dd id="detail-created"></dd>
+        <dt>Modificado</dt>
+        <dd id="detail-updated"></dd>
+      </dl>
+
+      <form id="edit-form" novalidate>
+        <label>
+          Nombre
+          <input id="edit-name" type="text" autocomplete="off" />
+        </label>
+        <label>
+          Email
+          <input id="edit-email" type="text" autocomplete="off" />
+        </label>
+        <div class="actions">
+          <button type="submit">Guardar cambios</button>
+          <button id="back" type="button" class="button-quiet">Volver</button>
+        </div>
+      </form>
+
+      <div id="delete-actions" class="actions">
+        <button id="delete-user" type="button" class="button-danger">
+          Borrar usuario
+        </button>
+      </div>
+
+      <div id="delete-confirmation" class="confirmation" hidden>
+        <p>¿Seguro que quieres borrar este usuario?</p>
+        <div class="actions">
+          <button id="confirm-delete" type="button" class="button-danger">
+            Sí, borrar
+          </button>
+          <button id="cancel-delete" type="button" class="button-quiet">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <script type="module" src="./popup.js"></script>
+  </body>
+</html>

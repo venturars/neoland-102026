@@ -1,0 +1,84 @@
+/* Lo que lleva el atributo hidden no se ve nunca. */
+[hidden] {
+  display: none !important;
+}
+
+/* Títulos con los colores del tema del editor. */
+h2 {
+  margin: 14px 0 4px;
+  font-size: 1.05em;
+}
+
+/* Formularios: cada etiqueta encima de su campo. */
+label {
+  display: block;
+  margin-top: 6px;
+}
+
+input {
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 2px;
+  padding: 4px;
+  border: 1px solid var(--vscode-input-border, transparent);
+  background: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+}
+
+/* Botones: normal, secundario y peligroso. */
+button {
+  margin-top: 8px;
+  padding: 4px 10px;
+  border: none;
+  background: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+  cursor: pointer;
+}
+
+button.secondary {
+  background: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-button-secondaryForeground);
+}
+
+button.danger {
+  background: var(--vscode-inputValidation-errorBackground);
+  color: var(--vscode-foreground);
+}
+
+/* Lista y usuario visto, sin cortar textos largos. */
+.user-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.user-list li,
+.user {
+  margin: 4px 0;
+  padding: 4px 6px;
+  border: 1px solid var(--vscode-panel-border, transparent);
+  overflow-wrap: anywhere;
+}
+
+/* Confirmación de borrado. */
+.confirm {
+  margin-top: 8px;
+  padding: 6px;
+  border: 1px solid var(--vscode-inputValidation-errorBorder);
+}
+
+.confirm p {
+  margin: 0;
+}
+
+/* Mensajes: aviso normal o error. */
+.message {
+  margin: 6px 0;
+  padding: 4px 8px;
+  border: 1px solid var(--vscode-inputValidation-infoBorder);
+}
+
+.message.error {
+  border-color: var(--vscode-inputValidation-errorBorder);
+  background: var(--vscode-inputValidation-errorBackground);
+}

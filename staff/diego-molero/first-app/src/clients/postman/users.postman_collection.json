@@ -1,0 +1,91 @@
+{
+  "info": {
+    "name": "First App · usuarios REST",
+    "description": "Recorrido de alta, listado, consulta, cambio y borrado de usuarios. Ejecutar contra una base de prueba: la petición final elimina el usuario creado.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://127.0.0.1:3000" },
+    { "key": "userId", "value": "" },
+    { "key": "testEmail", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Crear usuario",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\"name\":\"Postman Prueba\",\"email\":\"{{testEmail}}\"}" },
+        "url": "{{baseUrl}}/api/users"
+      },
+      "event": [
+        { "listen": "prerequest", "script": { "exec": [
+          "// Cada ejecución usa un correo propio para evitar datos de otra ejecución.",
+          "pm.collectionVariables.set('testEmail', `postman-${Date.now()}@example.test`);"
+        ] } },
+        { "listen": "test", "script": { "exec": [
+          "pm.test('Alta 201 y usuario JSON', function () { pm.response.to.have.status(201); const user = pm.response.json(); pm.expect(user.id).to.be.a('number'); pm.expect(user.name).to.eql('Postman Prueba'); pm.collectionVariables.set('userId', String(user.id)); });"
+        ] } }
+      ]
+    },
+    {
+      "name": "Listar usuarios",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/users" },
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('Listado 200 contiene el nuevo usuario', function () { pm.response.to.have.status(200); pm.expect(pm.response.json().some(user => String(user.id) === pm.collectionVariables.get('userId'))).to.be.true; });"
+      ] } }]
+    },
+    {
+      "name": "Consultar usuario",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/users/{{userId}}" },
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('Consulta 200 conserva el correo', function () { pm.response.to.have.status(200); pm.expect(pm.response.json().email).to.eql(pm.collectionVariables.get('testEmail')); });"
+      ] } }]
+    },
+    {
+      "name": "Correo repetido",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\"name\":\"Duplicado\",\"email\":\"{{testEmail}}\"}" },
+        "url": "{{baseUrl}}/api/users"
+      },
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('Correo repetido devuelve 409', function () { pm.response.to.have.status(409); pm.expect(pm.response.json().message).to.be.a('string'); });"
+      ] } }]
+    },
+    {
+      "name": "Modificar usuario",
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\"name\":\"Postman Editado\"}" },
+        "url": "{{baseUrl}}/api/users/{{userId}}"
+      },
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('Cambio 200 refleja el nombre', function () { pm.response.to.have.status(200); pm.expect(pm.response.json().name).to.eql('Postman Editado'); });"
+      ] } }]
+    },
+    {
+      "name": "ID inválido",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/users/1x" },
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('ID inválido devuelve 400', function () { pm.response.to.have.status(400); });"
+      ] } }]
+    },
+    {
+      "name": "Eliminar usuario",
+      "request": { "method": "DELETE", "url": "{{baseUrl}}/api/users/{{userId}}" },
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('Borrado 204 sin cuerpo', function () { pm.response.to.have.status(204); pm.expect(pm.response.text()).to.eql(''); });"
+      ] } }]
+    },
+    {
+      "name": "Usuario ausente",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/users/{{userId}}" },
+      "event": [{ "listen": "test", "script": { "exec": [
+        "pm.test('Tras borrar devuelve 404', function () { pm.response.to.have.status(404); });"
+      ] } }]
+    }
+  ]
+}

@@ -14,7 +14,7 @@ export async function showUsers(openMenu) {
   try {
     const users = await api("/api/users");
     list.replaceChildren();
-    if (users.length === 0) { list.textContent = "Todavía no hay usuarios. Prepara la base y crea uno con los clientes de terminal."; return; }
+    if (users.length === 0) { list.textContent = "Todavía no hay usuarios. Crea el primero para empezar."; return; }
     for (const user of users) {
       const button = document.createElement("button");
       button.type = "button";

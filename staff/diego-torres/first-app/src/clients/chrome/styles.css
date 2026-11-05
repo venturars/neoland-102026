@@ -1,0 +1,107 @@
+/* Lo que lleva el atributo hidden no se ve nunca. */
+[hidden] {
+  display: none !important;
+}
+
+/* Aspecto general de la ventana de la extensión. */
+body {
+  width: 380px;
+  margin: 0;
+  background: #f4f5f7;
+  color: #1f2933;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+}
+
+main {
+  padding: 12px 16px 16px;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+h2 {
+  margin: 16px 0 4px;
+  font-size: 15px;
+}
+
+/* Formularios: cada etiqueta encima de su campo. */
+label {
+  display: block;
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+input {
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 2px;
+  padding: 6px;
+  border: 1px solid #9aa5b1;
+  border-radius: 4px;
+}
+
+/* Botones: normal, secundario y peligroso. */
+button {
+  margin-top: 8px;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 4px;
+  background: #2457a6;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+button.secondary {
+  background: #616e7c;
+}
+
+button.danger {
+  background: #b42318;
+}
+
+/* Lista de usuarios y usuario visto, sin cortar textos largos. */
+.user-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.user-list li,
+.viewed-user {
+  margin: 4px 0;
+  padding: 6px 8px;
+  border: 1px solid #cbd2d9;
+  border-radius: 4px;
+  background: #ffffff;
+  overflow-wrap: anywhere;
+}
+
+/* Confirmación de borrado. */
+.confirm {
+  margin-top: 8px;
+  padding: 8px;
+  border: 1px solid #b42318;
+  border-radius: 4px;
+  background: #ffffff;
+}
+
+.confirm p {
+  margin: 0;
+}
+
+/* Mensajes: verde para un aviso y rojo para un error. */
+.message {
+  margin: 8px 0;
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: #e3f6e8;
+  color: #14532d;
+}
+
+.message.error {
+  background: #fde8e6;
+  color: #b42318;
+}

@@ -86,45 +86,89 @@ app.patch("/users/:id", async (req, res) => {
 
 app.delete("/users/:id", async (req, res) => {
   const id = parseUserId(req.params.id);
-  const user = await deleteUser(id);
+  await deleteUser(id);
 
-  res.status(200).json(user);
+  res.status(204).end();
+});
+
+app.use((req, res) => {
+  res.status(404).end();
 });
 
 // Express identifies an error middleware by its four parameters.
 // eslint-disable-next-line no-unused-vars
 app.use((error, req, res, next) => {
   if (error.type === "entity.parse.failed") {
-    res.status(400).json({ error: "Body is invalid" });
+    res.status(400).json({ message: "Body is invalid" });
 
     return;
   }
 
   if (error instanceof ValidationError) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ message: error.message });
 
     return;
   }
 
   if (error instanceof NotFoundError) {
-    res.status(404).json({ error: error.message });
+    res.status(404).json({ message: error.message });
 
     return;
   }
 
   if (error instanceof ConflictError) {
-    res.status(409).json({ error: error.message });
+    res.status(409).json({ message: error.message });
 
     return;
   }
 
   if (error instanceof DatabaseError) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
 
     return;
   }
 
-  res.status(500).json({ error: "Internal error" });
+  let couldNot = "";
+
+  if (req.method === "GET") {
+    if (req.path === "/users") {
+      couldNot = "Could not list the users";
+    }
+  }
+
+  if (req.method === "GET") {
+    if (req.path !== "/users") {
+      if (req.path.startsWith("/users/")) {
+        couldNot = "Could not find the user";
+      }
+    }
+  }
+
+  if (req.method === "POST") {
+    if (req.path === "/users") {
+      couldNot = "Could not create the user";
+    }
+  }
+
+  if (req.method === "PATCH") {
+    if (req.path.startsWith("/users/")) {
+      couldNot = "Could not update the user";
+    }
+  }
+
+  if (req.method === "DELETE") {
+    if (req.path.startsWith("/users/")) {
+      couldNot = "Could not delete the user";
+    }
+  }
+
+  if (couldNot === "") {
+    res.status(404).end();
+
+    return;
+  }
+
+  res.status(500).json({ message: couldNot });
 });
 
 app.listen(PORT, HOST, (error) => {

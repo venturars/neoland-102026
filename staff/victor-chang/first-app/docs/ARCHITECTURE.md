@@ -30,6 +30,8 @@ The folders and files are in [TREE.md](TREE.md).
   - `clients/web/styles.css` is its look.
   - `clients/web/app.js` reads the file, calls `logic/`, shows the result and saves the file.
   - `clients/web/queries.js` is the browser twin of `queries/users.js`, on sql.js.
+- `clients/http/` is an HTTP API that calls `logic/` and answers in JSON, on `127.0.0.1:3000`.
+  - `clients/http/server.js` reads each ask, calls `logic/` and answers the status and the JSON.
 - `docs/` holds the rules of the app.
   - `docs/CONSTITUTION.md` is what every change follows, and links to the guides.
   - `docs/ARCHITECTURE.md` is this file.
@@ -85,3 +87,14 @@ After a feature is done, its first client is `clients/terminal/<name>.txt`, name
 - It shows `error.message` as it is: name and email failures under their field, the others in a box with `OK`. Its own messages are in [ERRORS.md](ERRORS.md).
 - Sorting by name and the A to Z sections are only how it shows the list.
 - It does not import `count-users-by-gender`, which calls the local AI over HTTP.
+
+### HTTP
+
+`clients/http/server.js` is an API, started with `pnpm http` from `first-app`. It runs until it is stopped with `Ctrl+C`. Its asks are in the [http-client spec](specs/http-client/spec.md).
+
+- It is a `node:http` server on `127.0.0.1`, port `3000`, so only this computer can reach it. It has no npm dependency.
+- It imports the `logic/` files as they are, like the terminal client, so it uses `db/connection.js` and the real `db/users.sqlite`. A change is seen at once by the other clients.
+- An id that is only digits is turned into a number before it reaches `logic/`, because `updateUser` compares ids with `!==`. Any other id is passed as text, and `logic/` answers `User not found`.
+- A failure answers `{ "message": error.message }`, with the status from the error `code`: `VALIDATION` `400`, `DUPLICATE` `409`, `NOT_FOUND` `404`, `SYSTEM` `500`. Its own messages are in [ERRORS.md](ERRORS.md).
+- An unknown path or method answers `404` with no body. An error without one of those codes is a bug: it answers `500` with no body and is printed, and the server keeps running.
+- It does not import `count-users-by-gender`, `search-users`, `find-user-by-name` or `get-user-by-email`.

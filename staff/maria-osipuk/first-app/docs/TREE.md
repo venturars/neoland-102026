@@ -6,6 +6,7 @@ first-app/
 ├── .gitignore
 ├── .prettierignore
 ├── README.md
+├── babel.config.json
 ├── eslint.config.js
 ├── package.json
 ├── pnpm-lock.yaml
@@ -13,15 +14,21 @@ first-app/
 │   └── jupyter.sh
 ├── src/
 │   ├── clients/
+│   │   ├── chrome/
+│   │   │   ├── api.js
+│   │   │   ├── manifest.json
+│   │   │   ├── popup.html
+│   │   │   ├── popup.js
+│   │   │   └── styles.css
+│   │   ├── electron/
+│   │   │   ├── app.js
+│   │   │   ├── index.html
+│   │   │   ├── main.js
+│   │   │   ├── preload.cjs
+│   │   │   ├── styles.css
+│   │   │   └── user-actions.js
 │   │   ├── http/
-│   │   │   ├── create-http-server.js
-│   │   │   ├── handle-request.js
-│   │   │   ├── handle-users.js
-│   │   │   ├── read-json-body.js
-│   │   │   ├── send-http-error.js
-│   │   │   ├── send-json.js
-│   │   │   ├── serve-public-file.js
-│   │   │   └── start-http-server.js
+│   │   │   └── app.js
 │   │   ├── jupyter/
 │   │   │   ├── actualizar-usuario.ipynb
 │   │   │   ├── bienvenida.ipynb
@@ -33,6 +40,12 @@ first-app/
 │   │   │   ├── listar-usuarios.ipynb
 │   │   │   ├── preparar-tabla-usuarios.ipynb
 │   │   │   └── run_logic.py
+│   │   ├── nest/
+│   │   │   ├── app.module.js
+│   │   │   ├── main.js
+│   │   │   ├── users-exception.filter.js
+│   │   │   ├── users.controller.js
+│   │   │   └── users.service.js
 │   │   ├── terminal/
 │   │   │   ├── count-users-by-gender.txt
 │   │   │   ├── create-user.txt
@@ -42,22 +55,20 @@ first-app/
 │   │   │   ├── find-user-by-id.txt
 │   │   │   ├── list-users.txt
 │   │   │   └── update-user.txt
+│   │   ├── vscode/
+│   │   │   ├── extension.js
+│   │   │   ├── index.html
+│   │   │   ├── package.json
+│   │   │   ├── styles.css
+│   │   │   ├── user-actions.js
+│   │   │   ├── users.svg
+│   │   │   └── view.js
 │   │   └── web/
-│   │       ├── delete-selected-user.js
+│   │       ├── app.js
 │   │       ├── index.html
-│   │       ├── load-user-selection.js
-│   │       ├── main.js
-│   │       ├── navigate.js
-│   │       ├── open-user-editor.js
-│   │       ├── save-user.js
-│   │       ├── select-user.js
-│   │       ├── show-message.js
-│   │       ├── show-screen.js
-│   │       ├── show-user-menu.js
-│   │       ├── state.js
 │   │       └── styles.css
 │   ├── db/
-│   │   ├── connection.js
+│   │   ├── server.js
 │   │   └── users.sqlite
 │   ├── logic/
 │   │   ├── count-users-by-gender.js
@@ -69,13 +80,13 @@ first-app/
 │   │   └── update-user.js
 │   └── queries/
 │       ├── queries/
-│       │   ├── create-users-table.sql
-│       │   ├── delete.sql
-│       │   ├── find-by-email.sql
-│       │   ├── find-by-id.sql
-│       │   ├── insert.sql
-│       │   ├── list.sql
-│       │   └── update.sql
+│       │   ├── create-users-table.js
+│       │   ├── delete.js
+│       │   ├── find-by-email.js
+│       │   ├── find-by-id.js
+│       │   ├── insert.js
+│       │   ├── list.js
+│       │   └── update.js
 │       └── users.js
 ├── agents/
 │   ├── create-branch.md
@@ -122,6 +133,7 @@ first-app/
 │   ├── create-branch-from-staging.sh
 │   ├── create-branch.sh
 │   ├── create-empty-commit.sh
+│   ├── create-pr-base-staging.sh
 │   ├── launch-push.sh
 │   └── pull-changes.sh
 ├── templates/
@@ -154,11 +166,27 @@ first-app/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
+│   │   ├── chrome-extension-client/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
 │   │   ├── classifier/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
+│   │   ├── electron-desktop-client/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── express-rest-client/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
 │   │   ├── gestor-pnpm/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── independent-web-http-clients/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
@@ -171,6 +199,10 @@ first-app/
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
 │   │   ├── move-code-into-src/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── nest-users-client/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
@@ -190,11 +222,19 @@ first-app/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
+│   │   ├── sync-git-workflow-template/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
 │   │   ├── update-git-workflow-template/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
-│   │   └── vanilla-user-client/
+│   │   ├── vanilla-user-client/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   └── vscode-extension-client/
 │   │       ├── plan.md
 │   │       ├── spec.md
 │   │       └── tasks.md
@@ -206,5 +246,11 @@ first-app/
 │   ├── TREE.md
 │   └── WEB-CLIENT-GUIDE.md
 └── tests/
-    └── http-client.test.js
+    ├── chrome-client.test.js
+    ├── database-server.test.js
+    ├── electron-client.test.js
+    ├── http-client.test.js
+    ├── nest-client.test.js
+    ├── shared-database.test.js
+    └── vscode-client.test.js
 ```

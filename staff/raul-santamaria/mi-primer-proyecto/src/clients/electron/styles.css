@@ -1,0 +1,114 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.titlebar {
+  padding: 0.75rem 1rem;
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+  -webkit-app-region: drag;
+}
+
+.titlebar-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+main {
+  flex: 1;
+  max-width: 32rem;
+  margin: 1.5rem auto;
+  padding: 1.5rem;
+  width: 100%;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgb(15 23 42 / 0.45);
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 600;
+}
+
+p {
+  margin: 0.75rem 0 0;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+label {
+  display: block;
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  color: #cbd5e1;
+}
+
+input,
+button {
+  display: block;
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.65rem 0.85rem;
+  font: inherit;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+button {
+  text-align: left;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+}
+
+button:hover {
+  background: #172554;
+  border-color: #64748b;
+}
+
+button:disabled {
+  color: #64748b;
+  background: #1e293b;
+  cursor: not-allowed;
+}
+
+button.danger {
+  border-color: #7f1d1d;
+  color: #fecaca;
+}
+
+button.danger:hover {
+  background: #450a0a;
+}
+
+.actions {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.message {
+  min-height: 1.25rem;
+  color: #fca5a5;
+}

@@ -1,0 +1,1 @@
+UPDATE race_slots SET included_at_start=(state='listo') WHERE session_id=?

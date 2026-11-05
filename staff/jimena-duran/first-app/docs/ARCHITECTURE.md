@@ -16,6 +16,33 @@ El cliente `src/clients/browser/` contiene `index.html`, `app.js` y `styles.css`
 
 `src/logic/` es el núcleo estable de la aplicación. No se reemplaza por adaptadores, plugins o implementaciones intercambiables, y sus reglas no se trasladan a `src/queries/` ni a `src/clients/`. Cada operación tiene su propio archivo; una operación nueva no modifica otro archivo para reutilizarlo.
 
+`src/clients/nest/` expone las mismas cinco operaciones en
+`http://127.0.0.1:3003`. Un módulo registra controlador, servicio y filtro
+de transporte. El servicio importa las funciones existentes de `logic/`;
+no repite validaciones ni accede directamente a SQLite.
+`corepack pnpm nest` limpia el `dist/` local, compila `src/` con Babel
+manteniendo ESM y arranca `dist/clients/nest/main.js`. Los imports relativos
+usan la copia compilada de logic y queries, que sigue llamando al servidor
+SQL original en 3000. No se ejecuta la copia del servidor SQL en dist.
+Express permanece en 3001 y ambos clientes comparten el mismo servidor
+y datos. `dist/` no se versiona ni se revisa con ESLint.
+
+El cliente `src/clients/electron/` abre una ventana de escritorio propia e importa las operaciones de `src/logic/`. No reutiliza `src/clients/browser/` ni sustituye al servidor SQL de `src/db/server.js`.
+
+El cliente `src/clients/chrome/` reúne una extensión Manifest V3 y su API
+Fastify. El popup consulta exclusivamente `http://127.0.0.1:3002` con fetch;
+la API importa las cinco operaciones de usuarios de `src/logic/` y conserva
+sus reglas. `pnpm chrome` inicia la API. La extensión se carga manualmente
+en Chrome, según `README.md`. El servidor SQL permanece en 3000 y el
+cliente HTTP conserva su API Express en 3001.
+
+El cliente `src/clients/vscode/` aporta la vista Usuarios en la barra lateral
+de VS Code. Su proceso de extensión importa las cinco operaciones de
+`src/logic/`; la vista envía mensajes y presenta sus resultados. `pnpm vscode`
+abre la aplicación en una ventana de desarrollo desde Windows/PowerShell.
+No incorpora API ni puerto y conserva el servidor SQL en 3000, el cliente
+HTTP en 3001 y el cliente Chrome en 3002.
+
 Los contratos de funciones siguen [STYLE.md](STYLE.md); las salidas y los errores se definen en [ERRORS.md](ERRORS.md).
 
 `eslint.config.js` configura la revisión del JavaScript con las reglas
@@ -23,9 +50,11 @@ recomendadas de ESLint y excluye `.venv` y `node_modules`.
 
 ## Automatización del trabajo
 
-La automatización de Git vive en agents/, skills/, tools/, templates/ y MCPS/, separada de src/ y de los datos de usuarios. Los siete scripts Bash de tools/ conservan el código original de la fuente fijada; no se mantienen herramientas ni ensayos PowerShell propios.
+La automatización de Git vive en agents/, skills/, tools/, templates/ y MCPS/, separada de src/ y de los datos de usuarios. Los ocho scripts Bash de tools/ conservan el código original de la plantilla; no se mantienen herramientas ni ensayos PowerShell propios. `tools/create-pr-base-staging.sh` crea la PR con base staging, en draft y asignada al usuario autenticado en una sola invocación de gh, recibiendo el cuerpo mediante un archivo temporal.
 
-Los agentes y skills mantienen su estructura original. Solo se adaptan las siete rutas de comandos para ejecutarlos desde la raíz Git y se añade al orquestador la referencia al SDD local. AGENTS.md conserva las revisiones separadas de spec/plan y tareas antes de implementar; ese SDD prevalece sobre la continuación automática del template.
+Los agentes y skills mantienen su estructura e instrucciones originales. Solo se adaptan las ocho rutas de comandos para ejecutarlos desde la raíz Git y se conserva el párrafo del orquestador con las referencias y pausas SDD locales. AGENTS.md conserva las revisiones separadas de spec/plan y tareas antes de implementar; ese SDD prevalece sobre la continuación automática del template.
+
+El orquestador elige la etapa por el estado real: crea la issue si problema, resultado, alcance y comprobación están claros, y entrevista si hay dudas. Una issue escrita con cambios pendientes lleva a preparar una rama desde staging antes de editar; cada paso se confirma antes del siguiente. Las entrevistas devuelven las preguntas necesarias con recomendación y esperan respuestas, conservando el historial al cambiar de agente. Los commits describen archivo o función y cambio en una línea. La creación de PR utiliza la operación conjunta; una PR existente se reutiliza conservando el enlace, cuya responsabilidad sigue en el orquestador.
 
 Las doce plantillas originales son la fuente editorial de issues y PR. MCPS contiene la referencia original, sin ejecutar su configuración. La guía [GIT-AUTOMATION.md](GIT-AUTOMATION.md) explica uso con Git Bash, MCP y alternativa gh, así como los límites de esta copia. Los ensayos autorizados usan repositorios desechables con remoto local y evidencia separada de los resultados históricos.
 

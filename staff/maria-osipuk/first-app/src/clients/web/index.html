@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>First App · Usuarios</title>
     <link rel="icon" href="data:," />
-    <link rel="stylesheet" href="/styles.css" />
-    <script type="module" src="/main.js"></script>
+    <!-- Relative paths, so the page also works when opened from file://. -->
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="module" src="./app.js"></script>
   </head>
   <body>
     <div class="app">
@@ -31,7 +32,8 @@
           <p class="eyebrow">Usuarios</p>
           <h2 id="selection-heading" tabindex="-1">Selecciona un usuario</h2>
           <p class="description">
-            Elige un usuario de la lista para ver sus opciones.
+            Elige un usuario de la lista para ver sus opciones, o crea uno
+            nuevo.
           </p>
           <form id="selection-form">
             <label for="user-select">Usuario</label>
@@ -54,6 +56,33 @@
               >
                 Actualizar lista
               </button>
+            </div>
+          </form>
+          <form id="create-form" class="create-zone">
+            <h3>Crear usuario</h3>
+            <div class="field">
+              <label for="new-user-name">Nombre</label>
+              <input
+                id="new-user-name"
+                name="name"
+                type="text"
+                autocomplete="name"
+                required
+              />
+            </div>
+            <div class="field">
+              <label for="new-user-email">Email</label>
+              <input
+                id="new-user-email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                maxlength="64"
+                required
+              />
+            </div>
+            <div class="actions">
+              <button id="create-user" type="submit">Crear usuario</button>
             </div>
           </form>
         </section>

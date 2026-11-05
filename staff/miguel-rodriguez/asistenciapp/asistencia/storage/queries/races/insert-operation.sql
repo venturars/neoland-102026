@@ -1,0 +1,1 @@
+INSERT INTO race_operations(session_id,roster_key,operation_id,attempt_no,payload_fingerprint) VALUES (?,?,?,?,?)

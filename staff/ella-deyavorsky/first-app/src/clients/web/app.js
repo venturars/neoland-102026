@@ -1,5 +1,6 @@
 /* global document, confirm */
 import { listUsers } from "../../logic/list-users.js";
+import { listGmailUsers } from "../../logic/list-gmail-users.js";
 import { updateUser } from "../../logic/update-user.js";
 import { deleteUser } from "../../logic/delete-user.js";
 
@@ -7,6 +8,9 @@ const SCREEN_IDS = ["screen-list", "screen-menu", "screen-edit"];
 
 // Usuario elegido (null si no hay ninguno)
 let currentUser = null;
+
+// true: la lista solo muestra los usuarios de Gmail
+let onlyGmail = false;
 
 // Muestra una pantalla y oculta las otras
 function show(screenId) {
@@ -23,7 +27,7 @@ async function renderList() {
   listError.textContent = "";
   let users = [];
   try {
-    users = await listUsers();
+    users = onlyGmail ? await listGmailUsers() : await listUsers();
   } catch (error) {
     // Mensaje de la app (por ejemplo "The database failed.")
     listError.textContent = error.message;
@@ -93,6 +97,14 @@ async function removeUser() {
 }
 
 document.getElementById("btn-back").addEventListener("click", renderList);
+document.getElementById("btn-only-gmail").addEventListener("click", () => {
+  onlyGmail = true;
+  renderList();
+});
+document.getElementById("btn-show-all").addEventListener("click", () => {
+  onlyGmail = false;
+  renderList();
+});
 document.getElementById("btn-edit").addEventListener("click", fillEditForm);
 document.getElementById("btn-notes").addEventListener("click", () => {
   document.getElementById("menu-notice").textContent = "Notas: próximamente.";

@@ -5,9 +5,13 @@ first-app/
   AGENTS.md
   package.json
   eslint.config.js
+  .gitignore
+  babel.config.json
   scripts/
     jupyter.js
     browser.js
+    vscode.js
+    nest.js
   src/
     db/
       server.js           (todo el servidor de datos)
@@ -28,6 +32,10 @@ first-app/
       users-gender-count.js
     clients/
       web/                (index.html, styles.css y un .js por función)
+      electron/           (main.js, index.html, styles.css y un .js por función)
+      chrome/             (server.js, manifest.json, index.html, popup.js y styles.css)
+      vscode/             (package.json, extension.js, index.html, panel.js y styles.css)
+      nest/               (main.js, app.module.js, users.controller.js, users.service.js y logic-exception.filter.js)
       terminal/           (un .txt por operación)
       jupyter/            (un .ipynb por operación)
   docs/

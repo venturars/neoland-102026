@@ -14,7 +14,7 @@
 ## 3. Flujo de Trabajo (Paso a Paso)
 
 1. **Recepción:** Toma lo que el alumno quiere hacer. Si `help-me-to-think` dejó un resumen, úsalo.
-2. **Validación:** El cuerpo va en español y rellena la plantilla del tipo en `templates/issues/`. Si ese fichero no está, usa `templates/issues/basic_issue.md`.
+2. **Validación:** El cuerpo va en español y rellena la plantilla del tipo en `templates/issues/`. Si el tipo no tiene plantilla, usa la más cercana.
 3. **Procesamiento:** Sigue `skills/create-issue/SKILL.md`. Asigna la issue al usuario autenticado del MCP.
 4. **Formateo:** Responde con el número, el título y la URL.
 

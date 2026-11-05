@@ -21,6 +21,10 @@ specs/
 spec.md
 plan.md
 tasks.md
+bruno-http-client/
+spec.md
+plan.md
+tasks.md
 logic/
 shared.js
 create-user.js
@@ -70,6 +74,32 @@ styles.css
 app.js
 http/
 app.js
+bruno/
+nest/
+.babelrc.json
+main.js
+app.module.js
+users.controller.js
+chrome/
+server.js
+manifest.json
+index.html
+popup.js
+styles.css
+vscode/
+package.json
+extension.js
+index.html
+app.js
+styles.css
+electron/
+main.js
+preload.js
+index.html
+app.js
+styles.css
+.vscode/
+launch.json
 
 ```
 

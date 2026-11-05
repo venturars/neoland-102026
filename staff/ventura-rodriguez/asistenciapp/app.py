@@ -8,6 +8,7 @@ Uso: `python app.py` y abrir la URL del panel que se imprime en consola.
 
 import argparse
 import hmac
+import ipaddress
 import os
 import socket
 import sys
@@ -40,14 +41,41 @@ NOT_FOUND = "Esta clase no existe. Revisa el enlace."
 UNAUTHORIZED = "Acceso no autorizado. Abre el panel con tu enlace secreto de profesor."
 MISSING_CHECKIN = "Ese registro no existe en esta clase."
 GENERIC_ERRORS = {404: "No encontrado.", 405: "Método no permitido."}
+LOOPBACK = ("127.0.0.1", "::1")
 
 
-def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
+def client_ip(remote_addr: str | None, forwarded: str | None, tunnel: bool) -> str:
+    """IP de quien intenta registrarse.
+
+    Detrás del túnel, cloudflared entra desde 127.0.0.1 y Cloudflare escribe
+    la IP del alumno en ``CF-Connecting-IP``. Sin túnel, esa cabecera se ignora.
+
+    :param remote_addr: IP de la conexión.
+    :param forwarded: valor de ``CF-Connecting-IP``, o None.
+    :param tunnel: True si la app arrancó con ``--tunel``.
+    :return: la IP que cuenta para el freno.
+    :rtype: str
+
+    Usage::
+
+      ip = client_ip(request.remote_addr, request.headers.get("CF-Connecting-IP"), True)
+    """
+    connection = remote_addr or ""
+    if not tunnel or connection not in LOOPBACK or not forwarded:
+        return connection
+    try:
+        return str(ipaddress.ip_address(forwarded.strip()))
+    except ValueError:
+        return connection
+
+
+def create_app(db_path=DEFAULT_DB, token=None, now=time.time, tunnel=False):
     """Construye la aplicación web.
 
     :param db_path: ruta del archivo de asistencia.
     :param token: token del profesor. Si no viene, se pide al preparar la app.
     :param now: función que devuelve el instante Unix actual.
+    :param tunnel: True si los alumnos llegan por el túnel de cloudflared.
     :return: aplicación lista para servir.
     :rtype: Flask
 
@@ -62,6 +90,7 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=0, x_proto=1, x_host=1)
     app.config["DB_PATH"] = db_path
     app.config["NOW"] = now
+    app.config["TUNNEL"] = tunnel
     teacher_token = prepare(db_path)
     app.config["TEACHER_TOKEN"] = token if token is not None else teacher_token
 
@@ -121,7 +150,11 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
                 body.get("name"),
                 body.get("code", ""),
                 now,
-                request.remote_addr or "",
+                client_ip(
+                    request.remote_addr,
+                    request.headers.get("CF-Connecting-IP"),
+                    app.config["TUNNEL"],
+                ),
             )
             payload = {"name": row["name"], "checkedAt": row["checked_at"]}
             if not created:
@@ -239,7 +272,7 @@ def main():
             f"  Ciérrala con Ctrl+C, o arranca en otro puerto: PORT={port + 1} python app.py"
         )
     DEFAULT_DB.parent.mkdir(exist_ok=True)
-    app = create_app()
+    app = create_app(tunnel=args.tunel)
 
     tunnel, base_url = None, f"http://localhost:{port}"
     if args.tunel:

@@ -39,6 +39,26 @@ first-app/
         index.html
         app.js
         styles.css
+      http/
+        app.js
+      electron/
+        main.js
+        index.html
+        app.js
+        styles.css
+      chrome/
+        manifest.json
+        index.html
+        app.js
+        styles.css
+        server.js
+      vscode/
+        package.json
+        extension.js
+        index.html
+        app.js
+        styles.css
+        icon.svg
     queries/
       users.js
       queries/
@@ -55,6 +75,7 @@ first-app/
   eslint.config.js
   package.json
   pnpm-lock.yaml
+  pnpm-workspace.yaml
   agents/
     git-workflow-agent.md
     help-me-to-think.md

@@ -24,7 +24,10 @@ asistenciapp/
 │   ├── domain/            # reglas de negocio
 │   ├── usecases/          # coordinación de operaciones
 │   ├── storage/           # conexiones y operaciones SQLite; roster.py para catálogo
-│   │   ├── queries/roster/ # seis consultas del catálogo
+│   │   ├── queries/
+│   │   │   ├── sqlite/    # diecinueve textos de esquema, configuración y consultas
+│   │   │   ├── races/     # treinta y un textos de carrera
+│   │   │   └── roster/    # seis consultas del catálogo
 │   │   └── data/initial-students.csv # grupo inicial de una sola carga
 │   ├── origin.py          # origen fiable de la conexión
 │   ├── race_http.py       # adaptador HTTP de carrera
@@ -55,11 +58,29 @@ El archivo `data/asistencia.db` conserva sus tablas de asistencia, secretos, tok
 
 Las reglas vigentes están en [CONSTITUTION.md](CONSTITUTION.md); el proceso y la escritura de funciones, en [AGENTS.md](../AGENTS.md). Las specs 001–004 conservan los nombres que tenían sus documentos: AGENT.md pasó a AGENTS.md y CONSTITUTION.md pasó de la raíz a docs/. Los enlaces actuales se mantienen en el README y el manual.
 
-## Correcciones pendientes del código
+## Consultas de almacenamiento
 
-Los límites anteriores son la referencia para los próximos cambios. 012 retira los datos concretos del alumnado de `domain/roster.py`. El código actual todavía contiene consultas SQL antiguas dentro de las funciones de almacenamiento.
+El texto de las consultas vive en `asistencia/storage/queries/`. Los módulos
+`sqlite.py`, `races.py` y `roster.py` cargan archivos con nombres fijos relativos
+a su ubicación; después ejecutan la consulta y convierten el resultado.
 
-Las siguientes refactorizaciones deberán guardar el texto de las consultas antiguas en archivos separados. Las consultas nuevas del catálogo ya están separadas. Los casos de uso coordinan dominio y almacenamiento; no construyen respuestas del navegador. No se añaden proveedores intercambiables ni una capa genérica de consultas. La spec 010 documenta estos límites; no modifica todavía esas implementaciones.
+`queries/sqlite/` contiene diecinueve archivos, incluido el esquema de once
+sentencias. `queries/races/` contiene treinta y un textos para treinta y dos
+llamadas: cierre y limpieza reutilizan la revocación del secreto de entrada.
+Las seis consultas del catálogo permanecen en `queries/roster/`.
+
+Los archivos conservan los tokens y parámetros anteriores; tres textos pierden
+únicamente espacio terminal heredado. La inicialización
+sigue usando executescript; las operaciones de carrera no hacen commits internos.
+Se conservan las fronteras actuales: los casos de uso coordinan las transacciones
+de carrera y sqlite.py mantiene sus contextos with connection. La gestión de
+conexiones y su limpieza ante fallos permanecen en su lugar actual. La lectura de
+archivos no añade repositorios genéricos ni otra capa de persistencia.
+
+La [spec 015](../specs/015-consultas-y-legibilidad/spec.md), su
+[plan](../specs/015-consultas-y-legibilidad/plan.md) y sus
+[tareas](../specs/015-consultas-y-legibilidad/tasks.md) registran extracción,
+legibilidad y comprobaciones.
 
 
 ## Protección 006
@@ -172,7 +193,7 @@ La primera creación de una carrera prepara los quince alumnos originales solo s
 
 Cada carrera guarda su propia correspondencia en `race_slots`: cambios del catálogo solo afectan a carreras nuevas. `join` y `release` resuelven contra esas plazas, sin depender del catálogo actual. No se cambian operaciones A/B, credenciales, intentos, vigencia, asistencias ni limpieza de temporales. El catálogo no se enlaza a direcciones de seguridad.
 
-El adaptador traduce los dos motivos a 409/503. El panel muestra el mensaje como texto al crear carreras; 401, fallos de red y clases normales conservan su tratamiento anterior. No hay edición de alumnos, administración multigrupo, API nueva ni dependencia nueva. La separación del SQL antiguo sigue pendiente.
+El adaptador traduce los dos motivos a 409/503. El panel muestra el mensaje como texto al crear carreras; 401, fallos de red y clases normales conservan su tratamiento anterior. No hay edición de alumnos, administración multigrupo, API nueva ni dependencia nueva. El SQL del almacenamiento está separado en los archivos descritos arriba.
 
 ## Flujo de trabajo local
 
@@ -180,6 +201,15 @@ El adaptador traduce los dos motivos a 409/503. El panel muestra el mensaje como
 seis roles ejecutan aclaración, issue, rama, commit, push y PR mediante delegación
 nativa de Codex; no requieren un registro de Cursor. El principal conserva status,
 pull, enlace Development y asignación de revisores.
+
+La aclaración devuelve las preguntas necesarias con una recomendación por pregunta
+y termina. El principal espera las respuestas y conserva el historial completo al
+reanudar o sustituir el subagente. Una tarea definida aprovecha los documentos;
+una issue existente que requiere ediciones prepara o reanuda el draft primero.
+Los mensajes de commit nombran el archivo o función y el cambio concreto.
+
+La actualización se documenta en `specs/014-rondas-y-commits/spec.md`, `plan.md`
+y `tasks.md`; esos tres archivos registran criterios, enfoque y comprobaciones.
 
 Las quince skills documentan sus entradas y comprobaciones. Los siete scripts
 Bash conservan la implementación original del template y trabajan desde la raíz

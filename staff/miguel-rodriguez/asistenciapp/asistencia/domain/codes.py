@@ -12,10 +12,10 @@ import math
 WINDOW_SECONDS = 30
 
 
-def _window(t: float) -> int:
+def _window(instant: float) -> int:
     """Obtiene la ventana de rotación de un instante.
 
-    :param t: segundos Unix.
+    :param instant: segundos Unix.
     :return: número de ventana.
     :rtype: int
 
@@ -23,7 +23,7 @@ def _window(t: float) -> int:
 
         _window(1800000000.0)
     """
-    return int(t // WINDOW_SECONDS)
+    return int(instant // WINDOW_SECONDS)
 
 
 def _code_for_window(secret: bytes, window: int) -> str:
@@ -38,15 +38,19 @@ def _code_for_window(secret: bytes, window: int) -> str:
 
         _code_for_window(b"secreto", 60000000)
     """
-    digest = hmac.new(secret, window.to_bytes(8, "big"), hashlib.sha256).digest()
-    return f"{int.from_bytes(digest[:4], 'big') % 10_000:04d}"
+    window_bytes = window.to_bytes(8, "big")
+    signature = hmac.new(secret, window_bytes, hashlib.sha256)
+    digest = signature.digest()
+    number = int.from_bytes(digest[:4], 'big')
+    code = number % 10_000
+    return f"{code:04d}"
 
 
-def code_for(secret: bytes, t: float) -> str:
+def code_for(secret: bytes, instant: float) -> str:
     """Calcula el código vigente.
 
     :param secret: secreto de la sesión.
-    :param t: segundos Unix.
+    :param instant: segundos Unix.
     :return: código de cuatro dígitos.
     :rtype: str
 
@@ -54,15 +58,16 @@ def code_for(secret: bytes, t: float) -> str:
 
         code_for(b"secreto", 1800000000.0)
     """
-    return _code_for_window(secret, _window(t))
+    window = _window(instant)
+    return _code_for_window(secret, window)
 
 
-def is_valid_code(secret: bytes, code: str, t: float) -> bool:
+def is_valid_code(secret: bytes, code: str, instant: float) -> bool:
     """Acepta el código actual o el inmediatamente anterior.
 
     :param secret: secreto de la sesión.
     :param code: código recibido.
-    :param t: segundos Unix.
+    :param instant: segundos Unix.
     :return: si coincide una ventana aceptada.
     :rtype: bool
 
@@ -71,17 +76,18 @@ def is_valid_code(secret: bytes, code: str, t: float) -> bool:
         is_valid_code(b"secreto", "1234", 1800000000.0)
     """
     code = str(code).strip()
-    current = _window(t)
-    return any(
-        hmac.compare_digest(code, _code_for_window(secret, w))
-        for w in (current, current - 1)
-    )
+    current = _window(instant)
+    for candidate_window in (current, current - 1):
+        candidate_code = _code_for_window(secret, candidate_window)
+        if hmac.compare_digest(code, candidate_code):
+            return True
+    return False
 
 
-def seconds_left(t: float) -> int:
+def seconds_left(instant: float) -> int:
     """Calcula los segundos hasta el siguiente código.
 
-    :param t: segundos Unix.
+    :param instant: segundos Unix.
     :return: segundos restantes redondeados hacia arriba.
     :rtype: int
 
@@ -89,4 +95,4 @@ def seconds_left(t: float) -> int:
 
         seconds_left(1800000000.0)
     """
-    return math.ceil(WINDOW_SECONDS - (t % WINDOW_SECONDS))
+    return math.ceil(WINDOW_SECONDS - (instant % WINDOW_SECONDS))

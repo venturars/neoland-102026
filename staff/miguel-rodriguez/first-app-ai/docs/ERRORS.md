@@ -27,3 +27,10 @@ are no custom error classes or result wrappers.
 
 Jupyter's adapter and runner also display client messages. These describe client
 setup or presentation; they are not additional business-operation errors.
+
+
+## Cliente Nest
+
+Solo src/clients/nest usa clases, métodos, this y decoradores de Nest. Su filtro
+reconoce HttpException y transforma los errores compartidos al contrato HTTP.
+Las reglas anteriores siguen aplicándose al resto del proyecto.

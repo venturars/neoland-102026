@@ -39,3 +39,26 @@ Quien prepara una tarea necesita una plantilla acorde al tipo de cambio para exp
 - **CA-10:** Se retiran las plantillas básicas y sus referencias activas; títulos en inglés de menos de 72 caracteres, cuerpos y comentarios en español, UTF-8 y ramas con prefijo codex/.
 - **CA-11:** El orquestador conserva el enlace Closes #N, las PR nacen en borrador y los revisores solo se asignan cuando Diego los indica; scripts, delegación real y protecciones permanecen vigentes.
 - **CA-12:** Árbol y arquitectura describen las plantillas vigentes; comprobaciones documentales y recorridos Git aislados tienen evidencia real. La aplicación, datos y dependencias quedan fuera del cambio.
+
+## Iteración del 4 de noviembre de 2026 · Issue #855
+
+El workflow debe recoger las reglas vigentes de la plantilla compartida sin sustituir las decisiones locales ni las protecciones de scripts.
+
+- **CA-13:** Antes de crear una issue se verifica que problema, resultado, alcance y comprobación estén claros. Las dudas se razonan sin repetir decisiones resueltas.
+- **CA-14:** Todo cambio de proyecto parte de una issue y de una rama nueva desde `staging` antes de editar, y se entrega en una PR nueva en borrador. El tipo selecciona la pareja de plantillas vigente.
+- **CA-15:** El orquestador enlaza `Closes #N` y Development. Se conserva delegación real, prefijo `codex/`, comprobación de duplicados, alternativa `gh`, autorización anticipada y protecciones de los siete scripts; no se modifica configuración personal.
+
+## Iteración del 4 de noviembre de 2026 · Issue #957
+
+Diego solicita conservar las asociaciones entre nombres habituales de revisores y sus logins de GitHub. Da `molero → moolero12` y `jimena → jiji-mena` como asociaciones iniciales.
+
+- **CA-16:** La asignación de revisores consulta primero una caché persistente por repositorio. Los nombres se normalizan en mayúsculas, tildes y espacios.
+- **CA-17:** Solo se buscan los nombres ausentes; los resultados inequívocos se guardan. Una corrección explícita puede reemplazar un login anterior.
+- **CA-18:** La caché guarda solo nombres y logins públicos. Se excluyen autor y duplicados antes de solicitar revisión. Los errores transitorios de GitHub no borran asociaciones.
+- **CA-19:** Se comprueban persistencia, separación por repositorio, corrección y errores en una copia temporal, con UTF-8 y comentarios breves.
+
+### Ampliación de la caché · 4 de noviembre de 2026
+
+Diego pide recorrer los colaboradores actuales y guardar nombres posibles antes de que el aprendizaje futuro añada más asociaciones. Los alias se toman del nombre público o de aportaciones atribuidas a cada cuenta. Los nombres de pila compartidos por varias personas no se asignan.
+
+- **CA-20:** La caché incluye los logins de los colaboradores actuales y alias personales con identidad comprobada. Los colaboradores sin nombre vinculable conservan solo su login como clave.
