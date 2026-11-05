@@ -81,3 +81,15 @@ def sync_result_json(result: SyncResult) -> dict[str, Any]:
         "meetingStartedAt": result.meeting_started_at,
         "meetingEnded": result.meeting_ended,
     }
+
+
+def online_json(url: str | None) -> dict[str, Any]:
+    """El estado de la clase online: activa con su enlace, o no (spec 007 · plan §4, CA-07, CA-09)."""
+    if url is None:
+        return {"active": False}
+    return {"active": True, "url": url}
+
+
+def app_info_json(version: str, desktop: bool, online_url: str | None) -> dict[str, Any]:
+    """Lo que el panel necesita saber de la app: versión, si es la de escritorio y la clase online (CA-04)."""
+    return {"version": version, "desktop": desktop, "online": online_json(online_url)}

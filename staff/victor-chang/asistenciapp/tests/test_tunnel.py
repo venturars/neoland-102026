@@ -3,9 +3,6 @@
 Las líneas son copias reales de la salida de cloudflared 2026.10.1.
 """
 
-import io
-import os
-import subprocess
 import threading
 import time
 
@@ -53,59 +50,7 @@ def test_ignores_other_lines(line):
     assert find_tunnel_url(line) is None
 
 
-class FakeProcess:
-    """Sustituye a cloudflared: su salida es un texto fijo."""
-
-    def __init__(self, output: str | None, stubborn: bool = False):
-        if output is None:  # un cloudflared que no dice nada ni termina
-            read_end, self._write_end = os.pipe()
-            self.stdout = os.fdopen(read_end)
-        else:
-            self._write_end = None
-            self.stdout = io.StringIO(output)
-        self.terminated = False
-        self.killed = False
-        self.exit_code: int | None = None
-        self._stubborn = stubborn  # no sale con terminate(): hay que matarlo
-
-    def terminate(self) -> None:
-        self.terminated = True
-        if self._write_end is not None:  # como al morir cloudflared: su salida se acaba
-            os.close(self._write_end)
-            self._write_end = None
-        if not self._stubborn:
-            self.exit_code = 0
-
-    def wait(self, timeout: float | None = None) -> int:
-        if self.exit_code is None:
-            raise subprocess.TimeoutExpired("cloudflared", timeout or 0)
-        return self.exit_code
-
-    def kill(self) -> None:
-        self.killed = True
-        self.exit_code = -9
-
-    def poll(self) -> int | None:
-        return self.exit_code
-
-
-@pytest.fixture
-def fake_cloudflared(monkeypatch):
-    """Instala un cloudflared falso y guarda cómo se lanzó cada vez (`install.calls`)."""
-
-    def install(output: str | None, stubborn: bool = False) -> FakeProcess:
-        process = FakeProcess(output, stubborn)
-
-        def popen(args, **kwargs):
-            install.calls.append((args, kwargs))
-            return process
-
-        monkeypatch.setattr(tunnel.shutil, "which", lambda _name: "/usr/bin/cloudflared")
-        monkeypatch.setattr(tunnel.subprocess, "Popen", popen)
-        return process
-
-    install.calls = []
-    return install
+# El cloudflared falso (`fake_cloudflared`) está en conftest.py: lo comparten test_web_online.py y test_app.py.
 
 
 def test_start_tunnel_returns_url(fake_cloudflared):

@@ -85,11 +85,16 @@ Cómo leer esta lista:
     - `auth.py`: `PRIVATE_PREFIXES = ("/api/sessions", "/api/online", "/api/app")`, comprobados en el mismo sitio (X3). Solo la ruta exacta o lo que cuelga de ella: `/api/apps` no queda protegida (test).
     - `WebContext` y `create_app` ganan `tunnel` (por defecto `None`) y `desktop` (por defecto `False`); las llamadas de hoy no cambian.
     - Con el token, las rutas nuevas responden `404` hasta T07.
-- [ ] **T07** 🧪 · `entrypoints/web/online.py` y errores de túnel en `errors.py` (plan §4, §2.12):
+- [x] **T07** 🧪 · `entrypoints/web/online.py` y errores de túnel en `errors.py` (plan §4, §2.12):
   - tests en `test_web_online.py` con un `Tunnel` falso: `GET /api/app` → `version` (= `__version__`), `desktop` y `online.active`; `POST /api/online` → `active` y `url`, y la segunda vez la misma URL; `DELETE /api/online` → `active: false`, también si ya estaba cerrada; `TunnelTimeoutError` y `TunnelExitedError` → `502`, `CloudflaredMissingError` → `422`, con su mensaje en JSON (F3);
   - `attendance/__init__.py` gana `__version__ = "1.0.0"`;
   - deben fallar; luego, el código.
   - *Cubre:* CA-04, CA-07, CA-08.
+  - **Hecha (2026-11-05):** 13 tests nuevos en `test_web_online.py` (fallaron al no existir `__version__`, `OnlineNotAvailableError` ni las rutas). 571 tests en verde; `ruff` y `mypy` sin avisos.
+    - **Cambio sobre el plan:** los tests usan el **`Tunnel` de verdad** con un `cloudflared` falso, no un `Tunnel` falso (T4: solo se simula lo externo). El `cloudflared` falso pasa de `test_tunnel.py` a `conftest.py` (`fake_cloudflared`, `TUNNEL_URL`, `TUNNEL_URL_LINE`) para compartirlo.
+    - `online.py`: `GET /api/app`, `POST /api/online` y `DELETE /api/online`, con la excepción a C2 de plan §7.2 anotada en el módulo. Respuestas por `serializers.py` (`online_json`, `app_info_json`, D7/F2); con clase online, `GET /api/app` incluye también su `url`.
+    - **Añadido al plan:** `OnlineNotAvailableError` (`409`, "La clase online no está disponible en este arranque. Cierra la app y vuelve a abrirla.") si la app se montó sin `tunnel`. Desde T12 `app.py` siempre lo pasa, así que solo puede pasar si algo se monta mal.
+    - Errores de túnel en la tabla única (`422` sin `cloudflared`, `502` tiempo agotado o cerrado); el test de `test_web_errors.py` que recorre la tabla ya comprueba su código y su mensaje en JSON.
 - [ ] **T08** 🧪 · Enlace de alumnos con la URL del túnel en `teacher.py` (plan §2.6):
   - tests en `test_web_teacher.py`: con clase online, `studentUrl` empieza por la URL del túnel; sin ella, por `request.host_url` como hoy;
   - deben fallar; luego, el código.

@@ -14,7 +14,7 @@ from flask.json.provider import DefaultJSONProvider
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from attendance.config import Config
-from attendance.entrypoints.web import auth, context, errors, public, teacher
+from attendance.entrypoints.web import auth, context, errors, online, public, teacher
 from attendance.infra import storage
 from attendance.infra.tunnel import Tunnel
 from attendance.usecases.attendance import FetchParticipants
@@ -59,5 +59,6 @@ def create_app(
     errors.init_app(app)
     app.register_blueprint(public.blueprint)
     app.register_blueprint(teacher.blueprint)
+    app.register_blueprint(online.blueprint)
     app.add_url_rule("/", "index", lambda: app.send_static_file("index.html"))
     return app

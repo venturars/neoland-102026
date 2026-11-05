@@ -29,6 +29,7 @@ from attendance.domain.errors import (
     SessionNotFoundError,
     TitleTooLongError,
 )
+from attendance.infra.tunnel import CloudflaredMissingError, TunnelExitedError, TunnelTimeoutError
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +48,12 @@ class TeacherUnauthorizedError(AppError):
     """Falta el token del profesor o no es el bueno (spec 001 · CA-15, CA-17)."""
 
     MESSAGE = "Acceso no autorizado. Abre el panel con tu enlace secreto de profesor."
+
+
+class OnlineNotAvailableError(AppError):
+    """La app se arrancó sin clase online: no se puede abrir desde el panel (spec 007 · plan §4)."""
+
+    MESSAGE = "La clase online no está disponible en este arranque. Cierra la app y vuelve a abrirla."
 
 
 STATUS: dict[type[AppError], int] = {
@@ -69,6 +76,11 @@ STATUS: dict[type[AppError], int] = {
     MeetLoginNotCompletedError: 422,
     MeetNotConfiguredError: 422,
     MeetServiceError: 502,
+    # Clase online (spec 007 · plan §2.12): 422 lo que se arregla instalando; 502 cloudflared o la red.
+    CloudflaredMissingError: 422,
+    TunnelTimeoutError: 502,
+    TunnelExitedError: 502,
+    OnlineNotAvailableError: 409,
 }
 
 
