@@ -6,9 +6,9 @@ Esta constitución recoge el propósito, el alcance y los principios del proyect
 
 First App es una aplicación educativa de gestión de usuarios. Su objetivo es aprender a separar responsabilidades y seguir el recorrido de los datos mediante código sencillo y comprensible.
 
-Permite crear, buscar, listar, modificar y borrar usuarios, y realizar un recuento mediante clasificación local de nombres. Las operaciones se pueden utilizar desde terminal y Jupyter. El cliente web permite seleccionar un usuario existente y modificar o borrar sus datos.
+Permite crear, buscar, listar, modificar y borrar usuarios, y realizar un recuento mediante clasificación local de nombres. Las operaciones se pueden utilizar desde terminal y Jupyter. El cliente web permite crear un usuario, seleccionar uno existente y modificar o borrar sus datos. El cliente REST permite crear, listar, ver, modificar y borrar usuarios por HTTP. El cliente de escritorio permite crear, listar, ver, modificar y borrar usuarios desde una ventana propia. El cliente de Chrome permite crear, listar, ver, modificar y borrar usuarios desde una extensión, y muestra los errores en inglés. El cliente de VS Code permite crear, listar, ver, modificar y borrar usuarios desde una vista del editor. Cada cliente es independiente de los demás.
 
-La selección de usuario no acredita su identidad. La autenticación, el alta desde la web y la gestión de notas están fuera del alcance actual. Ampliar ese alcance requiere una tarea específica.
+La selección de usuario no acredita su identidad. La autenticación y la gestión de notas están fuera del alcance actual. Ampliar ese alcance requiere una tarea específica.
 
 ## 2. Principios de diseño
 
@@ -20,7 +20,7 @@ La selección de usuario no acredita su identidad. La autenticación, el alta de
 
 ## 3. Decisiones tecnológicas
 
-El proyecto utiliza Node.js y SQLite, con datos almacenados localmente. El cliente web usa HTML, CSS y JavaScript vanilla. La clasificación de nombres utiliza un servicio local de modelos.
+El proyecto utiliza Node.js y SQLite, con datos almacenados localmente. SQLite queda detrás de un servidor de datos local, el único proceso que abre la base; las reglas de negocio y las consultas no dependen de Node, para que cualquier cliente, también el navegador, las use directamente. El cliente web usa HTML, CSS y JavaScript vanilla. El cliente REST usa Express. El cliente de escritorio usa Electron, con HTML, CSS y JavaScript vanilla; la lógica se ejecuta en su proceso principal. El cliente de Chrome es una extensión con HTML, CSS y JavaScript vanilla y una API propia con Fastify, porque una extensión no puede importar archivos de fuera de su carpeta. El cliente de VS Code es una extensión con HTML, CSS y JavaScript vanilla; la lógica se ejecuta en el proceso de la extensión. La clasificación de nombres utiliza un servicio local de modelos.
 
 pnpm es el gestor de paquetes Node del proyecto. Las dependencias nuevas y los cambios de versión requieren una revisión de necesidad y seguridad antes de aprobar el plan. Las versiones, la configuración y el procedimiento de revisión se consultan en las guías técnicas.
 

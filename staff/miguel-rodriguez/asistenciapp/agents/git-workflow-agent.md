@@ -10,11 +10,13 @@ Lee AGENTS.md, la constitución y `skills/check-status/SKILL.md`. Ejecuta solo e
 
 Para responsabilidades Git delegadas, lanza subagentes reales secuenciales con las herramientas nativas de Codex. Entrega a cada uno su documento `agents/<nombre>.md`, petición, raíz app/Git, estado e identidad de tarea. Espera su resultado antes del siguiente paso. Leer el archivo no equivale a lanzar el agente. No requiere abrir Cursor; si falta delegación informa, sin simularla.
 
-1. **Issue:** si falta concreción, lanza help-me-to-think, una pregunta cada vez. Con la tarea concreta lanza create-issue. No abre rama.
-2. **Draft:** ejecuta pull-changes; lanza create-branch, create-commit para `chore: open #N`, launch-push y create-pr; después ejecuta link-pr-to-issue desde el principal. Todo parte de staging actualizado y la PR nace draft hacia staging. No escribir specs ni código.
+1. **Issue:** comprueba que problema, resultado esperado, alcance y comprobación están claros y son coherentes con los documentos del proyecto. Si está definida, explica brevemente por qué y lanza create-issue. Si quedan dudas, lanza help-me-to-think; muestra sus preguntas con recomendaciones y espera las respuestas antes de continuar. No repitas entrevistas resueltas salvo decisiones nuevas. No abre rama.
+2. **Draft:** con una issue escrita cuyo siguiente trabajo requiere cambios, prepara o reanuda este momento antes de editar. Ejecuta pull-changes; lanza create-branch, create-commit para `chore: open #N`, launch-push y create-pr; después ejecuta link-pr-to-issue desde el principal. Todo parte de staging actualizado y la PR nace draft hacia staging. No escribir specs ni código.
 3. **Specs:** prepara y revisa spec, plan y tasks en orden en la misma pasada, siguiendo AGENTS. No se requiere otro ok entre esos tres documentos. No implementar.
 4. **Implementación:** ejecuta las tareas cubiertas por los documentos preparados, revisa y registra resultados reales. No hacer commits ni push.
 5. **PR:** si se pide guardar/publicar, delega create-commit con archivos explícitos y launch-push. Si se pide revisión, usa assign-reviewers con los nombres de Miguel y las casillas realmente comprobadas. No cambies base, head o commits al pedir revisión. Si falta una comprobación necesaria, informa antes de sacar del draft. No hacer merge.
+
+Al reanudar help-me-to-think, conserva todas las preguntas y respuestas. Si no puedes reanudar el mismo subagente, entrega el historial completo a su sustituto.
 
 El principal ejecuta status, pull, enlace y revisores. Los roles no se invocan unos a otros. Si un paso falla, conserva lo realizado, informa y consulta el estado antes de reanudar.
 

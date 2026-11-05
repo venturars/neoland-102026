@@ -34,6 +34,8 @@ This list is for `logic/`. A client throws nothing and prints the message `logic
 - `This browser cannot open the database. Use Chrome or Edge.`, shown by the web client in a browser without the File System Access API.
 - `Access to users.sqlite was denied.`, shown by the web client when the browser refuses permission to the file.
 - `Could not read users.sqlite.` and `Could not save users.sqlite.`, shown by the web client when reading or writing the file fails.
+- `Request body is not valid JSON.`, answered by the HTTP client with `400` when the body of a create or update is not JSON.
+- `Port 3000 is already in use.`, printed by the HTTP client when another program already listens on that port.
 
 ## In code
 

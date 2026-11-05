@@ -20,12 +20,22 @@
 - `src/clients/jupyter/` es el cliente que se abre con el Jupyter de la app.
 - `src/clients/browser/` llama a `src/logic/`.
 - `src/clients/browser/index.html` se abre en el navegador.
-- `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001.
+- `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001 y está documentado con Bruno.
 - `src/clients/electron/` llama a `src/logic/`, abre su ventana y no
   reutiliza `src/clients/browser/`. No sustituye a `src/db/server.js`.
 - `src/clients/chrome/` llama a `src/logic/` desde su API, escucha en
   el puerto 3002 y no repite sus reglas. La extensión solo llama a esa
   API. No sustituye a `src/clients/http/` ni a `src/db/server.js`.
+- El proceso de `src/clients/vscode/` llama a `src/logic/` y la vista
+  solo muestra el resultado. No hay API nueva. No sustituye a
+  `src/clients/http/`, ni a `src/clients/chrome/`, ni a
+  `src/db/server.js`.
+- `src/clients/nest/` Cliente de nest documentado con Swagger UI.
+- `src/clients/node-http/` llama a `src/logic/`, usa `createServer`
+  de `node:http` y escucha en el puerto 3004. Los notebooks viven
+  en `jupyter/` y se abren con `pnpm jupyter-node-http`. Se lanza
+  con `pnpm node-http`. No sustituye a `src/clients/http/`, ni a
+  `src/clients/jupyter/`, ni a `src/db/server.js`.
 - `agents/git-workflow-agent.md` reconoce el momento y llama al
   subagente como un agente aparte.
 - `agents/help-me-to-think.md` hace las preguntas que hagan falta para ayudar a pensar al alumno.

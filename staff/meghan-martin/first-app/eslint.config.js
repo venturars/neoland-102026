@@ -36,7 +36,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/clients/vscode/extension.js"],
+    files: ["src/clients/electron/main.js"],
     languageOptions: {
       globals: {
         URL: "readonly",
@@ -44,12 +44,11 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/clients/vscode/panel.js"],
+    files: ["src/clients/electron/app.js"],
     languageOptions: {
       globals: {
-        acquireVsCodeApi: "readonly",
+        FormData: "readonly",
         document: "readonly",
-        window: "readonly",
       },
     },
   },

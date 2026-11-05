@@ -1,4 +1,3 @@
-/* global console, URL */
 import express from "express";
 import { createUser } from "../../logic/create-user.js";
 import { deleteUser } from "../../logic/delete-user.js";
@@ -185,6 +184,16 @@ app.use((request, response) => {
   response.end();
 });
 
-app.listen(port, hostname, () => {
+const nodeServer = app.listen(port, hostname, () => {
   console.log(ORIGIN);
+});
+
+nodeServer.on("error", (error) => {
+  if (error.code === "EADDRINUSE") {
+    console.error(
+      `Port ${port} is already in use. Stop the other pnpm http or free port ${port}.`,
+    );
+    process.exit(1);
+  }
+  throw error;
 });

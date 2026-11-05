@@ -1,0 +1,1 @@
+DELETE FROM checkins WHERE session_id=? AND id=?

@@ -1,0 +1,1 @@
+INSERT INTO sessions(id,title,secret,opened_at) VALUES (?,?,?,?)

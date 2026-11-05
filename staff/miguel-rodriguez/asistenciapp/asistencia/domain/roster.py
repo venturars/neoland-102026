@@ -24,7 +24,8 @@ def validate_roster(roster: list[dict], available_characters: set[str]) -> None:
             value = row.get(field)
             if not isinstance(value, str) or not value.strip():
                 raise ValueError('Referencia de alumno incompleta.')
-        key, name = row['key'], name_key(row['name'])
+        key = row['key']
+        name = name_key(row['name'])
         position = row.get('display_order')
         if type(position) is not int or position < 0 or position in positions:
             raise ValueError('Orden del catálogo inválido.')
@@ -57,4 +58,9 @@ def resolve_slot(value: object, roster: list[dict] | tuple[dict, ...]) -> dict |
     if not isinstance(value, str):
         return None
     normalized = name_key(value)
-    return next((row for row in roster if row['key'] == value or name_key(row['name']) == normalized), None)
+    for row in roster:
+        if row['key'] == value:
+            return row
+        if name_key(row['name']) == normalized:
+            return row
+    return None

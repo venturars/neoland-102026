@@ -10,7 +10,10 @@
 
 #### Reglas de Invocación Críticas
 
-- **Login**: Cada nombre se resuelve dentro de este repositorio. Primero un colaborador cuyo login o nombre coincida. Si no coincide, el login de quien hace commits aquí con ese nombre o ese correo. No elijas un usuario público que no colabora.
+- **Login**: Confirma `OWNER/REPO` y consulta primero `node staff/diego-molero/first-app/tools/reviewer-cache.js get OWNER/REPO "NOMBRE_1" "NOMBRE_2"` desde la raíz Git. El JSON devuelve un login por nombre o `null` si falta. Para un acierto utiliza el login guardado sin volver a buscarlo. La caché es persistente y específica del repositorio.
+- **Ausencias**: Resuelve solo los nombres con login `null` dentro de este repositorio. Primero un colaborador cuyo login o nombre coincida. Si no coincide, el login de quien hace commits aquí con ese nombre o ese correo. No elijas un usuario público que no colabora. Guarda cada resultado inequívoco con `node staff/diego-molero/first-app/tools/reviewer-cache.js set OWNER/REPO "NOMBRE" LOGIN` antes de pedir revisión. Si hay varias personas posibles, pregunta cuál es; no guardes una suposición.
+- **Correcciones**: Si la persona indica que una asociación cambió, usa `set OWNER/REPO "NOMBRE" LOGIN --replace`. Usa `remove OWNER/REPO "NOMBRE"` si pide olvidar la asociación. Un error transitorio de GitHub no demuestra que el login sea incorrecto: conserva la caché y comunica el fallo. Si GitHub confirma que el login guardado no puede revisar, comprueba la identidad con la persona y corrige la asociación explícitamente antes de reintentar.
+- **Preparación**: Deduplica los logins resueltos y quita al autor antes de enviarlos a GitHub. La caché guarda nombres y logins, nunca credenciales.
 - **Si no hay login de colaborador**: Dilo y no pidas la revisión de ese nombre.
 - **Procesamiento de respuestas**: Quita al autor de la lista si aparece. Deja la pull request lista para revisión. Si el MCP falla, comunica el error y no marques la revisión como pedida.
 

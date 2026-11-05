@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "First app users",
+  "version": "1.0.0",
+  "description": "Crea, lista, consulta, cambia y borra los usuarios de first-app.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Usuarios"
+  },
+  "host_permissions": ["http://127.0.0.1:3002/*"]
+}

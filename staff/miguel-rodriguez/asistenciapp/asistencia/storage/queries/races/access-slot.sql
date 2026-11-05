@@ -1,0 +1,1 @@
+SELECT s.*,a.credential_hash FROM race_slots s JOIN race_access a USING(session_id,roster_key) WHERE a.session_id=? AND a.credential_hash=?

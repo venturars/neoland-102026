@@ -2,7 +2,10 @@
 
 ```
 first-app/
+  README.md
   eslint.config.js
+  babel.config.json
+  .gitignore              excluye dist/ local
   src/
     db/server.js
     db/users.sqlite         local, fuera de Git
@@ -24,14 +27,33 @@ first-app/
       styles.css
     clients/http/
       app.js
+    clients/nest/
+      main.js
+      app-module.js
+      users-controller.js
+      users-service.js
+      http-exception-filter.js
     clients/electron/
       main.js
       index.html
       app.js
       styles.css
+    clients/chrome/
+      server.js
+      manifest.json
+      index.html
+      popup.js
+      styles.css
+    clients/vscode/
+      package.json
+      extension.js
+      index.html
+      panel.js
+      styles.css
   agents/                 orquestador y subagentes del flujo de Git
   skills/                 instrucciones reutilizables por momento
-  tools/                  siete scripts Bash originales del flujo de Git
+  tools/                  ocho scripts Bash originales del flujo de Git
+    create-pr-base-staging.sh
   templates/
     issues/
       {feat,fix,docs,refactor,test,chore}_issue.md

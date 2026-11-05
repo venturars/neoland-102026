@@ -17,7 +17,7 @@ Each topic has its own guide. A guide wins on its topic.
 ## Runtime
 
 - Node.js 24+, ES modules (`"type": "module"` in `package.json`).
-- Node built-ins: `node:sqlite`, `node:fs`, `node:url`.
+- Node built-ins: `node:sqlite`, `node:fs`, `node:url`, and `node:http` for the HTTP client.
 - npm dependencies: `openai`, to call the local AI (Ollama); `cli-table3` and `@colors/colors`, to draw the tables of the Jupyter client; `sql.js`, SQLite for the browser, so the web client opens `db/users.sqlite` without an API. Exact versions. Packages are installed with pnpm (`pnpm install`); `node_modules/` is git-ignored, `pnpm-lock.yaml` is committed.
 - Python 3 for the Jupyter client: an app-local `.venv` with `notebook` at an exact version, created by `scripts/jupyter.sh`, run with `pnpm jupyter`, on macOS, Linux and Windows (Git Bash). The Jupyter installed on the computer is not used.
 - Python 3 also starts the web client: `scripts/web.sh`, run with `pnpm web`, serves the app's files on `127.0.0.1` with `http.server`, from the Python on the computer.

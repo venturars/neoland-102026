@@ -25,11 +25,10 @@ first-app/
         styles.css
       rest/
         server.js
-      vscode/
-        package.json
-        extension.js
+      electron/
+        main.js
         index.html
-        panel.js
+        app.js
         styles.css
     users.js
   logic/

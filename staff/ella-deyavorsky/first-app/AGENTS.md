@@ -8,7 +8,7 @@ Git work follows `agents/git-workflow-agent.md` in this folder. The stops are th
 
 This is the first app of the AI engineering course for junior students. It is a good app to build with spec-driven development (SDD): write the rules first, then write the code that follows them.
 
-The app is JavaScript, run by Node.js. `package.json` sets `"type": "module"`, so files use ESM: `import` and `export`. The only web framework is Express, used only by the HTTP client in `src/clients/api/`. There is no TypeScript.
+The app is JavaScript, run by Node.js. `package.json` sets `"type": "module"`, so files use ESM: `import` and `export`. The only web frameworks are Express, used only by the HTTP client in `src/clients/api/`, Fastify, used only by the program of the extension in `src/clients/chrome/`, and Nest, used only by the Nest client in `src/clients/nest/`, which runs on Express through `@nestjs/platform-express`. This client is the only code with a build step. There is no TypeScript.
 
 The database is SQLite through Node's built-in `node:sqlite`. `src/db/connection.js` opens `src/db/users.sqlite` with `DatabaseSync`, and only the database program `src/db/server.js` uses it. Everything else asks that program. No database package is installed.
 
@@ -47,8 +47,8 @@ The active spec is the approved description of the feature you are building now.
 ## Commands
 
 - Install dependencies with `pnpm install`.
-- `pnpm format` runs Prettier on the `.js` files of `src/db/`, `src/queries/`, `src/logic/`, `src/clients/web/`, `src/clients/api/` and `src/clients/electron/`. The format is the standard one, with no config of its own. `pnpm lint` runs ESLint.
-- `pnpm start` runs the database program. Every client needs it running. `pnpm browser` opens the web client at `http://127.0.0.1:3000` (the program must be running). `pnpm api` starts the HTTP client on `http://127.0.0.1:3001` (the program must be running). `pnpm jupyter` starts the notebooks. `pnpm electron` opens the desktop window (the program must be running first, with `pnpm start`). Do not add another way to run the whole app unless the spec asks for it.
+- `pnpm format` runs Prettier on the `.js` files of `src/db/`, `src/queries/`, `src/logic/`, `src/clients/web/`, `src/clients/api/`, `src/clients/chrome/`, `src/clients/nest/`, `src/clients/electron/` and `src/clients/vscode/`. The format is the standard one, with no config of its own. `pnpm lint` runs ESLint.
+- `pnpm start` runs the database program. Every client needs it running. `pnpm browser` opens the web client at `http://127.0.0.1:3000` (the program must be running). `pnpm api` starts the HTTP client on `http://127.0.0.1:3001` (the program must be running). `pnpm chrome` starts the program of the Chrome extension on `http://127.0.0.1:3002` (the database program must be running). `pnpm nest` builds `src/` with Babel into `dist/` and starts the Nest client on `http://127.0.0.1:3003` (the database program must be running). The page of its routes is at `http://127.0.0.1:3003/docs`. `pnpm jupyter` starts the notebooks. `pnpm electron` opens the desktop window (the program must be running first, with `pnpm start`). `pnpm vscode` opens a VS Code Extension Development Host with the extension of the users (the program must be running first, with `pnpm start`, and the `code` command must be on the `PATH`). Do not add another way to run the whole app unless the spec asks for it.
 - There are no tests yet. `pnpm test` only prints that no test is specified, then stops.
 
 ## Packages
@@ -65,6 +65,8 @@ A datum is written as "not found" only after its tool was called. If the tool ca
 ## Style
 
 The conventions and the shape of each line are in `docs/STYLE.md`. Follow that file.
+
+`src/clients/nest/` departs from `docs/STYLE.md` and `docs/ERRORS.md`: it uses the conventions of Nest (file names, a build step, classes, methods, `this`, decorators and error classes). It uses the same sentences of `docs/ERRORS.md` and adds none. The rest of the project follows both guides.
 
 Before finishing a change in `logic/`, check it against the inputs in `docs/CONSTITUTIONS.md` and the errors in `docs/ERRORS.md`. The query names and the `.sql` file names are in `docs/DATABASE.md`. Do not invent a second contract, and do not keep a second list of query names in this guide.
 

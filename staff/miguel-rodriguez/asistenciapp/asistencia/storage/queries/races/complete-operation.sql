@@ -1,0 +1,1 @@
+UPDATE race_operations SET state='completed',result_kind=?,result_status=?,checkin_id=? WHERE session_id=? AND roster_key=? AND operation_id=? AND state='reserved'

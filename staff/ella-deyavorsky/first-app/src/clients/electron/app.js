@@ -2,6 +2,7 @@
 import { createUser } from "../../logic/create-user.js";
 import { deleteUser } from "../../logic/delete-user.js";
 import { findUserById } from "../../logic/find-user-by-id.js";
+import { listGmailUsers } from "../../logic/list-gmail-users.js";
 import { listUsers } from "../../logic/list-users.js";
 import { updateUser } from "../../logic/update-user.js";
 
@@ -9,6 +10,9 @@ const SCREEN_IDS = ["screen-list", "screen-detail"];
 
 // The user shown in the detail (null when there is none)
 let currentUser = null;
+
+// true: the list shows only the Gmail users
+let onlyGmail = false;
 
 // Show one screen and hide the other
 function show(screenId) {
@@ -24,7 +28,7 @@ async function renderList() {
   list.innerHTML = "";
   let users = [];
   try {
-    users = await listUsers();
+    users = onlyGmail ? await listGmailUsers() : await listUsers();
   } catch (error) {
     listError.textContent = error.message;
   }
@@ -115,6 +119,14 @@ document.getElementById("create-form").addEventListener("submit", create);
 document.getElementById("find-form").addEventListener("submit", find);
 document.getElementById("edit-form").addEventListener("submit", save);
 document.getElementById("btn-delete").addEventListener("click", remove);
+document.getElementById("btn-only-gmail").addEventListener("click", () => {
+  onlyGmail = true;
+  renderList();
+});
+document.getElementById("btn-show-all").addEventListener("click", () => {
+  onlyGmail = false;
+  renderList();
+});
 document.getElementById("btn-back").addEventListener("click", () => {
   document.getElementById("list-error").textContent = "";
   renderList();

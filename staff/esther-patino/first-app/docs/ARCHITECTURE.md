@@ -107,8 +107,25 @@
   - `src/clients/jupyter/remove-user.ipynb` valida borrar un usuario.
   - `src/clients/jupyter/users-gender-count.ipynb` valida el recuento por sexo del nombre.
 
-- `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001 y no repite sus reglas. No sustituye a `src/db/server.js`.
+- `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001.
   - `src/clients/http/app.js` crea, lista, ve, modifica y borra usuarios. Se arranca con `pnpm http`.
+  - `src/clients/http/bruno/` son las peticiones `.bru` contra `http://127.0.0.1:3001`. Los comandos están en `docs/style.md`.
+
+- `src/clients/nest/` llama a `src/logic/`, escucha en el puerto 3003 y no repite sus reglas. Las clases quedan en el módulo y en el controlador. `pnpm nest` lo compila con Babel a `src/clients/nest-run` y arranca ese `main.js`. También expone Swagger UI en `/api` del mismo puerto. No sustituye a `src/db/server.js` ni al cliente HTTP.
+
+- `src/clients/chrome/` llama a `src/logic/`, escucha en el puerto 3002.
+  - `src/clients/chrome/server.js` crea, lista, ve, modifica y borra usuarios. Se arranca con `pnpm chrome`.
+  - `src/clients/chrome/manifest.json` es el manifiesto de la extensión.
+  - `src/clients/chrome/index.html` es el popup.
+  - `src/clients/chrome/styles.css` es la hoja del popup.
+  - `src/clients/chrome/popup.js` pide las rutas de la API con `fetch` y no importa `src/logic/`.
+
+- `src/clients/vscode/` abre su panel en una pestaña. `extension.js` llama a `src/logic/` y no repite sus reglas. La página no importa `src/logic/`.
+  - `src/clients/vscode/extension.js` crea, lista, busca, ve, modifica y borra usuarios. Se abre con el comando «Abrir usuarios».
+  - `src/clients/vscode/package.json` es el manifiesto de la extensión.
+  - `src/clients/vscode/index.html` es el panel.
+  - `src/clients/vscode/styles.css` es la hoja del panel.
+  - `src/clients/vscode/app.js` pide las acciones y no importa `src/logic/` ni `vscode`.
 
 - `src/clients/web/` son las tres pantallas del navegador. Se abren desde el disco con `pnpm open`. Llaman a `src/logic/` y no piden `/api/users`.
   - `src/clients/web/index.html` define la lista, el menú y la modificación.

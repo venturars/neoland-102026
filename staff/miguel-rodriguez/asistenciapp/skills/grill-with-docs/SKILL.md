@@ -5,7 +5,7 @@
 
 #### Cómo entrevistar
 
-1. Haz una pregunta cada vez. Devuelve la pregunta al principal y termina esta invocación. El principal espera la respuesta de Miguel antes de volver a invocarte.
+1. Haz las preguntas necesarias, cada una con una respuesta recomendada, y devuélvelas al principal. Termina esta invocación y espera a que te llamen con las respuestas y el historial completo.
 2. Si la respuesta está en el repositorio, léelo y no preguntes eso.
 3. Cuando un término quede claro, dilo con las palabras del proyecto.
 4. Devuelve qué hay que hacer, cómo se comprueba y qué decisiones no están en el proyecto. No escribas ficheros de glosario ni de decisión. El resumen único lo cierra `help-me-to-think` cuando ya no quede otra entrevista.

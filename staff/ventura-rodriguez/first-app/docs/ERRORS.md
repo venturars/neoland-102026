@@ -2,6 +2,8 @@
 
 Un fallo se señala con `throw new Error("...")`. El mensaje está en inglés y es siempre uno de los de esta lista. No hay códigos ni clases de error propias.
 
+`src/clients/nest/` traduce los mensajes de esta lista con una clase filtro. No añade mensajes ni códigos.
+
 En los pasos 1 y 2, si la entrada o una regla de negocio falla:
 
 - `Name is empty`

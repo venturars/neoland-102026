@@ -7,7 +7,7 @@ export async function countUsersByGender() {
   let rows;
 
   try {
-    rows = listUserRows();
+    rows = await listUserRows();
   } catch {
     throw new Error("Unable to list users");
   }

@@ -23,6 +23,7 @@ const QUERIES = {
   "find-by-id": "get",
   "find-by-email": "get",
   "find-all": "all",
+  "find-gmail": "all",
   update: "get",
   remove: "run",
 };

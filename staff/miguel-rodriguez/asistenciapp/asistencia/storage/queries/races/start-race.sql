@@ -1,0 +1,1 @@
+UPDATE races SET starts_at=?,join_secret=NULL WHERE session_id=?

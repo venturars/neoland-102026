@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; style-src {{cspSource}}; script-src {{cspSource}};"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Usuarios</title>
+    <link rel="stylesheet" href="{{stylesUri}}" />
+  </head>
+  <body>
+    <p id="message" class="message" role="status" hidden></p>
+
+    <section id="list-view">
+      <p id="loading" class="muted">Cargando usuarios...</p>
+      <p id="empty-list" class="muted" hidden>Todavía no hay usuarios.</p>
+      <ul id="user-list" class="user-list"></ul>
+
+      <h2>Nuevo usuario</h2>
+      <form id="create-form" novalidate>
+        <label>
+          Nombre
+          <input id="create-name" type="text" autocomplete="off" />
+        </label>
+        <label>
+          Email
+          <input id="create-email" type="text" autocomplete="off" />
+        </label>
+        <div class="actions">
+          <button type="submit">Crear usuario</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="detail-view" hidden>
+      <h2 id="detail-title"></h2>
+      <dl class="facts">
+        <dt>Id</dt>
+        <dd id="detail-id"></dd>
+        <dt>Email</dt>
+        <dd id="detail-email"></dd>
+        <dt>Creado</dt>
+        <dd id="detail-created"></dd>
+        <dt>Modificado</dt>
+        <dd id="detail-updated"></dd>
+      </dl>
+
+      <form id="edit-form" novalidate>
+        <label>
+          Nombre
+          <input id="edit-name" type="text" autocomplete="off" />
+        </label>
+        <label>
+          Email
+          <input id="edit-email" type="text" autocomplete="off" />
+        </label>
+        <div class="actions">
+          <button type="submit">Guardar cambios</button>
+          <button id="back" type="button" class="button-quiet">Volver</button>
+        </div>
+      </form>
+
+      <div class="actions">
+        <button id="delete-user" type="button" class="button-danger">
+          Borrar usuario
+        </button>
+      </div>
+    </section>
+
+    <script src="{{scriptUri}}"></script>
+  </body>
+</html>
