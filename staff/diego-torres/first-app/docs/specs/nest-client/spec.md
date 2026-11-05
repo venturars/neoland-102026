@@ -1,6 +1,6 @@
 Issue: #1040
 
-**Nota:** la página propia en `/docs` y el `Origin` de la propia API cambian en `docs/specs/nest-swagger-docs/`.
+**Nota:** dos puntos de este documento ya no están en vigor: que no hay página propia y que se rechaza todo `Origin`. Lo vigente está en `docs/specs/nest-swagger-docs/`.
 
 # Cliente de usuarios con una API Nest
 

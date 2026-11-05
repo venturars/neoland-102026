@@ -59,4 +59,4 @@ Cambia una regla de la spec `nest-client`: antes, ninguna página web podía usa
 
 ## Fuera de esto
 
-La contraseña, el login, los permisos, abrir la API a otros ordenadores, una operación nueva, una regla nueva, un mensaje de error nuevo y cambiar lo que ya hacen las reglas, las consultas, la base y los demás clientes.
+La contraseña, el login, los permisos, abrir la API a otros ordenadores, una operación nueva, una regla de usuarios nueva, un mensaje de error nuevo y cambiar lo que ya hacen las reglas de usuarios, las consultas, la base y los demás clientes.

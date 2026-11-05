@@ -2,7 +2,7 @@
 
 Issue: #1040
 
-**Nota:** la página propia en `/docs` y el `Origin` de la propia API cambian en `docs/specs/nest-swagger-docs/`.
+**Nota:** dos puntos de este documento ya no están en vigor: que no hay página propia y que se rechaza todo `Origin`. Lo vigente está en `docs/specs/nest-swagger-docs/`.
 
 Funcionalidad nueva, solo en `src/clients/nest/`. No hay firma nueva en `src/logic/`, ni SQL nuevo, ni mensaje nuevo. `src/db/server.js`, `src/queries/` y los demás clientes no cambian.
 
