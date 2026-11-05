@@ -5,7 +5,9 @@ first-app/
   README.md
   eslint.config.js
   babel.config.json
-  .gitignore              excluye dist/ local
+  .gitignore              excluye dist/ y .venv/ locales
+  scripts/
+    jupyter-node-http.sh
   src/
     db/server.js
     db/users.sqlite         local, fuera de Git
@@ -27,6 +29,14 @@ first-app/
       styles.css
     clients/http/
       app.js
+    clients/node-http/
+      app.js
+      jupyter/
+        create-user.ipynb
+        list-users.ipynb
+        find-user-by-id.ipynb
+        update-user.ipynb
+        delete-user.ipynb
     clients/nest/
       main.js
       app-module.js

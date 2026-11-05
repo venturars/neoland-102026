@@ -48,6 +48,16 @@ Los contratos de funciones siguen [STYLE.md](STYLE.md); las salidas y los errore
 `eslint.config.js` configura la revisión del JavaScript con las reglas
 recomendadas de ESLint y excluye `.venv` y `node_modules`.
 
+`src/clients/node-http/app.js` usa `createServer` de `node:http` en
+`http://127.0.0.1:3004` y delega las cinco operaciones de usuarios en
+`src/logic/`. Se inicia con `pnpm node-http`; conserva el servidor SQL en
+3000 y los contratos existentes. Sus cinco notebooks Python ejecutan Node
+con `fetch`: notebook → HTTP 3004 → logic → queries → SQL actual.
+`pnpm jupyter-node-http` ejecuta `scripts/jupyter-node-http.sh`, reutiliza
+o crea `.venv` local y abre esa carpeta con Notebook 7.6.3. No incorpora
+dependencias Node ni sustituye el arranque documentado de JupyterLab o
+los nueve notebooks de `src/clients/jupyter/`. Uso en [JUPYTER.md](JUPYTER.md).
+
 ## Automatización del trabajo
 
 La automatización de Git vive en agents/, skills/, tools/, templates/ y MCPS/, separada de src/ y de los datos de usuarios. Los ocho scripts Bash de tools/ conservan el código original de la plantilla; no se mantienen herramientas ni ensayos PowerShell propios. `tools/create-pr-base-staging.sh` crea la PR con base staging, en draft y asignada al usuario autenticado en una sola invocación de gh, recibiendo el cuerpo mediante un archivo temporal.
