@@ -48,6 +48,14 @@ first-app/
 │   │   │   ├── find-user-by-id.txt
 │   │   │   ├── list-users.txt
 │   │   │   └── update-user.txt
+│   │   ├── vscode/
+│   │   │   ├── extension.js
+│   │   │   ├── index.html
+│   │   │   ├── package.json
+│   │   │   ├── styles.css
+│   │   │   ├── user-actions.js
+│   │   │   ├── users.svg
+│   │   │   └── view.js
 │   │   └── web/
 │   │       ├── app.js
 │   │       ├── index.html
@@ -211,7 +219,11 @@ first-app/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
-│   │   └── vanilla-user-client/
+│   │   ├── vanilla-user-client/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   └── vscode-extension-client/
 │   │       ├── plan.md
 │   │       ├── spec.md
 │   │       └── tasks.md
@@ -227,5 +239,6 @@ first-app/
     ├── database-server.test.js
     ├── electron-client.test.js
     ├── http-client.test.js
-    └── shared-database.test.js
+    ├── shared-database.test.js
+    └── vscode-client.test.js
 ```

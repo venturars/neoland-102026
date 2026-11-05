@@ -1,0 +1,31 @@
+{
+  "name": "first-app-users",
+  "displayName": "Usuarios",
+  "publisher": "first-app",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./extension.js",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "firstAppUsers",
+          "title": "Usuarios",
+          "icon": "users.svg"
+        }
+      ]
+    },
+    "views": {
+      "firstAppUsers": [
+        {
+          "type": "webview",
+          "id": "firstAppUsers.view",
+          "name": "Usuarios"
+        }
+      ]
+    }
+  }
+}

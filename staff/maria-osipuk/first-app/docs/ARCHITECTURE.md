@@ -20,6 +20,8 @@ Los cuadernos se abren con `./scripts/jupyter.sh` desde `first-app`. Usan el Jup
 
 `src/clients/chrome/` es el cliente de extensión de Chrome, con dos partes. `api.js` es un proceso Node con Fastify que conecta crear, listar, ver, modificar y borrar con las funciones de `src/logic/`. Traduce la petición y la respuesta; no contiene validación de negocio ni SQL. Se arranca con `pnpm run chrome`, escucha en `127.0.0.1:3002` y necesita el servidor de datos arrancado. La extensión, con `manifest.json`, `popup.html`, `popup.js` y `styles.css`, tiene las pantallas de lista y detalle y solo habla con esa API. Existe porque una extensión no puede importar archivos de fuera de su carpeta. La API no envía cabeceras CORS, así que Chrome bloquea a las páginas web; la extensión pasa porque `host_permissions` declara esa dirección.
 
+`src/clients/vscode/` es el cliente de extensión de VS Code, con dos partes que se hablan por mensajes. El proceso de la extensión corre en el host de Node del editor: `user-actions.js` llama a `src/logic/` y `extension.js` registra la vista, recibe los mensajes y confirma el borrado con un diálogo modal. La vista es un webview con `index.html`, `view.js` y `styles.css`: tiene las pantallas de lista y detalle, traduce los errores y no importa `src/logic/`. No abre ningún puerto, porque el proceso puede importar archivos de fuera de su carpeta. Se abre con `pnpm run vscode`, en una ventana de desarrollo, y necesita el servidor de datos arrancado.
+
 `src/logic/` es el núcleo de la aplicación. Contiene las funcionalidades para crear, buscar, actualizar, borrar y listar usuarios, y para contarlos según el género del nombre. Aplica las reglas de negocio y decide qué resultado recibe el cliente.
 
 `src/logic/` no calcula `createdAt` ni `updatedAt` y no los envía a las consultas. Esas fechas las escribe SQLite.
@@ -34,7 +36,7 @@ Las funciones de `src/logic/` son `async` y no importan módulos `node:*`, para 
 
 `src/db/users.sqlite` es la base de la aplicación. Si el servidor de datos arranca con `FIRST_APP_DATABASE_FILE`, abre esa ruta; todos los clientes usan entonces ese archivo.
 
-Todos los clientes (terminal, Jupyter, web, REST, escritorio y la API de Chrome) llaman a la lógica; la lógica llama a las consultas; las consultas piden al servidor de datos que ejecute el SQL. Ningún cliente importa archivos de otro. El cuaderno de preparar la tabla llama a `createUsersTable`, igual que su cliente de terminal.
+Todos los clientes (terminal, Jupyter, web, REST, escritorio, la API de Chrome y el proceso de VS Code) llaman a la lógica; la lógica llama a las consultas; las consultas piden al servidor de datos que ejecute el SQL. Ningún cliente importa archivos de otro. El cuaderno de preparar la tabla llama a `createUsersTable`, igual que su cliente de terminal.
 
 ## Flujo de git
 
@@ -55,9 +57,9 @@ Las skills que lanzan un script usan los de `tools/`, siempre desde la raíz del
 - `AGENTS.md` guarda el proceso SDD, los comandos y el cierre de una tarea. Enlaza a las guías con las reglas del código y al flujo de git de `agents/git-workflow-agent.md`.
 - `.gitignore` deja fuera `node_modules/`, `.env`, los archivos de SQLite, los checkpoints de Jupyter y el log del cliente Jupyter.
 - `.prettierignore` evita que Prettier entre en `.venv/`, `node_modules/` y el archivo de bloqueo generado por pnpm.
-- `package.json` declara los módulos ESM, `packageManager` con `pnpm@10.34.7`, los comandos `pnpm start` (servidor de datos), `pnpm run web`, `pnpm run http`, `pnpm run chrome`, `pnpm run electron`, `pnpm test` (de una prueba en una), `pnpm format` y `pnpm lint`, y el control que impide instalar con otro gestor.
+- `package.json` declara los módulos ESM, `packageManager` con `pnpm@10.34.7`, los comandos `pnpm start` (servidor de datos), `pnpm run web`, `pnpm run http`, `pnpm run chrome`, `pnpm run electron`, `pnpm run vscode`, `pnpm test` (de una prueba en una), `pnpm format` y `pnpm lint`, y el control que impide instalar con otro gestor.
 - `pnpm-lock.yaml` fija las versiones de las dependencias de la aplicación y de las herramientas de desarrollo.
-- `eslint.config.js` limita ESLint a los archivos JavaScript, ignora el entorno y las dependencias, activa las reglas `no-undef` y `no-unused-vars`, y limita `fetch` a las consultas, las pruebas y `src/clients/chrome/popup.js`, y los globals del navegador a `src/clients/web/`, a la página de `src/clients/electron/` y a ese `popup.js`. `preload.cjs` se comprueba como CommonJS.
+- `eslint.config.js` limita ESLint a los archivos JavaScript, ignora el entorno y las dependencias, activa las reglas `no-undef` y `no-unused-vars`, y limita `fetch` a las consultas, las pruebas y `src/clients/chrome/popup.js`, y los globals del navegador a `src/clients/web/`, a la página de `src/clients/electron/`, a ese `popup.js` y a `src/clients/vscode/view.js`. `preload.cjs` se comprueba como CommonJS.
 - `scripts/jupyter.sh` entra en la raíz de `first-app` y abre los cuadernos con el Jupyter del `.venv`.
 - `src/db/server.js` es el servidor de datos. Exporta `openDatabase()` y `createDatabaseServer(database)` para las pruebas y solo escucha si se ejecuta directamente. Acepta `FIRST_APP_DATABASE_FILE`.
 - `src/db/users.sqlite` es la base de la aplicación cuando no se configura otra ruta.
@@ -121,6 +123,14 @@ Las skills que lanzan un script usan los de `tools/`, siempre desde la raíz del
 - `src/clients/chrome/popup.js` gestiona las pantallas, llama a la API con `fetch` y muestra los errores en inglés.
 - `src/clients/chrome/styles.css` define la paleta y el ancho de la ventana de la extensión.
 - `tests/chrome-client.test.js` comprueba la API con una base temporal, también con el servidor de datos parado, y los permisos de `manifest.json`.
+- `src/clients/vscode/package.json` es el manifiesto de la extensión: su icono en la barra de actividad y su vista. No es un paquete que instale pnpm.
+- `src/clients/vscode/extension.js` registra la vista, prepara su HTML, responde sus mensajes y confirma el borrado.
+- `src/clients/vscode/user-actions.js` llama a `src/logic/` y devuelve `{ data }` o `{ error }`. No importa `vscode`, para poder probarse con Node.
+- `src/clients/vscode/index.html` define la lista, el alta, el detalle y la política de seguridad de la vista.
+- `src/clients/vscode/view.js` gestiona las pantallas, pide con `call` y traduce los errores.
+- `src/clients/vscode/styles.css` da aspecto a la vista con los colores del tema del editor.
+- `src/clients/vscode/users.svg` es el icono de la barra de actividad.
+- `tests/vscode-client.test.js` comprueba `user-actions.js` con una base temporal, también con el servidor de datos parado.
 - `tests/electron-client.test.js` comprueba `user-actions.js` con una base temporal, también con el servidor de datos parado.
 - `tests/database-server.test.js` comprueba el servidor de datos con una base temporal.
 - `tests/shared-database.test.js` comprueba que la lógica que usa la web y otro proceso Node, como un ejemplo de terminal, ven la misma base, y que sin servidor de datos se recibe el error de la operación.
