@@ -1,6 +1,6 @@
 # First App
 
-Aplicación educativa de gestión de usuarios con Node.js y SQLite. Tiene clientes de terminal, Jupyter, navegador, REST, escritorio y extensión de Chrome. El navegador usa HTML, CSS y JavaScript vanilla, sin frameworks.
+Aplicación educativa de gestión de usuarios con Node.js y SQLite. Tiene clientes de terminal, Jupyter, navegador, REST, escritorio y extensiones de Chrome y VS Code. El navegador usa HTML, CSS y JavaScript vanilla, sin frameworks.
 
 ## Arrancar
 
@@ -22,6 +22,7 @@ Con el servidor de datos arrancado, cada cliente se usa por separado:
 | REST       | `pnpm run http` arranca el cliente en `http://127.0.0.1:3001`.        |
 | Escritorio | `pnpm run electron` abre la aplicación en su propia ventana.          |
 | Chrome     | `pnpm run chrome` arranca su API y la extensión se abre desde Chrome. |
+| VS Code    | `pnpm run vscode` abre una ventana de desarrollo con la extensión.    |
 
 `pnpm run web` abre Chrome con un perfil temporal y `--allow-file-access-from-files`, porque la página se abre desde `file://` e importa módulos JavaScript de `src/logic/`. Chrome bloquea esos imports sin esa opción.
 
@@ -56,6 +57,12 @@ Los cambios guardados se conservan al reiniciar. Recargar la página vuelve a la
 
 Eliminar pide confirmación con un diálogo del sistema. Cerrar la ventana termina la aplicación, también en macOS.
 
+## Abrir la extensión de VS Code
+
+La extensión solo necesita `pnpm start`. `pnpm run vscode` usa el comando `code`, que tiene que estar instalado, y abre una ventana de desarrollo con la extensión cargada. No se instala nada en el editor.
+
+En esa ventana, el icono **Usuarios** de la barra de actividad abre la vista. Los textos y los errores se ven en español. Al ocultar la vista, lo escrito sin guardar se pierde y se vuelve a la lista.
+
 ## Cargar la extensión de Chrome
 
 La extensión necesita dos procesos: `pnpm start` y `pnpm run chrome`, que arranca su API en `http://127.0.0.1:3002`. El cliente REST no hace falta.
@@ -84,6 +91,7 @@ Los errores se ven en inglés, sin traducir. Chrome cierra la ventana al pulsar 
 - `src/clients/http/app.js`: el cliente REST con Express. Importa `src/logic/` directamente.
 - `src/clients/electron/`: la aplicación de escritorio. Su proceso principal llama a `src/logic/`, y su página le pide las acciones mediante `preload.cjs`.
 - `src/clients/chrome/`: la extensión y su API con Fastify. La API importa `src/logic/`, y la extensión le habla con `fetch`.
+- `src/clients/vscode/`: la extensión de VS Code. Su proceso llama a `src/logic/`, y su vista le pide las acciones con mensajes.
 
 El recorrido es cliente → lógica → consultas → servidor de datos → SQLite. Ningún cliente abre la base directamente. Las guías completas están en `docs/CONSTITUTION.md` y sus enlaces.
 
