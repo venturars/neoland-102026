@@ -31,6 +31,11 @@
   `src/clients/http/`, ni a `src/clients/chrome/`, ni a
   `src/db/server.js`.
 - `src/clients/nest/` Cliente de nest documentado con Swagger UI.
+- `src/clients/node-http/` llama a `src/logic/`, usa `createServer`
+  de `node:http` y escucha en el puerto 3004. Los notebooks viven
+  en `jupyter/` y se abren con `pnpm jupyter-node-http`. Se lanza
+  con `pnpm node-http`. No sustituye a `src/clients/http/`, ni a
+  `src/clients/jupyter/`, ni a `src/db/server.js`.
 - `agents/git-workflow-agent.md` reconoce el momento y llama al
   subagente como un agente aparte.
 - `agents/help-me-to-think.md` hace las preguntas que hagan falta para ayudar a pensar al alumno.
