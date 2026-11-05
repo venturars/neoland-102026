@@ -110,72 +110,72 @@ Note: on 2026-11-04 the database program on 3000, the HTTP client on 3001 and th
 
 ## Task 7 — Update the docs for the change
 
-- [ ] In `AGENTS.md`, add "This client is the only code with a build step." after the framework sentence of "Project", before "There is no TypeScript." Result: the line says the Nest client has a build step.
-- [ ] In `AGENTS.md`, replace the description of `pnpm nest` in "Commands" with: "`pnpm nest` builds `src/` with Babel into `dist/` and starts the Nest client on `http://127.0.0.1:3003` (the database program must be running)." Result: the script is described as it runs.
-- [ ] In `AGENTS.md`, add "a build step" to the list of the notice in "Style". Result: the notice lists the build step with the file names, classes, methods, `this`, decorators and error classes.
-- [ ] In `docs/ARCHITECTURE.md`, add to the `nest/` entry: the build with `babel.config.json` into `dist/`, which is not in git. Result: the entry says how the client starts.
-- [ ] In `docs/ARCHITECTURE.md`, change the line of `eslint.config.js`: it ignores `dist` and reads `src/clients/nest/` with the Babel parser. Result: the line matches the file after this change.
-- [ ] In `docs/ARCHITECTURE.md`, add `babel.config.json` under "first-app/": the decorators plugin that the build reads. Result: the file is described.
-- [ ] In `docs/TREE.md`, add `babel.config.json` in the root of `first-app/`. Result: the tree lists the file.
+- [x] In `AGENTS.md`, add "This client is the only code with a build step." after the framework sentence of "Project", before "There is no TypeScript." Result: the line says the Nest client has a build step.
+- [x] In `AGENTS.md`, replace the description of `pnpm nest` in "Commands" with: "`pnpm nest` builds `src/` with Babel into `dist/` and starts the Nest client on `http://127.0.0.1:3003` (the database program must be running)." Result: the script is described as it runs.
+- [x] In `AGENTS.md`, add "a build step" to the list of the notice in "Style". Result: the notice lists the build step with the file names, classes, methods, `this`, decorators and error classes.
+- [x] In `docs/ARCHITECTURE.md`, add to the `nest/` entry: the build with `babel.config.json` into `dist/`, which is not in git. Result: the entry says how the client starts.
+- [x] In `docs/ARCHITECTURE.md`, change the line of `eslint.config.js`: it ignores `dist` and reads `src/clients/nest/` with the Babel parser. Result: the line matches the file after this change.
+- [x] In `docs/ARCHITECTURE.md`, add `babel.config.json` under "first-app/": the decorators plugin that the build reads. Result: the file is described.
+- [x] In `docs/TREE.md`, add `babel.config.json` in the root of `first-app/`. Result: the tree lists the file.
 
 ## Task 8 — Get Babel ready
 
 The Socket review of these packages and their dependencies is in `plan.md`. `@babel/preset-env` is not added. The pnpm minimum release age can reject `@nestjs/*` 12.3.3 and `electron` 45.2.2 until 2026-11-05 at 09:37 UTC, because `pnpm add` checks the whole lockfile. Ella authorized the per-command exemption again for this change: write the four flags `--config.minimumReleaseAgeExclude=@nestjs/common`, `@nestjs/core`, `@nestjs/platform-express` and `electron`, add `--ignore-scripts`, and delete the `pnpm-workspace.yaml` that pnpm may write.
 
-- [ ] Run `pnpm add -D --save-exact @babel/core@8.1.0`. Result: `package.json` lists `@babel/core` 8.1.0 in `devDependencies`.
-- [ ] Run `pnpm add -D --save-exact @babel/cli@8.1.0`. Result: `package.json` lists `@babel/cli` 8.1.0.
-- [ ] Run `pnpm add -D --save-exact @babel/plugin-proposal-decorators@8.0.2`. Result: `package.json` lists `@babel/plugin-proposal-decorators` 8.0.2.
-- [ ] Run `pnpm add -D --save-exact @babel/eslint-parser@8.0.7`. Result: `package.json` lists `@babel/eslint-parser` 8.0.7.
-- [ ] Check that no `pnpm-workspace.yaml` or `.npmrc` was left. Result: nothing stays exempted.
-- [ ] Compare the new entries of `pnpm-lock.yaml` with the lists of `plan.md`. Result: every new package is on a reviewed list. If one is not, stop and tell the person.
-- [ ] Add `dist/` to `.gitignore` of `first-app`. Result: `git status` does not show the build output.
-- [ ] Change the `nest` script in `package.json` to `babel src --out-dir dist --delete-dir-on-start && node dist/clients/nest/main.js`. Result: `pnpm nest` builds, then starts.
-- [ ] Create `babel.config.json` with the decorators plugin in `legacy` mode. Result: Babel reads `@`.
-- [ ] Add `dist/**` to `ignores` in `eslint.config.js`. Result: ESLint does not read the build output.
-- [ ] Add a block to `eslint.config.js` for `src/clients/nest/**/*.js` with `@babel/eslint-parser` and the same plugin in `babelOptions`. Result: ESLint reads `@` in the Nest folder.
+- [x] Run `pnpm add -D --save-exact @babel/core@8.1.0`. Result: `package.json` lists `@babel/core` 8.1.0 in `devDependencies`.
+- [x] Run `pnpm add -D --save-exact @babel/cli@8.1.0`. Result: `package.json` lists `@babel/cli` 8.1.0.
+- [x] Run `pnpm add -D --save-exact @babel/plugin-proposal-decorators@8.0.2`. Result: `package.json` lists `@babel/plugin-proposal-decorators` 8.0.2.
+- [x] Run `pnpm add -D --save-exact @babel/eslint-parser@8.0.7`. Result: `package.json` lists `@babel/eslint-parser` 8.0.7.
+- [x] Check that no `pnpm-workspace.yaml` or `.npmrc` was left. Result: nothing stays exempted.
+- [x] Compare the new entries of `pnpm-lock.yaml` with the lists of `plan.md`. Result: every new package is on a reviewed list. If one is not, stop and tell the person. **Stopped on 2026-11-05:** 59 new entries, 56 on the lists, and 3 not: `electron-to-chromium@1.5.475` (the plan has 1.5.473), `escalade@3.2.0` and `picocolors@1.1.1` (both 4 layers down, through `update-browserslist-db`). Ella accepted the three on 2026-11-05 and `plan.md` lists them.
+- [x] Add `dist/` to `.gitignore` of `first-app`. Result: `git status` does not show the build output.
+- [x] Change the `nest` script in `package.json` to `babel src --out-dir dist --delete-dir-on-start && node dist/clients/nest/main.js`. Result: `pnpm nest` builds, then starts.
+- [x] Create `babel.config.json` with the decorators plugin in `legacy` mode. Result: Babel reads `@`.
+- [x] Add `dist/**` to `ignores` in `eslint.config.js`. Result: ESLint does not read the build output.
+- [x] Add a block to `eslint.config.js` for `src/clients/nest/**/*.js` with `@babel/eslint-parser` and the same plugin in `babelOptions`. Result: ESLint reads `@` in the Nest folder.
 
 ## Task 9 — Write the client with `@`
 
 Decorators are written with `@`, as in the Nest docs. The input uses `@Bind(...)`, because Babel does not read `@` in parameters.
 
-- [ ] In `src/clients/nest/errors.filter.js`, write `@Catch()` before `export class ErrorsFilter`. Result: the class catches every error.
-- [ ] In `src/clients/nest/errors.filter.js`, remove the call `Catch()(ErrorsFilter)` and its comment. Result: the decorator is not applied twice.
-- [ ] In `src/clients/nest/app.module.js`, write `@Module({ controllers: [UsersController] })` before `export class AppModule`. Result: the module has the controller.
-- [ ] In `src/clients/nest/app.module.js`, remove the call to `Module(...)` and its comment. Result: the decorator is not applied twice.
-- [ ] In `src/clients/nest/users.controller.js`, write `@Controller()` before `export class UsersController`. Result: the class is a controller with no prefix.
-- [ ] In `users.controller.js`, write `@Post("users")` and `@Bind(Body())` before `create`. Result: Nest routes `POST /users` to the method.
-- [ ] In `users.controller.js`, write `@Get("users")` before `list`. Result: Nest routes `GET /users` to the method.
-- [ ] In `users.controller.js`, write `@Get("users/:id")` and `@Bind(Param("id"))` before `findOne`. Result: Nest routes `GET /users/:id` to the method.
-- [ ] In `users.controller.js`, write `@Patch("users/:id")` and `@Bind(Param("id"), Body())` before `update`. Result: Nest routes `PATCH /users/:id` to the method.
-- [ ] In `users.controller.js`, write `@Delete("users/:id")`, `@HttpCode(204)` and `@Bind(Param("id"))` before `remove`. Result: Nest routes `DELETE /users/:id` and answers 204.
-- [ ] In `users.controller.js`, remove the constant `methods` and every call of a decorator at the end of the file. Result: the file has only `@` decorators.
-- [ ] Check that `main.js` does not need a change. Result: it imports the module and the filter as before.
-- [ ] In `src/clients/terminal/nest.txt`, say in the first lines that `pnpm nest` builds before it starts. Result: the file matches the script.
+- [x] In `src/clients/nest/errors.filter.js`, write `@Catch()` before `export class ErrorsFilter`. Result: the class catches every error.
+- [x] In `src/clients/nest/errors.filter.js`, remove the call `Catch()(ErrorsFilter)` and its comment. Result: the decorator is not applied twice.
+- [x] In `src/clients/nest/app.module.js`, write `@Module({ controllers: [UsersController] })` before `export class AppModule`. Result: the module has the controller.
+- [x] In `src/clients/nest/app.module.js`, remove the call to `Module(...)` and its comment. Result: the decorator is not applied twice.
+- [x] In `src/clients/nest/users.controller.js`, write `@Controller()` before `export class UsersController`. Result: the class is a controller with no prefix.
+- [x] In `users.controller.js`, write `@Post("users")` and `@Bind(Body())` before `create`. Result: Nest routes `POST /users` to the method.
+- [x] In `users.controller.js`, write `@Get("users")` before `list`. Result: Nest routes `GET /users` to the method.
+- [x] In `users.controller.js`, write `@Get("users/:id")` and `@Bind(Param("id"))` before `findOne`. Result: Nest routes `GET /users/:id` to the method.
+- [x] In `users.controller.js`, write `@Patch("users/:id")` and `@Bind(Param("id"), Body())` before `update`. Result: Nest routes `PATCH /users/:id` to the method.
+- [x] In `users.controller.js`, write `@Delete("users/:id")`, `@HttpCode(204)` and `@Bind(Param("id"))` before `remove`. Result: Nest routes `DELETE /users/:id` and answers 204.
+- [x] In `users.controller.js`, remove the constant `methods` and every call of a decorator at the end of the file. Result: the file has only `@` decorators.
+- [x] Check that `main.js` does not need a change. Result: it imports the module and the filter as before.
+- [x] In `src/clients/terminal/nest.txt`, say in the first lines that `pnpm nest` builds before it starts. Result: the file matches the script.
 
 ## Task 10 — Run the change
 
 Note: the database program on 3000 is Ella's, already running; it is not stopped. The step "Stop `pnpm start`" of Task 6 is not repeated: it was run on the Babel build in the spike of `plan.md` and gave 500 "The database failed.". The checks that change users use a test email, and the users they create are deleted at the end.
 
-- [ ] Run `pnpm nest`. Result: Babel compiles `src/` into `dist/`, then the one line prints: `Nest client on http://127.0.0.1:3003`.
-- [ ] Run `git status`. Result: `dist/` does not show.
-- [ ] Run `lsof -nP -iTCP:3003 -sTCP:LISTEN`. Result: it listens on `127.0.0.1` only.
-- [ ] With `curl` on 3003, create a test user, list, view, change the name only, delete. Result: 201, 200, 200, 200, 204, the email kept in the update, the user gone from the list.
-- [ ] With `curl`: create with an empty name, then with a bad email. Result: 400 with each sentence.
-- [ ] With `curl`: create with the email of another user. Result: 409 "This email is already used."
-- [ ] With `curl`: `POST` with no body, `name` as a number, no `email`, `[]` as body. Result: the four answer 400 "The request is not valid."
-- [ ] With `curl`: `POST` with broken JSON, `"x"` as body, a form body, a `text/plain` body. Result: the four answer 400 "The request is not valid."
-- [ ] With `curl`: `POST` with a JSON body over 100 KB. Result: 400 "The request is not valid.", no user created.
-- [ ] With `curl`: `PATCH` with `{}`. Result: 400 "There is nothing to update."
-- [ ] With `curl`: `PATCH` with `{"name": ["x"]}`. Result: 400 "The request is not valid."
-- [ ] With `curl`: `GET` an id that does not exist, then `abc`, then `1.5`. Result: the three answer 404 "No user was found."
-- [ ] With `curl`: `HEAD /users`, then `GET /users/`. Result: both answer 200.
-- [ ] With `curl`: an unknown route, a wrong method on `/users`, `OPTIONS /users`. Result: the three answer 404 with an empty body.
-- [ ] Add a temporary `throw new TypeError("test")` to `list` in `users.controller.js`. Result: the bug is in place for the next step.
-- [ ] Restart `pnpm nest`, then call `GET /users` with `curl`. Result: 500 "The database failed.", the `TypeError` in the terminal.
-- [ ] Remove the temporary line and restart `pnpm nest`. Result: `grep` finds no `TypeError` in the source or in `dist/`, `git diff` shows no change, and `GET /users` answers 200.
-- [ ] Call `GET /users` on 3001 and on 3002. Result: both answer 200, as before.
-- [ ] Run `pnpm format`. Result: no errors, and no file outside the plan changes.
-- [ ] Run `pnpm lint`. Result: no errors.
-- [ ] Add an unused import to a Nest file, run `pnpm lint`, then remove the import. Result: lint reports the mistake, and the file is back as it was.
-- [ ] Run `git merge-tree --write-tree --name-only --no-messages origin/staging HEAD` after `git fetch`. Result: no conflict.
-- [ ] Show the result, then stop. Result: the next feature is not started.
+- [x] Run `pnpm nest`. Result: Babel compiles `src/` into `dist/`, then the one line prints: `Nest client on http://127.0.0.1:3003`.
+- [x] Run `git status`. Result: `dist/` does not show.
+- [x] Run `lsof -nP -iTCP:3003 -sTCP:LISTEN`. Result: it listens on `127.0.0.1` only.
+- [x] With `curl` on 3003, create a test user, list, view, change the name only, delete. Result: 201, 200, 200, 200, 204, the email kept in the update, the user gone from the list.
+- [x] With `curl`: create with an empty name, then with a bad email. Result: 400 with each sentence.
+- [x] With `curl`: create with the email of another user. Result: 409 "This email is already used."
+- [x] With `curl`: `POST` with no body, `name` as a number, no `email`, `[]` as body. Result: the four answer 400 "The request is not valid."
+- [x] With `curl`: `POST` with broken JSON, `"x"` as body, a form body, a `text/plain` body. Result: the four answer 400 "The request is not valid."
+- [x] With `curl`: `POST` with a JSON body over 100 KB. Result: 400 "The request is not valid.", no user created.
+- [x] With `curl`: `PATCH` with `{}`. Result: 400 "There is nothing to update."
+- [x] With `curl`: `PATCH` with `{"name": ["x"]}`. Result: 400 "The request is not valid."
+- [x] With `curl`: `GET` an id that does not exist, then `abc`, then `1.5`. Result: the three answer 404 "No user was found."
+- [x] With `curl`: `HEAD /users`, then `GET /users/`. Result: both answer 200.
+- [x] With `curl`: an unknown route, a wrong method on `/users`, `OPTIONS /users`. Result: the three answer 404 with an empty body.
+- [x] Add a temporary `throw new TypeError("test")` to `list` in `users.controller.js`. Result: the bug is in place for the next step.
+- [x] Restart `pnpm nest`, then call `GET /users` with `curl`. Result: 500 "The database failed.", the `TypeError` in the terminal.
+- [x] Remove the temporary line and restart `pnpm nest`. Result: `grep` finds no `TypeError` in the source or in `dist/`, `git diff` shows no change, and `GET /users` answers 200.
+- [x] Call `GET /users` on 3001 and on 3002. Result: both answer 200, as before.
+- [x] Run `pnpm format`. Result: no errors, and no file outside the plan changes.
+- [x] Run `pnpm lint`. Result: no errors.
+- [x] Add an unused import to a Nest file, run `pnpm lint`, then remove the import. Result: lint reports the mistake, and the file is back as it was.
+- [x] Run `git merge-tree --write-tree --name-only --no-messages origin/staging HEAD` after `git fetch`. Result: no conflict.
+- [x] Show the result, then stop. Result: the next feature is not started.
