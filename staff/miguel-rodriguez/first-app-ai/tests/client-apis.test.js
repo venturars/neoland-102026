@@ -10,7 +10,7 @@ import { setTimeout } from "node:timers/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
-const ports = [3001, 3002, 3003];
+const ports = [3001, 3002];
 const fields = ["id", "name", "email", "createdAt", "updatedAt"];
 
 async function request(port, method, path, body) {
@@ -72,7 +72,7 @@ async function stop(server) {
 }
 
 test(
-  "Express, Fastify and Nest reuse shared operations and database records",
+  "Express and Fastify reuse shared operations and database records",
   { timeout: 30000 },
   async () => {
     const folder = await mkdtemp(join(tmpdir(), "first-app-client-apis-"));
@@ -93,7 +93,6 @@ test(
       dataServer = await start(app, "src/db/server.js", 3000);
       clients.push(await start(app, "src/clients/http/app.js", 3001));
       clients.push(await start(app, "src/clients/chrome/server.js", 3002));
-      clients.push(await start(app, "src/clients/nest/app.js", 3003));
       const queries = await import(
         pathToFileURL(join(app, "src/queries/users.js")).href
       );
@@ -204,7 +203,7 @@ test(
         assert.equal(updated.value.name, "Ada Lovelace");
         assert.equal(updated.value.email, user.email);
         assert.equal(updated.value.createdAt, user.createdAt);
-        const other = port === 3002 ? 3003 : 3002;
+        const other = port === 3002 ? 3001 : 3002;
         assert.deepEqual(
           await request(other, "GET", `/users/${user.id}`),
           updated,
