@@ -1,0 +1,1 @@
+UPDATE sessions SET closed_at = ? WHERE id = ? AND closed_at IS NULL

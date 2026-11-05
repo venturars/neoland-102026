@@ -1,0 +1,1 @@
+SELECT COUNT(*) FROM race_operations WHERE session_id=? AND roster_key=?

@@ -1,0 +1,1 @@
+SELECT * FROM race_slots WHERE session_id=? ORDER BY rowid
