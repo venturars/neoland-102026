@@ -29,10 +29,12 @@ const server = createServer(async (request, response) => {
   if (method === "POST" || method === "PATCH") {
     request.setEncoding("utf8");
     let text = "";
-    for await (const chunk of request) {
-      text = text + chunk;
-    }
+    // The read can fail if the client disconnects. It is in the same try as the parse,
+    // so the server keeps running and the request is answered as not valid.
     try {
+      for await (const chunk of request) {
+        text = text + chunk;
+      }
       body = JSON.parse(text);
     } catch {
       body = undefined;
