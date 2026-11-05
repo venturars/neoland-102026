@@ -193,3 +193,7 @@ resumen y confirmación de borrado. Verificar el adaptador y registro del provee
   reales y transporte controlado. La carga de la extensión en Chrome real
   corresponde a la evidencia del4; no se repitió su GUI en esta corrección.
 - La demostración del alumno y sus datos permanecen abiertos e intactos.
+
+La revisión final detectó que el formulario de VS Code aún imponía required
+del navegador al editar campos vacíos. Se marcó novalidate en ese formulario:
+la operación compartida valida la creación y conserva los omitidos al editar.
