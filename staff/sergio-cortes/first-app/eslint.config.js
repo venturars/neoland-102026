@@ -30,6 +30,14 @@ export default [
     },
   },
   {
+    files: ["src/clients/node-http/**/*.js"],
+    languageOptions: {
+      globals: {
+        console: "readonly",
+      },
+    },
+  },
+  {
     files: ["src/clients/web/**/*.js"],
     languageOptions: {
       globals: {

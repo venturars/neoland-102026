@@ -55,6 +55,28 @@ Comprueba los `Could not …` cuando la base no responde:
 
 También puedes abrir la colección en la [app de Bruno](https://www.usebruno.com/) apuntando a `src/clients/http/bruno/`.
 
+## Cliente node-http
+
+1. Desde first-app: `pnpm node-http`. Si el puerto 3000 está libre, arranca la base; si ya está (`pnpm server`), la reutiliza. El servidor queda en `http://127.0.0.1:3004`.
+
+## Cuadernos de Jupyter
+
+Hay dos comandos. Los dos arrancan la base (puerto 3000) si está libre y la paran al cerrar Jupyter. Si ya estaba en marcha, no la tocan.
+
+- `pnpm jupyter` — cuadernos de `src/clients/jupyter/`. Llaman a `src/logic/` directamente, así que solo necesitan la base. El cuaderno `user-gender-count.ipynb` además necesita Ollama (ver abajo).
+- `pnpm jupyter-node-http` — cuadernos de la API de `node-http` en `src/clients/node-http/jupyter/`. Arranca también `node-http` (puerto 3004) si está libre, y lo para al cerrar Jupyter.
+
+**Ollama:** `user-gender-count.ipynb` llama a `http://127.0.0.1:11434/v1`, el puerto por defecto de Ollama. Arranca Ollama antes de ejecutar ese cuaderno. Los scripts no lo arrancan.
+
+## Cliente Nest
+
+1. Desde first-app: `pnpm nest`. Si el puerto 3000 está libre, arranca la base; si ya está, la reutiliza.
+2. Antes de arrancar, compila `src/` con Babel a `dist/` (el script borra `dist/` primero). El servidor queda en `http://127.0.0.1:3003`.
+
+## Cliente web
+
+`pnpm web` abre `src/clients/web/index.html` en **Brave Browser** con un perfil temporal en `/tmp/first-app-brave`. El comando usa `open -na "Brave Browser"`, así que solo funciona en macOS y necesita Brave instalado.
+
 ## Otros comandos
 
 - `pnpm web` — cliente en Brave
@@ -63,4 +85,6 @@ También puedes abrir la colección en la [app de Bruno](https://www.usebruno.co
 - `pnpm electron` — ventana de escritorio
 - `pnpm vscode` — VS Code con la extensión en modo desarrollo
 - `pnpm jupyter` — cuadernos en `src/clients/jupyter/`
+- `pnpm node-http` — API `node:http` en el puerto 3004
+- `pnpm jupyter-node-http` — cuadernos de la API de `node-http`
 - `pnpm run format` / `pnpm run lint`
