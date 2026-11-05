@@ -18,7 +18,7 @@
 - `skills/create-branch-from-staging/SKILL.md` abre la rama desde `staging`.
 - `skills/create-branch/SKILL.md` abre la rama desde una base que no es `staging`.
 - `skills/create-empty-commit/SKILL.md` hace el commit vacío `chore: open #N`.
-- `skills/commit-changes/SKILL.md` guarda un trozo con ficheros nombrados; el mensaje nombra el fichero o la función y el cambio.
+- `skills/commit-changes/SKILL.md` guarda un trozo con ficheros nombrados; la primera línea del mensaje dice qué cambió, sin rutas de fichero, y el cuerpo nombra las funciones o ficheros implicados.
 - `skills/launch-push/SKILL.md` sube la rama actual y fija el upstream.
 - `skills/create-pr-base-staging/SKILL.md` abre la pull request con base `staging`, en draft y asignada, con el script de `tools/`.
 - `skills/create-draft/SKILL.md` pasa a draft una pull request que ya existe.
@@ -32,8 +32,8 @@
 - `tools/commit-changes.sh` guarda los ficheros nombrados.
 - `tools/launch-push.sh` sube la rama y fija el upstream.
 - `tools/create-pr-base-staging.sh` crea la pull request con base `staging`, en draft y asignada al usuario autenticado.
-- `templates/issues/` lleva seis plantillas (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`). En el comentario HTML van la regla del título, el tipo y el nombre de rama.
-- `templates/pull-request/` lleva seis plantillas del mismo tipo. El cuerpo comparte secciones; la lista de comprobación cambia por tipo. La sección Issue es `Closes #`.
+- `templates/issues/` lleva siete plantillas (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `knowledge`). En el comentario HTML van la regla del título, el tipo y el nombre de rama.
+- `templates/pull-request/` lleva siete plantillas del mismo tipo. El cuerpo comparte secciones; la lista de comprobación cambia por tipo. La sección Issue es `Closes #`.
 - `MCPS/github-mcp-server/mcp.txt` es la dirección del MCP de GitHub y el header para que la escritura no abra un formulario.
 - `MCPS/socket-mcp/mcp.txt` es la dirección del MCP de Socket.
 - `docs/specs/<nombre>/` es donde empieza un desarrollo. `<nombre>` es la funcionalidad, en kebab-case.
