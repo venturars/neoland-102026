@@ -1,0 +1,33 @@
+{
+  "name": "first-app-users",
+  "displayName": "first-app usuarios",
+  "description": "Gestiona los usuarios de first-app desde un panel de VS Code.",
+  "publisher": "sergio-moras",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./extension.js",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "firstAppUsers",
+          "title": "first-app usuarios",
+          "icon": "icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "firstAppUsers": [
+        {
+          "type": "webview",
+          "id": "firstAppUsers.panel",
+          "name": "Usuarios"
+        }
+      ]
+    }
+  }
+}
