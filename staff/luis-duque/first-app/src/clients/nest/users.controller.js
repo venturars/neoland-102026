@@ -33,17 +33,54 @@ const createBody = {
   type: "object",
   required: ["name", "email"],
   properties: {
-    name: { type: "string" },
-    email: { type: "string" },
+    name: { type: "string", example: "Ana" },
+    email: { type: "string", example: "ana@example.com" },
+  },
+  example: {
+    name: "Ana",
+    email: "ana@example.com",
   },
 };
 
 const updateBody = {
   type: "object",
   properties: {
-    name: { type: "string" },
-    email: { type: "string" },
+    name: { type: "string", example: "Ana" },
+    email: { type: "string", example: "ana@example.com" },
   },
+  example: {
+    name: "Ana",
+  },
+};
+
+const updateResponse = {
+  oneOf: [
+    {
+      type: "object",
+      required: ["id", "name"],
+      properties: {
+        id: { type: "number" },
+        name: { type: "string" },
+      },
+    },
+    {
+      type: "object",
+      required: ["id", "email"],
+      properties: {
+        id: { type: "number" },
+        email: { type: "string" },
+      },
+    },
+    {
+      type: "object",
+      required: ["id", "name", "email"],
+      properties: {
+        id: { type: "number" },
+        name: { type: "string" },
+        email: { type: "string" },
+      },
+    },
+  ],
 };
 
 const idParam = {
@@ -102,7 +139,7 @@ export class UsersController {
   @ApiOperation({ summary: "modificar" })
   @ApiParam(idParam)
   @ApiBody({ schema: updateBody })
-  @ApiResponse({ status: 200, schema: userSchema })
+  @ApiResponse({ status: 200, schema: updateResponse })
   @ApiResponse({ status: 400, schema: messageSchema })
   @ApiResponse({ status: 404, schema: messageSchema })
   @ApiResponse({ status: 409, schema: messageSchema })

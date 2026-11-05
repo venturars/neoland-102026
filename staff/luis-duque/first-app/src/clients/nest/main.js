@@ -12,6 +12,8 @@ const hostname = originUrl.hostname;
 const app = await NestFactory.create(AppModule);
 const config = new DocumentBuilder().setTitle("Usuarios").build();
 const document = SwaggerModule.createDocument(app, config);
-SwaggerModule.setup("swagger", app, document);
+SwaggerModule.setup("swagger", app, document, {
+  customSiteTitle: "Usuarios",
+});
 await app.listen(port, hostname);
 console.log(ORIGIN);

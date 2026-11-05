@@ -37,6 +37,8 @@ No se tocan `app.module.js`, `users.service.js` ni `http-exception.filter.js`. E
 
 Se toca `package.json`. En `dependencies` entra `@nestjs/swagger` `12.1.0`. El script `nest` se queda igual. pnpm añade el paquete con esa versión exacta. `pnpm-lock.yaml` lo escribe pnpm. No se edita a mano. No se usa npm ni yarn.
 
+Se toca `pnpm-workspace.yaml`. `allowBuilds` deja `"@scarf/scarf": false`. Sin esa línea, `pnpm install` se detiene en el script de ese paquete.
+
 No se toca `babel.config.json`. No se toca `eslint.config.js`: ya ignora `src/clients/nest/**`. No se toca el `.gitignore` de la raíz. No se crea un `README`.
 
 No se tocan `src/logic`, `src/queries`, `src/db`, `src/clients/terminal`, `src/clients/jupyter`, `src/clients/browser`, `src/clients/http`, `src/clients/electron`, `src/clients/chrome` ni `src/clients/vscode`.
@@ -52,7 +54,7 @@ No hay función de negocio nueva. `users.service.js` sigue importando las cinco 
 | `POST /users` | `createUser({ name, email })` | Cuerpo JSON con `name` y `email`, los dos obligatorios |
 | `GET /users` | `listUsers()` | Sin cuerpo y sin parámetros |
 | `GET /users/:id` | `findUserById(id)` | El `id` en la ruta |
-| `PATCH /users/:id` | `updateUser(id, changes)` | El `id` en la ruta. Cuerpo JSON con `name`, con `email` o con los dos |
+| `PATCH /users/:id` | `updateUser(id, changes)` | El `id` en la ruta. Cuerpo JSON con `name`, con `email` o con los dos. El ejemplo de la página manda un nombre que vale. La respuesta 200 es el `id` y solo los campos enviados |
 | `DELETE /users/:id` | `deleteUser(id)` | El `id` en la ruta |
 
 La descripción vive en el controlador, con los decoradores de `@nestjs/swagger`. El esquema del cuerpo se escribe ahí. No se añade `class-validator`.
@@ -63,7 +65,7 @@ No hay SQL nuevo. Cada petición usa la operación que ya está escrita.
 
 ## Cliente
 
-`main.js` sigue importando primero `reflect-metadata`. Crea la aplicación con `NestFactory` y `AppModule`. Con `DocumentBuilder` y `SwaggerModule`, de `@nestjs/swagger`, publica el documento de las cinco peticiones y monta la página en `swagger`. La dirección queda `http://127.0.0.1:3003/swagger`. El documento que lee esa página queda en `http://127.0.0.1:3003/swagger-json`. El título de la página es `Usuarios`.
+`main.js` sigue importando primero `reflect-metadata`. Crea la aplicación con `NestFactory` y `AppModule`. Con `DocumentBuilder` y `SwaggerModule`, de `@nestjs/swagger`, publica el documento de las cinco peticiones y monta la página en `swagger`. La dirección queda `http://127.0.0.1:3003/swagger`. El documento que lee esa página queda en `http://127.0.0.1:3003/swagger-json`. El título del documento y el de la pestaña son `Usuarios`. El ejemplo de crear manda un nombre y un email que valen.
 
 `ORIGIN` sigue valiendo `http://127.0.0.1:3003`. Escucha en el puerto y el host de `ORIGIN`. Al escuchar, hace `console.log` de `ORIGIN`.
 
