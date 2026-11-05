@@ -5,6 +5,8 @@ import { Injectable } from "@nestjs/common";
 import { createUser } from "../../logic/create-user.js";
 // Borra un usuario (viene de la capa de lógica).
 import { deleteUser } from "../../logic/delete-user.js";
+// Busca un usuario por su email (viene de la capa de lógica).
+import { findUserByEmail } from "../../logic/find-user-by-email.js";
 // Busca un usuario por su id (viene de la capa de lógica).
 import { findUserById } from "../../logic/find-user-by-id.js";
 // Devuelve la lista de usuarios (viene de la capa de lógica).
@@ -28,6 +30,11 @@ export class UsersService {
   // Devuelve el usuario con ese id.
   find(id) {
     return findUserById(id);
+  }
+
+  // Devuelve el usuario con ese email.
+  findByEmail(email) {
+    return findUserByEmail(email);
   }
 
   // Cambia solo los datos que llegan en changes.

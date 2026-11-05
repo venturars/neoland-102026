@@ -9,6 +9,8 @@ import Fastify from "fastify";
 import { createUser } from "../../logic/create-user.js";
 // Borra un usuario (viene de la capa de lógica).
 import { deleteUser } from "../../logic/delete-user.js";
+// Busca un usuario por su email (viene de la capa de lógica).
+import { findUserByEmail } from "../../logic/find-user-by-email.js";
 // Busca un usuario por su id (viene de la capa de lógica).
 import { findUserById } from "../../logic/find-user-by-id.js";
 // Devuelve la lista de usuarios (viene de la capa de lógica).
@@ -76,6 +78,17 @@ app.get("/users", async (request, reply) => {
     return reply.code(200).send(users);
   } catch (error) {
     return responderError(reply, error, "Could not list the users");
+  }
+});
+
+// Busca un usuario por el email que llega en la dirección.
+// Va antes que /users/:id para que se lea igual que en la API de Nest.
+app.get("/users/by-email", async (request, reply) => {
+  try {
+    const user = await findUserByEmail(request.query.email);
+    return reply.code(200).send(user);
+  } catch (error) {
+    return responderError(reply, error, "Could not find the user");
   }
 });
 
