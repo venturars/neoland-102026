@@ -14,6 +14,14 @@ Fuente: un commit es un conventional commit, como en [github-pr](https://www.ski
 
 #### Reglas de Invocación Críticas
 
-- **Mensaje técnico:** La descripción nombra el fichero o la función y el cambio. No uses un verbo suelto (`update files`, `fix bug`). Una sola línea. El commit vacío sigue siendo `chore: open #N`.
+- **Mensaje técnico:** La primera línea nombra el fichero o la función y el cambio. No uses un verbo suelto (`update files`, `fix bug`). Esa línea es una sola. El commit vacío sigue siendo `chore: open #N`, sin cuerpo.
+- **Desglose:** En un commit de trabajo, deja una línea en blanco y escribe viñetas en inglés. Cada viñeta nombra el fichero o la función y el cambio técnico de ese commit. GitHub muestra esas viñetas bajo el asunto. El commit vacío no lleva desglose.
+
+```
+feat: serve the Swagger page from src/clients/nest/main.js
+
+- src/clients/nest/main.js: the page is served at the Nest address.
+- src/clients/nest/users.controller.js: create and update show name and email examples.
+```
 - **Escapado de caracteres**: Si el mensaje contiene comillas dobles (`"`), escápalas como `\"`.
 - **Procesamiento de respuestas**: El script lista el mensaje y los ficheros. El commit lleva solo esos ficheros: lo que ya estuviera preparado se queda preparado. Si el código de salida no es 0, no reintentes metiendo más ficheros de los que nombró el alumno.
