@@ -137,11 +137,17 @@ Cómo leer esta lista:
     - `run_window(url, tunnel)`: ventana de 1000 × 760 (mínimo 400 × 560), `text_select=True`, `localization=CLOSE_TEXTS` y la API; `show_already_open(message)`: ventana pequeña con el mensaje escapado (X4).
     - `webview` se importa dentro de las funciones; para los tipos, `Window` de pywebview solo con `TYPE_CHECKING` (sin `Protocol`, §12).
     - **Adelantado de T14:** `pywebview` (app) y `pyinstaller` (empaquetado) en `requirements.txt`, porque `desktop.py` ya usa los tipos de pywebview y `mypy` lo necesita. Su justificación ya está en plan §7.1.
-- [ ] **T12** 🧪 · Modo escritorio en `app.py` (plan §2.2):
+- [x] **T12** 🧪 · Modo escritorio en `app.py` (plan §2.2):
   - tests en `test_app.py`: con `--ventana` o `sys.frozen` se elige el modo escritorio; sin ellos, el arranque de siempre; `--tunel` abre el `Tunnel`; en el modo escritorio, el `finally` cierra el túnel, para el servidor y suelta el bloqueo aunque la ventana falle (con piezas falsas);
   - `main()` se divide en `_run_terminal` y `_run_desktop` (M2);
   - deben fallar; luego, el código.
   - *Cubre:* CA-12, CA-13, CA-18.
+  - **Hecha (2026-11-05):** 12 tests nuevos en `test_app.py` (11 de escritorio y 1 de la terminal) y 1 en `test_tunnel.py`; fallaron los 10 que dependían del cambio y los de `--ventana` combinada quedan como red. Los tests de escritorio ejecutan `main()` de verdad con el `webview` falso y el usuario en `tmp_path`, y piden el panel al servidor real mientras la "ventana" está abierta. 615 tests en verde; `ruff` y `mypy` sin avisos.
+    - `main()` elige: con `--ventana` o `sys.frozen`, `_run_desktop()`; si no, `_run_terminal(args)` (lo de siempre).
+    - `_run_desktop()`: `load_config(desktop=True, bundle=sys._MEIPASS o None)` y `instance.acquire`; si fallan (`ConfigError`, `AlreadyRunningError`), `desktop.show_message` y sale. Luego `_open_desktop()`: `Tunnel(port=0)`, `create_app(desktop=True)`, `server.start` con `with`, `tunnel.port = running.port`, `desktop.run_window(panel, tunnel)` y, en `finally`, `tunnel.close()`, el servidor y el bloqueo (probado también con la ventana fallando).
+    - La terminal también usa `Tunnel`: `--tunel` lo abre al arrancar y el panel puede abrir la clase online después.
+    - **Cambios pequeños fuera de `app.py`:** `Tunnel.port` pasa a ser público y modificable (el puerto se sabe al arrancar el servidor, que necesita antes la app con el túnel); `desktop.show_already_open` pasa a `show_message`, porque también enseña los errores de configuración; `--ventana` no se combina con `--tunel` ni `--meet` (`parser.error`).
+    - Tests: el `cloudflared` falso de `test_app.py` pasa a ser el de `conftest.py` (el que necesita `Tunnel`), y el `webview` falso de `test_desktop.py` pasa a `conftest.py`, con `on_start` para actuar "con la ventana abierta".
 - [ ] **T13** 👤 · Prueba a mano en el Mac desde el código (`python app.py --ventana`):
   - abrir la clase online y registrarse desde un móvil con datos (CA-07); cerrar con clase online y cancelar, luego confirmar (CA-10); cerrar sin clase online (CA-11); tras cerrar, ni la app ni `cloudflared` siguen en marcha (CA-12); una asistencia abierta sigue al volver (CA-13); guardar el CSV y abrirlo en Excel o Numbers (CA-17); abrir dos veces (CA-03).
   - *Cubre:* CA-03, CA-07, CA-10 a CA-13, CA-17 (en macOS).

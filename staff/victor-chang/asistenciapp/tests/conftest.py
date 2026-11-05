@@ -1,8 +1,10 @@
-"""Fixtures compartidas: app con BD temporal, token fijo, reloj falso y cloudflared falso."""
+"""Fixtures compartidas: app con BD temporal, token fijo, reloj falso, cloudflared falso y pywebview falso."""
 
 import io
 import os
 import subprocess
+import sys
+import types
 
 import pytest
 
@@ -105,3 +107,50 @@ def fake_cloudflared(monkeypatch):
 
     install.calls = []
     return install
+
+
+SAVE = 10  # el valor de webview.FileDialog.SAVE no importa: el diálogo falso lo devuelve tal cual
+
+
+class FakeWindow:
+    """La ventana de pywebview: guarda lo que se le pide y contesta el diálogo como diga el test."""
+
+    def __init__(self, chosen=None):
+        self.confirm_close = False
+        self.chosen = chosen
+        self.dialogs = []
+
+    def create_file_dialog(self, dialog_type, save_filename=""):
+        self.dialogs.append((dialog_type, save_filename))
+        return self.chosen
+
+
+@pytest.fixture
+def fake_webview(monkeypatch):
+    """Un módulo `webview` falso (pywebview es externo, T4): guarda las ventanas creadas y cuenta los `start`.
+
+    `on_start` es lo que pasa "mientras la ventana está abierta": una función que recibe el módulo
+    (p. ej. para pedir el panel al servidor), o una excepción que lanzar.
+    """
+    module = types.ModuleType("webview")
+    module.FileDialog = types.SimpleNamespace(SAVE=SAVE)
+    module.created = []
+    module.started = 0
+    module.on_start = None
+
+    def create_window(title, url=None, html=None, **kwargs):
+        window = FakeWindow()
+        module.created.append({"title": title, "url": url, "html": html, "window": window, **kwargs})
+        return window
+
+    def start(**_kwargs):
+        module.started += 1
+        if isinstance(module.on_start, BaseException):
+            raise module.on_start
+        if module.on_start is not None:
+            module.on_start(module)
+
+    module.create_window = create_window
+    module.start = start
+    monkeypatch.setitem(sys.modules, "webview", module)
+    return module

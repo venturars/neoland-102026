@@ -107,8 +107,12 @@ def run_window(url: str, tunnel: Tunnel) -> None:
     webview.start()
 
 
-def show_already_open(message: str) -> None:
-    """Enseña en una ventana pequeña que ya hay otra copia abierta (CA-03) y vuelve al cerrarla."""
+def show_message(message: str) -> None:
+    """Enseña un aviso en una ventana pequeña y vuelve al cerrarla.
+
+    La app de escritorio no tiene terminal: así dice que ya hay otra copia abierta (CA-03) o que la
+    configuración no es válida.
+    """
     import webview  # noqa: PLC0415
 
     body = (

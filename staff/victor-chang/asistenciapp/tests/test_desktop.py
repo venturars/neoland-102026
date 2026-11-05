@@ -4,52 +4,14 @@ No se abre ninguna ventana: pywebview (externo) se sustituye por un módulo fals
 La clase online es el `Tunnel` de verdad con el cloudflared falso de conftest.py.
 """
 
-import sys
-import types
-
 import pytest
-from conftest import TUNNEL_URL, TUNNEL_URL_LINE
+from conftest import SAVE, TUNNEL_URL, TUNNEL_URL_LINE, FakeWindow
 
 from attendance.entrypoints import desktop
-from attendance.entrypoints.desktop import CLOSE_TEXTS, DesktopApi, run_window, show_already_open, watch_close
+from attendance.entrypoints.desktop import CLOSE_TEXTS, DesktopApi, run_window, show_message, watch_close
 from attendance.infra.tunnel import Tunnel
 
-SAVE = 10  # el valor de webview.FileDialog.SAVE no importa: el diálogo falso lo devuelve tal cual
-
-
-class FakeWindow:
-    """La ventana de pywebview: guarda lo que se le pide y contesta el diálogo como diga el test."""
-
-    def __init__(self, chosen=None):
-        self.confirm_close = False
-        self.chosen = chosen
-        self.dialogs = []
-
-    def create_file_dialog(self, dialog_type, save_filename=""):
-        self.dialogs.append((dialog_type, save_filename))
-        return self.chosen
-
-
-@pytest.fixture
-def fake_webview(monkeypatch):
-    """Un módulo `webview` falso que guarda las ventanas creadas y si se llamó a `start`."""
-    module = types.ModuleType("webview")
-    module.FileDialog = types.SimpleNamespace(SAVE=SAVE)
-    module.created = []
-    module.started = 0
-
-    def create_window(title, url=None, html=None, **kwargs):
-        window = FakeWindow()
-        module.created.append({"title": title, "url": url, "html": html, "window": window, **kwargs})
-        return window
-
-    def start(**_kwargs):
-        module.started += 1
-
-    module.create_window = create_window
-    module.start = start
-    monkeypatch.setitem(sys.modules, "webview", module)
-    return module
+# El módulo `webview` falso (`fake_webview`) está en conftest.py: también lo usa test_app.py.
 
 
 # ---------- confirmación al cerrar (CA-10, CA-11; plan v1.1 §2.7) ----------
@@ -162,15 +124,15 @@ def test_the_api_can_use_the_window(fake_webview, tmp_path):  # CA-17: save_file
     assert created["js_api"].save_file("x.csv", "Nombre\n") is True
 
 
-def test_already_open_shows_the_message(fake_webview):  # CA-03
-    show_already_open("AsistenciApp ya está abierta. Búscala en el Dock o en la barra de tareas.")
+def test_show_message_shows_it(fake_webview):  # CA-03: "ya está abierta"; también errores de configuración
+    show_message("AsistenciApp ya está abierta. Búscala en el Dock o en la barra de tareas.")
     [created] = fake_webview.created
     assert "AsistenciApp ya está abierta." in created["html"]
     assert fake_webview.started == 1
 
 
-def test_already_open_escapes_the_message(fake_webview):  # X4: se pinta como texto
-    show_already_open("<b>hola</b>")
+def test_show_message_escapes_it(fake_webview):  # X4: se pinta como texto
+    show_message("<b>hola</b>")
     assert "<b>" not in fake_webview.created[0]["html"]
     assert "&lt;b&gt;hola&lt;/b&gt;" in fake_webview.created[0]["html"]
 

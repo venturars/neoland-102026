@@ -4,21 +4,27 @@ Se prueba `main()` sin levantar el servidor. Solo se sustituye lo que está fuer
 (ARCHITECTURE.md · T4): `Flask.run`, el programa cloudflared y Google Meet. El puerto ocupado es un socket real.
 """
 
-import io
+import html
 import logging
+import os
 import re
 import socket
+import sys
+import urllib.error
+import urllib.request
+from pathlib import Path
 
 import pytest
 from flask import Flask
 
 import app
-from attendance.config import InvalidPortError
+from attendance.config import InvalidLockPortError, InvalidPortError, user_data_dir
 from attendance.domain.errors import MeetingLinkInvalidError, MeetServiceError
 from attendance.domain.participants import MeetingAttendance, Who
-from attendance.infra import tunnel
+from attendance.infra import instance, tunnel
 from attendance.infra.google_meet import GoogleMeet
-from attendance.infra.tunnel import CloudflaredMissingError
+from attendance.infra.ports import port_in_use
+from attendance.infra.tunnel import CloudflaredMissingError, Tunnel
 
 TUNNEL_LINE = "2026-10-20T08:33:25Z INF |  https://abc-def.trycloudflare.com  |\n"
 
@@ -27,17 +33,6 @@ def free_port():
     with socket.socket() as probe:
         probe.bind(("127.0.0.1", 0))  # 0 = un puerto libre elegido por el sistema
         return probe.getsockname()[1]
-
-
-class FakeCloudflared:
-    """Sustituye al programa cloudflared: anuncia su URL y apunta si lo han parado."""
-
-    def __init__(self):
-        self.stdout = io.StringIO(TUNNEL_LINE)
-        self.terminated = False
-
-    def terminate(self):
-        self.terminated = True
 
 
 @pytest.fixture
@@ -52,10 +47,9 @@ def started(tmp_path, monkeypatch):
 
 
 @pytest.fixture
-def cloudflared(monkeypatch):
-    process = FakeCloudflared()
-    monkeypatch.setattr(tunnel.shutil, "which", lambda _name: "/usr/bin/cloudflared")
-    monkeypatch.setattr(tunnel.subprocess, "Popen", lambda *_a, **_k: process)
+def cloudflared(fake_cloudflared, monkeypatch):
+    """`--tunel` con el cloudflared falso de conftest.py (el que necesita `Tunnel`, spec 007)."""
+    process = fake_cloudflared(TUNNEL_LINE)
     monkeypatch.setattr("sys.argv", ["app.py", "--tunel"])
     return process
 
@@ -191,3 +185,143 @@ def test_meet_everyone_needs_meet(started, monkeypatch):
     with pytest.raises(SystemExit):
         app.main()
     assert started == []
+
+
+# ---------- spec 007 · T12: modo escritorio (plan v1.1 §2.2) ----------
+
+
+def spy_create_app(monkeypatch):
+    """Apunta con qué se montó la app web, sin cambiar nada."""
+    built = []
+    real_create_app = app.create_app
+
+    def spy(config, **kwargs):
+        built.append((config, kwargs))
+        return real_create_app(config, **kwargs)
+
+    monkeypatch.setattr(app, "create_app", spy)
+    return built
+
+
+def get(url, token=None, method="GET"):
+    """Una petición de verdad al servidor que arranca app.py; devuelve (código, cuerpo)."""
+    headers = {"X-Teacher-Token": token} if token else {}
+    request = urllib.request.Request(url, method=method, headers=headers)  # noqa: S310 — solo http://127.0.0.1
+    try:
+        with urllib.request.urlopen(request, timeout=5) as response:  # noqa: S310
+            return response.status, response.read().decode()
+    except urllib.error.HTTPError as exc:
+        return exc.code, exc.read().decode()
+
+
+def panel_parts(url):
+    """De `http://127.0.0.1:<puerto>/profesor.html#t=<token>` saca (base, puerto, token)."""
+    match = re.fullmatch(r"(http://127\.0\.0\.1:(\d+))/profesor\.html#t=(\S+)", url)
+    assert match, url
+    return match.group(1), int(match.group(2)), match.group(3)
+
+
+@pytest.fixture
+def desktop_env(tmp_path, monkeypatch, fake_webview):
+    """`--ventana` con la carpeta del usuario en tmp_path y un puerto de bloqueo libre."""
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setenv("APPDATA", str(tmp_path / "AppData" / "Roaming"))
+    for name in ("ASISTENCIA_DB", "ASISTENCIA_GOOGLE_CLIENT", "ASISTENCIA_GOOGLE_TOKEN", "PORT"):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setenv("ASISTENCIA_LOCK_PORT", str(free_port()))
+    monkeypatch.setattr("sys.argv", ["app.py", "--ventana"])
+    monkeypatch.setattr(Flask, "run", lambda *_a, **_k: pytest.fail("en escritorio no se usa Flask.run"))
+    return fake_webview
+
+
+def test_ventana_opens_the_panel_in_a_window(desktop_env):  # CA-01, plan §2.2
+    answers = []
+    desktop_env.on_start = lambda webview: answers.append(get(webview.created[0]["url"].split("#")[0]))
+    app.main()
+    [window] = desktop_env.created
+    panel_parts(window["url"])  # http://127.0.0.1:<puerto libre>/profesor.html#t=<token>
+    assert answers[0][0] == 200  # mientras la ventana está abierta, el servidor responde
+    assert desktop_env.started == 1
+
+
+def test_desktop_keeps_the_data_in_the_user_folder(desktop_env):  # CA-05, CA-06
+    app.main()
+    folder = user_data_dir(os.environ, sys.platform, Path.home())
+    assert (folder / "asistencia.db").exists()
+
+
+def test_closing_the_window_stops_everything(desktop_env):  # CA-12
+    app.main()
+    _base, port, _token = panel_parts(desktop_env.created[0]["url"])
+    assert not port_in_use(port)  # el servidor se ha parado
+    instance.acquire(int(os.environ["ASISTENCIA_LOCK_PORT"])).release()  # y el bloqueo se ha soltado
+
+
+def test_the_online_class_closes_with_the_window(desktop_env, fake_cloudflared):  # CA-10, CA-12
+    process = fake_cloudflared(TUNNEL_LINE)
+    seen = {}
+
+    def during(webview):
+        base, _port, token = panel_parts(webview.created[0]["url"])
+        seen["open"] = get(f"{base}/api/online", token, method="POST")
+        seen["asks_to_close"] = webview.created[0]["window"].confirm_close
+
+    desktop_env.on_start = during
+    app.main()
+    assert seen["open"][0] == 200 and "abc-def.trycloudflare.com" in seen["open"][1]
+    assert seen["asks_to_close"] is True
+    assert process.terminated
+
+
+def test_a_failing_window_still_cleans_up(desktop_env):  # F4, S7: el finally
+    desktop_env.on_start = RuntimeError("la ventana falla")
+    with pytest.raises(RuntimeError):
+        app.main()
+    _base, port, _token = panel_parts(desktop_env.created[0]["url"])
+    assert not port_in_use(port)
+    instance.acquire(int(os.environ["ASISTENCIA_LOCK_PORT"])).release()
+
+
+def test_a_second_copy_shows_a_message(desktop_env, monkeypatch):  # CA-03
+    built = spy_create_app(monkeypatch)
+    with instance.acquire(int(os.environ["ASISTENCIA_LOCK_PORT"])):
+        app.main()
+    [window] = desktop_env.created
+    assert "AsistenciApp ya está abierta." in window["html"]
+    assert built == []  # no se monta nada más
+
+
+def test_bad_config_in_the_desktop_shows_a_message(desktop_env, monkeypatch):  # sin terminal, el error en una ventana
+    monkeypatch.setenv("ASISTENCIA_LOCK_PORT", "abc")
+    app.main()
+    [window] = desktop_env.created
+    assert html.escape(InvalidLockPortError.MESSAGE) in window["html"]
+
+
+def test_the_packaged_app_is_the_desktop_without_options(desktop_env, tmp_path, monkeypatch):  # CA-01
+    bundle = tmp_path / "AsistenciApp.app" / "Contents" / "Frameworks"
+    monkeypatch.setattr("sys.argv", ["AsistenciApp"])
+    monkeypatch.setattr(sys, "frozen", True, raising=False)
+    monkeypatch.setattr(sys, "_MEIPASS", str(bundle), raising=False)
+    built = spy_create_app(monkeypatch)
+    app.main()
+    config, kwargs = built[0]
+    assert kwargs["desktop"] is True
+    assert config.cloudflared_path is not None and config.cloudflared_path.parent == bundle
+    assert config.google_client_path == bundle / "google-client.json"  # la llave incluida (plan §2.8)
+
+
+@pytest.mark.parametrize("extra", [["--tunel"], ["--meet", "abc-defg-hij"]])
+def test_ventana_does_not_combine_with_terminal_options(desktop_env, monkeypatch, extra):
+    monkeypatch.setattr("sys.argv", ["app.py", "--ventana", *extra])
+    with pytest.raises(SystemExit):
+        app.main()
+    assert desktop_env.created == []
+
+
+def test_from_the_terminal_the_panel_can_open_the_online_class(started, monkeypatch):  # CA-18 + spec 007 · plan §2.6
+    built = spy_create_app(monkeypatch)
+    app.main()
+    _config, kwargs = built[0]
+    assert isinstance(kwargs["tunnel"], Tunnel)
+    assert kwargs.get("desktop", False) is False

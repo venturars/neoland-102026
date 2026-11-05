@@ -114,6 +114,9 @@ class Tunnel:
 
     `on_change` son funciones a las que se avisa con la URL nueva (o None) cada vez que se abre o se
     cierra; la ventana de escritorio la usa para pedir confirmación al cerrar (spec 007 · plan §2.7).
+
+    `port` se puede cambiar después de crearlo: en la app de escritorio el puerto lo elige el sistema
+    al arrancar el servidor, y el servidor necesita antes la app, que ya lleva el túnel (spec 007 · T12).
     """
 
     def __init__(self, executable: Path | None, port: int, timeout: float = TIMEOUT_SECONDS) -> None:
@@ -121,11 +124,11 @@ class Tunnel:
 
         Args:
             executable: el cloudflared que va dentro de la app, o None para buscarlo en el PATH.
-            port: puerto local de la app.
+            port: puerto local de la app (0 si aún no se sabe).
             timeout: segundos máximos de espera al abrir; los tests usan menos.
         """
         self._executable = executable
-        self._port = port
+        self.port = port
         self._timeout = timeout
         self._process: subprocess.Popen[str] | None = None
         self._url: str | None = None
@@ -151,7 +154,7 @@ class Tunnel:
             if self.url is not None:
                 return self.url
             self._close_dead()
-            self._process, self._url = start_tunnel(self._port, self._timeout, self._executable)
+            self._process, self._url = start_tunnel(self.port, self._timeout, self._executable)
             url = self._url
         self._notify(url)
         return url

@@ -92,6 +92,7 @@ def test_tunnel_errors_say_what_to_do(error):  # E3, E5
 # ---------- cloudflared dentro de la app y clase Tunnel (spec 007 · plan §2.6) ----------
 
 URL = "https://actual-academics-century-ratio.trycloudflare.com"
+TUNNEL_URL_LINE_FOR_PORT = URL_LINE
 
 
 @pytest.fixture
@@ -211,6 +212,15 @@ def test_url_is_none_if_cloudflared_died_on_its_own(fake_cloudflared):  # el pan
     online.open()
     process.exit_code = 1
     assert online.url is None
+
+
+def test_the_port_can_be_set_after_creating_it(fake_cloudflared):  # app.py · plan §2.2: el puerto llega al arrancar
+    fake_cloudflared(TUNNEL_URL_LINE_FOR_PORT + "\n")
+    online = Tunnel(executable=None, port=0, timeout=5)
+    online.port = 61670
+    online.open()
+    args, _kwargs = fake_cloudflared.calls[0]
+    assert args[-1] == "http://127.0.0.1:61670"
 
 
 def test_open_passes_on_the_errors(fake_cloudflared):  # CA-08: el error llega al panel
