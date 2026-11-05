@@ -38,9 +38,19 @@ async function rewrite(folder) {
     const path = join(folder, file.name);
     if (file.isDirectory()) {
       await rewrite(path);
-    } else if (file.name.endsWith(".js")) {
+    } else if (
+      path.endsWith(join("db", "server.js")) ||
+      path.endsWith(join("queries", "users.js"))
+    ) {
       const text = await readFile(path, "utf8");
-      await writeFile(path, text.replaceAll("3000", "23010"));
+      const configured = text.replace(
+        /http:\/\/127\.0\.0\.1:\d+/g,
+        "http://127.0.0.1:23010",
+      );
+      await writeFile(
+        path,
+        configured.replace(/server\.listen\(\d+,/, "server.listen(23010,"),
+      );
     }
   }
 }

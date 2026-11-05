@@ -1,0 +1,1 @@
+SELECT r.session_id FROM races r JOIN sessions s ON s.id=r.session_id WHERE expires_at<=? AND (s.closed_at IS NULL OR join_secret IS NOT NULL OR EXISTS(SELECT 1 FROM race_access a WHERE a.session_id=r.session_id) OR EXISTS(SELECT 1 FROM race_operations o WHERE o.session_id=r.session_id))

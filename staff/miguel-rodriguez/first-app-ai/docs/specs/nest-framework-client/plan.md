@@ -946,3 +946,19 @@ These optional peers are not proposed/installed; no required peer gap was found.
 ## Required human decision
 
 Accept or decline this exact Nest/Babel proposal with the minimatch CVE, tslib ownership warning, other unfiltered alerts, 52 unknown exact versions, and limited campaign/organization-alert coverage. No package installation until that decision. After any authorized installation, compare its lockfile three-layer tree with this inventory and review any differences before continuing.
+
+
+## Integración tras los merges · 2026-11-05
+
+Se incorpora staging f1e27d67 después de #1023, #1031, #1025 y #1035. Resolver
+README y arquitectura conservando las guías integradas y añadiendo Nest; unir
+las configuraciones de formato/lint y las excepciones de antigüedad. pnpm
+regenera el lockfile sin scripts. La comparación de los202 nodos y snapshots
+de las tres capas revisadas no presenta diferencias. El árbol combinado tiene
+373 versiones; lo añadido fuera de esas capas corresponde a Electron/Fastify
+ya integrados. OpenAI enlaza su peer opcional undici7.30.1 existente; la
+clasificación compartida usa fetch nativo. No cambia la lógica del clasificador.
+
+La prueba de Nest reescribe solo sus copias compiladas de db/server.js y
+queries/users.js para usar el puerto aislado, incluida la llamada listen.
+Las fuentes de los clientes integrados se conservan como están en staging.

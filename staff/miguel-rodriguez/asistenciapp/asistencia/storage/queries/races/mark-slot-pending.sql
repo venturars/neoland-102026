@@ -1,0 +1,1 @@
+UPDATE race_slots SET state='pendiente' WHERE session_id=? AND roster_key=?

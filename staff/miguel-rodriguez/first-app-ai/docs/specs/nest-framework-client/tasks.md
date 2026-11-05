@@ -42,7 +42,24 @@ La revisión Socket mantiene 52 comprobaciones incompletas y los hallazgos
 aceptados técnicamente por delegación; no se afirma una revisión limpia.
 
 Publicación verificada en ff5b17a4, sin force push. PR #1050 hacia staging,
-issue #1044 abierta y enlazada. Se conserva en draft hasta integrar #1025 y
+issue #1044 abierta y enlazada. Se conservó en draft hasta integrar #1025 y
 ajustar la configuración compartida antes de solicitar las primeras revisiones.
 Una comparación local merge-tree detectó solapamientos en README, arquitectura,
 ESLint, package y lockfile/workspace. No se cambió ninguna rama al comprobarlo.
+
+
+## Verificación de integración · 2026-11-05
+
+- Incorporado staging f1e27d67; la comparación final contiene únicamente Nest
+  y sus configuraciones/guías dentro de first-app-ai. Los otros proyectos son
+  contenido entrante de staging, no cambios nuevos de esta PR.
+- Lockfile regenerado con pnpm:373 versiones combinadas. Los202 nodos y
+  snapshots del alcance Socket revisado son idénticos. El intento offline
+  necesitó metadata de registro; la resolución posterior no cambió esas capas.
+- Babel compila33 archivos; formato y lint correctos.
+- Suite conjunta con datos desechables y puertos25000–25002/23010:34 pruebas
+  pasadas,0 fallos u omisiones. Incluye todos los clientes más la inyección real.
+- La primera ejecución conjunta detectó que el fixture cambiaba la URL pero
+  no listen tras variar el puerto de la copia. Se corrigió solo ese fixture y
+  se repitió la suite completa; los puertos de entrega siguen intactos.
+- Sin merge de PRs, cierre manual de issues, cambios de base ni force push.
