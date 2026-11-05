@@ -4,6 +4,8 @@ first-app/
   README.md
   eslint.config.js
   babel.config.json
+  scripts/
+    jupyter-node-http.sh
   src/
     db/
       server.js
@@ -54,6 +56,14 @@ first-app/
         users.controller.js
         users.service.js
         http-exception.filter.js
+      node-http/
+        app.js
+        jupyter/
+          create-user.ipynb
+          list-users.ipynb
+          find-user-by-id.ipynb
+          update-user.ipynb
+          delete-user.ipynb
   agents/
   skills/
   tools/
