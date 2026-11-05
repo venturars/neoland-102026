@@ -1,6 +1,6 @@
 # Tareas 009 · Alinear el flujo de git con la plantilla
 
-> Estado: **Implementadas** (2026-11-05), salvo T10 · Plan: [plan.md](plan.md) · Creado: 2026-11-05 · Aprobada: 2026-11-05
+> Estado: **Implementadas y verificadas** (2026-11-05) · Plan: [plan.md](plan.md) · Creado: 2026-11-05 · Aprobada: 2026-11-05
 
 Issue: #1145.
 
@@ -77,10 +77,11 @@ Cómo leer esta lista:
 
 ## Fase E · Pendiente de fusión
 
-- [ ] **T10** · Verificar CA-06 al fusionar #1143.
+- [x] **T10** · Verificar CA-06 al fusionar #1143.
   - Tras la fusión, `git ls-files -s` de `exercises/git-workflow-agent-template/tools/create-pr-base-staging.sh` en `staging` debe mostrar `100755`, igual que la copia.
   - *Cubre:* CA-06.
   - *Hecha cuando:* `staging` muestra `100755` para ese fichero. No bloquea el cierre de T09.
+  - *Resultado (2026-11-05):* #1143 fusionada (commit `b99ccb81`). `origin/staging` tiene `100755` con el mismo blob `8bea723` que la copia.
 
 ---
 
@@ -91,3 +92,4 @@ Cómo leer esta lista:
 | 0.1 | 2026-11-05 | Borrador inicial | Plan 009 aprobado. Tareas de verificación y cierre |
 | 1.0 | 2026-11-05 | Aprobadas | Ok para verificar |
 | 1.1 | 2026-11-05 | T01 a T09 hechas; T10 pendiente de #1143 | Verificación completa de CA-01 a CA-05, CA-07 y CA-08 |
+| 1.2 | 2026-11-05 | T10 hecha | #1143 fusionada; `staging` tiene el script como `100755`. CA-06 verificado |

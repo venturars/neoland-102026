@@ -1,6 +1,6 @@
 # Spec 009 · Alinear el flujo de git con la plantilla
 
-> Estado: **Implementada** (2026-11-05), salvo CA-06 pendiente de fusión de [#1143](https://github.com/venturars/neoland-102026/pull/1143) · Versión 1.1 · Creada: 2026-11-05 · Issue: [#1145](https://github.com/venturars/neoland-102026/issues/1145)
+> Estado: **Implementada y verificada** (2026-11-05) · Versión 1.2 · Creada: 2026-11-05 · Issue: [#1145](https://github.com/venturars/neoland-102026/issues/1145)
 
 > Nota: los cambios de la rama `1145-chore-align-asistenciapp-git-workflow` se hicieron antes de escribir esta spec (commit `0d018e3d`). Se revisan contra estos criterios. La PR queda en borrador hasta que se apruebe esta spec.
 
@@ -81,3 +81,4 @@ Formato: **Dado** (situación inicial) · **Cuando** (acción) · **Entonces** (
 | 0.2 | 2026-11-05 | Preguntas resueltas | La PR queda en borrador por ahora. El cierre de la spec no espera a #1143; CA-06 se verifica al fusionarla |
 | 1.0 | 2026-11-05 | Aprobada | Ok para pasar al plan |
 | 1.1 | 2026-11-05 | Implementada | T01 a T09 hechas; CA-01 a CA-05, CA-07 y CA-08 verificados. CA-06 pendiente de fusión de #1143 (T10) |
+| 1.2 | 2026-11-05 | Verificada | #1143 fusionada. CA-06 verificado: `staging` tiene el script como `100755` |
