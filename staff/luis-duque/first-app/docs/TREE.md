@@ -41,6 +41,11 @@ first-app/
         styles.css
       http/
         app.js
+      electron/
+        main.js
+        index.html
+        app.js
+        styles.css
     queries/
       users.js
       queries/
@@ -57,6 +62,7 @@ first-app/
   eslint.config.js
   package.json
   pnpm-lock.yaml
+  pnpm-workspace.yaml
   agents/
     git-workflow-agent.md
     help-me-to-think.md

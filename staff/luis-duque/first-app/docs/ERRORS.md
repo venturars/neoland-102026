@@ -13,3 +13,5 @@ Si Ollama no contesta, o la lectura falla, se detiene y lanza un `Error` con el 
 Si el programa local no está en marcha, la operación no se completa y se ve el fallo de esa llamada.
 
 Si el cliente HTTP no está en marcha, Postman no completa la petición.
+
+Si Electron no abre la ventana, no se puede pedir la operación desde ahí. Si el programa local no está en marcha, la ventana muestra el fallo de esa llamada.

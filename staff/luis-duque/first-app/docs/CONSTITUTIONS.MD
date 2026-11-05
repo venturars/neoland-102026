@@ -6,7 +6,7 @@ Las guías están en [ARCHITECTURE.md](ARCHITECTURE.md), [TREE.md](TREE.md), [DA
 
 Un desarrollo nuevo no empieza en el código. El pedido entra primero por `agents/git-workflow-agent.md`. Si la tarea ya está en curso, el pedido sigue en su momento o en su fase. Se piensa la tarea solo si es nueva. Una pregunta sobre el proyecto, o un mensaje que no cambie el proyecto, no abre ese flujo.
 
-Se escribe en `docs/specs/<nombre>/`. `<nombre>` va en kebab-case. El desarrollo abierto es `docs/specs/workflow-first/`.
+Se escribe en `docs/specs/<nombre>/`. `<nombre>` va en kebab-case. El desarrollo abierto es `docs/specs/electron-client/`.
 
 Pedir el cambio no abre el código y no escribe `spec.md` como primera respuesta. Con la rama ya abierta, `spec.md` se escribe y una persona lo lee, antes de pedir revisión. Después `plan.md` y lo lee. Después `tasks.md` y lo lee. El código, `package.json` y el resto de ficheros de la app se tocan cuando esa persona pide ejecutar las tareas.
 
@@ -28,7 +28,7 @@ Un paquete de Node nuevo, o un cambio de su versión, se comprueba con Socket an
 
 Crear, actualizar, eliminar, listar y buscar siguen el mismo camino.
 
-1. Se pide una operación con los datos del usuario, llamando a la lógica, desde el cliente de terminal, desde Jupyter, desde las pantallas del navegador o desde Postman. Las pantallas piden listar, modificar y eliminar. Postman pide crear, actualizar, eliminar, listar y buscar. El cliente HTTP es `src/clients/http/app.js`, usa Express `5.3.0`, se arranca con `pnpm http` y responde en `127.0.0.1:3001`.
+1. Se pide una operación con los datos del usuario, llamando a la lógica, desde el cliente de terminal, desde Jupyter, desde las pantallas del navegador, desde la ventana Electron o desde Postman. Las pantallas piden listar, modificar y eliminar. La ventana Electron pide listar, crear, modificar y eliminar. Postman pide crear, actualizar, eliminar, listar y buscar. El cliente HTTP es `src/clients/http/app.js`, usa Express `5.3.0`, se arranca con `pnpm http` y responde en `127.0.0.1:3001`. La ventana es `src/clients/electron`, usa Electron `45.2.3` y se arranca con `pnpm electron`.
 2. La lógica valida esos datos cuando la operación los lleva. Listar no lleva datos. Si no valen, lanza un `Error` y termina.
-3. Las consultas crean la tabla si no existe y piden la ejecución a un programa local en `127.0.0.1:3000`. Ese programa solo ejecuta consultas. Se arranca con `pnpm server`. Las pantallas se abren con `pnpm browser`.
+3. Las consultas crean la tabla si no existe y piden la ejecución a un programa local en `127.0.0.1:3000`. Ese programa solo ejecuta consultas. Se arranca con `pnpm server`. Las pantallas se abren con `pnpm browser`. La ventana se abre con `pnpm electron`.
 4. La base de datos guarda el cambio, lo rechaza si el email ya existe o el usuario no está, o devuelve las filas.
