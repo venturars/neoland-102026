@@ -1,5 +1,7 @@
 Issue: #1040
 
+**Nota:** la página propia en `/docs` y el `Origin` de la propia API cambian en `docs/specs/nest-swagger-docs/`.
+
 # Cliente de usuarios con una API Nest
 
 Una API HTTP hecha con Nest para crear, listar, ver, modificar y borrar usuarios. La usa quien prueba la app en su ordenador, por HTTP, sin abrir la web, Electron, las extensiones, la terminal ni Jupyter.
