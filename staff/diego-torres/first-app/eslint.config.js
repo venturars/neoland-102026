@@ -6,6 +6,24 @@ export default defineConfig([
     ignores: [".venv/**", "node_modules/**"],
   },
   {
+    // ESLint no entiende los decoradores @ de estos ficheros de Nest.
+    ignores: [
+      "src/clients/nest/.run/**",
+      "src/clients/nest/app.module.js",
+      "src/clients/nest/users.controller.js",
+      "src/clients/nest/users.service.js",
+      "src/clients/nest/logic-exception.filter.js",
+    ],
+  },
+  {
+    // Este fichero sí se revisa, aunque sea .mjs.
+    files: ["src/clients/nest/bootstrap.mjs"],
+    plugins: {
+      js,
+    },
+    extends: ["js/recommended"],
+  },
+  {
     files: ["**/*.js"],
     plugins: {
       js,
