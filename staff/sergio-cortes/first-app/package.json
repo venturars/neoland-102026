@@ -10,6 +10,7 @@
     "server": "node src/db/server.js",
     "web": "nc -z 127.0.0.1 3000 >/dev/null 2>&1 || { node src/db/server.js & DB=$!; trap \"kill $DB\" EXIT INT TERM; }; open -na \"Brave Browser\" --args --user-data-dir=/tmp/first-app-brave --allow-file-access-from-files \"file://$(pwd)/src/clients/web/index.html\"; wait",
     "http": "nc -z 127.0.0.1 3000 >/dev/null 2>&1 || { node src/db/server.js & DB=$!; trap \"kill $DB\" EXIT INT TERM; }; node src/clients/http/server.js",
+    "bruno": "sh -c 'cd src/clients/http/bruno && ../../../../node_modules/.bin/bru run 01-sql-online -r'",
     "electron": "nc -z 127.0.0.1 3000 >/dev/null 2>&1 || { node src/db/server.js & DB=$!; trap \"kill $DB\" EXIT INT TERM; }; electron src/clients/electron/main.js",
     "chrome": "nc -z 127.0.0.1 3000 >/dev/null 2>&1 || { node src/db/server.js & DB=$!; trap \"kill $DB\" EXIT INT TERM; }; node src/clients/chrome/server.js",
     "nest": "nc -z 127.0.0.1 3000 >/dev/null 2>&1 || { node src/db/server.js & DB=$!; trap \"kill $DB\" EXIT INT TERM; }; rm -rf dist && babel src -d dist --config-file ./babel.config.json && node dist/clients/nest/main.js",
@@ -42,6 +43,7 @@
     "@babel/plugin-proposal-decorators": "8.0.2",
     "@babel/preset-env": "8.0.7",
     "@eslint/js": "10.0.1",
+    "@usebruno/cli": "4.3.0",
     "electron": "45.2.2",
     "eslint": "10.13.0",
     "prettier": "3.9.10"

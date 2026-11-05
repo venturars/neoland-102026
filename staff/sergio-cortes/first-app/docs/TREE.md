@@ -46,6 +46,7 @@ first-app/
     clients/
       http/
         server.js
+        bruno/
       nest/
         main.js
         app.module.js
