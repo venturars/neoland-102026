@@ -1,6 +1,6 @@
 # Cliente NestJS
 
-Se puede listar, crear, modificar y eliminar usuarios desde Postman, sin pantallas. El cliente es NestJS `12.3.3`. No busca por id, por email ni por nombre. No cuenta el género.
+Se puede listar, crear, modificar, eliminar y buscar por id usuarios desde Postman, sin pantallas. El cliente es NestJS `12.3.3`. No busca por email ni por nombre. No cuenta el género.
 
 Listar no entra nada. Sale cada usuario, con su id, su nombre y su email. Si no hay ninguno, sale ninguno y eso no es un fallo.
 
@@ -10,7 +10,9 @@ Modificar entra el id y el nombre, el email o los dos. Sale el `id` y los campos
 
 Eliminar entra el id. Sale que ese usuario ya no está.
 
-Cada petición pide la operación que ya existe. No añade otra y no cambia lo que esa operación ya hace. Crear, modificar y eliminar siguen guardando el cambio. Listar no escribe.
+Buscar por id entra el id. Sale ese usuario, con su id, su nombre y su email.
+
+Cada petición pide la operación que ya existe. No añade otra y no cambia lo que esa operación ya hace. Crear, modificar y eliminar siguen guardando el cambio. Listar y buscar por id no escriben.
 
 Se llama desde Postman, en el propio equipo. El programa que ejecuta las consultas sigue en `127.0.0.1`, puerto `3000`. Este cliente responde en `127.0.0.1`, puerto `3003`. El cliente HTTP sigue en el `3001` y el popup de Chrome en el `3002`.
 

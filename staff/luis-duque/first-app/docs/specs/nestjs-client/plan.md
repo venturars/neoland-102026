@@ -2,7 +2,7 @@
 
 Cumple `docs/specs/nestjs-client/spec.md`.
 
-No hay operación nueva ni SQL nuevo. Listar, crear, modificar y eliminar siguen en la lógica que ya existe. Buscar y contar el género no entran. Crear la tabla no se pide aparte.
+No hay operación nueva ni SQL nuevo. Listar, crear, modificar, eliminar y buscar por id siguen en la lógica que ya existe. Buscar por email, por nombre y contar el género no entran. Crear la tabla no se pide aparte.
 
 Se añade NestJS `12.3.3`. Es la excepción aceptada, junto a Express `5.3.0`, Electron `45.2.3` y Fastify `5.12.8`. Esta app es JavaScript con `"type": "module"`. NestJS usa decoradores y Node no los ejecuta así. Babel los compila antes de arrancar. No hay TypeScript.
 
@@ -37,19 +37,19 @@ Se crea `src/clients/nest/`:
 
 - `main.js` arranca NestJS, escucha y escribe el origen.
 - `app.module.js` registra el controlador, el servicio y el filtro.
-- `users.controller.js` recibe las cuatro peticiones.
+- `users.controller.js` recibe las cinco peticiones.
 - `users.service.js` llama a la lógica.
 - `http-exception.filter.js` traduce el `Error` a la respuesta HTTP. No crea una clase de error: usa `Error`.
 
 Se crea `babel.config.json` en `first-app`. El preset es `@babel/preset-env` con `modules: false` y el objetivo `node: current`. El plugin es `@babel/plugin-proposal-decorators` con `version: legacy`.
 
-Se crea `scripts/run-nest.js`. Borra `dist`, compila `src` a `dist` con Babel y arranca `dist/clients/nest/main.js`. Compila todo `src` porque el cliente importa `../../logic` y esa ruta tiene que existir dentro de `dist`.
+No se crea `scripts/run-nest.js`. El arranque va en el script `nest` de `package.json`.
 
-Se toca `package.json`. En `dependencies` entran `@nestjs/common` `12.3.3`, `@nestjs/core` `12.3.3`, `@nestjs/platform-express` `12.3.3`, `reflect-metadata` `0.2.2` y `rxjs` `7.8.2`. En `devDependencies` entran `@babel/cli` `8.1.0`, `@babel/core` `8.1.0`, `@babel/plugin-proposal-decorators` `8.0.2` y `@babel/preset-env` `8.0.7`. El script `nest` queda `node scripts/run-nest.js`. Se lanza con `pnpm nest` desde `first-app`, con `pnpm server` en marcha. El script `format` también escribe `src/clients/nest/**/*.js`. pnpm añade los paquetes con esas versiones exactas. `pnpm-lock.yaml` lo escribe pnpm. No se edita a mano. No se usa npm ni yarn.
+Se toca `package.json`. En `dependencies` entran `@nestjs/common` `12.3.3`, `@nestjs/core` `12.3.3`, `@nestjs/platform-express` `12.3.3`, `reflect-metadata` `0.2.2` y `rxjs` `7.8.2`. En `devDependencies` entran `@babel/cli` `8.1.0`, `@babel/core` `8.1.0`, `@babel/plugin-proposal-decorators` `8.0.2` y `@babel/preset-env` `8.0.7`. El script `nest` queda `pnpm exec babel src -d dist --delete-dir-on-start --config-file ./babel.config.json && node dist/clients/nest/main.js`. Compila todo `src` porque el cliente importa `../../logic` y esa ruta tiene que existir dentro de `dist`. `--delete-dir-on-start` borra `dist` antes de compilar, en Windows, Mac y Linux. Se lanza con `pnpm nest` desde `first-app`, con `pnpm server` en marcha. El script `format` también escribe `src/clients/nest/**/*.js`. pnpm añade los paquetes con esas versiones exactas. `pnpm-lock.yaml` lo escribe pnpm. No se edita a mano. No se usa npm ni yarn.
 
 Se toca `eslint.config.js`. Ignora `dist/**` y `src/clients/nest/**`. El parser recomendado no entiende los decoradores. Prettier sí formatea ese JavaScript. `pnpm lint` sigue y no analiza esa carpeta.
 
-Se toca el `.gitignore` de la raíz del repositorio. Entra `staff/luis-duque/first-app/dist/`. `dist` es salida de Babel y no se sube.
+No se toca el `.gitignore` de la raíz del repositorio. `dist` es salida de Babel y no se sube.
 
 No se tocan `src/logic`, `src/queries`, `src/db`, `src/clients/terminal`, `src/clients/jupyter`, `src/clients/browser`, `src/clients/http`, `src/clients/electron`, `src/clients/chrome` ni `src/clients/vscode`. No se crea un `README`.
 
@@ -57,16 +57,17 @@ En el mismo cambio que el código se tocan `docs/CONSTITUTIONS.MD`, `AGENTS.MD`,
 
 ## Firma
 
-No hay función de negocio nueva. `users.service.js` importa cuatro funciones que ya existen. El controlador no importa la lógica.
+No hay función de negocio nueva. `users.service.js` importa cinco funciones que ya existen. El controlador no importa la lógica.
 
 | Petición | Llamada |
 | --- | --- |
 | `POST /users` | `createUser({ name, email })` |
 | `GET /users` | `listUsers()` |
+| `GET /users/:id` | `findUserById(id)` |
 | `PATCH /users/:id` | `updateUser(id, changes)` |
 | `DELETE /users/:id` | `deleteUser(id)` |
 
-No hay `GET /users/:id`, ni por email, ni por nombre. No se importa `usersGender`.
+No hay búsqueda por email ni por nombre. No se importa `usersGender`.
 
 El cuerpo de crear es JSON con `name` y `email`. El de modificar es JSON con `name`, con `email` o con los dos. Si un campo no llega, no entra en `changes`. El id de la ruta llega como texto. La lógica ya acepta un id en texto.
 
@@ -84,6 +85,7 @@ Si la función termina, la respuesta es JSON, salvo al eliminar:
 
 - Crear responde 201 con `{ id, name, email }`.
 - Listar responde 200 con la lista. Si no hay ninguno, `[]`.
+- Buscar por id responde 200 con `{ id, name, email }`.
 - Modificar responde 200 con lo que devuelve `updateUser`: el `id` y solo los campos enviados.
 - Eliminar responde 204 sin cuerpo. `deleteUser` no devuelve el usuario. Esa respuesta vacía es la señal de que ya no está.
 
@@ -100,14 +102,14 @@ Si la función lanza un `Error`, el cuerpo es `{ "message": texto }` y el texto 
 
 ## Documentación
 
-`docs/ARCHITECTURE.md` gana el cliente NestJS: otra forma de listar, crear, modificar y eliminar, desde Postman, sin pantallas. Responde en `127.0.0.1:3003`. Usa NestJS `12.3.3`. Llama a la lógica. No busca y no cuenta el género. Se arranca con `pnpm nest` desde `first-app`, con el programa de consultas en marcha. La terminal, Jupyter, las pantallas, la ventana, el popup de Chrome, la vista de Visual Studio Code y el cliente HTTP siguen igual.
+`docs/ARCHITECTURE.md` gana el cliente NestJS: otra forma de listar, crear, modificar, eliminar y buscar por id, desde Postman, sin pantallas. Responde en `127.0.0.1:3003`. Usa NestJS `12.3.3`. Llama a la lógica. No busca por email ni por nombre. No cuenta el género. Se arranca con `pnpm nest` desde `first-app`, con el programa de consultas en marcha. Babel compila `src` a `dist` y Node ejecuta `dist/clients/nest/main.js`. La terminal, Jupyter, las pantallas, la ventana, el popup de Chrome, la vista de Visual Studio Code y el cliente HTTP siguen igual.
 
-`docs/TREE.md` añade `clients/nest/` con `main.js`, `app.module.js`, `users.controller.js`, `users.service.js` y `http-exception.filter.js`. Añade `scripts/run-nest.js` y `babel.config.json`.
+`docs/TREE.md` añade `clients/nest/` con `main.js`, `app.module.js`, `users.controller.js`, `users.service.js` y `http-exception.filter.js`. Añade `babel.config.json`. No añade `scripts/run-nest.js`.
 
-`docs/STYLE.md` deja el cliente en `src/clients/nest`. `users.service.js` llama a `listUsers`, `createUser`, `updateUser` y `deleteUser`. No llama a las búsquedas ni a `usersGender`. No valida, no escribe SQL y no abre la base. Se arranca con `pnpm nest`. NestJS queda en `12.3.3`.
+`docs/STYLE.md` deja el cliente en `src/clients/nest`. `users.service.js` llama a `listUsers`, `createUser`, `updateUser`, `deleteUser` y `findUserById`. No llama a `findUserByEmail`, `findUserByName` ni a `usersGender`. No valida, no escribe SQL y no abre la base. Se arranca con `pnpm nest`. NestJS queda en `12.3.3`.
 
 `docs/ERRORS.md` añade que, si este cliente no está en marcha, Postman no completa la petición.
 
 `docs/CONSTITUTIONS.MD` cuenta el cliente NestJS, `pnpm nest` y `127.0.0.1:3003`. El desarrollo abierto pasa a ser `docs/specs/nestjs-client/`.
 
-`AGENTS.MD` deja la regla: el cliente vive en `src/clients/nest`. `users.service.js` importa `listUsers`, `createUser`, `updateUser` y `deleteUser`. No importa `usersGender` ni las búsquedas. No llama a `/execute`. No valida, no escribe SQL y no abre la base. Se arranca con `pnpm nest` desde `first-app` y escucha en `127.0.0.1:3003`. NestJS queda en `12.3.3`. Babel compila `src` a `dist` antes de arrancar. `dist` no se sube.
+`AGENTS.MD` deja la regla: el cliente vive en `src/clients/nest`. `users.service.js` importa `listUsers`, `createUser`, `updateUser`, `deleteUser` y `findUserById`. No importa `usersGender`, `findUserByEmail` ni `findUserByName`. No llama a `/execute`. No valida, no escribe SQL y no abre la base. Se arranca con `pnpm nest` desde `first-app`. El script `nest` borra `dist`, compila `src` a `dist` con Babel y ejecuta `dist/clients/nest/main.js`. Escucha en `127.0.0.1:3003`. NestJS queda en `12.3.3`. `dist` no se sube.
