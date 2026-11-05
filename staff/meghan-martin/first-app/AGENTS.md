@@ -35,6 +35,7 @@ La plantilla de la pull request es `.github/pull_request_template.md` de esta ap
 - `npm run jupyter`, desde `first-app`, abre la lista de notebooks. La primera vez prepara el Jupyter de esta app. La base tiene que estar en marcha.
 - `npm run browser`, desde `first-app`, abre `src/clients/browser/index.html`. No sirve la página. La base tiene que estar en marcha.
 - `npm run api`, desde `first-app`, responde JSON en `http://127.0.0.1:3001`. La base tiene que estar en marcha.
+- `npm run bruno`, desde `first-app`, lanza la colección Bruno del programa JSON. El programa JSON y la base del ensayo tienen que estar en marcha.
 - `npm run electron`, desde `first-app`, abre una ventana de escritorio. La base tiene que estar en marcha.
 - No hay tests. `package.json` no tiene script `test`.
 - El lock que hay es `package-lock.json`. No hay `pnpm-lock.yaml`.
