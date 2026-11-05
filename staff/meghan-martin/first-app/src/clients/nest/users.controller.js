@@ -10,8 +10,20 @@ import {
   Patch,
   Post,
 } from "@nestjs/common";
+import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { UsersService } from "./users.service.js";
 
+const USER_BODY = {
+  schema: {
+    type: "object",
+    properties: {
+      name: { type: "string" },
+      email: { type: "string" },
+    },
+  },
+};
+
+@ApiTags("users")
 @Controller()
 @Dependencies(UsersService)
 export class UsersController {
@@ -21,6 +33,7 @@ export class UsersController {
 
   @Post("users")
   @HttpCode(201)
+  @ApiBody(USER_BODY)
   @Bind(Body())
   async create(body) {
     const payload = body ?? {};
@@ -44,6 +57,7 @@ export class UsersController {
   }
 
   @Patch("users/:id")
+  @ApiBody(USER_BODY)
   @Bind(Param("id"), Body())
   async update(id, body) {
     const payload = body ?? {};
