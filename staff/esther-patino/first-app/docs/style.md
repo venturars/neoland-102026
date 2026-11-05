@@ -2,6 +2,8 @@
 
 - Base: `pnpm server` desde `first-app`. El servidor escucha en `127.0.0.1:3000`.
 - HTTP: `pnpm http` desde `first-app`. El cliente REST escucha en `127.0.0.1:3001`.
+- Node HTTP: `pnpm node-http` desde `first-app`. Ese cliente escucha en `127.0.0.1:3004`. Usa `node:http`.
+- Jupyter node-http: antes, `pnpm server` y `pnpm node-http` en terminales aparte. Luego `pnpm jupyter-node-http` desde `first-app`. Abre `src/clients/node-http/jupyter/`.
 - Bruno: antes, `pnpm server` y `pnpm http` en terminales aparte. Luego `pnpm bruno` desde `first-app` (carpeta `01-sql-online`). La base sigue en `127.0.0.1:3000`. Con solo el HTTP en marcha, desde `src/clients/http/bruno`: `node ../../../../node_modules/@usebruno/cli/bin/bru.js run 02-sql-offline -r`.
 - Nest: `pnpm nest` desde `first-app`. Ese cliente escucha en `127.0.0.1:3003`. Swagger UI está en `http://127.0.0.1:3003/api`. Usa una clase de módulo y una de controlador. Este cliente es el que pasa por Babel.
 - Chrome: `pnpm chrome` desde `first-app`. Esa API escucha en `127.0.0.1:3002`.

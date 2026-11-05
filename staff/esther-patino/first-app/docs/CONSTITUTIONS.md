@@ -6,6 +6,8 @@ first-app guarda usuarios. No es una web. Se usa desde la terminal, con Node. Ta
 
 También se crea, se lista, se ve, se cambia y se borra un usuario por HTTP, en el puerto 3001. La base sigue en el puerto 3000.
 
+También se crea, se lista, se ve, se cambia y se borra un usuario por HTTP con `node:http`, en el puerto 3004. La base sigue en el puerto 3000.
+
 También se crea, se lista, se ve, se cambia y se borra un usuario desde una extensión de Chrome, con una API Fastify en el puerto 3002. La base sigue en el puerto 3000.
 
 También se crea, se lista, se busca, se ve, se cambia y se borra un usuario desde un panel de VS Code. La base sigue en el puerto 3000.
@@ -70,7 +72,7 @@ El cliente es un archivo en `src/clients/terminal/`. El nombre dice la acción, 
 
 Ese archivo se pega en la terminal desde la raíz del repositorio. Entra en `first-app`, importa la función y hace `console.log` del resultado. No captura el error. Es la prueba manual de esa funcionalidad.
 
-El cliente de una funcionalidad nueva sigue siendo ese archivo. Este cambio añade el cliente de navegador y no añade un `.txt`. Este cambio añade el cliente HTTP y no añade un `.txt`. Este cambio añade el cliente Chrome y no añade un `.txt`. Este cambio añade el cliente de VS Code y no añade un `.txt`. Este cambio añade el cliente Nest, que es el que pasa por Babel, y no añade un `.txt`. Este cambio añade el recuento a esos clientes y no añade un `.txt`.
+El cliente de una funcionalidad nueva sigue siendo ese archivo. Este cambio añade el cliente de navegador y no añade un `.txt`. Este cambio añade el cliente HTTP y no añade un `.txt`. Este cambio añade el cliente node-http y no añade un `.txt`. Este cambio añade el cliente Chrome y no añade un `.txt`. Este cambio añade el cliente de VS Code y no añade un `.txt`. Este cambio añade el cliente Nest, que es el que pasa por Babel, y no añade un `.txt`. Este cambio añade el recuento a esos clientes y no añade un `.txt`.
 
 ## 8. Cómo se hace un desarrollo
 
