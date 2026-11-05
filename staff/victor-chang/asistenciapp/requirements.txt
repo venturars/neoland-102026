@@ -2,6 +2,7 @@ flask
 google-auth-oauthlib
 requests
 pywebview
+tzdata; sys_platform == "win32"
 pytest
 ruff
 mypy

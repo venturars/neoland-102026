@@ -1,6 +1,6 @@
 # Plan técnico 007 · App de escritorio para el profesor
 
-> Versión 1.2 · Estado: **Aprobado** (2026-11-05) · Spec: [spec.md](spec.md) v1.1 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Constitución v3.2 · Creado: 2026-11-04 · Issue: #919
+> Versión 1.3 · Estado: **Pendiente de aprobación** (2026-11-05; v1.2 aprobada) · Spec: [spec.md](spec.md) v1.1 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Constitución v3.2 · Creado: 2026-11-04 · Issue: #919
 
 Este documento explica **cómo** se empaqueta AsistenciApp como app de escritorio para macOS (Apple Silicon) y Windows x64 sin cambiar sus reglas. El escritorio es **una entrada nueva** (C3): una ventana que muestra el mismo panel y llama a los mismos casos de uso. Dominio, casos de uso y base de datos no cambian. Las reglas se citan por su identificador (`C2`, `F4`…).
 
@@ -287,7 +287,7 @@ asistenciapp/
 | --- | --- | --- |
 | P1 Independiente de plataforma | ✅ | El escritorio es una entrada; las reglas no saben de ventanas ni de sistemas |
 | P2 Simplicidad | ✅ | Sin actualizaciones automáticas, sin instalador en Windows (una carpeta comprimida), sin firma. Carpetas por sistema sin biblioteca; bloqueo con un socket |
-| P3 Dependencias mínimas | ⚠️ Justificada | **`pywebview`**: abre una ventana nativa con el motor web del sistema (WebKit en macOS, WebView2 en Windows). Sin ella, el profesor tendría que usar un navegador y no habría forma de confirmar el cierre (CA-10) ni de guardar con un diálogo nativo (CA-17). Frente a Electron: se queda en Python, pesa ~5 veces menos y no añade un segundo lenguaje (§8.1). **`pyinstaller`** es herramienta de empaquetado: no cuenta como dependencia (P3 v3.2). `cloudflared` es un programa externo, como hoy, ahora incluido en la app |
+| P3 Dependencias mínimas | ⚠️ Justificada | **`pywebview`**: abre una ventana nativa con el motor web del sistema (WebKit en macOS, WebView2 en Windows). Sin ella, el profesor tendría que usar un navegador y no habría forma de confirmar el cierre (CA-10) ni de guardar con un diálogo nativo (CA-17). Frente a Electron: se queda en Python, pesa ~5 veces menos y no añade un segundo lenguaje (§8.1). **`pyinstaller`** es herramienta de empaquetado: no cuenta como dependencia (P3 v3.2). `cloudflared` es un programa externo, como hoy, ahora incluido en la app. **`tzdata`** (v1.3, **solo en Windows**): los datos oficiales de zonas horarias de IANA, el paquete que recomienda la documentación de Python (PEP 615) para `zoneinfo` cuando el sistema no los trae. Windows no los trae, así que sin él `ZoneInfo("Europe/Madrid")` falla: lo descubrió la primera compilación de Windows (T15) |
 | P4 Privacidad mínima | ✅ | Los datos siguen solo en el ordenador del profesor. La llave compartida no da acceso a los datos de nadie: cada permiso se guarda en el ordenador de su profesor. Sin datos nuevos |
 | P5 Accesible y móvil | ✅ | El interruptor es un `<button aria-pressed>` con su texto; el estado se anuncia en `role="status"`. Los alumnos no cambian |
 | P6 Español | ✅ | Mensajes nuevos en español (§2.12), también los diálogos nativos |
@@ -353,3 +353,4 @@ Tomadas por Victor el 2026-11-04: §8.1–§8.6 en la sesión de preguntas previ
 | 1.0 | 2026-11-04 | Aprobado por Victor, con §8.7–§8.9 decididas como se proponían; §8.3 explica por qué el repositorio de compilación es público | — |
 | 1.1 | 2026-11-05 | Resultados del spike (§0); confirmación nativa al cerrar en vez de un diálogo desde `closing` (§2.7, §6); ventana con texto seleccionable (§2.2); app de Google publicada con sus páginas en GitHub Pages (§2.8); comprobación de `cloudflared` por *digest* de GitHub y firma de Cloudflare, y "arrastrar a Aplicaciones" (§2.11) | Spike de la tarea T01. Aprobado por Victor |
 | 1.2 | 2026-11-05 | Panel de escritorio siempre en claro (§2.2, §6; spec v1.1 CA-19) | Decisión de Victor al probar la app empaquetada (T14) |
+| 1.3 | 2026-11-05 | Dependencia nueva `tzdata`, solo en Windows (§7.1, P3); PyInstaller la incluye (`hiddenimports`). Pendiente de aprobación | La primera compilación de Windows (T15, ejecución 42018306912) falló: Windows no trae las zonas horarias y `ZoneInfo("Europe/Madrid")` no se encuentra |

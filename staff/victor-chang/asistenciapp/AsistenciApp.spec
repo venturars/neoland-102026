@@ -43,6 +43,9 @@ a = Analysis(  # noqa: F821
     datas=datas,
     # Herramientas de desarrollo y lo que la app no usa: menos peso (requisito: < 100 MB).
     excludes=["tkinter", "pytest", "_pytest", "mypy", "ruff", "PyInstaller"],
+    # Windows no trae las zonas horarias: zoneinfo las lee del paquete tzdata, que PyInstaller no ve
+    # solo porque se carga por nombre (spec 007 · plan v1.3 §7.1). En macOS no está instalado y se ignora.
+    hiddenimports=["tzdata"],
 )
 pyz = PYZ(a.pure)  # noqa: F821
 exe = EXE(  # noqa: F821
