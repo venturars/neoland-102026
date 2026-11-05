@@ -14,6 +14,8 @@ Fuente: un commit es un conventional commit, como en [github-pr](https://www.ski
 
 #### Reglas de Invocación Críticas
 
+- **Mensaje técnico:** La descripción nombra el archivo o la función y el cambio concreto. Una línea convencional en inglés; evita mensajes como `update files`. El commit vacío conserva `chore: open #N`.
+
 - **Procesamiento de respuestas**: El script lista el mensaje y los ficheros. El commit lleva solo esos ficheros: lo que ya estuviera preparado se queda preparado. Si el código de salida no es 0, no reintentes metiendo más ficheros de los que nombró el alumno.
 
 Cada ruta debe ser literal, dentro de first-app-ai y relativa a la raíz Git. Incluye ambos extremos de un renombre cuando corresponda. No uses glob ni directorios. Pasa argumentos separados con una API estructurada o una cita de shell correcta; no construyas comandos con eval. Si falla después del commit, lee HEAD e índice antes de reintentar: no crees un segundo commit para ocultarlo.

@@ -8,12 +8,14 @@ Lee la petición y ejecuta `skills/check-status/SKILL.md`. Usa solo el momento s
 
 Elige el momento por el estado real de la tarea, no solo por las palabras del prompt. Antes de escribir una issue, comprueba que problema, resultado esperado, alcance y forma de verificar estén claros y sean coherentes con el proyecto; contrástalos con sus documentos cuando corresponda. Si está definida, explica brevemente qué información permite escribirla y pasa a create-issue. Si quedan dudas o contradicciones, pasa a help-me-to-think y espera la respuesta necesaria antes de publicar. Conserva las respuestas ya resueltas; pregunta por decisiones pendientes o nuevas cuando cambie el alcance o aparezcan otros datos necesarios.
 
+Si la issue ya está escrita y el siguiente trabajo modifica el proyecto, corresponde Empezar antes de editar. Al reanudar, reconoce los pasos ya completados. Mantén el momento solicitado y las aprobaciones SDD.
+
 ## Delegación
 
 En Codex, usa su herramienta nativa para lanzar subagentes reales secuenciales y entrega a cada uno el correspondiente documento `agents/<nombre>.md`. Las entradas `.cursor/agents/` son compatibilidad opcional, no un requisito de este entorno. No ejecutes tú la operación asignada a un subagente ni confundas leer su archivo con lanzarlo. Si el entorno no permite delegar, informa del bloqueo. Cada encargo incluye petición, raíz app/Git, estado y issue/PR correspondientes; recoge su resultado antes del siguiente paso.
 
-- Pensar: lanza help-me-to-think. Si devuelve una pregunta, muéstrala a Miguel y espera su respuesta antes de otra invocación. Conserva las respuestas para el resumen final.
-- Escribir: lanza create-issue con el resumen o la tarea ya concreta. No abras la rama automáticamente.
+- Pensar: lanza help-me-to-think. Si devuelve preguntas, muéstralas a Miguel con sus recomendaciones y espera las respuestas antes de otra invocación. Conserva el historial para el resumen final; si no puedes reanudar el mismo subagente, pásale el historial completo de preguntas y respuestas en cada llamada.
+- Escribir: lanza create-issue con el resumen o la tarea ya concreta. Si el siguiente momento solicitado requiere cambios, pasa por Empezar antes de editar.
 - Empezar, con issue existente: completa esta secuencia antes de editar el proyecto. Al reanudar, consulta lo ya completado según «Reanudación y límites»:
   1. Ejecuta la skill pull-changes para actualizar staging en fast-forward.
   2. Lanza create-branch desde staging actualizado.
