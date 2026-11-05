@@ -1,6 +1,6 @@
 # Plan técnico 009 · Alinear el flujo de git con la plantilla
 
-> Estado: **Aprobado** (2026-11-05) · Spec: [spec.md](spec.md) v1.0 (aprobada 2026-11-05) · Creado: 2026-11-05 · Aprobado: 2026-11-05 · Issue: [#1145](https://github.com/venturars/neoland-102026/issues/1145)
+> Estado: **Implementado** (2026-11-05) · Spec: [spec.md](spec.md) v1.0 (aprobada 2026-11-05) · Creado: 2026-11-05 · Aprobado: 2026-11-05 · Issue: [#1145](https://github.com/venturars/neoland-102026/issues/1145)
 
 > Nota: la copia ya está en la rama `1145-chore-align-asistenciapp-git-workflow` (commit `0d018e3d`), subida antes de escribir el spec. Este plan la describe y añade los pasos que faltan para cerrar los criterios.
 
