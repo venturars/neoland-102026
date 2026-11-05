@@ -17,26 +17,44 @@
       </header>
       <main class="card">
         <p id="message" class="message" role="status" hidden></p>
-        <p class="eyebrow">Usuarios</p>
-        <h2>Lista</h2>
-        <ul id="user-list" class="user-list"></ul>
-        <form id="user-form">
-          <div class="field">
-            <label for="user-name">Nombre</label>
-            <input id="user-name" name="name" type="text" />
-          </div>
-          <div class="field">
-            <label for="user-email">Email</label>
-            <input id="user-email" name="email" type="text" />
-          </div>
+        <div class="actions">
+          <button id="show-users" class="tab tab-selected" type="button">
+            Usuarios
+          </button>
+          <button id="show-count" class="tab" type="button">Recuento</button>
+        </div>
+        <section id="users-section">
+          <p class="eyebrow">Usuarios</p>
+          <h2>Lista</h2>
+          <ul id="user-list" class="user-list"></ul>
+          <form id="user-form">
+            <div class="field">
+              <label for="user-name">Nombre</label>
+              <input id="user-name" name="name" type="text" />
+            </div>
+            <div class="field">
+              <label for="user-email">Email</label>
+              <input id="user-email" name="email" type="text" />
+            </div>
+            <div class="actions">
+              <button id="create-user" type="button">Crear</button>
+              <button id="save-user" type="submit">Guardar</button>
+              <button id="delete-user" class="danger" type="button">
+                Borrar
+              </button>
+            </div>
+          </form>
+        </section>
+        <section id="count-section" hidden>
+          <p class="eyebrow">Recuento</p>
+          <h2>Sexo del nombre</h2>
           <div class="actions">
-            <button id="create-user" type="button">Crear</button>
-            <button id="save-user" type="submit">Guardar</button>
-            <button id="delete-user" class="danger" type="button">
-              Borrar
-            </button>
+            <button id="count-users" type="button">Contar</button>
           </div>
-        </form>
+          <p id="count-women" hidden></p>
+          <p id="count-men" hidden></p>
+          <p id="count-undefined" hidden></p>
+        </section>
       </main>
     </div>
   </body>

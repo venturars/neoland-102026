@@ -6,10 +6,12 @@ first-app/
 ├── .gitignore
 ├── .prettierignore
 ├── README.md
+├── babel.config.json
 ├── eslint.config.js
 ├── package.json
 ├── pnpm-lock.yaml
 ├── scripts/
+│   ├── jupyter-node-http.sh
 │   └── jupyter.sh
 ├── src/
 │   ├── clients/
@@ -39,6 +41,20 @@ first-app/
 │   │   │   ├── listar-usuarios.ipynb
 │   │   │   ├── preparar-tabla-usuarios.ipynb
 │   │   │   └── run_logic.py
+│   │   ├── nest/
+│   │   │   ├── app.module.js
+│   │   │   ├── main.js
+│   │   │   ├── users-exception.filter.js
+│   │   │   ├── users.controller.js
+│   │   │   └── users.service.js
+│   │   ├── node-http/
+│   │   │   ├── app.js
+│   │   │   └── jupyter/
+│   │   │       ├── create-user.ipynb
+│   │   │       ├── delete-user.ipynb
+│   │   │       ├── find-user-by-id.ipynb
+│   │   │       ├── list-users.ipynb
+│   │   │       └── update-user.ipynb
 │   │   ├── terminal/
 │   │   │   ├── count-users-by-gender.txt
 │   │   │   ├── create-user.txt
@@ -195,6 +211,18 @@ first-app/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
+│   │   ├── nest-swagger-ui/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── nest-users-client/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── node-http-client/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
 │   │   ├── prettier-and-eslint/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
@@ -239,6 +267,8 @@ first-app/
     ├── database-server.test.js
     ├── electron-client.test.js
     ├── http-client.test.js
+    ├── nest-client.test.js
+    ├── node-http-client.test.js
     ├── shared-database.test.js
     └── vscode-client.test.js
 ```

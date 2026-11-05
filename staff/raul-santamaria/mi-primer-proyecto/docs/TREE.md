@@ -8,6 +8,7 @@ mi-primer-proyecto/
   AGENTS.md
   eslint.config.js
   start-jupyter.js
+  start-node-http-jupyter.js
   src/
     clients/
       browser/
@@ -28,13 +29,14 @@ mi-primer-proyecto/
         users-gender-count.txt
       http/
         app.js
-        bruno/
-          bruno.json
-          collection.bru
-          environments/
-            local.bru
-          01-happy-path/
-          02-validation/
+      node-http/
+        app.js
+        jupyter/
+          create-user.ipynb
+          list-users.ipynb
+          find-user-by-id.ipynb
+          update-user.ipynb
+          delete-user.ipynb
       chrome/
         server.js
         manifest.json

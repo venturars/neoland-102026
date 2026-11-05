@@ -29,8 +29,9 @@
   `src/logic/` con `await` y no repite sus reglas. Se abre con el script
   `electron` de `package.json`; el instalador Windows con `electron:dist`.
 - `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001 y no
-  repite sus reglas. La colección Bruno en `bruno/` prueba las mismas
-  rutas con `pnpm http-bruno`.
+  repite sus reglas.
+- `src/clients/node-http/` llama a `src/logic/`, escucha en el puerto 3004
+  y no repite sus reglas. `jupyter/` documenta esa API por HTTP.
 - `src/clients/chrome/server.js` llama a `src/logic/`, escucha en el puerto
   3002 y no repite sus reglas. La extensión en `src/clients/chrome/` solo
   habla con esa API por `fetch`.
@@ -46,6 +47,7 @@
   VS Code y F5; la base tiene que estar en marcha con el script `server`.
 - `src/clients/jupyter/` es el cliente que se abre con el Jupyter de la app.
 - `start-jupyter.js` arranca el Jupyter del entorno de la app.
+- `start-node-http-jupyter.js` arranca el Jupyter de `src/clients/node-http/jupyter`.
 - `eslint.config.js` aplica las reglas recomendadas de ESLint al
   JavaScript, declara los globals de Node e ignora `.venv` y
   `node_modules`.

@@ -9,7 +9,7 @@ Fuente: un commit es un conventional commit, como en [github-pr](https://www.ski
 
 #### Especificación de Argumentos
 
-1. **MENSAJE** _(Obligatorio)_: Conventional commit en inglés, `tipo: descripción`. El tipo es `feat`, `fix`, `docs`, `refactor`, `test` o `chore`.
+1. **MENSAJE** _(Obligatorio)_: Conventional commit en inglés, `tipo: descripción`. El tipo es `feat`, `fix`, `docs`, `refactor`, `test`, `chore` o `knowledge`.
 2. **FICHERO** _(Obligatorio, uno o más)_: Ruta desde la raíz del repo. Repite el argumento por cada fichero del trozo.
 
 #### Reglas de Invocación Críticas
