@@ -123,7 +123,8 @@ jobs:
           asset=cloudflared-windows-amd64.exe
           gh release download "$CLOUDFLARED_VERSION" --repo cloudflare/cloudflared --pattern "$asset" --dir "$RUNNER_TEMP"
           expected=$(gh api "repos/cloudflare/cloudflared/releases/tags/$CLOUDFLARED_VERSION" --jq ".assets[] | select(.name==\"$asset\") | .digest")
-          actual="sha256:$(sha256sum "$RUNNER_TEMP/$asset" | cut -d' ' -f1)"
+          # Por la entrada estándar: con una ruta de Windows (con \), sha256sum antepone "\" a la suma.
+          actual="sha256:$(sha256sum < "$RUNNER_TEMP/$asset" | cut -d' ' -f1)"
           [ "$actual" = "$expected" ] || { echo "::error::Suma de $asset: $actual, se esperaba $expected"; exit 1; }
           # La app lo busca como cloudflared.exe (config.py).
           mkdir -p "$RUNNER_TEMP/cf" && mv "$RUNNER_TEMP/$asset" "$RUNNER_TEMP/cf/cloudflared.exe"
