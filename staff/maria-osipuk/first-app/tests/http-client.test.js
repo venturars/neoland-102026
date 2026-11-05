@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
 import { mkdtempSync, rmSync } from "node:fs";
+import net from "node:net";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { test } from "node:test";
@@ -32,6 +33,19 @@ async function sendUser(method, route, user) {
   const body = JSON.stringify(user);
 
   return send(method, route, body);
+}
+
+async function isOllamaStopped() {
+  // The count asks the local model at 127.0.0.1:11434. The failure case
+  // only makes sense when nothing listens there, so the test checks first.
+  const connection = net.createConnection({ host: "127.0.0.1", port: 11434 });
+  const connected = once(connection, "connect").then(() => false);
+  const refused = once(connection, "error").then(() => true);
+  const stopped = await Promise.race([connected, refused]);
+
+  connection.destroy();
+
+  return stopped;
 }
 
 async function waitForClient(client) {
@@ -74,6 +88,16 @@ async function testHttpClient() {
     const emptyList = await send("GET", "/users");
     assert.equal(emptyList.status, 200);
     assert.deepEqual(emptyList.json, []);
+
+    // No users: three zeros in this order, without asking the model.
+    const emptyCount = await send("GET", "/users/gender-count");
+    assert.equal(emptyCount.status, 200);
+    assert.deepEqual(emptyCount.json, { female: 0, male: 0, undefined: 0 });
+    assert.deepEqual(Object.keys(emptyCount.json), [
+      "female",
+      "male",
+      "undefined",
+    ]);
 
     const created = await sendUser("POST", "/users", {
       name: "Ada",
@@ -127,6 +151,17 @@ async function testHttpClient() {
 
     const afterErrors = await send("GET", "/users");
     assert.equal(afterErrors.json.length, 1);
+
+    // With a user and the local model stopped there is no count at all.
+    const ollamaStopped = await isOllamaStopped();
+
+    if (ollamaStopped) {
+      const failedCount = await send("GET", "/users/gender-count");
+      assert.equal(failedCount.status, 500);
+      assert.deepEqual(failedCount.json, {
+        message: "Could not classify the users.",
+      });
+    }
 
     // A missing body and broken JSON are the client's fault, not a 500,
     // and they never show the HTML error page of Express.
@@ -197,6 +232,10 @@ async function testHttpClient() {
     const downList = await send("GET", "/users");
     assert.equal(downList.status, 500);
     assert.deepEqual(downList.json, { message: "Unable to list users" });
+
+    const downCount = await send("GET", "/users/gender-count");
+    assert.equal(downCount.status, 500);
+    assert.deepEqual(downCount.json, { message: "Unable to list users" });
 
     const downGet = await send("GET", "/users/1");
     assert.equal(downGet.status, 500);

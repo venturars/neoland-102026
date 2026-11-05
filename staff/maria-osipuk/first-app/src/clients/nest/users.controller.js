@@ -76,6 +76,13 @@ export class UsersController {
     return users;
   }
 
+  // This route is before users/:id so "gender-count" is not read as an id.
+  @Get("users/gender-count")
+  async countByGender() {
+    const counts = await this.usersService.countByGender();
+    return counts;
+  }
+
   @Get("users/:id")
   @ApiParam(ID_PARAM)
   @Bind(Param("id"))
