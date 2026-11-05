@@ -7,7 +7,7 @@ Issue #1024 · PR #1025. Spec y plan bajo autorización conjunta de Miguel del
 - [x] Preparar spec, plan y revisión de dependencias con cobertura y hallazgos.
 - [x] Instalar versiones exactas y cotejar las tres capas resueltas con Socket.
 - [x] Crear adaptadores Electron y Chrome y sus pantallas independientes.
-- [x] Crear Nest en JavaScript usando las operaciones existentes.
+- [x] Crear Nest en JavaScript usando las operaciones existentes (versión del 4; retirada el 5 a #1044).
 - [x] Exponer resumen compartido en APIs, web, escritorio, Chrome y VS Code.
 - [x] Actualizar comandos, guías, árbol, constitución y lint.
 - [x] Verificar APIs, UI reales, host VS Code y modelo local con datos desechables.
@@ -114,3 +114,40 @@ Las regresiones de fallos de recarga usan un transporte controlado sobre el JS
 real; las comprobaciones de ventanas recorren los servicios reales. Las pruebas
 usan copias, perfiles y bases desechables. La demostración del alumno se conserva
 fuera del repositorio. No se detuvo ni reconfiguró su Ollama.
+
+## Retirada de Nest · 2026-11-05
+
+Miguel pidió conservar Electron y Chrome en #1025 y desarrollar Nest por separado
+desde staging en la [issue #1044](https://github.com/venturars/neoland-102026/issues/1044).
+La evidencia anterior corresponde a la versión del 4 de noviembre; no acredita
+un cliente Nest en la entrega actual. Esta enmienda precede a los cambios.
+
+- [x] N01 · Actualizar spec y plan con la retirada autorizada y conservar el historial.
+- [x] N02 · Retirar el adaptador Nest, sus cinco dependencias exclusivas y su arranque.
+- [x] N03 · Regenerar solo los metadatos del lockfile sin scripts; conservar las versiones restantes.
+- [x] N04 · Acotar la prueba de APIs a Express y Chrome/Fastify.
+- [x] N05 · Actualizar guías, árbol y constitución con los clientes presentes.
+- [x] N06 · Verificar en copias desechables y cotejar los archivos protegidos.
+- [ ] N07 · Publicar la corrección en #1025 hacia staging después de su revisión.
+
+### Comprobaciones de la retirada
+
+- `pnpm install --lockfile-only --ignore-scripts --offline --no-frozen-lockfile`
+  con el store existente: código 0. El lockfile pasa de 237 a 207 entradas:
+  treinta eliminadas y ninguna nueva. Los 207 bloques conservados de paquetes
+  y snapshots son idénticos. Versiones directas y de desarrollo restantes intactas.
+- `pnpm format`, después `pnpm lint`: código 0. Al ejecutar el primer script,
+  pnpm reconcilió node_modules retirando los mismos treinta paquetes; no añadió
+  paquetes ni cambió versiones. El lint no tenía una excepción exclusiva de Nest.
+- `node --test --test-concurrency=1 tests/*.test.js`: 28 pasan, cero fallos u
+  omisiones, 2126.599542 ms. Copia desechable con puertos 23000–23002; solo en
+  esa copia se sustituyeron los puertos para no interferir con la demostración.
+  La prueba de APIs conserva CRUD compartido, campos omitidos, errores, resumen
+  vacío, persistencia y fallo de datos para Express y Chrome/Fastify.
+- Cotejo contra la copia previa: entre 109 archivos de código y flujo revisados,
+  solo desaparece src/clients/nest/app.js y cambia tests/client-apis.test.js.
+  Los otros 107, incluidos Electron, Chrome, web, VS Code, lógica y flujo Git,
+  permanecen idénticos. La revisión Socket anterior conserva su fecha y alcance.
+- Copia de pruebas retirada y puertos 23000–23002 libres. Los cuatro procesos
+  de demostración en 3000–3003 permanecen abiertos y no se modificaron sus datos.
+  La publicación de esta retirada sigue pendiente; no se hicieron commits ni push.

@@ -3,6 +3,22 @@
 Issue #1024 · PR #1025. Referencia: spec.md.
 Autorización conjunta de Miguel del 2026-11-04 descrita en la spec.
 
+## Retirada de Nest · 2026-11-05
+
+Por petición expresa de Miguel, retirar de #1025 el adaptador Nest anterior y
+continuarlo desde staging en la [issue #1044](https://github.com/venturars/neoland-102026/issues/1044).
+Eliminar su archivo, comando, patrón de formato y las declaraciones exclusivas
+de @nestjs/common, @nestjs/core, @nestjs/platform-express, reflect-metadata y rxjs.
+pnpm regenera solo el lockfile, con scripts desactivados; no se instala ni añade
+una versión. Conservar versiones y código de los demás clientes y la excepción
+de antigüedad de Electron. El lint actual no contiene una excepción propia de Nest.
+
+Las pruebas actuales de API cubren Express y Chrome/Fastify. La comprobación se
+ejecuta en copias desechables, con puertos alternativos solo en esas copias,
+sin tocar la demostración abierta. Actualizar guías, árbol y constitución para
+reflejar los clientes presentes. La revisión Socket y los resultados del día 4
+permanecen como historial de la propuesta anterior, no como inventario actual.
+
 ## Adaptadores
 
 - Electron: main.js abre index.html propio, con app.js/styles.css. preload.cjs
@@ -14,11 +30,8 @@ Autorización conjunta de Miguel del 2026-11-04 descrita en la spec.
 - Chrome: manifest MV3 y popup propio. Solo host_permissions para loopback3002.
   server.js usa Fastify y llama a lógica; pnpm chrome. La extensión no importa
   módulos Node ni necesita permisos de sitios ajenos.
-- Nest: un app.js en JavaScript, Controller/Module y decoradores aplicados como
-  funciones; port3003, pnpm nest. Las clases son adaptadores exigidos por Nest,
-  no cambios a las funciones de negocio. Sin TypeScript ni SWC.
 - Express existente: añadir GET /users/gender-count antes de /users/:id.
-  Chrome/Fastify y Nest ofrecen la misma ruta. Éxito200 y tres campos; fallo500
+  Chrome/Fastify ofrece la misma ruta. Éxito200 y tres campos; fallo500
   con message Could not classify the users. Mantener CRUD201/200/204 y errores
   400/409/404/500 del cliente REST actual. IDs a número antes de llamar lógica.
 - Web: botón de resumen que importa y espera usersGenderCount directamente. VS Code: acción
@@ -31,10 +44,10 @@ Autorización conjunta de Miguel del 2026-11-04 descrita en la spec.
 Cambios limitados a src/clients, package.json/lockfile, README, arquitectura,
 árbol, constitución, la operación usersGenderCount y estos documentos. Añadir cobertura de los nuevos JS/CJS en
 format y los globals de los adaptadores al lint cuando corresponda.
-`pnpm-workspace.yaml` guarda las cuatro excepciones de antigüedad por versión
+`pnpm-workspace.yaml` guarda la excepción de antigüedad de Electron por versión
 exacta generadas por pnpm; no desactiva el control para otras versiones.
 `tests/client-apis.test.js` comprueba los contratos y
-los fallos de las tres APIs con una base desechable.
+los fallos de las dos APIs con una base desechable.
 
 ## Correcciones de la revisión · 2026-11-04
 
@@ -68,7 +81,7 @@ histórico de classifier. No se cambia su contrato de negocio.
 ## Verificación
 
 Ejecutar servidores solo sobre copia desechable; puerto3000 datos, 3001Express,
-3002Chrome y3003Nest. Comprobar cada API con peticiones reales; escritorio y
+3002Chrome. Comprobar cada API con peticiones reales; escritorio y
 popup en Chromium real con perfiles propios; VS Code en extension host real.
 Usar el modelo llama3.2 instalado para un resumen poblado y verificar suma de
 conteos, sin imponer etiquetas exactas al modelo. Probar tres ceros con tabla
@@ -78,15 +91,18 @@ regresiones existentes en serie después de detener los servicios manuales.
 
 ## Dependencias y decisión
 
-Propuestas exactas: electron45.2.2 (desarrollo), fastify5.12.8, @nestjs/common,
-@nestjs/core y @nestjs/platform-express12.3.3, reflect-metadata0.2.2 y rxjs7.8.2.
+Dependencias actuales de esta entrega: electron45.2.2 (desarrollo) y fastify5.12.8.
 Se presentaron los hallazgos antes de instalar en esta conversación. La ejecución
 continúa bajo la autorización conjunta expresa de Miguel de completar la tarea;
 no se afirma una aceptación individual posterior de cada alerta. Conservar las
 limitaciones en la entrega y comprobar la resolución real tras instalar.
 Un cambio de versión obliga a comprobar la diferencia antes de incorporarla.
 
-# Proposed client dependency review · 2026-11-04
+# Historical proposed client dependency review · 2026-11-04
+
+This review records the original proposal, including the Nest implementation
+withdrawn on 2026-11-05. Its findings and relationships are historical evidence.
+The current dependency declarations exclude that implementation's five roots.
 
 Metadata only; no package installed by this audit. Roots: electron@45.2.2
 (devDependency), fastify@5.12.8, @nestjs/common@12.3.3, @nestjs/core@12.3.3,
