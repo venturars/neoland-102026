@@ -23,6 +23,11 @@ Si Socket responde que no hay cuota (créditos agotados), la revisión **se
 detiene**: el resumen explica el motivo, qué datos faltan y no se sigue
 consultando Socket en esa validación ni se inventan resultados.
 
+Una stat por debajo de 200 se escribe; 200 no baja.
+
+El lockfile solo puede incorporar versiones que Socket ya ha analizado.
+No se instala una versión sin esa revisión.
+
 Las alertas aplicables se comentan. Quien acepta el plan decide si las acepta.
 
 Ejemplo: el plan fija `express@5.3.0`. En la org hay CVEs abiertos de

@@ -25,6 +25,11 @@ https://mcp.socket.dev/.
 
 ## Stats
 
-- Por debajo de 50 se escribe; 50 no baja.
+- Por debajo de 200 se escribe; 200 no baja.
+
+## Lockfile
+
+- Solo se pueden instalar versiones analizadas por Socket.
+- `pnpm-lock.yaml` no incorpora una versión sin esa revisión.
 
 Conexión OAuth en Cursor: `MCPS/socket-mcp/mcp.txt`.

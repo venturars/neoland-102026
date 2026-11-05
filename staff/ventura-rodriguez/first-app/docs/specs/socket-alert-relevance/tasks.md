@@ -1,6 +1,7 @@
 # Tareas — alertas Socket relevantes al validar paquetes
 
-1. Crear `docs/SOCKET.md` con herramientas, relevancia, cuota y stats (breve).
+1. Crear `docs/SOCKET.md` con herramientas, relevancia, cuota, stats (umbral
+   200) y lockfile (solo versiones analizadas por Socket).
 
 2. Dejar `MCPS/socket-mcp/mcp.txt` en URL del servidor y enlace a `docs/SOCKET.md`.
 
