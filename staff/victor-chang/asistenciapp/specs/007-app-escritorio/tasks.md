@@ -13,19 +13,23 @@ Cómo leer esta lista:
 
 ## Fase A · Spike (plan §0)
 
-- [ ] **T01** 👤 · Prueba de concepto en el Mac de Victor, fuera de la app (`scripts/spike_escritorio.py`, desechable):
+- [x] **T01** 👤 · Prueba de concepto en el Mac de Victor, fuera de la app (`scripts/spike_escritorio.py`, desechable):
   - **Victor:** en Google Cloud, pasar la app de OAuth de *Prueba* a **En producción** (sin verificar) y tener a mano una cuenta de Google que **no** esté en la lista de usuarios de prueba.
   - **Victor:** aprobar la instalación de `pywebview` y `pyinstaller` en el entorno, y la descarga de `cloudflared` darwin-arm64 (versión fija y suma SHA-256).
   - Un `.app` mínimo con PyInstaller (`--windowed --onedir`): Flask en un hilo, una ventana con una página de prueba, un botón que abre el túnel con el `cloudflared` incluido, otro que guarda un CSV con BOM por el diálogo nativo y otro que lanza el inicio de sesión de Google.
   - Comprobar las 6 filas de plan §0 y anotar el resultado de cada una (con tamaño en MB y segundos hasta ver la ventana).
   - **Puerta:** si fallan #2 (inicio de sesión) o #3 (llave en producción sin verificar), se para y se revisa la spec con Victor. Si falla otra, se ajusta el plan antes de seguir.
   - *Cubre:* riesgo de CA-01, CA-02, CA-07, CA-14, CA-15, CA-17 y los requisitos no funcionales.
-  - **En curso (2026-11-04).** Hecho por el agente, con el permiso de Victor para instalar y descargar: `pywebview` 6.2.1 y `pyinstaller` 6.22.3 en un entorno temporal; `cloudflared` 2026.10.7 darwin-arm64; `scripts/spike_escritorio.py`; `Spike.app` (`--windowed --onedir`, firma *ad hoc*) y `Spike.dmg`.
+  - **Hecha (2026-11-05): las seis comprobaciones pasan en macOS y la puerta se pasa** (plan v1.1 §0). Hecho por el agente, con el permiso de Victor para instalar y descargar: `pywebview` 6.2.1 y `pyinstaller` 6.22.3 en un entorno temporal; `cloudflared` 2026.10.7 darwin-arm64; `scripts/spike_escritorio.py`; `Spike.app` (`--windowed --onedir`, firma *ad hoc*) y `Spike.dmg`.
     - **#4 ✅** El `cloudflared` incluido arranca desde `Contents/Frameworks/` y da su URL en ~5 s. Desde fuera, la URL responde `200` unos 2 s después (resolución por 1.1.1.1 y por el DNS del sistema). Al cerrar la ventana, el túnel y el servidor se paran y no queda ningún proceso.
     - **#6 ✅** `Spike.dmg` pesa **40 MB** (77 MB instalada, 39 MB son de `cloudflared`). La ventana aparece en **0,9 s** al abrirla normalmente; la primera vez tras compilar, entre 3,7 y 10 s (macOS revisa los archivos nuevos).
-    - **#1 (en parte) ✅** Escribir el CSV con `utf-8-sig` deja el BOM. Falta probar el diálogo nativo a mano.
-    - **Pendiente de Victor:** #1 (diálogo de guardar y descarga del navegador), #2 y #3 (Google, con la llave en producción y una cuenta que no sea de prueba), #5 ("Abrir igualmente" con el `.dmg` marcado como descargado) y la confirmación al cerrar con el túnel abierto. `spctl` **rechaza** el `.app`, como se esperaba sin firma de pago.
-    - **Hallazgos para el plan:**
+    - **#1 ✅** Victor guardó con el diálogo nativo (`asistencia-prueba.csv`, 55 bytes con BOM). La descarga del navegador, con `ALLOW_DOWNLOADS`, también funciona y también pregunta dónde guardar.
+    - **#2 ✅** Desde el `.app`, el inicio de sesión abre el navegador del sistema y vuelve a la app.
+    - **#3 ✅** Con la app de Google **en producción sin verificar** (publicada por Victor el 2026-11-05, con sus páginas en GitHub Pages) y una cuenta que **nunca** fue de prueba: aviso de Google de app no verificada, permiso de Meet concedido, API de Meet `200` y permiso renovable. Que no caduque a los 7 días queda para T13/T16 (el spike no guarda el permiso).
+    - **#5 ✅** "Abrir igualmente" aparece en Privacidad y seguridad (macOS 26.6) con el `.dmg` marcado como descargado. `spctl` rechaza el `.app`, como se esperaba sin firma de pago.
+    - **Cerrar con el túnel abierto ✅** tras corregir el spike: la confirmación nativa (`confirm_close` + textos en español) pregunta, "Cancelar" deja la app abierta y "Cerrar" la cierra sin dejar procesos. La primera versión, con un diálogo propio desde el evento `closing`, **congeló la app**.
+    - **Texto seleccionable ✅** con `text_select=True` (la primera versión no dejaba seleccionar el enlace).
+    - **Hallazgos, ya aplicados en el plan v1.1** (§0, tabla de hallazgos; además: congelación al cerrar, texto no seleccionable y *App Translocation*):
       1. La suma SHA-256 del `.tgz` de macOS que publican las notas de la versión **no coincide** con el archivo (las notas dicen `2136…`; el archivo y el *digest* de GitHub, `3586…`). El binario es auténtico: firmado con el Developer ID de Cloudflare Inc. (`68WVV388M8`) y notarizado por Apple. En Windows, la suma de las notas sí coincide con el *digest* de GitHub. Hace falta otra comprobación para macOS en plan §2.11.
       2. PyInstaller cambia la firma de Cloudflare del binario incluido por una *ad hoc*; sigue funcionando.
       3. La app no debe comprobar su propia URL pública nada más abrir el túnel: la primera consulta al DNS llega antes de que exista el nombre y macOS guarda el "no existe" (en el spike, 60 s sin resolver). Para los alumnos no pasa: consultan más tarde desde su móvil.
@@ -82,7 +86,7 @@ Cómo leer esta lista:
 ## Fase E · Escritorio (plan §2.2, §2.7, §2.9)
 
 - [ ] **T11** 🧪 · `entrypoints/desktop.py`:
-  - tests en `test_desktop.py` con una ventana y un diálogo falsos (sin abrir nada): el manejador de cierre cancela si hay clase online y el profesor dice "no", cierra si dice "sí" y no pregunta sin clase online; `DesktopApi.save_file` escribe el contenido en `utf-8-sig` en la ruta elegida y devuelve `True`, y si se cancela devuelve `False` sin escribir;
+  - tests en `test_desktop.py` con una ventana y un diálogo falsos (sin abrir nada): abrir el túnel pone `confirm_close` a `True` y cerrarlo a `False`, y los textos de cierre están en español (plan v1.1 §2.7); la ventana se crea con `text_select=True`; `DesktopApi.save_file` escribe el contenido en `utf-8-sig` en la ruta elegida y devuelve `True`, y si se cancela devuelve `False` sin escribir;
   - `webview` se importa dentro de las funciones (plan §5);
   - deben fallar; luego, el código, con `run_window` y `show_already_open`.
   - *Cubre:* CA-03, CA-10, CA-11, CA-17.
@@ -135,3 +139,4 @@ Cómo leer esta lista:
 | --- | --- | --- | --- |
 | 0.1 | 2026-11-04 | Borrador inicial: 18 tareas en 7 fases | Plan 007 v1.0 aprobado por Victor |
 | 1.0 | 2026-11-04 | Aprobado por Victor | — |
+| 1.1 | 2026-11-05 | T01 hecha; T11 prueba la confirmación nativa al cerrar y el texto seleccionable | Plan v1.1 (spike) |

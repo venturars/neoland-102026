@@ -1,6 +1,6 @@
 # Plan técnico 007 · App de escritorio para el profesor
 
-> Versión 1.0 · Estado: **Aprobado** (2026-11-04) · Spec: [spec.md](spec.md) v1.0 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Constitución v3.2 · Creado: 2026-11-04 · Issue: #919
+> Versión 1.1 · Estado: **Pendiente de aprobación** (2026-11-05; v1.0 aprobada el 2026-11-04) · Spec: [spec.md](spec.md) v1.0 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Constitución v3.2 · Creado: 2026-11-04 · Issue: #919
 
 Este documento explica **cómo** se empaqueta AsistenciApp como app de escritorio para macOS (Apple Silicon) y Windows x64 sin cambiar sus reglas. El escritorio es **una entrada nueva** (C3): una ventana que muestra el mismo panel y llama a los mismos casos de uso. Dominio, casos de uso y base de datos no cambian. Las reglas se citan por su identificador (`C2`, `F4`…).
 
@@ -20,6 +20,22 @@ Hay cosas que solo se saben probándolas en la app empaquetada. La primera tarea
 | 6 | Tamaño de la descarga (< 100 MB) y tiempo hasta ver el panel (< 10 s) | Se revisa §2.11 (`--onedir`, exclusiones) |
 
 En Windows las comprobaciones 1, 2, 4 y 6 se repiten con la primera compilación de Actions (T16), en un PC con Windows (decisión §8.7).
+
+**Resultado (2026-11-05): las seis pasan en macOS, y la puerta se pasa.** Detalle en `tasks.md`, T01. Lo que mostró, y que esta versión del plan ya aplica:
+
+| # | Hallazgo | Dónde se aplica |
+| --- | --- | --- |
+| 1 | Guardar por el diálogo nativo y la descarga del navegador (con `ALLOW_DOWNLOADS`) **funcionan los dos** en macOS y preguntan dónde guardar; el BOM se conserva | §2.9 sin cambios: el diálogo nativo es el que se sabe igual en Windows |
+| 2 | Una cuenta que **nunca** fue de prueba da permiso con la app en producción sin verificar, tras el aviso de Google; la API de Meet responde `200` | §2.8 |
+| 3 | Google no muestra casilla de Meet cuando solo se pide ese permiso; si se deniega, llega solo `openid` (ya lo trata `MeetPermissionMissingError`) | Sin cambios |
+| 4 | Abrir un diálogo desde el evento `closing` **congela la app** (los dos esperan al hilo principal) | §2.7: se usa la confirmación nativa de pywebview |
+| 5 | pywebview no deja seleccionar texto por defecto (`text_select=False`) | §2.2: ventana con `text_select=True` |
+| 6 | La suma SHA-256 del `.tgz` de macOS en las notas de `cloudflared` no coincide con el archivo, que sí es auténtico (Developer ID de Cloudflare, notarizado); la de Windows sí coincide | §2.11 |
+| 7 | La primera consulta DNS a la URL del túnel llega antes de que exista y macOS guarda el "no existe": la app no debe comprobar su propia URL | §2.6 (no se comprueba) |
+| 8 | Abierta desde la carpeta de descargas, macOS la ejecuta desde una ruta aleatoria de solo lectura (*App Translocation*) | §2.11: la página de descarga dice "arrástrala a Aplicaciones" |
+| 9 | 40 MB el `.dmg`; ventana en 0,8–2,7 s (hasta 10 s la primera vez tras compilar) | Sin cambios |
+
+Para publicar la app de Google en producción, Google exige nombre, email de soporte, página principal y política de privacidad: se publicaron en GitHub Pages del repositorio público (§2.8).
 
 ---
 
@@ -68,7 +84,7 @@ Ni `domain/` ni `usecases/` cambian.
 2. `load_config(os.environ, desktop=True)` (§2.3);
 3. `create_app(config, fetch_participants=…, tunnel=tunnel)`;
 4. `server.start(app)` → puerto (§2.4);
-5. `desktop.run_window(url_del_panel, tunnel)`; vuelve cuando se cierra la ventana;
+5. `desktop.run_window(url_del_panel, tunnel)`: ventana con `text_select=True` (el enlace de alumnos se puede seleccionar; spike §0 #5) y los textos del cierre en español (§2.7); vuelve cuando se cierra la ventana;
 6. en un `finally`: `tunnel.close()`, `server.stop()`, soltar el bloqueo (S7, F4).
 
 `main()` se divide en `_run_terminal()` (lo de hoy) y `_run_desktop()` para no pasar de ~40 líneas (M2).
@@ -118,11 +134,17 @@ Ni `domain/` ni `usecases/` cambian.
 
 ### 2.7 Cerrar la app (CA-10 a CA-13)
 
-`desktop.run_window` engancha `window.events.closing`. El manejador devuelve `False` (cancela) si `tunnel.url` no es `None` y el profesor no confirma en `window.create_confirmation_dialog("Cerrar AsistenciApp", "Los alumnos no podrán registrarse. ¿Cerrar igualmente?")`. Sin clase online, no pregunta (CA-11). Al volver `webview.start()`, el `finally` de §2.2 cierra todo (CA-12). Una asistencia abierta sigue en la base de datos y se continúa al volver a abrir (CA-13, ya es así hoy).
+Se usa la **confirmación nativa** de pywebview, que macOS y Windows leen en el momento de cerrar (`window.confirm_close`). **No** se abre un diálogo propio desde el evento `closing`: en el spike eso congeló la app (§0 #4).
+
+- `Tunnel` avisa de cada cambio (`on_change`, una lista de funciones); `desktop.run_window` registra una que pone `window.confirm_close = tunnel.url is not None`. Con clase online, pregunta; sin ella, no (CA-11).
+- Los textos van en `localization` de `create_window`: `global.quitConfirmation` = "Los alumnos no podrán registrarse. ¿Cerrar igualmente?", `global.quit` = "Cerrar", `global.cancel` = "Cancelar" (P6).
+
+Al volver `webview.start()`, el `finally` de §2.2 cierra todo (CA-12). Una asistencia abierta sigue en la base de datos y se continúa al volver a abrir (CA-13, ya es así hoy).
 
 ### 2.8 Llave de Google compartida (CA-14, CA-15, CA-16)
 
 - Un solo proyecto de Google Cloud (el de Victor), con la app de OAuth **en producción sin verificar** y una llave de tipo *aplicación de escritorio*. Google trata estas llaves como no secretas, pero no se sube a git (F5).
+- **Publicada el 2026-11-05.** Google pide para ello nombre (`AsistenciApp`), email de soporte, página principal y política de privacidad. Las dos páginas son de GitHub Pages del repositorio público: `https://changvictor.github.io/asistenciapp/` (el README) y `…/PRIVACIDAD.html` (`PRIVACIDAD.md`, en esta carpeta). `changvictor.github.io` es dominio autorizado. Sin logotipo: subirlo obliga a la verificación.
 - La llave vive en el **secreto de Actions `GOOGLE_CLIENT_JSON`** del repositorio público (§2.11). El flujo de compilación la escribe en un archivo y PyInstaller la mete en la app (`--add-data`).
 - `GooglePermission` no cambia: ya renueva el permiso y ya vuelve a pedirlo si falla. En producción el permiso no caduca a los 7 días (CA-15); el comentario de spec 004 P7 se actualiza.
 - **Tope de 100 profesores (CA-16)**: cuando se alcanza, Google muestra su error en el navegador y la app no recibe respuesta, así que acaba en `MeetLoginNotCompletedError` a los 2 minutos. Su mensaje gana una frase: "Si Google dice que la app ha alcanzado su límite de usuarios, usa tu propia llave (README §4.1) y guárdala en la carpeta de datos de la app." El modo *código* no depende de Google.
@@ -147,7 +169,11 @@ En la ventana no se usa la descarga del navegador (las vistas web incrustadas no
 | Windows | `windows-latest` (x64) | `pytest`, `ruff`, `mypy` · descargar `cloudflared` windows-amd64 · PyInstaller `--windowed --onedir` · comprimir | `AsistenciApp-X.Y.Z-windows.zip` |
 
 - Un último paso crea la *Release* con los dos archivos y unas notas que enlazan a la página de descarga del README (abrir sin firma en cada sistema, CA-02; aviso de Google, CA-15).
-- `cloudflared` se descarga en una **versión fija** (constante en el flujo) y se comprueba su suma SHA-256 antes de incluirlo.
+- `cloudflared` se descarga en una **versión fija** (constante en el flujo) y se comprueba antes de incluirlo (§0 #6):
+  - su suma SHA-256 con el *digest* que GitHub da de ese archivo de la versión (`gh api …/releases/tags/<versión>`), no con las notas;
+  - en macOS, además, la firma: `codesign --verify` y que la firma sea del equipo de Cloudflare (`TeamIdentifier=68WVV388M8`). PyInstaller la cambia después por una *ad hoc*, pero ya se ha comprobado que el binario es el auténtico.
+- GitHub Pages sirve desde `main` la página principal y la política de privacidad que pide Google (§2.8).
+- La página de descarga dice que en macOS hay que **arrastrar la app a Aplicaciones** antes de abrirla (§0 #8).
 - `--onedir` y no `--onefile`: `--onefile` se descomprime en cada arranque y no cumpliría los 10 s.
 
 ### 2.12 Errores nuevos (E3, E4, E5)
@@ -240,7 +266,7 @@ asistenciapp/
 | CA-07 | `test_web_online`: `POST /api/online` con un `Tunnel` falso → `active` y `url`; `test_web_teacher`: `studentUrl` con la URL del túnel. `test_tunnel`: `open` dos veces → un solo proceso. Manual: el enlace desde un móvil con datos |
 | CA-08 | `test_web_online`: `TunnelTimeoutError` → `502` con su mensaje; `CloudflaredMissingError` → `422`. Manual: sin internet |
 | CA-09 | Manual: con la clase online desactivada, el panel muestra el aviso |
-| CA-10, CA-11 | `test_desktop`: con `tunnel.url` y "no" → cancela; con "sí" → cierra; sin túnel → no pregunta. Manual en los dos sistemas |
+| CA-10, CA-11 | `test_desktop`: con una ventana falsa, abrir el túnel pone `confirm_close` a `True` y cerrarlo a `False`; los textos de `localization` están en español. Manual en los dos sistemas (el diálogo nativo no se puede probar sin pantalla) |
 | CA-12 | `test_tunnel`: `close` termina el proceso; `test_server`: `stop` libera el puerto. Manual: tras cerrar, `lsof` / Administrador de tareas sin `cloudflared` ni la app |
 | CA-13 | Ya cubierto por los tests de la spec 001 (la sesión abierta sigue en la BD). Manual: cerrar con una asistencia abierta y volver |
 | CA-14, CA-15 | Spike §0 #2 y #3. Manual: con una cuenta que nunca ha dado permiso, tomar asistencia; repetir pasados 7 días sin que lo pida |
@@ -322,3 +348,4 @@ Tomadas por Victor el 2026-11-04: §8.1–§8.6 en la sesión de preguntas previ
 | --- | --- | --- | --- |
 | 0.1 | 2026-11-04 | Borrador inicial | Spec 007 v1.0 aprobada por Victor |
 | 1.0 | 2026-11-04 | Aprobado por Victor, con §8.7–§8.9 decididas como se proponían; §8.3 explica por qué el repositorio de compilación es público | — |
+| 1.1 | 2026-11-05 | Resultados del spike (§0); confirmación nativa al cerrar en vez de un diálogo desde `closing` (§2.7, §6); ventana con texto seleccionable (§2.2); app de Google publicada con sus páginas en GitHub Pages (§2.8); comprobación de `cloudflared` por *digest* de GitHub y firma de Cloudflare, y "arrastrar a Aplicaciones" (§2.11) | Spike de la tarea T01 |
