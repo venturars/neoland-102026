@@ -83,7 +83,7 @@ Antes de cada commit se releen los comentarios nuevos con esta regla.
 
 ## Relación con la PR #1060
 
-Esta rama sale de `staging`, que aún no tiene el recuento por género de la PR #1060. Las dos tocan los mismos ficheros y en sitios parecidos: rutas antes de `:id`, `elegirFallo`, `showViewedUser` y `runAction`. La segunda en fusionarse tendrá conflictos pequeños, que se resuelven conservando las dos partes.
+Esta rama incluye la del recuento por género, con sus conflictos ya resueltos. Hay que fusionar primero la PR #1060 y después esta. Si se fusiona esta antes, el recuento entra con ella.
 
 ## Pruebas
 
