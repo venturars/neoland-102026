@@ -63,10 +63,10 @@ Do the tasks in order. Inside a task, do the steps in order. No outside tool or 
 - [x] Start `pnpm start`, then create `ada@gmail.com`, `bob@example.com` and `eve@gmailer.com`. Result: three users exist.
 - [x] Paste `src/clients/terminal/list-gmail-users.txt`. Result: Ada and Eve print, Bob does not.
 - [x] Start `pnpm api` and `pnpm chrome`, and `curl` `GET /users/gmail` on ports 3001 and 3002. Result: both answer 200 with Ada and Eve.
-- [ ] Start `pnpm nest` and `curl` `GET /users/gmail` on port 3003. Result: it answers 200 with Ada and Eve, and `GET /users/1` still works.
+- [x] Start `pnpm nest` and `curl` `GET /users/gmail` on port 3003. Result: it answers 200 with Ada and Eve, and `GET /users/1` still works.
 - [x] Run the cell of `list-gmail-users.ipynb`. Result: the table shows Ada and Eve.
 - [x] Open the web page with `pnpm browser`, click "Solo Gmail", then "Ver todos". Result: the list shows Ada and Eve, then all three.
 - [x] Open the desktop window with `pnpm electron` and repeat the clicks. Result: the same.
 - [ ] Open the VS Code extension with `pnpm vscode`, click "Solo Gmail", then "Recargar". Result: the list shows Ada and Eve, then all three.
 - [x] Delete Ada and Eve and ask for the Gmail users in the terminal. Result: `[]`.
-- [ ] Run `pnpm format` and `pnpm lint`. Result: both pass.
+- [x] Run `pnpm format` and `pnpm lint`. Result: both pass.
