@@ -10,19 +10,54 @@ mi-primer-proyecto/
   start-jupyter.js
   src/
     clients/
+      browser/
+        index.html
+        app.js
+        styles.css
+      electron/
+        main.js
+        index.html
+        app.js
+        styles.css
       terminal/
         create-user.txt
         list-users.txt
+        find-user-by-id.txt
         update-user.txt
         delete-user.txt
         users-gender-count.txt
+      http/
+        app.js
+      chrome/
+        server.js
+        manifest.json
+        index.html
+        popup.js
+        styles.css
+      nest/
+        bootstrap.mjs
+        main.js
+        app.module.js
+        users.controller.js
+        users.service.js
+        logic-exception.filter.js
+        logic-error.constants.js
+      vscode/
+        package.json
+        extension.cjs
+        panel.html
+        panel.js
+        panel.css
+        .vscode/
+          launch.json
       jupyter/
     db/
-      connection.js
+      server.js
       users.sqlite
     logic/
       create-user.js
       list-users.js
+      find-user-by-id.js
       update-user.js
       delete-user.js
       users-gender-count.js

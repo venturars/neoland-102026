@@ -1,0 +1,1 @@
+SELECT name, checked_at FROM checkins WHERE session_id = ? AND name_key = ?

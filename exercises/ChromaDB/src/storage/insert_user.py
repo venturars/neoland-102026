@@ -6,7 +6,9 @@ def insert_user(name: str, email: str, age: int, gender: str) -> int:
     query = read_query("insert_user")
 
     connection = connect_db()
-    cursor = connection.execute(query, {"name": name, "email": email, "age": age, "gender": gender})
+    cursor = connection.execute(
+        query, {"name": name, "email": email, "age": age, "gender": gender}
+    )
     connection.commit()
     connection.close()
 

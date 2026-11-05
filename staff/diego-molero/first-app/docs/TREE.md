@@ -1,32 +1,17 @@
 # Árbol
 
-Los entornos, bases y checkpoints se generan en local.
+Los entornos, bases, credenciales y checkpoints se generan en local.
 
 ```text
 first-app/
-  clients/
-    jupyter/
-      create-user.ipynb
-      create-users-table.ipynb
-      delete-user.ipynb
-      find-user-by-email.ipynb
-      find-user-by-id.ipynb
-      find-user-by-name.ipynb
-      list-users.ipynb
-      update-user.ipynb
-      users-gender-count.ipynb
-    terminal/
-      create-user.txt
-      create-users-table.txt
-      delete-user.txt
-      find-user-by-email.txt
-      find-user-by-id.txt
-      find-user-by-name.txt
-      list-users.txt
-      update-user.txt
-      users-gender-count.txt
-  db/
-    connection.js
+  agents/
+    create-branch.md
+    create-commit.md
+    create-issue.md
+    create-pr.md
+    git-workflow-agent.md
+    help-me-to-think.md
+    launch-push.md
   docs/
     specs/
       align-code-with-guides/
@@ -38,6 +23,14 @@ first-app/
         spec.md
         tasks.md
       find-user-by-name/
+        plan.md
+        spec.md
+        tasks.md
+      finish-frontend-express-rest/
+        plan.md
+        spec.md
+        tasks.md
+      git-workflow/
         plan.md
         spec.md
         tasks.md
@@ -53,6 +46,14 @@ first-app/
         plan.md
         spec.md
         tasks.md
+      move-layers-under-src/
+        plan.md
+        spec.md
+        tasks.md
+      notes/
+        plan.md
+        spec.md
+        tasks.md
       socket-package-validation/
         plan.md
         spec.md
@@ -65,39 +66,172 @@ first-app/
         plan.md
         spec.md
         tasks.md
+      vanilla-web-client/
+        plan.md
+        spec.md
+        tasks.md
     ARCHITECTURE.md
     CONSTITUTIONS.md
     DATABASE.md
     ERRORS.md
+    SOCKET.md
     STYLE.md
     TREE.md
-  logic/
-    create-user.js
-    delete-user.js
-    find-user-by-email.js
-    find-user-by-id.js
-    find-user-by-name.js
-    list-users.js
-    update-user.js
-    users-gender-count.js
-  queries/
-    queries/
-      create-users-table.sql
-      find-all.sql
-      find-by-email.sql
-      find-by-id.sql
-      find-by-name.sql
-      insert.sql
-      remove.sql
-      update.sql
-    users.js
+  MCPS/
+    github-mcp-server/
+      mcp.txt
+    socket-mcp/
+      mcp.txt
   scripts/
     jupyter.sh
+  skills/
+    assign-author/
+      SKILL.md
+    assign-reviewers/
+      SKILL.md
+      reviewer-cache.json
+    check-status/
+      SKILL.md
+    commit-changes/
+      SKILL.md
+    create-branch/
+      SKILL.md
+    create-branch-from-staging/
+      SKILL.md
+    create-draft/
+      SKILL.md
+    create-empty-commit/
+      SKILL.md
+    create-issue/
+      SKILL.md
+    create-pr-base-staging/
+      SKILL.md
+    grill-me/
+      SKILL.md
+    grill-with-docs/
+      SKILL.md
+    launch-push/
+      SKILL.md
+    link-pr-to-issue/
+      SKILL.md
+    pull-changes/
+      SKILL.md
+  src/
+    clients/
+      http/
+        app.js
+        handle-notes.js
+        handle-users.js
+        request-helpers.js
+        send-http-error.js
+        serve-public-file.js
+        start-http-server.js
+      postman/
+        users.postman_collection.json
+      jupyter/
+        create-user.ipynb
+        create-users-table.ipynb
+        delete-user.ipynb
+        find-user-by-email.ipynb
+        find-user-by-id.ipynb
+        find-user-by-name.ipynb
+        list-users.ipynb
+        update-user.ipynb
+        users-gender-count.ipynb
+      terminal/
+        create-note.txt
+        create-user.txt
+        create-users-table.txt
+        delete-note.txt
+        delete-user.txt
+        find-note-by-id.txt
+        find-user-by-email.txt
+        find-user-by-id.txt
+        find-user-by-name.txt
+        list-notes.txt
+        list-users.txt
+        update-note.txt
+        update-user.txt
+        users-gender-count.txt
+      web/
+        api.js
+        index.html
+        main.js
+        note-editor.js
+        notes-list.js
+        show-screen.js
+        state.js
+        styles.css
+        user-editor.js
+        user-create.js
+        user-menu.js
+        user-selection.js
+    db/
+      connection.js
+    logic/
+      create-note.js
+      create-user.js
+      delete-note.js
+      delete-user.js
+      find-note-by-id.js
+      find-user-by-email.js
+      find-user-by-id.js
+      find-user-by-name.js
+      list-notes.js
+      list-users.js
+      update-note.js
+      update-user.js
+      users-gender-count.js
+    queries/
+      queries/
+        create-users-table.sql
+        find-all.sql
+        find-by-email.sql
+        find-by-id.sql
+        find-by-name.sql
+        notes/
+          create-table.sql
+          find-all.sql
+          find-by-id.sql
+          insert.sql
+          remove.sql
+          update.sql
+        insert.sql
+        remove.sql
+        update.sql
+      initialize-database.js
+      notes.js
+      users.js
+  templates/
+    issues/
+      chore_issue.md
+      docs_issue.md
+      feat_issue.md
+      fix_issue.md
+      refactor_issue.md
+      test_issue.md
+    pull-request/
+      chore-pull-request.md
+      docs-pull-request.md
+      feat-pull-request.md
+      fix-pull-request.md
+      refactor-pull-request.md
+      test-pull-request.md
+  tools/
+    check-status.sh
+    reviewer-cache.js
+    commit-changes.sh
+    create-branch-from-staging.sh
+    create-branch.sh
+    create-empty-commit.sh
+    launch-push.sh
+    pull-changes.sh
   .gitattributes
   .gitignore
+  .mcp.example.json
   AGENTS.md
   package.json
   pnpm-lock.yaml
 ```
 
-En local también se utilizan db/users.sqlite, node_modules/ y .venv/, excluidos de Git.
+La base personal vive en `src/db/users.sqlite`. Los módulos y el SQL conservan su contenido tras el traslado. La configuración privada `.mcp.json`, el token del cliente, `node_modules/` y `.venv/` no se versionan.

@@ -1,13 +1,15 @@
-# Ver el estado
+### Herramienta: CHECK_STATUS
 
-Úsala antes de elegir un momento. No cambia nada.
+- **Descripción**: Úsala única y exclusivamente cuando necesites saber la rama actual, si hay cambios sin commit y si la rama sigue a un remoto.
 
-Desde la raíz del repositorio:
+- **Comando de Terminal**: `staff/meghan-martin/first-app/tools/check-status.sh`
 
-`staff/meghan-martin/first-app/tools/check-status.sh`
+El comando se lanza desde el root del repositorio git (la carpeta que contenga el directorio .git).
 
-Desde `first-app`:
+#### Especificación de Argumentos
 
-`tools/check-status.sh`
+No recibe argumentos.
 
-Tiene que escribir el repositorio, la rama y el remoto. Si el código de salida no es 0, lee el error y para.
+#### Reglas de Invocación Críticas
+
+- **Procesamiento de respuestas**: El script escribe, en este orden, el repositorio, la rama, el remoto con los commits por subir y por bajar, el último commit, los ficheros preparados, los modificados sin preparar y los que no tienen seguimiento. Si el código de salida no es 0, lee el error y comunícalo. No inventes la rama ni los ficheros.

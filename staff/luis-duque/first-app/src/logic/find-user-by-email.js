@@ -6,7 +6,7 @@ import * as users from "../queries/users.js";
  */
 export async function findUserByEmail(email) {
   const userEmail = validateEmail(email);
-  const user = users.findUserByEmail(userEmail);
+  const user = await users.findUserByEmail(userEmail);
 
   if (!user) {
     throw new Error(`User ${userEmail} was not found`);

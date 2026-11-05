@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>First App</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="module" src="./app.js"></script>
+  </head>
+  <body>
+    <main class="app">
+      <h1>First App</h1>
+
+      <!-- Mensajes para la persona: avisos y errores. -->
+      <p id="message" class="message" role="status" hidden></p>
+
+      <!-- Pantalla 1: lista de usuarios, alta y ver uno por id. -->
+      <section id="list-screen" data-screen>
+        <h2>Usuarios</h2>
+        <p id="list-status"></p>
+        <ul id="user-list" class="user-list"></ul>
+
+        <h3>Crear usuario</h3>
+        <!-- Los campos no llevan required: quien decide es la lógica. -->
+        <form id="create-form">
+          <label for="create-name">Nombre</label>
+          <input id="create-name" type="text" />
+          <label for="create-email">Email</label>
+          <input id="create-email" type="text" />
+          <button type="submit">Crear</button>
+        </form>
+
+        <h3>Ver un usuario</h3>
+        <form id="view-form">
+          <label for="view-id">Id</label>
+          <input id="view-id" type="text" />
+          <button type="submit">Ver</button>
+        </form>
+      </section>
+
+      <!-- Pantalla 2: ficha de un usuario, para modificarlo o borrarlo. -->
+      <section id="detail-screen" data-screen hidden>
+        <h2>Usuario</h2>
+        <dl class="user-data">
+          <dt>Id</dt>
+          <dd id="detail-id"></dd>
+          <dt>Nombre</dt>
+          <dd id="detail-name"></dd>
+          <dt>Email</dt>
+          <dd id="detail-email"></dd>
+          <dt>Creado</dt>
+          <dd id="detail-created"></dd>
+          <dt>Modificado</dt>
+          <dd id="detail-updated"></dd>
+        </dl>
+
+        <h3>Modificar usuario</h3>
+        <form id="edit-form">
+          <label for="edit-name">Nombre</label>
+          <input id="edit-name" type="text" />
+          <label for="edit-email">Email</label>
+          <input id="edit-email" type="text" />
+          <button type="submit">Guardar</button>
+        </form>
+
+        <div class="actions">
+          <button id="delete-button" type="button" class="danger">
+            Eliminar
+          </button>
+          <button id="back-button" type="button" class="secondary">
+            Volver
+          </button>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

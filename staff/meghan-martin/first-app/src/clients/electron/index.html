@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>People</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main>
+      <section id="list-screen">
+        <h1>People</h1>
+        <p id="list-error" class="error"></p>
+        <form id="create-form">
+          <label>
+            Name
+            <input id="create-name" name="name" type="text" />
+          </label>
+          <label>
+            Email
+            <input id="create-email" name="email" type="text" />
+          </label>
+          <button type="submit">Add</button>
+        </form>
+        <form id="find-form">
+          <label>
+            Id
+            <input id="find-id" name="id" type="text" />
+          </label>
+          <button type="submit">Open</button>
+        </form>
+        <div class="head">
+          <span>Id</span>
+          <span>Name</span>
+          <span>Email</span>
+        </div>
+        <div id="user-list"></div>
+      </section>
+
+      <section id="person-screen" hidden>
+        <h1 id="person-name"></h1>
+        <p id="person-email" class="muted"></p>
+        <p class="muted">Id <span id="person-id"></span></p>
+        <p class="muted">Created <span id="person-created"></span></p>
+        <p class="muted">Updated <span id="person-updated"></span></p>
+        <p id="person-error" class="error"></p>
+        <form id="update-form">
+          <label>
+            Name
+            <input id="name-input" name="name" type="text" />
+          </label>
+          <label>
+            Email
+            <input id="email-input" name="email" type="text" />
+          </label>
+          <p class="actions">
+            <button type="submit">Save</button>
+            <button id="back-button" type="button">Back</button>
+            <button id="delete-button" class="danger" type="button">
+              Delete
+            </button>
+          </p>
+        </form>
+      </section>
+    </main>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

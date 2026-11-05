@@ -1,0 +1,161 @@
+:root {
+  color: #2f3a2a;
+  font-family: "Segoe UI", sans-serif;
+  line-height: 1.5;
+  background: #f3efe4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.app {
+  padding: 0.75rem;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: 0;
+  border-radius: 0.5rem;
+  background: #3f6b4a;
+  color: white;
+  font-weight: 700;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 0;
+  font-size: 1.1rem;
+}
+
+h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.card {
+  background: #fbf8f2;
+  border: 1px solid #ddd4c2;
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+.eyebrow {
+  margin-bottom: 0.25rem;
+  color: #3f6b4a;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.user-list {
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.user-item {
+  width: 100%;
+  margin-bottom: 0.35rem;
+  text-align: left;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+}
+
+input,
+button {
+  font: inherit;
+}
+
+input {
+  width: 100%;
+  min-height: 2.5rem;
+  padding: 0.5rem;
+  border: 1px solid #c9bfa8;
+  border-radius: 0.4rem;
+  background: #fbf8f2;
+  color: inherit;
+}
+
+.field {
+  margin-bottom: 0.75rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+button {
+  min-height: 2.5rem;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 0.4rem;
+  background: #3f6b4a;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button.danger {
+  background: #f7f1e8;
+  color: #7a4a32;
+  border-color: #e0cfc0;
+}
+
+button.tab {
+  background: #f7f1e8;
+  color: #3f6b4a;
+  border-color: #c9bfa8;
+}
+
+button.tab-selected {
+  background: #3f6b4a;
+  color: white;
+  border-color: transparent;
+}
+
+.message {
+  margin-bottom: 0.75rem;
+  padding: 0.6rem;
+  border: 1px solid #c5d4c0;
+  border-radius: 0.4rem;
+  background: #e8f0e4;
+  overflow-wrap: anywhere;
+}
+
+.message-error {
+  border-color: #e0cfc0;
+  background: #f7f1e8;
+  color: #7a4a32;
+}
+
+[hidden] {
+  display: none;
+}

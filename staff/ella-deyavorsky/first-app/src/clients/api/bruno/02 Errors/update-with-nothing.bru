@@ -1,0 +1,24 @@
+meta {
+  name: Update with nothing
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{baseUrl}}/users/{{userId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {}
+}
+
+assert {
+  res.status: eq 400
+  res.body.error: eq There is nothing to update.
+}
+
+docs {
+  The body has no name and no email.
+}

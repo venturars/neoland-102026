@@ -2,14 +2,16 @@
 
 ## Storage and business operations
 
-- `src/db/connection.js` owns the single database connection. Its file location and
-  initialization behavior are defined in [DATABASE.md](DATABASE.md).
-- `src/queries/queries/` contains one SQL file per query. `src/queries/users.js` loads and
-  executes those statements; it performs no business validation or printing.
-  [DATABASE.md](DATABASE.md) defines each query's parameters and return value.
+- `src/db/server.js` owns the module-relative SQLite connection and executes
+  requests on the loopback data service. Its storage contracts are in
+  [DATABASE.md](DATABASE.md).
+- `src/queries/queries/` exports one JavaScript SQL-text constant per query.
+  `src/queries/users.js` sends those statements and bound parameters to the data
+  service; its async functions return query results without business validation
+  or presentation.
 - `src/logic/` contains the public business operations. It validates input, checks
   business conditions, calls queries, and constructs ordinary returned data.
-  It does not manage the connection or print results. The
+  It awaits query results without managing the connection or printing results. The
   [constitution](CONSTITUTIONS.md#public-business-operations) defines the contracts;
   [ERRORS.md](ERRORS.md) defines their failures.
 
@@ -26,9 +28,50 @@
 
 ## Clients and startup
 
-`src/clients/terminal/` contains copyable `node --input-type=module` heredocs. They call
+`src/clients/terminal/` contains copyable `node --input-type=module` heredocs. They await
 the corresponding operations and print their results. Their usage is described
 in the [constitution](CONSTITUTIONS.md#terminal-examples).
+
+`src/clients/web/` provides the selection, menu and edit/delete screens. The
+browser imports the shared list, ID lookup, update and delete operations as ES
+modules. It keeps presentation state in memory; saved contacts live in SQLite.
+Field errors present shared validation failures. Typed-email confirmation is a
+client precaution before calling delete, not authentication. Notes is disabled.
+Its summary button imports and awaits `usersGenderCount` directly. That shared
+operation uses native fetch to the existing local Ollama API, so its module also
+loads in the file-based browser client. Prompts, batching and result handling
+remain in the operation, without an intermediate HTTP client.
+
+`scripts/web.js`, run by `pnpm web`, opens the HTML as a file in Chrome/Chromium
+with local-file module access and a separate temporary profile. It uses an
+explicit `CHROME_BIN` path or the platform's usual installation paths. Stopping
+the launcher with Ctrl+C closes its browser and removes that profile.
+`src/db/server.js` handles only database requests on POST /execute and its CORS
+preflight; it does not serve the page or JavaScript files.
+
+`src/clients/vscode/` provides an independent VS Code extension. Its manifest and
+`extension.cjs` register a command and bridge panel messages to the existing user
+operations. `panel.html`, `panel.js`, and `panel.css` present the contact flows;
+the extension uses the same local data service and does not own business rules.
+Its `.vscode/launch.json` starts the Extension Development Host for local testing.
+`tests/vscode-client.test.js` checks the extension adapter. Its `genderCount`
+message calls the existing classifier in the extension host and returns aggregate
+counts to the panel.
+
+`src/clients/electron/main.js` opens the desktop client's own `index.html`.
+Its module renderer imports the shared business operations directly, including
+the browser-compatible classifier. The window retains context isolation and
+runs without Node integration. Its CSP permits only the local data and Ollama
+services. It does not reuse the web client's page.
+
+`src/clients/chrome/manifest.json` registers a Manifest V3 popup with only the
+local port-3002 host permission. Its own `index.html`, `popup.js` and `styles.css`
+call the Fastify adapter in `server.js`. The adapter converts numeric IDs and
+calls the same business operations, including the classifier. `pnpm chrome`
+starts the adapter; Chrome loads the folder as an unpacked extension.
+
+The Nest adapter is described below; its implementation follows
+[issue #1044](https://github.com/venturars/neoland-102026/issues/1044).
 
 `src/clients/jupyter/` provides nine independent notebooks for those same operations
 and explicit table initialization. Initialization calls a query; it is not a new
@@ -49,22 +92,35 @@ public business operation.
 - `src/clients/jupyter/client.py` sends an operation and arguments as JSON to a Node
   subprocess in this project copy and displays its output.
 - `src/clients/jupyter/run-operation.js` selects an explicitly supported operation,
-  awaits the classifier when needed, and presents returned values as tables or
+  awaits each requested operation, and presents returned values as tables or
   displays client messages and errors. It does not replace business operations.
 - `scripts/jupyter.js` prepares the existing project-local environment, registers
   its kernel, and starts Jupyter on the loopback interface with the notebook
   folder as its root.
 - `requirements-jupyter.txt` lists the Python requirements for that client.
-- `package.json` holds minimal application metadata, ES module mode, the Jupyter
-  startup and development-check commands, and dependency declarations. `pnpm-lock.yaml` records the
-  resolved packages. Version and package rules remain in the
+- `package.json` holds minimal application metadata, ES module mode, the
+  client startup commands, development-check commands and dependency declarations.
+  `pnpm-lock.yaml` records the resolved packages. `pnpm-workspace.yaml` holds
+  the exact-version release-age exception for Electron.
+  Version and package rules remain in the
   [constitution](CONSTITUTIONS.md#dependencies-and-package-management).
 - `.gitignore` excludes generated local artifacts. `src/db/users.sqlite`, `.venv/`,
   dependency installations and caches are runtime files, not source inventory.
-- `README.md` explains how to start and use the Jupyter client.
+- `README.md` explains how to prepare the data service and start each client.
 
 Results are presented by clients rather than printed by business operations.
 Startup may report environment preparation; it does not introduce business logic.
+
+## Verification
+
+`tests/serve-data-through-node.test.js` checks the local data service, query
+results, business operations and failure handling in disposable project copies.
+`tests/web-client.test.js` checks file-origin query access and confirms that
+the database server does not serve web assets or other project files. Both use port 3000; run them sequentially:
+
+```sh
+node --test --test-concurrency=1 tests/serve-data-through-node.test.js tests/web-client.test.js
+```
 
 ## Development tools
 
@@ -95,10 +151,18 @@ is defined in [AGENTS.md](../AGENTS.md).
 Socket package validation, guide separation, formatting/lint checks, and alignment
 with the architecture and style guides. Their individual documents
 record the request, approved approach, tasks, decisions, and verification.
+`complete-user-clients/` covers Electron, Chrome and the added summary
+controls in the existing clients.
 
 ## Git workflow
 
 `agents/git-workflow-agent.md` defines the workflow loaded by the principal agent.
+It checks task readiness against project context, asks for missing decisions and
+retains resolved answers. Starting a task completes branch and draft PR setup,
+including issue links, before project edits; resuming reuses completed steps.
+Interview rounds return the necessary questions with recommendations; the principal
+waits for answers and passes their history when resuming. Commit subjects identify
+the file or function and its concrete change.
 The six other agent documents define task clarification, issue creation, branch
 creation, commits, pushes and pull requests. The principal runs status, staging
 updates, issue linking and reviewer assignment through their respective skills.
@@ -109,7 +173,13 @@ agent documents. It does not duplicate their procedures. These are optional comp
 
 `skills/` describes each action and its inputs/results. The six Bash scripts in
 `tools/` implement local Git operations. `templates/` supplies the issue and PR
-bodies. `MCPS/github-mcp-server/mcp.txt` is a public server documentation reference,
+bodies: six issue templates and six PR templates for feat, fix, docs, refactor,
+test and chore. The chosen supported type is shared by the issue, branch and PR;
+new tasks without a specific template use the closest supported type. Draft
+checklists remain unchecked until review is requested and their items verified.
+The principal links the issue after PR creation; automatic closure follows the
+actual default branch, while PRs keep staging as their base.
+`MCPS/github-mcp-server/mcp.txt` is a public server documentation reference,
 not an installed connection or credential store. Setup and verification are in
 README.md; workflow permissions and SDD gates remain in AGENTS.md.
 
@@ -117,3 +187,38 @@ README.md; workflow permissions and SDD gates remain in AGENTS.md.
 documentation reference, alongside the GitHub reference. It is not an installed
 connection or credential store. The constitution explains access and source
 coverage; AGENTS.md retains the detailed dependency-validation procedure.
+
+## REST client
+
+`src/clients/http/app.js` adapts create, list, ID lookup, update, delete and
+the existing gender summary to HTTP using Express.
+It awaits the existing logic, converts route IDs to numbers, and maps business
+errors to HTTP statuses and JSON messages. It listens on loopback port 3001 via
+`pnpm http`; queries still reach the separate data service on port 3000.
+The client does not serve web assets. The summary route precedes the ID route
+without a special browser-origin exception. Fastify offers the same six
+routes on its own port. README documents the Postman requests.
+
+All adapters await the shared logic and use the data service on port 3000.
+They preserve the existing five-field contacts, validation, ordering and
+timestamps. Summary requests require Ollama only when contacts exist and return
+no partial result on a classifier failure.
+
+Electron and Chrome display the selected contact's five fields. Confirmed writes
+update local state before the optional list reload; a failed reload retains the
+confirmed result and reports that the list needs refreshing. The UI regressions
+are in `tests/client-ui-state.test.js`; classifier transport, batches and failures
+are checked in `tests/browser-classifier.test.js`.
+
+
+VS Code registra firstAppUsers como WebviewView de Explorer; el comando
+firstApp.openUsers la enfoca. El host llama a las operaciones compartidas,
+conservando los campos omitidos y mostrando las cinco propiedades del contacto.
+
+
+## Nest
+
+src/clients/nest recibe HTTP en loopback3003. El controlador usa el servicio
+inyectado por Nest, que llama a logic. AppModule registra controlador, proveedor
+y filtro global. Babel compila src a dist; el acceso SQL sigue en el servicio
+de datos3000.

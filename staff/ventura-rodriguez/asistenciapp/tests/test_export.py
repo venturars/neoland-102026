@@ -1,4 +1,4 @@
-"""Tests de asistencia/export.py · CA-14."""
+"""Tests de asistencia/export.py."""
 
 from datetime import timezone
 

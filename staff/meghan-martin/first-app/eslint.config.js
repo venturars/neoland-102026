@@ -18,4 +18,48 @@ export default defineConfig([
       },
     },
   },
+  {
+    files: ["src/db/server.js"],
+    languageOptions: {
+      globals: {
+        Buffer: "readonly",
+        console: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/rest/server.js"],
+    languageOptions: {
+      globals: {
+        console: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/electron/main.js"],
+    languageOptions: {
+      globals: {
+        URL: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/electron/app.js"],
+    languageOptions: {
+      globals: {
+        FormData: "readonly",
+        document: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/browser/app.js"],
+    languageOptions: {
+      globals: {
+        clearTimeout: "readonly",
+        document: "readonly",
+        setTimeout: "readonly",
+      },
+    },
+  },
 ]);

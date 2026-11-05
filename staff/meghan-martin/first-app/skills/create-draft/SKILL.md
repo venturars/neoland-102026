@@ -1,5 +1,12 @@
-# Dejarla en draft
+### Herramienta: CREATE_DRAFT
 
-Úsala después de abrir la pull request. La deja en draft un momento.
+- **Descripción**: Pasa una pull request a draft.
+- **MCP**: El servidor remoto descrito en `MCPS/github-mcp-server/mcp.txt`.
 
-El orquestador, justo después, pide revisión a Miguel (`mglnglxx`) y a Jimena (`jiji-mena`) y la saca de draft.
+#### Especificación de Argumentos
+
+1. **Pull request** : El número o la URL de la pull request de la rama actual.
+
+#### Reglas de Invocación Críticas
+
+- **Procesamiento de respuestas**: Confirma el estado draft. Si ya está en draft, conserva ese estado. Si no existe, comunica el error.

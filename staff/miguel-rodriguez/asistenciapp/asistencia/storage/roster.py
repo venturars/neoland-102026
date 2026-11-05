@@ -21,7 +21,8 @@ def read_state(connection: sqlite3.Connection) -> str | None:
         read_state(connection)
     """
     query = (QUERY_DIR / 'read-state.sql').read_text(encoding='utf-8')
-    row = connection.execute(query).fetchone()
+    cursor = connection.execute(query)
+    row = cursor.fetchone()
     return row[0] if row is not None else None
 
 
@@ -37,7 +38,9 @@ def table_exists(connection: sqlite3.Connection) -> bool:
         table_exists(connection)
     """
     query = (QUERY_DIR / 'table-exists.sql').read_text(encoding='utf-8')
-    return connection.execute(query).fetchone() is not None
+    cursor = connection.execute(query)
+    row = cursor.fetchone()
+    return row is not None
 
 
 def create_catalog(connection: sqlite3.Connection) -> None:
@@ -68,7 +71,10 @@ def insert_students(connection: sqlite3.Connection, students: list[dict]) -> Non
         insert_students(connection, students)
     """
     query = (QUERY_DIR / 'insert-student.sql').read_text(encoding='utf-8')
-    values = [(row['key'], row['name'], row['character'], row['display_order']) for row in students]
+    values = [
+        (row['key'], row['name'], row['character'], row['display_order'])
+        for row in students
+    ]
     connection.executemany(query, values)
 
 
@@ -99,7 +105,9 @@ def list_students(connection: sqlite3.Connection) -> list[dict]:
         list_students(connection)
     """
     query = (QUERY_DIR / 'list-students.sql').read_text(encoding='utf-8')
-    return [dict(row) for row in connection.execute(query)]
+    cursor = connection.execute(query)
+    rows = cursor.fetchall()
+    return [dict(row) for row in rows]
 
 
 def read_initial_students() -> list[dict]:
@@ -136,4 +144,8 @@ def available_characters() -> set[str]:
 
         available_characters()
     """
-    return {path.stem for path in CHARACTERS_DIR.iterdir() if path.is_file() and path.suffix == '.svg'}
+    characters = set()
+    for path in CHARACTERS_DIR.iterdir():
+        if path.is_file() and path.suffix == '.svg':
+            characters.add(path.stem)
+    return characters

@@ -1,0 +1,5 @@
+// Ejemplo manual. Ejecución: docs/CONSTITUTIONS.md.
+import { deleteNote } from "./src/logic/delete-note.js";
+
+deleteNote(1, 1);
+console.log("Note deleted");

@@ -3,7 +3,7 @@ import { validateEmail, validateName, toUser } from "./shared.js";
 
 export { insertUser };
 
-export function createUser(input) {
+export async function createUser(input) {
   let rawName;
   let rawEmail;
 
@@ -15,11 +15,11 @@ export function createUser(input) {
   const name = validateName(rawName);
   const email = validateEmail(rawEmail);
 
-  const owner = findByEmail(email);
+  const owner = await findByEmail(email);
   if (owner) {
     throw new Error("Email is already used");
   }
 
-  const saved = insertUser({ name, email });
+  const saved = await insertUser({ name, email });
   return toUser(saved);
 }

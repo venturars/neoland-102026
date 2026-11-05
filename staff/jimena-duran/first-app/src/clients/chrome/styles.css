@@ -1,0 +1,70 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 22rem;
+  margin: 0;
+  background: #f5f5f4;
+  color: #292524;
+  font-family: system-ui, sans-serif;
+}
+
+main {
+  padding: 1rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+h2 {
+  margin: 1.25rem 0 0.75rem;
+  font-size: 1rem;
+}
+
+label {
+  display: block;
+  margin-top: 0.75rem;
+}
+
+input,
+button {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #a8a29e;
+  border-radius: 0.4rem;
+  font: inherit;
+}
+
+input {
+  margin-top: 0.25rem;
+  background: #fff;
+}
+
+button {
+  margin-top: 0.75rem;
+  background: #e7e5e4;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #d6d3d1;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+li,
+p {
+  margin: 0.75rem 0 0;
+  overflow-wrap: anywhere;
+}
+
+#message {
+  color: #b91c1c;
+}

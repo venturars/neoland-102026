@@ -24,12 +24,18 @@ El ejemplo de terminal es obligatorio. Un logic ya creado no se reemplaza.
 
 Cada tarea nueva sigue `docs/GIT-WORKFLOW.md` aunque el prompt no nombre ese fichero. Es una issue, una rama desde `staging` y una pull request en draft hacia `staging`.
 
+Las formas de la issue y de la pull request están en `templates/`, una por tipo. El enlace es `Closes #N`. Al pedir revisión se marcan solo las casillas que se han comprobado.
+
 La plantilla de la pull request es `.github/pull_request_template.md` de esta app. Si el workspace es el repositorio de la clase, la ruta es `staff/meghan-martin/first-app/.github/pull_request_template.md`.
 
 ## Comandos
 
 - No hay comando de arranque de la app. Cada acción se prueba pegando su `src/clients/terminal/*.txt` desde dentro de `first-app`.
-- `npm run jupyter`, desde `first-app`, abre la lista de notebooks. La primera vez prepara el Jupyter de esta app.
+- `npm run db`, desde `first-app`, abre la base en `http://127.0.0.1:3000` y se queda en marcha hasta Ctrl+C.
+- `npm run jupyter`, desde `first-app`, abre la lista de notebooks. La primera vez prepara el Jupyter de esta app. La base tiene que estar en marcha.
+- `npm run browser`, desde `first-app`, abre `src/clients/browser/index.html`. No sirve la página. La base tiene que estar en marcha.
+- `npm run api`, desde `first-app`, responde JSON en `http://127.0.0.1:3001`. La base tiene que estar en marcha.
+- `npm run electron`, desde `first-app`, abre una ventana de escritorio. La base tiene que estar en marcha.
 - No hay tests. `package.json` no tiene script `test`.
 - El lock que hay es `package-lock.json`. No hay `pnpm-lock.yaml`.
 - `npm run format` lanza Prettier. El formato es el estándar, sin configuración propia.
@@ -58,11 +64,15 @@ Prettier sin configuración propia: comillas dobles, punto y coma, coma final, 2
 ## Al terminar una tarea
 ## Paquetes
 
-Antes de aprobar un plan, un paquete de Node nuevo o un cambio de versión se comprueba con el MCP de Socket. Se mira la versión propuesta y sus dependencias, hasta tres capas. En cada capa el criterio es el mismo: si esa versión está en una campaña, si tiene alertas y si alguna puntuación baja de 50.
+La regla está en la sección «Paquetes» de [docs/CONSTITUTIONS.md](docs/CONSTITUTIONS.md). Aquí solo el cómo, al escribir el plan.
 
-El plan lleva un resumen corto de cada paquete y versión. Las alertas se escriben. Quien aprueba el plan decide si las acepta. El agente no decide.
+El servidor es el de `MCPS/socket-mcp/mcp.txt`. La entrada se llama `socket-mcp`.
 
-Queda fuera un paquete que no es de Node, un paquete que ya está y no cambia de versión, y una dependencia más allá de la tercera capa.
+- Las puntuaciones salen de `depscore`, con la versión exacta. Una puntuación por debajo de 50 se escribe. 50 no baja.
+- La alerta sale de `alerts`, con la organización `vibecodingneoland` y el nombre del paquete. Solo cuenta una alerta de esa misma versión. Una lista vacía es la de un paquete vigilado. No dice que no haya alerta.
+- La campaña sale de `threat_feed`. Si responde 403 `threat_feed_not_entitled`, el resumen dice que la cuenta no tiene ese feed.
+
+Si una herramienta no contesta, el resumen dice el motivo. No escribe «no consta» sin haberla llamado. Quien aprueba el plan decide. Esto no es un momento del flujo de git.
 
 ## Al terminar
 

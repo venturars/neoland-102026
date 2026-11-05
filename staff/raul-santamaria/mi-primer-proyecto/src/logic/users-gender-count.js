@@ -13,7 +13,7 @@ export async function usersGenderCount() {
   let users;
 
   try {
-    users = list();
+    users = await list();
   } catch {
     throw new Error("Could not list the users");
   }

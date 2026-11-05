@@ -1,0 +1,1 @@
+SELECT * FROM race_operations WHERE session_id=? AND roster_key=? AND operation_id=?

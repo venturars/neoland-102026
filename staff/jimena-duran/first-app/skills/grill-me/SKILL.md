@@ -1,10 +1,12 @@
----
-name: grill-me
-description: Formula una pregunta de producto cuando la petición o los documentos no permiten definir una tarea concreta.
----
+### Herramienta: GRILL_ME
 
-# Aclarar la intención
+- **Descripción**: Úsala cuando la idea no depende de este repositorio, o cuando `grill-with-docs` ya dejó decisiones que el repositorio no responde. En ese caso va después. No la uses para crear la issue, la rama ni la pull request. No tiene script ni MCP.
 
-La invoca `agents/help-me-to-think.md`. Toma la petición y las respuestas ya recibidas. Devuelve al orquestador una pregunta cada vez sobre el comportamiento que falta decidir; ofrece opciones breves cuando ayuden. No inventes la respuesta ni detalles técnicos.
+* **Fuente**: [grill-me](https://www.skills.sh/mattpocock/skills/grill-me). Instalación: `npx skills add https://github.com/mattpocock/skills --skill grill-me`.
 
-Cuando la tarea esté clara, devuelve un resumen con qué hay que hacer y cómo se sabrá que está hecho. No crees issue, spec, rama ni código. El orquestador mantiene la conversación con Jimena y elige el siguiente momento.
+#### Cómo entrevistar
+
+1. Haz las preguntas que necesites y devuélvelas. No sigas hasta que te llamen con las respuestas.
+2. En cada pregunta, ofrece una respuesta recomendada.
+3. No abras el código para contestar. Esta skill no recorre el repositorio.
+4. Devuelve lo qué hay que hacer y cómo se comprueba. El resumen único lo cierra `help-me-to-think`.

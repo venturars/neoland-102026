@@ -7,10 +7,14 @@ from split_doc import split_doc
 
 def count_chunks() -> None:
     if not MD_DIR.is_dir():
-        raise RuntimeError(f"Markdown folder not found: {MD_DIR}. Run scripts/convert_docs.py")
+        raise RuntimeError(
+            f"Markdown folder not found: {MD_DIR}. Run scripts/convert_docs.py"
+        )
 
     start = time.time()
-    md_paths = sorted(path for path in MD_DIR.rglob("*.md") if path.name != "LICENSE.md")
+    md_paths = sorted(
+        path for path in MD_DIR.rglob("*.md") if path.name != "LICENSE.md"
+    )
     chunks = []
     for md_path in md_paths:
         chunks = chunks + split_doc(md_path)
@@ -28,10 +32,20 @@ def count_chunks() -> None:
         print(f"{area:<14}{count:>7}")
     print(f"{'TOTAL':<14}{len(chunks):>7}")
     print(f"Kinds: {dict(kinds.most_common())}")
-    print(f"Median: {sizes[len(sizes) // 2]}  p90: {sizes[len(sizes) * 9 // 10]}  max: {sizes[-1]}")
-    print(f"Below {MERGE_BELOW}: {sum(1 for size in sizes if size < MERGE_BELOW)}")
+    print(
+        (
+            f"Median: {sizes[len(sizes) // 2]}  "
+            f"p90: {sizes[len(sizes) * 9 // 10]}  max: {sizes[-1]}"
+        )
+    )
+    print(
+        "Below "
+        f"{MERGE_BELOW}: {sum(1 for size in sizes if size < MERGE_BELOW)}"
+    )
     print(f"Above {SPLIT_ABOVE}: {len(oversized)}")
-    for chunk in sorted(oversized, key=lambda chunk: len(chunk["text"]), reverse=True)[:10]:
+    for chunk in sorted(
+        oversized, key=lambda chunk: len(chunk["text"]), reverse=True
+    )[:10]:
         print(f"  {len(chunk['text']):>6}  {chunk['id']}")
     print(f"Time: {time.time() - start:.1f} s")
 

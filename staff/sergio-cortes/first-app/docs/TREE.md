@@ -1,7 +1,10 @@
 # Árbol
 
 first-app/
+  .gitignore
   AGENTS.md
+  README.md
+  babel.config.json
   eslint.config.js
   package.json
   agents/
@@ -25,7 +28,7 @@ first-app/
         tasks.md
   src/
     db/
-      connections.js
+      server.js
       users.sqlite
     queries/
       queries/
@@ -41,6 +44,38 @@ first-app/
       list-users.js
       user-gender-count.js
     clients/
+      http/
+        server.js
+        bruno/
+      nest/
+        main.js
+        app.module.js
+        users.controller.js
+        users.service.js
+        http-exception.filter.js
+      web/
+        index.html
+        styles.css
+        app.js
+      electron/
+        main.js
+        index.html
+        styles.css
+        app.js
+      chrome/
+        server.js
+        manifest.json
+        index.html
+        styles.css
+        popup.js
+      vscode/
+        package.json
+        extension.js
+        index.html
+        styles.css
+        panel.js
+        .vscode/
+          launch.json
       terminal/
         create-user-table.txt
         create-user.txt

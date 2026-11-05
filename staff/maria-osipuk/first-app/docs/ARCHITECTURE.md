@@ -10,53 +10,71 @@
 
 Cada cuaderno de operación tiene el escenario, las instrucciones y una celda. Si esa celda falla, muestra una frase en español y deja el detalle en `src/clients/jupyter/jupyter-client.log`.
 
-Los cuadernos se abren con `./scripts/jupyter.sh` desde `first-app`. Usan el Jupyter del `.venv`, el kernel `first-app` y la base `src/db/users.sqlite`. No crean usuarios de ejemplo.
+Los cuadernos se abren con `./scripts/jupyter.sh` desde `first-app`. Usan el Jupyter del `.venv` y el kernel `first-app`, y necesitan el servidor de datos arrancado. No crean usuarios de ejemplo.
+
+`src/clients/web/` es el cliente de navegador, con tres pantallas: selección (con el alta de usuario), menú y edición. `index.html` define sus controles y `styles.css` su diseño adaptable con lila y fondo continuo con matices lilas y rosados. `app.js` importa las funciones de `src/logic/` directamente, lee los formularios y traduce los errores. Se abre desde `file://` con `pnpm run web`. La selección se mantiene en memoria; recargar vuelve a la lista. «Ir a notas» está deshabilitada, sin pantalla ni petición asociada.
+
+`src/clients/http/` es el cliente REST, construido con Express. `app.js` conecta crear, listar, ver, modificar y borrar con las funciones de `src/logic/`. Traduce la petición y la respuesta; no contiene validación de negocio ni SQL. Se arranca con `pnpm run http`, escucha en `127.0.0.1:3001` y necesita el servidor de datos arrancado. No sustituye a `src/db/server.js`.
+
+`src/clients/electron/` es el cliente de escritorio, con una ventana de lista y panel. Tiene dos procesos. El principal, `main.js`, abre la ventana, pide la confirmación del borrado con un diálogo del sistema y atiende los canales `users:*`; es el único que llama a `src/logic/`, mediante `user-actions.js`. La página, `index.html`, `app.js` y `styles.css`, no importa `src/logic/`, no usa Node y su política de seguridad le impide hacer peticiones de red, porque el servidor de datos ejecuta cualquier SQL que recibe. `preload.cjs` es el único puente: publica en `window.users` cinco funciones. Se abre con `pnpm run electron` y necesita el servidor de datos arrancado. No abre ningún puerto.
+
+`src/clients/nest/` es el cliente Nest, otra forma de construir las cinco operaciones por HTTP. Tiene un módulo, un controlador, un servicio y un filtro de errores. El servicio, `users.service.js`, es el único archivo que llama a `src/logic/`; el controlador declara las rutas y convierte el cuerpo y el id; el filtro traduce el error de la lógica al estado HTTP; `main.js` arranca la aplicación. Traduce la petición y la respuesta: no contiene validación de negocio ni SQL. Nest usa decoradores y no hay TypeScript, así que `pnpm run nest` compila `src/` a `dist/` con Babel y `node` arranca la copia de `dist/clients/nest/`. Escucha en `127.0.0.1:3003`, publica en esa misma dirección una página Swagger UI (`@nestjs/swagger`) que describe y lanza las cinco rutas, y necesita el servidor de datos arrancado. No sustituye a `src/clients/http/`, a la API de Chrome ni a `src/db/server.js`.
+
+`src/clients/chrome/` es el cliente de extensión de Chrome, con dos partes. `api.js` es un proceso Node con Fastify que conecta crear, listar, ver, modificar y borrar con las funciones de `src/logic/`. Traduce la petición y la respuesta; no contiene validación de negocio ni SQL. Se arranca con `pnpm run chrome`, escucha en `127.0.0.1:3002` y necesita el servidor de datos arrancado. La extensión, con `manifest.json`, `popup.html`, `popup.js` y `styles.css`, tiene las pantallas de lista y detalle y solo habla con esa API. Existe porque una extensión no puede importar archivos de fuera de su carpeta. La API no envía cabeceras CORS, así que Chrome bloquea a las páginas web; la extensión pasa porque `host_permissions` declara esa dirección.
+
+`src/clients/vscode/` es el cliente de extensión de VS Code, con dos partes que se hablan por mensajes. El proceso de la extensión corre en el host de Node del editor: `user-actions.js` llama a `src/logic/` y `extension.js` registra la vista, recibe los mensajes y confirma el borrado con un diálogo modal. La vista es un webview con `index.html`, `view.js` y `styles.css`: tiene las pantallas de lista y detalle, traduce los errores y no importa `src/logic/`. No abre ningún puerto, porque el proceso puede importar archivos de fuera de su carpeta. Se abre con `pnpm run vscode`, en una ventana de desarrollo, y necesita el servidor de datos arrancado.
 
 `src/logic/` es el núcleo de la aplicación. Contiene las funcionalidades para crear, buscar, actualizar, borrar y listar usuarios, y para contarlos según el género del nombre. Aplica las reglas de negocio y decide qué resultado recibe el cliente.
 
 `src/logic/` no calcula `createdAt` ni `updatedAt` y no los envía a las consultas. Esas fechas las escribe SQLite.
 
-`src/queries/users.js` lee los archivos SQL, prepara las consultas, proporciona sus parámetros y las ejecuta mediante la conexión compartida. Al cargar este módulo, crea la tabla `users` si todavía no existe.
+Las funciones de `src/logic/` son `async` y no importan módulos `node:*`, para que el navegador pueda importarlas. La excepción es `countUsersByGender`, que usa el paquete `openai` y solo se ejecuta desde terminal y Jupyter.
 
-`src/queries/queries/` contiene un archivo `.sql` por consulta. Los archivos contienen exclusivamente SQL y no contienen JavaScript ni reglas de negocio.
+`src/queries/users.js` importa el SQL de `src/queries/queries/` y lo envía al servidor de datos con `fetch`, mediante `execute(method, sql, params)`. No abre SQLite ni lee archivos.
 
-`src/db/connection.js` abre la conexión SQLite.
+`src/queries/queries/` contiene un módulo `.js` por consulta, que exporta el SQL como una constante en mayúsculas. No contiene funciones ni reglas de negocio.
 
-`src/db/users.sqlite` es la base de la aplicación. Si el proceso tiene `FIRST_APP_DATABASE_FILE`, la conexión abre esa ruta. Si no la tiene, abre `src/db/users.sqlite`. Ninguno de los dos clientes define esa variable.
+`src/db/server.js` es el servidor de datos y el único proceso que abre SQLite. Escucha en `127.0.0.1:3000`, ejecuta lo que llega a `POST /execute` y crea la tabla `users` al arrancar. Como ejecuta cualquier SQL recibido, solo escucha en el equipo local. Se arranca con `pnpm start`.
 
-Ninguna capa accede directamente a otra capa que no sea la siguiente del recorrido: `src/clients/terminal/` o `src/clients/jupyter/`, `src/logic/`, `src/queries/users.js`, `src/queries/queries/*.sql`, `src/db/connection.js`, `src/db/users.sqlite`. El cuaderno de preparar la tabla llama a `createUsersTable`, igual que su cliente de terminal.
+`src/db/users.sqlite` es la base de la aplicación. Si el servidor de datos arranca con `FIRST_APP_DATABASE_FILE`, abre esa ruta; todos los clientes usan entonces ese archivo.
+
+Todos los clientes (terminal, Jupyter, web, REST, Nest, escritorio, la API de Chrome y el proceso de VS Code) llaman a la lógica; la lógica llama a las consultas; las consultas piden al servidor de datos que ejecute el SQL. Ningún cliente importa archivos de otro. El cuaderno de preparar la tabla llama a `createUsersTable`, igual que su cliente de terminal.
 
 ## Flujo de git
 
-`agents/git-workflow-agent.md` es el orquestador. Lee lo que pide María, mira la rama y los cambios con `skills/check-status` y elige un solo momento. No ejecuta git ni el MCP por su cuenta: llama a un subagente de `agents/` o a una skill de `skills/`. No hace merge a `staging`.
+`agents/git-workflow-agent.md` es el orquestador. Lee lo que pide la persona responsable, mira la rama y los cambios con `skills/check-status` y elige un solo momento. No ejecuta git ni el MCP por su cuenta: llama a un subagente de `agents/` o a una skill de `skills/`. No hace merge a `staging`.
 
 - Pensar la tarea: `agents/help-me-to-think.md`, que entrevista con `skills/grill-with-docs` si el cambio vive en esta app y con `skills/grill-me` si no.
-- Dejarla escrita: `agents/create-issue.md`, con `skills/create-issue` y `templates/issues/basic_issue.md`.
-- Empezar: `skills/pull-changes` adelanta `staging`. `agents/create-branch.md` abre la rama con `skills/create-branch-from-staging`. `agents/create-commit.md` hace el commit vacío con `skills/create-empty-commit`. `agents/launch-push.md` sube la rama con `skills/launch-push`. `agents/create-pr.md` abre la pull request en draft con `skills/create-pr-base-staging`, `skills/assign-author` y `skills/create-draft`, y `templates/pull-request/basic-pull-request.md`. Por último, el orquestador enlaza la issue con `skills/link-pr-to-issue`, sin cerrarla.
+- Dejarla escrita: `agents/create-issue.md`, con `skills/create-issue` y la plantilla del tipo en `templates/issues/`.
+- Empezar: `skills/pull-changes` adelanta `staging`. `agents/create-branch.md` abre la rama con `skills/create-branch-from-staging`. `agents/create-commit.md` hace el commit vacío con `skills/create-empty-commit`. `agents/launch-push.md` sube la rama con `skills/launch-push`. `agents/create-pr.md` abre la pull request en draft y asignada con `skills/create-pr-base-staging` y la plantilla del tipo en `templates/pull-request/`. Por último, el orquestador enlaza la issue con `skills/link-pr-to-issue`, añade `Closes #N` y comprueba la asociación en Development. No cierra la issue manualmente.
 - Guardar un trozo: `agents/create-commit.md` con `skills/commit-changes`, y `agents/launch-push.md`.
-- Que la revisen: `skills/assign-reviewers` asigna a los revisores que nombra María y saca la pull request de draft.
+- Que la revisen: `skills/assign-reviewers` asigna a los revisores que nombra la persona responsable y saca la pull request de draft.
+
+Las reglas de los títulos y de los tipos se consultan en las plantillas correspondientes. El cierre automático de una issue depende de fusionar en la rama predeterminada; si sigue siendo `main`, fusionar en `staging` no la cierra.
 
 Las skills que lanzan un script usan los de `tools/`, siempre desde la raíz del repositorio git. `skills/create-branch` abre la rama desde una base que no es `staging`. Las demás hablan con el MCP de GitHub, descrito en `MCPS/github-mcp-server/mcp.txt`.
 
 ## Ficheros
 
 - `AGENTS.md` guarda el proceso SDD, los comandos y el cierre de una tarea. Enlaza a las guías con las reglas del código y al flujo de git de `agents/git-workflow-agent.md`.
-- `.gitignore` deja fuera `node_modules/`, `.env`, los archivos de SQLite, los checkpoints de Jupyter y el log del cliente Jupyter.
-- `.prettierignore` evita que Prettier entre en `.venv/`, `node_modules/` y el archivo de bloqueo generado por pnpm.
-- `package.json` declara los módulos ESM, `packageManager` con `pnpm@10.34.7`, los comandos `pnpm format` y `pnpm lint`, y el control que impide instalar con otro gestor.
+- `.gitignore` deja fuera `node_modules/`, `dist/`, `.env`, los archivos de SQLite, los checkpoints de Jupyter y el log del cliente Jupyter.
+- `.prettierignore` evita que Prettier entre en `.venv/`, `node_modules/`, `dist/` y el archivo de bloqueo generado por pnpm.
+- `package.json` declara los módulos ESM, `packageManager` con `pnpm@10.34.7`, los comandos `pnpm start` (servidor de datos), `pnpm run web`, `pnpm run http`, `pnpm run nest`, `pnpm run chrome`, `pnpm run electron`, `pnpm run vscode`, `pnpm test` (de una prueba en una), `pnpm format` y `pnpm lint`, y el control que impide instalar con otro gestor.
 - `pnpm-lock.yaml` fija las versiones de las dependencias de la aplicación y de las herramientas de desarrollo.
-- `eslint.config.js` limita ESLint a los archivos JavaScript, ignora el entorno y las dependencias, y activa las reglas `no-undef` y `no-unused-vars`.
+- `eslint.config.js` limita ESLint a los archivos JavaScript, ignora el entorno y las dependencias, activa las reglas `no-undef` y `no-unused-vars`, y limita `fetch` a las consultas, las pruebas y `src/clients/chrome/popup.js`, y los globals del navegador a `src/clients/web/`, a la página de `src/clients/electron/`, a ese `popup.js` y a `src/clients/vscode/view.js`. `preload.cjs` se comprueba como CommonJS. Los archivos de `src/clients/nest/` se leen con `@babel/eslint-parser`, porque con el parser de ESLint los decoradores fallan, y `dist/` queda fuera.
+- `babel.config.json` compila `src/` para el cliente Nest: `@babel/preset-env` para la versión de Node que ejecuta, sin convertir los módulos, y `@babel/plugin-proposal-decorators` en versión `legacy`, la que Nest espera.
 - `scripts/jupyter.sh` entra en la raíz de `first-app` y abre los cuadernos con el Jupyter del `.venv`.
-- `src/db/connection.js` abre la conexión SQLite. Acepta `FIRST_APP_DATABASE_FILE` para que un proceso use otra ruta.
+- `src/db/server.js` es el servidor de datos. Exporta `openDatabase()` y `createDatabaseServer(database)` para las pruebas y solo escucha si se ejecuta directamente. Acepta `FIRST_APP_DATABASE_FILE`.
 - `src/db/users.sqlite` es la base de la aplicación cuando no se configura otra ruta.
-- `src/queries/users.js` lee, prepara y ejecuta las consultas. Al cargarse, crea la tabla `users` si no existe.
-- `src/queries/queries/create-users-table.sql` es el SQL que crea la tabla `users` si no existe.
-- `src/queries/queries/insert.sql` es el SQL que inserta un usuario.
-- `src/queries/queries/find-by-email.sql` es el SQL que busca un usuario por email.
-- `src/queries/queries/find-by-id.sql` es el SQL que busca un usuario por id.
-- `src/queries/queries/update.sql` es el SQL que actualiza un usuario.
-- `src/queries/queries/delete.sql` es el SQL que borra un usuario.
-- `src/queries/queries/list.sql` es el SQL que lista los usuarios.
+- `src/queries/users.js` envía las consultas al servidor de datos y devuelve sus filas. Sus funciones son `async`.
+- `src/queries/queries/create-users-table.js` exporta `CREATE_USERS_TABLE`, el SQL que crea la tabla `users` si no existe.
+- `src/queries/queries/insert.js` exporta `INSERT_USER`, el SQL que inserta un usuario.
+- `src/queries/queries/find-by-email.js` exporta `FIND_USER_BY_EMAIL`, el SQL que busca un usuario por email.
+- `src/queries/queries/find-by-id.js` exporta `FIND_USER_BY_ID`, el SQL que busca un usuario por id.
+- `src/queries/queries/update.js` exporta `UPDATE_USER`, el SQL que actualiza un usuario.
+- `src/queries/queries/delete.js` exporta `DELETE_USER`, el SQL que borra un usuario.
+- `src/queries/queries/list.js` exporta `LIST_USERS`, el SQL que lista los usuarios.
+- Todas las funciones de `src/logic/` son `async` y se llaman con `await`.
 - `src/logic/create-user.js` es `createUser(name, email)`. Crea un usuario y devuelve `id`, `name`, `email`, `createdAt` y `updatedAt`.
 - `src/logic/find-user-by-id.js` es `findUserById(id)`. Busca por id y devuelve ese usuario, o lanza un error si no existe.
 - `src/logic/find-user-by-email.js` es `findUserByEmail(email)`. Busca por email y devuelve ese usuario, o lanza un error si no existe.
@@ -74,17 +92,56 @@ Las skills que lanzan un script usan los de `tools/`, siempre desde la raíz del
 - `src/clients/jupyter/crear-usuario.ipynb` ejecuta el alta de usuario.
 - `src/clients/jupyter/listar-usuarios.ipynb` ejecuta el listado de usuarios.
 - `src/clients/jupyter/preparar-tabla-usuarios.ipynb` prepara la tabla y explica que no es una acción de usuario.
-- `src/clients/jupyter/run_logic.py` arranca Node y comunica los cuadernos con las funciones existentes.
+- `src/clients/jupyter/run_logic.py` arranca Node, espera cada función con `await` y comunica los cuadernos con las funciones existentes.
 - `agents/` guarda los siete subagentes del flujo de git: el orquestador y los seis que llama.
 - `skills/` guarda una carpeta por skill, cada una con su `SKILL.md`. Dice cuándo se usa, qué argumentos lleva y cómo se leen sus respuestas.
-- `tools/` guarda los siete scripts de git que lanzan las skills. Se ejecutan desde la raíz del repositorio y no admiten force push.
-- `templates/issues/basic_issue.md` es el cuerpo de la issue: qué hay que hacer y cómo probarlo.
-- `templates/pull-request/basic-pull-request.md` es el cuerpo de la pull request, con la sección Issue.
-- `MCPS/github-mcp-server/mcp.txt` es la dirección de la documentación del MCP de GitHub.
+- `tools/` guarda los ocho scripts de git que lanzan las skills. Se ejecutan desde la raíz del repositorio y no admiten force push.
+- `templates/issues/` guarda las seis plantillas de issues por tipo. Cada una define la forma del título y del cuerpo de su tarea.
+- `templates/pull-request/` guarda las seis plantillas de pull requests por tipo, con la lista de comprobación y la referencia `Closes #N`.
+- `MCPS/github-mcp-server/mcp.txt` documenta el servidor remoto de GitHub y el header de configuración de Cursor incluido en el template. Su ejemplo utiliza un marcador de credencial.
 - `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada fichero.
 - `docs/TREE.md` es el árbol.
 - `docs/DATABASE.md` es la base de datos, las queries y los tipos y formatos de cada campo.
 - `docs/ERRORS.md` es la lista de errores.
-- `docs/STYLE.md` es el nivel del código, la forma de cada línea, los comentarios y las convenciones.
-- `docs/CONSTITUTION.md` conserva las specs, los paquetes, el contrato de las funciones, las reglas de implementación y seguridad, la sincronización de la documentación y los pasos de `src/logic/`. Enlaza a las otras guías.
+- `docs/STYLE.md` es el nivel del código, la forma de cada línea, el contrato de las funciones de negocio, los comentarios y las convenciones.
+- `docs/CONSTITUTION.md` recoge el propósito, el alcance y los principios generales.
+- `AGENTS.md` recoge el proceso SDD y sus aprobaciones, los paquetes con pnpm y Socket, y qué documento se actualiza según lo que cambie.
 - `docs/specs/<nombre>/` describe un pedido, con `spec.md`, `plan.md` y `tasks.md`. No describe el estado del código. `<nombre>` va en kebab-case.
+
+## Archivos del cliente web y sus pruebas
+
+- `README.md` explica el arranque de cada cliente, las pantallas, los archivos y las comprobaciones.
+- `src/clients/web/index.html` define las tres pantallas, los formularios de alta y edición, sus etiquetas y la opción deshabilitada de notas.
+- `src/clients/web/styles.css` define la paleta compartida, la distribución adaptable y los estados visuales.
+- `src/clients/web/app.js` importa la lógica, gestiona las pantallas, los formularios, la confirmación del borrado y la traducción de errores.
+- `src/clients/electron/main.js` crea la ventana, registra los canales `users:*` y confirma el borrado.
+- `src/clients/electron/preload.cjs` publica `window.users`. Es CommonJS porque un preload con `sandbox` no admite `import`.
+- `src/clients/electron/user-actions.js` llama a `src/logic/` y devuelve `{ data }` o `{ error }`. No importa `electron`, para poder probarse con Node.
+- `src/clients/electron/index.html` define la lista, el alta, el detalle y la política de seguridad de la página.
+- `src/clients/electron/app.js` gestiona la lista, el panel y la traducción de errores.
+- `src/clients/electron/styles.css` define la paleta y la distribución en dos zonas.
+- `src/clients/chrome/api.js` es la API de la extensión: importa `src/logic/` y responde JSON.
+- `src/clients/chrome/manifest.json` declara la extensión con Manifest V3, su ventana y el permiso solo para la API.
+- `src/clients/chrome/popup.html` define la lista, el detalle, los formularios y la confirmación del borrado.
+- `src/clients/chrome/popup.js` gestiona las pantallas, llama a la API con `fetch` y muestra los errores en inglés.
+- `src/clients/chrome/styles.css` define la paleta y el ancho de la ventana de la extensión.
+- `src/clients/nest/main.js` arranca la aplicación Nest en `127.0.0.1:3003`.
+- `src/clients/nest/app.module.js` une el controlador, el servicio y el filtro de errores.
+- `src/clients/nest/users.controller.js` declara las cinco rutas, convierte el id con `Number` solo si escribe el mismo texto y llama al servicio.
+- `src/clients/nest/users.service.js` llama a `createUser`, `listUsers`, `findUserById`, `updateUser` y `deleteUser`, y devuelve su resultado.
+- `src/clients/nest/users-exception.filter.js` responde cada error con su estado HTTP y su mensaje en inglés.
+- `tests/nest-client.test.js` compila el cliente, lo comprueba con una base temporal, también con el servidor de datos parado.
+- `tests/chrome-client.test.js` comprueba la API con una base temporal, también con el servidor de datos parado, y los permisos de `manifest.json`.
+- `src/clients/vscode/package.json` es el manifiesto de la extensión: su icono en la barra de actividad y su vista. No es un paquete que instale pnpm.
+- `src/clients/vscode/extension.js` registra la vista, prepara su HTML, responde sus mensajes y confirma el borrado.
+- `src/clients/vscode/user-actions.js` llama a `src/logic/` y devuelve `{ data }` o `{ error }`. No importa `vscode`, para poder probarse con Node.
+- `src/clients/vscode/index.html` define la lista, el alta, el detalle y la política de seguridad de la vista.
+- `src/clients/vscode/view.js` gestiona las pantallas, pide con `call` y traduce los errores.
+- `src/clients/vscode/styles.css` da aspecto a la vista con los colores del tema del editor.
+- `src/clients/vscode/users.svg` es el icono de la barra de actividad.
+- `tests/vscode-client.test.js` comprueba `user-actions.js` con una base temporal, también con el servidor de datos parado.
+- `tests/electron-client.test.js` comprueba `user-actions.js` con una base temporal, también con el servidor de datos parado.
+- `tests/database-server.test.js` comprueba el servidor de datos con una base temporal.
+- `tests/shared-database.test.js` comprueba que la lógica que usa la web y otro proceso Node, como un ejemplo de terminal, ven la misma base, y que sin servidor de datos se recibe el error de la operación.
+
+- `docs/WEB-CLIENT-GUIDE.md` explica el servidor de datos, el cliente web y el recorrido de las operaciones para su lectura educativa.

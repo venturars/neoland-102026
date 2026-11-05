@@ -1,10 +1,14 @@
 # Árbol
 
 first-app/
+  README.md
   eslint.config.js
+  babel.config.json
+  scripts/
+    jupyter-node-http.sh
   src/
     db/
-      connection.js
+      server.js
       users.sqlite
     queries/
       queries/
@@ -21,6 +25,45 @@ first-app/
     clients/
       terminal/
       jupyter/
+      browser/
+        index.html
+        app.js
+        styles.css
+      http/
+        app.js
+        bruno.md
+        bruno/
+      electron/
+        main.js
+        index.html
+        app.js
+        styles.css
+      chrome/
+        server.js
+        manifest.json
+        index.html
+        popup.js
+        styles.css
+      vscode/
+        package.json
+        extension.js
+        index.html
+        panel.js
+        styles.css
+      nest/
+        main.js
+        app.module.js
+        users.controller.js
+        users.service.js
+        http-exception.filter.js
+      node-http/
+        app.js
+        jupyter/
+          create-user.ipynb
+          list-users.ipynb
+          find-user-by-id.ipynb
+          update-user.ipynb
+          delete-user.ipynb
   agents/
   skills/
   tools/
@@ -28,6 +71,7 @@ first-app/
   MCPS/
   docs/
     ARCHITECTURE.md
+    SOCKET.md
     TREE.md
     DATABASE.md
     ERRORS.md

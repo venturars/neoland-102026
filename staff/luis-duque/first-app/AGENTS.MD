@@ -1,6 +1,6 @@
 # Instrucciones del agente
 
-El flujo de trabajo de git de esta app es `agents/git-workflow-agent.md`, entero: pensar una tarea, dejarla escrita, empezar, guardar un trozo y pedir revisión. Ese flujo no quita las paradas de «Desarrollos».
+El flujo de trabajo de git de esta app es `agents/git-workflow-agent.md`, entero: pensar una tarea, dejarla escrita, empezar, guardar un trozo y pedir revisión. Un pedido que cambie algo en este proyecto entra primero por ese flujo. Si ya nombra el momento, se usa ese. Si la tarea ya está en curso, el pedido sigue en su momento o en su fase. Se piensa la tarea solo si es nueva. Una pregunta sobre el proyecto, o un mensaje que no provoque un cambio, se responde y no abre el flujo. Ese flujo no quita las paradas de «Desarrollos». Con la rama abierta, la fase siguiente es la spec, luego el plan y luego las tareas. La spec no espera a pedir revisión.
 
 Trabajas en `staff/luis-duque/first-app`. Estas instrucciones son para ti. Léelas antes de cambiar código y síguelas. Escríbelas para que otro agente las entienda sin conocer el historial del chat. No escribas nombres de personas.
 
@@ -10,19 +10,23 @@ Si el código y este archivo no coinciden, no cambies el estilo por tu cuenta. P
 
 ## Desarrollos
 
-Un cambio nuevo es un desarrollo: una función, una dependencia, la configuración o la documentación de la app. Empieza en `docs/specs/<nombre>/`, con `<nombre>` en kebab-case. El detalle está en `docs/CONSTITUTIONS.MD`, sección «Desarrollos».
+Un cambio nuevo es un desarrollo: una función, una dependencia, la configuración o la documentación de la app. Se escribe en `docs/specs/<nombre>/`, con `<nombre>` en kebab-case. El detalle está en `docs/CONSTITUTIONS.MD`, sección «Desarrollos». Pedir el cambio no escribe `spec.md` como primera respuesta.
 
-Pedir el cambio es pedir `spec.md`. «Hazlo», «estandariza», «implementa» o «cámbialo» no abren el código. Una skill, una issue o un «no uses la skill» tampoco. Hasta que pidan ejecutar las tareas no toques código, `package.json`, `pnpm-lock.yaml`, `src/logic`, `src/queries`, `src/db` ni `src/clients`.
+«Hazlo», «estandariza», «implementa» o «cámbialo» no abren el código. Una skill, una issue o un «no uses la skill» tampoco. Hasta que pidan ejecutar las tareas no toques código, `package.json`, `pnpm-lock.yaml`, `src/logic`, `src/queries`, `src/db` ni `src/clients`.
 
-Escribe `spec.md` y para. Una persona lo lee. Luego `plan.md` y para. Si la constitución, el código y la spec dicen lo mismo, escribe `tasks.md` y para. Si no, la pregunta queda al final del plan y no hay tareas. En este proceso no toques ningún otro fichero.
+Con la rama ya abierta, `spec.md` se escribe y se para, antes de pedir revisión. Una persona lo lee. Luego `plan.md` y para. Si la constitución, el código y la spec dicen lo mismo, escribe `tasks.md` y para. Si no, la pregunta queda al final del plan y no hay tareas. En este proceso no toques ningún otro fichero.
 
 El código empieza solo cuando los tres ficheros ya están escritos y esa persona pide ejecutar `tasks.md`. Ejecuta `tasks.md`. No inventes pasos. No vuelvas a escribir la spec, el plan ni las tareas en bucle.
 
 Una operación que ya está en el código no se sustituye. La nueva es un fichero nuevo.
 
+## Diseño web
+
+`skills/frontend-design/SKILL.md` se tiene en cuenta solo cuando el trabajo es un diseño web. Si un desarrollo dice otra cosa, manda el desarrollo. No la uses en la terminal, en Jupyter, en la lógica, en las consultas ni en la base.
+
 ## Alcance
 
-No añadas pantalla, servidor ni framework. No añadas otro cliente salvo que te lo pidan.
+La pantalla es el cliente de `src/clients/browser`. El cliente HTTP es `src/clients/http/app.js`, con Express `5.3.0`: es la excepción ya aceptada a no añadir otro framework. La ventana Electron es `src/clients/electron`, con Electron `45.2.3`: es la otra excepción ya aceptada. El popup de Chrome es `src/clients/chrome`, con el manifiesto en `src/clients/chrome/manifest.json` y Fastify `5.12.8`: es la otra excepción ya aceptada. La vista de Visual Studio Code es `src/clients/vscode`, con el manifiesto en `src/clients/vscode/package.json`. `vscode` lo aporta el editor. `engines.vscode` queda en `^1.100.0`. El servidor es `src/db/server.js` y solo ejecuta consultas. No añadas otro framework. No añadas otro cliente salvo que te lo pidan.
 
 No crees un `README`. La explicación para personas está en `docs/`.
 
@@ -32,19 +36,29 @@ No crees consultas ni funciones que no te hayan pedido. Las operaciones que ya e
 
 No uses `try/catch` en `src/queries/users.js`. Si SQLite rechaza un email repetido, deja salir ese error.
 
-No separes la lógica de la base de datos. `src/logic` llama a `src/queries`. `src/queries` usa la conexión de `src/db`.
+`src/logic` llama a `src/queries`. `src/queries` pide la ejecución a `src/db/server.js`. Ese servidor abre la base.
 
 ## Dónde va cada cosa
 
-Pon la conexión en `src/db`: `connection.js` y, cuando se abra la base, `users.sqlite`. Pon el esquema en `src/queries/queries/create-table-users.sql`.
+Pon el servidor en `src/db/server.js`, junto a `users.sqlite`. No exporta la conexión. Pon el esquema en `src/queries/queries/create-table-users.js`.
 
 Pon la validación y las operaciones en `src/logic`: `shared.js`, `create-user.js`, `update-user.js`, `delete-user.js`, `list-users.js`, `find-user-by-id.js`, `find-user-by-email.js`, `find-user-by-name.js` y `users-gender.js`. `shared.js` va dentro de `src/logic`, no en la raíz.
 
-Pon el cliente de Jupyter en `src/clients/jupyter`: un `.ipynb` por acción, con el mismo nombre que el txt. El bloque importa la función de `src/logic` y muestra una tabla de `cli-table3` con el encabezado `["cyan", "bold"]`. No valida, no escribe SQL y no abre la base. El script `jupyter` está en `package.json`. Se arranca con `pnpm jupyter` desde `first-app`, que llama a `scripts/jupyter.sh`. Crea el `.venv` de la app si falta, instala `notebook` `7.6.3` si falta el ejecutable y abre `src/clients/jupyter` en `127.0.0.1`. En Windows usa `Scripts` y `py -3`. En Mac y Linux usa `bin` y `python3`. No usa el Jupyter del equipo. En Windows la salida de Node se lee en UTF-8.
+Pon el cliente de Jupyter en `src/clients/jupyter`: un `.ipynb` por acción, con el mismo nombre que el txt. El bloque importa la función de `src/logic` y muestra una tabla de `cli-table3` con el encabezado `["cyan", "bold"]`. No valida, no escribe SQL y no abre la base. El script `jupyter` está en `package.json`. Se arranca con `pnpm jupyter` desde `first-app`, que llama a `scripts/jupyter.sh`. Crea el `.venv` de la app si falta, instala `notebook` `7.6.3` si falta el ejecutable y abre `src/clients/jupyter` en `127.0.0.1`. En Windows usa `Scripts` y `py -3`. En Mac y Linux usa `bin` y `python3`. No usa el Jupyter del equipo. En Windows la salida de Node se lee en UTF-8. Con `pnpm server` en marcha, listar, modificar y eliminar siguen igual.
+
+Pon el cliente del navegador en `src/clients/browser`: `index.html`, `app.js` y `styles.css`. `app.js` importa solo `listUsers`, `updateUser` y `deleteUser`. No llama a `/execute`. No valida, no escribe SQL y no abre la base. Se arranca con `pnpm browser` desde `first-app`, en Windows. El programa local se arranca con `pnpm server` y escucha en `127.0.0.1:3000`.
+
+Pon el cliente HTTP en un solo fichero, `src/clients/http/app.js`. Ese fichero importa `createUser`, `updateUser`, `deleteUser`, `listUsers`, `findUserById`, `findUserByEmail` y `findUserByName`. No importa `usersGender`. No llama a `/execute`. No valida, no escribe SQL y no abre la base. `GET /users/email/:email` y `GET /users/name/:name` van antes de `GET /users/:id`. Se arranca con `pnpm http` desde `first-app` y escucha en `127.0.0.1:3001`. Express queda en `5.3.0`.
+
+Pon el cliente Electron en `src/clients/electron`: `main.js`, `index.html`, `app.js` y `styles.css`. `app.js` importa `listUsers`, `createUser`, `updateUser` y `deleteUser`. No importa `usersGender` ni las búsquedas. No llama a `/execute`. No valida, no escribe SQL y no abre la base. Se arranca con `pnpm electron` desde `first-app`. Electron queda en `45.2.3`.
+
+Pon el popup de Chrome en `src/clients/chrome`: `manifest.json`, `index.html`, `app.js`, `styles.css` y `server.js`. `server.js` importa `listUsers`, `createUser`, `updateUser` y `deleteUser`. No importa `usersGender` ni las búsquedas. No llama a `/execute`. No valida, no escribe SQL y no abre la base. Escucha en `127.0.0.1:3002` y se arranca con `pnpm chrome` desde `first-app`. `app.js` pide esas cuatro operaciones a ese origen. Fastify queda en `5.12.8`.
+
+Pon la vista de Visual Studio Code en `src/clients/vscode`: `package.json`, `extension.js`, `index.html`, `app.js`, `styles.css` e `icon.svg`. `extension.js` importa `listUsers`, `createUser`, `updateUser` y `deleteUser`. No importa `usersGender` ni las búsquedas. No llama a `/execute`. No valida, no escribe SQL y no abre la base. Se arranca con `pnpm vscode` desde `first-app`. `app.js` pide esas cuatro operaciones al proceso del editor y no importa la lógica. `vscode` lo aporta el editor. `engines.vscode` queda en `^1.100.0`.
 
 Pon la entrada por terminal en `src/clients/terminal`: `create-user.txt`, `update-user.txt`, `delete-user.txt`, `list-users.txt`, `find-user-by-id.txt`, `find-user-by-email.txt`, `find-user-by-name.txt` y `users-gender.txt`. Cada archivo contiene una sola línea, y esa línea es el comando de cmd. El comando llama a la función de `src/logic` de su acción con `node --input-type=module -e` y el `import` `./staff/luis-duque/first-app/src/logic/...`. No valida, no escribe SQL y no abre la base. Tira esa línea desde cmd, en la raíz del repositorio, porque Node resuelve el `import` desde la carpeta de trabajo. No uses PowerShell y no pases el archivo por la entrada estándar. `create-user.txt` lleva el nombre y el email al final del comando. `update-user.txt` lleva el id y después `name=...`, `email=...` o los dos. `delete-user.txt` lleva el id. `list-users.txt` no lleva argumentos. `find-user-by-id.txt` lleva el id. `find-user-by-email.txt` lleva el email. `find-user-by-name.txt` lleva el nombre: importa `findUserByName` y hace `console.log` del resultado. `users-gender.txt` no lleva argumentos: importa `usersGender` y hace `console.log` del recuento.
 
-Pon la ejecución de todo el SQL en `src/queries/users.js`, también `create-table-users.sql`. Pon el texto de cada consulta en `src/queries/queries`, en `create-table-users.sql`, `create-user.sql`, `update-user.sql`, `delete-user.sql`, `list-users.sql`, `find-user-by-id.sql`, `find-user-by-email.sql` y `find-user-by-name.sql`. `src/db/connection.js` no lee ni ejecuta ninguna consulta.
+Pon la petición de todo el SQL en `src/queries/users.js`. Ese fichero pide `POST /execute` a `http://127.0.0.1:3000` y espera. No abre la base y no usa `try/catch`. Pon el texto de cada consulta en `src/queries/queries`, en `create-table-users.js`, `create-user.js`, `update-user.js`, `delete-user.js`, `list-users.js`, `find-user-by-id.js`, `find-user-by-email.js` y `find-user-by-name.js`. `src/db/server.js` es el único que abre `users.sqlite` y ejecuta SQL.
 
 Pon la explicación general del proyecto en `docs/ARCHITECTURE.md`. El árbol está en `docs/TREE.md`. La base y las consultas están en `docs/DATABASE.md`. Los fallos están en `docs/ERRORS.md`.
 

@@ -1,23 +1,19 @@
----
-name: create-pr-base-staging
-description: Prepara una PR en borrador hacia staging desde una rama publicada cuando abrirla está autorizado.
----
+### Herramienta: CREATE_PR_BASE_STAGING
 
-# Abrir la revisión
+- **Descripción**: Úsala desde el agente `create-pr` para abrir la pull request con base `staging`, directamente en draft y asignada al usuario autenticado en una misma invocación.
+- **Comando de Terminal**: `bash ./staff/jimena-duran/first-app/tools/create-pr-base-staging.sh "[RAMA]" "[TITULO]" "[CUERPO]"`
 
-Solo la ejecuta el subagente real `agents/create-pr.md`. Recibe rama publicada autorizada, título en inglés y cuerpo basado en `templates/pull-request/basic-pull-request.md` en español. Retira el marcador `Closes #N` y deja vacía la sección Issue para que el orquestador escriba después la referencia con el número real. No publiques marcadores sin resolver. No hace commit, push ni merge.
+Ejecuta el comando desde la raíz del repositorio git. Si la plantilla se copia a un proyecto, usa la ruta de su carpeta `tools/` desde esa raíz. `[CUERPO]` es la ruta de un fichero temporal con la plantilla rellenada. Requiere GitHub CLI autenticado: esa cuenta será el autor de la PR y `--assignee "@me"` la persona asignada.
 
-Comprueba identidad `jiji-mena` y permisos. Prefiere MCP si corresponde a esa cuenta y soporta draft y base; si no, informa y usa `gh` autenticado como Jimena. Busca primero una PR de esa rama, incluidas las cerradas si hay indicios de reanudación, para no duplicarla ni reabrir otra silenciosamente.
+Fuente de la forma del cuerpo: [github-pr](https://www.skills.sh/gentleman-programming/gentleman-skills/github-pr), adaptada a esta plantilla.
 
-Antes de reintentar una escritura fallida o cambiar a gh, aplica la [consulta del estado remoto](../../docs/GIT-AUTOMATION.md#consultar-el-estado-remoto-antes-de-reintentar): busca la PR por repositorio y rama en todos los estados y verifica sus datos. Reutiliza la PR aplicada; reintenta solo si se confirma que no se creó; si no puede determinarse, detente e informa. Un 401 de gh dentro del sandbox no prueba una credencial inválida: comprueba el acceso al almacén de Windows con los permisos necesarios.
+#### Especificación de Argumentos
 
-Alternativa PowerShell desde la raíz, solo tras autorización:
+1. **RAMA** _(Obligatorio)_: La rama subida, que se pasa como `--head`.
+2. **TITULO** _(Obligatorio)_: El título de la issue.
+3. **CUERPO** _(Obligatorio)_: Fichero con la descripción en español y la plantilla del tipo de `templates/pull-request/` del proyecto. Deja la sección Issue vacía. Si el tipo no tiene plantilla, usa la más cercana.
 
-```powershell
-gh pr list --repo $repository --head $branchName --state all --json number,url,state,baseRefName,isDraft
-gh pr create --repo $repository --head $branchName --base staging --draft --title $title --body-file $bodyPath --assignee jiji-mena
-```
+#### Reglas de Invocación Críticas
 
-Comprueba `$LASTEXITCODE` después de cada comando y usa un archivo temporal UTF-8 para el cuerpo. Si existe una PR abierta compatible, conserva su URL y relación de issue; actualiza solo los campos autorizados. Una base diferente o PR cerrada requiere informar antes de actuar. Relee base, draft y asignación. Devuelve URL y estado reales. No abrir una PR si la entrega actual lo prohíbe.
-
-En los comandos, `$repository` es el repositorio `owner/name` comprobado a partir de origin y del contexto de esta tarea. No lo tomes de un nombre personal fijo ni actúes sobre otro repositorio.
+- **PR existente**: Comprueba si ya hay una PR de esa rama hacia `staging`. Reutilízala y actualiza el cuerpo conservando el enlace con la issue; usa `assign-author` y `create-draft` cuando haga falta.
+- **Procesamiento de respuestas**: Si el código de salida es 0, devuelve la URL y confirma draft y asignación. Si falla, comunica el error.

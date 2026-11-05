@@ -1,31 +1,87 @@
-# Arquitectura
+# Arquitectura — ChromaDB
 
-## RAG (documentación Python)
+Dos subsistemas en la misma carpeta del proyecto: **RAG** (documentación Python indexada) y **CRUD usuarios** (SQLite). Comparten convenciones en [STYLE.md](STYLE.md) y reglas en [CONSTITUTION.md](CONSTITUTION.md).
 
-- `scripts/`: pipeline de descarga, conversión, troceado, embeddings e
-  indexado. Un fichero por acción; `search.py` y `get_doc.py` consultan
-  el índice en local.
-- `chroma_db/`: almacén vectorial (generado en cada equipo, fuera de git).
-- `chromadash/`: visor opcional; arranca servidor Chroma solo para UI.
-- `skills/python-docs/SKILL.md`: guía al agente para consultar antes de
-  escribir Python.
+## Vista general
 
-## CRUD usuarios (SQLite)
+```text
+                    ┌─────────────────────────────────────┐
+                    │  RAG (scripts/ + chroma_db/)        │
+  python-docs-md ──►│  download → convert → build_index   │
+                    │  search.py / get_doc.py             │
+                    └─────────────────────────────────────┘
 
-- `src/clients/jupyter/` → `src/sdk/` → `src/core/` → `src/storage/` →
-  `src/db/`. Ver `docs/CONSTITUTION.md`.
+                    ┌─────────────────────────────────────┐
+                    │  CRUD (src/)                        │
+  Jupyter ─────────►│  clients → sdk → core → storage → db│
+                    └─────────────────────────────────────┘
+```
 
-## Flujo git con agentes
+## RAG — pipeline `scripts/`
 
-- `agents/git-workflow-agent.md` elige el momento (pensar, issue, empezar,
-  guardar, pedir revisión) y lanza un subagente aparte.
-- `agents/help-me-to-think.md`, `create-issue.md`, `create-branch.md`,
-  `create-commit.md`, `launch-push.md`, `create-pr.md` cubren cada paso.
-- `skills/` y `tools/` ejecutan git y GitHub según las reglas de
-  `AGENTS.md` (parada antes de pedir revisión; sin merge a `staging`).
+| Pieza | Responsabilidad |
+| --- | --- |
+| `scripts/download_docs.py` | Baja HTML oficial a `python-docs/`. |
+| `scripts/convert_docs.py` | Genera `python-docs-md/`. |
+| `scripts/build_index.py` | Trocea, embede con Ollama, escribe `chroma_db/`. |
+| `scripts/search.py` | Búsqueda semántica (requiere Ollama). |
+| `scripts/get_doc.py` | Búsqueda por nombre exacto. |
+| `scripts/settings.py` | Constantes compartidas (versión, modelo, troceado). |
+| `skills/python-docs/SKILL.md` | Cómo debe consultar un agente antes de escribir Python. |
+| `chromadash/` | UI opcional; servidor Chroma solo para inspección. |
 
-## Implementación con IA
+Un fichero Python por acción en `scripts/` (salvo `settings.py`).
 
-- Tras la issue y los documentos SDD, `agents/developer.md` y
-  `agents/tester.md` implementan `tasks.md` (llave/contraseña solo en esa
-  fase).
+## CRUD — capas `src/`
+
+Solo la capa superior llama a la inmediatamente inferior:
+
+```text
+src/clients/jupyter/   notebooks, una acción por fichero
+        │
+        ▼
+src/sdk/               API para clientes (`import sdk`)
+        │
+        ▼
+src/core/              Reglas de negocio y validación
+        │
+        ▼
+src/storage/           SQL vía ficheros en storage/queries/
+        │
+        ▼
+src/db/                Conexión, schema.sql, ruta users.sqlite
+```
+
+Detalle de tablas y rutas: [DATABASE.md](DATABASE.md).
+
+## Flujo git y agentes
+
+| Componente | Rol |
+| --- | --- |
+| `agents/git-workflow-agent.md` | Orquestador: pensar, issue, rama, commit, PR. |
+| `agents/help-me-to-think.md`, `create-issue.md`, … | Un paso del flujo git cada uno. |
+| `AGENTS.md` | Manual del agente principal (lectura obligatoria, SDD, implementación). |
+| `agents/developer.md` / `agents/tester.md` | Subagentes de implementación por rondas. |
+| `skills/` + `tools/` | Automatización git/GitHub. |
+
+Paradas humanas y llave de implementación: [AGENTS.md](../AGENTS.md).
+
+## SDD — especificaciones
+
+```text
+docs/specs/<cambio>/     spec.md, plan.md, tasks.md (+ report.md si falla ronda 9)
+templates/specs/         plantillas para specs NUEVAS (desde issue #682)
+templates/issues/        plantillas de issues GitHub
+```
+
+- `<cambio>` en kebab-case; carpeta **después** de tener `Issue: #N`.
+- Specs antiguas (`adapt-git-workflow`, `restructure-skills`, …) mantienen su formato; las nuevas copian `templates/specs/`.
+
+## Documentación de referencia
+
+| Fichero | Contenido |
+| --- | --- |
+| [TREE.md](TREE.md) | Árbol de carpetas |
+| [COMMANDS.md](COMMANDS.md) | Comandos operativos |
+| [DEPENDENCIES.md](DEPENDENCIES.md) | Paquetes pip y Ollama |
+| [SECURITY.md](SECURITY.md) | Datos locales, servidor, Jupyter |

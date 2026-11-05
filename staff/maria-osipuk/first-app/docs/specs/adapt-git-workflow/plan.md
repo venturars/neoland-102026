@@ -32,7 +32,7 @@ No se tocan `logic/`, `queries/`, `db/`, `clients/`, `package.json` ni `scripts/
 
 ## Rutas
 
-Los scripts se lanzan desde la raíz del repositorio git, que es `neoland-102026`. En esas siete skills, cada `./tools/` pasa a `staff/maria-osipuk/first-app/tools/`. Las demás skills hablan con el MCP y no llevan ruta.
+Los scripts se lanzan desde la raíz del repositorio git. En esas siete skills, cada `./tools/` se adapta a la ubicación de `tools/` dentro de la aplicación, relativa a esa raíz. Las demás skills hablan con el MCP y no llevan ruta.
 
 Los scripts no cambian. Calculan la raíz con `git rev-parse --show-toplevel`, así que funcionan desde cualquier carpeta.
 
@@ -79,13 +79,13 @@ No hay paquete de Node. No hace falta Socket.
 
 El flujo viejo y el nuevo no conviven: el viejo apunta a ficheros borrados. Se sustituye el viejo por el nuevo.
 
-Se mantiene de la sección vieja que, antes de crear la issue, se enseñan la persona asignada y el título y se espera el sí. La plantilla no para ahí. Esta app sí. Si María prefiere que la issue salga sin esa parada, se cambia al revisar el plan.
+Se mantiene de la sección vieja que, antes de crear la issue, se enseñan la persona asignada y el título y se espera el sí. La plantilla no para ahí. Esta app sí. Si la persona responsable prefiere que la issue salga sin esa parada, se cambia al revisar el plan.
 
 `pnpm format` formatea también los `.md` copiados, así que algún texto puede cambiar solo de forma, no de contenido. Eso es esperado.
 
 ## Comprobación
 
-- `staff/maria-osipuk/first-app/tools/check-status.sh` termina bien desde la raíz del repositorio.
+- El script `tools/check-status.sh`, invocado con la ruta de la aplicación desde la raíz del repositorio, termina bien.
 - `grep -rn "\./tools/" skills` no devuelve ninguna línea.
 - Cada ruta que escribe `AGENTS.md` existe.
 - `pnpm format` y `pnpm lint` terminan bien desde `first-app`.

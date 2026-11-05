@@ -26,7 +26,7 @@ def read_units(md_path: Path) -> list[dict]:
     anchor = ""
     unit_type = ""
     in_code = False
-    for line in lines[position + 1:]:
+    for line in lines[position + 1 :]:
         if line.strip().startswith("```"):
             in_code = not in_code
         anchor_match = None
@@ -82,5 +82,9 @@ def read_units(md_path: Path) -> list[dict]:
 
     # Una sección sin texto propio sobra: su título ya va en las migas de pan.
     # Una definición sin texto se queda: su firma ya es información.
-    units = [unit for unit in units if unit["content"] != "" or unit["type"] not in ["section", "std term"]]
+    units = [
+        unit
+        for unit in units
+        if unit["content"] != "" or unit["type"] not in ["section", "std term"]
+    ]
     return units

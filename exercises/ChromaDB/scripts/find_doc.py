@@ -13,7 +13,8 @@ def find_doc(name: str) -> list[dict]:
         raise RuntimeError("Index not found. Run scripts/build_index.py")
     collection = client.get_collection(COLLECTION, embedding_function=None)
 
-    # Búsqueda exacta por nombre, sin vectores: el nombre tiene que estar en la lista anchors
+    # Búsqueda exacta por nombre, sin vectores.
+    # El nombre tiene que estar en la lista anchors.
     response = collection.get(
         where={"anchors": {"$contains": name.strip()}},
         include=["documents", "metadatas"],
@@ -21,10 +22,12 @@ def find_doc(name: str) -> list[dict]:
 
     results = []
     for position in range(len(response["ids"])):
-        results.append({
-            "id": response["ids"][position],
-            "text": response["documents"][position],
-            "metadata": response["metadatas"][position],
-        })
+        results.append(
+            {
+                "id": response["ids"][position],
+                "text": response["documents"][position],
+                "metadata": response["metadatas"][position],
+            }
+        )
     results.sort(key=lambda result: result["id"])
     return results

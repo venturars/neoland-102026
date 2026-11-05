@@ -8,23 +8,28 @@
 
 ## 2. Contexto y Alcance
 
-- **Cuándo actuar:** En cuanto el alumno pide pensar una tarea, dejarla escrita, empezar, guardar un trozo o que la revisen.
+- **Cuándo actuar:** En cuanto el alumno pide pensar una tarea, dejarla escrita, empezar, guardar un trozo o que la revisen. Para hacer cambios en un proyecto, se debe hacer desde una nueva rama y una PR nueva en Draft.
 - **Límites de conocimiento:** No ejecuta git ni el MCP por su cuenta. No hace merge a `staging`.
 
 ## 3. Flujo de Trabajo (Paso a Paso)
 
 1. **Recepción:** Lee lo que pide el alumno y el estado que devuelva la skill `check-status`.
-2. **Validación:** Elige un solo momento. Si faltan datos para el paso actual, los pide en la misma respuesta y no sigue.
+2. **Validación:** Elige un solo momento según el estado real de la tarea, no por la formulación del prompt. Antes de crear la issue:
+   - Si el problema, el resultado esperado, el alcance y cómo comprobarlo están claros y son coherentes con el proyecto, créala y explica brevemente por qué.
+   - Si quedan dudas o contradicciones, llama a `agents/help-me-to-think.md`. No repitas entrevistas resueltas salvo cambios o decisiones nuevas.
+
+   Si la issue ya está escrita y el trabajo siguiente hace cambios, el momento es Empezar.
+   Para cualquier otro paso, pide los datos que falten antes de continuar.
 3. **Procesamiento:** Llama y continúa. No espera un sí.
-   - Pensar la tarea: `agents/help-me-to-think.md`.
-   - Dejarla escrita: `agents/create-issue.md`.
-   - Empezar, en este orden:
+   - Pensar la tarea: `agents/help-me-to-think.md`. Si no puedes reanudar el mismo subagente, pásale el historial completo de preguntas y respuestas en cada llamada.
+   - Dejarla escrita: `agents/create-issue.md`. Si a continuación se van a hacer cambios, el momento siguiente es Empezar.
+   - Empezar (con la issue ya escrita; prepara la rama nueva desde `staging` antes de hacer cambios), en este orden:
      1. `skills/pull-changes`, que adelanta `staging`.
      2. `agents/create-branch.md` con la skill `create-branch-from-staging`.
      3. `agents/create-commit.md` con la skill `create-empty-commit`.
      4. `agents/launch-push.md`.
-     5. `agents/create-pr.md` con `create-pr-base-staging`, `assign-author` y `create-draft`. Este agente no enlaza la issue.
-     6. `skills/link-pr-to-issue`. El orquestador siempre enlaza la issue. El enlace no cierra la issue.
+     5. `agents/create-pr.md` con `create-pr-base-staging`. Este agente no enlaza la issue.
+     6. `skills/link-pr-to-issue`. El orquestador siempre enlaza la issue.
    - Guardar un trozo: `agents/create-commit.md` con los ficheros de ese trozo y `agents/launch-push.md`.
    - Que la revisen: el alumno nombra revisores. Se usa la skill `assign-reviewers` y la pull request sale de draft.
 4. **Formateo:** Responde con lo que hizo cada paso: número de issue, nombre de rama, mensaje de commit o URL de la pull request.
@@ -39,9 +44,9 @@
 - **`agents/create-pr.md`:** Crear la pull request. Es el único agente que las crea.
 - **`skills/check-status`:** Saber la rama y si hay cambios, antes de elegir el momento.
 - **`skills/pull-changes`:** Adelantar `staging` antes de abrir la rama. Siempre `staging`.
-- **`skills/link-pr-to-issue`:** Enlazar la pull request con la issue, sin cerrarla. La llama el orquestador, no `create-pr`.
+- **`skills/link-pr-to-issue`:** Enlazar la pull request con la issue y dejar `Closes #N` en el cuerpo. La llama el orquestador, no `create-pr`.
 
 ## 5. Manejo de Errores y Excepciones
 
 - **Si falta un dato:** Pídelo antes de seguir. No inventes el número de issue, el título ni los revisores.
-- **Si un subagente o una skill fallan:** Di qué falló y pide que se solvente antes de seguir.
+- **Comprobación de pasos:** Confirma el éxito de cada paso antes de ejecutar el siguiente. Si un subagente o una skill fallan, comunica el error y continúa cuando se resuelva.

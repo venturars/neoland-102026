@@ -1,10 +1,47 @@
 # Arquitectura
 
-La aplicación usa Node.js con módulos ES (`"type": "module"`) y una base SQLite gestionada por `node:sqlite`.
+La aplicación usa Node.js con módulos ES y SQLite gestionado por node:sqlite.
 
-Las cuatro capas viven bajo `src/`. `src/db/` solo abre la base; su conexión conserva `users.sqlite` junto al módulo y fuera de Git. El SQL permanece en `src/queries/queries/`; `src/queries/users.js` lo lee y lo ejecuta, sin reglas de negocio. Las decisiones de negocio viven en `src/logic/`. Los clientes de `src/clients/terminal/` invocan esa capa desde first-app y muestran su resultado; los notebooks están en `src/clients/jupyter/`.
+Las cuatro capas viven bajo src/. El servidor `src/db/server.js` abre únicamente `src/db/users.sqlite`, fuera de Git, y ejecuta SQL en `http://127.0.0.1:3000/execute`. No contiene reglas de usuarios ni sirve HTML.
+
+Cada consulta es un módulo .js de `src/queries/queries/` con una constante SQL y parámetros nombrados. `src/queries/users.js` importa esas constantes y usa fetch para acceder al servidor; no lee archivos con readFile ni abre SQLite.
+
+Las decisiones de negocio viven en `src/logic/`. Sus funciones esperan las consultas con await y mantienen sus reglas, resultados y errores. Los clientes de terminal y Jupyter importan logic directamente y esperan el resultado. La preparación de tabla utiliza queries y listTables, sin una conexión alternativa.
+
+Flujo: cliente → logic → queries → HTTP/JSON /execute → servidor SQL → users.sqlite. El cliente HTTP expone las operaciones de usuarios y llama directamente a logic; queries conserva la interfaz HTTP de datos con el servidor SQL. Los clientes comparten la base del servidor y no se llaman entre sí. Uso en [DATABASE.md](DATABASE.md) y [JUPYTER.md](JUPYTER.md).
+
+El cliente `src/clients/browser/` contiene `index.html`, `app.js` y `styles.css`. La página se abre mediante file:// e importa directamente listUsers, updateUser y deleteUser desde logic. El navegador conserva sus imports directos; el servidor SQL no sirve HTML ni incorpora una API de usuarios. `npm.cmd run browser` abre Chrome instalado con un perfil temporal separado y permiso para cargar módulos locales.
+
+`src/clients/http/app.js` importa y espera con await las cinco operaciones existentes de `src/logic/`. Express escucha en `http://127.0.0.1:3001`, sin repetir reglas de negocio. Se arranca con `pnpm http`; no sustituye al servidor SQL de `src/db/server.js`, que permanece en 3000.
 
 `src/logic/` es el núcleo estable de la aplicación. No se reemplaza por adaptadores, plugins o implementaciones intercambiables, y sus reglas no se trasladan a `src/queries/` ni a `src/clients/`. Cada operación tiene su propio archivo; una operación nueva no modifica otro archivo para reutilizarlo.
+
+`src/clients/nest/` expone las mismas cinco operaciones en
+`http://127.0.0.1:3003`. Un módulo registra controlador, servicio y filtro
+de transporte. El servicio importa las funciones existentes de `logic/`;
+no repite validaciones ni accede directamente a SQLite.
+`corepack pnpm nest` limpia el `dist/` local, compila `src/` con Babel
+manteniendo ESM y arranca `dist/clients/nest/main.js`. Los imports relativos
+usan la copia compilada de logic y queries, que sigue llamando al servidor
+SQL original en 3000. No se ejecuta la copia del servidor SQL en dist.
+Express permanece en 3001 y ambos clientes comparten el mismo servidor
+y datos. `dist/` no se versiona ni se revisa con ESLint.
+
+El cliente `src/clients/electron/` abre una ventana de escritorio propia e importa las operaciones de `src/logic/`. No reutiliza `src/clients/browser/` ni sustituye al servidor SQL de `src/db/server.js`.
+
+El cliente `src/clients/chrome/` reúne una extensión Manifest V3 y su API
+Fastify. El popup consulta exclusivamente `http://127.0.0.1:3002` con fetch;
+la API importa las cinco operaciones de usuarios de `src/logic/` y conserva
+sus reglas. `pnpm chrome` inicia la API. La extensión se carga manualmente
+en Chrome, según `README.md`. El servidor SQL permanece en 3000 y el
+cliente HTTP conserva su API Express en 3001.
+
+El cliente `src/clients/vscode/` aporta la vista Usuarios en la barra lateral
+de VS Code. Su proceso de extensión importa las cinco operaciones de
+`src/logic/`; la vista envía mensajes y presenta sus resultados. `pnpm vscode`
+abre la aplicación en una ventana de desarrollo desde Windows/PowerShell.
+No incorpora API ni puerto y conserva el servidor SQL en 3000, el cliente
+HTTP en 3001 y el cliente Chrome en 3002.
 
 Los contratos de funciones siguen [STYLE.md](STYLE.md); las salidas y los errores se definen en [ERRORS.md](ERRORS.md).
 
@@ -13,16 +50,12 @@ recomendadas de ESLint y excluye `.venv` y `node_modules`.
 
 ## Automatización del trabajo
 
-La automatización de Git es documentación y herramientas de desarrollo, separadas de la lógica de usuarios. No modifica sus contratos, su base de datos ni sus clientes. Su uso se explica en [GIT-AUTOMATION.md](GIT-AUTOMATION.md).
+La automatización de Git vive en agents/, skills/, tools/, templates/ y MCPS/, separada de src/ y de los datos de usuarios. Los ocho scripts Bash de tools/ conservan el código original de la plantilla; no se mantienen herramientas ni ensayos PowerShell propios. `tools/create-pr-base-staging.sh` crea la PR con base staging, en draft y asignada al usuario autenticado en una sola invocación de gh, recibiendo el cuerpo mediante un archivo temporal.
 
-`agents/git-workflow-agent.md` coordina el momento solicitado y lanza agentes reales con responsabilidades delimitadas: `help-me-to-think` concreta la petición, `create-issue` la registra, `create-branch` prepara la rama, `create-commit` guarda un trozo autorizado, `launch-push` publica cuando se indica y `create-pr` crea la revisión en borrador contra staging. Las preguntas y los errores vuelven al orquestador.
+Los agentes y skills mantienen su estructura e instrucciones originales. Solo se adaptan las ocho rutas de comandos para ejecutarlos desde la raíz Git y se conserva el párrafo del orquestador con las referencias y pausas SDD locales. AGENTS.md conserva las revisiones separadas de spec/plan y tareas antes de implementar; ese SDD prevalece sobre la continuación automática del template.
 
-Las skills de `skills/` se leen por su ruta. Definen entrevistas, estado, ramas, commits, publicación, asignaciones y relación de issue con PR. El orquestador escribe `Closes #N` después de create-pr, conserva y verifica Development por separado y gestiona las personas revisoras indicadas. La base sigue siendo staging: la palabra de cierre solo se interpreta cuando la PR apunta a la rama predeterminada. No cierra issues manualmente ni realiza merges implícitos.
+El orquestador elige la etapa por el estado real: crea la issue si problema, resultado, alcance y comprobación están claros, y entrevista si hay dudas. Una issue escrita con cambios pendientes lleva a preparar una rama desde staging antes de editar; cada paso se confirma antes del siguiente. Las entrevistas devuelven las preguntas necesarias con recomendación y esperan respuestas, conservando el historial al cambiar de agente. Los commits describen archivo o función y cambio en una línea. La creación de PR utiliza la operación conjunta; una PR existente se reutiliza conservando el enlace, cuya responsabilidad sigue en el orquestador.
 
-Los scripts `.ps1` de `tools/` ejecutan las operaciones de Git en PowerShell. Resuelven la raíz desde su ubicación, comprueban códigos de salida nativos, protegen la rama autorizada de cada tarea y conservan cambios ajenos. Los commits selectivos usan un índice temporal. Las herramientas no fijan nombres de ramas personales ni fuerzan publicaciones.
+Las doce plantillas originales son la fuente editorial de issues y PR. MCPS contiene la referencia original, sin ejecutar su configuración. La guía [GIT-AUTOMATION.md](GIT-AUTOMATION.md) explica uso con Git Bash, MCP y alternativa gh, así como los límites de esta copia. Los ensayos autorizados usan repositorios desechables con remoto local y evidencia separada de los resultados históricos.
 
-`tools/git-common.ps1` comparte solo las comprobaciones de repositorio, estado, ramas, hooks y comandos nativos. `tools/tests/` verifica el flujo y la conservación de datos en repositorios desechables con remoto local; no ejecuta mutaciones en el repositorio personal.
-
-`templates/issues/` y `templates/pull-request/` dan forma a los cuerpos en español. `MCPS/github-mcp-server/mcp.txt` referencia la documentación del servidor; la conexión, identidad y capacidades se comprueban en la sesión. GitHub CLI es una alternativa documentada si el MCP no resulta suficiente o no corresponde a la cuenta autorizada.
-
-El orden de AGENTS.md permanece por encima del flujo de Git: issue antes de spec; spec y plan antes de la primera pausa; tareas antes de la segunda pausa; implementación tras autorización. La actualización del árbol y la arquitectura forma parte de las tareas aprobadas cuando se añaden o eliminan archivos.
+`MCPS/socket-mcp/mcp.txt` referencia el MCP remoto de Socket con OAuth. [SOCKET.md](SOCKET.md) documenta la consulta PURL autenticada con `SOCKET_API_TOKEN`, el inventario directo derivado del manifiesto y lockfile y la interpretación de alertas. Son documentación de desarrollo; la conexión y configuración existentes se conservan.

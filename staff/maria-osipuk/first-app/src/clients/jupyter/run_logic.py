@@ -2,7 +2,8 @@
 
 The notebooks stay in Python. The business rules stay in logic/.
 This file only starts Node and returns the value or the error message
-that the function already uses. Node opens src/db/users.sqlite.
+that the function already uses. Node does not open SQLite: the functions
+ask the data server, so `pnpm start` must be running first.
 """
 
 import json
@@ -116,13 +117,13 @@ def delete_user(user_id):
 
 
 def list_users():
-    """Return the users stored in src/db/users.sqlite."""
+    """Return the users stored by the data server."""
     return _call("listUsers", [])
 
 
 def count_users_by_gender():
-    """Count stored names. This waits, because the function waits for Ollama."""
-    return _call("countUsersByGender", [], wait_for_result=True)
+    """Count stored names with the local Ollama model."""
+    return _call("countUsersByGender", [])
 
 
 def create_users_table():
@@ -147,26 +148,25 @@ def show(value):
     print(value)
 
 
-def _call(function_name, arguments, wait_for_result=False):
+def _call(function_name, arguments):
     """Run one existing function in Node and read its JSON result.
 
     arguments travel as JSON. They are not pasted into the program text,
     so a name or an email cannot change the call itself.
-    Node keeps its default database, src/db/users.sqlite.
+    Node reaches the database through the data server, not a file.
     """
     if function_name not in FUNCTIONS:
         raise RuntimeError("That function is not part of the Jupyter client.")
 
     module_url = (APP_ROOT / FUNCTIONS[function_name]).as_uri()
-    # countUsersByGender is async. The other functions return immediately.
+    # Every function is async, because each one waits for the data server.
     # The await stays in this bridge so the notebook does not reimplement it.
-    wait_prefix = "await " if wait_for_result else ""
     script = "\n".join(
         [
             f'import {{ {function_name} }} from "{module_url}";',
             "const argumentsFromPython = JSON.parse(process.env.FIRST_APP_CALL_ARGUMENTS);",
             "try {",
-            f"  const result = {wait_prefix}{function_name}(...argumentsFromPython);",
+            f"  const result = await {function_name}(...argumentsFromPython);",
             "  if (result === undefined) {",
             '    console.log("RESULT null");',
             "  } else {",
@@ -181,7 +181,6 @@ def _call(function_name, arguments, wait_for_result=False):
     )
 
     environment = os.environ.copy()
-    environment.pop("FIRST_APP_DATABASE_FILE", None)
     environment["FIRST_APP_CALL_ARGUMENTS"] = json.dumps(arguments)
 
     completed = subprocess.run(

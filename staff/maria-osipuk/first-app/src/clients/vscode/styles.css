@@ -1,0 +1,124 @@
+/* Every color comes from the editor, so the view follows the theme. */
+body {
+  padding: 8px 12px;
+  color: var(--vscode-foreground);
+  font-family: var(--vscode-font-family);
+  font-size: var(--vscode-font-size);
+}
+
+[hidden] {
+  display: none;
+}
+
+h2 {
+  margin: 16px 0 8px;
+  font-size: 1.1em;
+}
+
+.muted {
+  color: var(--vscode-descriptionForeground);
+}
+
+.message {
+  margin: 0 0 8px;
+  padding: 6px 8px;
+  border: 1px solid var(--vscode-focusBorder);
+}
+
+.message-error {
+  border-color: var(--vscode-inputValidation-errorBorder);
+  background: var(--vscode-inputValidation-errorBackground);
+}
+
+.user-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.user-list button {
+  display: block;
+  width: 100%;
+  margin: 0 0 4px;
+  padding: 6px 8px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.user-list button:hover {
+  background: var(--vscode-list-hoverBackground);
+}
+
+.user-list strong,
+.user-list span {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.user-list span {
+  color: var(--vscode-descriptionForeground);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  margin: 0 0 12px;
+}
+
+.facts dt {
+  color: var(--vscode-descriptionForeground);
+}
+
+.facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+input {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  margin-top: 2px;
+  padding: 4px 6px;
+  border: 1px solid var(--vscode-input-border, transparent);
+  background: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.actions button {
+  padding: 4px 10px;
+  border: 0;
+  background: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+  cursor: pointer;
+}
+
+.actions button:hover {
+  background: var(--vscode-button-hoverBackground);
+}
+
+.actions .button-quiet {
+  background: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-button-secondaryForeground);
+}
+
+.actions .button-danger {
+  background: var(--vscode-inputValidation-errorBackground);
+  color: var(--vscode-foreground);
+}

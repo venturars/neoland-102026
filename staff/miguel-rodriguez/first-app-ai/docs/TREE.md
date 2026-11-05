@@ -34,7 +34,23 @@ first-app-ai/
 │   ├── STYLE.md
 │   ├── TREE.md
 │   └── specs/
+│       ├── workflow-rounds-and-commits/
+│       │   ├── plan.md
+│       │   ├── spec.md
+│       │   └── tasks.md
+│       ├── vscode-user-client/
+│       │   ├── plan.md
+│       │   ├── spec.md
+│       │   └── tasks.md
+│       ├── vanilla-web-client/
+│       │   ├── plan.md
+│       │   ├── spec.md
+│       │   └── tasks.md
 │       ├── align-code-with-guides/
+│       │   ├── plan.md
+│       │   ├── spec.md
+│       │   └── tasks.md
+│       ├── complete-user-clients/
 │       │   ├── plan.md
 │       │   ├── spec.md
 │       │   └── tasks.md
@@ -70,6 +86,22 @@ first-app-ai/
 │       │   ├── plan.md
 │       │   ├── spec.md
 │       │   └── tasks.md
+│       ├── rest-user-client/
+│       │   ├── plan.md
+│       │   ├── spec.md
+│       │   └── tasks.md
+│       ├── update-workflow-task-checks/
+│       │   ├── plan.md
+│       │   ├── spec.md
+│       │   └── tasks.md
+│       ├── update-git-workflow-templates/
+│       │   ├── plan.md
+│       │   ├── spec.md
+│       │   └── tasks.md
+│       ├── serve-data-through-node/
+│       │   ├── plan.md
+│       │   ├── spec.md
+│       │   └── tasks.md
 │       └── split-sdd-guides/
 │           ├── plan.md
 │           ├── spec.md
@@ -77,9 +109,11 @@ first-app-ai/
 ├── eslint.config.js
 ├── package.json
 ├── pnpm-lock.yaml
+├── pnpm-workspace.yaml
 ├── requirements-jupyter.txt
 ├── scripts/
-│   └── jupyter.js
+│   ├── jupyter.js
+│   └── web.js
 ├── skills/
 │   ├── assign-author/
 │   │   └── SKILL.md
@@ -111,6 +145,31 @@ first-app-ai/
 │       └── SKILL.md
 ├── src/
 │   ├── clients/
+│   │   ├── chrome/
+│   │   │   ├── index.html
+│   │   │   ├── manifest.json
+│   │   │   ├── popup.js
+│   │   │   ├── server.js
+│   │   │   └── styles.css
+│   │   ├── electron/
+│   │   │   ├── app.js
+│   │   │   ├── index.html
+│   │   │   ├── main.js
+│   │   │   └── styles.css
+│   │   ├── http/
+│   │   │   └── app.js
+│   │   ├── vscode/
+│   │   │   ├── .vscode/
+│   │   │   │   └── launch.json
+│   │   │   ├── extension.cjs
+│   │   │   ├── package.json
+│   │   │   ├── panel.html
+│   │   │   ├── panel.js
+│   │   │   └── panel.css
+│   │   ├── web/
+│   │   │   ├── index.html
+│   │   │   ├── main.js
+│   │   │   └── styles.css
 │   │   ├── jupyter/
 │   │   │   ├── 01-create-users-table.ipynb
 │   │   │   ├── 02-create-user.ipynb
@@ -134,7 +193,7 @@ first-app-ai/
 │   │       ├── update-user.txt
 │   │       └── users-gender-count.txt
 │   ├── db/
-│   │   └── connection.js
+│   │   └── server.js
 │   ├── logic/
 │   │   ├── create-user.js
 │   │   ├── delete-user.js
@@ -146,20 +205,38 @@ first-app-ai/
 │   │   └── users-gender-count.js
 │   └── queries/
 │       ├── queries/
-│       │   ├── create-users-table.sql
-│       │   ├── find-all.sql
-│       │   ├── find-by-email.sql
-│       │   ├── find-by-id.sql
-│       │   ├── find-by-name.sql
-│       │   ├── insert.sql
-│       │   ├── remove.sql
-│       │   └── update.sql
+│       │   ├── create-users-table.js
+│       │   ├── find-all.js
+│       │   ├── find-by-email.js
+│       │   ├── find-by-id.js
+│       │   ├── find-by-name.js
+│       │   ├── insert.js
+│       │   ├── list-tables.js
+│       │   ├── remove.js
+│       │   └── update.js
 │       └── users.js
 ├── templates/
 │   ├── issues/
-│   │   └── basic_issue.md
+│   │   ├── chore_issue.md
+│   │   ├── docs_issue.md
+│   │   ├── feat_issue.md
+│   │   ├── fix_issue.md
+│   │   ├── refactor_issue.md
+│   │   └── test_issue.md
 │   └── pull-request/
-│       └── basic-pull-request.md
+│       ├── chore-pull-request.md
+│       ├── docs-pull-request.md
+│       ├── feat-pull-request.md
+│       ├── fix-pull-request.md
+│       ├── refactor-pull-request.md
+│       └── test-pull-request.md
+├── tests/
+│   ├── browser-classifier.test.js
+│   ├── client-apis.test.js
+│   ├── client-ui-state.test.js
+│   ├── serve-data-through-node.test.js
+│   ├── vscode-client.test.js
+│   └── web-client.test.js
 └── tools/
     ├── check-status.sh
     ├── commit-changes.sh
@@ -168,3 +245,8 @@ first-app-ai/
     ├── launch-push.sh
     └── pull-changes.sh
 ```
+
+
+Cliente src/clients/nest: main.js, app.module.js, users.controller.js,
+users.service.js y http-exception.filter.js. babel.config.json configura la
+compilación; dist/ es salida generada ignorada por Git.

@@ -4,10 +4,11 @@ first-app/
   src/
     db/
       connection.js
+      server.js
       users.sqlite
     queries/
-      queries/
       users.js
+      users-sql.js
     logic/
       create-user.js
       update-user.js
@@ -18,6 +19,17 @@ first-app/
       users-gender-count.js
     clients/
       terminal/
+      browser/
+        index.html
+        app.js
+        styles.css
+      rest/
+        server.js
+      electron/
+        main.js
+        index.html
+        app.js
+        styles.css
     users.js
   logic/
     create-user.js
@@ -33,6 +45,20 @@ first-app/
   skills/
   tools/
   templates/
+    issues/
+      feat_issue.md
+      fix_issue.md
+      docs_issue.md
+      refactor_issue.md
+      test_issue.md
+      chore_issue.md
+    pull-request/
+      feat-pull-request.md
+      fix-pull-request.md
+      docs-pull-request.md
+      refactor-pull-request.md
+      test-pull-request.md
+      chore-pull-request.md
   MCPS/
   docs/
     ARCHITECTURE.md
@@ -45,6 +71,18 @@ first-app/
     GIT-AUTOMATION.md
     specs/
       <nombre>/
+        spec.md
+        plan.md
+        tasks.md
+      plantillas-por-tipo/
+        spec.md
+        plan.md
+        tasks.md
+      cliente-navegador/
+        spec.md
+        plan.md
+        tasks.md
+      servidor-base/
         spec.md
         plan.md
         tasks.md

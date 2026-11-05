@@ -4,7 +4,7 @@
 first-app/
   src/
     db/
-      connection.js
+      server.js
       users.sqlite
     logic/
       shared.js
@@ -35,22 +35,47 @@ first-app/
         find-user-by-email.ipynb
         find-user-by-name.ipynb
         users-gender.ipynb
+      browser/
+        index.html
+        app.js
+        styles.css
+      http/
+        app.js
+      electron/
+        main.js
+        index.html
+        app.js
+        styles.css
+      chrome/
+        manifest.json
+        index.html
+        app.js
+        styles.css
+        server.js
+      vscode/
+        package.json
+        extension.js
+        index.html
+        app.js
+        styles.css
+        icon.svg
     queries/
       users.js
       queries/
-        create-table-users.sql
-        create-user.sql
-        update-user.sql
-        delete-user.sql
-        list-users.sql
-        find-user-by-id.sql
-        find-user-by-email.sql
-        find-user-by-name.sql
+        create-table-users.js
+        create-user.js
+        update-user.js
+        delete-user.js
+        list-users.js
+        find-user-by-id.js
+        find-user-by-email.js
+        find-user-by-name.js
   scripts/
     jupyter.sh
   eslint.config.js
   package.json
   pnpm-lock.yaml
+  pnpm-workspace.yaml
   agents/
     git-workflow-agent.md
     help-me-to-think.md
@@ -70,6 +95,8 @@ first-app/
     create-empty-commit/SKILL.md
     create-issue/SKILL.md
     create-pr-base-staging/SKILL.md
+    frontend-design/LICENSE.txt
+    frontend-design/SKILL.md
     grill-me/SKILL.md
     grill-with-docs/SKILL.md
     launch-push/SKILL.md
@@ -84,8 +111,20 @@ first-app/
     launch-push.sh
     pull-changes.sh
   templates/
-    issues/basic_issue.md
-    pull-request/basic-pull-request.md
+    issues/
+      chore_issue.md
+      docs_issue.md
+      feat_issue.md
+      fix_issue.md
+      refactor_issue.md
+      test_issue.md
+    pull-request/
+      chore-pull-request.md
+      docs-pull-request.md
+      feat-pull-request.md
+      fix-pull-request.md
+      refactor-pull-request.md
+      test-pull-request.md
   MCPS/
     github-mcp-server/mcp.txt
   docs/

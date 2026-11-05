@@ -9,10 +9,11 @@ Fuente: un commit es un conventional commit, como en [github-pr](https://www.ski
 
 #### Especificación de Argumentos
 
-1. **MENSAJE** _(Obligatorio)_: Conventional commit en inglés, `tipo: descripción`. El tipo es `feat`, `fix`, `docs`, `refactor`, `test` o `chore`.
+1. **MENSAJE** _(Obligatorio)_: Conventional commit en inglés, `tipo: descripción`. El tipo es `feat`, `fix`, `docs`, `refactor`, `test`, `chore` o `knowledge`.
 2. **FICHERO** _(Obligatorio, uno o más)_: Ruta desde la raíz del repo. Repite el argumento por cada fichero del trozo.
 
 #### Reglas de Invocación Críticas
 
+- **Mensaje técnico:** La descripción nombra el fichero o la función y el cambio. No uses un verbo suelto (`update files`, `fix bug`). Una sola línea. El commit vacío sigue siendo `chore: open #N`.
 - **Escapado de caracteres**: Si el mensaje contiene comillas dobles (`"`), escápalas como `\"`.
 - **Procesamiento de respuestas**: El script lista el mensaje y los ficheros. El commit lleva solo esos ficheros: lo que ya estuviera preparado se queda preparado. Si el código de salida no es 0, no reintentes metiendo más ficheros de los que nombró el alumno.

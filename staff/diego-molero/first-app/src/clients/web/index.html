@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Usuarios y notas</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="/styles.css">
+    <script type="module" src="/main.js"></script>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="masthead"><p class="eyebrow">FIRST APP</p><h1>Tu espacio de notas</h1><p>Elige tu usuario para continuar.</p></header>
+      <p id="notice" class="notice" role="status" aria-live="polite" hidden></p>
+      <section id="selection" class="panel" aria-labelledby="selection-title">
+        <h2 id="selection-title" tabindex="-1">¿Quién eres?</h2>
+        <p>Selecciona tu ID y nombre. No necesitas contraseña.</p>
+        <div class="actions"><button id="new-user" type="button">Crear usuario</button></div>
+        <div id="users" class="stack"></div>
+        <button id="retry-users" class="secondary" type="button" hidden>Reintentar</button>
+      </section>
+      <section id="user-create" class="panel" aria-labelledby="user-create-title" hidden>
+        <h2 id="user-create-title" tabindex="-1">Crear usuario</h2>
+        <p>Tu nombre e ID aparecerán en el listado de entrada.</p>
+        <form id="create-user-form" class="stack">
+          <label>Nombre<input id="create-user-name" name="name" autocomplete="name" required></label>
+          <label>Correo<input id="create-user-email" name="email" type="email" maxlength="64" autocomplete="email" required></label>
+          <div class="actions"><button id="create-user-cancel" class="secondary" type="button">Volver</button><button type="submit">Crear usuario</button></div>
+        </form>
+      </section>
+      <section id="menu" class="panel" aria-labelledby="menu-title" hidden>
+        <h2 id="menu-title" tabindex="-1">Hola, <span id="current-name"></span></h2>
+        <p id="current-id" class="muted"></p>
+        <div class="actions"><button id="menu-back" class="secondary" type="button">Volver</button><button id="menu-edit" type="button">Modificar usuario</button><button id="menu-notes" type="button">Ir a notas</button></div>
+      </section>
+      <section id="user-editor" class="panel" aria-labelledby="user-editor-title" hidden>
+        <h2 id="user-editor-title" tabindex="-1">Modificar usuario</h2>
+        <form id="user-form" class="stack"><label>Nombre<input id="user-name" name="name" required></label><label>Correo<input id="user-email" name="email" type="email" maxlength="64" required></label><div class="actions"><button id="user-cancel" class="secondary" type="button">Volver</button><button type="submit">Guardar cambios</button></div></form>
+        <div class="danger-zone"><p>Eliminar el usuario también borrará todas sus notas.</p><button id="delete-user" class="danger" type="button">Eliminar usuario</button></div>
+      </section>
+      <section id="notes-list" class="panel" aria-labelledby="notes-title" hidden>
+        <h2 id="notes-title" tabindex="-1">Mis notas</h2>
+        <div class="actions"><button id="notes-back" class="secondary" type="button">Volver</button><button id="new-note" type="button">Crear nota</button></div>
+        <div id="notes" class="stack"></div>
+        <button id="retry-notes" class="secondary" type="button" hidden>Reintentar</button>
+      </section>
+      <section id="note-editor" class="panel" aria-labelledby="note-editor-title" hidden>
+        <h2 id="note-editor-title" tabindex="-1">Nueva nota</h2>
+        <form id="note-form" class="stack"><label>Título<input id="note-title" name="title" required></label><label>Contenido<textarea id="note-content" name="content" rows="8"></textarea></label><div class="actions"><button id="note-cancel" class="secondary" type="button">Volver</button><button type="submit">Guardar nota</button></div></form>
+        <div id="note-danger" class="danger-zone" hidden><button id="delete-note" class="danger" type="button">Eliminar nota</button></div>
+      </section>
+    </main>
+  </body>
+</html>

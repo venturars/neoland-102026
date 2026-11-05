@@ -4,7 +4,7 @@ PROJECT_DIR = Path(__file__).resolve().parent.parent
 MD_DIR = PROJECT_DIR / "python-docs-md"
 DB_DIR = PROJECT_DIR / "chroma_db"
 
-# La escribe download_docs.py. Sin este fichero aún no hay documentación descargada.
+# La escribe download_docs.py. Sin este fichero no hay docs.
 VERSION_FILE = PROJECT_DIR / "python-docs" / "version.txt"
 VERSION = ""
 if VERSION_FILE.is_file():
@@ -48,11 +48,18 @@ MERGE_MAX = 2000
 SPLIT_ABOVE = 3200
 
 BATCH_SIZE = 32
-# Tokens que Ollama deja leer al modelo. El fragmento más grande tiene unos 5.700.
-# Más contexto gasta más memoria; menos haría fallar los fragmentos grandes.
+# Tokens que Ollama deja leer al modelo.
+# El fragmento más grande tiene unos 5.700.
+# Más contexto gasta memoria. Menos haría fallar los grandes.
 NUM_CTX = 8192
 
-# Qwen3-Embedding pide una instrucción delante de las preguntas, no de los documentos
-QUERY_INSTRUCTION = "Given a question about Python, retrieve the documentation passages that answer it"
+# Qwen3-Embedding pide una instrucción en las preguntas, no en los docs.
+QUERY_INSTRUCTION = (
+    "Given a question about Python, retrieve the documentation "
+    "passages that answer it"
+)
 if VERSION != "":
-    QUERY_INSTRUCTION = f"Given a question about Python {VERSION}, retrieve the documentation passages that answer it"
+    QUERY_INSTRUCTION = (
+        f"Given a question about Python {VERSION}, retrieve the "
+        "documentation passages that answer it"
+    )

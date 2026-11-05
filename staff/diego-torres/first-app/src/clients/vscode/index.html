@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <!-- Solo se cargan estilos y scripts de la propia extensión. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; style-src __CSP_SOURCE__; script-src __CSP_SOURCE__;"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Usuarios</title>
+    <link rel="stylesheet" href="__STYLES_URI__" />
+  </head>
+  <body>
+    <main>
+      <!-- Mensajes para la persona: avisos y errores. -->
+      <p id="message" class="message" role="status" hidden></p>
+
+      <!-- Usuario que se acaba de ver o modificar. -->
+      <p id="viewed-user" class="user" hidden></p>
+
+      <!-- Lista de usuarios guardados. -->
+      <ul id="user-list" class="user-list"></ul>
+
+      <!-- Sin required: quien decide es la lógica. -->
+      <h2>Crear</h2>
+      <form id="create-form">
+        <label for="create-name">Nombre</label>
+        <input id="create-name" type="text" />
+        <label for="create-email">Email</label>
+        <input id="create-email" type="text" />
+        <button type="submit">Crear</button>
+      </form>
+
+      <h2>Ver</h2>
+      <form id="view-form">
+        <label for="view-id">Id</label>
+        <input id="view-id" type="text" />
+        <button type="submit">Ver</button>
+      </form>
+
+      <h2>Modificar</h2>
+      <form id="update-form">
+        <label for="update-id">Id</label>
+        <input id="update-id" type="text" />
+        <label for="update-name">Nombre</label>
+        <input id="update-name" type="text" />
+        <label for="update-email">Email</label>
+        <input id="update-email" type="text" />
+        <button type="submit">Modificar</button>
+      </form>
+
+      <h2>Borrar</h2>
+      <form id="delete-form">
+        <label for="delete-id">Id</label>
+        <input id="delete-id" type="text" />
+        <button type="submit" class="danger">Borrar</button>
+      </form>
+
+      <!-- confirm() no funciona en una vista de VS Code. -->
+      <div id="delete-confirm" class="confirm" hidden>
+        <p id="delete-question"></p>
+        <button id="delete-yes" type="button" class="danger">Confirmar</button>
+        <button id="delete-no" type="button" class="secondary">Cancelar</button>
+      </div>
+    </main>
+    <script src="__PANEL_URI__"></script>
+  </body>
+</html>

@@ -3,6 +3,7 @@
 ```text
 first-app/
   AGENTS.md
+  babel.config.json
   eslint.config.js
   package.json
   src/
@@ -12,30 +13,76 @@ first-app/
       delete-user.js
       find-user-by-email.js
       find-user-by-id.js
+      list-gmail-users.js
       list-users.js
       update-user.js
     queries/
       users.js
+    db/
+      connection.js
+      server.js
+      users.sqlite
       queries/
         create-users-table.sql
         find-all.sql
         find-by-email.sql
         find-by-id.sql
+        find-gmail.sql
         insert.sql
         remove.sql
         update.sql
-    db/
-      connection.js
-      users.sqlite
     clients/
+      api/
+        bruno/
+          01 CRUD/
+            create-user.bru
+            find-user.bru
+            list-users.bru
+            update-user.bru
+          02 Errors/
+            create-with-bad-email.bru
+            create-with-empty-name.bru
+            create-with-invalid-json.bru
+            create-with-repeated-email.bru
+            create-without-name.bru
+            delete-missing-user.bru
+            find-id-not-a-number.bru
+            find-missing-user.bru
+            update-missing-user.bru
+            update-with-nothing.bru
+          03 Delete/
+            delete-user.bru
+            find-deleted-user.bru
+          04 SQL down/
+            list-users-database-stopped.bru
+          environments/
+            local.bru
+          README.md
+          bruno.json
+        server.js
+      chrome/
+        manifest.json
+        popup.css
+        popup.html
+        popup.js
+        server.js
+      nest/
+        app.module.js
+        errors.filter.js
+        main.js
+        users.controller.js
       terminal/
+        api.txt
+        chrome.txt
         count-users-by-gender.txt
         create-user.txt
         create-users-table.txt
         delete-user.txt
         find-user-by-email.txt
         find-user-by-id.txt
+        list-gmail-users.txt
         list-users.txt
+        nest.txt
         update-user.txt
       jupyter/
         README.md
@@ -45,9 +92,25 @@ first-app/
         delete-user.ipynb
         find-user-by-email.ipynb
         find-user-by-id.ipynb
+        list-gmail-users.ipynb
         list-users.ipynb
         prepare-database.ipynb
         update-user.ipynb
+      web/
+        index.html
+        style.css
+        app.js
+      electron/
+        main.js
+        index.html
+        app.js
+        styles.css
+      vscode/
+        package.json
+        extension.js
+        webview.js
+        webview.css
+        icon.svg
   scripts/
     jupyter.sh
   agents/
@@ -95,15 +158,28 @@ first-app/
     create-branch.sh
     create-branch-from-staging.sh
     create-empty-commit.sh
+    create-pr-base-staging.sh
     launch-push.sh
     pull-changes.sh
   templates/
     issues/
-      basic_issue.md
+      feat_issue.md
+      fix_issue.md
+      refactor_issue.md
+      docs_issue.md
+      chore_issue.md
+      test_issue.md
     pull-request/
-      basic-pull-request.md
+      feat-pull-request.md
+      fix-pull-request.md
+      refactor-pull-request.md
+      docs-pull-request.md
+      chore-pull-request.md
+      test-pull-request.md
   MCPS/
     github-mcp-server/
+      mcp.txt
+    socket-mcp/
       mcp.txt
   docs/
     ARCHITECTURE.md

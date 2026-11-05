@@ -1,0 +1,6 @@
+// Ejemplo manual. Ejecución: docs/CONSTITUTIONS.md.
+import { deleteUser } from "./src/logic/delete-user.js";
+
+deleteUser(1);
+
+console.log("User deleted");

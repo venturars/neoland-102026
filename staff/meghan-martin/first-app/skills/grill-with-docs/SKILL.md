@@ -1,7 +1,11 @@
-# Preguntar con los documentos
+### Herramienta: GRILL_WITH_DOCS
 
-Úsala cuando el cambio vive en este repositorio. Va antes de `grill-me`.
+- **Descripción**: Úsala cuando el cambio vive en este proyecto. Va la primera. Si al terminar quedan decisiones que el proyecto no responde, `help-me-to-think` sigue con `grill-me`. No la uses para crear la issue, la rama ni la pull request.
+- **Fuente**: [grill-with-docs](https://www.skills.sh/mattpocock/skills/grill-with-docs). Instalación: `npx skills add https://github.com/mattpocock/skills --skill grill-with-docs`.
 
-Lee la spec activa, el plan y `AGENTS.md` antes de preguntar. Haz una pregunta cada vez. No escribas ficheros. No crees la issue.
+#### Cómo entrevistar
 
-Si un documento no responde, dilo y pasa a `skills/grill-me/SKILL.md`.
+1. Haz las preguntas que necesites y devuélvelas. No sigas hasta que te llamen con las respuestas.
+2. Si la respuesta está en el repositorio, léelo y no preguntes eso.
+3. Cuando un término quede claro, dilo con las palabras del proyecto.
+4. Devuelve qué hay que hacer, cómo se comprueba y qué decisiones no están en el proyecto. No escribas ficheros de glosario ni de decisión. El resumen único lo cierra `help-me-to-think` cuando ya no quede otra entrevista.

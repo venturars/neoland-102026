@@ -1,7 +1,7 @@
 import { DatabaseError, NotFoundError, ValidationError } from "./errors.js";
 import { findById } from "../queries/user.js";
 
-export function findUserById(id) {
+export async function findUserById(id) {
   if (typeof id !== "number") {
     throw new ValidationError("Id is invalid");
   }
@@ -9,7 +9,7 @@ export function findUserById(id) {
   let user;
 
   try {
-    user = findById(id);
+    user = await findById(id);
   } catch {
     throw new DatabaseError("Could not find the user");
   }

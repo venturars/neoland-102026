@@ -1,4 +1,5 @@
-# Pega esto en la terminal, con el directorio actual en first-app
+# Pega esto en la terminal, con el directorio actual en first-app.
+# La base tiene que estar en marcha: npm run db
 # Ollama debe estar en marcha (modelo nimble-v3, o OLLAMA_MODEL)
 node --input-type=module <<'EOF'
 import { usersGenderCount } from "./src/logic/users-gender-count.js";

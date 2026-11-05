@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Usuarios",
+  "version": "0.0.0",
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "Usuarios"
+  },
+  "host_permissions": ["http://127.0.0.1:3002/*"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com"
+  }
+}

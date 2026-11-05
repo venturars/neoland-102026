@@ -1,6 +1,6 @@
 import { findById, remove } from "../queries/users.js";
 
-export function deleteUser(input) {
+export async function deleteUser(input) {
   const id = Number(input.id);
   if (!Number.isInteger(id) || id <= 0) {
     throw new Error("User id is not valid");
@@ -8,7 +8,7 @@ export function deleteUser(input) {
 
   let current;
   try {
-    current = findById(id);
+    current = await findById(id);
   } catch {
     throw new Error("Could not delete the user");
   }
@@ -18,7 +18,7 @@ export function deleteUser(input) {
   }
 
   try {
-    remove(id);
+    await remove(id);
   } catch {
     throw new Error("Could not delete the user");
   }

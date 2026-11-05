@@ -1,37 +1,69 @@
 # Arquitectura
 
-- `src/db/` abre la base de datos y no contiene reglas de negocio.
-- `src/db/connection.js` es la única conexión a la base de datos.
+- `src/db/` guarda la base de datos y el servidor que la ejecuta. No contiene
+  reglas de negocio.
+- `src/db/server.js` abre la única conexión a SQLite, escucha en
+  `http://127.0.0.1:3000` y ejecuta el SQL que recibe por `POST /execute`.
+  No exporta la conexión.
 - `src/db/users.sqlite` es el único fichero de la base de datos.
-- `src/queries/queries/` guarda el SQL. Hay un fichero `.sql` por query.
-- `src/queries/users.js` lee esos ficheros, prepara el SQL y lo ejecuta.
+- `src/queries/queries/` guarda el texto de cada consulta. Hay un módulo
+  `.js` por query.
+- `src/queries/users.js` importa ese texto y pide la ejecución al servidor.
   No hay reglas de negocio en `src/queries/`.
 - `src/logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
   Una funcionalidad por fichero. No importa la base de datos: recibe el
   almacén. Cuando una funcionalidad existe, no se mueve ni se sustituye.
 - `src/logic/create-user.js` crea un usuario.
 - `src/logic/list-users.js` lista los usuarios.
+- `src/logic/find-user-by-id.js` devuelve un usuario por id.
 - `src/logic/update-user.js` actualiza un usuario.
 - `src/logic/delete-user.js` borra un usuario.
 - `src/logic/users-gender-count.js` cuenta los usuarios por género.
-- `src/clients/terminal/` llama a `src/logic/` y muestra el resultado. Es el
-  primer cliente y el test manual de cada funcionalidad.
+- `src/clients/terminal/` llama a `src/logic/` con `await` y muestra el
+  resultado. Es el primer cliente y el test manual de cada funcionalidad.
+- `src/clients/browser/` llama a `src/logic/` con `await`, no repite sus
+  reglas y no se sirve la página; se abre con el script `browser` de
+  `package.json`.
+- `src/clients/electron/main.js` arranca y para `src/db/server.js`, abre
+  la ventana de escritorio y carga `index.html`. `app.js` llama a
+  `src/logic/` con `await` y no repite sus reglas. Se abre con el script
+  `electron` de `package.json`; el instalador Windows con `electron:dist`.
+- `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001 y no
+  repite sus reglas.
+- `src/clients/chrome/server.js` llama a `src/logic/`, escucha en el puerto
+  3002 y no repite sus reglas. La extensión en `src/clients/chrome/` solo
+  habla con esa API por `fetch`.
+- `src/clients/nest/` llama a `src/logic/`, escucha en el puerto 3003 y no
+  repite sus reglas. Sirve Swagger UI en `/docs` sobre la misma API REST.
+  El código interno sigue convenciones Nest; no aplica `docs/STYLE.md` ni
+  `docs/ERRORS.md` en ese árbol.
+- `src/clients/vscode/extension.cjs` registra la vista lateral webview,
+  recibe mensajes del panel y llama a `src/logic/` con `import()`. No
+  repite sus reglas. `panel.html`, `panel.js` y `panel.css` son la
+  interfaz propia. El manifiesto está en
+  `src/clients/vscode/package.json`. Se depura abriendo esa carpeta en
+  VS Code y F5; la base tiene que estar en marcha con el script `server`.
 - `src/clients/jupyter/` es el cliente que se abre con el Jupyter de la app.
 - `start-jupyter.js` arranca el Jupyter del entorno de la app.
 - `eslint.config.js` aplica las reglas recomendadas de ESLint al
   JavaScript, declara los globals de Node e ignora `.venv` y
   `node_modules`.
 - `agents/git-workflow-agent.md` reconoce el momento y llama al
-  subagente como un agente aparte. El padre no hace ese trabajo.
-- `agents/help-me-to-think.md` hace una pregunta cada vez hasta que la
-  tarea se puede dejar escrita.
-- `agents/create-issue.md` crea la issue con título en inglés y
-  descripción en español, asignada a quien está autenticado.
-- `agents/create-branch.md` crea la rama `número-tipo-descripcion`.
+  subagente como un agente aparte. El padre no hace ese trabajo. Si la
+  issue ya está escrita y toca hacer cambios, el momento es Empezar. Las
+  paradas de «Orden» en `AGENTS.md` siguen.
+- `agents/help-me-to-think.md` devuelve las preguntas que hagan falta,
+  cada una con respuesta recomendada, hasta que la tarea se puede dejar
+  escrita.
+- `agents/create-issue.md` crea la issue asignada a quien está
+  autenticado. El cuerpo sale de la plantilla del tipo.
+- `agents/create-branch.md` crea la rama de trabajo. El tipo es el de
+  la plantilla.
 - `agents/create-commit.md` hace un commit pequeño con ficheros
   nombrados.
-- `agents/create-pr.md` abre la pull request contra `staging` y la deja
-  en draft, sin enlazar la issue.
+- `agents/create-pr.md` abre la pull request contra `staging` en draft y
+  asignada al usuario autenticado con una sola invocación a
+  `create-pr-base-staging`, sin enlazar la issue.
 - `agents/launch-push.md` publica `HEAD` en `origin` y deja el upstream
   puesto.
 - `skills/grill-with-docs/SKILL.md` entrevista cuando el cambio vive en
@@ -54,10 +86,11 @@
   nombrados.
 - `skills/launch-push/SKILL.md` sube la rama actual y fija el upstream.
 - `skills/create-pr-base-staging/SKILL.md` abre la pull request con base
-  `staging`.
+  `staging`, en draft y asignada, con GitHub CLI y
+  `tools/create-pr-base-staging.sh`.
 - `skills/create-draft/SKILL.md` deja la pull request en draft.
-- `skills/link-pr-to-issue/SKILL.md` deja el enlace en Development y
-  `Related to #N` en el cuerpo, sin cerrar la issue.
+- `skills/link-pr-to-issue/SKILL.md` deja `Closes #N` en el cuerpo y
+  enlaza la issue en Development. No llama a la API para cerrarla.
 - `skills/assign-reviewers/SKILL.md` asigna a quienes miran la pull
   request y la saca de draft.
 - `skills/validate-node-package/SKILL.md` consulta el MCP de Socket al
@@ -70,11 +103,15 @@
 - `tools/create-empty-commit.sh` crea el commit vacío de apertura.
 - `tools/commit-changes.sh` guarda los ficheros nombrados.
 - `tools/launch-push.sh` sube la rama y fija el upstream.
-- `templates/issues/basic_issue.md` es el cuerpo de la issue: qué hay
-  que hacer y cómo probarlo.
-- `templates/pull-request/basic-pull-request.md` es el cuerpo de la
-  pull request.
-- `MCPS/github-mcp-server/mcp.txt` es la dirección del MCP de GitHub.
+- `tools/create-pr-base-staging.sh` crea la pull request contra
+  `staging` en draft y asignada al usuario autenticado.
+- `templates/issues/` tiene una plantilla por tipo: feat, fix, docs,
+  refactor, test y chore. El cuerpo dice qué hay que hacer y cómo
+  probarlo.
+- `templates/pull-request/` tiene una plantilla por tipo. La sección
+  Issue lleva `Closes #`.
+- `MCPS/github-mcp-server/mcp.txt` es la dirección del MCP de GitHub y
+  el header para que la escritura vaya directa.
 - `MCPS/socket-mcp/mcp.txt` es la dirección del MCP de Socket.
 - `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada
   fichero.

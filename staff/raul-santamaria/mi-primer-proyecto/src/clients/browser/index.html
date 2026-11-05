@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mi primer proyecto</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main>
+      <section id="list-screen">
+        <h1>¿Quién eres?</h1>
+        <ul id="user-list"></ul>
+        <p id="list-message" class="message"></p>
+      </section>
+
+      <section id="menu-screen" hidden>
+        <h1>Tu usuario</h1>
+        <p id="menu-name"></p>
+        <button id="back-button" type="button">Volver</button>
+        <button id="edit-button" type="button">Modificar usuario</button>
+        <button id="notes-button" type="button" disabled>Notas</button>
+      </section>
+
+      <section id="edit-screen" hidden>
+        <h1>Modificar o eliminar</h1>
+        <p id="edit-id"></p>
+        <form id="edit-form">
+          <label>
+            Nombre
+            <input id="name-input" name="name" type="text" />
+          </label>
+          <label>
+            Email
+            <input id="email-input" name="email" type="text" />
+          </label>
+          <button type="submit">Guardar</button>
+        </form>
+        <button id="delete-button" type="button">Eliminar</button>
+        <button id="edit-back-button" type="button">Volver</button>
+        <p id="edit-message" class="message"></p>
+      </section>
+    </main>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

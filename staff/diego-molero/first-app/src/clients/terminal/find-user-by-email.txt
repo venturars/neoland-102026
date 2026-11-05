@@ -1,0 +1,6 @@
+// Ejemplo manual. Ejecución: docs/CONSTITUTIONS.md.
+import { findUserByEmail } from "./src/logic/find-user-by-email.js";
+
+const result = findUserByEmail("  ADA@EXAMPLE.COM  ");
+
+console.log(result);
