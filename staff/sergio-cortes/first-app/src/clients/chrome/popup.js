@@ -39,6 +39,75 @@ async function findUserById(id) {
   return response.json();
 }
 
+async function findUsersByName(name) {
+  const params = new URLSearchParams();
+  params.set("name", name);
+  const query = params.toString();
+  const url = `${ORIGIN}/users/by-name?${query}`;
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    await throwApiError(response);
+  }
+
+  return response.json();
+}
+
+async function findUserByEmail(email) {
+  const params = new URLSearchParams();
+  params.set("email", email);
+  const query = params.toString();
+  const url = `${ORIGIN}/users/by-email?${query}`;
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    await throwApiError(response);
+  }
+
+  return response.json();
+}
+
+async function searchUsersByCriterion(criterion, value) {
+  if (criterion === "name") {
+    const users = await findUsersByName(value);
+    return users;
+  }
+
+  if (criterion === "email") {
+    const user = await findUserByEmail(value);
+    const users = [user];
+    return users;
+  }
+
+  if (criterion === "id") {
+    const id = parseUserId(value);
+    const user = await findUserById(id);
+    const users = [user];
+    return users;
+  }
+
+  const empty = [];
+  return empty;
+}
+
+async function createUser(input) {
+  const url = `${ORIGIN}/users`;
+  const payload = { name: input.name, email: input.email };
+  const body = JSON.stringify(payload);
+  const requestInit = {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body,
+  };
+  const response = await fetch(url, requestInit);
+
+  if (!response.ok) {
+    await throwApiError(response);
+  }
+
+  return response.json();
+}
+
 async function updateUser(input) {
   const idText = String(input.id);
   const url = `${ORIGIN}/users/${idText}`;
@@ -147,6 +216,14 @@ function showScreen(screenName) {
   showMessage("", false);
 }
 
+function rememberSelectedUser(user) {
+  STATE.selectedUser = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+  };
+}
+
 function showUserMenu() {
   const user = STATE.selectedUser;
 
@@ -161,6 +238,38 @@ function showUserMenu() {
   const email = document.getElementById("menu-user-email");
   email.textContent = user.email;
   showScreen("menu");
+}
+
+function fillUserSelect(users, statusText) {
+  const select = document.getElementById("user-select");
+  const submit = document.getElementById("select-user");
+  const status = document.getElementById("selection-status");
+  select.replaceChildren();
+
+  if (users.length === 0) {
+    select.disabled = true;
+    submit.disabled = true;
+    status.textContent = statusText;
+    return;
+  }
+
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.textContent = "Elige un usuario";
+  placeholder.disabled = true;
+  placeholder.selected = true;
+  select.append(placeholder);
+
+  for (const user of users) {
+    const option = document.createElement("option");
+    option.value = String(user.id);
+    option.textContent = "#" + user.id + " · " + user.name + " — " + user.email;
+    select.append(option);
+  }
+
+  select.disabled = false;
+  submit.disabled = false;
+  status.textContent = statusText;
 }
 
 function openUserEditor() {
@@ -183,42 +292,21 @@ async function loadUserSelection() {
   STATE.isBusy = true;
   showScreen("selection");
 
-  const select = document.getElementById("user-select");
-  const submit = document.getElementById("select-user");
   const reload = document.getElementById("reload-users");
   const status = document.getElementById("selection-status");
-  select.replaceChildren();
-  select.disabled = true;
-  submit.disabled = true;
   reload.disabled = true;
   status.textContent = "Cargando la lista…";
 
   try {
     const users = await listUsers();
+    fillUserSelect(
+      users,
+      "Selecciona el usuario con el que quieres continuar.",
+    );
 
     if (users.length === 0) {
       status.textContent = "No hay usuarios disponibles.";
-      return;
     }
-
-    const placeholder = document.createElement("option");
-    placeholder.value = "";
-    placeholder.textContent = "Elige un usuario";
-    placeholder.disabled = true;
-    placeholder.selected = true;
-    select.append(placeholder);
-
-    for (const user of users) {
-      const option = document.createElement("option");
-      option.value = String(user.id);
-      option.textContent =
-        "#" + user.id + " · " + user.name + " — " + user.email;
-      select.append(option);
-    }
-
-    select.disabled = false;
-    submit.disabled = false;
-    status.textContent = "Selecciona el usuario con el que quieres continuar.";
   } catch (error) {
     status.textContent = "Actualiza la lista para volver a intentarlo.";
 
@@ -233,6 +321,69 @@ async function loadUserSelection() {
   } finally {
     STATE.isBusy = false;
     reload.disabled = false;
+  }
+}
+
+async function searchUsers(event) {
+  event.preventDefault();
+
+  if (STATE.isBusy) {
+    return;
+  }
+
+  const criterion = document.getElementById("search-criterion").value;
+  const valueInput = document.getElementById("search-value");
+  const value = valueInput.value;
+  const controls = document.querySelectorAll(
+    "#search-form select, #search-form input, #search-form button",
+  );
+  STATE.isBusy = true;
+  showMessage("", false);
+
+  for (const control of controls) {
+    control.disabled = true;
+  }
+
+  try {
+    const users = await searchUsersByCriterion(criterion, value);
+
+    if (users.length === 0) {
+      fillUserSelect(users, "No hay usuarios disponibles.");
+      const status = document.getElementById("selection-status");
+      status.textContent = "No hay usuarios disponibles.";
+      return;
+    }
+
+    if (users.length === 1) {
+      const user = users[0];
+      rememberSelectedUser(user);
+      showUserMenu();
+      return;
+    }
+
+    fillUserSelect(
+      users,
+      "Varios usuarios coinciden. Elige uno y pulsa Continuar.",
+    );
+    showMessage(
+      "Varios usuarios coinciden. Elige uno en la lista y pulsa Continuar.",
+      false,
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      showMessage(error.message, true);
+    } else {
+      showMessage(
+        "No se ha podido buscar. Comprueba la conexión y vuelve a intentarlo.",
+        true,
+      );
+    }
+  } finally {
+    STATE.isBusy = false;
+
+    for (const control of controls) {
+      control.disabled = false;
+    }
   }
 }
 
@@ -263,11 +414,7 @@ async function selectUser(event) {
   try {
     const id = parseUserId(rawId);
     const user = await findUserById(id);
-    STATE.selectedUser = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-    };
+    rememberSelectedUser(user);
     showUserMenu();
   } catch (error) {
     if (error instanceof Error) {
@@ -275,6 +422,50 @@ async function selectUser(event) {
     } else {
       showMessage(
         "No se ha podido obtener el usuario. Vuelve a intentarlo.",
+        true,
+      );
+    }
+  } finally {
+    STATE.isBusy = false;
+
+    for (const control of controls) {
+      control.disabled = false;
+    }
+  }
+}
+
+async function createNewUser(event) {
+  event.preventDefault();
+
+  if (STATE.isBusy) {
+    return;
+  }
+
+  const nameInput = document.getElementById("create-user-name");
+  const name = nameInput.value;
+  const emailInput = document.getElementById("create-user-email");
+  const email = emailInput.value;
+  const controls = document.querySelectorAll(
+    "#create-user-form input, #create-user-form button",
+  );
+  STATE.isBusy = true;
+  showMessage("", false);
+
+  for (const control of controls) {
+    control.disabled = true;
+  }
+
+  try {
+    await createUser({ name, email });
+    nameInput.value = "";
+    emailInput.value = "";
+    await loadUserSelection();
+  } catch (error) {
+    if (error instanceof Error) {
+      showMessage(error.message, true);
+    } else {
+      showMessage(
+        "No se ha podido crear el usuario. Comprueba la conexión y vuelve a intentarlo.",
         true,
       );
     }
@@ -433,6 +624,10 @@ function navigate(event) {
 function initializeClient() {
   const selectionForm = document.getElementById("selection-form");
   selectionForm.addEventListener("submit", selectUser);
+  const searchForm = document.getElementById("search-form");
+  searchForm.addEventListener("submit", searchUsers);
+  const createForm = document.getElementById("create-user-form");
+  createForm.addEventListener("submit", createNewUser);
   const editForm = document.getElementById("edit-form");
   editForm.addEventListener("submit", saveUser);
   const deleteButton = document.getElementById("delete-user");

@@ -56,6 +56,10 @@ La excepción es el cliente REST, que no presenta frases a una persona: responde
 
 `Request JSON is invalid` es el único mensaje propio del cliente, porque un cuerpo que no se puede leer falla antes de llegar a `src/logic/`. Responde `400`, sin la página de error de Express.
 
+## Cliente de escritorio
+
+`src/clients/electron/user-actions.js` captura el error de `src/logic/` y responde `{ error }` con su mensaje en inglés. No lo relanza, porque un error lanzado en un manejador de Electron llega a la página con texto añadido delante. `src/clients/electron/app.js` lo traduce con su tabla `MESSAGES` y conserva los campos escritos cuando falla un alta o un guardado. Una lista vacía solo se muestra después de una carga correcta sin usuarios.
+
 ## Jupyter
 
 `src/clients/jupyter/run_logic.py` traduce con su tabla `MESSAGES` y deja el detalle técnico en `jupyter-client.log`.

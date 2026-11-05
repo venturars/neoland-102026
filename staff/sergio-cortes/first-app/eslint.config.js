@@ -63,6 +63,17 @@ export default [
       globals: {
         document: "readonly",
         fetch: "readonly",
+        URLSearchParams: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/vscode/panel.js"],
+    languageOptions: {
+      globals: {
+        document: "readonly",
+        window: "readonly",
+        acquireVsCodeApi: "readonly",
       },
     },
   },

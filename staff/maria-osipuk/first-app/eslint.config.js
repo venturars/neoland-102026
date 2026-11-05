@@ -37,6 +37,31 @@ export default defineConfig([
     },
   },
   {
+    // The Electron page uses the DOM. It reaches the data through window.users.
+    files: ["src/clients/electron/app.js"],
+    languageOptions: {
+      globals: {
+        document: "readonly",
+        window: "readonly",
+      },
+    },
+  },
+  {
+    // A sandboxed preload runs as CommonJS, so it uses require and not import.
+    files: ["src/clients/electron/preload.cjs"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "commonjs",
+      globals: {
+        require: "readonly",
+      },
+    },
+    rules: {
+      "no-undef": "error",
+      "no-unused-vars": "error",
+    },
+  },
+  {
     files: ["tests/**/*.js"],
     languageOptions: {
       globals: {

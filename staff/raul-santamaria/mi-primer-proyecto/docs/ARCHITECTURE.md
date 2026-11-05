@@ -33,6 +33,9 @@
 - `src/clients/chrome/server.js` llama a `src/logic/`, escucha en el puerto
   3002 y no repite sus reglas. La extensión en `src/clients/chrome/` solo
   habla con esa API por `fetch`.
+- `src/clients/nest/` llama a `src/logic/`, escucha en el puerto 3003 y no
+  repite sus reglas. El código interno sigue convenciones Nest; no aplica
+  `docs/STYLE.md` ni `docs/ERRORS.md` en ese árbol.
 - `src/clients/vscode/extension.cjs` registra la vista lateral webview,
   recibe mensajes del panel y llama a `src/logic/` con `import()`. No
   repite sus reglas. `panel.html`, `panel.js` y `panel.css` son la

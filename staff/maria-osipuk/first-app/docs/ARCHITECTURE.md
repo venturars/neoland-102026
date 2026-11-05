@@ -16,6 +16,8 @@ Los cuadernos se abren con `./scripts/jupyter.sh` desde `first-app`. Usan el Jup
 
 `src/clients/http/` es el cliente REST, construido con Express. `app.js` conecta crear, listar, ver, modificar y borrar con las funciones de `src/logic/`. Traduce la petición y la respuesta; no contiene validación de negocio ni SQL. Se arranca con `pnpm run http`, escucha en `127.0.0.1:3001` y necesita el servidor de datos arrancado. No sustituye a `src/db/server.js`.
 
+`src/clients/electron/` es el cliente de escritorio, con una ventana de lista y panel. Tiene dos procesos. El principal, `main.js`, abre la ventana, pide la confirmación del borrado con un diálogo del sistema y atiende los canales `users:*`; es el único que llama a `src/logic/`, mediante `user-actions.js`. La página, `index.html`, `app.js` y `styles.css`, no importa `src/logic/`, no usa Node y su política de seguridad le impide hacer peticiones de red, porque el servidor de datos ejecuta cualquier SQL que recibe. `preload.cjs` es el único puente: publica en `window.users` cinco funciones. Se abre con `pnpm run electron` y necesita el servidor de datos arrancado. No abre ningún puerto.
+
 `src/logic/` es el núcleo de la aplicación. Contiene las funcionalidades para crear, buscar, actualizar, borrar y listar usuarios, y para contarlos según el género del nombre. Aplica las reglas de negocio y decide qué resultado recibe el cliente.
 
 `src/logic/` no calcula `createdAt` ni `updatedAt` y no los envía a las consultas. Esas fechas las escribe SQLite.
@@ -30,7 +32,7 @@ Las funciones de `src/logic/` son `async` y no importan módulos `node:*`, para 
 
 `src/db/users.sqlite` es la base de la aplicación. Si el servidor de datos arranca con `FIRST_APP_DATABASE_FILE`, abre esa ruta; todos los clientes usan entonces ese archivo.
 
-Todos los clientes (terminal, Jupyter, web y REST) llaman a la lógica; la lógica llama a las consultas; las consultas piden al servidor de datos que ejecute el SQL. Ningún cliente importa archivos de otro. El cuaderno de preparar la tabla llama a `createUsersTable`, igual que su cliente de terminal.
+Todos los clientes (terminal, Jupyter, web, REST y escritorio) llaman a la lógica; la lógica llama a las consultas; las consultas piden al servidor de datos que ejecute el SQL. Ningún cliente importa archivos de otro. El cuaderno de preparar la tabla llama a `createUsersTable`, igual que su cliente de terminal.
 
 ## Flujo de git
 
@@ -38,7 +40,7 @@ Todos los clientes (terminal, Jupyter, web y REST) llaman a la lógica; la lógi
 
 - Pensar la tarea: `agents/help-me-to-think.md`, que entrevista con `skills/grill-with-docs` si el cambio vive en esta app y con `skills/grill-me` si no.
 - Dejarla escrita: `agents/create-issue.md`, con `skills/create-issue` y la plantilla del tipo en `templates/issues/`.
-- Empezar: `skills/pull-changes` adelanta `staging`. `agents/create-branch.md` abre la rama con `skills/create-branch-from-staging`. `agents/create-commit.md` hace el commit vacío con `skills/create-empty-commit`. `agents/launch-push.md` sube la rama con `skills/launch-push`. `agents/create-pr.md` abre la pull request en draft con `skills/create-pr-base-staging`, `skills/assign-author` y `skills/create-draft`, y la plantilla del tipo en `templates/pull-request/`. Por último, el orquestador enlaza la issue con `skills/link-pr-to-issue`, añade `Closes #N` y comprueba la asociación en Development. No cierra la issue manualmente.
+- Empezar: `skills/pull-changes` adelanta `staging`. `agents/create-branch.md` abre la rama con `skills/create-branch-from-staging`. `agents/create-commit.md` hace el commit vacío con `skills/create-empty-commit`. `agents/launch-push.md` sube la rama con `skills/launch-push`. `agents/create-pr.md` abre la pull request en draft y asignada con `skills/create-pr-base-staging` y la plantilla del tipo en `templates/pull-request/`. Por último, el orquestador enlaza la issue con `skills/link-pr-to-issue`, añade `Closes #N` y comprueba la asociación en Development. No cierra la issue manualmente.
 - Guardar un trozo: `agents/create-commit.md` con `skills/commit-changes`, y `agents/launch-push.md`.
 - Que la revisen: `skills/assign-reviewers` asigna a los revisores que nombra la persona responsable y saca la pull request de draft.
 
@@ -51,9 +53,9 @@ Las skills que lanzan un script usan los de `tools/`, siempre desde la raíz del
 - `AGENTS.md` guarda el proceso SDD, los comandos y el cierre de una tarea. Enlaza a las guías con las reglas del código y al flujo de git de `agents/git-workflow-agent.md`.
 - `.gitignore` deja fuera `node_modules/`, `.env`, los archivos de SQLite, los checkpoints de Jupyter y el log del cliente Jupyter.
 - `.prettierignore` evita que Prettier entre en `.venv/`, `node_modules/` y el archivo de bloqueo generado por pnpm.
-- `package.json` declara los módulos ESM, `packageManager` con `pnpm@10.34.7`, los comandos `pnpm start` (servidor de datos), `pnpm run web`, `pnpm run http`, `pnpm test` (de una prueba en una), `pnpm format` y `pnpm lint`, y el control que impide instalar con otro gestor.
+- `package.json` declara los módulos ESM, `packageManager` con `pnpm@10.34.7`, los comandos `pnpm start` (servidor de datos), `pnpm run web`, `pnpm run http`, `pnpm run electron`, `pnpm test` (de una prueba en una), `pnpm format` y `pnpm lint`, y el control que impide instalar con otro gestor.
 - `pnpm-lock.yaml` fija las versiones de las dependencias de la aplicación y de las herramientas de desarrollo.
-- `eslint.config.js` limita ESLint a los archivos JavaScript, ignora el entorno y las dependencias, activa las reglas `no-undef` y `no-unused-vars`, y limita `fetch` a las consultas y las pruebas y los globals del navegador a `src/clients/web/`.
+- `eslint.config.js` limita ESLint a los archivos JavaScript, ignora el entorno y las dependencias, activa las reglas `no-undef` y `no-unused-vars`, y limita `fetch` a las consultas y las pruebas y los globals del navegador a `src/clients/web/` y a la página de `src/clients/electron/`. `preload.cjs` se comprueba como CommonJS.
 - `scripts/jupyter.sh` entra en la raíz de `first-app` y abre los cuadernos con el Jupyter del `.venv`.
 - `src/db/server.js` es el servidor de datos. Exporta `openDatabase()` y `createDatabaseServer(database)` para las pruebas y solo escucha si se ejecuta directamente. Acepta `FIRST_APP_DATABASE_FILE`.
 - `src/db/users.sqlite` es la base de la aplicación cuando no se configura otra ruta.
@@ -86,7 +88,7 @@ Las skills que lanzan un script usan los de `tools/`, siempre desde la raíz del
 - `src/clients/jupyter/run_logic.py` arranca Node, espera cada función con `await` y comunica los cuadernos con las funciones existentes.
 - `agents/` guarda los siete subagentes del flujo de git: el orquestador y los seis que llama.
 - `skills/` guarda una carpeta por skill, cada una con su `SKILL.md`. Dice cuándo se usa, qué argumentos lleva y cómo se leen sus respuestas.
-- `tools/` guarda los siete scripts de git que lanzan las skills. Se ejecutan desde la raíz del repositorio y no admiten force push.
+- `tools/` guarda los ocho scripts de git que lanzan las skills. Se ejecutan desde la raíz del repositorio y no admiten force push.
 - `templates/issues/` guarda las seis plantillas de issues por tipo. Cada una define la forma del título y del cuerpo de su tarea.
 - `templates/pull-request/` guarda las seis plantillas de pull requests por tipo, con la lista de comprobación y la referencia `Closes #N`.
 - `MCPS/github-mcp-server/mcp.txt` documenta el servidor remoto de GitHub y el header de configuración de Cursor incluido en el template. Su ejemplo utiliza un marcador de credencial.
@@ -105,6 +107,13 @@ Las skills que lanzan un script usan los de `tools/`, siempre desde la raíz del
 - `src/clients/web/index.html` define las tres pantallas, los formularios de alta y edición, sus etiquetas y la opción deshabilitada de notas.
 - `src/clients/web/styles.css` define la paleta compartida, la distribución adaptable y los estados visuales.
 - `src/clients/web/app.js` importa la lógica, gestiona las pantallas, los formularios, la confirmación del borrado y la traducción de errores.
+- `src/clients/electron/main.js` crea la ventana, registra los canales `users:*` y confirma el borrado.
+- `src/clients/electron/preload.cjs` publica `window.users`. Es CommonJS porque un preload con `sandbox` no admite `import`.
+- `src/clients/electron/user-actions.js` llama a `src/logic/` y devuelve `{ data }` o `{ error }`. No importa `electron`, para poder probarse con Node.
+- `src/clients/electron/index.html` define la lista, el alta, el detalle y la política de seguridad de la página.
+- `src/clients/electron/app.js` gestiona la lista, el panel y la traducción de errores.
+- `src/clients/electron/styles.css` define la paleta y la distribución en dos zonas.
+- `tests/electron-client.test.js` comprueba `user-actions.js` con una base temporal, también con el servidor de datos parado.
 - `tests/database-server.test.js` comprueba el servidor de datos con una base temporal.
 - `tests/shared-database.test.js` comprueba que la lógica que usa la web y otro proceso Node, como un ejemplo de terminal, ven la misma base, y que sin servidor de datos se recibe el error de la operación.
 

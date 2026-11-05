@@ -1,0 +1,42 @@
+body {
+  margin: 0;
+  padding: 16px;
+  font-family: sans-serif;
+}
+
+main {
+  max-width: 640px;
+  margin: auto;
+}
+
+form,
+section {
+  margin-bottom: 24px;
+}
+
+label,
+input,
+button {
+  display: block;
+}
+
+input {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 4px 0 12px;
+  padding: 6px;
+}
+
+button {
+  padding: 6px 12px;
+}
+
+li,
+#viewed-user,
+#message {
+  overflow-wrap: anywhere;
+}
+
+li {
+  margin-bottom: 10px;
+}
