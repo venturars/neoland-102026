@@ -14,21 +14,21 @@ Do the tasks in order. Inside a task, do the steps in order. `docs/CONSTITUTIONS
 
 ## Task 3 — Write the Nest client
 
-- [ ] In `src/clients/nest/main.js`, import `DocumentBuilder` and `SwaggerModule` from `@nestjs/swagger`. Result: both are available.
-- [ ] In `src/clients/nest/main.js`, after the filter and before `listen`, build the document with the title "Users API", a one-line description and the version `0.0.0`. Result: the document exists.
-- [ ] In `src/clients/nest/main.js`, mount the page with `SwaggerModule.setup("docs", app, document)`. Result: `/docs` answers the page; the line printed at start does not change.
-- [ ] In `src/clients/nest/users.controller.js`, import `ApiBody`, `ApiOperation`, `ApiParam`, `ApiResponse` and `ApiTags` from `@nestjs/swagger`. Result: the decorators are available.
-- [ ] In `src/clients/nest/users.controller.js`, add a constant with the schema of a user: `id`, `name`, `email`, `createdAt`, `updatedAt`. Result: the user is described once.
-- [ ] Add `@ApiTags("users")` to the class. Result: the six routes are under one heading.
-- [ ] Add `@ApiOperation` with a one-line summary to each of the six methods. Result: each route has a short line.
-- [ ] Add `@ApiParam({ name: "id", type: "integer" })` to `findOne`, `update` and `remove`. Result: the three routes with an id show it.
-- [ ] Add `@ApiBody` to `create` with `name` and `email`, both text and required. Result: the page shows both fields.
-- [ ] Add `@ApiBody` to `update` with `name` and `email`, both text, neither required, and a description saying at least one is needed. Result: the page shows the two fields.
-- [ ] Add `@ApiResponse` to `create` for 201, 400, 409 and 500, with the sentences of the plan. Result: its statuses are described.
-- [ ] Add `@ApiResponse` to `list` and `listGmail` for 200 and 500. Result: their statuses are described.
-- [ ] Add `@ApiResponse` to `findOne` for 200, 404 and 500. Result: its statuses are described.
-- [ ] Add `@ApiResponse` to `update` for 200, 400, 404, 409 and 500, with the sentences of the plan. Result: its statuses are described.
-- [ ] Add `@ApiResponse` to `remove` for 204, 404 and 500. Result: its statuses are described.
+- [x] In `src/clients/nest/main.js`, import `DocumentBuilder` and `SwaggerModule` from `@nestjs/swagger`. Result: both are available.
+- [x] In `src/clients/nest/main.js`, after the filter and before `listen`, build the document with the title "Users API", a one-line description and the version `0.0.0`. Result: the document exists.
+- [x] In `src/clients/nest/main.js`, mount the page with `SwaggerModule.setup("docs", app, document)`. Result: `/docs` answers the page; the line printed at start does not change.
+- [x] In `src/clients/nest/users.controller.js`, import `ApiBody`, `ApiOperation`, `ApiParam`, `ApiResponse` and `ApiTags` from `@nestjs/swagger`. Result: the decorators are available.
+- [x] In `src/clients/nest/users.controller.js`, add a constant with the schema of a user: `id`, `name`, `email`, `createdAt`, `updatedAt`. Result: the user is described once.
+- [x] Add `@ApiTags("users")` to the class. Result: the six routes are under one heading.
+- [x] Add `@ApiOperation` with a one-line summary to each of the six methods. Result: each route has a short line.
+- [x] Add `@ApiParam({ name: "id", type: "integer" })` to `findOne`, `update` and `remove`. Result: the three routes with an id show it.
+- [x] Add `@ApiBody` to `create` with `name` and `email`, both text and required. Result: the page shows both fields.
+- [x] Add `@ApiBody` to `update` with `name` and `email`, both text, neither required, and a description saying at least one is needed. Result: the page shows the two fields.
+- [x] Add `@ApiResponse` to `create` for 201, 400, 409 and 500, with the sentences of the plan. Result: its statuses are described.
+- [x] Add `@ApiResponse` to `list` and `listGmail` for 200 and 500. Result: their statuses are described.
+- [x] Add `@ApiResponse` to `findOne` for 200, 404 and 500. Result: its statuses are described.
+- [x] Add `@ApiResponse` to `update` for 200, 400, 404, 409 and 500, with the sentences of the plan. Result: its statuses are described.
+- [x] Add `@ApiResponse` to `remove` for 204, 404 and 500. Result: its statuses are described.
 
 ## Task 4 — Run it
 

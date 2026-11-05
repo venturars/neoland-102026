@@ -1,6 +1,7 @@
 /* global console */
 import "reflect-metadata";
 import { NestFactory } from "@nestjs/core";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { AppModule } from "./app.module.js";
 import { ErrorsFilter } from "./errors.filter.js";
 
@@ -20,6 +21,17 @@ app.useBodyParser("json");
 
 const httpAdapter = app.getHttpAdapter();
 app.useGlobalFilters(new ErrorsFilter(httpAdapter));
+
+// The page /docs shows the routes, as the decorators of the controller describe them, and sends requests to them.
+const document = SwaggerModule.createDocument(
+  app,
+  new DocumentBuilder()
+    .setTitle("Users API")
+    .setDescription("Small user management app")
+    .setVersion("0.0.0")
+    .build(),
+);
+SwaggerModule.setup("docs", app, document);
 
 await app.listen(PORT, HOST);
 console.log("Nest client on http://" + HOST + ":" + PORT);
