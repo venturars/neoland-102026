@@ -4,8 +4,8 @@ Do the tasks in order. Inside a task, do the steps in order. `docs/CONSTITUTIONS
 
 ## Task 1 — Update the docs
 
-- [ ] In `docs/ARCHITECTURE.md`, add to the `nest/` entry that the client also serves the page `/docs`, described by the decorators of `@nestjs/swagger` in `users.controller.js`. Result: the entry names the page and how the routes are described.
-- [ ] In `AGENTS.md`, in "Commands", add to `pnpm nest` that the page of the routes is at `http://127.0.0.1:3003/docs`. Result: the way to open the page is written.
+- [x] In `docs/ARCHITECTURE.md`, add to the `nest/` entry that the client also serves the page `/docs`, described by the decorators of `@nestjs/swagger` in `users.controller.js`. Result: the entry names the page and how the routes are described.
+- [x] In `AGENTS.md`, in "Commands", add to `pnpm nest` that the page of the routes is at `http://127.0.0.1:3003/docs`. Result: the way to open the page is written.
 
 ## Task 2 — Get the package ready
 
