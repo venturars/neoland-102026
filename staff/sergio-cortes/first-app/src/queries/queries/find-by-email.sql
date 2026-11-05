@@ -1,3 +1,3 @@
 SELECT *
 FROM users
-WHERE email = :email;
+WHERE LOWER(email) = LOWER(:email);

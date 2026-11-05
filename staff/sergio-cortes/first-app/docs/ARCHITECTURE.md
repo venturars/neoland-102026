@@ -39,7 +39,7 @@
 - `src/db/` abre la base de datos y no contiene reglas de negocio.
 - `src/db/server.js` abre la única conexión a la base de datos, lee los `.sql` de `src/queries/queries/` por nombre de fichero y atiende `POST /execute` en `127.0.0.1:3000` con `{ method, file, params }`. `method` es `exec`, `get`, `all` o `run`. Se arranca con `pnpm server` desde first-app.
 - `src/db/users.sqlite` es el único fichero de la base de datos.
-- `src/queries/queries/` guarda el SQL en ficheros `.sql`. Hay un fichero por sentencia.
+- `src/queries/queries/` guarda el SQL en ficheros `.sql`. Hay un fichero por sentencia. `find-by-name.sql` y `find-by-email.sql` comparan nombre y email con `LOWER` (búsqueda sin distinguir mayúsculas).
 - `src/queries/user.js` pide el resultado de esas operaciones al servidor de la base por HTTP. No hay reglas de negocio en `src/queries/`.
 - `src/logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
 - `src/logic/errors.js` exporta las clases de error compartidas. No es una funcionalidad de negocio.
@@ -53,21 +53,21 @@
 - `src/logic/user-gender-count.js` cuenta usuarios por género.
 - `src/clients/terminal/` llama a `src/logic/` y muestra el resultado. Es el primer cliente y el test manual de cada funcionalidad.
 - `src/clients/web/` son las tres pantallas del navegador (HTML, CSS y JavaScript vanilla). Llama a `src/logic/` con `await`, como la terminal y Jupyter. Se abre con `pnpm web` desde `first-app` (Brave, archivo local). El script `web` arranca antes `src/db/server.js` si nada escucha en `127.0.0.1:3000`, y lo para al salir. Si ya está en marcha (`pnpm server`), lo reutiliza. Solo hay tres ficheros en la carpeta.
-  - `src/clients/web/index.html` define selección (lista y alta), menú, edición y el popover de borrado (campo de email para confirmar).
+  - `src/clients/web/index.html` define selección (lista, búsqueda y alta), menú, edición y el popover de borrado (campo de email para confirmar). El panel «Buscar usuario» indica que nombre y email no distinguen mayúsculas.
   - `src/clients/web/styles.css` es la hoja compartida (paleta crema/teal).
-  - `src/clients/web/app.js` concentra la lógica de pantalla: estado del usuario elegido, cambio de pantalla, lista (`listUsers`), alta (`createUser`), selección (`findUserById`), guardado (`updateUser`), popover de borrado con comprobación de email y borrado (`deleteUser`), y el arranque (`initializeClient`).
+  - `src/clients/web/app.js` concentra la lógica de pantalla: estado del usuario elegido, cambio de pantalla, lista (`listUsers`), búsqueda (`findUserByName`, `findUserByEmail`, `findUserById`; nombre y email vía queries con `LOWER`), alta (`createUser`), selección, guardado (`updateUser`), popover de borrado con comprobación de email y borrado (`deleteUser`), y el arranque (`initializeClient`). Un resultado de búsqueda abre el menú; varios por nombre exigen elegir y continuar.
 - `src/clients/electron/` es el cliente de escritorio. Copia de partida de `src/clients/web/` (`index.html`, `styles.css`, `app.js`) más `main.js`. Llama a `src/logic/` con `await`. Se abre con `pnpm electron` desde `first-app`. El script `electron` arranca antes `src/db/server.js` si nada escucha en `127.0.0.1:3000`, y lo para al salir. Si ya está en marcha (`pnpm server`), lo reutiliza. No modifica `src/clients/web/`.
   - `src/clients/electron/main.js` crea la ventana y carga el `index.html` de esta carpeta.
-  - `src/clients/electron/index.html` define selección (lista y alta), menú, edición y el popover de borrado.
+  - `src/clients/electron/index.html` define selección (lista, búsqueda y alta), menú, edición y el popover de borrado (mismo texto de búsqueda que web).
   - `src/clients/electron/styles.css` es la hoja copiada (paleta crema/teal).
-  - `src/clients/electron/app.js` concentra la lógica de pantalla, igual que el de navegador: lista (`listUsers`), alta (`createUser`), selección, guardado, borrado y arranque.
+  - `src/clients/electron/app.js` concentra la lógica de pantalla, igual que el de navegador: lista, búsqueda, alta, selección, guardado, borrado y arranque.
 - `src/clients/http/server.js` es el cliente HTTP con Express en `127.0.0.1:3001`. Solo acepta conexiones de este equipo y escribe esa dirección en la consola al arrancar. Un solo fichero con las rutas `GET /users`, `GET /users/:id`, `POST /users`, `PATCH /users/:id` y `DELETE /users/:id`. Llama a `src/logic/` directamente y un middleware de errores traduce la clase del error a su estado. Se arranca con `pnpm http`. El script `http` de `package.json` arranca antes `src/db/server.js` si nada escucha en `127.0.0.1:3000`, y lo para al salir. Si ya está en marcha (`pnpm server`), lo reutiliza.
 - `src/clients/chrome/` es la extensión de Chrome para usuarios. Copia de partida de las pantallas de `src/clients/web/` (`index.html`, `styles.css`) más `popup.js` y `manifest.json`. El popup pide JSON a Fastify en `127.0.0.1:3002`; no importa `src/logic/`. No modifica `src/clients/web/` ni Express.
-  - `src/clients/chrome/server.js` es la API con Fastify en `127.0.0.1:3002`. Las cinco rutas y el JSON de errores son los del cliente HTTP con Express. Llama a `src/logic/` directamente.
+  - `src/clients/chrome/server.js` es la API con Fastify en `127.0.0.1:3002`. Rutas de usuarios (listar, buscar por nombre y email, ver por id, crear, actualizar y borrar) y el JSON de errores alineados con Express. Llama a `src/logic/` directamente.
   - `src/clients/chrome/manifest.json` es Manifest V3. La acción abre `index.html` en el popup. El permiso de host es `http://127.0.0.1:3002/*`.
-  - `src/clients/chrome/index.html` define selección (lista y alta), menú, edición y el popover de borrado.
+  - `src/clients/chrome/index.html` define selección (lista, búsqueda y alta), menú, edición y el popover de borrado (mismo texto de búsqueda que web).
   - `src/clients/chrome/styles.css` es la hoja copiada (paleta crema/teal).
-  - `src/clients/chrome/popup.js` concentra la lógica de pantalla y habla con la API por `fetch` (lista, alta con `POST /users`, selección, guardado, borrado).
+  - `src/clients/chrome/popup.js` concentra la lógica de pantalla y habla con la API por `fetch` (lista, búsqueda, alta con `POST /users`, selección, guardado, borrado). Un resultado de búsqueda abre el menú; varios por nombre exigen elegir y continuar.
 - `src/clients/vscode/` es la extensión de VS Code para usuarios. Copia de partida de las pantallas de `src/clients/web/` (`index.html`, `styles.css`) más `panel.js`, `extension.js` y `package.json`. El panel no importa `src/logic/`; el proceso de la extensión sí. No modifica los otros clientes ni abre un puerto nuevo.
   - `src/clients/vscode/extension.js` importa `src/logic/`, abre un webview como pestaña de editor con el comando `First App: Abrir usuarios` y atiende los mensajes del panel.
   - `src/clients/vscode/index.html` define selección (lista, búsqueda y alta), menú, edición y el popover de borrado.
