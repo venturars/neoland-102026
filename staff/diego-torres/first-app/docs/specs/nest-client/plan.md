@@ -2,6 +2,8 @@
 
 Issue: #1040
 
+**Nota:** dos puntos de este documento ya no están en vigor: que no hay página propia y que se rechaza todo `Origin`. Lo vigente está en `docs/specs/nest-swagger-docs/`.
+
 Funcionalidad nueva, solo en `src/clients/nest/`. No hay firma nueva en `src/logic/`, ni SQL nuevo, ni mensaje nuevo. `src/db/server.js`, `src/queries/` y los demás clientes no cambian.
 
 La referencia es la API de la extensión de Chrome de este proyecto, `src/clients/chrome/server.js`: mismas rutas, mismos estados y misma tabla de errores. Por decisión de Diego, no se toma como referencia el cliente Nest de otro alumno.
