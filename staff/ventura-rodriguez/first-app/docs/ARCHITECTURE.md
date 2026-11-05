@@ -32,7 +32,9 @@
   `src/db/server.js`.
 - `src/clients/nest/` se compila con Babel, `node` arranca
   `dist/clients/nest/main.js`, llama a `src/logic/` a través de esa
-  copia
+  copia y abre la página en `http://127.0.0.1:3003`. No repite sus
+  reglas. No sustituye a `src/clients/http/`, ni a
+  `src/clients/chrome/`, ni a `src/db/server.js`.
 - `agents/git-workflow-agent.md` reconoce el momento y llama al
   subagente como un agente aparte.
 - `agents/help-me-to-think.md` hace las preguntas que hagan falta para ayudar a pensar al alumno.
