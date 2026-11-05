@@ -3,22 +3,23 @@
   Tipo knowledge. La rama será número-knowledge-descripcion.
 -->
 
-## Qué hay que hacer
+## 📝 Qué hay que hacer
 
 <!--
-  Qué tiene que quedar escrito para que otra persona aprenda de este cambio.
+  Qué tiene que quedar escrito para que un compañero aprenda de este cambio.
+  Motivo y caso de uso, en concreto.
 -->
 
-## Dónde queda escrito
+## 🚫 Fuera de esto
 
 <!--
-  El documento. Sin pegar el texto entero.
+  Opcional. Lo que esta issue no cubre.
 -->
 
-## Cómo probarlo
+## ✅ Cómo probarlo
 
 <!--
-  Abrir ese documento y comprobar la frase o el apartado.
+  Pasos numerados. Qué se abre y qué se tiene que ver escrito.
 -->
 
 1.
