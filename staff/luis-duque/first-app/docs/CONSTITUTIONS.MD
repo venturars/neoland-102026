@@ -4,9 +4,11 @@ Las guías están en [ARCHITECTURE.md](ARCHITECTURE.md), [TREE.md](TREE.md), [DA
 
 ## Desarrollos
 
-Un desarrollo nuevo no empieza en el código. Se escribe en `docs/specs/<nombre>/`. `<nombre>` va en kebab-case. El desarrollo abierto es `docs/specs/http-client/`.
+Un desarrollo nuevo no empieza en el código. El pedido entra primero por `agents/git-workflow-agent.md`. Si no nombra el momento, se piensa la tarea. Una pregunta sobre el proyecto, o un mensaje que no cambie el proyecto, no abre ese flujo.
 
-Pedir el cambio no abre el código. Primero se escribe `spec.md` y una persona lo lee. Después `plan.md` y lo lee. Después `tasks.md` y lo lee. El código, `package.json` y el resto de ficheros de la app se tocan cuando esa persona pide ejecutar las tareas.
+Se escribe en `docs/specs/<nombre>/`. `<nombre>` va en kebab-case. El desarrollo abierto es `docs/specs/http-client/`.
+
+Pedir el cambio no abre el código y no escribe `spec.md` como primera respuesta. `spec.md` se escribe y una persona lo lee. Después `plan.md` y lo lee. Después `tasks.md` y lo lee. El código, `package.json` y el resto de ficheros de la app se tocan cuando esa persona pide ejecutar las tareas.
 
 `spec.md` es el negocio: qué se pide, qué entra, qué sale y qué fallo se ve. No nombra ficheros, funciones ni SQL.
 
