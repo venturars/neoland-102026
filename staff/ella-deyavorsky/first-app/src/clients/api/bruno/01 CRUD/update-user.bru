@@ -1,0 +1,27 @@
+meta {
+  name: Update user
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/users/{{userId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Ada"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.name: eq Ada
+  res.body.email: eq bruno-ady@example.com
+}
+
+docs {
+  Changes only the name. The email stays as it is.
+}

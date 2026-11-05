@@ -1,0 +1,26 @@
+meta {
+  name: Create without name
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "no-name@example.com"
+  }
+}
+
+assert {
+  res.status: eq 400
+  res.body.error: eq The request is not valid.
+}
+
+docs {
+  The body has no name.
+}

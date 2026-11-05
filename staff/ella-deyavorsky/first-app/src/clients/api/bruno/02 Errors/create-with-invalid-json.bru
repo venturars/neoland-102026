@@ -1,0 +1,24 @@
+meta {
+  name: Create with invalid JSON
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+body:json {
+  { "name": 
+}
+
+assert {
+  res.status: eq 400
+  res.body.error: eq The request is not valid.
+}
+
+docs {
+  The body is not valid JSON.
+}

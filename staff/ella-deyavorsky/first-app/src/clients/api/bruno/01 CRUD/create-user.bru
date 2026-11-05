@@ -1,0 +1,35 @@
+meta {
+  name: Create user
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Ady",
+    "email": "bruno-ady@example.com"
+  }
+}
+
+assert {
+  res.status: eq 201
+  res.body.id: isNumber
+  res.body.name: eq Ady
+  res.body.email: eq bruno-ady@example.com
+  res.body.createdAt: isString
+  res.body.updatedAt: isString
+}
+
+script:post-response {
+  bru.setVar("userId", res.body.id);
+}
+
+docs {
+  Creates Ady and saves her id in the variable userId, which the next requests use.
+}

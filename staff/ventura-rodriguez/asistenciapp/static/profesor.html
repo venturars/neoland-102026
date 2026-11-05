@@ -10,7 +10,7 @@
 </head>
 <body>
   <main>
-    <!-- CA-21: aviso si el panel se abre en local -->
+    <!-- Aviso si el panel se abre en local -->
     <p id="local-warning" class="message warn" hidden>
       Estás usando una dirección que solo funciona en este ordenador: <strong>tus alumnos no podrán abrir el enlace de alumnos</strong>.
       Para una clase online, para la app (Ctrl+C) y arráncala con <code>python app.py --tunel</code>.
@@ -18,7 +18,7 @@
 
     <div id="status" role="status" aria-live="polite"></div>
 
-    <!-- Vista: panel (T17) -->
+    <!-- Vista: panel -->
     <section id="panel-view" hidden>
       <h1>Panel del profesor</h1>
 
@@ -33,7 +33,7 @@
       <ul id="sessions" class="list sessions card"></ul>
     </section>
 
-    <!-- Vista: sesión en vivo (T18) -->
+    <!-- Vista: sesión en vivo -->
     <section id="session-view" hidden>
       <p><a id="back" href="#">← Volver al panel</a></p>
       <h1 id="s-title"></h1>
@@ -62,7 +62,7 @@
         <button id="close" type="button" class="danger">Cerrar asistencia</button>
       </div>
 
-      <!-- Confirmación dentro de la página, sin confirm() (plan §5) -->
+      <!-- Confirmación dentro de la página, sin confirm() -->
       <div id="confirm-close" class="message warn" hidden>
         <p><strong>¿Cerrar la asistencia?</strong> Nadie más podrá registrarse en esta clase.</p>
         <div class="actions">

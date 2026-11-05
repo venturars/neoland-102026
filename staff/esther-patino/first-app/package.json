@@ -11,6 +11,8 @@
     "open": "cmd /c start \"\" \"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\" --allow-file-access-from-files --user-data-dir=\"%TEMP%\\first-app-screens\" --new-window \"%CD%\\src\\clients\\web\\index.html\"",
     "server": "node src/db/server.js",
     "http": "node src/clients/http/app.js",
+    "prebruno": "node scripts/check-bruno-prerequisites.mjs",
+    "bruno": "cd src/clients/http/bruno && node ../../../../node_modules/@usebruno/cli/bin/bru.js run 01-sql-online -r",
     "nest": "babel src/clients/nest --out-dir src/clients/nest-run && node src/clients/nest-run/main.js",
     "chrome": "node src/clients/chrome/server.js",
     "electron": "electron src/clients/electron/main.js",
@@ -35,6 +37,7 @@
     "@babel/core": "8.1.0",
     "@babel/plugin-proposal-decorators": "8.0.2",
     "@babel/preset-env": "8.0.7",
+    "@usebruno/cli": "4.3.0",
     "electron": "45.2.2",
     "eslint": "10.13.0",
     "prettier": "3.9.10"
