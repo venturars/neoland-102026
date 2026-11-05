@@ -12,6 +12,7 @@ const ESTADOS = {
   "Could not delete the user": 500,
   "Could not list the users": 500,
   "Could not find the user": 500,
+  "Could not classify the users": 500,
 };
 
 // Mensaje de fallo de cada acción, si lo lanzado no viene de la lógica.
@@ -23,6 +24,11 @@ const FALLOS = {
 
 // Elige el mensaje de fallo de la acción que se estaba haciendo.
 function elegirFallo(request) {
+  // El recuento por género tiene su propio mensaje.
+  if (request.path === "/users/gender-count") {
+    return "Could not classify the users";
+  }
+
   // Con GET, la ruta dice si se pedía la lista o un solo usuario.
   if (request.method === "GET" && request.params?.id === undefined) {
     return "Could not list the users";
