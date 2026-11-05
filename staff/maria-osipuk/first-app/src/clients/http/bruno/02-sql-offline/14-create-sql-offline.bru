@@ -1,0 +1,23 @@
+meta {
+  name: create-sql-offline
+  type: http
+  seq: 14
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Offline",
+    "email": "offline@example.com"
+  }
+}
+
+tests {
+  test("Estado 500", function () { expect(res.getStatus()).to.equal(500); });
+  test("Mensaje exacto", function () { expect(res.getBody()).to.deep.equal({ message: "Unable to create user" }); });
+}
