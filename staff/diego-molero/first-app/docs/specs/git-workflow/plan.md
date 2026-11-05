@@ -64,3 +64,9 @@ Comparar agentes y skills de `exercises/git-workflow-agent-template` en el `stag
 ### Ampliación de alias iniciales
 
 Consultar la lista viva de colaboradores, sus nombres públicos y las cuentas atribuidas a commits de las carpetas personales cuando falte el nombre público. Añadir logins como clave propia y nombres completos o apodos solo cuando la relación sea clara. Evitar `diego` y `sergio`, compartidos por más de un colaborador. Mantener el aprendizaje de nombres nuevos descrito arriba y comprobar que todos los alias del JSON se consultan sin duplicados ni conflictos.
+
+## Iteración del 5 de noviembre de 2026 · Issue #1098
+
+Añadir al JSON una fecha UTC de inicio de ciclo y subir su versión de formato. La herramienta acepta también el formato anterior: lo valida, conserva sus alias y empieza a contar 48 horas desde su primer uso. Cada operación `get`, `set` o `remove` verifica la fecha; si han pasado 48 horas, vacía todos los repositorios, guarda el nuevo ciclo y después ejecuta la operación. No se reinicia el plazo por una consulta o un alta dentro del ciclo. Una fecha inválida detiene la operación sin modificar el archivo.
+
+La limpieza se realiza al acceder después del vencimiento, pues no hay un proceso residente. Los nombres ausentes se buscarán de nuevo según `assign-reviewers`. Se comprueban en una copia temporal el límite exacto, la persistencia del vaciado, el aprendizaje posterior, la migración de versión anterior y el rechazo de fecha inválida. Se actualiza la skill para explicar la caducidad. La rama y la PR se mantienen separadas de la PR ya fusionada.

@@ -57,3 +57,11 @@ La comprobación en Windows usó una copia bajo .venv/reviewer-cache-check-957: 
 - [x] **W05:** Recorrer colaboradores actuales y sus nombres públicos o aportaciones, ampliar alias inequívocos y comprobar la caché ampliada.
 
 La API de GitHub devolvió 16 colaboradores. Se consultaron sus nombres públicos y, para perfiles sin nombre, las cuentas atribuidas a commits de carpetas personales. La caché ampliada contiene 46 alias y cubre los 16 logins; cada alias se consultó con la herramienta local sin fallos. `diego` y `sergio` quedan sin asociación por existir dos compañeros con cada nombre. `mdiazcaballero` conserva solo el login: su perfil no publica nombre y no se pudo atribuirle un nombre personal con la evidencia consultada. Se comprobaron sintaxis Node y `git diff --check` en Windows.
+
+## Iteración del 5 de noviembre de 2026 · Issue #1098
+
+- [x] **X01:** Registrar caducidad, migración y verificación antes de cambiar la herramienta.
+- [x] **X02:** Implementar limpieza automática al acceder tras 48 horas y documentarla.
+- [x] **X03:** Comprobar límite temporal, migración, errores y alcance en copia temporal; entregar en la PR nueva en borrador.
+
+La comprobación local en Windows usó una copia temporal ignorada: un ciclo de 47 horas y 59 minutos conserva el alias; uno de más de 48 horas lo vacía y guarda el JSON vacío. Se volvió a aprender el alias, se migró una caché de versión 1 conservando sus datos y se rechazó una fecha inválida sin reescribir el archivo. `node --check`, lectura UTF-8 y `git diff --check` correctos. No se ejecutó la aplicación ni se solicitó revisión; Linux/macOS no comprobados.

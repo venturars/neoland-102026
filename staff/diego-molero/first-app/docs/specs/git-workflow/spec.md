@@ -62,3 +62,11 @@ Diego solicita conservar las asociaciones entre nombres habituales de revisores 
 Diego pide recorrer los colaboradores actuales y guardar nombres posibles antes de que el aprendizaje futuro añada más asociaciones. Los alias se toman del nombre público o de aportaciones atribuidas a cada cuenta. Los nombres de pila compartidos por varias personas no se asignan.
 
 - **CA-20:** La caché incluye los logins de los colaboradores actuales y alias personales con identidad comprobada. Los colaboradores sin nombre vinculable conservan solo su login como clave.
+
+## Iteración del 5 de noviembre de 2026 · Issue #1098
+
+Diego quiere que la caché de revisores no crezca indefinidamente. Autoriza continuar en la misma rama con una PR nueva.
+
+- **CA-21:** Las asociaciones de la caché caducan juntas a las 48 horas de comenzar su ciclo. En el primer uso posterior se eliminan automáticamente y los nombres vuelven a resolverse con GitHub.
+- **CA-22:** La limpieza funciona sin proceso en segundo plano ni dependencias nuevas. El archivo UTF-8 conserva un ciclo nuevo y una lista vacía para poder seguir aprendiendo.
+- **CA-23:** Una caché anterior sin fecha comienza su primer ciclo al leerse, conservando sus asociaciones. Un archivo dañado o una fecha inválida no se sobrescriben.

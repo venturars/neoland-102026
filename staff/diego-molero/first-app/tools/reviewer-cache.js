@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const cachePath = fileURLToPath(new URL("../skills/assign-reviewers/reviewer-cache.json", import.meta.url));
 const [action, repositoryInput, ...args] = process.argv.slice(2);
+const CACHE_TTL_MS = 48 * 60 * 60 * 1000;
 
 function normalizeName(value) {
   const name = value?.trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, " ");
@@ -13,7 +14,7 @@ function normalizeName(value) {
 
 function readCache() {
   const cache = JSON.parse(readFileSync(cachePath, "utf8"));
-  if (cache.version !== 1 || !cache.repositories || typeof cache.repositories !== "object" || Array.isArray(cache.repositories)) {
+  if (![1, 2].includes(cache.version) || !cache.repositories || typeof cache.repositories !== "object" || Array.isArray(cache.repositories)) {
     throw new Error("La caché tiene un formato incompatible.");
   }
   for (const [repository, entries] of Object.entries(cache.repositories)) {
@@ -26,7 +27,26 @@ function readCache() {
       }
     }
   }
-  return cache;
+
+  const now = Date.now();
+  if (cache.version === 1) {
+    // Una caché anterior conserva sus alias y empieza ahora su primer ciclo de 48 horas.
+    cache.version = 2;
+    cache.cycleStartedAt = new Date(now).toISOString();
+    return { cache, changed: true };
+  }
+
+  const startedAt = Date.parse(cache.cycleStartedAt);
+  if (!Number.isFinite(startedAt) || new Date(startedAt).toISOString() !== cache.cycleStartedAt) {
+    throw new Error("La fecha de la caché es inválida.");
+  }
+  if (now - startedAt >= CACHE_TTL_MS) {
+    // Al primer uso tras el vencimiento se borran los alias y comienza otro ciclo.
+    cache.repositories = {};
+    cache.cycleStartedAt = new Date(now).toISOString();
+    return { cache, changed: true };
+  }
+  return { cache, changed: false };
 }
 
 function saveCache(cache) {
@@ -44,7 +64,8 @@ function saveCache(cache) {
 try {
   const repository = repositoryInput?.toLowerCase();
   if (!/^[\w.-]+\/[\w.-]+$/.test(repository ?? "")) throw new Error("Indica OWNER/REPO.");
-  const cache = readCache();
+  const { cache, changed } = readCache();
+  if (changed) saveCache(cache);
   const entries = cache.repositories[repository] ?? {};
 
   if (action === "get" && args.length > 0) {
