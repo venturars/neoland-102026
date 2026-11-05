@@ -20,6 +20,8 @@ from pathlib import Path
 
 ROOT = Path(SPECPATH)  # noqa: F821 — SPECPATH lo pone PyInstaller
 VERSION = re.search(r'__version__ = "([^"]+)"', (ROOT / "attendance" / "__init__.py").read_text()).group(1)
+# El icono "A_" (icono/icono.html; se regenera con scripts/generar_icono.py).
+ICON = ROOT / "icono" / ("AsistenciApp.icns" if sys.platform == "darwin" else "AsistenciApp.ico")
 
 cloudflared = os.environ.get("ASISTENCIA_BUILD_CLOUDFLARED", "")
 if not cloudflared or not Path(cloudflared).is_file():
@@ -50,6 +52,7 @@ exe = EXE(  # noqa: F821
     exclude_binaries=True,
     name="AsistenciApp",
     console=False,  # sin terminal (spec 007 · HU-01)
+    icon=str(ICON),
 )
 coll = COLLECT(exe, a.binaries, a.datas, name="AsistenciApp")  # noqa: F821
 
@@ -57,6 +60,7 @@ if sys.platform == "darwin":
     app = BUNDLE(  # noqa: F821
         coll,
         name="AsistenciApp.app",
+        icon=str(ICON),
         bundle_identifier="io.github.changvictor.asistenciapp",
         version=VERSION,
         info_plist={

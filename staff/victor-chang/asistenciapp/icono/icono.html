@@ -1,0 +1,38 @@
+<!doctype html>
+<!--
+  Icono de AsistenciApp (spec 007 · T14, opción c de Victor): "A_", la inicial de la marca
+  "AsistenciApp_" con su cursor rojo, en el fondo oscuro de la cabecera y con la letra de la app.
+  Lienzo de 1024 px con el cuadrado redondeado de 824 px que usan los iconos de macOS.
+  Se convierte en PNG, .icns y .ico con scripts/generar_icono.py.
+-->
+<html lang="es">
+<meta charset="utf-8">
+<style>
+  @font-face {
+    font-family: "Montserrat";
+    font-weight: 800;
+    src: url("../static/fonts/montserrat-latin-800-normal.woff2") format("woff2");
+  }
+  html, body { margin: 0; width: 1024px; height: 1024px; background: transparent; overflow: hidden; }
+  .tile {
+    position: absolute;
+    left: 100px;
+    top: 100px;
+    width: 824px;
+    height: 824px;
+    border-radius: 185px;
+    background: #0b0b0b; /* --header-bg en oscuro (styles.css) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 800;
+    font-size: 500px;
+    line-height: 1;
+    letter-spacing: 0.03em; /* el cursor no toca la "A" */
+    color: #ffffff; /* --header-text */
+  }
+  .tile span { color: #e6284e; } /* --brand-mark: el cursor rojo de la marca */
+</style>
+<body><div class="tile">A<span>_</span></div></body>
+</html>
