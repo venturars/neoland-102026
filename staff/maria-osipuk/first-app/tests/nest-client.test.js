@@ -199,6 +199,22 @@ async function testNestClient() {
       assert.deepEqual(invalidDelete.json, invalidMessage);
     }
 
+    // The Swagger UI page is HTML at the address of the client, and the
+    // document it shows lists the five operations with their bodies.
+    const page = await fetch(CLIENT + "/");
+    const pageText = await page.text();
+    assert.equal(page.status, 200);
+    assert.ok(pageText.includes("Swagger UI"));
+
+    const documentResponse = await fetch(CLIENT + "/-json");
+    const document = await documentResponse.json();
+    assert.equal(documentResponse.status, 200);
+    assert.equal(document.info.title, "Users");
+    assert.ok(document.paths["/users"].post.requestBody);
+    assert.ok(document.paths["/users/{id}"].patch.requestBody);
+    assert.equal(document.paths["/users/{id}"].get.parameters[0].name, "id");
+    assert.ok(document.paths["/users/{id}"].delete);
+
     const unknownRoute = await send("GET", "/no-existe");
     assert.equal(unknownRoute.status, 404);
     assert.equal(unknownRoute.text, "");

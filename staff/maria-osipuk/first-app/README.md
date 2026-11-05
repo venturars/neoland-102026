@@ -45,6 +45,8 @@ Un error responde JSON con la clave `message`. Para no tocar la base real, arran
 
 Con `pnpm start` y `pnpm run nest` en dos terminales, las peticiones van a `http://127.0.0.1:3003`. Son las mismas cinco rutas, los mismos cuerpos y los mismos errores que en el cliente REST. `pnpm run nest` compila `src/` a `dist/` con Babel antes de arrancar, porque Nest usa decoradores y Node no los entiende. `dist/` no se sube a git.
 
+También puedes abrir `http://127.0.0.1:3003` en el navegador: es una página Swagger UI donde se crean, listan, ven, modifican y borran usuarios sin escribir las peticiones a mano.
+
 ## Qué muestra cada pantalla del navegador
 
 1. **Selección:** elegir un usuario existente por su id, nombre y email y pulsar «Continuar», o crear uno nuevo con nombre y email. No se pide contraseña.
