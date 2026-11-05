@@ -1,0 +1,1 @@
+UPDATE race_slots SET state='retirado' WHERE session_id=? AND checkin_id=?

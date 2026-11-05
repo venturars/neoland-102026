@@ -2,7 +2,7 @@
 
 - Base: `pnpm server` desde `first-app`. El servidor escucha en `127.0.0.1:3000`.
 - HTTP: `pnpm http` desde `first-app`. El cliente REST escucha en `127.0.0.1:3001`.
-- Nest: `pnpm nest` desde `first-app`. Ese cliente escucha en `127.0.0.1:3003`. Usa una clase de módulo y una de controlador. Este cliente es el que pasa por Babel.
+- Nest: `pnpm nest` desde `first-app`. Ese cliente escucha en `127.0.0.1:3003`. Swagger UI está en `http://127.0.0.1:3003/api`. Usa una clase de módulo y una de controlador. Este cliente es el que pasa por Babel.
 - Chrome: `pnpm chrome` desde `first-app`. Esa API escucha en `127.0.0.1:3002`.
 - Electron: `pnpm electron` desde `first-app`. Abre la ventana de escritorio. No escucha en un puerto. La base sigue en `127.0.0.1:3000`.
 - VS Code: abre la carpeta `first-app` y lanza la configuración de `.vscode/launch.json`. El comando «Abrir usuarios» abre el panel. La base sigue en `127.0.0.1:3000`. Este cliente no escucha en un puerto.

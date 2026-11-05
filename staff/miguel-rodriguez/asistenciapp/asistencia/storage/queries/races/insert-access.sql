@@ -1,0 +1,1 @@
+INSERT INTO race_access VALUES (?,?,?)

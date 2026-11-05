@@ -1,0 +1,1 @@
+UPDATE race_slots SET state='listo' WHERE session_id=? AND roster_key=?

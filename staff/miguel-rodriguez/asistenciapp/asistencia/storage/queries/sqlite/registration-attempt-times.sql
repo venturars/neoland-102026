@@ -1,0 +1,1 @@
+SELECT attempted_at FROM registration_attempts WHERE address = ?

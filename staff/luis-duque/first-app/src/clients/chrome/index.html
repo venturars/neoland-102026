@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Usuarios</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500&family=Literata:opsz,wght@7..72,560&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main>
+      <section id="list-screen">
+        <h1>Usuarios</h1>
+        <ul id="user-list"></ul>
+        <form id="choose-form">
+          <label>
+            Id
+            <input id="id-input" name="id" type="text" />
+          </label>
+          <button type="submit">Elegir</button>
+        </form>
+        <button id="create-button" type="button">Crear</button>
+        <p id="list-message" class="message"></p>
+      </section>
+
+      <section id="menu-screen" hidden>
+        <p id="menu-user"></p>
+        <button id="back-button" type="button">Volver</button>
+        <button id="edit-button" type="button">Modificar usuario</button>
+      </section>
+
+      <section id="create-screen" hidden>
+        <h1>Crear usuario</h1>
+        <form id="create-form">
+          <label>
+            Nombre
+            <input id="create-name-input" name="name" type="text" />
+          </label>
+          <label>
+            Email
+            <input id="create-email-input" name="email" type="text" />
+          </label>
+          <button type="submit">Guardar</button>
+        </form>
+        <button id="create-back-button" type="button">Volver</button>
+        <p id="create-message" class="message"></p>
+      </section>
+
+      <section id="edit-screen" hidden>
+        <h1>Modificar usuario</h1>
+        <p id="edit-id"></p>
+        <form id="edit-form">
+          <label>
+            Nombre
+            <input id="name-input" name="name" type="text" />
+          </label>
+          <label>
+            Email
+            <input id="email-input" name="email" type="text" />
+          </label>
+          <button type="submit">Guardar</button>
+        </form>
+        <button id="delete-button" type="button">Eliminar</button>
+        <button id="edit-back-button" type="button">Volver</button>
+        <p id="edit-message" class="message"></p>
+      </section>
+    </main>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

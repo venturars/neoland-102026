@@ -10,7 +10,7 @@ También se crea, se lista, se ve, se cambia y se borra un usuario desde una ext
 
 También se crea, se lista, se busca, se ve, se cambia y se borra un usuario desde un panel de VS Code. La base sigue en el puerto 3000.
 
-También se crea, se lista, se ve, se cambia y se borra un usuario con el cliente Nest, en el puerto 3003. Ese cliente pasa por Babel. La base sigue en el puerto 3000.
+También se crea, se lista, se ve, se cambia y se borra un usuario con el cliente Nest, en el puerto 3003. Ese cliente pasa por Babel. También se puede probar desde Swagger UI en la ruta `api` del mismo host. La base sigue en el puerto 3000.
 
 También se crea, se lista, se ve, se cambia y se borra un usuario desde una ventana de escritorio. La base sigue en el puerto 3000.
 
