@@ -117,7 +117,9 @@ class GooglePermission:
         try:
             credentials.refresh(Request())  # type: ignore[no-untyped-call]
         except RefreshError:
-            # Mientras la app de Google esté en prueba, el permiso caduca a los 7 días (spec P7, opción A).
+            # El permiso ya no vale: el profesor lo retiró en su cuenta de Google o, con una llave propia en
+            # modo de prueba, caducó a los 7 días (spec 004 P7). Con la app publicada en producción
+            # (spec 007 · plan §2.8) no caduca solo.
             logger.info("El permiso de Google ha caducado; se volverá a pedir")
             self.forget()
             return None

@@ -101,11 +101,14 @@ Cómo leer esta lista:
   - *Cubre:* CA-07.
   - **Hecha (2026-11-05):** 2 tests nuevos en `test_web_teacher.py` con la app de escritorio, el `Tunnel` de verdad y el `cloudflared` falso, pidiendo el panel desde `http://127.0.0.1:<puerto>`. Falló el de "clase online abierta" (daba `127.0.0.1`); el de "cerrada" ya pasaba y queda como red. 573 tests en verde; `ruff` y `mypy` sin avisos.
     - `teacher.py`: `_student_base_url()` da `tunnel.url + "/"` si hay clase online y, si no, `request.host_url`. El test de spec 001 con el panel abierto desde el túnel (`X-Forwarded-Host`) sigue en verde.
-- [ ] **T09** 🧪 · Mensajes de Google para la llave compartida (plan §2.8):
+- [x] **T09** 🧪 · Mensajes de Google para la llave compartida (plan §2.8):
   - test: el mensaje de `MeetLoginNotCompletedError` incluye la frase del tope de usuarios y dónde dejar la llave propia;
   - el comentario de `google_auth.py` sobre la caducidad semanal (spec 004 P7) pasa a decir que en producción el permiso no caduca;
   - debe fallar; luego, el código.
   - *Cubre:* CA-15, CA-16.
+  - **Hecha (2026-11-05):** en `test_errors.py`, el mensaje esperado de `MeetLoginNotCompletedError` pasa al del plan §2.8 y un test nuevo exige "límite de usuarios", "tu propia llave" y "README §4.1"; fallaron los dos y ahora pasan. 574 tests en verde; `ruff` y `mypy` sin avisos.
+    - El comentario de `google_auth.py` explica ahora cuándo deja de valer un permiso: retirado por el profesor o, con una llave propia en modo de prueba, a los 7 días; con la app publicada no caduca solo.
+    - **Para T17:** la fila de *"No se completó el permiso de Google…"* en "Problemas frecuentes" del README todavía manda añadir la cuenta en **Usuarios de prueba**; hay que cambiarla por el aviso de app no verificada y la llave propia.
 
 ## Fase D · Panel (plan §2.6, §2.9, §2.10)
 

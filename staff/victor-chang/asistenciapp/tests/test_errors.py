@@ -41,8 +41,11 @@ MEET_MESSAGES = {
         "Falta el permiso de Google Meet. Vuelve a tomar la asistencia y marca la casilla "
         "«Ver información sobre tus reuniones de Google Meet»."
     ),
+    # spec 007 · plan §2.8 (CA-16): con la llave compartida, Google puede llegar a su tope de usuarios.
     errors.MeetLoginNotCompletedError: (
-        "No se completó el permiso de Google. Vuelve a tomar la asistencia y acepta en la ventana de Google."
+        "No se completó el permiso de Google. Vuelve a tomar la asistencia y acepta en la ventana de Google. "
+        "Si Google dice que la app ha alcanzado su límite de usuarios, usa tu propia llave "
+        "(README §4.1) y guárdala en la carpeta de datos de la app."
     ),
     errors.MeetNotConfiguredError: (
         "Falta preparar la app en Google Cloud. Sigue los pasos de «Modo automático» en el README."
@@ -88,6 +91,12 @@ def test_name_too_long_message_uses_the_real_limit():
 
 def test_title_too_long_message_uses_the_real_limit():
     assert f"{MAX_TITLE_LENGTH} caracteres" in errors.TitleTooLongError.MESSAGE
+
+
+def test_login_message_explains_the_user_limit():  # spec 007 · CA-16
+    message = errors.MeetLoginNotCompletedError.MESSAGE
+    assert "límite de usuarios" in message
+    assert "tu propia llave" in message and "README §4.1" in message
 
 
 @pytest.mark.parametrize("error, message", MEET_MESSAGES.items(), ids=lambda v: getattr(v, "__name__", "msg"))

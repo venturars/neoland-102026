@@ -109,9 +109,17 @@ class MeetPermissionMissingError(AppError):
 
 
 class MeetLoginNotCompletedError(AppError):
-    """No se aceptó el permiso de Google a tiempo (spec 004 · CA-11)."""
+    """No se aceptó el permiso de Google a tiempo (spec 004 · CA-11).
 
-    MESSAGE = "No se completó el permiso de Google. Vuelve a tomar la asistencia y acepta en la ventana de Google."
+    También es lo que pasa cuando la llave compartida llega al tope de usuarios de Google: Google lo
+    dice en el navegador y la app no recibe respuesta (spec 007 · plan §2.8, CA-16).
+    """
+
+    MESSAGE = (
+        "No se completó el permiso de Google. Vuelve a tomar la asistencia y acepta en la ventana de Google. "
+        "Si Google dice que la app ha alcanzado su límite de usuarios, usa tu propia llave "
+        "(README §4.1) y guárdala en la carpeta de datos de la app."
+    )
 
 
 class MeetNotConfiguredError(AppError):
