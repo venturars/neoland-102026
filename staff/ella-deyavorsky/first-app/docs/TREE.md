@@ -84,6 +84,13 @@ first-app/
         list-users.txt
         nest.txt
         update-user.txt
+      node-http/
+        app.js
+        create-user.ipynb
+        list-users.ipynb
+        find-user-by-id.ipynb
+        update-user.ipynb
+        delete-user.ipynb
       jupyter/
         README.md
         00-welcome-and-index.ipynb
@@ -113,6 +120,7 @@ first-app/
         icon.svg
   scripts/
     jupyter.sh
+    jupyter-node-http.sh
   agents/
     create-branch.md
     create-commit.md
