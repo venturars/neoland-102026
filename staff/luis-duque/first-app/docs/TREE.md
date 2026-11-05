@@ -62,6 +62,7 @@ first-app/
   eslint.config.js
   package.json
   pnpm-lock.yaml
+  pnpm-workspace.yaml
   agents/
     git-workflow-agent.md
     help-me-to-think.md

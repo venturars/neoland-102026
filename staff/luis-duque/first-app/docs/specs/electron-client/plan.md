@@ -17,7 +17,7 @@ No hay `preload.js`. La página importa la lógica, igual que las pantallas del 
 
 Se toca `package.json`. El script `electron` queda `electron src/clients/electron/main.js`. Se lanza con `pnpm electron` desde `first-app`, con `pnpm server` en marcha. El campo `main` sigue en `index.js`. El script `format` también escribe `src/clients/electron/**/*.js`.
 
-pnpm añade `electron` `45.2.2` en `dependencies`. `pnpm-lock.yaml` lo escribe pnpm. No se edita a mano. No se usa npm ni yarn. No se genera un instalador. No hay `pnpm-workspace.yaml`: esa versión ya está fuera de las 24 horas de antigüedad mínima de pnpm.
+pnpm añade `electron` `45.2.3` en `dependencies`. `pnpm-lock.yaml` lo escribe pnpm. No se edita a mano. No se usa npm ni yarn. No se genera un instalador. `pnpm-workspace.yaml` excluye `electron@45.2.3` de la antigüedad mínima de 24 horas: se publicó el 2026-11-04 a las 21:39 UTC. Sin esa exclusión, pnpm no instala. `electron@45.2.2` sí pasa la antigüedad, pero en este equipo Windows bloquea su `electron.exe` con una directiva de control de aplicaciones y `pnpm electron` no abre la ventana.
 
 No se tocan `src/logic`, `src/queries`, `src/db`, `src/clients/terminal`, `src/clients/jupyter`, `src/clients/browser` ni `src/clients/http`.
 
@@ -25,13 +25,13 @@ En el mismo cambio que el código se tocan `docs/CONSTITUTIONS.MD`, `AGENTS.MD`,
 
 ## Validación Socket
 
-`depscore` respondió el 2026-11-05. Ninguna stat está por debajo de 50. El árbol es el que resolvió `npm view` para `electron@45.2.2` y el `pnpm-lock.yaml`, hasta 3 capas. Son 13 paquetes, sin repetir. `undici@7.30.1` es opcional de `@electron/get@5.1.0` y no trae dependencias, así que no abre una capa 3 nueva. `openai` sigue en `7.39.0`. El lockfile también lo asocia a `undici@7.30.1` porque esa dependencia es opcional para los dos. La versión de `openai` no cambia.
+`depscore` respondió el 2026-11-05. Ninguna stat está por debajo de 50. El árbol es el que resolvió `npm view` para `electron@45.2.3` y el `pnpm-lock.yaml`, hasta 3 capas. Son 13 paquetes, sin repetir. `undici@7.30.1` es opcional de `@electron/get@5.1.0` y no trae dependencias, así que no abre una capa 3 nueva. `openai` sigue en `7.39.0`. El lockfile también lo asocia a `undici@7.30.1` porque esa dependencia es opcional para los dos. La versión de `openai` no cambia.
 
 `organizations` respondió `Unauthorized` después de autenticar el MCP. Sin `org_slug` no se ha podido llamar a `alerts` ni a `threat_feed`. No hay dato de alerta ni de campaña. Eso no es ausencia de avisos.
 
 | Paquete | Versión | Capa | Campaña | Alertas | Stats por debajo de 50 |
 | --- | --- | --- | --- | --- | --- |
-| `electron` | `45.2.2` | 0 | sin dato | sin dato | ninguna. Licencia 100, mantenimiento 97, calidad 99, cadena 99, vulnerabilidad 100 |
+| `electron` | `45.2.3` | 0 | sin dato | sin dato | ninguna. Licencia 100, mantenimiento 97, calidad 99, cadena 99, vulnerabilidad 100 |
 | `@types/node` | `24.19.2` | 1 | sin dato | sin dato | ninguna. Licencia 100, mantenimiento 96, calidad 80, cadena 100, vulnerabilidad 100 |
 | `@electron/get` | `5.1.0` | 1 | sin dato | sin dato | ninguna. Licencia 100, mantenimiento 82, calidad 100, cadena 99, vulnerabilidad 100 |
 | `@electron-internal/extract-zip` | `1.0.8` | 1 | sin dato | sin dato | ninguna. Licencia 100, mantenimiento 94, calidad 98, cadena 95, vulnerabilidad 100 |
@@ -126,18 +126,20 @@ Para elegir, el id se busca en la lista ya cargada. Si no es un entero positivo,
 
 `docs/CONSTITUTIONS.MD` cuenta la ventana Electron y `pnpm electron`. El desarrollo abierto pasa a ser `docs/specs/electron-client/`.
 
-`AGENTS.MD` deja la regla: el cliente vive en `src/clients/electron`. `app.js` importa `listUsers`, `createUser`, `updateUser` y `deleteUser`. No importa `usersGender` ni las búsquedas. No llama a `/execute`. No valida, no escribe SQL y no abre la base. Se arranca con `pnpm electron` desde `first-app`. Electron queda en `45.2.2`.
+`AGENTS.MD` deja la regla: el cliente vive en `src/clients/electron`. `app.js` importa `listUsers`, `createUser`, `updateUser` y `deleteUser`. No importa `usersGender` ni las búsquedas. No llama a `/execute`. No valida, no escribe SQL y no abre la base. Se arranca con `pnpm electron` desde `first-app`. Electron queda en `45.2.3`. `pnpm-workspace.yaml` excluye esa versión de la antigüedad mínima.
 
 ## Pregunta
 
 La constitución y `AGENTS.MD` dicen que no se añade otro framework. Express `5.3.0` es la excepción ya aceptada. Los clientes que ya están son la terminal, Jupyter, el navegador y el HTTP.
 
-La spec pide una ventana Electron. Electron `45.2.2` es un framework y un paquete nuevo. El código no lo tiene.
+La spec pide una ventana Electron. Electron `45.2.3` es un framework y un paquete nuevo. El código no lo tiene.
 
-¿Se actualizan la constitución y las guías para permitir este cliente con Electron `45.2.2`? Hasta esa respuesta no hay `tasks.md`.
+¿Se actualizan la constitución y las guías para permitir este cliente con Electron `45.2.3`? Hasta esa respuesta no hay `tasks.md`.
 
 ## Corrección tras la revisión
 
-La primera instalación usó `electron@45.2.3`, publicado el 2026-11-04 a las 21:39 UTC. pnpm rechaza lo publicado dentro de las últimas 24 horas y escribió `pnpm-workspace.yaml` para excluir esa versión. El plan no lo decía.
+`electron@45.2.3` se publicó el 2026-11-04 a las 21:39 UTC. pnpm lo rechaza durante 24 horas. La exclusión queda en `pnpm-workspace.yaml` y en este plan.
 
-`electron@45.2.2` se publicó el 2026-11-03 a las 21:43 UTC y ya pasa esa comprobación. El 2026-11-05, `pnpm install` termina sin exclusión y sin `pnpm-workspace.yaml`. `depscore` de `electron@45.2.2` y de `undici@7.30.1` está en la tabla de arriba. `organizations` sigue respondiendo `Unauthorized`, así que alerta y campaña siguen sin dato.
+Se probó `electron@45.2.2`, publicado el 2026-11-03 a las 21:43 UTC. `pnpm install` lo acepta sin exclusión. En este equipo, Windows bloquea su `electron.exe`: «Una directiva de Control de aplicaciones bloqueó este archivo». `pnpm electron` termina con `spawn UNKNOWN`. El `electron.exe` de `45.2.3` sí arranca. Por eso la ventana se queda en `45.2.3`.
+
+`undici@7.30.1` está en la tabla. `organizations` sigue en `Unauthorized`: alerta y campaña siguen sin dato.
