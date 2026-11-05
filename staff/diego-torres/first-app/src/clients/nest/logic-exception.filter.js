@@ -1,15 +1,20 @@
 // Herramientas de Nest para capturar los fallos.
 import { Catch, HttpException } from "@nestjs/common";
 
-// Estado HTTP de cada error de las reglas.
+// Estado HTTP de cada error que lanza la lógica.
 const ESTADOS = {
   "Name is empty": 400,
   "Email is invalid": 400,
   "Email is already used": 409,
   "User not found": 404,
+  "Could not create the user": 500,
+  "Could not update the user": 500,
+  "Could not delete the user": 500,
+  "Could not list the users": 500,
+  "Could not find the user": 500,
 };
 
-// Mensaje de fallo de cada acción, según el método de la petición.
+// Mensaje de fallo de cada acción, si lo lanzado no viene de la lógica.
 const FALLOS = {
   POST: "Could not create the user",
   PATCH: "Could not update the user",
@@ -50,7 +55,7 @@ export class LogicExceptionFilter {
     const request = http.getRequest();
     const response = http.getResponse();
 
-    // Si es un error de las reglas, se responde su estado y su mensaje.
+    // Si el error viene de la lógica, se responde su estado y su mensaje.
     const estado = ESTADOS[error?.message];
     if (estado !== undefined) {
       response.status(estado).json({ message: error.message });
