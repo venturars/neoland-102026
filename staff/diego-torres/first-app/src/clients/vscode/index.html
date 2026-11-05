@@ -19,10 +19,16 @@
       <!-- Usuario que se acaba de ver o modificar. -->
       <p id="viewed-user" class="user" hidden></p>
 
+      <!-- Resultado del recuento por género. -->
+      <p id="gender-result" class="user" hidden></p>
+
       <!-- Lista de usuarios guardados. -->
       <ul id="user-list" class="user-list"></ul>
 
       <!-- Sin required: quien decide es la lógica. -->
+      <h2>Contar por género</h2>
+      <button id="gender-count" type="button">Contar por género</button>
+
       <h2>Crear</h2>
       <form id="create-form">
         <label for="create-name">Nombre</label>
@@ -45,6 +51,15 @@
         <input id="find-email" type="text" />
         <button type="submit">Buscar</button>
       </form>
+
+      <h2>Buscar por nombre</h2>
+      <form id="find-name-form">
+        <label for="find-name">Nombre</label>
+        <input id="find-name" type="text" />
+        <button type="submit">Buscar</button>
+      </form>
+      <!-- Usuarios encontrados. La lista general no cambia. -->
+      <ul id="found-users" class="user-list"></ul>
 
       <h2>Modificar</h2>
       <form id="update-form">

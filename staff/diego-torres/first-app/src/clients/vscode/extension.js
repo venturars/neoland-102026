@@ -11,10 +11,14 @@ import { deleteUser } from "../../logic/delete-user.js";
 import { findUserByEmail } from "../../logic/find-user-by-email.js";
 // Busca un usuario por su id (viene de la capa de lógica).
 import { findUserById } from "../../logic/find-user-by-id.js";
+// Busca usuarios por su nombre (viene de la capa de lógica).
+import { findUserByName } from "../../logic/find-user-by-name.js";
 // Devuelve la lista de usuarios (viene de la capa de lógica).
 import { listUsers } from "../../logic/list-users.js";
 // Modifica un usuario (viene de la capa de lógica).
 import { updateUser } from "../../logic/update-user.js";
+// Cuenta los usuarios por género (viene de la capa de lógica).
+import { usersGenderCount } from "../../logic/users-gender-count.js";
 
 // Las acciones que cambian datos vuelven a enviar la lista.
 const CAMBIAN_DATOS = ["create", "update", "delete"];
@@ -35,6 +39,12 @@ async function runAction(message) {
   }
   if (action === "find-by-email") {
     return { user: await findUserByEmail(email) };
+  }
+  if (action === "find-by-name") {
+    return { foundUsers: await findUserByName(name) };
+  }
+  if (action === "gender-count") {
+    return { genderCount: await usersGenderCount() };
   }
   if (action === "update") {
     return { user: await updateUser(id, changes) };

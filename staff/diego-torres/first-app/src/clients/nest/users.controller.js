@@ -51,6 +51,22 @@ export class UsersController {
     return this.usersService.findByEmail(email);
   }
 
+  // GET /users/by-name?name= busca usuarios por su nombre.
+  // Va antes que /users/:id. Si no, "by-name" se tomaría por un id.
+  // Bind(Query("name")) pasa a la función el nombre que llega en la dirección.
+  @Get("by-name")
+  @Bind(Query("name"))
+  findByName(name) {
+    return this.usersService.findByName(name);
+  }
+
+  // GET /users/gender-count cuenta los usuarios por género.
+  // Va antes que /users/:id. Si no, "gender-count" se tomaría por un id.
+  @Get("gender-count")
+  countByGender() {
+    return this.usersService.countByGender();
+  }
+
   // GET /users/:id devuelve un usuario.
   // Bind(Param("id")) pasa el id de la ruta a la función.
   @Get(":id")

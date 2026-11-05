@@ -13,10 +13,14 @@ import { deleteUser } from "../../logic/delete-user.js";
 import { findUserByEmail } from "../../logic/find-user-by-email.js";
 // Busca un usuario por su id (viene de la capa de lógica).
 import { findUserById } from "../../logic/find-user-by-id.js";
+// Busca usuarios por su nombre (viene de la capa de lógica).
+import { findUserByName } from "../../logic/find-user-by-name.js";
 // Devuelve la lista de usuarios (viene de la capa de lógica).
 import { listUsers } from "../../logic/list-users.js";
 // Modifica un usuario (viene de la capa de lógica).
 import { updateUser } from "../../logic/update-user.js";
+// Cuenta los usuarios por género (viene de la capa de lógica).
+import { usersGenderCount } from "../../logic/users-gender-count.js";
 
 // Dirección de esta API. Solo escucha en este ordenador.
 const HOST = "127.0.0.1";
@@ -89,6 +93,28 @@ app.get("/users/by-email", async (request, reply) => {
     return reply.code(200).send(user);
   } catch (error) {
     return responderError(reply, error, "Could not find the user");
+  }
+});
+
+// Busca usuarios por el nombre que llega en la dirección.
+// Va antes que /users/:id para que se lea igual que en la API de Nest.
+app.get("/users/by-name", async (request, reply) => {
+  try {
+    const users = await findUserByName(request.query.name);
+    return reply.code(200).send(users);
+  } catch (error) {
+    return responderError(reply, error, "Could not find the user");
+  }
+});
+
+// Cuenta los usuarios por el género de su nombre.
+// Va antes que /users/:id para que se lea igual que en la API de Nest.
+app.get("/users/gender-count", async (request, reply) => {
+  try {
+    const counts = await usersGenderCount();
+    return reply.code(200).send(counts);
+  } catch (error) {
+    return responderError(reply, error, "Could not classify the users");
   }
 });
 
