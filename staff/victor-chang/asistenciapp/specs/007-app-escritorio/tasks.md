@@ -46,10 +46,14 @@ Cómo leer esta lista:
     - `user_data_dir` es pública: la usarán el README (dónde copiar `asistencia.db`, decisión §8.8) y quizá `app.py`.
     - Windows sin `APPDATA` (o vacía) usa `~/AppData/Roaming`; otros sistemas, `~/.local/share` (fuera de la spec, pero sin fallar).
     - Con `--ventana` desde el código (sin `bundle`), la llave es la de `data/` del proyecto y `cloudflared`, el del `PATH`.
-- [ ] **T03** 🧪 · `infra/server.py` (plan §2.4):
+- [x] **T03** 🧪 · `infra/server.py` (plan §2.4):
   - tests en `test_server.py`: `start(app)` da un puerto distinto de 0 en el que responde la app; `stop()` lo libera (se puede volver a abrir) y el hilo termina;
   - deben fallar; luego, el código.
   - *Cubre:* CA-12.
+  - **Hecha (2026-11-05):** 5 tests nuevos en `test_server.py` (fallaron al no existir el módulo) y `infra/server.py`: `start(app) -> RunningServer` con `make_server("127.0.0.1", 0, app, threaded=True)` en un hilo; `port`, `host`, `running` y `stop()`. 515 tests en verde; `ruff` y `mypy` sin avisos.
+    - Además de lo previsto: `stop()` se puede llamar dos veces (lo llamará el `finally` de `app.py` aunque algo falle antes) y `RunningServer` funciona con `with` (S7); dos servidores a la vez reciben puertos distintos.
+    - El hilo es *daemon*: si algo falla antes del `finally`, no impide que el proceso termine.
+    - Los tests tardan ~3 s en total por el sondeo de medio segundo de `shutdown()` de werkzeug; se acepta (T5: segundos).
 - [ ] **T04** 🧪 · `infra/instance.py` (plan §2.5):
   - tests en `test_instance.py` (con un puerto de bloqueo libre elegido por el test): un segundo `acquire` lanza `AlreadyRunningError` con su mensaje; tras soltar el primero, `acquire` vuelve a funcionar; `ASISTENCIA_LOCK_PORT` cambia el puerto;
   - deben fallar; luego, el código.
