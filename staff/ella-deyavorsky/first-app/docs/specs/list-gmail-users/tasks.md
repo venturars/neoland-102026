@@ -1,6 +1,6 @@
 # Tasks — A list of users with Gmail emails
 
-Do the tasks in order. Inside a task, do the steps in order. No outside tool or package is needed, so that task does not exist. `docs/CONSTITUTIONS.md` and `docs/ERRORS.md` do not change. The Nest client and the VS Code client are not part of this feature. The work is on the branch `1032-feat-list-gmail-users`.
+Do the tasks in order. Inside a task, do the steps in order. No outside tool or package is needed, so that task does not exist. `docs/CONSTITUTIONS.md` and `docs/ERRORS.md` do not change. The Nest client and the VS Code extension are part of this feature; they reached `staging` after the first version of these files, and `staging` is merged into the branch. The work is on the branch `1032-feat-list-gmail-users`.
 
 ## Task 1 — Update the docs
 
@@ -15,6 +15,8 @@ Do the tasks in order. Inside a task, do the steps in order. No outside tool or 
 - [x] In `docs/ARCHITECTURE.md`, add "`list-gmail-users.js` returns the users whose email contains `@gmail`." under `logic/`. Result: the entry has the file.
 - [x] In `docs/ARCHITECTURE.md`, add `GET /users/gmail` to the entry of the HTTP client. Result: the route is listed.
 - [x] In `docs/ARCHITECTURE.md`, add `GET /users/gmail` to the entry of the program of the Chrome extension. Result: the route is listed.
+- [x] In `docs/ARCHITECTURE.md`, add `GET /users/gmail` to the entry of the Nest client. Result: the route is listed.
+- [x] In `docs/ARCHITECTURE.md`, add the "Solo Gmail" button to the entry of the VS Code extension. Result: the button is listed.
 - [x] In `docs/ARCHITECTURE.md`, add `list-gmail-users.txt` and `list-gmail-users.ipynb` to the entries of the terminal and Jupyter clients. Result: both files are listed.
 
 ## Task 2 — Write the query
@@ -38,6 +40,12 @@ Do the tasks in order. Inside a task, do the steps in order. No outside tool or 
 - [x] In `src/clients/api/server.js`, add `GET /users/gmail` before `GET /users/:id`, answering 200 with the array and 500 `{ "error": "The database failed." }` on error. Result: the route answers as `GET /users` does.
 - [x] In `src/clients/chrome/server.js`, import `listGmailUsers`. Result: the function is available.
 - [x] In `src/clients/chrome/server.js`, add `GET /users/gmail` before any route with an id, answering as `GET /users` does. Result: the route answers 200 with the array.
+- [x] In `src/clients/nest/users.controller.js`, import `listGmailUsers`. Result: the function is available.
+- [x] In `src/clients/nest/users.controller.js`, add `listGmail()` with `@Get("users/gmail")` before `findOne()`, returning `listGmailUsers()`. Result: the route answers like `list()`.
+- [x] In `src/clients/vscode/extension.js`, import `listGmailUsers`. Result: the function is available.
+- [x] In `src/clients/vscode/extension.js`, add the action `"list-gmail"` to `runAction`, returning `{ users }` from `listGmailUsers()`. Result: the extension answers it like `"list"`.
+- [x] In `src/clients/vscode/extension.js`, add the button "Solo Gmail" to the HTML, next to "Recargar". Result: the view shows the button.
+- [x] In `src/clients/vscode/webview.js`, make the button send `{ action: "list-gmail" }`. Result: a click draws the Gmail users in the list.
 - [x] Create `src/clients/jupyter/list-gmail-users.ipynb`, built like `list-users.ipynb`, with `listGmailUsers` and the same table. Result: running the cell shows the Gmail users in a table.
 - [x] In `src/clients/jupyter/00-welcome-and-index.ipynb`, add a row for the new notebook. Result: the index links it.
 - [x] In `src/clients/jupyter/README.md`, add `list-gmail-users.ipynb` and `listGmailUsers` to the table. Result: the table lists it.
@@ -55,8 +63,10 @@ Do the tasks in order. Inside a task, do the steps in order. No outside tool or 
 - [x] Start `pnpm start`, then create `ada@gmail.com`, `bob@example.com` and `eve@gmailer.com`. Result: three users exist.
 - [x] Paste `src/clients/terminal/list-gmail-users.txt`. Result: Ada and Eve print, Bob does not.
 - [x] Start `pnpm api` and `pnpm chrome`, and `curl` `GET /users/gmail` on ports 3001 and 3002. Result: both answer 200 with Ada and Eve.
+- [ ] Start `pnpm nest` and `curl` `GET /users/gmail` on port 3003. Result: it answers 200 with Ada and Eve, and `GET /users/1` still works.
 - [x] Run the cell of `list-gmail-users.ipynb`. Result: the table shows Ada and Eve.
 - [x] Open the web page with `pnpm browser`, click "Solo Gmail", then "Ver todos". Result: the list shows Ada and Eve, then all three.
 - [x] Open the desktop window with `pnpm electron` and repeat the clicks. Result: the same.
+- [ ] Open the VS Code extension with `pnpm vscode`, click "Solo Gmail", then "Recargar". Result: the list shows Ada and Eve, then all three.
 - [x] Delete Ada and Eve and ask for the Gmail users in the terminal. Result: `[]`.
-- [x] Run `pnpm format` and `pnpm lint`. Result: both pass.
+- [ ] Run `pnpm format` and `pnpm lint`. Result: both pass.

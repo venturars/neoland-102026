@@ -12,6 +12,8 @@ A new action, `listGmailUsers`, built like `listUsers`: one file in `logic/`, on
 - Change `src/clients/api/server.js`: add `GET /users/gmail`, built like `GET /users`. It is declared **before** `GET /users/:id`, or `gmail` would be read as an id.
 - Change `src/clients/chrome/server.js`: add `GET /users/gmail`, built like `GET /users`. The popup does not change.
 - Change `src/clients/web/index.html` and `app.js`, and `src/clients/electron/index.html` and `app.js`: see "Web page and desktop window".
+- Change `src/clients/nest/users.controller.js`: add `listGmail()`, see "The HTTP clients".
+- Change `src/clients/vscode/extension.js`, `webview.js`: see "VS Code extension".
 - Add `src/clients/jupyter/list-gmail-users.ipynb`, built like `list-users.ipynb`, with `listGmailUsers` and the same table. Change `src/clients/jupyter/00-welcome-and-index.ipynb` (one row in the index) and `src/clients/jupyter/README.md` (one row in the table of notebooks).
 - Change `docs/DATABASE.md`, `docs/TREE.md` and `docs/ARCHITECTURE.md`.
 
@@ -37,7 +39,8 @@ Order inside the file, from "One logic file per action":
 ## The HTTP clients
 
 - Each route calls `listGmailUsers()`, answers 200 with the array, and on any error answers 500 `{ "error": "The database failed." }`. An error that is not that sentence is written with `console.error` first, as `GET /users` does.
-- The route is the same in the two.
+- The route is the same in the three.
+- Nest keeps its own conventions (`AGENTS.md`, "Style"). In `users.controller.js`, `listGmail()` is declared **before** `findOne()`, with `@Get("users/gmail")` and no `@Bind`, and it returns `listGmailUsers()`. The error filter answers what it throws, as for `list()`. Nest is built with Babel (`pnpm nest`), so `logic/` is imported as in the other methods.
 
 ## Web page and desktop window
 
@@ -50,6 +53,14 @@ Both pages have a list screen that today draws all users in `renderList()`, whic
 
 Both pages import `listGmailUsers` straight from `logic/`, as they do with `listUsers`. The desktop window has the same list code in its own `app.js`, so it gets the same change in that file.
 
+## VS Code extension
+
+The extension has no server. `extension.js` imports `logic/` and answers the messages of the screen, and `webview.js` draws the answers.
+
+- `extension.js` imports `listGmailUsers`. `runAction` handles a new action, `"list-gmail"`, which returns `{ users }` from `listGmailUsers()`, as `"list"` does with `listUsers()`. An error is answered by the code that already wraps `runAction`.
+- `webview.js` gets a button "Solo Gmail", next to "Recargar", that sends `{ action: "list-gmail" }`. The reply has `users`, so the existing code draws the list, the empty message and any error. "Recargar" and the first load still send `{ action: "list" }`, so they show all users.
+- The button is added in the HTML written by `writeHtml` in `extension.js`, with the other buttons.
+
 ## Outside tools and packages
 
 None. `pnpm start` must be running for every client, as today.
@@ -59,15 +70,15 @@ None. `pnpm start` must be running for every client, as today.
 - No new sentence in `docs/ERRORS.md`.
 - `docs/DATABASE.md`: add `findGmail` to the list of query functions, the line "`findGmail` runs `find-gmail.sql`.", and a short note on the query.
 - `docs/TREE.md`: add `find-gmail.sql`, `list-gmail-users.js`, `list-gmail-users.txt` and `list-gmail-users.ipynb`.
-- `docs/ARCHITECTURE.md`: add the same four files, and the new route in the entry of each HTTP client.
+- `docs/ARCHITECTURE.md`: add the same four files, and the new route in the entry of each HTTP client (`api/`, `chrome/` and `nest/`) and the new button in the entry of `vscode/`.
 - `docs/CONSTITUTIONS.md` stays as it is.
 
 ## What stays as it is
 
-`listUsers`, `findAll`, `find-all.sql`, the other six actions, the table, `src/db/connection.js`, `package.json`, the popup of the Chrome extension, and the other notebooks of `src/clients/jupyter/`.
+`listUsers`, `findAll`, `find-all.sql`, the other six actions, the table, `src/db/connection.js`, `package.json`, the Babel build of Nest, the popup of the Chrome extension, and the other notebooks of `src/clients/jupyter/`.
 
 ## Decisions
 
-- **Nest and VS Code clients:** left out of this feature. Neither is on this branch (Nest is on `991-feat-nest-http-client`; the VS Code client is on other branches), and each gets the action in a later issue.
+- **Nest and VS Code clients:** included. Both reached `staging` after the first version of this plan, and `staging` was merged into this branch. The VS Code button is "Solo Gmail"; "Recargar" is the way back to all users.
 - **Web page and desktop window:** the two-button shape above. It was explained in more detail and is waiting for the person's yes.
 - **Jupyter:** a new notebook is included.

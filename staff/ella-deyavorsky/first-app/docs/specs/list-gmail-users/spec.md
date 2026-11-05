@@ -8,9 +8,7 @@ It is one more way to list users, next to the list of all users. It does not rep
 
 ## Who uses it and who has access
 
-Anyone who uses the app on this computer, from these clients: the terminal, the notebooks, the HTTP client, the program of the Chrome extension, the web page and the desktop window. There is no sign-in.
-
-The Nest client and the VS Code client are not part of this feature. Neither is on this branch yet, and each gets this action in a later issue.
+Anyone who uses the app on this computer, from these clients: the terminal, the notebooks, the HTTP client, the program of the Chrome extension, the Nest client, the web page, the desktop window and the VS Code extension. There is no sign-in.
 
 The database program must be running.
 
@@ -30,9 +28,9 @@ In the clients that use HTTP, it is a new route that answers like the list of al
 |---|---|---|---|
 | List Gmail users | `GET /users/gmail` | nothing | 200 and the list, empty if there are none |
 
-The route is the same in the HTTP client and the program of the Chrome extension.
+The route is the same in the HTTP client, the program of the Chrome extension and the Nest client.
 
-In the web page and the desktop window, the list screen gets a way to show only the Gmail users, and a way to go back to all of them. In the notebooks, there is one more notebook that shows the Gmail users in a table.
+In the web page and the desktop window, the list screen gets a way to show only the Gmail users, and a way to go back to all of them. In the VS Code extension, the view gets a button that shows only the Gmail users in its list; the button that reloads the list brings back all of them. In the notebooks, there is one more notebook that shows the Gmail users in a table.
 
 ## Example
 
