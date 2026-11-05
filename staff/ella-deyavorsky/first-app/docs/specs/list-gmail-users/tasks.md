@@ -67,6 +67,6 @@ Do the tasks in order. Inside a task, do the steps in order. No outside tool or 
 - [x] Run the cell of `list-gmail-users.ipynb`. Result: the table shows Ada and Eve.
 - [x] Open the web page with `pnpm browser`, click "Solo Gmail", then "Ver todos". Result: the list shows Ada and Eve, then all three.
 - [x] Open the desktop window with `pnpm electron` and repeat the clicks. Result: the same.
-- [ ] Open the VS Code extension with `pnpm vscode`, click "Solo Gmail", then "Recargar". Result: the list shows Ada and Eve, then all three.
+- [x] Open the VS Code extension with `pnpm vscode`, click "Solo Gmail", then "Recargar". Result: the list shows Ada and Eve, then all three.
 - [x] Delete Ada and Eve and ask for the Gmail users in the terminal. Result: `[]`.
 - [x] Run `pnpm format` and `pnpm lint`. Result: both pass.
