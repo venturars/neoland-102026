@@ -74,6 +74,12 @@ first-app/
         index.html
         app.js
         styles.css
+      vscode/
+        package.json
+        extension.js
+        webview.js
+        webview.css
+        icon.svg
   scripts/
     jupyter.sh
   agents/
@@ -121,6 +127,7 @@ first-app/
     create-branch.sh
     create-branch-from-staging.sh
     create-empty-commit.sh
+    create-pr-base-staging.sh
     launch-push.sh
     pull-changes.sh
   templates/

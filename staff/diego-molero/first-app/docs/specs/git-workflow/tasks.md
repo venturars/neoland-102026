@@ -44,3 +44,16 @@ Diego autoriza expresamente implementar, comprobar y entregar el bloque. No se a
 - [x] **V03:** Comprobar los siete scripts, plantillas, referencias, UTF-8 y recorridos Git en repositorios temporales; registrar evidencia real.
 
 El 4 de noviembre, el comprobador aislado `.venv/git-template-check-20261104-855-elevated.py` pasó las siete sintaxis Bash y 14 recorridos con repositorios temporales y remoto bare local. Los siete scripts conservan el contenido de `staging`. Las plantillas existentes siguen siendo seis parejas por tipo y la selección no cambia. La validación añadida en agentes se coteja con la fuente vigente; se mantienen el prefijo `codex/`, la delegación real, el enlace por el orquestador y la alternativa `gh` sin tocar configuración personal.
+
+## Iteración del 4 de noviembre de 2026 · Issue #957
+
+- [x] **W01:** Registrar criterios y plan de la caché antes de modificar el workflow.
+- [x] **W02:** Implementar la caché persistente y su consulta, alta y corrección local.
+- [x] **W03:** Integrar su uso en la asignación de revisores y actualizar arquitectura y árbol.
+- [x] **W04:** Verificar casos relevantes en copia temporal, UTF-8, sintaxis y alcance; entregar PR en borrador sin pedir revisores ni fusionar.
+
+La comprobación en Windows usó una copia bajo .venv/reviewer-cache-check-957: aciertos con tildes y mayúsculas, ausencias, persistencia entre procesos, aislamiento entre repositorios, conflicto rechazado (exit 1), sustitución explícita, borrado y JSON dañado rechazado (exit 1). node --check y git diff --check correctos. Solo se usó Node local; no se pidieron revisiones reales para verificarlo. Linux/macOS pendientes.
+
+- [x] **W05:** Recorrer colaboradores actuales y sus nombres públicos o aportaciones, ampliar alias inequívocos y comprobar la caché ampliada.
+
+La API de GitHub devolvió 16 colaboradores. Se consultaron sus nombres públicos y, para perfiles sin nombre, las cuentas atribuidas a commits de carpetas personales. La caché ampliada contiene 46 alias y cubre los 16 logins; cada alias se consultó con la herramienta local sin fallos. `diego` y `sergio` quedan sin asociación por existir dos compañeros con cada nombre. `mdiazcaballero` conserva solo el login: su perfil no publica nombre y no se pudo atribuirle un nombre personal con la evidencia consultada. Se comprobaron sintaxis Node y `git diff --check` en Windows.

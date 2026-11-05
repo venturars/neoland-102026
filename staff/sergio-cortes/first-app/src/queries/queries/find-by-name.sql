@@ -1,4 +1,4 @@
 SELECT *
 FROM users
-WHERE name = :name
+WHERE LOWER(name) = LOWER(:name)
 ORDER BY id;

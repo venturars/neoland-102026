@@ -12,7 +12,7 @@ El código y los nombres técnicos se escriben en inglés. Los comentarios de lo
 
 Los ficheros van en kebab-case. Las funciones y las variables van en camelCase. Los exports son con nombre. Los imports de JavaScript llevan la extensión `.js`. El SQL usa parámetros con nombre. No hay envoltorios ni helpers genéricos. El formato es el estándar de Prettier. Una constante va en mayúsculas.
 
-Una función por fichero, sin clases, sin `this` y sin métodos. Un usuario sigue siendo un registro con `id`, `name`, `email`, `createdAt` y `updatedAt`. Cada línea deja una sola acción en un nombre. Una acción es una llamada o una comprobación, así que `input.name` y `.trim()` van en líneas distintas y Prettier no las junta. Un fallo de la lista se comprueba con `if` y `throw new Error` en su propia línea. Se escribe como lo escribiría un junior a mano.
+Una función por fichero, sin clases, sin `this` y sin métodos. Las excepciones aprobadas están en «Excepciones». Un usuario sigue siendo un registro con `id`, `name`, `email`, `createdAt` y `updatedAt`. Cada línea deja una sola acción en un nombre. Una acción es una llamada o una comprobación, así que `input.name` y `.trim()` van en líneas distintas y Prettier no las junta. Un fallo de la lista se comprueba con `if` y `throw new Error` en su propia línea. Se escribe como lo escribiría un junior a mano.
 
 ## Funciones de negocio
 
@@ -43,6 +43,10 @@ Las reglas concretas de los campos y las fechas generadas por SQLite están en [
 
 Solo modifica propiedades presentes en `changes` y admitidas por la spec. Las demás conservan su valor. Cada valor se valida y normaliza como al crearlo. Un usuario puede conservar su propio valor único, pero no usar el de otra fila.
 
+### Funciones asíncronas
+
+Las funciones de `src/logic/` y de `src/queries/users.js` son `async`, porque cada consulta espera la respuesta del servidor de datos. Se llaman siempre con `await`, también dentro de `try`, para que el `catch` reciba el fallo de la consulta. La lógica solo usa `import` y `fetch` (a través de las consultas): no importa módulos `node:*`, para que el navegador pueda usarla.
+
 ### Respuesta y errores
 
 Una operación correcta devuelve directamente el dato saneado, sin un envoltorio como `{ ok: true }`. Si no produce datos, no inventa un valor de retorno. Una actualización devuelve la entidad completa, salvo contrato distinto aprobado en la spec.
@@ -56,6 +60,18 @@ Las entradas inválidas y los fallos de operación siguen [ERRORS.md](ERRORS.md)
 Si cambia un contrato, se actualizan sus clientes afectados. Cada archivo de `src/clients/terminal/` conserva una sola línea con el caso correcto. Los casos incorrectos se comprueban durante la tarea y no se añaden a esos archivos de ejemplo.
 
 Se reutilizan las responsabilidades existentes antes de crear funciones o consultas. El esquema no cambia como efecto secundario de otra tarea. Los cambios de datos siguen el procedimiento de migración de [DATABASE.md](DATABASE.md).
+
+## Excepciones
+
+Aprobadas en la tarea del cliente web independiente:
+
+- `src/clients/web/app.js` reúne las funciones de su cliente en un solo archivo.
+- `execute(method, sql, params)` de `src/queries/users.js` es el único envoltorio de `fetch` hacia el servidor de datos.
+
+Aprobadas en la tarea del cliente de escritorio:
+
+- `src/clients/electron/app.js` y `src/clients/electron/user-actions.js` reúnen las funciones de su cliente en un solo archivo.
+- `user-actions.js` responde `{ data }` o `{ error }` entre los procesos de ese cliente. `src/logic/` sigue sin envoltorios.
 
 ## Comentarios
 

@@ -18,6 +18,20 @@ El cliente `src/clients/browser/` contiene `index.html`, `app.js` y `styles.css`
 
 El cliente `src/clients/electron/` abre una ventana de escritorio propia e importa las operaciones de `src/logic/`. No reutiliza `src/clients/browser/` ni sustituye al servidor SQL de `src/db/server.js`.
 
+El cliente `src/clients/chrome/` reúne una extensión Manifest V3 y su API
+Fastify. El popup consulta exclusivamente `http://127.0.0.1:3002` con fetch;
+la API importa las cinco operaciones de usuarios de `src/logic/` y conserva
+sus reglas. `pnpm chrome` inicia la API. La extensión se carga manualmente
+en Chrome, según `README.md`. El servidor SQL permanece en 3000 y el
+cliente HTTP conserva su API Express en 3001.
+
+El cliente `src/clients/vscode/` aporta la vista Usuarios en la barra lateral
+de VS Code. Su proceso de extensión importa las cinco operaciones de
+`src/logic/`; la vista envía mensajes y presenta sus resultados. `pnpm vscode`
+abre la aplicación en una ventana de desarrollo desde Windows/PowerShell.
+No incorpora API ni puerto y conserva el servidor SQL en 3000, el cliente
+HTTP en 3001 y el cliente Chrome en 3002.
+
 Los contratos de funciones siguen [STYLE.md](STYLE.md); las salidas y los errores se definen en [ERRORS.md](ERRORS.md).
 
 `eslint.config.js` configura la revisión del JavaScript con las reglas

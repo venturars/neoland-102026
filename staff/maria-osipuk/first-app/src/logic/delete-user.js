@@ -1,6 +1,6 @@
 import { deleteUserRow, findUserById } from "../queries/users.js";
 
-export function deleteUser(id) {
+export async function deleteUser(id) {
   // Check that id is a whole number greater than zero.
   // The client sends it as a JavaScript value, so a string like "1"
   // or a decimal like 1.5 must be rejected here, before any query runs.
@@ -13,7 +13,7 @@ export function deleteUser(id) {
   let user;
 
   try {
-    user = findUserById(id);
+    user = await findUserById(id);
   } catch {
     throw new Error("Unable to find user");
   }
@@ -25,7 +25,7 @@ export function deleteUser(id) {
   }
 
   try {
-    deleteUserRow(id);
+    await deleteUserRow(id);
   } catch {
     throw new Error("Unable to delete user");
   }

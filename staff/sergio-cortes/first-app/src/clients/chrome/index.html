@@ -20,31 +20,81 @@
         <p id="message" class="message" role="status" hidden></p>
 
         <section id="selection-screen" data-screen>
-          <p class="eyebrow">Usuarios</p>
-          <h2 id="selection-heading">Selecciona un usuario</h2>
-          <p class="description">
-            Elige un usuario de la lista para ver sus opciones.
-          </p>
-          <form id="selection-form">
-            <div class="field">
-              <label for="user-select">Usuario</label>
-              <select id="user-select" name="user" required>
-                <option value="">Cargando usuarios…</option>
-              </select>
-              <p id="selection-status" class="help">Cargando la lista…</p>
-            </div>
-            <div class="actions">
-              <button id="select-user" type="submit">Continuar</button>
-              <button
-                id="reload-users"
-                class="secondary"
-                type="button"
-                data-action="selection"
-              >
-                Actualizar lista
-              </button>
-            </div>
-          </form>
+          <div class="panel">
+            <p class="eyebrow">Usuarios</p>
+            <h2 id="selection-heading">Selecciona un usuario</h2>
+            <p class="description">
+              Elige un usuario de la lista para ver sus opciones.
+            </p>
+            <form id="selection-form">
+              <div class="field">
+                <label for="user-select">Usuario</label>
+                <select id="user-select" name="user" required>
+                  <option value="">Cargando usuarios…</option>
+                </select>
+                <p id="selection-status" class="help">Cargando la lista…</p>
+              </div>
+              <div class="actions">
+                <button id="select-user" type="submit">Continuar</button>
+                <button
+                  id="reload-users"
+                  class="secondary"
+                  type="button"
+                  data-action="selection"
+                >
+                  Actualizar lista
+                </button>
+              </div>
+            </form>
+          </div>
+          <div class="panel">
+            <p class="eyebrow">Búsqueda</p>
+            <h2>Buscar usuario</h2>
+            <p class="description">
+              Elige criterio y valor exactos (nombre y email sin distinguir
+              mayúsculas). Tras buscar, la lista muestra ese resultado.
+            </p>
+            <form id="search-form">
+              <div class="field">
+                <label for="search-criterion">Criterio</label>
+                <select id="search-criterion" name="criterion" required>
+                  <option value="name">Nombre</option>
+                  <option value="email">Email</option>
+                  <option value="id">Id</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="search-value">Valor</label>
+                <input id="search-value" name="value" type="text" required />
+              </div>
+              <div class="actions">
+                <button id="search-users" type="submit">Buscar</button>
+              </div>
+            </form>
+          </div>
+          <div class="panel">
+            <p class="eyebrow">Alta</p>
+            <h2>Crear usuario</h2>
+            <p class="description">Añade un usuario con nombre y email.</p>
+            <form id="create-user-form">
+              <div class="field">
+                <label for="create-user-name">Nombre</label>
+                <input id="create-user-name" name="name" type="text" />
+              </div>
+              <div class="field">
+                <label for="create-user-email">Email</label>
+                <input
+                  id="create-user-email"
+                  name="email"
+                  type="email"
+                  maxlength="64"
+                />
+              </div>
+              <div class="actions">
+                <button type="submit">Crear usuario</button>
+              </div>
+            </form>
+          </div>
         </section>
 
         <section id="menu-screen" data-screen hidden>

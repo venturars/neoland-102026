@@ -7,7 +7,7 @@ Each layer has one job. The files of each layer are listed in [TREE.md](TREE.md)
 - `logic/` decides if an action is allowed. Its functions are async. It does not contain SQL. It calls the functions exported by `src/queries/users.js`. It never reads a `.sql` file.
 - `queries/` asks the database program for data with `fetch`. It does not decide if a name or an email is valid, and it imports nothing from Node, so it also runs in a browser. The SQL text lives in `src/db/queries/`.
 - `db/` is the database program. It opens the database, stores it, reads the SQL files and answers the queries over HTTP. It also serves the files of the web client and of the Electron client (`/electron/`).
-- `clients/` runs the logic by hand. A client imports a function from `logic/` and prints the result, or answers it over HTTP. It has no rules. The web client does it too, as a browser module. The Electron client does the same, also as a browser module. The popup of the Chrome extension is the exception: it only calls its own program over HTTP.
+- `clients/` runs the logic by hand. A client imports a function from `logic/` and prints the result, or answers it over HTTP. It has no rules. The web client does it too, as a browser module. The Electron client does the same, also as a browser module. The popup of the Chrome extension is the exception: it only calls its own program over HTTP. In the VS Code extension, the extension host imports `logic/`, and its webview only talks to the extension host.
 - `scripts/` holds the helper that starts the notebooks.
 - `agents/` holds the git workflow: an orchestrator and one subagent per moment. It has no rules of the app.
 - `skills/` holds one skill per git or GitHub step. The subagents call them.
@@ -60,6 +60,7 @@ A new query is a new `.sql` file in `src/db/queries/` and a new function in `src
 - `nest/` is the Nest client: an app started with `pnpm nest` that listens on `http://127.0.0.1:3003`, with the same five routes as `api/`. `main.js` creates the app, reads the body as JSON only, sets the filter and listens. `app.module.js` is the module, with the controller. `users.controller.js` has the routes: each one checks the shape of the body and calls one function of `logic/`. `errors.filter.js` turns an error into an HTTP answer. It has no rules. The database program must be running. `src/clients/nest/` departs from `docs/STYLE.md` and `docs/ERRORS.md`: it uses the conventions of Nest (file names, classes, methods, `this`, decorators and error classes). It uses the same sentences of `docs/ERRORS.md` and adds none. The rest of the project follows both guides.
 - `web/` has `index.html`, `style.css` and `app.js`: three screens (choose a user, menu, edit) over the real users. `app.js` is a browser module that imports `logic/`. It opens at `http://localhost:3000` while the database program runs. The `.txt` per feature of `terminal/` does not apply here; it is tested by opening the page.
 - `electron/` is the desktop client: `main.js`, `index.html`, `app.js` and `styles.css`. It has its own page and does not use `web/`. `main.js` only opens a window on `http://127.0.0.1:3000/electron/index.html`; the database program serves that page. `app.js` is a browser module that imports `logic/`, as `web/` does, and shows the message of any error as it is. It does not start the database program: `pnpm start` must be running. It opens with `pnpm electron`. The `.txt` per feature of `terminal/` does not apply here; it is tested by opening the window.
+- `vscode/` is the VS Code extension, opened with `pnpm vscode` in an Extension Development Host. It has no server and no port. `package.json` is the manifest of the extension, separate from the one of `first-app`. `extension.js` is the extension host: it imports `logic/`, asks before deleting and answers each message of the screen. `webview.js` is the screen: it draws what it receives and sends what the person types. It has no rules. `webview.css` is the style and `icon.svg` the icon of the sidebar. The database program must be running. The `.txt` per feature of `terminal/` does not apply here; it is tested by opening the view.
 
 ### scripts/
 
@@ -90,8 +91,8 @@ One folder per skill, each with a `SKILL.md`. A skill that runs a script names i
 - `create-empty-commit/` makes the empty commit `chore: open #N`.
 - `commit-changes/` saves a piece with named files.
 - `launch-push/` pushes the current branch and sets the upstream.
-- `create-pr-base-staging/` opens the pull request with base `staging`.
-- `create-draft/` leaves the pull request in draft.
+- `create-pr-base-staging/` opens the pull request with base `staging`, in draft and assigned to the signed-in user, in one call.
+- `create-draft/` turns a pull request that already exists into a draft.
 - `link-pr-to-issue/` leaves `Closes #N` in the body and links the issue in Development. The issue closes when the pull request reaches the default branch, not when it is merged into `staging`.
 - `assign-reviewers/` assigns the people who review the pull request and takes it out of draft.
 
@@ -104,6 +105,7 @@ One folder per skill, each with a `SKILL.md`. A skill that runs a script names i
 - `create-empty-commit.sh` creates the empty opening commit.
 - `commit-changes.sh` saves the named files.
 - `launch-push.sh` pushes the branch and sets the upstream.
+- `create-pr-base-staging.sh` opens the pull request with base `staging`, in draft and assigned to the signed-in user, with `gh pr create`.
 
 ### templates/
 
