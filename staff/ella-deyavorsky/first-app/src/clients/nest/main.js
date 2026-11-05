@@ -35,3 +35,4 @@ SwaggerModule.setup("docs", app, document);
 
 await app.listen(PORT, HOST);
 console.log("Nest client on http://" + HOST + ":" + PORT);
+console.log("Swagger UI on http://" + HOST + ":" + PORT + "/docs");

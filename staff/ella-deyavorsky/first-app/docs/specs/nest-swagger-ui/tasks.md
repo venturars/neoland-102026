@@ -41,3 +41,11 @@ Do the tasks in order. Inside a task, do the steps in order. `docs/CONSTITUTIONS
 - [x] Run `curl -i http://127.0.0.1:3003/nothing`. Result: 404 with an empty body.
 - [x] Run `curl -i http://127.0.0.1:3003/users` and `curl -i http://127.0.0.1:3003/users/gmail`. Result: both answer 200 as before.
 - [x] Open `http://127.0.0.1:3003/docs-json`. Result: it lists the six routes. The page keeps working with the defaults.
+
+## Task 5 — Print the address of the page
+
+Added on 2026-11-05 at the request of the person; see "Change of 2026-11-05 (after the run)" in `plan.md`.
+
+- [x] In `src/clients/nest/main.js`, after the existing `console.log`, print `Swagger UI on http://127.0.0.1:3003/docs`, built from `HOST` and `PORT`. Result: the client prints two lines at start and the first one is unchanged.
+- [x] Run `pnpm format` and `pnpm lint`. Result: both end without errors.
+- [x] Run `pnpm nest`. Result: the terminal prints both lines, and the address in the second one opens the page.

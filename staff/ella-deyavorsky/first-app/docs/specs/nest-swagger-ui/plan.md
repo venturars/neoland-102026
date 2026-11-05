@@ -9,6 +9,10 @@
 - **3:** the install script of `@scarf/scarf` is not run: the package is added with `--ignore-scripts`.
 - **4:** `js-yaml` 5.5.0 is accepted. The Socket review, its gaps and the alerts on 4.1.1 are accepted.
 
+### Change of 2026-11-05 (after the run)
+
+While checking the page, the person could not find its address: the client printed only `Nest client on http://127.0.0.1:3003`, and `/` is blank. The person chose to print the address. `main.js` prints a second line after the first: `Swagger UI on http://127.0.0.1:3003/docs`. The first line does not change, so this replaces the plan's words "The line printed at start stays as it is." (in "Files to change") and nothing else. `/` still answers 404 with an empty body. `docs/ARCHITECTURE.md` and `AGENTS.md` need no change.
+
 ## Summary
 
 The Nest client gets one more package, `@nestjs/swagger`. `main.js` mounts the Swagger UI page, and `users.controller.js` describes each route with the decorators of that package. Nothing in `logic/`, `queries/`, `db/`, the error filter or the other clients changes. There is no new function in `logic/`, no new query, no `.sql` file and no new error sentence. No file is added, so `docs/TREE.md` does not change.
