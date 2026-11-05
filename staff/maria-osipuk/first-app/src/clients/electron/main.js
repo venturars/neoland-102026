@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
+  countUsersAction,
   createUserAction,
   deleteUserAction,
   findUserAction,
@@ -69,6 +70,7 @@ async function confirmAndDeleteUser(event, id) {
 // Each channel is one action of the window. The first argument of a handler
 // is the event, so the values sent by the page come after it.
 ipcMain.handle("users:list", () => listUsersAction());
+ipcMain.handle("users:count", () => countUsersAction());
 ipcMain.handle("users:find", (event, id) => findUserAction(id));
 ipcMain.handle("users:create", (event, name, email) =>
   createUserAction(name, email),

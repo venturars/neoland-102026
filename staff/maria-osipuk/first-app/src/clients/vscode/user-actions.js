@@ -1,3 +1,4 @@
+import { countUsersByGender } from "../../logic/count-users-by-gender.js";
 import { createUser } from "../../logic/create-user.js";
 import { deleteUser } from "../../logic/delete-user.js";
 import { findUserById } from "../../logic/find-user-by-id.js";
@@ -52,6 +53,15 @@ export async function deleteUserAction(id) {
 
     // deleteUser returns nothing, so the answer has no user to carry.
     return { data: null };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+export async function countUsersAction() {
+  try {
+    const counts = await countUsersByGender();
+    return { data: counts };
   } catch (error) {
     return { error: error.message };
   }

@@ -27,11 +27,17 @@ const MESSAGES = {
 
 const GENERIC_MESSAGE = "No se ha podido completar la operación.";
 
+// The count shows this sentence in English, as it is, when the model
+// cannot classify. It is not in MESSAGES because it has no Spanish copy.
+const UNABLE_TO_CLASSIFY = "Unable to classify names";
+const COULD_NOT_CLASSIFY = "Could not classify the users.";
+
 // The selection lives in memory, so hiding the view forgets it.
 // isBusy stops a second click while an action is still waiting for its answer.
 const STATE = {
   selectedId: null,
   isBusy: false,
+  isCounting: false,
   lastRequest: 0,
 };
 
@@ -287,6 +293,76 @@ async function goBack() {
   STATE.isBusy = false;
 }
 
+function showTab(tabName) {
+  // The users tab is only hidden, not rebuilt, so its list, its detail and
+  // what was written in its forms are still there when it comes back.
+  const isUsers = tabName === "users";
+  document.getElementById("users-tab").hidden = !isUsers;
+  document.getElementById("count-tab").hidden = isUsers;
+
+  const usersTab = document.getElementById("tab-users");
+  usersTab.classList.toggle("is-active", isUsers);
+  usersTab.setAttribute("aria-selected", String(isUsers));
+
+  const countTab = document.getElementById("tab-count");
+  countTab.classList.toggle("is-active", !isUsers);
+  countTab.setAttribute("aria-selected", String(!isUsers));
+}
+
+function showUsersTab() {
+  showTab("users");
+}
+
+function showCountTab() {
+  showTab("count");
+}
+
+function showCountError(errorMessage) {
+  let text = COULD_NOT_CLASSIFY;
+
+  // Only this error has the English sentence. Any other error uses the
+  // same Spanish table as the rest of the view.
+  if (errorMessage !== UNABLE_TO_CLASSIFY) {
+    text = translateError(errorMessage);
+  }
+
+  const message = document.getElementById("count-message");
+  message.textContent = text;
+  message.hidden = false;
+}
+
+async function requestCount() {
+  if (STATE.isCounting) {
+    return;
+  }
+
+  STATE.isCounting = true;
+
+  // Hide the previous answer first: a failed count must not leave
+  // numbers on the screen that look like its result.
+  document.getElementById("count-message").hidden = true;
+  document.getElementById("count-result").hidden = true;
+  document.getElementById("count-loading").hidden = false;
+  document.getElementById("count-button").disabled = true;
+
+  const answer = await call("count", {});
+
+  document.getElementById("count-loading").hidden = true;
+  document.getElementById("count-button").disabled = false;
+  STATE.isCounting = false;
+
+  if (answer.error !== undefined) {
+    showCountError(answer.error);
+    return;
+  }
+
+  const counts = answer.data;
+  document.getElementById("count-female").textContent = counts.female;
+  document.getElementById("count-male").textContent = counts.male;
+  document.getElementById("count-undefined").textContent = counts.undefined;
+  document.getElementById("count-result").hidden = false;
+}
+
 async function initializeClient() {
   // This script is the last tag of the body, so these controls exist.
   window.addEventListener("message", receiveAnswer);
@@ -301,6 +377,13 @@ async function initializeClient() {
   backButton.addEventListener("click", goBack);
   const deleteButton = document.getElementById("delete-user");
   deleteButton.addEventListener("click", deleteSelectedUser);
+
+  const usersTab = document.getElementById("tab-users");
+  usersTab.addEventListener("click", showUsersTab);
+  const countTab = document.getElementById("tab-count");
+  countTab.addEventListener("click", showCountTab);
+  const countButton = document.getElementById("count-button");
+  countButton.addEventListener("click", requestCount);
 
   STATE.isBusy = true;
   await loadUsers();

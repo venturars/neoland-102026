@@ -1,17 +1,32 @@
 import assert from "node:assert/strict";
 import { once } from "node:events";
 import { mkdtempSync, rmSync } from "node:fs";
+import net from "node:net";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { test } from "node:test";
 
 import {
+  countUsersAction,
   createUserAction,
   deleteUserAction,
   findUserAction,
   listUsersAction,
   updateUserAction,
 } from "../src/clients/electron/user-actions.js";
+
+async function isOllamaStopped() {
+  // The count asks the local model at 127.0.0.1:11434. The failure case
+  // only makes sense when nothing listens there, so the test checks first.
+  const connection = net.createConnection({ host: "127.0.0.1", port: 11434 });
+  const connected = once(connection, "connect").then(() => false);
+  const refused = once(connection, "error").then(() => true);
+  const stopped = await Promise.race([connected, refused]);
+
+  connection.destroy();
+
+  return stopped;
+}
 
 async function testUserActions() {
   const folder = mkdtempSync(path.join(tmpdir(), "first-app-electron-"));
@@ -34,10 +49,30 @@ async function testUserActions() {
     // A new database answers an empty list, not an error.
     assert.deepEqual(await listUsersAction(), { data: [] });
 
+    // No users: three zeros in this order, without asking the model.
+    const emptyCount = await countUsersAction();
+    assert.deepEqual(emptyCount, {
+      data: { female: 0, male: 0, undefined: 0 },
+    });
+    assert.deepEqual(Object.keys(emptyCount.data), [
+      "female",
+      "male",
+      "undefined",
+    ]);
+
     const created = await createUserAction("Ada", "ada@example.com");
     const ada = created.data;
     assert.equal(ada.name, "Ada");
     assert.equal(ada.email, "ada@example.com");
+
+    // With a user and the local model stopped there is no count at all.
+    const ollamaStopped = await isOllamaStopped();
+
+    if (ollamaStopped) {
+      assert.deepEqual(await countUsersAction(), {
+        error: "Unable to classify names",
+      });
+    }
 
     const listed = await listUsersAction();
     assert.equal(listed.data.length, 1);
@@ -82,6 +117,9 @@ async function testUserActions() {
     await closed;
 
     assert.deepEqual(await listUsersAction(), {
+      error: "Unable to list users",
+    });
+    assert.deepEqual(await countUsersAction(), {
       error: "Unable to list users",
     });
     assert.deepEqual(await findUserAction(1), {
