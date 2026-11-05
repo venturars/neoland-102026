@@ -1,6 +1,8 @@
 flask
 google-auth-oauthlib
 requests
+pywebview
 pytest
 ruff
 mypy
+pyinstaller

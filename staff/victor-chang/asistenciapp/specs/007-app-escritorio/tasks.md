@@ -126,11 +126,17 @@ Cómo leer esta lista:
 
 ## Fase E · Escritorio (plan §2.2, §2.7, §2.9)
 
-- [ ] **T11** 🧪 · `entrypoints/desktop.py`:
+- [x] **T11** 🧪 · `entrypoints/desktop.py`:
   - tests en `test_desktop.py` con una ventana y un diálogo falsos (sin abrir nada): abrir el túnel pone `confirm_close` a `True` y cerrarlo a `False`, y los textos de cierre están en español (plan v1.1 §2.7); la ventana se crea con `text_select=True`; `DesktopApi.save_file` escribe el contenido en `utf-8-sig` en la ruta elegida y devuelve `True`, y si se cancela devuelve `False` sin escribir;
   - `webview` se importa dentro de las funciones (plan §5);
   - deben fallar; luego, el código, con `run_window` y `show_already_open`.
   - *Cubre:* CA-03, CA-10, CA-11, CA-17.
+  - **Hecha (2026-11-05):** 20 tests en el nuevo `test_desktop.py` (fallaron al no existir el módulo), con un módulo `webview` falso (externo, T4) y el `Tunnel` de verdad con el `cloudflared` falso. 603 tests en verde; `ruff` y `mypy` sin avisos.
+    - `watch_close(window, tunnel)`: registra en `tunnel.on_change` una función que pone `window.confirm_close`; también si la clase online ya estaba abierta (con `--tunel`). `CLOSE_TEXTS` con los textos en español.
+    - `DesktopApi(save_dialog)`: `attach(window)` y `save_file(filename, content)`: diálogo nativo con el nombre sugerido, escribe con `utf-8-sig`; `False` si se cancela, si no hay ventana o si lo que llega de la página no es texto (E1). Acepta la ruta como texto o como tupla, según el sistema.
+    - `run_window(url, tunnel)`: ventana de 1000 × 760 (mínimo 400 × 560), `text_select=True`, `localization=CLOSE_TEXTS` y la API; `show_already_open(message)`: ventana pequeña con el mensaje escapado (X4).
+    - `webview` se importa dentro de las funciones; para los tipos, `Window` de pywebview solo con `TYPE_CHECKING` (sin `Protocol`, §12).
+    - **Adelantado de T14:** `pywebview` (app) y `pyinstaller` (empaquetado) en `requirements.txt`, porque `desktop.py` ya usa los tipos de pywebview y `mypy` lo necesita. Su justificación ya está en plan §7.1.
 - [ ] **T12** 🧪 · Modo escritorio en `app.py` (plan §2.2):
   - tests en `test_app.py`: con `--ventana` o `sys.frozen` se elige el modo escritorio; sin ellos, el arranque de siempre; `--tunel` abre el `Tunnel`; en el modo escritorio, el `finally` cierra el túnel, para el servidor y suelta el bloqueo aunque la ventana falle (con piezas falsas);
   - `main()` se divide en `_run_terminal` y `_run_desktop` (M2);
