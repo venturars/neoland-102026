@@ -63,10 +63,17 @@ Cómo leer esta lista:
     - Sin `SO_REUSEADDR`; en Windows, `SO_EXCLUSIVEADDRUSE` para que otro programa no pueda compartir el puerto.
     - `release()` se puede llamar dos veces y `InstanceLock` funciona con `with` (S7).
     - Comprobado también entre **dos procesos**: con el bloqueo tomado, otro proceso recibe `AlreadyRunningError`; al soltarlo, lo toma sin problema.
-- [ ] **T05** 🧪 · Clase `Tunnel` en `infra/tunnel.py` (plan §2.6):
+- [x] **T05** 🧪 · Clase `Tunnel` en `infra/tunnel.py` (plan §2.6):
   - tests en `test_tunnel.py` con un `cloudflared` falso (un script que imprime una URL y espera): `open` dos veces → un solo proceso y la misma URL; `close` termina el proceso y deja `url` en `None`; `close` sin abrir no falla; si el proceso no sale en 5 s, se mata; `start_tunnel` usa el ejecutable que recibe y, con `None`, el del `PATH` como hoy; en Windows se pasa `CREATE_NO_WINDOW`;
   - deben fallar; luego, el código. Los tests de hoy de `start_tunnel` siguen en verde.
   - *Cubre:* CA-07, CA-12.
+  - **Hecha (2026-11-05):** 14 tests nuevos en `test_tunnel.py` (fallaron al no existir `Tunnel`); el `cloudflared` falso gana `wait`, `kill` y `poll`, y guarda cómo se lanzó. 539 tests en verde; `ruff` y `mypy` sin avisos.
+    - `start_tunnel(port, timeout, executable)`: con `executable`, no busca en el `PATH`; si el archivo no existe, `CloudflaredMissingError`. `creationflags=CREATE_NO_WINDOW` solo en Windows.
+    - `close_process(process)`: `terminate`, espera 5 s y, si no sale, `kill` (F4).
+    - `Tunnel(executable, port, timeout)`: `open()` (con `threading.Lock`: dos hilos a la vez lanzan un solo `cloudflared`), `close()` (no falla si no estaba abierto), `url` y `on_change` (lista de funciones avisadas con la URL o `None`, plan v1.1 §2.7).
+    - Además de lo previsto: `url` es `None` si `cloudflared` se cerró solo (así el panel no dice "Activa" sin túnel), y `open()` lo recoge antes de lanzar otro.
+    - Comprobado también con el **`cloudflared` real** 2026.10.7: abre en 5,4 s, el segundo `open()` da la misma URL, `close()` lo para al momento, avisa dos veces (URL y `None`) y no queda ningún proceso.
+    - `app.py` sigue llamando a `start_tunnel(port)` como hasta ahora; pasa a usar `Tunnel` en T12.
 
 ## Fase C · Entrada web (plan §2.6, §2.8, §2.12, §4)
 

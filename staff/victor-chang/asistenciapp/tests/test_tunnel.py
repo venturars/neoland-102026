@@ -1,10 +1,12 @@
-"""Tests de attendance/infra/tunnel.py · spec 001 CA-20; spec 005 · plan §2.7 (errores con nombre).
+"""Tests de attendance/infra/tunnel.py · spec 001 CA-20; spec 005 · plan §2.7; spec 007 CA-07, CA-12.
 
 Las líneas son copias reales de la salida de cloudflared 2026.10.1.
 """
 
 import io
 import os
+import subprocess
+import threading
 import time
 
 import pytest
@@ -13,6 +15,7 @@ from attendance.domain.errors import AppError
 from attendance.infra import tunnel
 from attendance.infra.tunnel import (
     CloudflaredMissingError,
+    Tunnel,
     TunnelError,
     TunnelExitedError,
     TunnelTimeoutError,
@@ -53,7 +56,7 @@ def test_ignores_other_lines(line):
 class FakeProcess:
     """Sustituye a cloudflared: su salida es un texto fijo."""
 
-    def __init__(self, output: str | None):
+    def __init__(self, output: str | None, stubborn: bool = False):
         if output is None:  # un cloudflared que no dice nada ni termina
             read_end, self._write_end = os.pipe()
             self.stdout = os.fdopen(read_end)
@@ -61,22 +64,47 @@ class FakeProcess:
             self._write_end = None
             self.stdout = io.StringIO(output)
         self.terminated = False
+        self.killed = False
+        self.exit_code: int | None = None
+        self._stubborn = stubborn  # no sale con terminate(): hay que matarlo
 
     def terminate(self) -> None:
         self.terminated = True
         if self._write_end is not None:  # como al morir cloudflared: su salida se acaba
             os.close(self._write_end)
             self._write_end = None
+        if not self._stubborn:
+            self.exit_code = 0
+
+    def wait(self, timeout: float | None = None) -> int:
+        if self.exit_code is None:
+            raise subprocess.TimeoutExpired("cloudflared", timeout or 0)
+        return self.exit_code
+
+    def kill(self) -> None:
+        self.killed = True
+        self.exit_code = -9
+
+    def poll(self) -> int | None:
+        return self.exit_code
 
 
 @pytest.fixture
 def fake_cloudflared(monkeypatch):
-    def install(output: str | None) -> FakeProcess:
-        process = FakeProcess(output)
+    """Instala un cloudflared falso y guarda cómo se lanzó cada vez (`install.calls`)."""
+
+    def install(output: str | None, stubborn: bool = False) -> FakeProcess:
+        process = FakeProcess(output, stubborn)
+
+        def popen(args, **kwargs):
+            install.calls.append((args, kwargs))
+            return process
+
         monkeypatch.setattr(tunnel.shutil, "which", lambda _name: "/usr/bin/cloudflared")
-        monkeypatch.setattr(tunnel.subprocess, "Popen", lambda *_a, **_k: process)
+        monkeypatch.setattr(tunnel.subprocess, "Popen", popen)
         return process
 
+    install.calls = []
     return install
 
 
@@ -114,3 +142,135 @@ def test_missing_cloudflared(monkeypatch):
 def test_tunnel_errors_say_what_to_do(error):  # E3, E5
     assert issubclass(error, TunnelError) and issubclass(TunnelError, AppError)
     assert error.MESSAGE.count(". ") >= 1 or ": " in error.MESSAGE
+
+
+# ---------- cloudflared dentro de la app y clase Tunnel (spec 007 · plan §2.6) ----------
+
+URL = "https://actual-academics-century-ratio.trycloudflare.com"
+
+
+@pytest.fixture
+def bundled(tmp_path):
+    """Un cloudflared "dentro de la app": un archivo que existe."""
+    path = tmp_path / "cloudflared"
+    path.write_text("")
+    return path
+
+
+def test_start_tunnel_uses_the_given_executable(fake_cloudflared, monkeypatch, bundled):  # CA-07
+    fake_cloudflared(URL_LINE + "\n")
+    monkeypatch.setattr(tunnel.shutil, "which", lambda _name: pytest.fail("no debe buscar en el PATH"))
+    start_tunnel(8000, timeout=5, executable=bundled)
+    args, _kwargs = fake_cloudflared.calls[0]
+    assert args == [str(bundled), "tunnel", "--url", "http://127.0.0.1:8000"]
+
+
+def test_start_tunnel_with_a_missing_executable(fake_cloudflared, tmp_path):
+    fake_cloudflared(URL_LINE + "\n")
+    with pytest.raises(CloudflaredMissingError):
+        start_tunnel(8000, timeout=5, executable=tmp_path / "no-existe")
+    assert fake_cloudflared.calls == []
+
+
+def test_on_windows_cloudflared_opens_no_console(fake_cloudflared, monkeypatch):  # plan §2.6
+    fake_cloudflared(URL_LINE + "\n")
+    monkeypatch.setattr(tunnel.sys, "platform", "win32")
+    start_tunnel(8000, timeout=5)
+    _args, kwargs = fake_cloudflared.calls[0]
+    assert kwargs["creationflags"] == tunnel.CREATE_NO_WINDOW == 0x08000000
+
+
+def test_on_macos_there_are_no_windows_flags(fake_cloudflared, monkeypatch):
+    fake_cloudflared(URL_LINE + "\n")
+    monkeypatch.setattr(tunnel.sys, "platform", "darwin")
+    start_tunnel(8000, timeout=5)
+    _args, kwargs = fake_cloudflared.calls[0]
+    assert kwargs.get("creationflags", 0) == 0
+
+
+def test_tunnel_starts_closed():
+    assert Tunnel(executable=None, port=8000).url is None
+
+
+def test_open_twice_starts_one_cloudflared(fake_cloudflared):  # CA-07: dos clics, un túnel
+    fake_cloudflared(URL_LINE + "\n")
+    online = Tunnel(executable=None, port=8000, timeout=5)
+    assert online.open() == URL
+    assert online.open() == URL
+    assert online.url == URL
+    assert len(fake_cloudflared.calls) == 1
+
+
+def test_open_from_two_threads_starts_one_cloudflared(fake_cloudflared):  # dos peticiones a la vez
+    fake_cloudflared(URL_LINE + "\n")
+    online = Tunnel(executable=None, port=8000, timeout=5)
+    urls = []
+    threads = [threading.Thread(target=lambda: urls.append(online.open())) for _ in range(2)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    assert urls == [URL, URL]
+    assert len(fake_cloudflared.calls) == 1
+
+
+def test_close_ends_cloudflared(fake_cloudflared):  # CA-12
+    process = fake_cloudflared(URL_LINE + "\n")
+    online = Tunnel(executable=None, port=8000, timeout=5)
+    online.open()
+    online.close()
+    assert process.terminated and not process.killed
+    assert online.url is None
+
+
+def test_close_kills_a_cloudflared_that_does_not_stop(fake_cloudflared):  # F4: libera lo que abrió
+    process = fake_cloudflared(URL_LINE + "\n", stubborn=True)
+    online = Tunnel(executable=None, port=8000, timeout=5)
+    online.open()
+    online.close()
+    assert process.terminated and process.killed
+    assert online.url is None
+
+
+def test_close_without_opening_does_not_fail():  # lo llama el finally de app.py
+    online = Tunnel(executable=None, port=8000)
+    online.close()
+    online.close()
+    assert online.url is None
+
+
+def test_reopen_after_closing_starts_a_new_cloudflared(fake_cloudflared):
+    fake_cloudflared(URL_LINE + "\n")
+    online = Tunnel(executable=None, port=8000, timeout=5)
+    online.open()
+    online.close()
+    fake_cloudflared(URL_LINE + "\n")
+    assert online.open() == URL
+    assert len(fake_cloudflared.calls) == 2
+
+
+def test_listeners_hear_each_change(fake_cloudflared):  # plan v1.1 §2.7: la ventana pide confirmar al cerrar
+    fake_cloudflared(URL_LINE + "\n")
+    online = Tunnel(executable=None, port=8000, timeout=5)
+    heard = []
+    online.on_change.append(heard.append)
+    online.open()
+    online.open()  # ya abierto: no cambia nada
+    online.close()
+    assert heard == [URL, None]
+
+
+def test_url_is_none_if_cloudflared_died_on_its_own(fake_cloudflared):  # el panel no dice "Activa" sin túnel
+    process = fake_cloudflared(URL_LINE + "\n")
+    online = Tunnel(executable=None, port=8000, timeout=5)
+    online.open()
+    process.exit_code = 1
+    assert online.url is None
+
+
+def test_open_passes_on_the_errors(fake_cloudflared):  # CA-08: el error llega al panel
+    fake_cloudflared("2026-10-20T08:33:16Z ERR failed to request quick Tunnel\n")
+    online = Tunnel(executable=None, port=8000, timeout=5)
+    with pytest.raises(TunnelExitedError):
+        online.open()
+    assert online.url is None
