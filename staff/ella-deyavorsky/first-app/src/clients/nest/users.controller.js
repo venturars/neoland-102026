@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Bind,
   Body,
   Controller,
   Delete,
@@ -16,7 +17,10 @@ import { updateUser } from "../../logic/update-user.js";
 import { deleteUser } from "../../logic/delete-user.js";
 
 // Each method calls one function of logic/. The rules stay there. The error filter answers what it throws.
+@Controller()
 export class UsersController {
+  @Post("users")
+  @Bind(Body())
   async create(body) {
     // The method checks the shape of the input. The rules stay in logic/.
     if (body === undefined || body === null || typeof body !== "object") {
@@ -32,10 +36,13 @@ export class UsersController {
     return createUser({ name, email });
   }
 
+  @Get("users")
   async list() {
     return listUsers();
   }
 
+  @Get("users/:id")
+  @Bind(Param("id"))
   async findOne(idText) {
     // The id comes from the path as text. Text that is not a number matches no user.
     const id = Number(idText);
@@ -43,6 +50,8 @@ export class UsersController {
     return findUserById({ id });
   }
 
+  @Patch("users/:id")
+  @Bind(Param("id"), Body())
   async update(idText, body) {
     const id = Number(idText);
 
@@ -63,46 +72,12 @@ export class UsersController {
     return updateUser({ id, name, email });
   }
 
+  @Delete("users/:id")
+  @HttpCode(204)
+  @Bind(Param("id"))
   async remove(idText) {
     const id = Number(idText);
 
     await deleteUser({ id });
   }
 }
-
-// Plain Node does not read "@", so each decorator is called as a function.
-const methods = UsersController.prototype;
-
-Controller("users")(UsersController);
-
-Post()(methods, "create", Object.getOwnPropertyDescriptor(methods, "create"));
-Body()(methods, "create", 0);
-
-Get()(methods, "list", Object.getOwnPropertyDescriptor(methods, "list"));
-
-Get(":id")(
-  methods,
-  "findOne",
-  Object.getOwnPropertyDescriptor(methods, "findOne"),
-);
-Param("id")(methods, "findOne", 0);
-
-Patch(":id")(
-  methods,
-  "update",
-  Object.getOwnPropertyDescriptor(methods, "update"),
-);
-Param("id")(methods, "update", 0);
-Body()(methods, "update", 1);
-
-Delete(":id")(
-  methods,
-  "remove",
-  Object.getOwnPropertyDescriptor(methods, "remove"),
-);
-HttpCode(204)(
-  methods,
-  "remove",
-  Object.getOwnPropertyDescriptor(methods, "remove"),
-);
-Param("id")(methods, "remove", 0);

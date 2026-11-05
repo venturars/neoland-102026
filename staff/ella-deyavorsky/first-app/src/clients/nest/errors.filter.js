@@ -11,6 +11,7 @@ const STATUS_BY_SENTENCE = new Map([
 ]);
 
 // Turns everything that is thrown into an HTTP answer. logic/ throws a plain Error and knows nothing about HTTP.
+@Catch()
 export class ErrorsFilter {
   constructor(httpAdapter) {
     this.httpAdapter = httpAdapter;
@@ -53,6 +54,3 @@ export class ErrorsFilter {
     this.httpAdapter.reply(response, { error: "The database failed." }, 500);
   }
 }
-
-// Plain Node does not read "@", so the decorator is called as a function.
-Catch()(ErrorsFilter);
