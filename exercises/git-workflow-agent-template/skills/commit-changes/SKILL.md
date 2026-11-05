@@ -9,20 +9,25 @@ Fuente: un commit es un conventional commit, como en [github-pr](https://www.ski
 
 #### Especificación de Argumentos
 
-1. **MENSAJE** _(Obligatorio)_: Conventional commit en inglés, `tipo: descripción`. El tipo es `feat`, `fix`, `docs`, `refactor`, `test`, `chore` o `knowledge`.
+1. **MENSAJE** _(Obligatorio)_: Conventional commit en inglés, `tipo: descripción`. El tipo es `feat`, `fix`, `chore`, `refactor`, `docs`, `test`, `style`, `perf` o `ci`.
 2. **FICHERO** _(Obligatorio, uno o más)_: Ruta desde la raíz del repo. Repite el argumento por cada fichero del trozo.
 
 #### Reglas de Invocación Críticas
 
-- **Mensaje técnico:** La primera línea es `tipo: descripción` o `tipo(ámbito): descripción`, en inglés, en imperativo y sin punto final. Dice qué cambió. Apunta a 50 caracteres y no pasa de 72. No pongas la ruta del fichero en esa línea, ni un verbo suelto (`update files`), ni un pasado (`added`). El commit vacío sigue siendo `chore: open #N`, sin cuerpo.
-- **Desglose:** Una línea en blanco y el detalle técnico de este commit, en inglés. Puede ocupar varias líneas. Cada línea puede nombrar el fichero o la función y decir qué cambió ahí, y por qué si no es obvio. No repite la primera línea. Si la pull request tiene varios commits, este texto cubre solo este. El commit vacío no lleva desglose.
+- **Mensaje técnico:** Primera línea `tipo: descripción` o `tipo(ámbito): descripción`, en inglés, en imperativo, sin punto final. Dice qué cambió. Apunta a 50 caracteres, máximo 72. Sin rutas de fichero, sin verbos sueltos (`update files`), sin pasado (`added`). Un cambio incompatible lleva `!` tras el tipo: `feat(api)!: …`. El commit vacío sigue siendo `chore: open #N`, sin cuerpo.
+- **Desglose:** Línea en blanco y el detalle técnico de este commit, en inglés, líneas de máximo 72 caracteres. Nombra las funciones, campos o ficheros implicados; explica por qué se hizo y, si el diff no lo deja claro, qué cambió. No repite la primera línea. Si la pull request tiene varios commits, cubre solo este. Opcional en commits triviales; el commit vacío no lo lleva.
+- **Pie:** Línea en blanco y la referencia a la issue: `Closes #N` o `Refs #N`. Si hay `!`, añade `BREAKING CHANGE: qué deja de funcionar`.
 - **Ejemplo:** Muestra la forma. No se copia.
 
   ```
   feat(reports): print the stored total
 
-  printTotal returns the total addLine stored.
-  src/reports/print-total.js prints that total instead of summing the lines again.
+  printTotal recomputed the sum from report.lines on every call, so it
+  ignored the discounts addLine already applies to report.total.
+  src/reports/print-total.js now reads report.total instead of reducing
+  lines; the sum helper is removed.
+
+  Closes #42
   ```
 - **Escapado de caracteres**: Si el mensaje contiene comillas dobles (`"`), escápalas como `\"`.
 - **Procesamiento de respuestas**: El script lista el mensaje y los ficheros. El commit lleva solo esos ficheros: lo que ya estuviera preparado se queda preparado. Si el código de salida no es 0, no reintentes metiendo más ficheros de los que nombró el alumno.
