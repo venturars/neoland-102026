@@ -11,6 +11,7 @@
     "start": "node src/db/server.js",
     "http": "node src/clients/http/app.js",
     "chrome": "node src/clients/chrome/api.js",
+    "nest": "rm -rf dist && babel src -d dist --config-file ./babel.config.json && node dist/clients/nest/main.js",
     "electron": "electron src/clients/electron/main.js",
     "web": "open -na \"Google Chrome\" --args --user-data-dir=/tmp/first-app-chrome --allow-file-access-from-files \"file://$(pwd)/src/clients/web/index.html\""
   },
@@ -20,11 +21,21 @@
   "type": "module",
   "packageManager": "pnpm@10.34.7",
   "dependencies": {
+    "@nestjs/common": "12.3.3",
+    "@nestjs/core": "12.3.3",
+    "@nestjs/platform-express": "12.3.3",
     "express": "5.3.0",
     "fastify": "5.12.8",
-    "openai": "^7.40.0"
+    "openai": "^7.40.0",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2"
   },
   "devDependencies": {
+    "@babel/cli": "8.1.0",
+    "@babel/core": "8.1.0",
+    "@babel/eslint-parser": "8.0.7",
+    "@babel/plugin-proposal-decorators": "8.0.2",
+    "@babel/preset-env": "8.0.7",
     "electron": "45.2.2",
     "eslint": "10.13.0",
     "prettier": "3.9.10"
