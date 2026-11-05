@@ -1,9 +1,10 @@
+import babelParser from "@babel/eslint-parser";
 import { defineConfig } from "eslint/config";
 import js from "@eslint/js";
 
 export default defineConfig([
   {
-    ignores: ["node_modules/**", ".venv/**"],
+    ignores: ["node_modules/**", ".venv/**", "dist/**"],
   },
   {
     files: ["**/*.js"],
@@ -49,6 +50,22 @@ export default defineConfig([
       globals: {
         FormData: "readonly",
         document: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/nest/**/*.js"],
+    languageOptions: {
+      parser: babelParser,
+      parserOptions: {
+        requireConfigFile: false,
+        babelOptions: {
+          configFile: "./babel.config.json",
+        },
+      },
+      globals: {
+        console: "readonly",
+        URL: "readonly",
       },
     },
   },

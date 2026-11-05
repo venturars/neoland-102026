@@ -47,3 +47,9 @@ Los comandos llevan `--scope user` y valen para todos tus proyectos. Para tenerl
 Crea `~/.cursor/mcp.json` para tenerlos en todos tus proyectos, o `.cursor/mcp.json` para tenerlos solo aquí. Dentro de `mcpServers`, copia la entrada de cada apartado de `MCP.md`. Si el fichero ya existe, añade esas entradas y deja las que ya tuvieras.
 
 Abre Cursor Settings → MCP y comprueba que aparecen conectados. Abre una conversación nueva de Agent.
+
+## Nest
+
+Desde `first-app`, deja `npm run db` en marcha y ejecuta `npm run nest`. Responde en `http://127.0.0.1:3003`.
+
+Este cliente se aparta de `docs/STYLE.md` y de `docs/ERRORS.md`: usa clases, métodos, `this` y decoradores, y traduce las frases de error que ya existen. Esas dos guías siguen igual para el resto de la app. No sustituye al cliente HTTP del puerto 3001.

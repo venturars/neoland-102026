@@ -1,6 +1,7 @@
 # Árbol
 
 first-app/
+  babel.config.json
   src/
     db/
       connection.js
@@ -30,6 +31,12 @@ first-app/
         index.html
         app.js
         styles.css
+      nest/
+        main.js
+        app.module.js
+        users.controller.js
+        users.service.js
+        http-exception.filter.js
     users.js
   logic/
     create-user.js
@@ -83,6 +90,10 @@ first-app/
         plan.md
         tasks.md
       servidor-base/
+        spec.md
+        plan.md
+        tasks.md
+      cliente-nest/
         spec.md
         plan.md
         tasks.md
