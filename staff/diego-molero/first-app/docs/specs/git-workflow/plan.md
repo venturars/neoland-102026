@@ -53,14 +53,3 @@ La constitución se cumple: cambio exclusivo de automatización y documentación
 ## Iteración del 4 de noviembre de 2026 · Issue #855
 
 Comparar agentes y skills de `exercises/git-workflow-agent-template` en el `staging` actualizado. Incorporar la validación de una issue lista y la regla explícita de crear rama y PR en borrador antes de cambiar un proyecto. Conservar las diferencias locales justificadas: delegación real, autorizaciones ya dadas, comentarios y cuerpo en español, títulos cortos en inglés, selección de las doce plantillas, alternativa `gh`, ausencia de cambios automáticos de credenciales y scripts seguros. Revisar sintaxis, referencias, UTF-8 y recorridos aislados en repositorios temporales; registrar resultados en tareas.
-
-## Iteración del 4 de noviembre de 2026 · Issue #957
-
-1. Guardar `skills/assign-reviewers/reviewer-cache.json` en UTF-8 y versionado, agrupado por repositorio, con las dos asociaciones proporcionadas por Diego.
-2. Añadir `tools/reviewer-cache.js` con `get`, `set` y `remove` sin paquetes ni red. Normalizar nombre a minúsculas, sin tildes y con espacios compactados. `set` rechaza conflictos salvo corrección explícita con `--replace`; validar el archivo antes de escribir.
-3. Actualizar `assign-reviewers` y el orquestador: consultar primero la caché, resolver solo ausentes con las reglas actuales, guardar hallazgos inequívocos, excluir autor y duplicados. Ante un login incorrecto confirmado, corregirlo expresamente. No invalidar por errores transitorios.
-4. Actualizar arquitectura y árbol. Comprobar sintaxis, UTF-8 y casos de acierto, ausencia, separación, conflicto, corrección y archivo dañado en copia temporal. Entregar en PR borrador sin pedir revisores durante esta tarea.
-
-### Ampliación de alias iniciales
-
-Consultar la lista viva de colaboradores, sus nombres públicos y las cuentas atribuidas a commits de las carpetas personales cuando falte el nombre público. Añadir logins como clave propia y nombres completos o apodos solo cuando la relación sea clara. Evitar `diego` y `sergio`, compartidos por más de un colaborador. Mantener el aprendizaje de nombres nuevos descrito arriba y comprobar que todos los alias del JSON se consultan sin duplicados ni conflictos.

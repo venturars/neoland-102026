@@ -103,3 +103,8 @@ venv/
 
 # AsistenciApp: data/ guarda nombres de alumnos y el token del profesor.
 **/asistenciapp/data/
+
+# Caché local del workflow compartido.
+/.git-workflow-cache.json
+/.git-workflow-cache.json.*.tmp
+/.git-workflow-cache.lock
