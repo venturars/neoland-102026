@@ -181,6 +181,15 @@ seis roles ejecutan aclaración, issue, rama, commit, push y PR mediante delegac
 nativa de Codex; no requieren un registro de Cursor. El principal conserva status,
 pull, enlace Development y asignación de revisores.
 
+La aclaración devuelve las preguntas necesarias con una recomendación por pregunta
+y termina. El principal espera las respuestas y conserva el historial completo al
+reanudar o sustituir el subagente. Una tarea definida aprovecha los documentos;
+una issue existente que requiere ediciones prepara o reanuda el draft primero.
+Los mensajes de commit nombran el archivo o función y el cambio concreto.
+
+La actualización se documenta en `specs/014-rondas-y-commits/spec.md`, `plan.md`
+y `tasks.md`; esos tres archivos registran criterios, enfoque y comprobaciones.
+
 Las quince skills documentan sus entradas y comprobaciones. Los siete scripts
 Bash conservan la implementación original del template y trabajan desde la raíz
 Git. El orquestador limita los encargos a esta app y nombra los archivos de cada
