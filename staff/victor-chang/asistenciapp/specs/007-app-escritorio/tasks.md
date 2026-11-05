@@ -95,10 +95,12 @@ Cómo leer esta lista:
     - `online.py`: `GET /api/app`, `POST /api/online` y `DELETE /api/online`, con la excepción a C2 de plan §7.2 anotada en el módulo. Respuestas por `serializers.py` (`online_json`, `app_info_json`, D7/F2); con clase online, `GET /api/app` incluye también su `url`.
     - **Añadido al plan:** `OnlineNotAvailableError` (`409`, "La clase online no está disponible en este arranque. Cierra la app y vuelve a abrirla.") si la app se montó sin `tunnel`. Desde T12 `app.py` siempre lo pasa, así que solo puede pasar si algo se monta mal.
     - Errores de túnel en la tabla única (`422` sin `cloudflared`, `502` tiempo agotado o cerrado); el test de `test_web_errors.py` que recorre la tabla ya comprueba su código y su mensaje en JSON.
-- [ ] **T08** 🧪 · Enlace de alumnos con la URL del túnel en `teacher.py` (plan §2.6):
+- [x] **T08** 🧪 · Enlace de alumnos con la URL del túnel en `teacher.py` (plan §2.6):
   - tests en `test_web_teacher.py`: con clase online, `studentUrl` empieza por la URL del túnel; sin ella, por `request.host_url` como hoy;
   - deben fallar; luego, el código.
   - *Cubre:* CA-07.
+  - **Hecha (2026-11-05):** 2 tests nuevos en `test_web_teacher.py` con la app de escritorio, el `Tunnel` de verdad y el `cloudflared` falso, pidiendo el panel desde `http://127.0.0.1:<puerto>`. Falló el de "clase online abierta" (daba `127.0.0.1`); el de "cerrada" ya pasaba y queda como red. 573 tests en verde; `ruff` y `mypy` sin avisos.
+    - `teacher.py`: `_student_base_url()` da `tunnel.url + "/"` si hay clase online y, si no, `request.host_url`. El test de spec 001 con el panel abierto desde el túnel (`X-Forwarded-Host`) sigue en verde.
 - [ ] **T09** 🧪 · Mensajes de Google para la llave compartida (plan §2.8):
   - test: el mensaje de `MeetLoginNotCompletedError` incluye la frase del tope de usuarios y dónde dejar la llave propia;
   - el comentario de `google_auth.py` sobre la caducidad semanal (spec 004 P7) pasa a decir que en producción el permiso no caduca;

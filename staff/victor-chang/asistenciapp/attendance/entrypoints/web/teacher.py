@@ -49,7 +49,7 @@ def create_session() -> ResponseReturnValue:
 def teacher_view(session_id: str) -> ResponseReturnValue:
     """La clase, sus registros y, si está abierta, el código y su cuenta atrás (spec 001 · CA-10 a CA-13)."""
     view = sessions.teacher_view(context.db(), session_id, context.now())
-    return jsonify(teacher_view_json(view, f"{request.host_url}alumno.html?s={session_id}"))
+    return jsonify(teacher_view_json(view, f"{_student_base_url()}alumno.html?s={session_id}"))
 
 
 @blueprint.post("/<session_id>/meet-sync")
@@ -89,3 +89,12 @@ def export(session_id: str) -> ResponseReturnValue:
         mimetype="text/csv",
         headers={"Content-Disposition": f'attachment; filename="{export_file.filename}"'},
     )
+
+
+def _student_base_url() -> str:
+    # Con la clase online abierta, su dirección pública: en la ventana de escritorio el panel está en
+    # 127.0.0.1 (spec 007 · plan §2.6, CA-07). Si no, la de la petición, como hasta ahora (spec 001 · CA-19).
+    tunnel = context.current().tunnel
+    if tunnel is not None and tunnel.url is not None:
+        return f"{tunnel.url}/"
+    return request.host_url

@@ -8,10 +8,14 @@ Vienen de test_api.py (spec 005 · T14). Cambia solo el de abrir con un cuerpo m
 import re
 
 import pytest
+from conftest import TOKEN, TUNNEL_URL, TUNNEL_URL_LINE
 from web_helpers import check_in, current_code, open_session
 
+from attendance.config import Config
 from attendance.domain.errors import TitleTooLongError
+from attendance.entrypoints.web import create_app
 from attendance.entrypoints.web.errors import MalformedRequestError
+from attendance.infra.tunnel import Tunnel
 
 CLOSED = "La asistencia de esta clase ya está cerrada. Si acabas de llegar, avisa al profesor."
 
@@ -141,6 +145,34 @@ def test_student_url_uses_public_tunnel_address(client, teacher):  # CA-19
         headers={**teacher, "X-Forwarded-Proto": "https", "X-Forwarded-Host": "abc.trycloudflare.com"},
     )
     assert res.get_json()["studentUrl"] == f"https://abc.trycloudflare.com/alumno.html?s={sid}"
+
+
+# ---------- spec 007 · T08: enlace de alumnos con la clase online (CA-07; plan §2.6) ----------
+
+
+@pytest.fixture
+def desktop_client(tmp_path, clock):
+    """La app de escritorio: el panel se abre en 127.0.0.1 y la clase online se abre desde él."""
+    config = Config(db_path=tmp_path / "test.db", port=8000, timezone=None)
+    tunnel = Tunnel(executable=None, port=8000, timeout=5)
+    return create_app(config, clock=clock, teacher_token=TOKEN, tunnel=tunnel, desktop=True).test_client()
+
+
+def test_with_the_online_class_the_student_link_is_public(desktop_client, teacher, fake_cloudflared):  # CA-07
+    fake_cloudflared(TUNNEL_URL_LINE + "\n")
+    sid = open_session(desktop_client, teacher)
+    desktop_client.post("/api/online", headers=teacher)
+    res = desktop_client.get(f"/api/sessions/{sid}", headers=teacher, base_url="http://127.0.0.1:61670")
+    assert res.get_json()["studentUrl"] == f"{TUNNEL_URL}/alumno.html?s={sid}"
+
+
+def test_without_the_online_class_the_student_link_is_local(desktop_client, teacher, fake_cloudflared):  # CA-09
+    fake_cloudflared(TUNNEL_URL_LINE + "\n")
+    sid = open_session(desktop_client, teacher)
+    desktop_client.post("/api/online", headers=teacher)
+    desktop_client.delete("/api/online", headers=teacher)
+    res = desktop_client.get(f"/api/sessions/{sid}", headers=teacher, base_url="http://127.0.0.1:61670")
+    assert res.get_json()["studentUrl"] == f"http://127.0.0.1:61670/alumno.html?s={sid}"
 
 
 # ---------- T22 · quitar registros (CA-24, CA-25, CA-26) ----------
