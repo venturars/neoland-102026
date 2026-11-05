@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "First App",
+  "version": "1.0.0",
+  "description": "Gestiona los usuarios de First App desde la barra de Chrome.",
+  "action": {
+    "default_title": "First App",
+    "default_popup": "popup.html"
+  },
+  "host_permissions": ["http://127.0.0.1:3002/*"]
+}

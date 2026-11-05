@@ -1,0 +1,33 @@
+{
+  "name": "first-app-users",
+  "displayName": "First app users",
+  "description": "Crea, lista, consulta, cambia y borra los usuarios de first-app.",
+  "version": "0.0.0",
+  "publisher": "first-app",
+  "private": true,
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "type": "module",
+  "main": "./extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "firstAppUsersContainer",
+          "title": "Usuarios",
+          "icon": "./icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "firstAppUsersContainer": [
+        {
+          "id": "firstAppUsers",
+          "name": "Usuarios",
+          "type": "webview"
+        }
+      ]
+    }
+  }
+}

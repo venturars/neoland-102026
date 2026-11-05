@@ -1,6 +1,6 @@
 # First App
 
-Aplicación educativa de gestión de usuarios con Node.js y SQLite. Tiene clientes de terminal, Jupyter, navegador y REST. El navegador usa HTML, CSS y JavaScript vanilla, sin frameworks.
+Aplicación educativa de gestión de usuarios con Node.js y SQLite. Tiene clientes de terminal, Jupyter, navegador, REST, escritorio y extensión de Chrome. El navegador usa HTML, CSS y JavaScript vanilla, sin frameworks.
 
 ## Arrancar
 
@@ -14,12 +14,14 @@ Arranca el **servidor de datos** en `http://127.0.0.1:3000`. Es el único proces
 
 Con el servidor de datos arrancado, cada cliente se usa por separado:
 
-| Cliente   | Cómo se abre                                                         |
-| --------- | -------------------------------------------------------------------- |
-| Navegador | `pnpm run web` abre Chrome con `src/clients/web/index.html`.         |
-| Terminal  | Copiar una línea de `src/clients/terminal/`.                         |
-| Jupyter   | `./scripts/jupyter.sh` abre los cuadernos de `src/clients/jupyter/`. |
-| REST      | `pnpm run http` arranca el cliente en `http://127.0.0.1:3001`.       |
+| Cliente    | Cómo se abre                                                          |
+| ---------- | --------------------------------------------------------------------- |
+| Navegador  | `pnpm run web` abre Chrome con `src/clients/web/index.html`.          |
+| Terminal   | Copiar una línea de `src/clients/terminal/`.                          |
+| Jupyter    | `./scripts/jupyter.sh` abre los cuadernos de `src/clients/jupyter/`.  |
+| REST       | `pnpm run http` arranca el cliente en `http://127.0.0.1:3001`.        |
+| Escritorio | `pnpm run electron` abre la aplicación en su propia ventana.          |
+| Chrome     | `pnpm run chrome` arranca su API y la extensión se abre desde Chrome. |
 
 `pnpm run web` abre Chrome con un perfil temporal y `--allow-file-access-from-files`, porque la página se abre desde `file://` e importa módulos JavaScript de `src/logic/`. Chrome bloquea esos imports sin esa opción.
 
@@ -45,6 +47,34 @@ Un error responde JSON con la clave `message`. Para no tocar la base real, arran
 
 Los cambios guardados se conservan al reiniciar. Recargar la página vuelve a la selección.
 
+## Qué muestra la aplicación de escritorio
+
+`pnpm run electron` abre una ventana propia. El primer arranque necesita internet y tarda más, porque descarga el binario de Electron. Si falla con `does not provide an export named 'BrowserWindow'`, la terminal tiene definida `ELECTRON_RUN_AS_NODE`: ejecutar antes `unset ELECTRON_RUN_AS_NODE`.
+
+- **Lista, a la izquierda:** los usuarios, el botón «Actualizar» y el botón «Nuevo usuario».
+- **Panel, a la derecha:** el alta o, al elegir un usuario, su detalle para guardar cambios o eliminarlo.
+
+Eliminar pide confirmación con un diálogo del sistema. Cerrar la ventana termina la aplicación, también en macOS.
+
+## Cargar la extensión de Chrome
+
+La extensión necesita dos procesos: `pnpm start` y `pnpm run chrome`, que arranca su API en `http://127.0.0.1:3002`. El cliente REST no hace falta.
+
+Se carga una sola vez. Para probarla sin tocar el perfil personal, este comando abre Chrome con un perfil temporal, el mismo de `pnpm run web`, directamente en la página de extensiones:
+
+```sh
+open -na "Google Chrome" --args --user-data-dir=/tmp/first-app-chrome "chrome://extensions"
+```
+
+1. En `chrome://extensions`, activar el **Modo desarrollador**.
+2. Pulsar **Cargar descomprimida** y elegir la carpeta `src/clients/chrome/`.
+3. Abrirla con su icono en la barra del navegador. Se puede fijar desde el icono de extensiones.
+
+- **Lista:** los usuarios y el formulario para crear uno nuevo.
+- **Detalle:** al elegir un usuario, sus datos, el formulario para guardar cambios, «Volver» y «Borrar usuario», que pide confirmación dentro de la misma ventana.
+
+Los errores se ven en inglés, sin traducir. Chrome cierra la ventana al pulsar fuera de ella: lo escrito sin guardar se pierde y se vuelve a la lista.
+
 ## Dónde está el código
 
 - `src/db/server.js`: el servidor de datos. Recibe SQL por `POST /execute` y lo ejecuta en SQLite.
@@ -52,6 +82,8 @@ Los cambios guardados se conservan al reiniciar. Recargar la página vuelve a la
 - `src/logic/`: validación y operaciones de usuarios que comparten todos los clientes.
 - `src/clients/web/`: `index.html`, `styles.css` y `app.js`. Importa `src/logic/` directamente.
 - `src/clients/http/app.js`: el cliente REST con Express. Importa `src/logic/` directamente.
+- `src/clients/electron/`: la aplicación de escritorio. Su proceso principal llama a `src/logic/`, y su página le pide las acciones mediante `preload.cjs`.
+- `src/clients/chrome/`: la extensión y su API con Fastify. La API importa `src/logic/`, y la extensión le habla con `fetch`.
 
 El recorrido es cliente → lógica → consultas → servidor de datos → SQLite. Ningún cliente abre la base directamente. Las guías completas están en `docs/CONSTITUTION.md` y sus enlaces.
 
@@ -63,7 +95,7 @@ pnpm format
 pnpm lint
 ```
 
-`pnpm test` crea sus propias bases temporales y elimina sus datos al terminar. No usa la base real. Las pruebas arrancan su propio servidor de datos en el puerto `3000`, y lanzan el cliente REST en el `3001`, así que hay que detener `pnpm start` y `pnpm run http` antes de ejecutarlas; si el puerto está ocupado, fallan antes de enviar ninguna consulta.
+`pnpm test` crea sus propias bases temporales y elimina sus datos al terminar. No usa la base real. Las pruebas arrancan su propio servidor de datos en el puerto `3000`, y lanzan el cliente REST en el `3001` y la API de Chrome en el `3002`, así que hay que detener `pnpm start`, `pnpm run http` y `pnpm run chrome` antes de ejecutarlas; si el puerto está ocupado, fallan antes de enviar ninguna consulta.
 
 Para arrancar el servidor de datos con otro archivo, definir `FIRST_APP_DATABASE_FILE` antes de iniciarlo:
 

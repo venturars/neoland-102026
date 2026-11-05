@@ -39,9 +39,11 @@ recomendadas de ESLint y excluye `.venv` y `node_modules`.
 
 ## Automatización del trabajo
 
-La automatización de Git vive en agents/, skills/, tools/, templates/ y MCPS/, separada de src/ y de los datos de usuarios. Los siete scripts Bash de tools/ conservan el código original de la fuente fijada; no se mantienen herramientas ni ensayos PowerShell propios.
+La automatización de Git vive en agents/, skills/, tools/, templates/ y MCPS/, separada de src/ y de los datos de usuarios. Los ocho scripts Bash de tools/ conservan el código original de la plantilla; no se mantienen herramientas ni ensayos PowerShell propios. `tools/create-pr-base-staging.sh` crea la PR con base staging, en draft y asignada al usuario autenticado en una sola invocación de gh, recibiendo el cuerpo mediante un archivo temporal.
 
-Los agentes y skills mantienen su estructura original. Solo se adaptan las siete rutas de comandos para ejecutarlos desde la raíz Git y se añade al orquestador la referencia al SDD local. AGENTS.md conserva las revisiones separadas de spec/plan y tareas antes de implementar; ese SDD prevalece sobre la continuación automática del template.
+Los agentes y skills mantienen su estructura e instrucciones originales. Solo se adaptan las ocho rutas de comandos para ejecutarlos desde la raíz Git y se conserva el párrafo del orquestador con las referencias y pausas SDD locales. AGENTS.md conserva las revisiones separadas de spec/plan y tareas antes de implementar; ese SDD prevalece sobre la continuación automática del template.
+
+El orquestador elige la etapa por el estado real: crea la issue si problema, resultado, alcance y comprobación están claros, y entrevista si hay dudas. Una issue escrita con cambios pendientes lleva a preparar una rama desde staging antes de editar; cada paso se confirma antes del siguiente. Las entrevistas devuelven las preguntas necesarias con recomendación y esperan respuestas, conservando el historial al cambiar de agente. Los commits describen archivo o función y cambio en una línea. La creación de PR utiliza la operación conjunta; una PR existente se reutiliza conservando el enlace, cuya responsabilidad sigue en el orquestador.
 
 Las doce plantillas originales son la fuente editorial de issues y PR. MCPS contiene la referencia original, sin ejecutar su configuración. La guía [GIT-AUTOMATION.md](GIT-AUTOMATION.md) explica uso con Git Bash, MCP y alternativa gh, así como los límites de esta copia. Los ensayos autorizados usan repositorios desechables con remoto local y evidencia separada de los resultados históricos.
 

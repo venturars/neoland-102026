@@ -3,6 +3,7 @@
 ```text
 first-app/
   AGENTS.md
+  babel.config.json
   eslint.config.js
   package.json
   src/
@@ -39,6 +40,11 @@ first-app/
         popup.html
         popup.js
         server.js
+      nest/
+        app.module.js
+        errors.filter.js
+        main.js
+        users.controller.js
       terminal/
         api.txt
         chrome.txt
@@ -50,6 +56,7 @@ first-app/
         find-user-by-id.txt
         list-gmail-users.txt
         list-users.txt
+        nest.txt
         update-user.txt
       jupyter/
         README.md
@@ -72,6 +79,12 @@ first-app/
         index.html
         app.js
         styles.css
+      vscode/
+        package.json
+        extension.js
+        webview.js
+        webview.css
+        icon.svg
   scripts/
     jupyter.sh
   agents/
