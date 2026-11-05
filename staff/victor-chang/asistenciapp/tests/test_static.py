@@ -3,11 +3,13 @@
 Lo visual (colores en pantalla, 400 px, teclado) se revisa a mano en T08 (plan §5).
 """
 
+import mimetypes
 import re
 
 import pytest
 
-from attendance.entrypoints.web import STATIC_DIR
+from attendance.config import Config
+from attendance.entrypoints.web import STATIC_DIR, create_app
 
 STYLES = (STATIC_DIR / "styles.css").read_text(encoding="utf-8")
 PAGES = sorted(STATIC_DIR.glob("*.html"))
@@ -59,6 +61,29 @@ def test_the_app_serves_each_font(client, family, weight, file):
     assert res.status_code == 200
     assert res.mimetype == "font/woff2"
     assert res.data[:4] == b"wOF2"
+
+
+@pytest.mark.parametrize(
+    ("path", "mimetype"),
+    [
+        ("/fonts/roboto-latin-400-normal.woff2", "font/woff2"),
+        ("/profesor.js", "text/javascript"),
+        ("/styles.css", "text/css"),
+        ("/profesor.html", "text/html"),
+        ("/fonts/OFL-Roboto.txt", "text/plain"),
+    ],
+)
+def test_static_files_keep_their_type_whatever_the_system_says(tmp_path, monkeypatch, path, mimetype):
+    # spec 007 · T15: en Windows, mimetypes lee el registro, que puede dar otro tipo (la primera compilación
+    # de Windows sirvió las letras como application/octet-stream). Se simula aquí: la app debe dar el suyo.
+    if not mimetypes.inited:
+        mimetypes.init()
+    for extension in (".woff2", ".js", ".css", ".html", ".txt"):
+        monkeypatch.setitem(mimetypes.types_map, extension, "application/octet-stream")
+    config = Config(db_path=tmp_path / "test.db", port=8000, timezone=None)
+    res = create_app(config, teacher_token="t").test_client().get(path)
+    assert res.status_code == 200
+    assert res.mimetype == mimetype
 
 
 @pytest.mark.parametrize("family", ["Montserrat", "Roboto"])

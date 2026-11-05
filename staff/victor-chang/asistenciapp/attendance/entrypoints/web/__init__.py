@@ -4,6 +4,7 @@
 una base de datos temporal, un reloj falso, un token fijo y unos participantes de Meet falsos.
 """
 
+import mimetypes
 import time
 from collections.abc import Callable
 from contextlib import closing
@@ -20,6 +21,16 @@ from attendance.infra.tunnel import Tunnel
 from attendance.usecases.attendance import FetchParticipants
 
 STATIC_DIR = Path(__file__).resolve().parents[3] / "static"
+# El tipo de cada archivo de static/, fijo. Si no, Python lo toma del sistema y en Windows lo lee del
+# registro, que puede decir otra cosa (p. ej. .woff2 como application/octet-stream o .js como
+# text/plain): así salió en la primera compilación de Windows (spec 007 · T15).
+STATIC_TYPES = {
+    ".html": "text/html",
+    ".css": "text/css",
+    ".js": "text/javascript",
+    ".woff2": "font/woff2",
+    ".txt": "text/plain",
+}
 
 
 def create_app(
@@ -41,6 +52,8 @@ def create_app(
         tunnel: la clase online que se abre y se cierra desde el panel (spec 007 · plan §2.6), o None.
         desktop: si es la app de escritorio (spec 007 · plan §4).
     """
+    for extension, mimetype in STATIC_TYPES.items():
+        mimetypes.add_type(mimetype, extension)
     app = Flask(__name__, static_folder=STATIC_DIR, static_url_path="")
     json_provider = DefaultJSONProvider(app)
     json_provider.ensure_ascii = False
