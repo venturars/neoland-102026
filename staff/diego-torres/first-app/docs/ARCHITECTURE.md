@@ -17,7 +17,7 @@ Ningún cliente funciona sin el servidor en marcha (`pnpm start`). La web no la 
 | `src/queries/queries/*.js` | Una frase SQL por fichero, exportada como constante |
 | `src/queries/users.js` | Envía cada frase al servidor con `fetch` y devuelve las filas |
 | `src/logic/shared.js` | Qué es un nombre y un email válidos, y la copia de salida de un usuario |
-| `src/logic/<operación>.js` | Una operación por fichero: crear, modificar, borrar, listar y las tres búsquedas |
+| `src/logic/<operación>.js` | Una operación por fichero: crear, modificar, borrar, listar y las tres búsquedas. Buscar por email también lo usan la API de Chrome, la extensión de VS Code y la API de Nest |
 | `src/logic/users-gender-count.js` | Cuenta usuarios por el género del nombre. No guarda nada |
 | `src/logic/index.js` | Reexporta las operaciones |
 | `src/clients/web/*` | Cliente de navegador en HTML, CSS y JS vanilla. Se abre como fichero e importa `src/logic/` con rutas relativas |
