@@ -55,8 +55,8 @@ FIRST_APP_DATABASE_FILE=/tmp/bruno.sqlite pnpm start
 pnpm run http
 ```
 
-1. `01-sql-online`: con el servidor de datos en marcha, se lanza la carpeta entera (**Run**). Son 13 peticiones que crean a Ada, la ven, la modifican, la borran y prueban los errores. El id de Ada se guarda solo.
-2. `02-sql-offline`: se detiene `pnpm start` con `Ctrl+C`, se deja `pnpm run http` abierto y se lanza la carpeta. Son 5 peticiones que esperan el error `500` de cada operación.
+1. `01-sql-online`: con el servidor de datos en marcha, se lanza la carpeta entera (**Run**). Son 14 peticiones que crean a Ada, la ven, la modifican, la borran, prueban los errores y piden el recuento con la base ya vacía. El id de Ada se guarda solo.
+2. `02-sql-offline`: se detiene `pnpm start` con `Ctrl+C`, se deja `pnpm run http` abierto y se lanza la carpeta. Son 6 peticiones que esperan el error `500` de cada operación y del recuento.
 
 Si la primera carpeta se lanza con usuarios ya creados, fallan la lista vacía y el email repetido.
 
@@ -65,6 +65,14 @@ Si la primera carpeta se lanza con usuarios ya creados, fallan la lista vacía y
 Con `pnpm start` y `pnpm run nest` en dos terminales, las peticiones van a `http://127.0.0.1:3003`. Son las mismas cinco rutas, los mismos cuerpos y los mismos errores que en el cliente REST. `pnpm run nest` compila `src/` a `dist/` con Babel antes de arrancar, porque Nest usa decoradores y Node no los entiende. `dist/` no se sube a git.
 
 También puedes abrir `http://127.0.0.1:3003` en el navegador: es una página Swagger UI donde se crean, listan, ven, modifican y borran usuarios sin escribir las peticiones a mano.
+
+## Pedir el recuento por género
+
+El recuento cuenta los usuarios guardados según el género que sugiere su nombre y devuelve tres números: mujeres (`female`), hombres (`male`) e indefinidos (`undefined`). Necesita Ollama en local con el modelo `gemma4`, además de `pnpm start`. Sin usuarios responde tres ceros sin contactar con Ollama. No guarda el género ni muestra los nombres.
+
+- **REST, Nest y API de Chrome:** `GET /users/gender-count`, en los puertos 3001, 3003 y 3002. Responde `{ "female": 2, "male": 1, "undefined": 1 }`. Si falla el clasificador responde `500` con `Could not classify the users.`
+- **Escritorio, VS Code y Chrome:** la pestaña **Recuento**, con el botón «Pedir recuento». No se pide solo al abrirla. Se ven tres números: mujeres, hombres e indefinidos. Si falla el clasificador se ve `Could not classify the users.`
+- **Navegador:** no lo tiene, porque su página no puede ejecutar el clasificador. La terminal y Jupyter ya cuentan.
 
 ## Qué muestra cada pantalla del navegador
 
@@ -78,8 +86,11 @@ Los cambios guardados se conservan al reiniciar. Recargar la página vuelve a la
 
 `pnpm run electron` abre una ventana propia. El primer arranque necesita internet y tarda más, porque descarga el binario de Electron. Si falla con `does not provide an export named 'BrowserWindow'`, la terminal tiene definida `ELECTRON_RUN_AS_NODE`: ejecutar antes `unset ELECTRON_RUN_AS_NODE`.
 
+La ventana tiene dos pestañas, **Usuarios** y **Recuento**.
+
 - **Lista, a la izquierda:** los usuarios, el botón «Actualizar» y el botón «Nuevo usuario».
 - **Panel, a la derecha:** el alta o, al elegir un usuario, su detalle para guardar cambios o eliminarlo.
+- **Recuento:** el botón «Pedir recuento» y los tres números.
 
 Eliminar pide confirmación con un diálogo del sistema. Cerrar la ventana termina la aplicación, también en macOS.
 
@@ -87,7 +98,7 @@ Eliminar pide confirmación con un diálogo del sistema. Cerrar la ventana termi
 
 La extensión solo necesita `pnpm start`. `pnpm run vscode` usa el comando `code`, que tiene que estar instalado, y abre una ventana de desarrollo con la extensión cargada. No se instala nada en el editor.
 
-En esa ventana, el icono **Usuarios** de la barra de actividad abre la vista. Los textos y los errores se ven en español. Al ocultar la vista, lo escrito sin guardar se pierde y se vuelve a la lista.
+En esa ventana, el icono **Usuarios** de la barra de actividad abre la vista. Los textos y los errores se ven en español. La vista tiene las pestañas **Usuarios** y **Recuento**. Al ocultarla, lo escrito sin guardar se pierde y se vuelve a la lista.
 
 ## Cargar la extensión de Chrome
 
@@ -103,6 +114,7 @@ open -na "Google Chrome" --args --user-data-dir=/tmp/first-app-chrome "chrome://
 2. Pulsar **Cargar descomprimida** y elegir la carpeta `src/clients/chrome/`.
 3. Abrirla con su icono en la barra del navegador. Se puede fijar desde el icono de extensiones.
 
+- **Pestañas:** **Usuarios** y **Recuento**, con el botón «Pedir recuento».
 - **Lista:** los usuarios y el formulario para crear uno nuevo.
 - **Detalle:** al elegir un usuario, sus datos, el formulario para guardar cambios, «Volver» y «Borrar usuario», que pide confirmación dentro de la misma ventana.
 

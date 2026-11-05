@@ -45,13 +45,15 @@ first-app/
 │   │   │       │   ├── 11-delete-missing.bru
 │   │   │       │   ├── 12-delete-ada.bru
 │   │   │       │   ├── 13-list-after-delete.bru
+│   │   │       │   ├── 14-count-empty.bru
 │   │   │       │   └── folder.bru
 │   │   │       ├── 02-sql-offline/
-│   │   │       │   ├── 14-create-sql-offline.bru
-│   │   │       │   ├── 15-list-sql-offline.bru
-│   │   │       │   ├── 16-find-sql-offline.bru
-│   │   │       │   ├── 17-update-sql-offline.bru
-│   │   │       │   ├── 18-delete-sql-offline.bru
+│   │   │       │   ├── 15-create-sql-offline.bru
+│   │   │       │   ├── 16-list-sql-offline.bru
+│   │   │       │   ├── 17-find-sql-offline.bru
+│   │   │       │   ├── 18-update-sql-offline.bru
+│   │   │       │   ├── 19-delete-sql-offline.bru
+│   │   │       │   ├── 20-count-sql-offline.bru
 │   │   │       │   └── folder.bru
 │   │   │       ├── bruno.json
 │   │   │       └── collection.bru
