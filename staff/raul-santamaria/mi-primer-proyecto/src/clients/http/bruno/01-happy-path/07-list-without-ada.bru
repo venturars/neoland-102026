@@ -1,0 +1,22 @@
+meta {
+  name: list without Ada
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/users
+}
+
+tests {
+  test("status is 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+  test("Ada is gone", function () {
+    const users = res.getBody();
+    const ada = users.find(function (user) {
+      return user.email === "ada@example.com";
+    });
+    expect(ada).to.equal(undefined);
+  });
+}

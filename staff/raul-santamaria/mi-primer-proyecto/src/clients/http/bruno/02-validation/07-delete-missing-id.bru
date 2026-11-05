@@ -1,0 +1,18 @@
+meta {
+  name: delete missing id
+  type: http
+  seq: 7
+}
+
+delete {
+  url: {{baseUrl}}/users/999999
+}
+
+tests {
+  test("status is 404", function () {
+    expect(res.getStatus()).to.equal(404);
+  });
+  test("message", function () {
+    expect(res.getBody().message).to.equal("No user exists with that id");
+  });
+}

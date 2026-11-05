@@ -1,0 +1,33 @@
+meta {
+  name: patch Ada name
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{baseUrl}}/users/{{userId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Ada Lovelace"
+  }
+}
+
+tests {
+  test("status is 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+  test("name updated", function () {
+    const body = res.getBody();
+    expect(body.name).to.equal("Ada Lovelace");
+    expect(body.email).to.equal("ada@example.com");
+    expect(String(body.id)).to.equal(bru.getVar("userId"));
+  });
+}
