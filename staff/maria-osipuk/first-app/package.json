@@ -13,6 +13,7 @@
     "chrome": "node src/clients/chrome/api.js",
     "nest": "rm -rf dist && babel src -d dist --config-file ./babel.config.json && node dist/clients/nest/main.js",
     "electron": "electron src/clients/electron/main.js",
+    "vscode": "code --extensionDevelopmentPath=\"$(pwd)/src/clients/vscode\" \"$(pwd)\"",
     "web": "open -na \"Google Chrome\" --args --user-data-dir=/tmp/first-app-chrome --allow-file-access-from-files \"file://$(pwd)/src/clients/web/index.html\""
   },
   "keywords": [],

@@ -31,6 +31,8 @@ first-app/
       styles.css
       app.js
       queries.js
+    http/
+      server.js
   docs/
     adr/
       0001-browser-sqlite-connection.md

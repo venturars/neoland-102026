@@ -71,6 +71,17 @@ export default defineConfig([
     },
   },
   {
+    // The VS Code view uses the DOM. It reaches the data through messages.
+    files: ["src/clients/vscode/view.js"],
+    languageOptions: {
+      globals: {
+        acquireVsCodeApi: "readonly",
+        document: "readonly",
+        window: "readonly",
+      },
+    },
+  },
+  {
     // A sandboxed preload runs as CommonJS, so it uses require and not import.
     files: ["src/clients/electron/preload.cjs"],
     languageOptions: {

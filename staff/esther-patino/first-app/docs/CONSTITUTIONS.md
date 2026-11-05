@@ -10,7 +10,7 @@ También se crea, se lista, se ve, se cambia y se borra un usuario desde una ext
 
 También se crea, se lista, se busca, se ve, se cambia y se borra un usuario desde un panel de VS Code. La base sigue en el puerto 3000.
 
-También se crea, se lista, se ve, se cambia y se borra un usuario con el cliente Nest, en el puerto 3003. Ese cliente pasa por Babel. La base sigue en el puerto 3000.
+También se crea, se lista, se ve, se cambia y se borra un usuario con el cliente Nest, en el puerto 3003. Ese cliente pasa por Babel. También se puede probar desde Swagger UI en la ruta `api` del mismo host. La base sigue en el puerto 3000.
 
 Se puede crear un usuario, listarlos, buscar uno, cambiarlo y borrarlo.
 
@@ -66,7 +66,7 @@ El cliente es un archivo en `src/clients/terminal/`. El nombre dice la acción, 
 
 Ese archivo se pega en la terminal desde la raíz del repositorio. Entra en `first-app`, importa la función y hace `console.log` del resultado. No captura el error. Es la prueba manual de esa funcionalidad.
 
-El cliente de una funcionalidad nueva sigue siendo ese archivo. Este cambio añade el cliente de navegador y no añade un `.txt`. Este cambio añade el cliente HTTP y no añade un `.txt`. Este cambio añade el cliente Chrome y no añade un `.txt`. Este cambio añade el cliente de VS Code y no añade un `.txt`. Este cambio añade el cliente Nest, que es el que pasa por Babel, y no añade un `.txt`.
+El cliente de una funcionalidad nueva sigue siendo ese archivo. Este cambio añade el cliente de navegador y no añade un `.txt`. Este cambio añade el cliente HTTP y no añade un `.txt`. Este cambio añade el cliente Chrome y no añade un `.txt`. Este cambio añade el cliente de VS Code y no añade un `.txt`. Este cambio añade el cliente Nest, que es el que pasa por Babel, y no añade un `.txt`. Este cambio añade Swagger UI al cliente Nest y no añade un `.txt`.
 
 ## 8. Cómo se hace un desarrollo
 

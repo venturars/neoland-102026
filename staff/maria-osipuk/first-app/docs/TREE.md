@@ -40,6 +40,12 @@ first-app/
 │   │   │   ├── listar-usuarios.ipynb
 │   │   │   ├── preparar-tabla-usuarios.ipynb
 │   │   │   └── run_logic.py
+│   │   ├── nest/
+│   │   │   ├── app.module.js
+│   │   │   ├── main.js
+│   │   │   ├── users-exception.filter.js
+│   │   │   ├── users.controller.js
+│   │   │   └── users.service.js
 │   │   ├── terminal/
 │   │   │   ├── count-users-by-gender.txt
 │   │   │   ├── create-user.txt
@@ -49,12 +55,14 @@ first-app/
 │   │   │   ├── find-user-by-id.txt
 │   │   │   ├── list-users.txt
 │   │   │   └── update-user.txt
-│   │   ├── nest/
-│   │   │   ├── app.module.js
-│   │   │   ├── main.js
-│   │   │   ├── users-exception.filter.js
-│   │   │   ├── users.controller.js
-│   │   │   └── users.service.js
+│   │   ├── vscode/
+│   │   │   ├── extension.js
+│   │   │   ├── index.html
+│   │   │   ├── package.json
+│   │   │   ├── styles.css
+│   │   │   ├── user-actions.js
+│   │   │   ├── users.svg
+│   │   │   └── view.js
 │   │   └── web/
 │   │       ├── app.js
 │   │       ├── index.html
@@ -222,7 +230,11 @@ first-app/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
-│   │   └── vanilla-user-client/
+│   │   ├── vanilla-user-client/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   └── vscode-extension-client/
 │   │       ├── plan.md
 │   │       ├── spec.md
 │   │       └── tasks.md
@@ -239,5 +251,6 @@ first-app/
     ├── electron-client.test.js
     ├── http-client.test.js
     ├── nest-client.test.js
-    └── shared-database.test.js
+    ├── shared-database.test.js
+    └── vscode-client.test.js
 ```

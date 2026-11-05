@@ -64,6 +64,13 @@ first-app/
         panel.js
         styles.css
         README.md
+      nest/
+        main.js
+        app.module.js
+        users.controller.js
+        users.service.js
+        http-exception.filter.js
+        README.md
   agents/
   skills/
   tools/
@@ -113,6 +120,10 @@ first-app/
         plan.md
         tasks.md
       vscode-sidebar-users/
+        spec.md
+        plan.md
+        tasks.md
+      nest-http-client/
         spec.md
         plan.md
         tasks.md

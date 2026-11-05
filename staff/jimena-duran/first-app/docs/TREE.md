@@ -4,6 +4,8 @@
 first-app/
   README.md
   eslint.config.js
+  babel.config.json
+  .gitignore              excluye dist/ local
   src/
     db/server.js
     db/users.sqlite         local, fuera de Git
@@ -25,6 +27,12 @@ first-app/
       styles.css
     clients/http/
       app.js
+    clients/nest/
+      main.js
+      app-module.js
+      users-controller.js
+      users-service.js
+      http-exception-filter.js
     clients/electron/
       main.js
       index.html

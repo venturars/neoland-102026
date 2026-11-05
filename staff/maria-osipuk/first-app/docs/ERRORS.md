@@ -74,6 +74,10 @@ Dos respuestas nacen en el filtro, porque ese fallo ocurre antes de llegar a `sr
 
 `src/clients/chrome/popup.js` muestra el `message` tal cual y conserva los campos escritos cuando falla un alta o un guardado. Una lista vacía solo se muestra después de una carga correcta sin usuarios. Dos mensajes nacen ahí, porque esos fallos no llegan a `src/logic/`: `Unable to reach the API` si la API está parada y `Unable to complete the operation` si una respuesta de error no trae `message`.
 
+## Cliente de VS Code
+
+`src/clients/vscode/user-actions.js` captura el error de `src/logic/` y responde `{ error }` con su mensaje en inglés, porque un mensaje entre las dos partes del cliente no puede llevar un `Error` lanzado. `src/clients/vscode/view.js` lo traduce con su tabla `MESSAGES` y conserva los campos escritos cuando falla un alta o un guardado. Una lista vacía solo se muestra después de una carga correcta sin usuarios.
+
 ## Jupyter
 
 `src/clients/jupyter/run_logic.py` traduce con su tabla `MESSAGES` y deja el detalle técnico en `jupyter-client.log`.

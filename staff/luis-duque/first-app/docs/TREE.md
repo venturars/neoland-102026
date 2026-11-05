@@ -46,6 +46,12 @@ first-app/
         index.html
         app.js
         styles.css
+      chrome/
+        manifest.json
+        index.html
+        app.js
+        styles.css
+        server.js
     queries/
       users.js
       queries/
