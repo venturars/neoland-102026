@@ -1,6 +1,6 @@
 # Plan técnico 007 · App de escritorio para el profesor
 
-> Versión 1.3 · Estado: **Pendiente de aprobación** (2026-11-05; v1.2 aprobada) · Spec: [spec.md](spec.md) v1.1 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Constitución v3.2 · Creado: 2026-11-04 · Issue: #919
+> Versión 1.3 · Estado: **Aprobado** (2026-11-05) · Spec: [spec.md](spec.md) v1.1 · Arquitectura: [ARCHITECTURE.md](../../ARCHITECTURE.md) v1.1 · Constitución v3.2 · Creado: 2026-11-04 · Issue: #919
 
 Este documento explica **cómo** se empaqueta AsistenciApp como app de escritorio para macOS (Apple Silicon) y Windows x64 sin cambiar sus reglas. El escritorio es **una entrada nueva** (C3): una ventana que muestra el mismo panel y llama a los mismos casos de uso. Dominio, casos de uso y base de datos no cambian. Las reglas se citan por su identificador (`C2`, `F4`…).
 
@@ -353,4 +353,4 @@ Tomadas por Victor el 2026-11-04: §8.1–§8.6 en la sesión de preguntas previ
 | 1.0 | 2026-11-04 | Aprobado por Victor, con §8.7–§8.9 decididas como se proponían; §8.3 explica por qué el repositorio de compilación es público | — |
 | 1.1 | 2026-11-05 | Resultados del spike (§0); confirmación nativa al cerrar en vez de un diálogo desde `closing` (§2.7, §6); ventana con texto seleccionable (§2.2); app de Google publicada con sus páginas en GitHub Pages (§2.8); comprobación de `cloudflared` por *digest* de GitHub y firma de Cloudflare, y "arrastrar a Aplicaciones" (§2.11) | Spike de la tarea T01. Aprobado por Victor |
 | 1.2 | 2026-11-05 | Panel de escritorio siempre en claro (§2.2, §6; spec v1.1 CA-19) | Decisión de Victor al probar la app empaquetada (T14) |
-| 1.3 | 2026-11-05 | Dependencia nueva `tzdata`, solo en Windows (§7.1, P3); PyInstaller la incluye (`hiddenimports`). Pendiente de aprobación | La primera compilación de Windows (T15, ejecución 42018306912) falló: Windows no trae las zonas horarias y `ZoneInfo("Europe/Madrid")` no se encuentra |
+| 1.3 | 2026-11-05 | Dependencia nueva `tzdata`, solo en Windows (§7.1, P3); PyInstaller la incluye (`hiddenimports`). Aprobado por Victor | La primera compilación de Windows (T15, ejecución 42018306912) falló: Windows no trae las zonas horarias y `ZoneInfo("Europe/Madrid")` no se encuentra |
