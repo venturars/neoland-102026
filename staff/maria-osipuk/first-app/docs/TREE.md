@@ -202,6 +202,10 @@ first-app/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
+│   │   ├── nest-swagger-ui/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
 │   │   ├── nest-users-client/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
