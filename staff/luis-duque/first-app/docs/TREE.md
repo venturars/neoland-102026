@@ -52,6 +52,13 @@ first-app/
         app.js
         styles.css
         server.js
+      vscode/
+        package.json
+        extension.js
+        index.html
+        app.js
+        styles.css
+        icon.svg
     queries/
       users.js
       queries/
