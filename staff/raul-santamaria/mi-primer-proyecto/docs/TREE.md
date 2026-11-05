@@ -28,6 +28,13 @@ mi-primer-proyecto/
         users-gender-count.txt
       http/
         app.js
+        bruno/
+          bruno.json
+          collection.bru
+          environments/
+            local.bru
+          01-happy-path/
+          02-validation/
       chrome/
         server.js
         manifest.json

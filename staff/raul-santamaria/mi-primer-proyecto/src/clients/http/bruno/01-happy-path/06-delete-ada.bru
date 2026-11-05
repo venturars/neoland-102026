@@ -1,0 +1,15 @@
+meta {
+  name: delete Ada
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseUrl}}/users/{{userId}}
+}
+
+tests {
+  test("status is 204", function () {
+    expect(res.getStatus()).to.equal(204);
+  });
+}

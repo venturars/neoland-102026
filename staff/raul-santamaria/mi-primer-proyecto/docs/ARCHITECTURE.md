@@ -29,7 +29,8 @@
   `src/logic/` con `await` y no repite sus reglas. Se abre con el script
   `electron` de `package.json`; el instalador Windows con `electron:dist`.
 - `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001 y no
-  repite sus reglas.
+  repite sus reglas. La colección Bruno en `bruno/` prueba las mismas
+  rutas con `pnpm http-bruno`.
 - `src/clients/chrome/server.js` llama a `src/logic/`, escucha en el puerto
   3002 y no repite sus reglas. La extensión en `src/clients/chrome/` solo
   habla con esa API por `fetch`.

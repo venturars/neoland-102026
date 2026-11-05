@@ -1,0 +1,31 @@
+meta {
+  name: create duplicate email
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Ada Copy",
+    "email": "ada@example.com"
+  }
+}
+
+tests {
+  test("status is 409", function () {
+    expect(res.getStatus()).to.equal(409);
+  });
+  test("message", function () {
+    expect(res.getBody().message).to.equal("Email is already used");
+  });
+}
