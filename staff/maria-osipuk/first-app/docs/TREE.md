@@ -29,7 +29,32 @@ first-app/
 │   │   │   ├── styles.css
 │   │   │   └── user-actions.js
 │   │   ├── http/
-│   │   │   └── app.js
+│   │   │   ├── app.js
+│   │   │   └── bruno/
+│   │   │       ├── 01-sql-online/
+│   │   │       │   ├── 01-empty-list.bru
+│   │   │       │   ├── 02-create-ada.bru
+│   │   │       │   ├── 03-list-users.bru
+│   │   │       │   ├── 04-find-ada.bru
+│   │   │       │   ├── 05-patch-name.bru
+│   │   │       │   ├── 06-create-empty-name.bru
+│   │   │       │   ├── 07-create-invalid-email.bru
+│   │   │       │   ├── 08-create-used-email.bru
+│   │   │       │   ├── 09-get-missing.bru
+│   │   │       │   ├── 10-patch-missing.bru
+│   │   │       │   ├── 11-delete-missing.bru
+│   │   │       │   ├── 12-delete-ada.bru
+│   │   │       │   ├── 13-list-after-delete.bru
+│   │   │       │   └── folder.bru
+│   │   │       ├── 02-sql-offline/
+│   │   │       │   ├── 14-create-sql-offline.bru
+│   │   │       │   ├── 15-list-sql-offline.bru
+│   │   │       │   ├── 16-find-sql-offline.bru
+│   │   │       │   ├── 17-update-sql-offline.bru
+│   │   │       │   ├── 18-delete-sql-offline.bru
+│   │   │       │   └── folder.bru
+│   │   │       ├── bruno.json
+│   │   │       └── collection.bru
 │   │   ├── jupyter/
 │   │   │   ├── actualizar-usuario.ipynb
 │   │   │   ├── bienvenida.ipynb
@@ -172,6 +197,10 @@ first-app/
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
 │   │   ├── align-code-with-guides/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── bruno-http-client/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md

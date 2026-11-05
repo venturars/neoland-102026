@@ -1,0 +1,16 @@
+meta {
+  name: find-sql-offline
+  type: http
+  seq: 16
+}
+
+get {
+  url: {{baseUrl}}/users/{{missingId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 500", function () { expect(res.getStatus()).to.equal(500); });
+  test("Mensaje exacto", function () { expect(res.getBody()).to.deep.equal({ message: "Unable to find user" }); });
+}

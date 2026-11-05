@@ -46,6 +46,20 @@ Un error responde JSON con la clave `message`. Para no tocar la base real, arran
 
 Con `pnpm start` y `pnpm run node-http` en dos terminales, `pnpm run jupyter-node-http` abre los cuadernos de `src/clients/node-http/jupyter/`. Hay uno por operación: `create-user`, `list-users`, `find-user-by-id`, `update-user` y `delete-user`. Cada uno explica la petición, la hace a `http://127.0.0.1:3004` y dibuja la respuesta en tabla; si falla, muestra el mensaje en inglés. Son las mismas cinco rutas, los mismos cuerpos y los mismos errores que en el cliente REST. Los de ver, modificar y borrar buscan a Ada por su email (`ada@example.com`), así que se crea antes con `create-user`. El de borrar borra a Ada de verdad.
 
+## Probar el cliente REST con Bruno
+
+La carpeta `src/clients/http/bruno/` es una colección de [Bruno](https://www.usebruno.com/) con las mismas peticiones, ya escritas y con sus comprobaciones. En Bruno, **Open Collection** y esa carpeta. Hace falta una base vacía, así que se arranca el servidor de datos con una temporal:
+
+```sh
+FIRST_APP_DATABASE_FILE=/tmp/bruno.sqlite pnpm start
+pnpm run http
+```
+
+1. `01-sql-online`: con el servidor de datos en marcha, se lanza la carpeta entera (**Run**). Son 13 peticiones que crean a Ada, la ven, la modifican, la borran y prueban los errores. El id de Ada se guarda solo.
+2. `02-sql-offline`: se detiene `pnpm start` con `Ctrl+C`, se deja `pnpm run http` abierto y se lanza la carpeta. Son 5 peticiones que esperan el error `500` de cada operación.
+
+Si la primera carpeta se lanza con usuarios ya creados, fallan la lista vacía y el email repetido.
+
 ## Probar el cliente Nest con Postman
 
 Con `pnpm start` y `pnpm run nest` en dos terminales, las peticiones van a `http://127.0.0.1:3003`. Son las mismas cinco rutas, los mismos cuerpos y los mismos errores que en el cliente REST. `pnpm run nest` compila `src/` a `dist/` con Babel antes de arrancar, porque Nest usa decoradores y Node no los entiende. `dist/` no se sube a git.
@@ -102,6 +116,7 @@ Los errores se ven en inglés, sin traducir. Chrome cierra la ventana al pulsar 
 - `src/clients/web/`: `index.html`, `styles.css` y `app.js`. Importa `src/logic/` directamente.
 - `src/clients/http/app.js`: el cliente REST con Express. Importa `src/logic/` directamente.
 - `src/clients/node-http/`: el cliente REST con `node:http`, sin framework. Su `app.js` importa `src/logic/` y sus cuadernos de `jupyter/` llaman a la API por HTTP.
+- `src/clients/http/bruno/`: la colección de Bruno del cliente REST. Son archivos `.bru`, sin código de la aplicación.
 - `src/clients/nest/`: el cliente Nest, con módulo, controlador, servicio y filtro de errores. Se compila con Babel, y su servicio importa `src/logic/`.
 - `src/clients/electron/`: la aplicación de escritorio. Su proceso principal llama a `src/logic/`, y su página le pide las acciones mediante `preload.cjs`.
 - `src/clients/chrome/`: la extensión y su API con Fastify. La API importa `src/logic/`, y la extensión le habla con `fetch`.
