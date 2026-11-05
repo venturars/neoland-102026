@@ -8,7 +8,12 @@ import {
   Req,
   Res,
 } from "@nestjs/common";
-import { ApiBody, ApiExcludeEndpoint, ApiTags } from "@nestjs/swagger";
+import {
+  ApiBody,
+  ApiExcludeEndpoint,
+  ApiParam,
+  ApiTags,
+} from "@nestjs/swagger";
 import { createUser } from "../../logic/create-user.js";
 import { deleteUser } from "../../logic/delete-user.js";
 import { findUserById } from "../../logic/find-user-by-id.js";
@@ -34,6 +39,11 @@ const USER_BODY = {
       email: { type: "string" },
     },
   },
+};
+
+const USER_ID_PARAM = {
+  name: "id",
+  schema: { type: "integer", minimum: 1 },
 };
 
 @ApiTags("users")
@@ -99,6 +109,7 @@ class UsersController {
   }
 
   @Get("users/:id")
+  @ApiParam(USER_ID_PARAM)
   async find(request, response) {
     try {
       const rawId = request.params.id;
@@ -131,6 +142,7 @@ class UsersController {
   }
 
   @Patch("users/:id")
+  @ApiParam(USER_ID_PARAM)
   @ApiBody(USER_BODY)
   async update(request, response) {
     try {
@@ -187,6 +199,7 @@ class UsersController {
   }
 
   @Delete("users/:id")
+  @ApiParam(USER_ID_PARAM)
   async remove(request, response) {
     try {
       const rawId = request.params.id;
