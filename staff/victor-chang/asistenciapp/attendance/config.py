@@ -8,6 +8,8 @@ Variables (todas opcionales; vacía cuenta como no puesta):
 - `ASISTENCIA_GOOGLE_CLIENT`: la llave de la app en Google Cloud (spec 004 · plan §2.4).
   Por defecto, `data/google-client.json`.
 - `ASISTENCIA_GOOGLE_TOKEN`: dónde se guarda el permiso de Google. Por defecto, `data/google-token.json`.
+- `ASISTENCIA_LOCK_PORT`: puerto local con el que la app de escritorio sabe si ya está abierta
+  (spec 007 · plan §2.5). Por defecto, 47913.
 
 En la app de escritorio (spec 007 · plan §2.3), los valores por defecto cambian: la base de datos y el
 permiso van a la carpeta de datos del usuario de cada sistema; la llave de Google es la propia del
@@ -29,6 +31,7 @@ DEFAULT_DB = DATA_DIR / "asistencia.db"
 DEFAULT_GOOGLE_CLIENT = DATA_DIR / "google-client.json"
 DEFAULT_GOOGLE_TOKEN = DATA_DIR / "google-token.json"
 DEFAULT_PORT = 8000
+DEFAULT_LOCK_PORT = 47913  # alto y poco común (spec 007 · plan §2.5)
 APP_FOLDER = "AsistenciApp"  # nombre de la carpeta de datos del usuario (spec 007 · plan §2.3)
 GOOGLE_CLIENT_FILE = "google-client.json"
 # [0-9] y no \d, que acepta cifras de otros alfabetos (ARCHITECTURE.md · E1).
@@ -44,6 +47,14 @@ class InvalidPortError(ConfigError):
 
     MESSAGE = (
         "PORT debe ser un número de puerto entre 1 y 65535 (p. ej. PORT=8001). Corrígelo, o quítalo para usar el 8000."
+    )
+
+
+class InvalidLockPortError(ConfigError):
+    """`ASISTENCIA_LOCK_PORT` no es un puerto válido (spec 007 · plan §2.5)."""
+
+    MESSAGE = (
+        "ASISTENCIA_LOCK_PORT debe ser un número de puerto entre 1 y 65535. Corrígelo, o quítalo para usar el 47913."
     )
 
 
@@ -66,6 +77,7 @@ class Config:
     google_client_path: Path = DEFAULT_GOOGLE_CLIENT
     google_token_path: Path = DEFAULT_GOOGLE_TOKEN
     cloudflared_path: Path | None = None  # None: se busca en el PATH (spec 007 · plan §2.3)
+    lock_port: int = DEFAULT_LOCK_PORT  # una sola instancia de la app de escritorio (spec 007 · plan §2.5)
 
 
 @dataclass(frozen=True)
@@ -96,16 +108,18 @@ def load_config(
 
     Raises:
         InvalidPortError: `PORT` no es un número entre 1 y 65535.
+        InvalidLockPortError: `ASISTENCIA_LOCK_PORT` no es un número entre 1 y 65535.
         InvalidTimezoneError: `ASISTENCIA_TZ` no es una zona horaria conocida.
     """
     defaults = _desktop_defaults(environ, platform, home or Path.home(), bundle) if desktop else _source_defaults()
     return Config(
         db_path=_path(environ.get("ASISTENCIA_DB", ""), defaults.db),
-        port=_port(environ.get("PORT", "")),
+        port=_port(environ.get("PORT", ""), DEFAULT_PORT, InvalidPortError),
         timezone=_timezone(environ.get("ASISTENCIA_TZ", "")),
         google_client_path=_path(environ.get("ASISTENCIA_GOOGLE_CLIENT", ""), defaults.google_client),
         google_token_path=_path(environ.get("ASISTENCIA_GOOGLE_TOKEN", ""), defaults.google_token),
         cloudflared_path=defaults.cloudflared,
+        lock_port=_port(environ.get("ASISTENCIA_LOCK_PORT", ""), DEFAULT_LOCK_PORT, InvalidLockPortError),
     )
 
 
@@ -145,11 +159,11 @@ def _path(value: str, default: Path) -> Path:
     return Path(value) if value else default
 
 
-def _port(value: str) -> int:
+def _port(value: str, default: int, error: type[ConfigError]) -> int:
     if not value:
-        return DEFAULT_PORT
+        return default
     if not PORT_FORMAT.fullmatch(value) or not 1 <= int(value) <= 65535:
-        raise InvalidPortError
+        raise error
     return int(value)
 
 

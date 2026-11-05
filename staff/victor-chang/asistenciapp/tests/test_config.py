@@ -9,9 +9,11 @@ from attendance.config import (
     DEFAULT_DB,
     DEFAULT_GOOGLE_CLIENT,
     DEFAULT_GOOGLE_TOKEN,
+    DEFAULT_LOCK_PORT,
     DEFAULT_PORT,
     Config,
     ConfigError,
+    InvalidLockPortError,
     InvalidPortError,
     InvalidTimezoneError,
     load_config,
@@ -146,6 +148,20 @@ def test_desktop_from_source_without_a_bundle_uses_the_projects_key(tmp_path):  
     config = load_config({}, desktop=True, platform="darwin", home=tmp_path)
     assert config.google_client_path == DEFAULT_GOOGLE_CLIENT
     assert config.cloudflared_path is None
+
+
+def test_lock_port_defaults_and_can_be_changed():  # CA-03 · plan §2.5
+    assert load_config({}).lock_port == DEFAULT_LOCK_PORT == 47913
+    assert load_config({"ASISTENCIA_LOCK_PORT": "50123"}).lock_port == 50123
+    assert load_config({"ASISTENCIA_LOCK_PORT": ""}).lock_port == DEFAULT_LOCK_PORT
+
+
+@pytest.mark.parametrize("port", ["abc", "0", "65536", "٤٧٩١٣"])
+def test_invalid_lock_port_is_rejected(port):
+    with pytest.raises(InvalidLockPortError) as exc:
+        load_config({"ASISTENCIA_LOCK_PORT": port})
+    assert "ASISTENCIA_LOCK_PORT" in str(exc.value)
+    assert issubclass(InvalidLockPortError, ConfigError)
 
 
 @pytest.mark.parametrize(("platform", "name"), [("darwin", "cloudflared"), ("win32", "cloudflared.exe")])

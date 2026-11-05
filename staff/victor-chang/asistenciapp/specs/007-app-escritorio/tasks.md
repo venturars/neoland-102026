@@ -54,10 +54,15 @@ Cómo leer esta lista:
     - Además de lo previsto: `stop()` se puede llamar dos veces (lo llamará el `finally` de `app.py` aunque algo falle antes) y `RunningServer` funciona con `with` (S7); dos servidores a la vez reciben puertos distintos.
     - El hilo es *daemon*: si algo falla antes del `finally`, no impide que el proceso termine.
     - Los tests tardan ~3 s en total por el sondeo de medio segundo de `shutdown()` de werkzeug; se acepta (T5: segundos).
-- [ ] **T04** 🧪 · `infra/instance.py` (plan §2.5):
+- [x] **T04** 🧪 · `infra/instance.py` (plan §2.5):
   - tests en `test_instance.py` (con un puerto de bloqueo libre elegido por el test): un segundo `acquire` lanza `AlreadyRunningError` con su mensaje; tras soltar el primero, `acquire` vuelve a funcionar; `ASISTENCIA_LOCK_PORT` cambia el puerto;
   - deben fallar; luego, el código.
   - *Cubre:* CA-03.
+  - **Hecha (2026-11-05):** 5 tests nuevos en `test_instance.py` y 2 en `test_config.py` (fallaron al no existir el módulo ni el valor nuevo) y `infra/instance.py`: `acquire(port) -> InstanceLock` y `AlreadyRunningError` con el mensaje del plan. 525 tests en verde; `ruff` y `mypy` sin avisos.
+    - **Cambio sobre el plan:** `ASISTENCIA_LOCK_PORT` no lo lee `instance.py`, sino `config.py` (C4: solo la configuración lee el entorno). Es `Config.lock_port`, por defecto 47913 y validado como `PORT` (`InvalidLockPortError`); `acquire` lo recibe por parámetro. `_port` pasa a recibir su valor por defecto y su error.
+    - Sin `SO_REUSEADDR`; en Windows, `SO_EXCLUSIVEADDRUSE` para que otro programa no pueda compartir el puerto.
+    - `release()` se puede llamar dos veces y `InstanceLock` funciona con `with` (S7).
+    - Comprobado también entre **dos procesos**: con el bloqueo tomado, otro proceso recibe `AlreadyRunningError`; al soltarlo, lo toma sin problema.
 - [ ] **T05** 🧪 · Clase `Tunnel` en `infra/tunnel.py` (plan §2.6):
   - tests en `test_tunnel.py` con un `cloudflared` falso (un script que imprime una URL y espera): `open` dos veces → un solo proceso y la misma URL; `close` termina el proceso y deja `url` en `None`; `close` sin abrir no falla; si el proceso no sale en 5 s, se mata; `start_tunnel` usa el ejecutable que recibe y, con `None`, el del `PATH` como hoy; en Windows se pasa `CREATE_NO_WINDOW`;
   - deben fallar; luego, el código. Los tests de hoy de `start_tunnel` siguen en verde.
