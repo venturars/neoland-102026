@@ -9,8 +9,8 @@ Do the tasks in order. Inside a task, do the steps in order. `docs/CONSTITUTIONS
 
 ## Task 2 — Get the package ready
 
-- [ ] Run `pnpm add --save-exact --ignore-scripts @nestjs/swagger@12.1.0` in `first-app`. Result: `package.json` has `"@nestjs/swagger": "12.1.0"` and `pnpm-lock.yaml` has the ten versions of the plan; the install script of `@scarf/scarf` did not run.
-- [ ] Check in `pnpm-lock.yaml` that `js-yaml` is 5.5.0 and that no other new package is outside the ten versions of the Socket review. Result: any other new version is reported before going on.
+- [x] Run `pnpm add --save-exact --ignore-scripts @nestjs/swagger@12.1.0` in `first-app`. Result: `package.json` has `"@nestjs/swagger": "12.1.0"` and `pnpm-lock.yaml` has the ten versions of the plan; the install script of `@scarf/scarf` did not run.
+- [x] Check in `pnpm-lock.yaml` that `js-yaml` is 5.5.0 and that no other new package is outside the ten versions of the Socket review. Result: any other new version is reported before going on.
 
 ## Task 3 — Write the Nest client
 
