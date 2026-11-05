@@ -37,8 +37,8 @@ Do the tasks in order. Inside a task, do the steps in order. There is no query, 
 
 ## Task 4 — Run it
 
-- [ ] Start `pnpm start` and `pnpm api`. Result: both programs answer.
-- [ ] Open the collection in Bruno, pick `local` and run the folders `01 CRUD`, `02 Errors` and `03 Delete` in order. Result: every request and every assert passes.
-- [ ] Run the three folders a second time. Result: they pass again, so the collection leaves no user behind.
-- [ ] Stop `pnpm start` and send the request of `04 SQL down`. Result: 500 "The database failed.", and the assert passes.
-- [ ] Start `pnpm start` again and check that `git status` shows only the files of this feature. Result: no change in `package.json`, `pnpm-lock.yaml` or `src/clients/api/server.js`.
+- [x] Start `pnpm start` and `pnpm api`. Result: both programs answer.
+- [x] Open the collection in Bruno, pick `local` and run the folders `01 CRUD`, `02 Errors` and `03 Delete` in order. Result: every request and every assert passes.
+- [x] Run the three folders a second time. Result: they pass again, so the collection leaves no user behind.
+- [x] Stop `pnpm start` and send the request of `04 SQL down`. Result: 500 "The database failed.", and the assert passes.
+- [x] Start `pnpm start` again and check that `git status` shows only the files of this feature. Result: no change in `package.json`, `pnpm-lock.yaml` or `src/clients/api/server.js`.
