@@ -121,7 +121,7 @@ Una funcionalidad está terminada cuando:
 | `006-limite-intentos-ip` | ✅ Implementada (2026-10-23); 93 tests pytest | Issue #318, PR #319; rate limit IP, block list, panel profesor, constitución v2.4 |
 | `007-informe-descarga-asistencia` | ✅ Terminada (2026-10-28) | Issue #324; informe `.xlsx` openpyxl; título/total fusionados A–D; 96 tests pytest |
 | `008-flujo-git-curso` | ✅ Implementada (2026-10-30): T01–T07, 96 tests | Issue #688; flujo de git del curso en esta carpeta |
-| `009-alinear-flujo-git-plantilla` | Pendiente de aprobación (2026-11-05) | Issue #1145; alinear el flujo de git con la plantilla del ejercicio |
+| `009-alinear-flujo-git-plantilla` | Spec aprobada (2026-11-05); plan pendiente de aprobación | Issue #1145; alinear el flujo de git con la plantilla del ejercicio |
 | Bot de Discord | Idea futura, sin número | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
