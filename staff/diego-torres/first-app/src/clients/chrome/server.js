@@ -11,6 +11,8 @@ import { createUser } from "../../logic/create-user.js";
 import { deleteUser } from "../../logic/delete-user.js";
 // Busca un usuario por su id (viene de la capa de lógica).
 import { findUserById } from "../../logic/find-user-by-id.js";
+// Busca usuarios por su nombre (viene de la capa de lógica).
+import { findUserByName } from "../../logic/find-user-by-name.js";
 // Devuelve la lista de usuarios (viene de la capa de lógica).
 import { listUsers } from "../../logic/list-users.js";
 // Modifica un usuario (viene de la capa de lógica).
@@ -76,6 +78,17 @@ app.get("/users", async (request, reply) => {
     return reply.code(200).send(users);
   } catch (error) {
     return responderError(reply, error, "Could not list the users");
+  }
+});
+
+// Busca usuarios por el nombre que llega en la dirección.
+// Va antes que /users/:id para que se lea igual que en la API de Nest.
+app.get("/users/by-name", async (request, reply) => {
+  try {
+    const users = await findUserByName(request.query.name);
+    return reply.code(200).send(users);
+  } catch (error) {
+    return responderError(reply, error, "Could not find the user");
   }
 });
 

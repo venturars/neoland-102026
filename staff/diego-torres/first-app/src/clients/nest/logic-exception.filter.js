@@ -23,6 +23,11 @@ const FALLOS = {
 
 // Elige el mensaje de fallo de la acción que se estaba haciendo.
 function elegirFallo(request) {
+  // Buscar por nombre falla igual que buscar un usuario.
+  if (request.path === "/users/by-name") {
+    return "Could not find the user";
+  }
+
   // Con GET, la ruta dice si se pedía la lista o un solo usuario.
   if (request.method === "GET" && request.params?.id === undefined) {
     return "Could not list the users";

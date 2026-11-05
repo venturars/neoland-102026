@@ -7,6 +7,8 @@ import { createUser } from "../../logic/create-user.js";
 import { deleteUser } from "../../logic/delete-user.js";
 // Busca un usuario por su id (viene de la capa de lógica).
 import { findUserById } from "../../logic/find-user-by-id.js";
+// Busca usuarios por su nombre (viene de la capa de lógica).
+import { findUserByName } from "../../logic/find-user-by-name.js";
 // Devuelve la lista de usuarios (viene de la capa de lógica).
 import { listUsers } from "../../logic/list-users.js";
 // Modifica un usuario (viene de la capa de lógica).
@@ -28,6 +30,11 @@ export class UsersService {
   // Devuelve el usuario con ese id.
   find(id) {
     return findUserById(id);
+  }
+
+  // Devuelve los usuarios con ese nombre.
+  findByName(name) {
+    return findUserByName(name);
   }
 
   // Cambia solo los datos que llegan en changes.
