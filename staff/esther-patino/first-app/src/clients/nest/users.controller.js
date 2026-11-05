@@ -19,6 +19,7 @@ import { deleteUser } from "../../logic/delete-user.js";
 import { findUserById } from "../../logic/find-user-by-id.js";
 import { listUsers } from "../../logic/list-users.js";
 import { updateUser } from "../../logic/update-user.js";
+import { usersGenderCount } from "../../logic/users-gender-count.js";
 
 const NAME_IS_EMPTY = "Name is empty";
 const EMAIL_IS_INVALID = "Email is invalid";
@@ -30,6 +31,7 @@ const COULD_NOT_LIST_THE_USERS = "Could not list the users";
 const COULD_NOT_FIND_THE_USER = "Could not find the user";
 const COULD_NOT_UPDATE_THE_USER = "Could not update the user";
 const COULD_NOT_DELETE_THE_USER = "Could not delete the user";
+const COULD_NOT_CLASSIFY_THE_USERS = "Could not classify the users";
 
 const USER_BODY = {
   schema: {
@@ -105,6 +107,26 @@ class UsersController {
       }
       response.status(500);
       response.json({ message: COULD_NOT_LIST_THE_USERS });
+    }
+  }
+
+  @Get("users/gender-count")
+  async genderCount(request, response) {
+    try {
+      const count = await usersGenderCount();
+      response.status(200);
+      response.json(count);
+    } catch (error) {
+      if (error instanceof Error) {
+        const message = error.message;
+        if (message === COULD_NOT_CLASSIFY_THE_USERS) {
+          response.status(500);
+          response.json({ message });
+          return;
+        }
+      }
+      response.status(500);
+      response.json({ message: COULD_NOT_CLASSIFY_THE_USERS });
     }
   }
 
@@ -244,6 +266,8 @@ Req()(UsersController.prototype, "create", 0);
 Res()(UsersController.prototype, "create", 1);
 Req()(UsersController.prototype, "list", 0);
 Res()(UsersController.prototype, "list", 1);
+Req()(UsersController.prototype, "genderCount", 0);
+Res()(UsersController.prototype, "genderCount", 1);
 Req()(UsersController.prototype, "find", 0);
 Res()(UsersController.prototype, "find", 1);
 Req()(UsersController.prototype, "update", 0);

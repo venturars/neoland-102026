@@ -8,81 +8,85 @@ import { findByEmail, findById, update } from "../queries/user.js";
 
 export async function updateUser(input) {
   const id = input.id;
-  const name = input.name;
-  const email = input.email;
+  const incomingName = input.name;
+  const incomingEmail = input.email;
 
   if (typeof id !== "number") {
     throw new ValidationError("Id is invalid");
   }
 
-  let nameIsEmpty = false;
+  if (incomingName !== undefined) {
+    let nameIsEmpty = false;
 
-  if (typeof name !== "string") {
-    nameIsEmpty = true;
-  }
-
-  if (typeof name === "string") {
-    const trimmedName = name.trim();
-
-    if (trimmedName === "") {
+    if (typeof incomingName !== "string") {
       nameIsEmpty = true;
     }
-  }
 
-  if (nameIsEmpty) {
-    throw new ValidationError("Name is empty");
-  }
+    if (typeof incomingName === "string") {
+      const trimmedName = incomingName.trim();
 
-  let emailIsInvalid = false;
+      if (trimmedName === "") {
+        nameIsEmpty = true;
+      }
+    }
 
-  if (typeof email !== "string") {
-    emailIsInvalid = true;
-  }
-
-  if (typeof email === "string") {
-    const hasSpace = email.includes(" ");
-
-    if (hasSpace) {
-      emailIsInvalid = true;
+    if (nameIsEmpty) {
+      throw new ValidationError("Name is empty");
     }
   }
 
-  if (emailIsInvalid) {
-    throw new ValidationError("Email is invalid");
-  }
+  if (incomingEmail !== undefined) {
+    let emailIsInvalid = false;
 
-  const atIndex = email.indexOf("@");
-  const lastAtIndex = email.lastIndexOf("@");
+    if (typeof incomingEmail !== "string") {
+      emailIsInvalid = true;
+    }
 
-  let atSignIsInvalid = false;
+    if (typeof incomingEmail === "string") {
+      const hasSpace = incomingEmail.includes(" ");
 
-  if (atIndex <= 0) {
-    atSignIsInvalid = true;
-  }
+      if (hasSpace) {
+        emailIsInvalid = true;
+      }
+    }
 
-  if (atIndex !== lastAtIndex) {
-    atSignIsInvalid = true;
-  }
+    if (emailIsInvalid) {
+      throw new ValidationError("Email is invalid");
+    }
 
-  if (atSignIsInvalid) {
-    throw new ValidationError("Email is invalid");
-  }
+    const atIndex = incomingEmail.indexOf("@");
+    const lastAtIndex = incomingEmail.lastIndexOf("@");
 
-  const domain = email.slice(atIndex + 1);
-  const dotIndex = domain.lastIndexOf(".");
+    let atSignIsInvalid = false;
 
-  let domainDotIsInvalid = false;
+    if (atIndex <= 0) {
+      atSignIsInvalid = true;
+    }
 
-  if (dotIndex <= 0) {
-    domainDotIsInvalid = true;
-  }
+    if (atIndex !== lastAtIndex) {
+      atSignIsInvalid = true;
+    }
 
-  if (dotIndex === domain.length - 1) {
-    domainDotIsInvalid = true;
-  }
+    if (atSignIsInvalid) {
+      throw new ValidationError("Email is invalid");
+    }
 
-  if (domainDotIsInvalid) {
-    throw new ValidationError("Email is invalid");
+    const domain = incomingEmail.slice(atIndex + 1);
+    const dotIndex = domain.lastIndexOf(".");
+
+    let domainDotIsInvalid = false;
+
+    if (dotIndex <= 0) {
+      domainDotIsInvalid = true;
+    }
+
+    if (dotIndex === domain.length - 1) {
+      domainDotIsInvalid = true;
+    }
+
+    if (domainDotIsInvalid) {
+      throw new ValidationError("Email is invalid");
+    }
   }
 
   let current;
@@ -95,6 +99,18 @@ export async function updateUser(input) {
 
   if (current === undefined) {
     throw new NotFoundError("User not found");
+  }
+
+  let name = current.name;
+
+  if (incomingName !== undefined) {
+    name = incomingName;
+  }
+
+  let email = current.email;
+
+  if (incomingEmail !== undefined) {
+    email = incomingEmail;
   }
 
   let owner;

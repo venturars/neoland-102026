@@ -5,6 +5,7 @@ const LIST_USERS = "list-users";
 const FIND_USER_BY_ID = "find-user-by-id";
 const UPDATE_USER = "update-user";
 const DELETE_USER = "delete-user";
+const USERS_GENDER_COUNT = "users-gender-count";
 
 contextBridge.exposeInMainWorld("desktop", {
   createUser(input) {
@@ -21,5 +22,8 @@ contextBridge.exposeInMainWorld("desktop", {
   },
   deleteUser(id) {
     return ipcRenderer.invoke(DELETE_USER, id);
+  },
+  usersGenderCount() {
+    return ipcRenderer.invoke(USERS_GENDER_COUNT);
   },
 });
