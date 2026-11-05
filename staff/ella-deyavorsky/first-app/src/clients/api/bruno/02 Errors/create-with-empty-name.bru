@@ -1,0 +1,27 @@
+meta {
+  name: Create with empty name
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": " ",
+    "email": "no-name@example.com"
+  }
+}
+
+assert {
+  res.status: eq 400
+  res.body.error: eq The name is missing.
+}
+
+docs {
+  The name is only spaces.
+}
