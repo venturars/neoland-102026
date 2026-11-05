@@ -5,6 +5,7 @@ const COULD_NOT_LIST_THE_USERS = "Could not list the users";
 const COULD_NOT_FIND_THE_USER = "Could not find the user";
 const COULD_NOT_UPDATE_THE_USER = "Could not update the user";
 const COULD_NOT_DELETE_THE_USER = "Could not delete the user";
+const COULD_NOT_CLASSIFY_THE_USERS = "Could not classify the users";
 
 const STATE = {
   selectedUser: null,
@@ -244,6 +245,72 @@ async function deleteUser() {
   }
 }
 
+function showUsersSection() {
+  const usersSection = document.getElementById("users-section");
+  const countSection = document.getElementById("count-section");
+  const usersTab = document.getElementById("show-users");
+  const countTab = document.getElementById("show-count");
+
+  usersSection.hidden = false;
+  countSection.hidden = true;
+  usersTab.classList.add("tab-selected");
+  countTab.classList.remove("tab-selected");
+}
+
+function showCountSection() {
+  const usersSection = document.getElementById("users-section");
+  const countSection = document.getElementById("count-section");
+  const usersTab = document.getElementById("show-users");
+  const countTab = document.getElementById("show-count");
+
+  usersSection.hidden = true;
+  countSection.hidden = false;
+  usersTab.classList.remove("tab-selected");
+  countTab.classList.add("tab-selected");
+}
+
+function showGenderCount(count) {
+  const women = document.getElementById("count-women");
+  const men = document.getElementById("count-men");
+  const undefinedUser = document.getElementById("count-undefined");
+
+  women.textContent = "women " + count.women;
+  men.textContent = "men " + count.men;
+  undefinedUser.textContent = "undefinedUser " + count.undefinedUser;
+  women.hidden = false;
+  men.hidden = false;
+  undefinedUser.hidden = false;
+}
+
+async function countUsers() {
+  if (STATE.isBusy) {
+    return;
+  }
+
+  STATE.isBusy = true;
+  showMessage("", false);
+
+  try {
+    const response = await fetch(ORIGIN + "/users/gender-count");
+
+    if (!response.ok) {
+      const message = await readErrorMessage(
+        response,
+        COULD_NOT_CLASSIFY_THE_USERS,
+      );
+      showMessage(message, true);
+      return;
+    }
+
+    const count = await response.json();
+    showGenderCount(count);
+  } catch (error) {
+    showMessage(COULD_NOT_CLASSIFY_THE_USERS, true);
+  } finally {
+    STATE.isBusy = false;
+  }
+}
+
 function initializeClient() {
   const form = document.getElementById("user-form");
   form.addEventListener("submit", saveUser);
@@ -251,6 +318,12 @@ function initializeClient() {
   createButton.addEventListener("click", createUser);
   const deleteButton = document.getElementById("delete-user");
   deleteButton.addEventListener("click", deleteUser);
+  const usersTab = document.getElementById("show-users");
+  usersTab.addEventListener("click", showUsersSection);
+  const countTab = document.getElementById("show-count");
+  countTab.addEventListener("click", showCountSection);
+  const countButton = document.getElementById("count-users");
+  countButton.addEventListener("click", countUsers);
   listUsers();
 }
 

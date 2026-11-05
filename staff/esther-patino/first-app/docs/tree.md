@@ -92,6 +92,12 @@ extension.js
 index.html
 app.js
 styles.css
+electron/
+main.js
+preload.js
+index.html
+app.js
+styles.css
 .vscode/
 launch.json
 

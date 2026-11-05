@@ -12,9 +12,13 @@ También se crea, se lista, se busca, se ve, se cambia y se borra un usuario des
 
 También se crea, se lista, se ve, se cambia y se borra un usuario con el cliente Nest, en el puerto 3003. Ese cliente pasa por Babel. También se puede probar desde Swagger UI en la ruta `api` del mismo host. La base sigue en el puerto 3000.
 
+También se crea, se lista, se ve, se cambia y se borra un usuario desde una ventana de escritorio. La base sigue en el puerto 3000.
+
 Se puede crear un usuario, listarlos, buscar uno, cambiarlo y borrarlo.
 
 También se pueden contar los usuarios ya guardados según el sexo que sugiere su nombre. El sexo lo decide una IA local, sin coste. El resultado solo se muestra. Es una lectura del nombre, no el sexo verificado de la persona. No se guarda el sexo ni otro campo.
+
+Ese recuento también se pide desde el cliente HTTP, la extensión de Chrome, el panel de VS Code, la ventana de escritorio y el cliente Nest. En la extensión, en el panel y en la ventana, la persona lo abre en una pestaña. Las tres pantallas del navegador no lo piden.
 
 El resultado de ese recuento es un objeto con estos campos y ningún otro:
 
@@ -66,7 +70,7 @@ El cliente es un archivo en `src/clients/terminal/`. El nombre dice la acción, 
 
 Ese archivo se pega en la terminal desde la raíz del repositorio. Entra en `first-app`, importa la función y hace `console.log` del resultado. No captura el error. Es la prueba manual de esa funcionalidad.
 
-El cliente de una funcionalidad nueva sigue siendo ese archivo. Este cambio añade el cliente de navegador y no añade un `.txt`. Este cambio añade el cliente HTTP y no añade un `.txt`. Este cambio añade el cliente Chrome y no añade un `.txt`. Este cambio añade el cliente de VS Code y no añade un `.txt`. Este cambio añade el cliente Nest, que es el que pasa por Babel, y no añade un `.txt`. Este cambio añade Swagger UI al cliente Nest y no añade un `.txt`.
+El cliente de una funcionalidad nueva sigue siendo ese archivo. Este cambio añade el cliente de navegador y no añade un `.txt`. Este cambio añade el cliente HTTP y no añade un `.txt`. Este cambio añade el cliente Chrome y no añade un `.txt`. Este cambio añade el cliente de VS Code y no añade un `.txt`. Este cambio añade el cliente Nest, que es el que pasa por Babel, y no añade un `.txt`. Este cambio añade el recuento a esos clientes y no añade un `.txt`.
 
 ## 8. Cómo se hace un desarrollo
 
