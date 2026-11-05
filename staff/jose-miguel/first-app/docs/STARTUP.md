@@ -40,7 +40,7 @@ Para liberar un puerto en Windows: localiza la terminal donde corre el comando y
 | Cliente | Segundo comando | Notas |
 | --- | --- | --- |
 | Browser | `pnpm browser` | `file://` + módulos ES. Ver [`src/clients/browser/README.md`](../src/clients/browser/README.md). |
-| HTTP (Express) | `pnpm http` | API en `http://127.0.0.1:3001`. Ver [`src/clients/http/README.md`](../src/clients/http/README.md). |
+| HTTP (Express) | `pnpm http` | API en `http://127.0.0.1:3001`. Colección Bruno: `pnpm bruno` (lista vacía). Ver [`src/clients/http/README.md`](../src/clients/http/README.md). |
 | Electron | `pnpm electron` | Ventana de escritorio. Ver [`src/clients/electron/README.md`](../src/clients/electron/README.md). |
 | Chrome | `pnpm chrome` + extensión cargada | API en `http://127.0.0.1:3002` y popup MV3. Ver [`src/clients/chrome/README.md`](../src/clients/chrome/README.md). |
 | VS Code | F5 desde `src/clients/vscode` | Panel lateral; ver [`src/clients/vscode/README.md`](../src/clients/vscode/README.md). |

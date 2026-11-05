@@ -10,6 +10,7 @@
     "browser": "node scripts/start-browser.js",
     "electron": "electron src/clients/electron/main.js",
     "http": "node src/clients/http/app.js",
+    "bruno": "node scripts/run-bruno.js",
     "chrome": "node src/clients/chrome/server.js",
     "nest": "node scripts/run-nest.js",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -36,6 +37,7 @@
     "@babel/plugin-proposal-decorators": "8.0.2",
     "@babel/preset-env": "8.0.7",
     "@eslint/js": "10.0.1",
+    "@usebruno/cli": "4.3.0",
     "electron": "45.2.2",
     "eslint": "10.13.0",
     "prettier": "3.9.10"

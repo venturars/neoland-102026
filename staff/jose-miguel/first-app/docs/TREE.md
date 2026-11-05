@@ -8,6 +8,7 @@ first-app/
   scripts/
     start-jupyter.js
     start-browser.js
+    run-bruno.js
   src/
     db/
       server.js
@@ -44,6 +45,11 @@ first-app/
       http/
         app.js
         README.md
+        bruno/
+          bruno.json
+          collection.bru
+          01-sql-online/
+          02-sql-offline/
       electron/
         main.js
         index.html
@@ -124,6 +130,14 @@ first-app/
         plan.md
         tasks.md
       nest-http-client/
+        spec.md
+        plan.md
+        tasks.md
+      nest-openapi-ui/
+        spec.md
+        plan.md
+        tasks.md
+      bruno-http-collection/
         spec.md
         plan.md
         tasks.md

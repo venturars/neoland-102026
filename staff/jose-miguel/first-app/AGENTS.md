@@ -86,7 +86,7 @@ Arranque con servidor SQL + cliente: **`docs/STARTUP.md`**.
 - Ejecutar: pegar el contenido de `src/clients/terminal/` en la terminal, con el directorio actual en `first-app` (con `pnpm server` en otra terminal si el fragmento usa la base).
 - Jupyter: `pnpm jupyter` desde `first-app` (ejecuta `node scripts/start-jupyter.js`; abre Notebook sobre `src/clients/jupyter/`; la primera vez crea `.venv` e instala Notebook). Celdas con logic suelen necesitar `pnpm server` en paralelo.
 - Cliente browser: `pnpm server` + `pnpm browser`. Detalle en `src/clients/browser/README.md` y `docs/STARTUP.md`.
-- Cliente HTTP (Express): `pnpm server` + `pnpm http`. Detalle en `src/clients/http/README.md` y `docs/STARTUP.md`.
+- Cliente HTTP (Express): `pnpm server` + `pnpm http`. Colección Bruno: `pnpm bruno` (lista vacía; no es el script `test`). Detalle en `src/clients/http/README.md` y `docs/STARTUP.md`.
 - Cliente Electron: `pnpm server` + `pnpm electron`. Detalle en `src/clients/electron/README.md` y `docs/STARTUP.md`.
 - Cliente Chrome: `pnpm server` + `pnpm chrome` y cargar la extensión desde `src/clients/chrome`. Detalle en `src/clients/chrome/README.md` y `docs/STARTUP.md`.
 - Cliente VS Code: `pnpm server` + abrir `src/clients/vscode` en VS Code y F5. Detalle en `src/clients/vscode/README.md` y `docs/STARTUP.md`.
