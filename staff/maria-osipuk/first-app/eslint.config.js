@@ -47,6 +47,16 @@ export default defineConfig([
     },
   },
   {
+    // The extension uses the DOM. It reaches the data through its own API.
+    files: ["src/clients/chrome/popup.js"],
+    languageOptions: {
+      globals: {
+        document: "readonly",
+        fetch: "readonly",
+      },
+    },
+  },
+  {
     // A sandboxed preload runs as CommonJS, so it uses require and not import.
     files: ["src/clients/electron/preload.cjs"],
     languageOptions: {

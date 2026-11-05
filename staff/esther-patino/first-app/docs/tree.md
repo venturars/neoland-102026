@@ -70,6 +70,11 @@ styles.css
 app.js
 http/
 app.js
+nest/
+.babelrc.json
+main.js
+app.module.js
+users.controller.js
 chrome/
 server.js
 manifest.json

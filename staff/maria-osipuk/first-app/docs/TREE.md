@@ -13,6 +13,12 @@ first-app/
 │   └── jupyter.sh
 ├── src/
 │   ├── clients/
+│   │   ├── chrome/
+│   │   │   ├── api.js
+│   │   │   ├── manifest.json
+│   │   │   ├── popup.html
+│   │   │   ├── popup.js
+│   │   │   └── styles.css
 │   │   ├── electron/
 │   │   │   ├── app.js
 │   │   │   ├── index.html
@@ -145,6 +151,10 @@ first-app/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
+│   │   ├── chrome-extension-client/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
 │   │   ├── classifier/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
@@ -213,6 +223,7 @@ first-app/
 │   ├── TREE.md
 │   └── WEB-CLIENT-GUIDE.md
 └── tests/
+    ├── chrome-client.test.js
     ├── database-server.test.js
     ├── electron-client.test.js
     ├── http-client.test.js
