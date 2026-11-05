@@ -39,7 +39,9 @@ Al añadir un paquete de Node o cambiar su versión, se comprueba con Socket ant
 
 Entra el paquete y la versión. También entran las dependencias de ese paquete, hasta 3 capas.
 
-El resumen entra en el plan antes de aceptarlo. Para el paquete y para cada dependencia, el resumen dice si esa versión está en una campaña, si tiene una alerta y si alguna stat está por debajo de 50 puntos.
+El resumen entra en el plan antes de aceptarlo. Para el paquete y para cada dependencia, el resumen dice si esa versión está en una campaña, si tiene una alerta y si alguna stat está por debajo de 200 puntos.
+
+Solo se instalan las versiones que Socket ya ha analizado.
 
 Las alertas se comentan. Quien acepta el plan decide si las acepta.
 

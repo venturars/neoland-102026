@@ -2,15 +2,14 @@
 
 Issue: #908.
 
-No es una funcionalidad nueva. No toca `src/`, `package.json`, clientes,
-`docs/CONSTITUTIONS.md` ni `AGENTS.md`.
+No es una funcionalidad nueva. No toca `src/`, `package.json` ni clientes.
 
 La constitución remite el MCP a `MCPS/socket-mcp/mcp.txt`. El procedimiento
 resumido va en `docs/SOCKET.md`. Los planes (p. ej. express-rest-client)
 mezclaban alertas de toda la org; esta tarea corrige la guía.
 
-`docs/SOCKET.md` fija stats por debajo de 200 y que el lockfile solo instala
-versiones ya analizadas por Socket.
+`docs/SOCKET.md`, `docs/CONSTITUTIONS.md` y `AGENTS.md` fijan stats por debajo
+de 200 y que el lockfile solo instala versiones ya analizadas por Socket.
 
 ## Revisión
 
@@ -24,6 +23,8 @@ Se tocan:
 - `MCPS/socket-mcp/mcp.txt` (URL + enlace a `SOCKET.md`)
 - `docs/ARCHITECTURE.md`
 - `docs/TREE.md`
+- `docs/CONSTITUTIONS.md` (umbral 200 y lockfile)
+- `AGENTS.md` (umbral 200 y lockfile)
 
 ## Contrato
 

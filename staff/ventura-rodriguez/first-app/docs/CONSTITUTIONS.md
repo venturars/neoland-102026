@@ -36,7 +36,9 @@ Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket.
 
 La referencia del MCP está en `MCPS/socket-mcp/mcp.txt`. La organización es `ai-engineering`.
 
-Las stats salen de `depscore`, con la versión exacta. Una stat por debajo de 50 puntos se escribe. 50 no baja.
+Las stats salen de `depscore`, con la versión exacta. Una stat por debajo de 200 puntos se escribe. 200 no baja.
+
+Solo se instalan versiones analizadas por Socket.
 
 La alerta sale de `alerts`, con `org_slug` `ai-engineering`. Una lista vacía es la lista de la organización. No dice que esa versión no tenga alerta.
 
