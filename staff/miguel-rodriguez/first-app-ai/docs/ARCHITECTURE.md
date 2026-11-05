@@ -167,3 +167,11 @@ It awaits the existing logic, converts route IDs to numbers, and maps business
 errors to HTTP statuses and JSON messages. It listens on loopback port 3001 via
 `pnpm http`; queries still reach the separate data service on port 3000.
 The client does not serve web assets. README documents the Postman requests.
+
+
+## Nest
+
+src/clients/nest recibe HTTP en loopback3003. El controlador usa el servicio
+inyectado por Nest, que llama a logic. AppModule registra controlador, proveedor
+y filtro global. Babel compila src a dist; el acceso SQL sigue en el servicio
+de datos3000.

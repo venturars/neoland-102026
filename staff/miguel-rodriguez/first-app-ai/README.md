@@ -134,3 +134,23 @@ Una ruta desconocida devuelve 404 vacío; JSON mal formado, 400 vacío.
 Usa datos desechables para borrar. Terminal, Jupyter, web y REST comparten los
 contactos. Ctrl+C detiene cada servicio desde su propia terminal. El cliente REST
 no sirve la página web.
+
+
+## Nest
+
+En otra terminal, mantén `pnpm server` y la tabla inicializada. Ejecuta `pnpm nest`
+para compilar src y abrir la API en http://127.0.0.1:3003. Ctrl+C la detiene.
+En Postman utiliza POST /users con JSON {"name":"Ada","email":"ada@example.com"};
+GET /users; GET /users/ID; PATCH /users/ID con JSON {"name":"Ada Lovelace"};
+DELETE /users/ID. Creación201, consultas y edición200, borrado204 sin cuerpo.
+Sustituye ID por el ID devuelto. Las respuestas de contactos tienen los cinco
+campos y PATCH conserva los omitidos. Es una API; no tiene página propia.
+
+Para verificar el adaptador sin dejar el servidor abierto:
+
+```sh
+pnpm exec babel src --out-dir dist --delete-dir-on-start
+node --test --test-concurrency=1 tests/nest-client.test.js
+```
+
+Estas pruebas preparan datos desechables y utilizan un puerto separado.

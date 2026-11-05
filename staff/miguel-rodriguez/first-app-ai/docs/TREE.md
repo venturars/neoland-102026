@@ -221,3 +221,8 @@ first-app-ai/
     ├── launch-push.sh
     └── pull-changes.sh
 ```
+
+
+Cliente src/clients/nest: main.js, app.module.js, users.controller.js,
+users.service.js y http-exception.filter.js. babel.config.json configura la
+compilación; dist/ es salida generada ignorada por Git.
