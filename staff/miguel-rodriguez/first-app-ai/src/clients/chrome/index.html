@@ -52,16 +52,17 @@
           <dt>Actualizado</dt>
           <dd id="updated-at"></dd>
         </dl>
+        <p id="user-email"></p>
         <form id="edit-form" novalidate>
           <label for="edit-name">Nombre</label>
-          <input id="edit-name" autocomplete="name" required />
+          <input id="edit-name" autocomplete="name" placeholder="Conservar nombre" />
           <label for="edit-email">Email</label>
           <input
             id="edit-email"
+            placeholder="Conservar email"
             type="text"
             inputmode="email"
             autocomplete="email"
-            required
           />
           <button type="submit">Guardar</button>
         </form>

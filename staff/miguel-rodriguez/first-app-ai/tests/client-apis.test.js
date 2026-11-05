@@ -112,7 +112,7 @@ test(
           status: 200,
           value: { women: 0, men: 0, genderUndefined: 0 },
         });
-        assert.equal((await request(port, "GET", "/missing")).status, 404);
+        assert.deepEqual(await request(port, "GET", "/missing"), { status: 404, value: undefined });
         const malformed = await fetch(`http://127.0.0.1:${port}/users`, {
           method: "POST",
           headers: { "content-type": "application/json" },

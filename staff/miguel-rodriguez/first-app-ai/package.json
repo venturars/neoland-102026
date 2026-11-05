@@ -9,13 +9,14 @@
   },
   "scripts": {
     "jupyter": "node scripts/jupyter.js",
-    "format": "prettier --no-config --no-editorconfig --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/jupyter/**/*.js\" \"src/clients/web/**/*.js\" \"src/clients/http/**/*.js\" \"src/clients/vscode/**/*.js\" \"src/clients/vscode/**/*.cjs\" \"src/clients/electron/**/*.js\" \"src/clients/electron/**/*.cjs\" \"src/clients/chrome/**/*.js\" \"scripts/**/*.js\" \"eslint.config.js\"",
+    "format": "prettier --no-config --no-editorconfig --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/jupyter/**/*.js\" \"src/clients/web/**/*.js\" \"src/clients/http/**/*.js\" \"src/clients/vscode/**/*.js\" \"src/clients/vscode/**/*.cjs\" \"src/clients/electron/**/*.js\" \"src/clients/chrome/**/*.js\" \"scripts/**/*.js\" \"eslint.config.js\"",
     "lint": "eslint .",
     "server": "node src/db/server.js",
     "web": "node scripts/web.js",
     "http": "node src/clients/http/app.js",
     "electron": "electron src/clients/electron/main.js",
-    "chrome": "node src/clients/chrome/server.js"
+    "chrome": "node src/clients/chrome/server.js",
+    "vscode": "code --extensionDevelopmentPath=\"${PWD}/src/clients/vscode\" \"${PWD}\""
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

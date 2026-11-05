@@ -92,6 +92,11 @@ app.delete("/users/:id", async (request, reply) => {
   }
 });
 
+app.setNotFoundHandler((request, reply) => {
+  reply.code(404);
+  return reply.send();
+});
+
 try {
   const address = await app.listen({ host: HOST, port: PORT });
   console.log(address);

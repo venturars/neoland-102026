@@ -40,7 +40,7 @@ export default [
     },
   },
   {
-    files: ["src/clients/vscode/**/*.cjs", "src/clients/electron/preload.cjs"],
+    files: ["src/clients/vscode/**/*.cjs"],
     languageOptions: {
       sourceType: "commonjs",
       globals: {

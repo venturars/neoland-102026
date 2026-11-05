@@ -1,3 +1,10 @@
+import { createUser } from "../../logic/create-user.js";
+import { listUsers } from "../../logic/list-users.js";
+import { findUserById } from "../../logic/find-user-by-id.js";
+import { updateUser } from "../../logic/update-user.js";
+import { deleteUser } from "../../logic/delete-user.js";
+import { usersGenderCount } from "../../logic/users-gender-count.js";
+
 const users = document.querySelector("#users");
 const editor = document.querySelector("#editor");
 const createForm = document.querySelector("#create-form");
@@ -7,10 +14,6 @@ const message = document.querySelector("#message");
 const summary = document.querySelector("#summary");
 let selectedUser;
 let busy = false;
-
-async function call(operation, args = []) {
-  return await window.firstApp.call(operation, args);
-}
 
 async function run(action) {
   if (busy) {
@@ -37,7 +40,7 @@ async function run(action) {
 }
 
 async function refreshUsers() {
-  const contacts = await call("list");
+  const contacts = await listUsers();
   users.replaceChildren();
   const placeholder = document.createElement("option");
   placeholder.value = "";
@@ -47,7 +50,7 @@ async function refreshUsers() {
   for (const user of contacts) {
     const option = document.createElement("option");
     option.value = user.id;
-    option.textContent = `${user.name} · ID ${user.id}`;
+    option.textContent = `${user.id} · ${user.name} · ${user.email}`;
     users.append(option);
   }
   selectedUser = undefined;
@@ -66,13 +69,13 @@ function showUser(user) {
     choice.value = id;
     users.append(choice);
   }
-  choice.textContent = `${user.name} · ID ${user.id}`;
+  choice.textContent = `${user.id} · ${user.name} · ${user.email}`;
   users.options[0].textContent = "Elige un contacto";
   users.value = id;
   document.querySelector("#user-title").textContent =
     `${user.name} · ID ${user.id}`;
-  document.querySelector("#edit-name").value = user.name;
-  document.querySelector("#edit-email").value = user.email;
+  document.querySelector("#user-email").textContent = user.email;
+  editForm.reset();
   document.querySelector("#created-at").textContent = user.createdAt;
   document.querySelector("#updated-at").textContent = user.updatedAt;
   deleteForm.reset();
@@ -119,7 +122,7 @@ users.addEventListener("change", () => {
   }
   run(async () => {
     const id = Number(value);
-    const user = await call("find", [id]);
+    const user = await findUserById(id);
     showUser(user);
   });
 });
@@ -133,7 +136,7 @@ document.querySelector("#find-form").addEventListener("submit", (event) => {
     if (!validId) {
       throw new Error("El ID debe ser un entero positivo");
     }
-    const user = await call("find", [id]);
+    const user = await findUserById(id);
     showUser(user);
   });
 });
@@ -143,7 +146,7 @@ createForm.addEventListener("submit", (event) => {
   run(async () => {
     const name = document.querySelector("#create-name").value;
     const email = document.querySelector("#create-email").value;
-    const user = await call("create", [{ name, email }]);
+    const user = await createUser({ name, email });
     createForm.reset();
     showUser(user);
     await refreshAfterChange("Contacto creado");
@@ -155,8 +158,15 @@ editForm.addEventListener("submit", (event) => {
   run(async () => {
     const name = document.querySelector("#edit-name").value;
     const email = document.querySelector("#edit-email").value;
+    const changes = {};
+    if (name !== "") {
+      changes.name = name;
+    }
+    if (email !== "") {
+      changes.email = email;
+    }
     const id = selectedUser.id;
-    const user = await call("update", [id, { name, email }]);
+    const user = await updateUser(id, changes);
     showUser(user);
     await refreshAfterChange("Contacto guardado");
   });
@@ -173,7 +183,7 @@ deleteForm.addEventListener("submit", (event) => {
       throw new Error("El email no coincide con el contacto guardado");
     }
     const id = selectedUser.id;
-    await call("delete", [id]);
+    await deleteUser(id);
     selectedUser = undefined;
     editor.hidden = true;
     editForm.reset();
@@ -198,7 +208,7 @@ document.querySelector("#gender-count").addEventListener("click", () => {
   run(async () => {
     summary.textContent = "Consultando…";
     try {
-      const counts = await call("genderCount");
+      const counts = await usersGenderCount();
       summary.textContent = `Mujeres: ${counts.women} · Hombres: ${counts.men} · Sin definir: ${counts.genderUndefined}`;
     } catch (error) {
       summary.textContent = "";

@@ -80,7 +80,7 @@ async function refreshUsers() {
   for (const user of contacts) {
     const option = document.createElement("option");
     option.value = user.id;
-    option.textContent = `${user.name} · ID ${user.id}`;
+    option.textContent = `${user.id} · ${user.name} · ${user.email} · ${user.createdAt} · ${user.updatedAt}`;
     users.append(option);
   }
   selectedUser = undefined;
@@ -99,13 +99,13 @@ function showUser(user) {
     choice.value = id;
     users.append(choice);
   }
-  choice.textContent = `${user.name} · ID ${user.id}`;
+  choice.textContent = `${user.id} · ${user.name} · ${user.email} · ${user.createdAt} · ${user.updatedAt}`;
   users.options[0].textContent = "Elige un contacto";
   users.value = id;
   document.querySelector("#user-title").textContent =
     `${user.name} · ID ${user.id}`;
-  document.querySelector("#edit-name").value = user.name;
-  document.querySelector("#edit-email").value = user.email;
+  document.querySelector("#user-email").textContent = user.email;
+  editForm.reset();
   document.querySelector("#created-at").textContent = user.createdAt;
   document.querySelector("#updated-at").textContent = user.updatedAt;
   deleteForm.reset();
@@ -188,8 +188,15 @@ editForm.addEventListener("submit", (event) => {
   run(async () => {
     const name = document.querySelector("#edit-name").value;
     const email = document.querySelector("#edit-email").value;
+    const changes = {};
+    if (name !== "") {
+      changes.name = name;
+    }
+    if (email !== "") {
+      changes.email = email;
+    }
     const id = selectedUser.id;
-    const user = await call("update", [id, { name, email }]);
+    const user = await call("update", [id, changes]);
     showUser(user);
     await refreshAfterChange("Contacto guardado");
   });

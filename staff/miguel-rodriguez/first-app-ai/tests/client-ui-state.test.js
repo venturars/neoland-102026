@@ -161,10 +161,15 @@ async function loadClient(client) {
   }
   const context = vm.createContext({
     document,
-    window: { firstApp: { call } },
+    createUser: (input) => call("create", [input]),
+    listUsers: () => call("list"),
+    findUserById: (id) => call("find", [id]),
+    updateUser: (id, changes) => call("update", [id, changes]),
+    deleteUser: (id) => call("delete", [id]),
+    usersGenderCount: () => call("genderCount"),
     fetch,
   });
-  vm.runInContext(source, context);
+  vm.runInContext(source.replace(/^import .*;\n/gm, ""), context);
   async function idle() {
     for (let attempt = 0; attempt < 100; attempt++) {
       await setImmediate();
@@ -241,7 +246,7 @@ for (const client of ["electron", "chrome"]) {
     ui.get("#edit-email").value = "new@example.test";
     await ui.act("#edit-form", "submit");
     assert.equal(ui.state.rows[0].email, "new@example.test");
-    assert.equal(ui.get("#edit-email").value, "new@example.test");
+    assert.equal(ui.get("#user-email").textContent, "new@example.test");
     assert.match(ui.get("#message").textContent, /^Contacto guardado.*lista/);
     assert.equal(ui.get("#created-at").textContent, "2026-11-04 21:00:00");
     assert.equal(ui.get("#updated-at").textContent, "2026-11-04 21:01:00");
@@ -285,7 +290,7 @@ for (const client of ["electron", "chrome"]) {
       ui.state.rows[0].updatedAt = "2026-11-04 21:02:00";
     };
     await ui.act("#edit-form", "submit");
-    assert.equal(ui.get("#edit-email").value, "newer@example.test");
+    assert.equal(ui.get("#user-email").textContent, "newer@example.test");
     assert.equal(ui.get("#updated-at").textContent, "2026-11-04 21:02:00");
     ui.get("#delete-email").value = "saved@example.test";
     await ui.act("#delete-form", "submit");
@@ -341,5 +346,32 @@ for (const client of ["electron", "chrome"]) {
     await ui.idle();
     assert.equal(ui.state.rows.length, 1);
     assert.equal(ui.get("#new-user").disabled, false);
+  });
+}
+
+for (const client of ["electron", "chrome"]) {
+  test(`${client}: editing a name preserves a newer stored email`, async () => {
+    const ui = await loadClient(client);
+    await ui.create();
+    ui.state.rows[0].email = "changed-elsewhere@example.test";
+    ui.get("#edit-name").value = "Ada Lovelace";
+    await ui.act("#edit-form", "submit");
+    assert.equal(ui.state.rows[0].name, "Ada Lovelace");
+    assert.equal(ui.state.rows[0].email, "changed-elsewhere@example.test");
+    assert.equal(ui.get("#user-email").textContent, ui.state.rows[0].email);
+    assert.equal(ui.get("#edit-email").value, "");
+  });
+  test(`${client}: list labels show the expected contact fields`, async () => {
+    const ui = await loadClient(client);
+    await ui.create();
+    const label = ui.get("#users").options[1].textContent;
+    const user = ui.state.rows[0];
+    for (const field of ["id", "name", "email"]) {
+      assert.ok(label.includes(String(user[field])));
+    }
+    if (client === "chrome") {
+      assert.ok(label.includes(user.createdAt));
+      assert.ok(label.includes(user.updatedAt));
+    }
   });
 }
