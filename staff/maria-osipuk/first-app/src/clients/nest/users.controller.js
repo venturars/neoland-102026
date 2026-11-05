@@ -10,8 +10,34 @@ import {
   Patch,
   Post,
 } from "@nestjs/common";
+import { ApiBody, ApiParam } from "@nestjs/swagger";
 
 import { UsersService } from "./users.service.js";
+
+// Without TypeScript, Swagger cannot read the body or the id from the
+// methods, so the page is told here what each route receives.
+const CREATE_USER_SCHEMA = {
+  type: "object",
+  required: ["name", "email"],
+  properties: {
+    name: { type: "string", example: "Ada" },
+    email: { type: "string", example: "ada@example.com" },
+  },
+};
+
+const UPDATE_USER_SCHEMA = {
+  type: "object",
+  properties: {
+    name: { type: "string", example: "Ada Lovelace" },
+    email: { type: "string", example: "ada@example.com" },
+  },
+};
+
+const ID_PARAM = {
+  name: "id",
+  required: true,
+  schema: { type: "string", example: "1" },
+};
 
 // The controller only turns the request into calls to the service and the
 // result into the response. Without TypeScript, Nest cannot read the
@@ -26,6 +52,7 @@ export class UsersController {
 
   @Post("users")
   @HttpCode(201)
+  @ApiBody({ schema: CREATE_USER_SCHEMA })
   @Bind(Body())
   async create(body) {
     // Without a JSON body the body can be undefined. An empty object lets
@@ -50,6 +77,7 @@ export class UsersController {
   }
 
   @Get("users/:id")
+  @ApiParam(ID_PARAM)
   @Bind(Param("id"))
   async find(idText) {
     // The route gives text and logic/ needs a number. The number is used
@@ -68,6 +96,8 @@ export class UsersController {
   }
 
   @Patch("users/:id")
+  @ApiParam(ID_PARAM)
+  @ApiBody({ schema: UPDATE_USER_SCHEMA })
   @Bind(Param("id"), Body())
   async update(idText, body) {
     const idNumber = Number(idText);
@@ -102,6 +132,7 @@ export class UsersController {
 
   @Delete("users/:id")
   @HttpCode(204)
+  @ApiParam(ID_PARAM)
   @Bind(Param("id"))
   async remove(idText) {
     const idNumber = Number(idText);
