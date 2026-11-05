@@ -44,7 +44,7 @@ function buscarEstadoDePeticion(error) {
 
 // Catch() sin nada dentro significa: captura cualquier fallo.
 @Catch()
-class LogicExceptionFilter {
+export class LogicExceptionFilter {
   catch(error, host) {
     const http = host.switchToHttp();
     const request = http.getRequest();
@@ -69,6 +69,3 @@ class LogicExceptionFilter {
     response.status(500).json({ message });
   }
 }
-
-// Se exporta aparte: swc no admite export entre el decorador y la clase.
-export { LogicExceptionFilter };

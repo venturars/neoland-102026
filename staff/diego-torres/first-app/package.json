@@ -9,10 +9,10 @@
     "electron": "electron src/clients/electron/main.js",
     "chrome": "node src/clients/chrome/server.js",
     "vscode": "node scripts/vscode.js",
-    "nest": "node src/clients/nest/bootstrap.mjs",
+    "nest": "node scripts/nest.js",
     "jupyter": "node scripts/jupyter.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/web/**/*.{js,html,css}\" \"src/clients/electron/**/*.{js,html,css}\" \"src/clients/chrome/**/*.{js,html,css}\" \"src/clients/vscode/**/*.{js,html,css}\" \"src/clients/nest/*.{js,mjs}\"",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/web/**/*.{js,html,css}\" \"src/clients/electron/**/*.{js,html,css}\" \"src/clients/chrome/**/*.{js,html,css}\" \"src/clients/vscode/**/*.{js,html,css}\" \"src/clients/nest/**/*.js\"",
     "lint": "eslint ."
   },
   "keywords": [],
@@ -35,6 +35,10 @@
     "eslint": "10.13.0",
     "@eslint/js": "10.0.1",
     "electron": "45.2.2",
-    "@swc/core": "1.16.21"
+    "@babel/cli": "8.1.0",
+    "@babel/core": "8.1.0",
+    "@babel/eslint-parser": "8.0.7",
+    "@babel/plugin-proposal-decorators": "8.0.2",
+    "@babel/preset-env": "8.0.7"
   }
 }

@@ -14,7 +14,7 @@ import { updateUser } from "../../logic/update-user.js";
 
 // Llama a la lógica. Las reglas no se repiten aquí.
 @Injectable()
-class UsersService {
+export class UsersService {
   // Crea un usuario con su nombre y su email.
   create(name, email) {
     return createUser({ name, email });
@@ -40,6 +40,3 @@ class UsersService {
     return deleteUser(id);
   }
 }
-
-// Se exporta aparte: swc no admite export entre el decorador y la clase.
-export { UsersService };

@@ -4,9 +4,9 @@ import {
   Body,
   Controller,
   Delete,
+  Dependencies,
   Get,
   HttpCode,
-  Inject,
   Param,
   Patch,
   Post,
@@ -16,10 +16,12 @@ import {
 import { UsersService } from "./users.service.js";
 
 // Todas las rutas de esta clase empiezan por /users.
+// Dependencies le dice a Nest qué servicio tiene que pasar al constructor.
 @Controller("users")
-class UsersController {
+@Dependencies(UsersService)
+export class UsersController {
   // Nest nos pasa el servicio al crear el controlador.
-  constructor(@Inject(UsersService) usersService) {
+  constructor(usersService) {
     this.usersService = usersService;
   }
 
@@ -73,6 +75,3 @@ class UsersController {
     await this.usersService.remove(id);
   }
 }
-
-// Se exporta aparte: swc no admite export entre el decorador y la clase.
-export { UsersController };

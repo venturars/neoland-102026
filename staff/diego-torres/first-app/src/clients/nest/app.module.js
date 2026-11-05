@@ -21,7 +21,4 @@ import { UsersService } from "./users.service.js";
     },
   ],
 })
-class AppModule {}
-
-// Se exporta aparte: swc no admite export entre el decorador y la clase.
-export { AppModule };
+export class AppModule {}
