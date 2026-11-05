@@ -68,8 +68,8 @@ Formato: **Dado** (situación inicial) · **Cuando** (acción) · **Entonces** (
 
 ## 6. Preguntas abiertas
 
-- **[NECESITA ACLARACIÓN: ¿la pull request se queda en borrador hasta aprobar esta spec, o se puede pedir revisión antes?]** Propuesta: se queda en borrador.
-- **[NECESITA ACLARACIÓN: ¿esta spec se cierra antes de fusionar #1143, o espera a que CA-06 se cumpla?]** Propuesta: se cierra cuando se cumplan CA-01 a CA-05 y CA-08. CA-06 se verifica al fusionar #1143.
+- **¿La pull request se queda en borrador hasta aprobar esta spec, o se puede pedir revisión antes?** Resuelta: se queda en borrador por ahora.
+- **¿Esta spec se cierra antes de fusionar #1143, o espera a que CA-06 se cumpla?** Resuelta: se cierra cuando se cumplan CA-01 a CA-05 y CA-08. CA-06 se verifica al fusionar #1143.
 
 ---
 
@@ -78,3 +78,4 @@ Formato: **Dado** (situación inicial) · **Cuando** (acción) · **Entonces** (
 | Versión | Fecha | Cambio | Motivo |
 | --- | --- | --- | --- |
 | 0.1 | 2026-11-05 | Borrador inicial | Issue #1145: alinear el flujo de git con la plantilla del ejercicio |
+| 0.2 | 2026-11-05 | Preguntas resueltas | La PR queda en borrador por ahora. El cierre de la spec no espera a #1143; CA-06 se verifica al fusionarla |
