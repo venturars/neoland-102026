@@ -13,6 +13,8 @@ import { findUserById } from "../../logic/find-user-by-id.js";
 import { listUsers } from "../../logic/list-users.js";
 // Modifica un usuario (viene de la capa de lógica).
 import { updateUser } from "../../logic/update-user.js";
+// Cuenta los usuarios por género (viene de la capa de lógica).
+import { usersGenderCount } from "../../logic/users-gender-count.js";
 
 // Las acciones que cambian datos vuelven a enviar la lista.
 const CAMBIAN_DATOS = ["create", "update", "delete"];
@@ -30,6 +32,9 @@ async function runAction(message) {
   }
   if (action === "view") {
     return { user: await findUserById(id) };
+  }
+  if (action === "gender-count") {
+    return { genderCount: await usersGenderCount() };
   }
   if (action === "update") {
     return { user: await updateUser(id, changes) };
