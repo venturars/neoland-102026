@@ -40,6 +40,7 @@ que la cuota se agotó, que stats y alertas quedaron sin revisar, y no hay más
 consultas Socket en ese plan hasta que una persona recargue o espere.
 
 Queda fuera cambiar el número de capas de dependencias, decidir alertas por la
-persona, configurar notificaciones de email o Slack en socket.dev y usar Socket
-cuando la cuota no permite contestar. El umbral 200 y el lockfile se alinean en
-`docs/SOCKET.md`, `docs/CONSTITUTIONS.md` y `AGENTS.md` para no dejar dos reglas.
+persona, configurar notificaciones de email o Slack en socket.dev, usar Socket
+cuando la cuota no permite contestar, y **modificar** `AGENTS.md` o
+`docs/CONSTITUTIONS.md`. Las reglas operativas van en una guía resumida en
+markdown, no duplicadas en la constitución.

@@ -7,5 +7,5 @@
 
 3. Actualizar `docs/ARCHITECTURE.md` y `docs/TREE.md`.
 
-4. Alinear `AGENTS.md` y `docs/CONSTITUTIONS.md`: stats por debajo de 200 y
-   solo versiones analizadas por Socket.
+4. Comprobar: `AGENTS.md` y `docs/CONSTITUTIONS.md` sin cambios; reglas solo en
+   `docs/SOCKET.md`.
