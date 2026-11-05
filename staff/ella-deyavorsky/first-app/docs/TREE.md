@@ -68,6 +68,12 @@ first-app/
         index.html
         app.js
         styles.css
+      vscode/
+        package.json
+        extension.js
+        webview.js
+        webview.css
+        icon.svg
   scripts/
     jupyter.sh
   agents/
