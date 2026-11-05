@@ -44,7 +44,8 @@ first-app/
       styles.css
   agents/                 orquestador y subagentes del flujo de Git
   skills/                 instrucciones reutilizables por momento
-  tools/                  siete scripts Bash originales del flujo de Git
+  tools/                  ocho scripts Bash originales del flujo de Git
+    create-pr-base-staging.sh
   templates/
     issues/
       {feat,fix,docs,refactor,test,chore}_issue.md

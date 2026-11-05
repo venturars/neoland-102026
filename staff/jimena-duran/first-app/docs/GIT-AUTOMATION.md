@@ -4,7 +4,7 @@ El flujo entra por [AGENTS.md](../AGENTS.md) y [agents/git-workflow-agent.md](..
 
 ## Fuente y ejecución
 
-Los siete scripts proceden de `exercises/git-workflow-agent-template` en `6db669aac7c0811c966ba7ba9bc4fc7e3ae6e953`, sin traducción ni cambios de código. Git Bash ya está instalado. Desde su terminal, en la raíz Git, los comandos son:
+Los ocho scripts proceden de `exercises/git-workflow-agent-template`, sin traducción ni cambios de código. Los siete existentes se conservan y se incorpora `create-pr-base-staging.sh`. Git Bash ya está instalado. Desde su terminal, en la raíz Git, los comandos son:
 
 ```bash
 ./staff/jimena-duran/first-app/tools/check-status.sh
@@ -14,13 +14,18 @@ Los siete scripts proceden de `exercises/git-workflow-agent-template` en `6db669
 ./staff/jimena-duran/first-app/tools/create-empty-commit.sh NUMERO
 ./staff/jimena-duran/first-app/tools/commit-changes.sh "tipo: description" "ruta/al/archivo"
 ./staff/jimena-duran/first-app/tools/launch-push.sh
+bash ./staff/jimena-duran/first-app/tools/create-pr-base-staging.sh RAMA TITULO CUERPO
 ```
 
-También se pueden invocar con `bash ruta/al/script.sh`. Los parámetros y resultados son los originales; las rutas de archivos del commit parten de la raíz Git. Las siete skills de terminal contienen la ruta de first-app. Los permisos concretos de la tarea determinan qué operación se realiza; implementar no autoriza publicar.
+También se pueden invocar con `bash ruta/al/script.sh` desde PowerShell utilizando Git Bash. Los parámetros y resultados son los originales; las rutas de archivos del commit parten de la raíz Git. Las ocho skills de terminal contienen la ruta de first-app. Los permisos concretos de la tarea determinan qué operación se realiza; implementar no autoriza publicar.
+
+Para crear una PR, `RAMA` es la rama subida, `TITULO` es el título y `CUERPO` es la ruta de un archivo temporal con la plantilla local rellenada en español y la sección Issue vacía. Se requiere GitHub CLI autenticado. Una invocación crea la PR con base `staging`, en draft y asignada a esa cuenta. Si ya existe, el agente reutiliza la PR y conserva el vínculo con la issue.
 
 ## Instrucciones y referencias
 
-Los siete agentes y quince skills conservan la estructura y texto originales, con el párrafo local del orquestador y las siete rutas de comandos como únicas adaptaciones. Las doce plantillas originales definen el formato de issues y PR; se utiliza la del tipo o la más cercana, como indica la fuente.
+Los siete agentes y quince skills conservan la estructura y texto originales, con el párrafo local del orquestador y las ocho rutas de comandos como únicas adaptaciones. Las doce plantillas originales definen el formato de issues y PR; se utiliza la del tipo o la más cercana, como indica la fuente.
+
+El orquestador selecciona la etapa por el estado real, crea la issue cuando está claro lo necesario y entrevista si quedan dudas, sin repetir decisiones resueltas. Con issue escrita y cambios pendientes prepara la rama desde staging antes de editar y confirma el éxito de cada paso. Las entrevistas devuelven las preguntas necesarias con recomendación y se detienen hasta recibir respuestas; al cambiar de agente se conserva el historial completo. Los mensajes de commit nombran el archivo o función y el cambio en una sola línea.
 
 Las rutas de agentes y skills se resuelven dentro de first-app. La prioridad del SDD y sus pausas está definida en AGENTS; no se sustituyen por la secuencia automática del template.
 
