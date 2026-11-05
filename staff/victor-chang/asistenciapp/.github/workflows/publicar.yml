@@ -1,0 +1,172 @@
+# Compila la app de escritorio y la publica en Releases (spec 007 · plan v1.2 §2.11, tarea T15).
+#
+# Solo funciona en el repositorio público ChangVictor/asistenciapp, que es una copia de la carpeta
+# staff/victor-chang/asistenciapp (constitución §7): allí este archivo queda en la raíz. En el
+# repositorio del curso GitHub no lo lee, porque no está en la raíz.
+#
+# Se lanza al subir una etiqueta vX.Y.Z (o vX.Y.Z-rcN para una versión de prueba) con
+# scripts/publicar.sh. Necesita el secreto GOOGLE_CLIENT_JSON (la llave de Google, plan §2.8).
+
+name: Publicar
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write # crear la Release
+
+env:
+  CLOUDFLARED_VERSION: "2026.10.7" # versión fija (plan §2.11)
+  CLOUDFLARE_TEAM_ID: "68WVV388M8" # Developer ID de Cloudflare Inc. (spike de T01)
+  PYTHON_VERSION: "3.13"
+
+jobs:
+  version:
+    name: Comprobar la versión
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.check.outputs.version }}
+      prerelease: ${{ steps.check.outputs.prerelease }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: check
+        name: La etiqueta coincide con __version__
+        run: |
+          version=$(python3 -c 'import re; print(re.search(r"__version__ = \"([^\"]+)\"", open("attendance/__init__.py").read()).group(1))')
+          tag="${GITHUB_REF_NAME#v}"
+          if [ "$tag" != "$version" ] && [[ ! "$tag" =~ ^"$version"-rc[0-9]+$ ]]; then
+            echo "::error::La etiqueta ${GITHUB_REF_NAME} no coincide con __version__ = ${version} (attendance/__init__.py)."
+            exit 1
+          fi
+          echo "version=$tag" >> "$GITHUB_OUTPUT"
+          if [[ "$tag" == *-rc* ]]; then echo "prerelease=true" >> "$GITHUB_OUTPUT"; else echo "prerelease=false" >> "$GITHUB_OUTPUT"; fi
+
+  macos:
+    name: macOS (Apple Silicon)
+    needs: version
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Dependencias
+        run: pip install -r requirements.txt
+      - name: Tests y revisiones
+        run: |
+          pytest -q
+          ruff check
+          ruff format --check
+          mypy
+      - name: cloudflared (comprobado)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          asset=cloudflared-darwin-arm64.tgz
+          gh release download "$CLOUDFLARED_VERSION" --repo cloudflare/cloudflared --pattern "$asset" --dir "$RUNNER_TEMP"
+          # Suma SHA-256 contra el digest de GitHub (las notas de Cloudflare no coinciden en macOS: spike de T01).
+          expected=$(gh api "repos/cloudflare/cloudflared/releases/tags/$CLOUDFLARED_VERSION" --jq ".assets[] | select(.name==\"$asset\") | .digest")
+          actual="sha256:$(shasum -a 256 "$RUNNER_TEMP/$asset" | cut -d' ' -f1)"
+          [ "$actual" = "$expected" ] || { echo "::error::Suma de $asset: $actual, se esperaba $expected"; exit 1; }
+          mkdir -p "$RUNNER_TEMP/cf" && tar -xzf "$RUNNER_TEMP/$asset" -C "$RUNNER_TEMP/cf"
+          # Y la firma de Cloudflare, antes de que PyInstaller la cambie por una ad hoc.
+          codesign --verify --strict "$RUNNER_TEMP/cf/cloudflared"
+          codesign -dv "$RUNNER_TEMP/cf/cloudflared" 2>&1 | grep -q "TeamIdentifier=$CLOUDFLARE_TEAM_ID" \
+            || { echo "::error::cloudflared no está firmado por Cloudflare ($CLOUDFLARE_TEAM_ID)"; exit 1; }
+          echo "ASISTENCIA_BUILD_CLOUDFLARED=$RUNNER_TEMP/cf/cloudflared" >> "$GITHUB_ENV"
+      - name: Llave de Google
+        env:
+          GOOGLE_CLIENT_JSON: ${{ secrets.GOOGLE_CLIENT_JSON }}
+        run: |
+          [ -n "$GOOGLE_CLIENT_JSON" ] || { echo "::error::Falta el secreto GOOGLE_CLIENT_JSON"; exit 1; }
+          mkdir -p "$RUNNER_TEMP/clave"
+          printf '%s' "$GOOGLE_CLIENT_JSON" > "$RUNNER_TEMP/clave/google-client.json"
+          echo "ASISTENCIA_BUILD_GOOGLE_CLIENT=$RUNNER_TEMP/clave/google-client.json" >> "$GITHUB_ENV"
+      - name: Compilar
+        run: pyinstaller AsistenciApp.spec --noconfirm
+      - name: Crear el .dmg
+        run: |
+          name="AsistenciApp-${{ needs.version.outputs.version }}-macos.dmg"
+          hdiutil create -volname AsistenciApp -srcfolder dist/AsistenciApp.app -ov -format UDZO "$name"
+          echo "DMG=$name" >> "$GITHUB_ENV"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: macos
+          path: ${{ env.DMG }}
+          if-no-files-found: error
+
+  windows:
+    name: Windows (x64)
+    needs: version
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Dependencias
+        run: pip install -r requirements.txt
+      - name: Tests y revisiones
+        run: |
+          pytest -q
+          ruff check
+          ruff format --check
+          mypy
+      - name: cloudflared (comprobado)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          asset=cloudflared-windows-amd64.exe
+          gh release download "$CLOUDFLARED_VERSION" --repo cloudflare/cloudflared --pattern "$asset" --dir "$RUNNER_TEMP"
+          expected=$(gh api "repos/cloudflare/cloudflared/releases/tags/$CLOUDFLARED_VERSION" --jq ".assets[] | select(.name==\"$asset\") | .digest")
+          actual="sha256:$(sha256sum "$RUNNER_TEMP/$asset" | cut -d' ' -f1)"
+          [ "$actual" = "$expected" ] || { echo "::error::Suma de $asset: $actual, se esperaba $expected"; exit 1; }
+          # La app lo busca como cloudflared.exe (config.py).
+          mkdir -p "$RUNNER_TEMP/cf" && mv "$RUNNER_TEMP/$asset" "$RUNNER_TEMP/cf/cloudflared.exe"
+          echo "ASISTENCIA_BUILD_CLOUDFLARED=$RUNNER_TEMP/cf/cloudflared.exe" >> "$GITHUB_ENV"
+      - name: Llave de Google
+        env:
+          GOOGLE_CLIENT_JSON: ${{ secrets.GOOGLE_CLIENT_JSON }}
+        run: |
+          [ -n "$GOOGLE_CLIENT_JSON" ] || { echo "::error::Falta el secreto GOOGLE_CLIENT_JSON"; exit 1; }
+          mkdir -p "$RUNNER_TEMP/clave"
+          printf '%s' "$GOOGLE_CLIENT_JSON" > "$RUNNER_TEMP/clave/google-client.json"
+          echo "ASISTENCIA_BUILD_GOOGLE_CLIENT=$RUNNER_TEMP/clave/google-client.json" >> "$GITHUB_ENV"
+      - name: Compilar
+        run: pyinstaller AsistenciApp.spec --noconfirm
+      - name: Crear el .zip
+        shell: pwsh
+        run: |
+          $name = "AsistenciApp-${{ needs.version.outputs.version }}-windows.zip"
+          Compress-Archive -Path dist/AsistenciApp -DestinationPath $name
+          "ZIP=$name" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+      - uses: actions/upload-artifact@v7
+        with:
+          name: windows
+          path: ${{ env.ZIP }}
+          if-no-files-found: error
+
+  publicar:
+    name: Publicar la Release
+    needs: [version, macos, windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          path: descargas
+          merge-multiple: true
+      - name: Crear la Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          flags=()
+          if [ "${{ needs.version.outputs.prerelease }}" = "true" ]; then flags+=(--prerelease); fi
+          gh release create "$GITHUB_REF_NAME" descargas/* \
+            --title "AsistenciApp ${{ needs.version.outputs.version }}" \
+            --notes-file .github/notas-version.md \
+            "${flags[@]}"

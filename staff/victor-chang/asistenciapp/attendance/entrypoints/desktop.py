@@ -66,7 +66,8 @@ class DesktopApi:
         path = _first_path(chosen)
         if path is None:
             return False
-        path.write_text(content, encoding=CSV_ENCODING)
+        # newline="": se escribe tal cual. Si no, Windows cambiaría cada \n por \r\n, y el CSV ya trae \r\n.
+        path.write_text(content, encoding=CSV_ENCODING, newline="")
         return True
 
 

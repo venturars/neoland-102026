@@ -4,6 +4,7 @@ Solo se simulan las credenciales de Google y su flujo OAuth (ARCHITECTURE.md · 
 """
 
 import stat
+import sys
 
 import pytest
 from google.auth.exceptions import RefreshError
@@ -51,6 +52,8 @@ def test_permission_without_meet_is_refused_and_not_saved(make_permission, tmp_p
     assert not (tmp_path / "google-token.json").exists()
 
 
+# En Windows no hay permisos 0600: chmod no hace nada y %APPDATA% ya es solo del usuario (spec 007 · plan §2.3).
+@pytest.mark.skipif(sys.platform == "win32", reason="Windows no tiene permisos de archivo POSIX")
 def test_the_permission_is_saved_only_for_the_user(make_permission, tmp_path):  # CA-12, X
     permission, logins = make_permission()
     permission.credentials()

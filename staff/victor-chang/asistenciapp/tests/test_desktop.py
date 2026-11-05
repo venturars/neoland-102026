@@ -64,6 +64,14 @@ def test_save_file_writes_with_the_bom(tmp_path):  # CA-17: Excel lee bien las t
     assert window.dialogs == [(SAVE, "asistencia-clase.csv")]  # sugiere el nombre que da el servidor
 
 
+def test_save_file_keeps_the_csv_line_endings(tmp_path):  # CA-17: en Windows, write_text cambiaría \n por \r\n
+    target = tmp_path / "lista.csv"
+    api = DesktopApi(save_dialog=SAVE)
+    api.attach(FakeWindow(chosen=str(target)))
+    api.save_file("lista.csv", "Nombre,Hora\r\nAna,11:07\r\n")  # el módulo csv termina las líneas en \r\n
+    assert target.read_bytes() == "﻿Nombre,Hora\r\nAna,11:07\r\n".encode()
+
+
 def test_save_file_accepts_a_list_from_the_dialog(tmp_path):  # pywebview puede devolver una tupla
     target = tmp_path / "lista.csv"
     api = DesktopApi(save_dialog=SAVE)
