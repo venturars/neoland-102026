@@ -4,6 +4,7 @@ import { Uri, window } from "vscode";
 import { createUser } from "../../logic/create-user.js";
 import { deleteUser } from "../../logic/delete-user.js";
 import { findUserById } from "../../logic/find-user-by-id.js";
+import { listGmailUsers } from "../../logic/list-gmail-users.js";
 import { listUsers } from "../../logic/list-users.js";
 import { updateUser } from "../../logic/update-user.js";
 
@@ -66,6 +67,7 @@ function writeHtml(webview) {
 
     <h2>Usuarios</h2>
     <button id="reload-button" type="button">Recargar</button>
+    <button id="gmail-button" type="button">Solo Gmail</button>
     <p id="list-empty" class="hidden">No hay usuarios</p>
     <ul id="user-list"></ul>
 
@@ -107,6 +109,11 @@ async function answerMessage(webview, message) {
 async function runAction(message) {
   if (message.action === "list") {
     const users = await listUsers();
+    return { users };
+  }
+
+  if (message.action === "list-gmail") {
+    const users = await listGmailUsers();
     return { users };
   }
 
