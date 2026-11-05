@@ -1,8 +1,14 @@
 import js from "@eslint/js";
+import babelParser from "@babel/eslint-parser";
 
 export default [
   {
+    files: ["src/clients/nest/**/*.js"],
+    languageOptions: { parser: babelParser },
+  },
+  {
     ignores: [
+      "dist/**",
       "**/node_modules/**",
       "**/.venv/**",
       "**/__pycache__/**",
