@@ -121,7 +121,7 @@ main {
 }
 
 /* Títulos, código y total con la letra de títulos; si aún no ha llegado, la del sistema. */
-h1, h2, .code, .total, .wordmark { font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif; }
+h1, h2, .online-title, .code, .total, .wordmark { font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif; }
 
 h1 { font-size: 1.6rem; font-weight: 800; line-height: 1.2; margin: 0 0 1rem; }
 h2 { font-size: 1.2rem; font-weight: 700; margin: 2rem 0 0.75rem; }
@@ -276,6 +276,26 @@ label.choice input {
 }
 
 #sync-status .message { margin: 0; }
+
+/* ---------- clase online y versión (spec 007 · CA-04, CA-07 a CA-09) ---------- */
+
+.online-row {
+  display: flex;
+  flex-wrap: wrap; /* a 400 px, el botón baja debajo del título (P5) */
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+}
+
+/* Como un h2, pero sin serlo: va antes del h1 de cada vista y no debe romper el orden de títulos (U4). */
+.online-title { font-size: 1.2rem; font-weight: 700; margin: 0; }
+
+.online-status { margin: 0.75rem 0 0; }
+
+.app-footer {
+  text-align: center;
+  padding: 1rem;
+}
 
 .link-box {
   display: block;

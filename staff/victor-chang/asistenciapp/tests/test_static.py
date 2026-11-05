@@ -177,3 +177,50 @@ def test_every_page_has_the_brand_header(page):
     assert header
     assert re.search(r'class="wordmark">AsistenciApp<', header.group(1))
     assert html.count("AsistenciApp<") == 1  # el nombre no se repite (plan §2.3)
+
+
+# ---------- spec 007 · T10: clase online, versión y guardar en la ventana ----------
+
+PANEL = (STATIC_DIR / "profesor.html").read_text(encoding="utf-8")
+PANEL_JS = (STATIC_DIR / "profesor.js").read_text(encoding="utf-8")
+
+
+def test_panel_has_the_online_class_switch():  # CA-07, P5: un botón con su estado, no un div
+    button = re.search(r"<button\b[^>]*\bid=\"online-toggle\"[^>]*>", PANEL)
+    assert button
+    assert 'type="button"' in button.group(0)
+    assert 'aria-pressed="false"' in button.group(0)
+
+
+def test_online_state_is_announced():  # CA-08, CA-09, U4: el estado y los errores se anuncian
+    status = re.search(r"<[a-z]+\b[^>]*\bid=\"online-status\"[^>]*>", PANEL)
+    assert status
+    assert 'role="status"' in status.group(0) and 'aria-live="polite"' in status.group(0)
+
+
+def test_the_first_heading_is_still_the_h1():  # U4: la tarjeta va antes de cada vista y no lleva un h2
+    body = PANEL.split("<body", 1)[1]
+    assert re.search(r"<h[1-6]\b", body).group(0) == "<h1"
+
+
+def test_the_old_local_warning_is_gone():  # el interruptor lo sustituye (plan §2.6)
+    assert "local-warning" not in PANEL and "local-warning" not in PANEL_JS
+    assert "python app.py --tunel" not in PANEL
+
+
+def test_panel_shows_the_version():  # CA-04
+    assert re.search(r"<footer\b[^>]*>.*\bid=\"app-version\"", PANEL, re.DOTALL)
+
+
+@pytest.mark.parametrize("path", ["/api/app", "/api/online"])
+def test_panel_uses_its_single_api_function(path):  # U3
+    assert re.search(rf"\bapi\(\s*[\"'`]{path}[\"'`]", PANEL_JS)
+
+
+def test_there_is_only_one_fetch():  # U3: toda llamada pasa por api()
+    assert PANEL_JS.count("fetch(") == 1
+
+
+def test_csv_uses_the_window_save_dialog_only_when_it_exists():  # CA-17 · plan §2.9
+    assert re.search(r"window\.pywebview\?\.api\?\.save_file", PANEL_JS)
+    assert "a.download = filename" in PANEL_JS  # en un navegador, la descarga de siempre

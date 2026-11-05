@@ -177,6 +177,12 @@ async function downloadCsv(sessionId) {
   const blob = await res.blob();
   const filename =
     /filename="([^"]+)"/.exec(res.headers.get("Content-Disposition") || "")?.[1] || "asistencia.csv";
+  // En la app de escritorio, el diálogo nativo de guardar (spec 007 · plan §2.9, CA-17). Python vuelve
+  // a poner el BOM al escribir (utf-8-sig), así que da igual que blob.text() lo quite.
+  if (window.pywebview?.api?.save_file) {
+    await window.pywebview.api.save_file(filename, await blob.text());
+    return;
+  }
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
@@ -467,8 +473,58 @@ async function route() {
   }
 }
 
-// CA-21: aviso si el panel se abre en una dirección local
-$("local-warning").hidden = !["localhost", "127.0.0.1", "[::1]"].includes(location.hostname);
+// ---------- clase online y versión (spec 007 · CA-04, CA-07 a CA-09) ----------
+
+const ONLINE_TEXT = {
+  off: "Desactivada: tus alumnos no pueden entrar desde fuera de este ordenador.",
+  opening: "Abriendo la clase online… Puede tardar unos segundos.",
+  on: "Activa: tus alumnos pueden entrar desde casa con el enlace de alumnos. Si no carga, espera unos 20 segundos.",
+};
+// Abierto desde el túnel (arrancada con --tunel desde el código), cerrar la clase online cortaría
+// este mismo panel: el interruptor solo se muestra en la dirección local (la de la ventana).
+const isLocal = ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname);
+let onlineActive = false;
+
+function renderOnline(state, errorText = "") {
+  // state: "off" | "opening" | "on"
+  onlineActive = state === "on";
+  const toggle = $("online-toggle");
+  toggle.hidden = !isLocal;
+  toggle.disabled = state === "opening";
+  toggle.setAttribute("aria-pressed", String(onlineActive));
+  toggle.textContent = onlineActive ? "Cerrar clase online" : "Abrir clase online";
+
+  const status = $("online-status");
+  status.className = `online-status message ${errorText ? "error" : { off: "warn", opening: "", on: "ok" }[state]}`;
+  status.textContent = errorText || ONLINE_TEXT[state];
+  $("online").hidden = false;
+}
+
+async function loadAppInfo() {
+  const res = await api("/api/app");
+  if (!res.ok) throw new Error("app");
+  const data = await res.json();
+  $("app-version").textContent = data.version;
+  renderOnline(data.online.active ? "on" : "off");
+}
+
+$("online-toggle").addEventListener("click", async () => {
+  const opening = !onlineActive;
+  renderOnline(opening ? "opening" : "off");
+  try {
+    const res = await api("/api/online", { method: opening ? "POST" : "DELETE" });
+    const data = await res.json();
+    if (!res.ok) {
+      renderOnline("off", data.error); // CA-08: el mensaje dice qué hacer; el panel sigue funcionando
+      return;
+    }
+    renderOnline(data.active ? "on" : "off");
+  } catch (error) {
+    if (error instanceof AuthError) handleError(error);
+    else renderOnline(opening ? "off" : "on", "No se pudo conectar con la app. Inténtalo de nuevo.");
+  }
+});
 
 window.addEventListener("hashchange", route);
 route();
+if (token()) loadAppInfo().catch(handleError);

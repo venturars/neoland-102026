@@ -112,11 +112,17 @@ Cómo leer esta lista:
 
 ## Fase D · Panel (plan §2.6, §2.9, §2.10)
 
-- [ ] **T10** 🧪 · Interruptor "Clase online", versión y guardar en la ventana en `profesor.html`, `profesor.js` y `styles.css`:
+- [x] **T10** 🧪 · Interruptor "Clase online", versión y guardar en la ventana en `profesor.html`, `profesor.js` y `styles.css`:
   - tests en `test_static.py`: existe el botón `#online-toggle` con `aria-pressed`; el estado va en una zona `role="status"`; ya no está `#local-warning`; `profesor.js` llama a `/api/app` y `/api/online` por su única función de API (U3) y usa `window.pywebview.api.save_file` solo si existe;
   - deben fallar; luego, el código: estados "Abriendo…", "Activa" y "Desactivada: tus alumnos no pueden entrar desde fuera de este ordenador"; versión en el pie; `downloadCsv` con la rama de la ventana (lee la exportación como texto y la pasa a `save_file`).
   - Comprobar en Chrome desde el código (sin ventana), con un `cloudflared` falso: el interruptor, sus tres estados y un error; a 400 px y con teclado (P5).
   - *Cubre:* CA-04, CA-07, CA-08, CA-09, CA-17.
+  - **Hecha (2026-11-05):** 9 tests nuevos en `test_static.py`; fallaron los 7 que dependían del cambio y los otros 2 (un solo `fetch`, el `h1` primero) quedan como red. 583 tests en verde; `ruff` y `mypy` sin avisos.
+    - `profesor.html`: la tarjeta **"Clase online"** (`#online`, con `#online-toggle` con `aria-pressed` y `#online-status` con `role="status"` y `aria-live`) sustituye a `#local-warning`; pie con "Versión <span id=\"app-version\">". El título de la tarjeta es un `<p class="online-title">` con aspecto de `h2`, porque la tarjeta va antes del `h1` de cada vista (U4; test).
+    - `profesor.js`: `loadAppInfo()` (`/api/app`: versión y estado) y el interruptor (`POST`/`DELETE /api/online`), todo por `api()` (U3). Estados "Abriendo…" (botón desactivado), "Activa…" (verde), "Desactivada…" (aviso, CA-09) y el error del servidor (CA-08). El interruptor solo se muestra en la dirección local: abierto desde el túnel (arrancada con `--tunel`), cerrar la clase online cortaría el propio panel. `downloadCsv` usa `window.pywebview.api.save_file` si existe y, si no, la descarga de siempre.
+    - `styles.css`: fila de la tarjeta (se parte a 400 px), estado y pie.
+    - **Comprobado en Chrome** con un servidor de vista previa (fuera del proyecto) con la app de escritorio, el `Tunnel` de verdad y un `cloudflared` falso: estado inicial y versión; "Abriendo…" → "Activa…"; abrir una clase y ver su enlace de alumnos con la dirección del túnel; cerrar con el **teclado** (foco y Enter): `aria-pressed="false"`, aviso y el enlace vuelve a `127.0.0.1`; error de `cloudflared` con su mensaje; a **400 px** (en un `iframe`, como en la spec 006): sin desplazamiento horizontal y botón de 45 px de alto. Servidor parado y puerto libre.
+    - **Queda para T13** (en la ventana de verdad): guardar el CSV con `save_file`. **Para T12/T17:** el mensaje "Enlace del panel no válido… aparece en la terminal" no tiene sentido en la app de escritorio, que no tiene terminal.
 
 ## Fase E · Escritorio (plan §2.2, §2.7, §2.9)
 
