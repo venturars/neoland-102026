@@ -33,6 +33,7 @@ La base de datos está en [DATABASE.md](DATABASE.md). El árbol completo, en [TR
 - `src/clients/electron/`: el cliente de escritorio. `main.js` abre la ventana; `index.html`, `styles.css` y `app.js` son sus pantallas. `app.js` llama a `listUsers`, `createUser`, `updateUser` y `deleteUser`.
 - `src/clients/chrome/server.js`: la API de la extensión de Chrome, con Fastify. Llama a `listUsers`, `createUser`, `updateUser` y `deleteUser`.
 - `src/clients/chrome/extension/`: la extensión de Chrome (`manifest.json`, `popup.html`, `styles.css` y `popup.js`). Pide cada operación a su API.
+- `src/clients/vscode/`: la extensión de VS Code. `package.json` es su manifiesto, `extension.js` llama a `listUsers`, `createUser`, `updateUser` y `deleteUser`, y `index.html`, `styles.css` y `panel.js` son el panel.
 
 ## Una operación
 Una operación tiene, con el mismo nombre:
@@ -135,6 +136,19 @@ Solo atiende a la extensión:
 - La API no envía `Access-Control-Allow-Origin`: la extensión no lo necesita porque el manifest le da permiso para `http://127.0.0.1:3001` (`host_permissions`), y una web no puede leer las respuestas.
 - La CSP del manifest solo deja cargar los ficheros de la extensión y llamar a su API.
 
+### VS Code
+Se arranca con `pnpm db` y, en otra terminal, `pnpm vscode`, desde `first-app/`. `pnpm vscode` abre una ventana de desarrollo de VS Code con la extensión cargada (`--extensionDevelopmentPath`) y la carpeta `first-app` abierta. En la barra de actividad sale el icono **first-app usuarios**, que abre el panel en la barra lateral. Cerrar esa ventana cierra la extensión. No se empaqueta ni se instala, y no usa paquetes: el módulo `vscode` lo pone VS Code.
+
+La extensión tiene dos partes:
+- `extension.js`, el proceso de la extensión: corre en Node dentro de VS Code y es un cliente como la terminal. Importa `logic/` y lo llama con `await`. Registra el panel y atiende sus mensajes.
+- El panel (`index.html`, `styles.css` y `panel.js`): una página aislada (webview) con dos pantallas, la lista de usuarios con el alta y la ficha de un usuario, que se abre pulsándolo, con sus datos, guardar cambios y borrar con confirmación. No llama a nada: pide cada operación al proceso. Si recibe un error, lo muestra como `Error: <mensaje>`. Usa los colores del tema de VS Code.
+
+Los mensajes:
+- El panel envía `{ id, action, data }`, con `action` `list`, `create`, `update` o `delete`.
+- `extension.js` solo atiende las acciones de `ACTIONS` y contesta con el mismo `id`: `{ id, ok: true, result }` o `{ id, ok: false, error }`, con el mensaje de `logic` tal cual.
+
+`extension.js` lee `index.html` y cambia sus marcas: la CSP (`default-src 'none'`, estilos solo de la extensión y scripts solo con un nonce nuevo cada vez) y las rutas de `styles.css` y `panel.js`. El panel no puede llamar a ninguna dirección: la base solo la ve el proceso de la extensión, que es Node y no envía `Origin`.
+
 ## Servidor de la base
 Se arranca con `pnpm db` desde `first-app/` y escucha en `http://127.0.0.1:4000`, solo en este equipo. Se para con Ctrl+C. Los clientes necesitan que esté en marcha.
 
@@ -151,6 +165,6 @@ Solo atiende `POST /query` con `{ "query": "<nombre>", "params": [ ... ] }`. Bus
 | `OPTIONS /query` | 204 y el permiso para el navegador |
 | SQLite falla | 500 y `{ "error": "<mensaje de SQLite>" }` |
 
-El navegador solo puede llamar a la base desde una página del disco abierta con `pnpm browser`: Chrome con `--allow-file-access-from-files` envía `Origin: file://`. Todas las respuestas llevan `Access-Control-Allow-Origin: file://`, nunca `*`, y `OPTIONS /query` contesta la pregunta que el navegador hace antes de cada `POST`. Una web (`http://` o `https://`) recibe 403, y un Chrome normal que abre un fichero del disco envía `Origin: null` y también recibe 403. Otra página del disco abierta en el perfil de la app sí podría llamar a la base: ese perfil es solo para esta app. La terminal, Jupyter, la ventana de escritorio y las APIs no envían `Origin`, así que no les afecta.
+El navegador solo puede llamar a la base desde una página del disco abierta con `pnpm browser`: Chrome con `--allow-file-access-from-files` envía `Origin: file://`. Todas las respuestas llevan `Access-Control-Allow-Origin: file://`, nunca `*`, y `OPTIONS /query` contesta la pregunta que el navegador hace antes de cada `POST`. Una web (`http://` o `https://`) recibe 403, y un Chrome normal que abre un fichero del disco envía `Origin: null` y también recibe 403. Otra página del disco abierta en el perfil de la app sí podría llamar a la base: ese perfil es solo para esta app. La terminal, Jupyter, la ventana de escritorio, las APIs y la extensión de VS Code no envían `Origin`, así que no les afecta.
 
 `queries/users.js` lanza el `error` de la respuesta tal cual. Si no llega a conectar, lanza `Database is not running. Start it with pnpm db.` ([ERRORS.md](ERRORS.md#base-parada)).

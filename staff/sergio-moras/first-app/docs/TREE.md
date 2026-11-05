@@ -5,7 +5,7 @@ Los ficheros de hoy, sin `node_modules/` ni `src/db/users.sqlite`, que no están
 ```
 first-app/
   AGENTS.md            cómo trabaja el agente
-  package.json         dependencias y scripts format, lint, db, browser, api, electron y chrome
+  package.json         dependencias y scripts format, lint, db, browser, api, electron, chrome y vscode
   pnpm-lock.yaml
   eslint.config.js
   .gitignore
@@ -37,6 +37,10 @@ first-app/
       chrome/
         server.js      la API de la extensión, con Fastify
         extension/     manifest.json, popup.html, styles.css y popup.js: lo que carga Chrome
+      vscode/
+        package.json   el manifiesto de la extensión de VS Code
+        extension.js   registra el panel y llama a logic/
+        index.html, styles.css, panel.js e icon.svg   el panel y su icono
   docs/
     CONSTITUTIONS.md
     ARCHITECTURE.md

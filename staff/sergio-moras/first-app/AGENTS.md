@@ -49,9 +49,14 @@ pnpm chrome
 ```
 La extensión se carga una sola vez: en Chrome, `chrome://extensions`, activar el modo desarrollador, **Cargar descomprimida** y elegir `src/clients/chrome/extension/`. Se abre con su icono.
 
+La extensión de VS Code se abre desde `first-app/`, con `pnpm db` ya en marcha en otra terminal. Abre una ventana de desarrollo de VS Code; el panel sale con el icono **first-app usuarios** de la barra de actividad. Se cierra cerrando esa ventana:
+```
+pnpm vscode
+```
+
 Formato y revisión del JavaScript de la app, desde `first-app/`:
 ```
-pnpm format   # Prettier sobre los .js de src/logic/, src/queries/ y src/db/, el cliente de navegador, la API REST, el cliente de escritorio, la extensión de Chrome con su API y eslint.config.js
+pnpm format   # Prettier sobre los .js de src/logic/, src/queries/ y src/db/, el cliente de navegador, la API REST, el cliente de escritorio, la extensión de Chrome con su API, la extensión de VS Code y eslint.config.js
 pnpm lint     # ESLint con las reglas recomendadas
 ```
 
