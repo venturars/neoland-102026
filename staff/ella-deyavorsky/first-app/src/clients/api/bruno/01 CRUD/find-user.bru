@@ -1,0 +1,21 @@
+meta {
+  name: Find user
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/users/{{userId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.id: eq {{userId}}
+  res.body.name: eq Ady
+}
+
+docs {
+  Checks Ady by her id.
+}
