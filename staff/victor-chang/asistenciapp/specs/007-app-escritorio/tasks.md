@@ -77,10 +77,14 @@ Cómo leer esta lista:
 
 ## Fase C · Entrada web (plan §2.6, §2.8, §2.12, §4)
 
-- [ ] **T06** 🧪 · `auth.py` con `PRIVATE_PREFIXES`, y `create_app` / `WebContext` con `tunnel` y `desktop` (plan §4):
+- [x] **T06** 🧪 · `auth.py` con `PRIVATE_PREFIXES`, y `create_app` / `WebContext` con `tunnel` y `desktop` (plan §4):
   - tests: `/api/online` y `/api/app` sin token → `401`; `/api/sessions` sigue protegido; las rutas públicas siguen abiertas;
   - deben fallar; luego, el código.
   - *Cubre:* base de CA-04 y CA-07 (§6 de la constitución).
+  - **Hecha (2026-11-05):** 16 tests en el nuevo `test_web_online.py`; fallaron los 8 que dependían del cambio (6 de credencial y 2 de `create_app`) y los otros 8 quedan como red. 555 tests en verde; `ruff` y `mypy` sin avisos.
+    - `auth.py`: `PRIVATE_PREFIXES = ("/api/sessions", "/api/online", "/api/app")`, comprobados en el mismo sitio (X3). Solo la ruta exacta o lo que cuelga de ella: `/api/apps` no queda protegida (test).
+    - `WebContext` y `create_app` ganan `tunnel` (por defecto `None`) y `desktop` (por defecto `False`); las llamadas de hoy no cambian.
+    - Con el token, las rutas nuevas responden `404` hasta T07.
 - [ ] **T07** 🧪 · `entrypoints/web/online.py` y errores de túnel en `errors.py` (plan §4, §2.12):
   - tests en `test_web_online.py` con un `Tunnel` falso: `GET /api/app` → `version` (= `__version__`), `desktop` y `online.active`; `POST /api/online` → `active` y `url`, y la segunda vez la misma URL; `DELETE /api/online` → `active: false`, también si ya estaba cerrada; `TunnelTimeoutError` y `TunnelExitedError` → `502`, `CloudflaredMissingError` → `422`, con su mensaje en JSON (F3);
   - `attendance/__init__.py` gana `__version__ = "1.0.0"`;

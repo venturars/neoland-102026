@@ -9,6 +9,7 @@ from flask import Flask, current_app, g
 
 from attendance.config import Config
 from attendance.infra import storage
+from attendance.infra.tunnel import Tunnel
 from attendance.usecases.attendance import FetchParticipants
 
 _KEY = "attendance"
@@ -22,6 +23,8 @@ class WebContext:
     clock: Callable[[], float]
     teacher_token: str
     fetch_participants: FetchParticipants | None = None  # sin él, la app no toma asistencia de Meet (spec 004)
+    tunnel: Tunnel | None = None  # la clase online; sin él, no se puede abrir desde el panel (spec 007)
+    desktop: bool = False  # la app de escritorio (spec 007 · plan §4)
 
 
 def init_app(app: Flask, web_context: WebContext) -> None:
