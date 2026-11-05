@@ -90,6 +90,14 @@ Se llamó a `usersGenderCount()` desde Node con la base y Ollama reales, con 8 u
 
 Cargar `users-gender-count.js` hace que `chrome/server.js`, `extension.js` y la API de Nest carguen `openai` al arrancar. Hasta ahora, Chrome lo evitaba importando fichero a fichero. Se sigue importando así, pero este fichero sí lo necesita. Falta comprobar que `openai` carga dentro de la extensión de VS Code: los pasos lo prueban.
 
+## Respuestas que llegan tarde
+
+El recuento tarda varios segundos. Si mientras tanto se hace otra acción, su respuesta no se enseña: pisaría lo que haya en pantalla. Lo pidió la revisión de la PR #1060.
+
+Cada acción suma uno a `ultimaAccion` al empezar. El recuento guarda esa cuenta y, al responder, solo se enseña si sigue siendo la misma. El botón vuelve a funcionar en cualquier caso. En VS Code, la vista envía la cuenta como `requestId` y la extensión la devuelve con la respuesta.
+
+Se comprobó con un script que ejecuta `popup.js` y `panel.js` con una página simulada y controla cuándo llega cada respuesta. No es la prueba a mano en las ventanas, que sigue pendiente.
+
 ## Pruebas
 
 No hay tests en el proyecto. Con `pnpm start`, Ollama, `pnpm chrome` y `pnpm nest` en marcha:

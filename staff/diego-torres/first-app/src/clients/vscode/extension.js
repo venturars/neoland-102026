@@ -56,11 +56,12 @@ async function runAction(message) {
 
 // Atiende un mensaje de la vista y le envía la respuesta.
 async function answer(webview, message) {
-  const { action } = message;
+  // requestId vuelve a la vista para que reconozca las respuestas que llegan tarde.
+  const { action, requestId } = message;
 
   try {
     const reply = await runAction(message);
-    webview.postMessage({ action, ...reply });
+    webview.postMessage({ action, requestId, ...reply });
 
     // Si han cambiado los datos, envía la lista nueva.
     if (CAMBIAN_DATOS.includes(action)) {
@@ -69,7 +70,7 @@ async function answer(webview, message) {
     }
   } catch (error) {
     // El mensaje llega a la vista tal como sale de la lógica.
-    webview.postMessage({ action, error: error.message });
+    webview.postMessage({ action, requestId, error: error.message });
   }
 }
 

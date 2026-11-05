@@ -85,6 +85,12 @@ Antes de cada commit se releen los comentarios nuevos con esta regla.
 
 Esta rama incluye la del recuento por género, con sus conflictos ya resueltos. Hay que fusionar primero la PR #1060 y después esta. Si se fusiona esta antes, el recuento entra con ella.
 
+## Respuestas que llegan tarde
+
+Con dos búsquedas seguidas, la respuesta vieja podía añadirse a la lista de la nueva. Lo pidió la revisión de la PR #1065.
+
+La lista se vacía al pintar. Además, la búsqueda usa la misma cuenta `ultimaAccion` que el recuento por género: solo se enseña si sigue siendo la última acción.
+
 ## Pruebas
 
 No hay tests en el proyecto. Con `pnpm start`, `pnpm chrome` y `pnpm nest` en marcha, en 3002 y 3003:
