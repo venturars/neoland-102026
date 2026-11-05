@@ -44,7 +44,7 @@ try {
 
 Cada cliente tiene su propia copia de las frases en español, para que pueda cambiarse o quitarse sin afectar a los demás. Un mensaje desconocido muestra una frase genérica, nunca el texto original.
 
-Hay tres excepciones. El cliente REST no presenta frases a una persona: responde con el mensaje en inglés de `src/logic/`. El cliente Nest hace lo mismo. El cliente de Chrome muestra esos mensajes en inglés, sin tabla de traducción.
+Hay cuatro excepciones. El cliente REST no presenta frases a una persona: responde con el mensaje en inglés de `src/logic/`. El cliente Nest y el cliente `node:http` hacen lo mismo. El cliente de Chrome muestra esos mensajes en inglés, sin tabla de traducción.
 
 ## Navegador
 
@@ -61,6 +61,14 @@ Hay tres excepciones. El cliente REST no presenta frases a una persona: responde
 `src/clients/nest/users-exception.filter.js` es una clase filtro que captura todos los errores del cliente y responde JSON con la clave `message` y el mismo estado que el cliente REST: `400` si la entrada no es válida, `404` si el usuario no existe y `409` si el email ya está registrado. Un error de operación o un mensaje desconocido responde `500` con el `Unable to` de la ruta, que el filtro deduce del método y de la ruta de la petición, nunca con otro texto. El borrado conserva `Unable to find user` cuando `src/logic/` falla al buscar antes al usuario.
 
 Dos respuestas nacen en el filtro, porque ese fallo ocurre antes de llegar a `src/logic/`: `Request JSON is invalid` con `400` si el cuerpo no se puede leer, y `404` sin cuerpo para una ruta que no existe, en lugar del JSON por defecto de Nest.
+
+## Cliente node:http
+
+`src/clients/node-http/app.js` captura el error en cada ruta y responde JSON con la clave `message` y el mismo estado que el cliente REST: `400` si la entrada no es válida, `404` si el usuario no existe y `409` si el email ya está registrado. Un error de operación o un mensaje desconocido responde `500` con el `Unable to` de esa ruta, nunca con otro texto. El borrado conserva `Unable to find user` cuando `src/logic/` falla al buscar antes al usuario.
+
+`Request JSON is invalid` nace en `app.js`, porque un cuerpo que no se puede leer falla antes de llegar a `src/logic/`. Responde `400`. Una ruta o un método que no existen responden `404` sin cuerpo.
+
+Los cuadernos de `src/clients/node-http/jupyter/` muestran el `message` tal cual y no dibujan la tabla de datos. Si la API no responde, muestran `Unable to reach the API`.
 
 ## Cliente de escritorio
 
