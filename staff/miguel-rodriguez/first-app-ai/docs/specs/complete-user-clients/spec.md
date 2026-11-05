@@ -58,3 +58,23 @@ qué se ejecutó realmente y cualquier límite de la comprobación.
 Se conserva el servicio de datos separado, las operaciones de negocio, la
 clasificación existente y sus dependencias de modelo. No se añade autenticación,
 notas, distribución de instaladores ni reglas nuevas de contactos.
+
+
+## Alineación del ejercicio · 2026-11-05
+
+Miguel pidió corregir los clientes según el ejercicio. Electron carga las
+operaciones compartidas desde sus módulos de renderer; main solo abre la
+ventana propia. Se retira el puente preload/IPC anterior. Electron lista ID,
+nombre y email; Chrome lista los cinco campos. Ambos permiten dejar un campo
+de edición vacío para conservar su valor guardado. La ficha muestra los datos
+actuales separados de los campos de modificación. Fastify devuelve 404 vacío
+para una ruta desconocida. Se conservan resumen y confirmación por email.
+
+Verificar llamadas directas desde Electron real, campos omitidos desde ambas
+pantallas, contratos HTTP, errores, y las regresiones de escritura/recarga, en
+copias desechables. Formato y lint antes de publicar en la misma PR #1025.
+
+
+La alineación incluye VS Code: vista Usuarios en Explorer, arranque pnpm vscode,
+las cinco columnas visibles y campos omitidos al editar. Conserva búsquedas,
+resumen y confirmación de borrado. Verificar el adaptador y registro del proveedor.

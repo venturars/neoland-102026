@@ -154,3 +154,42 @@ un cliente Nest en la entrega actual. Esta enmienda precede a los cambios.
   6fd8d257 (SDD), 7fb39305 (retirada) y 282dc522 (guías). El remoto se comprobó
   en 282dc522, sin force push. Issue #1024 y PR #1025 reflejan la separación a
   #1044 y #1050; la base permanece staging y las issues siguen abiertas.
+
+
+## Alineación del ejercicio · 2026-11-05
+
+Miguel pidió corregir los clientes según el ejercicio. Electron carga las
+operaciones compartidas desde sus módulos de renderer; main solo abre la
+ventana propia. Se retira el puente preload/IPC anterior. Electron lista ID,
+nombre y email; Chrome lista los cinco campos. Ambos permiten dejar un campo
+de edición vacío para conservar su valor guardado. La ficha muestra los datos
+actuales separados de los campos de modificación. Fastify devuelve 404 vacío
+para una ruta desconocida. Se conservan resumen y confirmación por email.
+
+Verificar llamadas directas desde Electron real, campos omitidos desde ambas
+pantallas, contratos HTTP, errores, y las regresiones de escritura/recarga, en
+copias desechables. Formato y lint antes de publicar en la misma PR #1025.
+
+
+La alineación incluye VS Code: vista Usuarios en Explorer, arranque pnpm vscode,
+las cinco columnas visibles y campos omitidos al editar. Conserva búsquedas,
+resumen y confirmación de borrado. Verificar el adaptador y registro del proveedor.
+
+
+### Verificación final de alineación · 2026-11-05
+
+- pnpm format y después pnpm lint: código0. Lockfile y versiones intactos.
+- Suite completa en copia y datos desechables, puertos23000–23002:32 pruebas
+  pasadas,0 fallos/omitidas,962.046083ms. Incluye edición parcial que conserva
+  un email cambiado desde otro cliente, cinco campos en Chrome y404 vacío.
+- Electron45.2.2 real por CDP, perfil propio: crearAda, editar solo nombre,
+  email conservado y fechas visibles, contrastados con SQLite por queries.
+  window.require y window.firstApp son undefined: el renderer carga los módulos
+  compartidos directamente. Ventana y servicio propios detenidos.
+- VS Code real en Extension Development Host aislado: extensión activa, vista
+  firstAppUsers de Explorer registrada, foco y comando de apertura ejecutados.
+  No se atribuyen clics de edición del webview a esa prueba de activación.
+- Las pantallas Chrome y los fallos de recarga se comprueban con sus fuentes
+  reales y transporte controlado. La carga de la extensión en Chrome real
+  corresponde a la evidencia del4; no se repitió su GUI en esta corrección.
+- La demostración del alumno y sus datos permanecen abiertos e intactos.

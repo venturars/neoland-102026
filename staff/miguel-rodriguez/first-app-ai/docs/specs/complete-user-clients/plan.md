@@ -21,12 +21,9 @@ permanecen como historial de la propuesta anterior, no como inventario actual.
 
 ## Adaptadores
 
-- Electron: main.js abre index.html propio, con app.js/styles.css. preload.cjs
-  expone una lista cerrada de operaciones por IPC; main llama a lógica. Mantener
-  contextIsolation y renderer sin Node. La clasificación queda en el main, donde
-  funciona la operación compartida. Preparar el binario con el install.js del
-  paquete instalado si pnpm no ejecuta su postinstall; documentar ese paso inicial.
-  pnpm electron, cierre de ventana y reapertura en macOS.
+- Electron: main.js abre index.html propio. app.js importa las operaciones
+  compartidas directamente. Renderer sin Node y con contextIsolation; CSP
+  permite datos3000 y Ollama11434. Se retira preload/IPC.
 - Chrome: manifest MV3 y popup propio. Solo host_permissions para loopback3002.
   server.js usa Fastify y llama a lógica; pnpm chrome. La extensión no importa
   módulos Node ni necesita permisos de sitios ajenos.
@@ -275,3 +272,23 @@ installation must check actual optional/peer resolution and changed versions.
 - pino@10.4.0: @pinojs/redact@0.4.0, atomic-sleep@1.0.0, on-exit-leak-free@2.1.2, pino-abstract-transport@3.0.0, pino-std-serializers@7.1.0, process-warning@5.1.1, quick-format-unescaped@4.0.4, real-require@1.0.0, safe-stable-stringify@2.5.0, sonic-boom@4.2.1, thread-stream@4.2.1
 - rxjs@7.8.2: tslib@2.9.1
 - uid@2.0.2: @lukeed/csprng@1.1.0
+
+
+## Alineación del ejercicio · 2026-11-05
+
+Miguel pidió corregir los clientes según el ejercicio. Electron carga las
+operaciones compartidas desde sus módulos de renderer; main solo abre la
+ventana propia. Se retira el puente preload/IPC anterior. Electron lista ID,
+nombre y email; Chrome lista los cinco campos. Ambos permiten dejar un campo
+de edición vacío para conservar su valor guardado. La ficha muestra los datos
+actuales separados de los campos de modificación. Fastify devuelve 404 vacío
+para una ruta desconocida. Se conservan resumen y confirmación por email.
+
+Verificar llamadas directas desde Electron real, campos omitidos desde ambas
+pantallas, contratos HTTP, errores, y las regresiones de escritura/recarga, en
+copias desechables. Formato y lint antes de publicar en la misma PR #1025.
+
+
+La alineación incluye VS Code: vista Usuarios en Explorer, arranque pnpm vscode,
+las cinco columnas visibles y campos omitidos al editar. Conserva búsquedas,
+resumen y confirmación de borrado. Verificar el adaptador y registro del proveedor.

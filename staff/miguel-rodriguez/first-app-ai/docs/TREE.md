@@ -151,7 +151,6 @@ first-app-ai/
 │   │   │   ├── app.js
 │   │   │   ├── index.html
 │   │   │   ├── main.js
-│   │   │   ├── preload.cjs
 │   │   │   └── styles.css
 │   │   ├── http/
 │   │   │   └── app.js

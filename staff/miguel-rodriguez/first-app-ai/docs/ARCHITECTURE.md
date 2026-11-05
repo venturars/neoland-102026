@@ -58,11 +58,11 @@ Its `.vscode/launch.json` starts the Extension Development Host for local testin
 message calls the existing classifier in the extension host and returns aggregate
 counts to the panel.
 
-`src/clients/electron/main.js` opens the desktop client's own `index.html` and
-handles an allowlist of IPC operations through the existing logic.
-`preload.cjs` exposes only that bridge. The renderer (`app.js` and `styles.css`)
-runs with context isolation and without Node integration. The main process
-performs classification; the window does not load the web client.
+`src/clients/electron/main.js` opens the desktop client's own `index.html`.
+Its module renderer imports the shared business operations directly, including
+the browser-compatible classifier. The window retains context isolation and
+runs without Node integration. Its CSP permits only the local data and Ollama
+services. It does not reuse the web client's page.
 
 `src/clients/chrome/manifest.json` registers a Manifest V3 popup with only the
 local port-3002 host permission. Its own `index.html`, `popup.js` and `styles.css`
@@ -207,3 +207,8 @@ update local state before the optional list reload; a failed reload retains the
 confirmed result and reports that the list needs refreshing. The UI regressions
 are in `tests/client-ui-state.test.js`; classifier transport, batches and failures
 are checked in `tests/browser-classifier.test.js`.
+
+
+VS Code registra firstAppUsers como WebviewView de Explorer; el comando
+firstApp.openUsers la enfoca. El host llama a las operaciones compartidas,
+conservando los campos omitidos y mostrando las cinco propiedades del contacto.

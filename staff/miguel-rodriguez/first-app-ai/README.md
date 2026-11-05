@@ -68,10 +68,11 @@ Abrir el HTML con doble clic en una sesión normal puede bloquear los módulos.
 Para abrir o volver a abrir el cliente:
 
 1. Desde `first-app-ai`, inicia `pnpm server` si el servicio no está en marcha. Prepara la tabla como se indica arriba si todavía no existe; repetir la preparación conserva los contactos.
-2. En VS Code 1.142.0 o posterior, abre `src/clients/vscode/` como carpeta y pulsa **F5**. Se abrirá una ventana **Extension Development Host**.
-3. En esa ventana, abre la paleta de comandos con **Cmd+Shift+P** (macOS) o **Ctrl+Shift+P** (Windows/Linux), busca **First App: Open Users** y pulsa Enter.
+2. Ejecuta `pnpm vscode` con VS Code 1.142.0 o posterior y el comando `code` disponible.
+3. En la ventana de desarrollo, abre **Usuarios** en **Explorer**. El comando **First App: Open Users** también enfoca esa vista.
 
-Si cierras solo el panel, ejecuta de nuevo el comando en la ventana de desarrollo. Si cierras esa ventana o VS Code, repite los pasos anteriores. Cerrar la ventana de desarrollo no detiene el servicio; para detenerlo, pulsa **Ctrl+C** en su terminal. El panel utiliza la misma base local que los otros clientes. Para experimentar, utiliza una copia del proyecto sin su base y datos ficticios.
+Cerrar VS Code no detiene el servicio de datos. Para detenerlo, pulsa **Ctrl+C**
+en su terminal. Usa una copia y contactos ficticios para experimentar.
 
 ## Abrir Electron
 
@@ -85,7 +86,7 @@ Con los datos preparados, ejecuta `pnpm electron`. Abre una ventana propia para
 crear, seleccionar, buscar por ID, editar y eliminar contactos. El borrado pide
 el email guardado. El resumen usa la misma clasificación que Jupyter.
 
-Electron llama a las operaciones desde su proceso principal; no necesita las
+Electron llama a las operaciones desde los módulos de su renderer; no necesita las
 APIs Express o Fastify. Cierra la aplicación con **Salir/Quit**; en macOS
 cerrar solo la ventana conserva la aplicación y puedes reabrirla desde el Dock.
 
@@ -190,3 +191,8 @@ En Express, una ruta desconocida devuelve 404 vacío; JSON mal formado, 400 vac�
 Usa datos desechables para borrar. Todos los clientes comparten los contactos.
 **Ctrl+C** detiene cada API desde su propia terminal. Las APIs no sirven la
 página web; esta se abre con `pnpm web`.
+
+
+Los campos vacíos al modificar conservan el valor guardado en Electron, Chrome
+y VS Code. Electron carga lógica desde su renderer. Para VS Code, ejecuta
+`pnpm vscode` con el comando `code` disponible y abre Usuarios en Explorer.

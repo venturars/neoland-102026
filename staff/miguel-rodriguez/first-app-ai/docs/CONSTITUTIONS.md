@@ -73,7 +73,7 @@ precaution, not an additional business-operation parameter or authentication.
 Express (`pnpm http`, port 3001) and the Chrome Fastify bridge (`pnpm chrome`,
 port 3002) expose create, list, ID lookup, update,
 delete and the existing gender summary over loopback HTTP. Electron uses its own
-page and a restricted IPC bridge; the Chrome MV3 extension uses its own popup.
+page whose module renderer imports shared logic; the Chrome MV3 extension uses its own popup.
 VS Code, the web and both new visual clients call the shared operations. The
 classifier uses native fetch to the same local Ollama API in Node and the browser.
 All clients require the data service and initialized
