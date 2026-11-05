@@ -13,6 +13,13 @@ first-app/
 │   └── jupyter.sh
 ├── src/
 │   ├── clients/
+│   │   ├── electron/
+│   │   │   ├── app.js
+│   │   │   ├── index.html
+│   │   │   ├── main.js
+│   │   │   ├── preload.cjs
+│   │   │   ├── styles.css
+│   │   │   └── user-actions.js
 │   │   ├── http/
 │   │   │   └── app.js
 │   │   ├── jupyter/
@@ -142,6 +149,10 @@ first-app/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
+│   │   ├── electron-desktop-client/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
 │   │   ├── express-rest-client/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
@@ -203,6 +214,7 @@ first-app/
 │   └── WEB-CLIENT-GUIDE.md
 └── tests/
     ├── database-server.test.js
+    ├── electron-client.test.js
     ├── http-client.test.js
     └── shared-database.test.js
 ```
