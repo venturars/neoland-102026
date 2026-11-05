@@ -78,7 +78,7 @@ Antes de cada commit se releen los comentarios nuevos con esta regla.
 
 ## Relación con las PR #1060 y #1065
 
-Esta rama sale de `staging`, que aún no tiene el recuento por género ni la búsqueda por nombre. Las tres tocan los mismos ficheros y en sitios parecidos: rutas antes de `:id`, `elegirFallo` y `runAction`. Las que se fusionen después tendrán conflictos pequeños, que se resuelven conservando todas las partes. `@Bind(Query(...))` también lo usa la #1065, así que el import de `Query` puede salir repetido en el conflicto y se deja uno.
+Esta rama incluye las del recuento por género y la búsqueda por nombre, con sus conflictos ya resueltos. Hay que fusionar en orden: PR #1060, PR #1065 y esta. Si se fusiona esta antes, las otras dos entran con ella.
 
 ## Pruebas
 
