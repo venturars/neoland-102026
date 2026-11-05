@@ -10,8 +10,8 @@ Antes de empezar, leer `spec.md` y `plan.md` completos. Las comprobaciones que e
    Resultado: `package.json` y `pnpm-lock.yaml` los declaran y el lockfile resuelve las versiones del plan.
 2. **Crear `babel.config.json`.** `@babel/preset-env` con `targets.node` en `current` y `modules` en `false`, y `@babel/plugin-proposal-decorators` con `version` `legacy`.
    Resultado: `pnpm exec babel --version` responde con la versión del plan.
-3. **Añadir el script `nest` y ampliar `format`.** `nest` borra `dist`, compila `src` a `dist` con `--config-file ./babel.config.json` y lanza `dist/clients/nest/main.js`. `format` incluye `src/clients/nest/**/*.js`.
-   Resultado: ambos scripts aparecen en `package.json`.
+3. **Añadir el script `nest`.** Borra `dist`, compila `src` a `dist` con `--config-file ./babel.config.json` y lanza `dist/clients/nest/main.js`. `format` ya es `prettier --write .` y cubre la carpeta nueva, así que no cambia.
+   Resultado: el script `nest` aparece en `package.json`.
 4. **Ignorar `dist/`.** Añadir `dist/` a `.gitignore` y a `.prettierignore`.
    Resultado: tras compilar, `git status` no muestra `dist/`.
 5. **Configurar ESLint.** En `eslint.config.js`, `@babel/eslint-parser` para `src/clients/nest/**/*.js` con `babel.config.json`, y `dist/` ignorado.

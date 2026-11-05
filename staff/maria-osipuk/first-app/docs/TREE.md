@@ -6,6 +6,7 @@ first-app/
 ├── .gitignore
 ├── .prettierignore
 ├── README.md
+├── babel.config.json
 ├── eslint.config.js
 ├── package.json
 ├── pnpm-lock.yaml
@@ -48,6 +49,12 @@ first-app/
 │   │   │   ├── find-user-by-id.txt
 │   │   │   ├── list-users.txt
 │   │   │   └── update-user.txt
+│   │   ├── nest/
+│   │   │   ├── app.module.js
+│   │   │   ├── main.js
+│   │   │   ├── users-exception.filter.js
+│   │   │   ├── users.controller.js
+│   │   │   └── users.service.js
 │   │   └── web/
 │   │       ├── app.js
 │   │       ├── index.html
@@ -187,6 +194,10 @@ first-app/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
+│   │   ├── nest-users-client/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
 │   │   ├── prettier-and-eslint/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
@@ -227,5 +238,6 @@ first-app/
     ├── database-server.test.js
     ├── electron-client.test.js
     ├── http-client.test.js
+    ├── nest-client.test.js
     └── shared-database.test.js
 ```

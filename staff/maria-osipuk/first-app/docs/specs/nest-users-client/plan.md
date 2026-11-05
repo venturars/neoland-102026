@@ -56,7 +56,7 @@ Se crean:
 
 Se modifican:
 
-- `package.json`: paquetes nuevos, script `nest` y `format` ampliado a `src/clients/nest/**/*.js`.
+- `package.json`: paquetes nuevos y script `nest`. El script `format` ya es `prettier --write .` y cubre la carpeta nueva, así que no cambia.
 - `pnpm-lock.yaml`
 - `eslint.config.js`: `@babel/eslint-parser` para `src/clients/nest/**/*.js`, con `babel.config.json`. Sin él, ESLint se para en el primer `@`. `dist/` queda fuera.
 - `.gitignore` y `.prettierignore`: `dist/`.
