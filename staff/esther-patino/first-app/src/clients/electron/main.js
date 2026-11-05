@@ -6,6 +6,7 @@ import { deleteUser } from "../../logic/delete-user.js";
 import { findUserById } from "../../logic/find-user-by-id.js";
 import { listUsers } from "../../logic/list-users.js";
 import { updateUser } from "../../logic/update-user.js";
+import { usersGenderCount } from "../../logic/users-gender-count.js";
 
 const NAME_IS_EMPTY = "Name is empty";
 const EMAIL_IS_INVALID = "Email is invalid";
@@ -16,11 +17,13 @@ const COULD_NOT_LIST_THE_USERS = "Could not list the users";
 const COULD_NOT_FIND_THE_USER = "Could not find the user";
 const COULD_NOT_UPDATE_THE_USER = "Could not update the user";
 const COULD_NOT_DELETE_THE_USER = "Could not delete the user";
+const COULD_NOT_CLASSIFY_THE_USERS = "Could not classify the users";
 const CREATE_USER = "create-user";
 const LIST_USERS = "list-users";
 const FIND_USER_BY_ID = "find-user-by-id";
 const UPDATE_USER = "update-user";
 const DELETE_USER = "delete-user";
+const USERS_GENDER_COUNT = "users-gender-count";
 
 const directory = path.dirname(fileURLToPath(import.meta.url));
 
@@ -52,6 +55,9 @@ function shownMessage(error, fallback) {
       return message;
     }
     if (message === COULD_NOT_DELETE_THE_USER) {
+      return message;
+    }
+    if (message === COULD_NOT_CLASSIFY_THE_USERS) {
       return message;
     }
   }
@@ -121,6 +127,15 @@ app.whenReady().then(function () {
       await deleteUser(id);
     } catch (error) {
       throw new Error(shownMessage(error, COULD_NOT_DELETE_THE_USER));
+    }
+  });
+
+  ipcMain.handle(USERS_GENDER_COUNT, async () => {
+    try {
+      const count = await usersGenderCount();
+      return count;
+    } catch (error) {
+      throw new Error(shownMessage(error, COULD_NOT_CLASSIFY_THE_USERS));
     }
   });
 

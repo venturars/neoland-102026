@@ -129,6 +129,18 @@ button.danger {
   border-color: #e0cfc0;
 }
 
+button.tab {
+  background: #f7f1e8;
+  color: #3f6b4a;
+  border-color: #c9bfa8;
+}
+
+button.tab-selected {
+  background: #3f6b4a;
+  color: white;
+  border-color: transparent;
+}
+
 .message {
   margin-bottom: 0.75rem;
   padding: 0.6rem;

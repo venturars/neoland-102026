@@ -187,10 +187,63 @@ function onEditorMessage(event) {
     return;
   }
 
+  if (message.type === "gender-count") {
+    showGenderCount(message.count);
+    STATE.isBusy = false;
+    return;
+  }
+
   if (message.type === "error") {
     showMessage(message.message, true);
     STATE.isBusy = false;
   }
+}
+
+function showUsersSection() {
+  const usersSection = document.getElementById("users-section");
+  const countSection = document.getElementById("count-section");
+  const usersTab = document.getElementById("show-users");
+  const countTab = document.getElementById("show-count");
+
+  usersSection.hidden = false;
+  countSection.hidden = true;
+  usersTab.classList.add("tab-selected");
+  countTab.classList.remove("tab-selected");
+}
+
+function showCountSection() {
+  const usersSection = document.getElementById("users-section");
+  const countSection = document.getElementById("count-section");
+  const usersTab = document.getElementById("show-users");
+  const countTab = document.getElementById("show-count");
+
+  usersSection.hidden = true;
+  countSection.hidden = false;
+  usersTab.classList.remove("tab-selected");
+  countTab.classList.add("tab-selected");
+}
+
+function showGenderCount(count) {
+  const women = document.getElementById("count-women");
+  const men = document.getElementById("count-men");
+  const undefinedUser = document.getElementById("count-undefined");
+
+  women.textContent = "women " + count.women;
+  men.textContent = "men " + count.men;
+  undefinedUser.textContent = "undefinedUser " + count.undefinedUser;
+  women.hidden = false;
+  men.hidden = false;
+  undefinedUser.hidden = false;
+}
+
+function countUsers() {
+  if (STATE.isBusy) {
+    return;
+  }
+
+  STATE.isBusy = true;
+  showMessage("", false);
+  editor.postMessage({ type: "users-gender-count" });
 }
 
 function initializeClient() {
@@ -204,6 +257,12 @@ function initializeClient() {
   createButton.addEventListener("click", createUser);
   const deleteButton = document.getElementById("delete-user");
   deleteButton.addEventListener("click", deleteUser);
+  const usersTab = document.getElementById("show-users");
+  usersTab.addEventListener("click", showUsersSection);
+  const countTab = document.getElementById("show-count");
+  countTab.addEventListener("click", showCountSection);
+  const countButton = document.getElementById("count-users");
+  countButton.addEventListener("click", countUsers);
   window.addEventListener("message", onEditorMessage);
   listUsers();
 }

@@ -4,6 +4,7 @@
 - HTTP: `pnpm http` desde `first-app`. El cliente REST escucha en `127.0.0.1:3001`.
 - Nest: `pnpm nest` desde `first-app`. Ese cliente escucha en `127.0.0.1:3003`. Usa una clase de módulo y una de controlador. Este cliente es el que pasa por Babel.
 - Chrome: `pnpm chrome` desde `first-app`. Esa API escucha en `127.0.0.1:3002`.
+- Electron: `pnpm electron` desde `first-app`. Abre la ventana de escritorio. No escucha en un puerto. La base sigue en `127.0.0.1:3000`.
 - VS Code: abre la carpeta `first-app` y lanza la configuración de `.vscode/launch.json`. El comando «Abrir usuarios» abre el panel. La base sigue en `127.0.0.1:3000`. Este cliente no escucha en un puerto.
 - Pantallas: `pnpm open` desde `first-app`. Abre `src/clients/web/index.html` en el navegador. Se lanza a la vez que la base. Lanzarlo pide permiso para abrir el navegador.
 - Tests: los `.txt` de `src/clients/terminal/`. Se pegan en PowerShell desde la raíz del repositorio. El fragmento entra en `first-app` y no captura errores. No hay `npm test`.
