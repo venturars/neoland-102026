@@ -1,12 +1,13 @@
 # Bruno — cliente HTTP
 
-Desde `first-app`:
+Desde `first-app` hacen falta **dos terminales** además de la de Bruno:
 
-1. Arranca la base con `pnpm server`.
-2. Arranca el cliente HTTP con `pnpm http`. La consola escribe
-   `http://127.0.0.1:3001`.
-3. Con la lista vacía, lanza `pnpm bruno`. Ejecuta la carpeta
-   `01-sql-online` de `src/clients/http/bruno/`.
+1. Terminal A: `pnpm server` (escribe `http://127.0.0.1:3000`).
+2. Terminal B: `pnpm http` (escribe `http://127.0.0.1:3001`).
+3. Terminal C: con la lista vacía, `pnpm bruno` (carpeta `01-sql-online`).
+
+Si falta el server o el HTTP, `prebruno` lo dice antes de lanzar las
+peticiones. Un `ECONNREFUSED` en 3001 significa que no está `pnpm http`.
 
 Para probar con la base caída y el cliente HTTP abierto:
 
