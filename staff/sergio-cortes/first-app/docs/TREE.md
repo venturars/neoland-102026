@@ -1,6 +1,7 @@
 # Árbol
 
 first-app/
+  .gitignore
   AGENTS.md
   README.md
   babel.config.json
