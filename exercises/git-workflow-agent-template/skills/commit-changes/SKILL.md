@@ -14,6 +14,20 @@ Fuente: un commit es un conventional commit, como en [github-pr](https://www.ski
 
 #### Reglas de Invocación Críticas
 
-- **Mensaje técnico:** La descripción nombra el fichero o la función y el cambio. No uses un verbo suelto (`update files`, `fix bug`). Una sola línea. El commit vacío sigue siendo `chore: open #N`.
+- **Mensaje técnico:** Primera línea `tipo: descripción` o `tipo(ámbito): descripción`, en inglés, en imperativo, sin punto final. Dice qué cambió. Apunta a 50 caracteres, máximo 72. Sin rutas de fichero, sin verbos sueltos (`update files`), sin pasado (`added`). Un cambio incompatible lleva `!` tras el tipo: `feat(api)!: …`. El commit vacío sigue siendo `chore: open #N`, sin cuerpo.
+- **Desglose:** Tras una línea en blanco, el detalle técnico de este commit, en inglés. Cada línea cabe en 72 caracteres. Nombra las funciones, los campos o los ficheros implicados. Explica por qué se hizo y, si el diff no lo deja claro, qué cambió. No repite la primera línea. Si la pull request tiene varios commits, cubre solo este. En un commit trivial puede omitirse.
+- **Pie:** Tras otra línea en blanco, la referencia a la issue: `Closes #N` o `Refs #N`. Si el tipo lleva `!`, añade `BREAKING CHANGE:` y qué deja de funcionar.
+- **Ejemplo:** Muestra la forma. No se copia.
+
+  ```
+  feat(reports): print the stored total
+
+  printTotal recomputed the sum from report.lines on every call, so it
+  ignored the discounts addLine already applies to report.total.
+  src/reports/print-total.js now reads report.total instead of reducing
+  lines; the sum helper is removed.
+
+  Closes #42
+  ```
 - **Escapado de caracteres**: Si el mensaje contiene comillas dobles (`"`), escápalas como `\"`.
 - **Procesamiento de respuestas**: El script lista el mensaje y los ficheros. El commit lleva solo esos ficheros: lo que ya estuviera preparado se queda preparado. Si el código de salida no es 0, no reintentes metiendo más ficheros de los que nombró el alumno.
