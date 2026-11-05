@@ -41,7 +41,7 @@
 - **`agents/create-branch.md`:** Crear la rama desde `staging`.
 - **`agents/create-commit.md`:** Hacer el commit vacío o el de un trozo.
 - **`agents/launch-push.md`:** Subir la rama.
-- **`agents/create-pr.md`:** Crear la pull request o gestionar los revisores indicados. Es el único agente que las crea.
+- **`agents/create-pr.md`:** Crear la pull request. Es el único agente que las crea.
 - **`skills/check-status`:** Saber la rama y si hay cambios, antes de elegir el momento.
 - **`skills/pull-changes`:** Adelantar `staging` antes de abrir la rama. Siempre `staging`.
 - **`skills/link-pr-to-issue`:** Enlazar la pull request con la issue y dejar `Closes #N` en el cuerpo. La llama el orquestador, no `create-pr`.

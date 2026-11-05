@@ -81,5 +81,3 @@ El plan del desarrollo contiene una sección de validación con una fila por nom
 | Evidencia | Fecha, herramientas y fuentes, quién hizo las consultas y decisión de la persona responsable cuando sea necesaria. |
 
 Una consulta sin acceso o sin cobertura se marca pendiente. No se inventa un resumen para aceptar un paquete nuevo ni se cambia de fuente en silencio. Las alertas abiertas o la cobertura incompleta se presentan para su decisión antes de incorporar la dependencia. Se conserva la distinción entre una comprobación realizada por el agente y una aprobación de la persona.
-
-La [revisión registrada de esta aplicación](specs/socket-package-validation/plan.md#validación-socket-del-30-de-octubre-de-2026) contiene siete versiones sin puntuaciones inferiores a 50, siete consultas de alertas organizativas vacías y un intento de campañas rechazado porque la organización no tiene esa capacidad. Las campañas siguen sin comprobarse; esta actualización de guías no añade ni cambia paquetes.

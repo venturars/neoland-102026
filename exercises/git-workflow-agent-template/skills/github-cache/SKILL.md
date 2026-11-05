@@ -5,14 +5,26 @@ description: Reutilizar alias y datos públicos de colaboradores al resolver rev
 
 # Caché de GitHub
 
-La usa el subagente `create-pr` al pedir revisión. Requiere Node 20+, Git y `gh` autenticado; respeta `GH_HOST`. La cuenta activa se comprueba en vivo para aislar sus datos.
+Requiere Node 20+, Git y `gh` autenticado; respeta `GH_HOST`. La herramienta identifica la cuenta activa para aislar sus datos.
 
-Desde la raíz Git, ejecutar `node exercises/git-workflow-agent-template/tools/github-cache.mjs` con:
+Desde la raíz Git, ejecutar `node exercises/git-workflow-agent-template/tools/github-cache.mjs` con los siguientes comandos.
 
-- `alias get OWNER/REPO "NOMBRE"...`: logins conocidos o `null`.
-- `alias set OWNER/REPO "NOMBRE" LOGIN [--replace]` y `alias remove OWNER/REPO "NOMBRE"`: guardar, corregir u olvidar.
-- `directory OWNER/REPO` y `profile OWNER/REPO LOGIN`: colaboradores y nombre público. `--refresh` revalida con ETag.
+## Alias
 
-El archivo local ignorado se crea vacío; todos sus datos vencen a las 48 horas y se borran al siguiente acceso. No hay catálogo fijo. `cacheAvailable: false` indica que el resultado no se guarda.
+Consultar primero la caché con `alias get OWNER/REPO "NOMBRE"...`. Si devuelve un login, reutilizarlo sin buscar de nuevo la identidad del revisor en GitHub. Resolver solo los `null` mediante el directorio y los perfiles; si no basta, comprobar autoría de commits del repositorio sin guardar correos.
 
-Consultar alias primero; resolver solo ausencias usando colaboradores y sus perfiles. Si no basta, comprobar nombres de autores de commits del repositorio sin guardar correos. Ante una ausencia inesperada, refrescar el directorio. Guardar coincidencias inequívocas con `alias set`; pedir aclaración ante ambigüedad. Un fallo de GitHub no confirma una identidad; los permisos para revisar se comprueban en vivo mediante `assign-reviewers`.
+Guardar coincidencias inequívocas con `alias set OWNER/REPO "NOMBRE" LOGIN`. Para corregirlas, añadir `--replace`; para olvidarlas, usar `alias remove OWNER/REPO "NOMBRE"`. Pedir aclaración ante ambigüedad.
+
+## Colaboradores
+
+Usar primero `directory OWNER/REPO`, que reutiliza el directorio local vigente. GitHub solo se consulta si falta, ha caducado o se pide `--refresh`. Ante una ausencia inesperada, refrescar con ETag: `304` conserva los datos y `200` los actualiza.
+
+## Perfiles
+
+Usar primero `profile OWNER/REPO LOGIN`, que reutiliza el nombre público guardado. GitHub solo se consulta si falta, ha caducado o se pide `--refresh`, usando ETag cuando existe una respuesta vigente.
+
+## Caducidad y fallos
+
+El archivo local ignorado se crea vacío; todos sus datos vencen a las 48 horas y se borran al siguiente acceso. No hay catálogo fijo. `cacheAvailable: false` indica que se continúa sin persistencia.
+
+Un fallo de GitHub no confirma una identidad. Los permisos para revisar se comprueban en vivo mediante `assign-reviewers`.
