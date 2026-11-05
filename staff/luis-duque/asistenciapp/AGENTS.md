@@ -143,5 +143,6 @@ Una funcionalidad está terminada cuando:
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
 | `002-discord-bot` | Idea futura | Fuera del MVP |
 | `006-git-workflow` | 4. Implementar (T01–T10 hechos) | Issue #777 / PR #784. Pendiente de ok final |
+| `007-workflow-first` | 3. Tareas, pendiente de ejecutar | Issue #1038 |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
