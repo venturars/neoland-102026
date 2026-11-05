@@ -24,6 +24,16 @@ const FALLOS = {
 
 // Elige el mensaje de fallo de la acción que se estaba haciendo.
 function elegirFallo(request) {
+  // Buscar por email falla igual que buscar un usuario.
+  if (request.path === "/users/by-email") {
+    return "Could not find the user";
+  }
+
+  // Buscar por nombre falla igual que buscar un usuario.
+  if (request.path === "/users/by-name") {
+    return "Could not find the user";
+  }
+
   // El recuento por género tiene su propio mensaje.
   if (request.path === "/users/gender-count") {
     return "Could not classify the users";
