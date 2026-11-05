@@ -14,14 +14,15 @@ Fuente: un commit es un conventional commit, como en [github-pr](https://www.ski
 
 #### Reglas de Invocación Críticas
 
-- **Mensaje técnico:** La primera línea nombra el fichero o la función y el cambio. No uses un verbo suelto (`update files`, `fix bug`). Esa línea es una sola. El commit vacío sigue siendo `chore: open #N`, sin cuerpo.
-- **Desglose:** En un commit de trabajo, deja una línea en blanco y escribe viñetas en inglés. Cada viñeta nombra el fichero o la función y el cambio técnico de ese commit. GitHub muestra esas viñetas bajo el asunto. El commit vacío no lleva desglose.
-- **Ejemplo:** Muestra la forma. No se copia. El fichero es inventado.
+- **Mensaje técnico:** La primera línea es `tipo: descripción` o `tipo(ámbito): descripción`, en inglés, en imperativo y sin punto final. Dice qué cambió. Apunta a 50 caracteres y no pasa de 72. No pongas la ruta del fichero en esa línea, ni un verbo suelto (`update files`), ni un pasado (`added`). El commit vacío sigue siendo `chore: open #N`, sin cuerpo.
+- **Desglose:** Una línea en blanco y el detalle técnico de este commit, en inglés. Puede ocupar varias líneas. Cada línea puede nombrar el fichero o la función y decir qué cambió ahí, y por qué si no es obvio. No repite la primera línea. Si la pull request tiene varios commits, este texto cubre solo este. El commit vacío no lleva desglose.
+- **Ejemplo:** Muestra la forma. No se copia.
 
-```
-feat: print the total from src/reports/print-total.js
+  ```
+  feat(reports): print the stored total
 
-- src/reports/print-total.js: printTotal writes the total that addLine stored.
-```
+  printTotal returns the total addLine stored.
+  src/reports/print-total.js prints that total instead of summing the lines again.
+  ```
 - **Escapado de caracteres**: Si el mensaje contiene comillas dobles (`"`), escápalas como `\"`.
 - **Procesamiento de respuestas**: El script lista el mensaje y los ficheros. El commit lleva solo esos ficheros: lo que ya estuviera preparado se queda preparado. Si el código de salida no es 0, no reintentes metiendo más ficheros de los que nombró el alumno.
