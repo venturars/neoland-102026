@@ -84,6 +84,11 @@ Aprobadas en la tarea del cliente de VS Code:
 - `user-actions.js` responde `{ data }` o `{ error }` entre las partes de ese cliente. `src/logic/` sigue sin envoltorios.
 - `call(action, values)` de `view.js` es el único envoltorio de `postMessage` hacia el proceso de la extensión.
 
+Aprobadas en la tarea del cliente Nest:
+
+- `src/clients/nest/` se aparta de esta guía: usa clases, `this`, decoradores y nombres de archivo con punto (`users.controller.js`), porque Nest se construye así. El resto de la aplicación no cambia.
+- Los exports de ese cliente siguen siendo con nombre. Cada archivo contiene una sola clase.
+
 ## Comentarios
 
 Los comentarios son material de estudio: la desarrolladora debe poder aprender el código leyéndolos. Se escriben cuando se crea una funcionalidad o se modifica código con autorización, en inglés sencillo y con frases completas, no con etiquetas de una o dos palabras.
