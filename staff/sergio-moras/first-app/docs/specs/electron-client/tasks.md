@@ -27,6 +27,6 @@ Implementan [plan.md](plan.md), que cumple [spec.md](spec.md). Se ejecutan **en 
 - [x] `AGENTS.md`: el comando `pnpm electron`, con `pnpm db` antes.
 
 ## T5. El paquete (a partir de las 22:43)
-- [ ] `pnpm add -D electron@45.2.2 --save-exact`, sin `pnpm-workspace.yaml` ni excepciones.
-- [ ] Comprobar que `package.json` tiene `"electron": "45.2.2"` en `devDependencies` y que `pnpm-lock.yaml` cambió.
-- [ ] Con `pnpm electron`, la ventana abre y lista los usuarios.
+- [x] `pnpm add -D electron@45.2.2 --save-exact`, sin `pnpm-workspace.yaml` ni excepciones.
+- [x] Comprobar que `package.json` tiene `"electron": "45.2.2"` en `devDependencies` y que `pnpm-lock.yaml` cambió.
+- [x] Con `pnpm electron`, la ventana abre y lista los usuarios.
