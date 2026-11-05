@@ -9,7 +9,7 @@ Miguel autorizó revisión conjunta y ejecución el 2026-11-05.
 - [x] N04 · Crear servicio, controlador, módulo, filtro y arranque usando decoradores e inyección real.
 - [x] N05 · Configurar Babel, comando y lint; documentar excepción local y actualizar guías y árbol.
 - [x] N06 · Ejecutar CRUD, errores, campos omitidos e inyección sobre copia y base desechables.
-- [ ] N07 · Revisar diff, ejecutar formato/lint, publicar solo esta tarea en #1050 hacia staging.
+- [x] N07 · Revisar diff, ejecutar formato/lint, publicar solo esta tarea en #1050 hacia staging.
 
 ## Revisión antes del código
 
@@ -40,3 +40,9 @@ contiene las cinco peticiones para repetirlas allí. Las pruebas crean y elimina
 sus datos; no usan la base ni los procesos de demostración del alumno.
 La revisión Socket mantiene 52 comprobaciones incompletas y los hallazgos
 aceptados técnicamente por delegación; no se afirma una revisión limpia.
+
+Publicación verificada en ff5b17a4, sin force push. PR #1050 hacia staging,
+issue #1044 abierta y enlazada. Se conserva en draft hasta integrar #1025 y
+ajustar la configuración compartida antes de solicitar las primeras revisiones.
+Una comparación local merge-tree detectó solapamientos en README, arquitectura,
+ESLint, package y lockfile/workspace. No se cambió ninguna rama al comprobarlo.
