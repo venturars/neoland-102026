@@ -18,38 +18,42 @@ petición HTTP
         → src/db/server.js (127.0.0.1:3000)
 ```
 
-Node no entiende los decoradores `@` de Nest. Por eso `pnpm nest` lanza `bootstrap.mjs`, que traduce los ficheros con `@swc/core` a `src/clients/nest/.run/` y arranca el resultado. No hay TypeScript. Quien prueba la app lanza `pnpm start` en una terminal y `pnpm nest` en otra.
+Node no entiende los decoradores `@` de Nest. Por eso `pnpm nest` lanza `scripts/nest.js`, que traduce `src/logic/`, `src/queries/` y `src/clients/nest/` con Babel a `dist/` y arranca el resultado. Las rutas entre carpetas no cambian, así que no hay que reescribir ningún import. No hay TypeScript. Quien prueba la app lanza `pnpm start` en una terminal y `pnpm nest` en otra.
 
 ## Ficheros
 
 Se crean en `src/clients/nest/`:
 
-- `bootstrap.mjs` — traduce los ficheros a `.run/`. Como esa carpeta está un nivel más abajo, cambia `../../logic/` por `../../../logic/` en lo traducido. Después importa `.run/main.js`.
 - `main.js` — crea la app de Nest sin sus avisos de consola (`logger: false`), añade la comprobación de `Host` y `Origin` y escucha solo en `127.0.0.1:3003`. Avisa si el puerto está ocupado, igual que `chrome/server.js`.
 - `app.module.js` — une el controlador, el servicio y el filtro.
 - `users.controller.js` — las rutas. Lee el id y el cuerpo, y llama al servicio. No valida.
 - `users.service.js` — llama a `src/logic/`. Importa fichero a fichero, no desde `logic/index.js`, para no cargar `openai`.
 - `logic-exception.filter.js` — traduce cada fallo a su estado y su mensaje.
 
+Se crean en la raíz de `first-app`:
+
+- `scripts/nest.js` — borra `dist/`, traduce con Babel y arranca la API. Borra desde Node porque `rm -rf` no existe en los scripts de pnpm en Windows.
+- `babel.config.json` — `@babel/preset-env` con `targets.node` `current` y `modules` `false`, y `@babel/plugin-proposal-decorators` con `version` `legacy`.
+- `.gitignore` — `dist/`.
+
 Se tocan:
 
-- `package.json` — los paquetes de abajo, el script `"nest": "node src/clients/nest/bootstrap.mjs"` y `src/clients/nest/*.{js,mjs}` en `format`. El glob no es recursivo para no formatear `.run/`.
+- `package.json` — los paquetes de abajo, el script `"nest": "node scripts/nest.js"` y `src/clients/nest/**/*.js` en `format`.
 - `pnpm-lock.yaml` — lo actualiza `pnpm install`.
-- `eslint.config.js` — ignora `.run/` y los cuatro ficheros con `@` (`app.module.js`, `users.controller.js`, `users.service.js` y `logic-exception.filter.js`), porque el lector por defecto de ESLint no entiende los decoradores. Añade las reglas recomendadas a `bootstrap.mjs`. **Límite:** esos cuatro ficheros no pasan lint. Revisarlos exigiría otro paquete y más comprobaciones de Socket.
-- `.gitignore` — fichero nuevo en `first-app/`, con `src/clients/nest/.run/`.
+- `eslint.config.js` — lee `src/clients/nest/` con `@babel/eslint-parser` e ignora `dist/`. Todo el cliente pasa lint.
 - `AGENTS.md` — dependencias, comando `pnpm nest`, alcance de `pnpm format` y clientes que necesitan el servidor.
 - `docs/ARCHITECTURE.md` — filas en «Quién sabe qué» y la capa de clientes.
-- `docs/TREE.md` — `clients/nest/`.
+- `docs/TREE.md` — `clients/nest/`, `scripts/nest.js` y `babel.config.json`.
 - `docs/STYLE.md` — aviso: `src/clients/nest/` usa clases y decoradores porque Nest los exige. El resto del proyecto sigue igual.
 
-`pnpm-workspace.yaml` no existe y no se crea. `@swc/core` trae un `postinstall`, pero su binario llega como dependencia opcional. Si la instalación falla sin ese fichero, se para y se enseña a Diego.
+El controlador recibe el servicio con `@Dependencies(UsersService)`, porque el modo `legacy` de Babel no admite decoradores en los parámetros.
 
 El código lleva líneas cortas y comentarios por bloques en castellano, también encima de cada import y de cada decorador que no se entienda solo. Cada comentario es una frase sencilla, fácil de leer y sin jerga de Nest sin explicar. Por ejemplo: `// Si no conocemos el error, respondemos que la acción ha fallado.`
 
 ## Paquetes
 
 - `dependencies`: `@nestjs/common@12.3.3`, `@nestjs/core@12.3.3`, `@nestjs/platform-express@12.3.3`, `reflect-metadata@0.2.2` y `rxjs@7.8.2`.
-- `devDependencies`: `@swc/core@1.16.21`.
+- `devDependencies`: `@babel/cli@8.1.0`, `@babel/core@8.1.0`, `@babel/eslint-parser@8.0.7`, `@babel/plugin-proposal-decorators@8.0.2` y `@babel/preset-env@8.0.7`.
 
 ## API
 
@@ -110,15 +114,19 @@ No da permiso CORS a nadie. Esto no es autenticación: un programa de este orden
 
 ## Comprobado al implementar
 
-`@Bind` e `@Inject` funcionan traducidos con swc. El JSON mal formado llega al filtro y responde 400 sin cuerpo.
-
-swc no admite `export` entre un decorador y su clase, así que las clases se exportan aparte, al final de cada fichero.
+`@Bind` y `@Dependencies` funcionan traducidos con Babel. El JSON mal formado llega al filtro y responde 400 sin cuerpo.
 
 La base caída se simuló haciendo fallar `fetch` en una copia de la API, porque `pnpm start` ya estaba en marcha y no se paró. No se probó apagando el servidor de verdad.
 
-`pnpm format` cambia los saltos de línea de CRLF a LF en todos los ficheros de su alcance, con `core.autocrlf` activo. Esos cambios no son de esta tarea y se restauraron.
+`pnpm format` cambia los saltos de línea de CRLF a LF en todos los ficheros de su alcance, con `core.autocrlf` activo. Esos cambios no son de esta tarea y se restauran.
 
-`pnpm audit` da un aviso moderado en `minimatch`, que llega por `eslint`. No es de Nest. No hay ninguno alto ni crítico.
+`pnpm audit` da un aviso moderado, que llega por `eslint` y no es de Nest. No hay ninguno alto ni crítico.
+
+Lint revisa los ficheros con decoradores: un error puesto a propósito en `app.module.js` se detectó y se quitó.
+
+## Cambio por la revisión de la PR
+
+La primera versión traducía con `@swc/core` y dejaba cuatro ficheros fuera de lint. La revisión de la PR #1041 pidió incluirlos y propuso Babel, y Diego decidió cambiar. Desaparecen `bootstrap.mjs`, `@swc/core` y el cambio de rutas de los imports.
 
 ## Pruebas
 
@@ -132,44 +140,29 @@ No hay tests en el proyecto. Se prueba por HTTP contra el 3003, con `pnpm start`
 
 ## Socket
 
-Consulta propia del 2026-11-05 a `https://mcp.socket.dev/`, sin iniciar sesión, porque `SOCKET_API_TOKEN` no está definido. Las versiones salen de `pnpm install --lockfile-only --ignore-scripts` en una copia temporal de `package.json` y `pnpm-lock.yaml`. No se ha instalado nada en el proyecto.
+Consultas propias del 2026-11-05 a `https://mcp.socket.dev/`, sin iniciar sesión, porque `SOCKET_API_TOKEN` no está definido. Las versiones salen de `pnpm install --lockfile-only --ignore-scripts` en una copia temporal. Se comprobaron antes de instalar en el proyecto.
 
-Son 91 paquetes hasta 3 capas y se comprueban los 89 nuevos. `debug@4.4.3` y `ms@2.1.3` ya estaban en esa versión y no se vuelven a mirar. Los pares opcionales `class-validator` y `class-transformer` no se instalan.
+Son 200 paquetes nuevos hasta 3 capas: 74 por Nest y 126 por Babel. Los que ya estaban en esa versión no se vuelven a mirar. Los pares opcionales `class-validator` y `class-transformer` no se instalan.
 
-- **Stats:** salen de la herramienta `depscore`. Responde por 88 de los 89. **Cinco tienen una stat por debajo de 50**, todas en `quality`:
-  - `@swc/counter@0.1.3`: 41. Es dependencia obligatoria de `@swc/core`, así que se instala siempre.
-  - `@swc/core-linux-arm-gnueabihf`, `@swc/core-linux-ppc64-gnu`, `@swc/core-linux-s390x-gnu` y `@swc/core-win32-ia32-msvc`, todos en `1.16.21`: 40. Son binarios opcionales de otras plataformas.
-- **`append-field@1.0.0`: sin datos.** Socket responde con `append-field@2.0.0`, también al preguntar solo por él. El árbol instala la 1.0.0. Los números de la 2.0.0 no valen para esa versión.
+- **Stats:** salen de la herramienta `depscore`. Ninguna está por debajo de 50. La más baja es 50.
+- **`append-field@1.0.0`: sin datos.** Socket responde con `append-field@2.0.0`, también al preguntar solo por él. El árbol instala la 1.0.0.
 - **Alertas: sin comprobar.** La herramienta `alerts` responde 401 sin iniciar sesión. `depscore` no enumera alertas, así que estas stats no dicen que no haya ninguna.
 - **Campañas: sin comprobar.** `threat_feed` va por organización, y `organizations` también responde 401, así que no se ha llamado.
-- **Fuera de las 3 capas:** otros 19 paquetes nuevos entran en el lock y no se han mirado, como dice `AGENTS.md`.
+- **Fuera de las 3 capas:** otros 29 paquetes nuevos entran en el lock y no se han mirado, como dice `AGENTS.md`: 19 por Nest y 10 por Babel.
 - **Versión muy reciente:** `@nestjs/common@12.3.3` se publicó el 2026-11-04, el día antes de esta consulta.
 
-Tras instalar se compara con **todas** las entradas nuevas del `pnpm-lock.yaml` y se lanza `pnpm audit`. Si algo no coincide o sale algo alto o crítico, se para y se enseña a Diego. `pnpm audit` busca vulnerabilidades conocidas, no campañas ni paquetes maliciosos nuevos.
+Tras instalar se comparó con todas las entradas nuevas del `pnpm-lock.yaml`: coinciden con estas tablas y con esos 29. `pnpm audit` busca vulnerabilidades conocidas, no campañas ni paquetes maliciosos nuevos.
+
+### Nest
 
 | Capa | Paquete | license | maintenance | quality | supplyChain | vulnerability |
 | --- | --- | --- | --- | --- | --- | --- |
 | 0 | `@nestjs/common@12.3.3` | 100 | 96 | 100 | 99 | 100 |
 | 0 | `@nestjs/core@12.3.3` | 100 | 95 | 100 | 99 | 100 |
 | 0 | `@nestjs/platform-express@12.3.3` | 100 | 96 | 100 | 99 | 100 |
-| 0 | `@swc/core@1.16.21` | 100 | 96 | 100 | 91 | 100 |
 | 0 | `reflect-metadata@0.2.2` | 80 | 80 | 99 | 100 | 100 |
 | 0 | `rxjs@7.8.2` | 100 | 88 | 100 | 99 | 100 |
 | 1 | `@standard-schema/spec@1.1.0` | 100 | 82 | 99 | 100 | 100 |
-| 1 | `@swc/core-darwin-arm64@1.16.21` (opcional) | 100 | 96 | 53 | 99 | 100 |
-| 1 | `@swc/core-darwin-x64@1.16.21` (opcional) | 100 | 95 | 53 | 99 | 100 |
-| 1 | `@swc/core-linux-arm-gnueabihf@1.16.21` (opcional) | 100 | 96 | 40 | 100 | 100 |
-| 1 | `@swc/core-linux-arm64-gnu@1.16.21` (opcional) | 100 | 96 | 53 | 99 | 100 |
-| 1 | `@swc/core-linux-arm64-musl@1.16.21` (opcional) | 100 | 96 | 53 | 99 | 100 |
-| 1 | `@swc/core-linux-ppc64-gnu@1.16.21` (opcional) | 100 | 96 | 40 | 99 | 100 |
-| 1 | `@swc/core-linux-s390x-gnu@1.16.21` (opcional) | 100 | 96 | 40 | 99 | 100 |
-| 1 | `@swc/core-linux-x64-gnu@1.16.21` (opcional) | 100 | 96 | 53 | 99 | 100 |
-| 1 | `@swc/core-linux-x64-musl@1.16.21` (opcional) | 100 | 96 | 53 | 99 | 100 |
-| 1 | `@swc/core-win32-arm64-msvc@1.16.21` (opcional) | 100 | 96 | 53 | 99 | 100 |
-| 1 | `@swc/core-win32-ia32-msvc@1.16.21` (opcional) | 100 | 96 | 40 | 99 | 100 |
-| 1 | `@swc/core-win32-x64-msvc@1.16.21` (opcional) | 100 | 96 | 53 | 99 | 100 |
-| 1 | `@swc/counter@0.1.3` | 100 | 79 | 41 | 100 | 100 |
-| 1 | `@swc/types@0.1.28` | 100 | 82 | 72 | 100 | 100 |
 | 1 | `cors@2.8.6` | 100 | 83 | 100 | 99 | 100 |
 | 1 | `express@5.3.0` | 100 | 92 | 100 | 97 | 100 |
 | 1 | `fast-safe-stringify@2.1.1` | 100 | 75 | 100 | 100 | 100 |
@@ -239,12 +232,143 @@ Tras instalar se compara con **todas** las entradas nuevas del `pnpm-lock.yaml` 
 | 3 | `toidentifier@1.0.1` | 100 | 83 | 82 | 100 | 100 |
 | 3 | `wrappy@1.0.2` | 100 | 75 | 73 | 100 | 100 |
 
+### Babel
+
+| Capa | Paquete | license | maintenance | quality | supplyChain | vulnerability |
+| --- | --- | --- | --- | --- | --- | --- |
+| 0 | `@babel/cli@8.1.0` | 100 | 95 | 75 | 99 | 100 |
+| 0 | `@babel/core@8.1.0` | 100 | 97 | 78 | 98 | 100 |
+| 0 | `@babel/eslint-parser@8.0.7` | 100 | 96 | 75 | 99 | 100 |
+| 0 | `@babel/plugin-proposal-decorators@8.0.2` | 100 | 89 | 73 | 99 | 100 |
+| 0 | `@babel/preset-env@8.0.7` | 100 | 94 | 75 | 96 | 100 |
+| 1 | `@babel/code-frame@8.0.6` | 100 | 90 | 73 | 100 | 100 |
+| 1 | `@babel/compat-data@8.0.5` | 100 | 90 | 75 | 100 | 100 |
+| 1 | `@babel/generator@8.1.0` | 100 | 97 | 78 | 99 | 100 |
+| 1 | `@babel/helper-compilation-targets@8.0.7` | 100 | 96 | 74 | 99 | 100 |
+| 1 | `@babel/helper-create-class-features-plugin@8.0.10` | 100 | 97 | 77 | 99 | 100 |
+| 1 | `@babel/helper-plugin-utils@8.0.1` | 100 | 88 | 70 | 100 | 100 |
+| 1 | `@babel/helper-validator-option@8.0.0` | 100 | 88 | 71 | 100 | 100 |
+| 1 | `@babel/helpers@8.1.0` | 100 | 97 | 76 | 99 | 100 |
+| 1 | `@babel/parser@8.1.0` | 100 | 98 | 80 | 100 | 100 |
+| 1 | `@babel/plugin-bugfix-firefox-class-in-computed-class-key@8.0.1` | 100 | 88 | 70 | 100 | 100 |
+| 1 | `@babel/plugin-bugfix-safari-class-field-initializer-scope@8.0.1` | 100 | 88 | 70 | 100 | 100 |
+| 1 | `@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression@8.0.1` | 100 | 88 | 68 | 100 | 100 |
+| 1 | `@babel/plugin-bugfix-safari-rest-destructuring-rhs-array@8.0.6` | 100 | 94 | 68 | 100 | 100 |
+| 1 | `@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining@8.0.1` | 100 | 88 | 70 | 99 | 100 |
+| 1 | `@babel/plugin-bugfix-v8-static-class-fields-redefine-readonly@8.0.1` | 100 | 88 | 72 | 100 | 100 |
+| 1 | `@babel/plugin-syntax-decorators@8.0.1` | 100 | 88 | 67 | 100 | 100 |
+| 1 | `@babel/plugin-transform-arrow-functions@8.0.1` | 100 | 88 | 66 | 99 | 100 |
+| 1 | `@babel/plugin-transform-async-generator-functions@8.0.6` | 100 | 90 | 72 | 99 | 100 |
+| 1 | `@babel/plugin-transform-async-to-generator@8.0.1` | 100 | 88 | 69 | 99 | 100 |
+| 1 | `@babel/plugin-transform-block-scoped-functions@8.0.1` | 100 | 88 | 70 | 100 | 100 |
+| 1 | `@babel/plugin-transform-block-scoping@8.0.10` | 100 | 97 | 75 | 99 | 100 |
+| 1 | `@babel/plugin-transform-class-properties@8.0.1` | 100 | 88 | 64 | 100 | 100 |
+| 1 | `@babel/plugin-transform-class-static-block@8.0.5` | 100 | 90 | 72 | 100 | 100 |
+| 1 | `@babel/plugin-transform-classes@8.1.0` | 100 | 97 | 75 | 99 | 100 |
+| 1 | `@babel/plugin-transform-computed-properties@8.0.1` | 100 | 88 | 72 | 100 | 100 |
+| 1 | `@babel/plugin-transform-destructuring@8.0.5` | 100 | 94 | 75 | 100 | 100 |
+| 1 | `@babel/plugin-transform-dotall-regex@8.0.1` | 100 | 88 | 62 | 99 | 100 |
+| 1 | `@babel/plugin-transform-duplicate-keys@8.0.1` | 100 | 88 | 69 | 100 | 100 |
+| 1 | `@babel/plugin-transform-duplicate-named-capturing-groups-regex@8.0.1` | 100 | 88 | 65 | 99 | 100 |
+| 1 | `@babel/plugin-transform-dynamic-import@8.0.1` | 100 | 88 | 67 | 100 | 100 |
+| 1 | `@babel/plugin-transform-explicit-resource-management@8.0.5` | 100 | 90 | 72 | 99 | 100 |
+| 1 | `@babel/plugin-transform-exponentiation-operator@8.0.1` | 100 | 88 | 70 | 100 | 100 |
+| 1 | `@babel/plugin-transform-export-namespace-from@8.1.0` | 100 | 93 | 69 | 100 | 100 |
+| 1 | `@babel/plugin-transform-for-of@8.0.7` | 100 | 95 | 72 | 100 | 100 |
+| 1 | `@babel/plugin-transform-function-name@8.0.1` | 100 | 88 | 66 | 100 | 100 |
+| 1 | `@babel/plugin-transform-json-strings@8.0.1` | 100 | 88 | 66 | 100 | 100 |
+| 1 | `@babel/plugin-transform-literals@8.0.1` | 100 | 88 | 66 | 100 | 100 |
+| 1 | `@babel/plugin-transform-logical-assignment-operators@8.0.1` | 100 | 88 | 69 | 100 | 100 |
+| 1 | `@babel/plugin-transform-member-expression-literals@8.0.1` | 100 | 88 | 65 | 100 | 100 |
+| 1 | `@babel/plugin-transform-modules-amd@8.0.1` | 100 | 88 | 72 | 99 | 100 |
+| 1 | `@babel/plugin-transform-modules-commonjs@8.0.1` | 100 | 88 | 73 | 100 | 100 |
+| 1 | `@babel/plugin-transform-modules-systemjs@8.1.0` | 100 | 93 | 74 | 99 | 100 |
+| 1 | `@babel/plugin-transform-modules-umd@8.0.1` | 100 | 88 | 72 | 99 | 100 |
+| 1 | `@babel/plugin-transform-named-capturing-groups-regex@8.0.1` | 100 | 88 | 65 | 99 | 100 |
+| 1 | `@babel/plugin-transform-new-target@8.0.1` | 100 | 88 | 70 | 100 | 100 |
+| 1 | `@babel/plugin-transform-nullish-coalescing-operator@8.0.1` | 100 | 88 | 69 | 100 | 100 |
+| 1 | `@babel/plugin-transform-numeric-separator@8.0.1` | 100 | 88 | 66 | 100 | 100 |
+| 1 | `@babel/plugin-transform-object-rest-spread@8.0.1` | 100 | 88 | 75 | 99 | 100 |
+| 1 | `@babel/plugin-transform-object-super@8.0.1` | 100 | 88 | 70 | 100 | 100 |
+| 1 | `@babel/plugin-transform-optional-catch-binding@8.0.1` | 100 | 88 | 65 | 100 | 100 |
+| 1 | `@babel/plugin-transform-optional-chaining@8.0.5` | 100 | 90 | 73 | 99 | 100 |
+| 1 | `@babel/plugin-transform-parameters@8.0.5` | 100 | 90 | 75 | 99 | 100 |
+| 1 | `@babel/plugin-transform-private-methods@8.0.1` | 100 | 88 | 65 | 99 | 100 |
+| 1 | `@babel/plugin-transform-private-property-in-object@8.0.5` | 100 | 90 | 72 | 99 | 100 |
+| 1 | `@babel/plugin-transform-property-literals@8.0.1` | 100 | 88 | 65 | 100 | 100 |
+| 1 | `@babel/plugin-transform-regenerator@8.0.6` | 100 | 92 | 76 | 99 | 100 |
+| 1 | `@babel/plugin-transform-regexp-modifiers@8.0.1` | 100 | 88 | 62 | 99 | 100 |
+| 1 | `@babel/plugin-transform-reserved-words@8.0.1` | 100 | 88 | 64 | 100 | 100 |
+| 1 | `@babel/plugin-transform-shorthand-properties@8.0.1` | 100 | 88 | 69 | 100 | 100 |
+| 1 | `@babel/plugin-transform-spread@8.0.8` | 100 | 94 | 72 | 100 | 100 |
+| 1 | `@babel/plugin-transform-sticky-regex@8.0.1` | 100 | 88 | 65 | 100 | 100 |
+| 1 | `@babel/plugin-transform-template-literals@8.0.1` | 100 | 88 | 71 | 100 | 100 |
+| 1 | `@babel/plugin-transform-typeof-symbol@8.0.1` | 100 | 88 | 69 | 100 | 100 |
+| 1 | `@babel/plugin-transform-unicode-escapes@8.0.1` | 100 | 88 | 71 | 100 | 100 |
+| 1 | `@babel/plugin-transform-unicode-property-regex@8.0.1` | 100 | 88 | 65 | 100 | 100 |
+| 1 | `@babel/plugin-transform-unicode-regex@8.0.1` | 100 | 88 | 62 | 99 | 100 |
+| 1 | `@babel/plugin-transform-unicode-sets-regex@8.0.1` | 100 | 88 | 62 | 99 | 100 |
+| 1 | `@babel/preset-modules@0.2.0` | 100 | 84 | 99 | 99 | 100 |
+| 1 | `@babel/template@8.0.0` | 100 | 88 | 75 | 100 | 100 |
+| 1 | `@babel/traverse@8.1.0` | 100 | 97 | 79 | 99 | 100 |
+| 1 | `@babel/types@8.1.0` | 100 | 97 | 80 | 100 | 100 |
+| 1 | `@jridgewell/trace-mapping@0.3.31` | 100 | 80 | 100 | 100 | 100 |
+| 1 | `@types/gensync@1.0.5` | 100 | 80 | 70 | 100 | 100 |
+| 1 | `babel-plugin-polyfill-corejs3@1.0.0` | 100 | 83 | 93 | 99 | 100 |
+| 1 | `chokidar@5.0.0` | 100 | 85 | 100 | 99 | 100 |
+| 1 | `commander@14.0.3` | 100 | 83 | 100 | 99 | 100 |
+| 1 | `convert-source-map@2.0.0` | 100 | 81 | 100 | 100 | 100 |
+| 1 | `core-js-compat@3.51.0` | 100 | 87 | 100 | 100 | 100 |
+| 1 | `empathic@2.1.0` | 100 | 83 | 93 | 100 | 100 |
+| 1 | `gensync@1.0.0-beta.2` | 100 | 75 | 100 | 100 | 100 |
+| 1 | `glob@14.0.3` | 100 | 92 | 99 | 98 | 100 |
+| 1 | `import-meta-resolve@4.2.0` | 100 | 79 | 100 | 99 | 100 |
+| 1 | `json5@2.2.3` | 100 | 81 | 100 | 100 | 100 |
+| 1 | `obug@3.0.0` | 100 | 90 | 100 | 100 | 100 |
+| 1 | `slash@5.1.0` | 100 | 79 | 72 | 100 | 100 |
+| 1 | `verkit@0.5.0` | 100 | 88 | 100 | 100 | 100 |
+| 2 | `@babel/helper-annotate-as-pure@8.0.0` | 100 | 88 | 64 | 100 | 100 |
+| 2 | `@babel/helper-create-regexp-features-plugin@8.0.7` | 100 | 94 | 72 | 100 | 100 |
+| 2 | `@babel/helper-define-polyfill-provider@1.0.0` | 100 | 87 | 76 | 99 | 100 |
+| 2 | `@babel/helper-globals@8.0.6` | 100 | 89 | 75 | 100 | 100 |
+| 2 | `@babel/helper-member-expression-to-functions@8.0.5` | 100 | 90 | 74 | 100 | 100 |
+| 2 | `@babel/helper-module-imports@8.0.0` | 100 | 88 | 75 | 99 | 100 |
+| 2 | `@babel/helper-module-transforms@8.1.0` | 100 | 96 | 76 | 100 | 100 |
+| 2 | `@babel/helper-optimise-call-expression@8.0.0` | 100 | 88 | 68 | 100 | 100 |
+| 2 | `@babel/helper-remap-async-to-generator@8.0.1` | 100 | 88 | 70 | 99 | 100 |
+| 2 | `@babel/helper-replace-supers@8.0.1` | 100 | 88 | 73 | 100 | 100 |
+| 2 | `@babel/helper-skip-transparent-expression-wrappers@8.1.0` | 100 | 94 | 66 | 100 | 100 |
+| 2 | `@babel/helper-string-parser@8.0.8` | 100 | 96 | 74 | 100 | 100 |
+| 2 | `@babel/helper-validator-identifier@8.0.6` | 100 | 90 | 72 | 100 | 100 |
+| 2 | `@jridgewell/gen-mapping@0.4.0-beta.0` | 100 | 80 | 100 | 100 | 100 |
+| 2 | `@jridgewell/resolve-uri@3.1.2` | 100 | 79 | 81 | 100 | 100 |
+| 2 | `@jridgewell/sourcemap-codec@1.6.0` | 100 | 81 | 100 | 100 | 100 |
+| 2 | `@types/jsesc@2.5.1` | 100 | 79 | 69 | 100 | 100 |
+| 2 | `browserslist@4.29.5` | 100 | 92 | 90 | 98 | 100 |
+| 2 | `flru@1.0.2` | 100 | 75 | 99 | 100 | 100 |
+| 2 | `js-tokens@10.0.0` | 100 | 80 | 72 | 100 | 100 |
+| 2 | `jsesc@3.1.0` | 100 | 79 | 100 | 100 | 100 |
+| 2 | `minimatch@11.0.4` | 100 | 95 | 100 | 100 | 100 |
+| 2 | `minipass@7.1.3` | 100 | 80 | 100 | 100 | 100 |
+| 2 | `path-scurry@3.0.0` | 100 | 86 | 100 | 99 | 100 |
+| 2 | `readdirp@5.1.1` | 100 | 83 | 100 | 100 | 100 |
+| 3 | `@babel/helper-wrap-function@8.0.0` | 100 | 88 | 72 | 100 | 100 |
+| 3 | `@isaacs/nonrecursive-glob-match@1.0.3` | 100 | 91 | 100 | 100 | 100 |
+| 3 | `baseline-browser-mapping@2.11.35` | 100 | 96 | 99 | 99 | 100 |
+| 3 | `caniuse-lite@1.0.30001820` | 100 | 96 | 74 | 100 | 100 |
+| 3 | `electron-to-chromium@1.5.477` | 100 | 96 | 100 | 100 | 100 |
+| 3 | `lodash.debounce@4.0.8` | 100 | 75 | 74 | 100 | 100 |
+| 3 | `lru-cache@11.5.3` | 100 | 88 | 99 | 99 | 100 |
+| 3 | `node-releases@2.0.63` | 100 | 95 | 81 | 100 | 100 |
+| 3 | `regexpu-core@6.5.4` | 100 | 93 | 100 | 99 | 100 |
+| 3 | `update-browserslist-db@1.3.4` | 100 | 89 | 82 | 99 | 100 |
+
 ## Decisiones de Diego
 
 Respondidas el 2026-11-05:
 
-- **Socket:** acepta los 89 paquetes, con las cinco stats bajo 50, `append-field@1.0.0` sin datos y las alertas y campañas sin comprobar.
+- **Socket:** acepta los paquetes de las dos tablas, con `append-field@1.0.0` sin datos y las alertas y campañas sin comprobar.
 - **Constitución:** «No se añaden paquetes para el servidor ni para la web» habla de `src/db/` y de `src/clients/web/`. Nest es un cliente nuevo y no choca.
 - **`docs/STYLE.md`:** vale un aviso limitado a `src/clients/nest/`, porque Nest exige clases y decoradores.
 - **`Host` y `Origin`:** se mantiene la protección, como en la API de Chrome.
-- **Lint:** acepta que los cuatro ficheros con `@` no pasen `pnpm lint`.
+- **Babel:** sustituye a swc tras la revisión de la PR, con `scripts/nest.js` en vez de `rm -rf` para que funcione en Windows.

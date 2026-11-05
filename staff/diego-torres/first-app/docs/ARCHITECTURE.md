@@ -28,7 +28,7 @@ Ningún cliente funciona sin el servidor en marcha (`pnpm start`). La web no la 
 | `src/clients/vscode/*` | Extensión de VS Code con una vista lateral. `extension.js` corre en Node y llama a `src/logic/`. `panel.js` solo habla con `extension.js` y pinta las respuestas |
 | `scripts/vscode.js` | Abre el editor en modo desarrollo con la extensión de `src/clients/vscode/` |
 | `src/clients/nest/*` | API de usuarios con Nest, en `127.0.0.1:3003`. La lanza `pnpm nest`. Llama a `src/logic/`, no tiene reglas y comprueba `Host` y `Origin` |
-| `src/clients/nest/bootstrap.mjs` | Traduce los decoradores con swc a `src/clients/nest/.run/`, que no está en git, y arranca la API |
+| `scripts/nest.js` | Traduce los decoradores con Babel a `dist/`, que no está en git, y arranca la API. La configuración está en `babel.config.json` |
 | `src/clients/terminal/*.txt` | Un cliente por operación, para pegar en la terminal |
 | `src/clients/jupyter/*.ipynb` | Un cuaderno por operación, que abre `pnpm run jupyter` |
 

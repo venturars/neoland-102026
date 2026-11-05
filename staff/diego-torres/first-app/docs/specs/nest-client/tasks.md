@@ -89,3 +89,26 @@ Todos los comentarios del código son frases sencillas, fáciles de leer y sin j
 22. En `first-app`, lanza `pnpm format` y `pnpm lint`.
     `format` no toca `.run/`. `lint` termina bien.
     Cuenta a Diego qué ha quedado sin revisar por lint: los cuatro ficheros con `@`.
+
+## Cambios por la revisión de la PR
+
+Estos pasos sustituyen a swc, `bootstrap.mjs` y las exclusiones de lint de los pasos anteriores.
+
+23. Abre `package.json`.
+    Quita `@swc/core`, añade los cinco paquetes de Babel del plan y cambia el script `nest` por `node scripts/nest.js`.
+
+24. En `first-app`, lanza `pnpm install` y compara el lock con las tablas del plan.
+    Solo quedan sin fila los 29 paquetes fuera de las 3 capas. Lanza `pnpm audit`: nada alto ni crítico.
+
+25. Crea `babel.config.json` y `scripts/nest.js`, y cambia `.gitignore` a `dist/`.
+    Borra `src/clients/nest/bootstrap.mjs`.
+
+26. Abre los ficheros de `src/clients/nest/`.
+    Las clases vuelven a `export class`. El controlador usa `@Dependencies(UsersService)` en vez de `@Inject`.
+
+27. Abre `eslint.config.js`.
+    Lee `src/clients/nest/` con `@babel/eslint-parser`, ignora `dist/` y no excluye ningún fichero de Nest.
+
+28. Repite las pruebas de los pasos 13 a 18.
+
+29. Actualiza `AGENTS.md`, `docs/ARCHITECTURE.md` y `docs/TREE.md`, y lanza `pnpm format` y `pnpm lint`.

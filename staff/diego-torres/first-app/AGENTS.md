@@ -6,7 +6,7 @@ El trabajo de git sigue `agents/git-workflow-agent.md` de esta carpeta. Las para
 
 first-app es una app de usuarios para alumnos junior. Se construye con IA siguiendo el sistema SDD.
 
-Está en Node, con módulos ES (`"type": "module"`). SQLite entra con `node:sqlite`. Las dependencias de paquete son `openai`, `cli-table3`, `@colors/colors`, `fastify`, `@nestjs/common`, `@nestjs/core`, `@nestjs/platform-express`, `reflect-metadata` y `rxjs`. Las de desarrollo son `prettier`, `eslint`, `@eslint/js`, `electron` y `@swc/core`. Los scripts se lanzan con pnpm.
+Está en Node, con módulos ES (`"type": "module"`). SQLite entra con `node:sqlite`. Las dependencias de paquete son `openai`, `cli-table3`, `@colors/colors`, `fastify`, `@nestjs/common`, `@nestjs/core`, `@nestjs/platform-express`, `reflect-metadata` y `rxjs`. Las de desarrollo son `prettier`, `eslint`, `@eslint/js`, `electron`, `@babel/cli`, `@babel/core`, `@babel/eslint-parser`, `@babel/plugin-proposal-decorators` y `@babel/preset-env`. Los scripts se lanzan con pnpm.
 
 La arquitectura está en `docs/CONSTITUCION.md` y en las guías que enlaza (`docs/ARCHITECTURE.md`, `docs/DATABASE.md`, `docs/ERRORS.md`, `docs/STYLE.md` y `docs/TREE.md`). Esta guía no las repite. Si una tarea y la constitución chocan, gana la constitución. Si la constitución, el código y esta guía se contradicen, se pregunta antes de escribir.
 
@@ -62,11 +62,11 @@ Desde esta carpeta, Jupyter se abre con `pnpm run jupyter`, en Linux y en Window
 
 `pnpm vscode` lanza `scripts/vscode.js`, que abre una ventana de desarrollo del editor con la extensión de `src/clients/vscode/`. La vista Usuarios está en la barra lateral del explorador. Se lanza con `pnpm start` ya en marcha.
 
-`pnpm nest` lanza `src/clients/nest/bootstrap.mjs`, que traduce los decoradores con swc a `src/clients/nest/.run/` y arranca la API de Nest en `http://127.0.0.1:3003`. Se lanza en otra terminal, con `pnpm start` ya en marcha.
+`pnpm nest` lanza `scripts/nest.js`, que traduce los decoradores con Babel a `dist/` y arranca la API de Nest en `http://127.0.0.1:3003`. Se lanza en otra terminal, con `pnpm start` ya en marcha.
 
-`pnpm format` pasa Prettier por los `.js` de `src/db/`, `src/queries/` y `src/logic/`, y por los `.js`, `.html` y `.css` de `src/clients/web/`, `src/clients/electron/`, `src/clients/chrome/` y `src/clients/vscode/`, y por los `.js` y `.mjs` de `src/clients/nest/`, sin entrar en `.run/`, con el formato estándar y sin configuración propia. `pnpm lint` pasa ESLint con las reglas recomendadas, según `eslint.config.js`. Los cuatro ficheros de `src/clients/nest/` con decoradores quedan fuera, porque ESLint no los entiende.
+`pnpm format` pasa Prettier por los `.js` de `src/db/`, `src/queries/` y `src/logic/`, y por los `.js`, `.html` y `.css` de `src/clients/web/`, `src/clients/electron/`, `src/clients/chrome/` y `src/clients/vscode/`, y por los `.js` de `src/clients/nest/`, con el formato estándar y sin configuración propia. `pnpm lint` pasa ESLint con las reglas recomendadas, según `eslint.config.js`. Los ficheros de `src/clients/nest/` se leen con `@babel/eslint-parser`, por sus decoradores.
 
-La dependencia `openai` es la del clasificador. `@colors/colors` y `cli-table3` son las tablas del cliente Jupyter. `fastify` es la API de la extensión de Chrome. Los paquetes `@nestjs/*`, `reflect-metadata`, `rxjs` y `@swc/core` son la API de Nest. Se instalan con `pnpm install`.
+La dependencia `openai` es la del clasificador. `@colors/colors` y `cli-table3` son las tablas del cliente Jupyter. `fastify` es la API de la extensión de Chrome. Los paquetes `@nestjs/*`, `reflect-metadata`, `rxjs` y `@babel/*` son la API de Nest. Se instalan con `pnpm install`.
 
 ## Estilo
 
