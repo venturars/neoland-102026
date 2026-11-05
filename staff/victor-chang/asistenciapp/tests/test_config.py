@@ -1,4 +1,4 @@
-"""Tests de attendance/config.py · spec 005 CA-03; spec 004 CA-11, CA-12; ARCHITECTURE F5."""
+"""Tests de attendance/config.py · spec 005 CA-03; spec 004 CA-11, CA-12; spec 007 CA-05, CA-06, CA-16, CA-18; F5."""
 
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -73,3 +73,83 @@ def test_invalid_timezone_is_rejected(tz):
 def test_config_errors_are_app_errors():  # E3: una base común con su mensaje
     assert issubclass(ConfigError, AppError)
     assert issubclass(InvalidPortError, ConfigError) and issubclass(InvalidTimezoneError, ConfigError)
+
+
+# ---------- app de escritorio (spec 007 · plan §2.3) ----------
+
+MAC_DATA = Path("Library") / "Application Support" / "AsistenciApp"
+
+
+def test_from_source_the_data_stays_in_the_project():  # CA-18
+    config = load_config({}, desktop=False, platform="darwin", home=Path("/Users/ana"))
+    assert config == load_config({})
+    assert config.cloudflared_path is None  # se busca en el PATH, como hoy
+
+
+def test_desktop_on_macos_uses_application_support(tmp_path):  # CA-05, CA-06
+    config = load_config({}, desktop=True, platform="darwin", home=tmp_path)
+    folder = tmp_path / MAC_DATA
+    assert config.db_path == folder / "asistencia.db"
+    assert config.google_token_path == folder / "google-token.json"
+
+
+def test_desktop_on_windows_uses_appdata(tmp_path):  # CA-05, CA-06
+    appdata = tmp_path / "AppData" / "Roaming"
+    config = load_config({"APPDATA": str(appdata)}, desktop=True, platform="win32", home=tmp_path / "otra")
+    assert config.db_path == appdata / "AsistenciApp" / "asistencia.db"
+    assert config.google_token_path == appdata / "AsistenciApp" / "google-token.json"
+
+
+@pytest.mark.parametrize("environ", [{}, {"APPDATA": ""}])
+def test_desktop_on_windows_without_appdata_uses_the_usual_folder(tmp_path, environ):  # CA-05
+    config = load_config(environ, desktop=True, platform="win32", home=tmp_path)
+    assert config.db_path == tmp_path / "AppData" / "Roaming" / "AsistenciApp" / "asistencia.db"
+
+
+def test_desktop_keeps_the_user_data_out_of_the_app(tmp_path):  # CA-05, CA-06: actualizar no toca los datos
+    bundle = tmp_path / "AsistenciApp.app" / "Contents" / "Frameworks"
+    config = load_config({}, desktop=True, platform="darwin", home=tmp_path / "ana", bundle=bundle)
+    for path in (config.db_path, config.google_token_path):
+        assert path.is_relative_to(tmp_path / "ana" / MAC_DATA)
+        assert not path.is_relative_to(bundle.parent.parent)
+
+
+def test_desktop_variables_still_win(tmp_path):  # F5: el entorno manda
+    environ = {
+        "ASISTENCIA_DB": "copia.db",
+        "ASISTENCIA_GOOGLE_CLIENT": "llave.json",
+        "ASISTENCIA_GOOGLE_TOKEN": "permiso.json",
+    }
+    config = load_config(environ, desktop=True, platform="darwin", home=tmp_path, bundle=tmp_path / "app")
+    assert (config.db_path, config.google_client_path, config.google_token_path) == (
+        Path("copia.db"),
+        Path("llave.json"),
+        Path("permiso.json"),
+    )
+
+
+def test_desktop_uses_the_key_inside_the_app(tmp_path):  # CA-14 · plan §2.8
+    bundle = tmp_path / "app"
+    config = load_config({}, desktop=True, platform="darwin", home=tmp_path, bundle=bundle)
+    assert config.google_client_path == bundle / "google-client.json"
+
+
+def test_desktop_prefers_the_profesors_own_key(tmp_path):  # CA-16
+    own_key = tmp_path / MAC_DATA / "google-client.json"
+    own_key.parent.mkdir(parents=True)
+    own_key.write_text("{}")
+    config = load_config({}, desktop=True, platform="darwin", home=tmp_path, bundle=tmp_path / "app")
+    assert config.google_client_path == own_key
+
+
+def test_desktop_from_source_without_a_bundle_uses_the_projects_key(tmp_path):  # --ventana desde el código
+    config = load_config({}, desktop=True, platform="darwin", home=tmp_path)
+    assert config.google_client_path == DEFAULT_GOOGLE_CLIENT
+    assert config.cloudflared_path is None
+
+
+@pytest.mark.parametrize(("platform", "name"), [("darwin", "cloudflared"), ("win32", "cloudflared.exe")])
+def test_desktop_uses_the_cloudflared_inside_the_app(tmp_path, platform, name):  # CA-07 · plan §2.3
+    bundle = tmp_path / "app"
+    config = load_config({"APPDATA": str(tmp_path)}, desktop=True, platform=platform, home=tmp_path, bundle=bundle)
+    assert config.cloudflared_path == bundle / name

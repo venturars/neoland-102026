@@ -37,10 +37,15 @@ Cómo leer esta lista:
 
 ## Fase B · Infraestructura (plan §2.3–§2.6)
 
-- [ ] **T02** 🧪 · Configuración por sistema en `config.py` (plan §2.3):
+- [x] **T02** 🧪 · Configuración por sistema en `config.py` (plan §2.3):
   - tests en `test_config.py`: `load_config(environ, desktop=True, platform=…, home=…)` da las rutas de la carpeta del usuario en `darwin` y en `win32` (con `APPDATA`); sin `desktop`, las de `data/` como hoy; las variables `ASISTENCIA_*` mandan en los dos casos; la llave propia de la carpeta del usuario va antes que la incluida; `cloudflared_path` es `None` desde el código y el binario incluido en escritorio;
   - deben fallar; luego, el código.
   - *Cubre:* CA-05, CA-06, CA-16, CA-18.
+  - **Hecha (2026-11-05):** 12 tests nuevos en `test_config.py`; fallaron los 12 (`load_config` no aceptaba los parámetros nuevos) y ahora pasan. 510 tests en verde; `ruff` y `mypy` sin avisos.
+    - `load_config(environ, desktop, platform, home, bundle)`: además de lo que decía el plan, `bundle` es la carpeta de lo que va dentro de la app (`sys._MEIPASS`); se la pasará `app.py` (T12), así `config.py` no lee `sys` por su cuenta salvo `sys.platform` por defecto.
+    - `user_data_dir` es pública: la usarán el README (dónde copiar `asistencia.db`, decisión §8.8) y quizá `app.py`.
+    - Windows sin `APPDATA` (o vacía) usa `~/AppData/Roaming`; otros sistemas, `~/.local/share` (fuera de la spec, pero sin fallar).
+    - Con `--ventana` desde el código (sin `bundle`), la llave es la de `data/` del proyecto y `cloudflared`, el del `PATH`.
 - [ ] **T03** 🧪 · `infra/server.py` (plan §2.4):
   - tests en `test_server.py`: `start(app)` da un puerto distinto de 0 en el que responde la app; `stop()` lo libera (se puede volver a abrir) y el hilo termina;
   - deben fallar; luego, el código.
