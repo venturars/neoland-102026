@@ -74,7 +74,6 @@ styles.css
 app.js
 http/
 app.js
-bruno.md
 bruno/
 nest/
 .babelrc.json

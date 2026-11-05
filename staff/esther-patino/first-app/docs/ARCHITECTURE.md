@@ -109,8 +109,7 @@
 
 - `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001.
   - `src/clients/http/app.js` crea, lista, ve, modifica y borra usuarios. Se arranca con `pnpm http`.
-  - `src/clients/http/bruno.md` dice cómo arrancar la base, el cliente HTTP y las dos carpetas de la colección.
-  - `src/clients/http/bruno/` son las peticiones `.bru` contra `http://127.0.0.1:3001`.
+  - `src/clients/http/bruno/` son las peticiones `.bru` contra `http://127.0.0.1:3001`. Los comandos están en `docs/style.md`.
 
 - `src/clients/nest/` llama a `src/logic/`, escucha en el puerto 3003 y no repite sus reglas. Las clases quedan en el módulo y en el controlador. `pnpm nest` lo compila con Babel a `src/clients/nest-run` y arranca ese `main.js`. También expone Swagger UI en `/api` del mismo puerto. No sustituye a `src/db/server.js` ni al cliente HTTP.
 
