@@ -2,26 +2,32 @@
 
 Issue: #1071.
 
-Añade `@nestjs/swagger@12.1.0` y documentación OpenAPI estática en
-`src/clients/nest/`. No cambia `src/logic/` ni `src/queries/`.
+Añade `@nestjs/swagger@12.1.0` en `package.json`. No cambia
+`src/logic/` ni `src/queries/`. No se crean ficheros de código.
 
-En `main.js`, tras `NestFactory.create`, se llama a
-`SwaggerModule.setup("docs", app, openApiDocument)` con un documento
-importado desde `openapi.document.js`. No usa `createDocument` ni DTOs:
-el OpenAPI describe las cinco rutas de usuarios, los esquemas `User` y
-`ErrorMessage`, y las respuestas 400, 404, 409 y 500 alineadas con
-`src/clients/http/app.js` y la spec del cliente Nest.
+En `main.js`, tras `NestFactory.create` y antes de `listen`: un
+`DocumentBuilder` con título y descripción mínimos;
+`SwaggerModule.createDocument(app, config)` lee la metadata del
+controlador; `SwaggerModule.setup("docs", app, document)`.
 
-`bootstrap.mjs` incluye `openapi.document.js` en la lista que copia o
-transpila a `.run/` (copia directa, sin decoradores).
+En `users.controller.js`, decoradores de `@nestjs/swagger` sin DTOs ni
+ficheros nuevos: `@ApiTags("users")`; por ruta, `@ApiOperation`,
+`@ApiParam` (id), `@ApiBody` con `schema` objeto (name, email) en POST y
+PATCH; `@ApiResponse` para 200, 201, 204, 400, 404, 409 y 500 con
+`{ message: string }` donde aplique, alineado con
+`src/clients/http/app.js`. Runtime igual: servicio y filtro de errores
+sin cambios.
+
+`bootstrap.mjs` no se toca. `docs/TREE.md`, `docs/STYLE.md`,
+`docs/ERRORS.md` y `README.md` no se tocan.
 
 ## Ficheros
 
-Crean: `src/clients/nest/openapi.document.js`.
+No se crean ficheros de código.
 
-Tocan: `src/clients/nest/main.js`, `src/clients/nest/bootstrap.mjs`,
-`package.json`, `pnpm-lock.yaml`, `docs/TREE.md`, `docs/ARCHITECTURE.md`,
-`README.md`.
+Tocan: `package.json`, `pnpm-lock.yaml`, `src/clients/nest/main.js`,
+`src/clients/nest/users.controller.js`, `docs/ARCHITECTURE.md` (bullet
+de `src/clients/nest/`: API en 3003 y Swagger UI en `/docs`).
 
 ## Errores
 
