@@ -1,9 +1,9 @@
 # Tareas — cliente Electron
 
-Plan aceptado. Electron `45.2.3` queda permitido. Cada paso hace una cosa.
+Plan aceptado. Electron `45.2.2` queda permitido. Cada paso hace una cosa.
 
 1. Abre `package.json` en `first-app`.
-   pnpm añade `electron` `45.2.3` en `dependencies`. El script `electron` queda `electron src/clients/electron/main.js`.
+   pnpm añade `electron` `45.2.2` en `dependencies`. El script `electron` queda `electron src/clients/electron/main.js`.
    `format` también escribe `src/clients/electron/**/*.js`. El campo `main` sigue en `index.js`.
    `pnpm-lock.yaml` lo escribe pnpm. No se edita a mano. No hay instalador.
 
@@ -48,14 +48,14 @@ Plan aceptado. Electron `45.2.3` queda permitido. Cada paso hace una cosa.
    Los mensajes que ya estaban se quedan. El fichero se puede leer.
 
 10. Abre `docs/CONSTITUTIONS.MD` y `AGENTS.MD`.
-    Cuentan la ventana, `pnpm electron` y Electron `45.2.3` en `src/clients/electron`. El desarrollo abierto pasa a ser `docs/specs/electron-client/`.
+    Cuentan la ventana, `pnpm electron` y Electron `45.2.2` en `src/clients/electron`. El desarrollo abierto pasa a ser `docs/specs/electron-client/`.
     `app.js` importa `listUsers`, `createUser`, `updateUser` y `deleteUser`. No valida, no escribe SQL y no abre la base.
-    Express `5.3.0` sigue siendo la excepción ya aceptada. Electron `45.2.3` es la otra. Otro framework sigue prohibido. Los dos se pueden leer.
+    Express `5.3.0` sigue siendo la excepción ya aceptada. Electron `45.2.2` es la otra. Otro framework sigue prohibido. Los dos se pueden leer.
 
 11. Lee `src/logic`, `src/queries`, `src/db` y el resto de `src/clients`.
     Siguen igual. `docs/DATABASE.md` no se toca.
     No hay otra dependencia nueva.
-    `electron` en `package.json` es `45.2.3`.
+    `electron` en `package.json` es `45.2.2`.
 
 12. Desde `first-app`, lanza `pnpm format` y `pnpm lint`.
     Formatean el JavaScript de `src/clients/electron` y no dejan avisos.
