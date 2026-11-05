@@ -148,9 +148,12 @@ Cómo leer esta lista:
     - La terminal también usa `Tunnel`: `--tunel` lo abre al arrancar y el panel puede abrir la clase online después.
     - **Cambios pequeños fuera de `app.py`:** `Tunnel.port` pasa a ser público y modificable (el puerto se sabe al arrancar el servidor, que necesita antes la app con el túnel); `desktop.show_already_open` pasa a `show_message`, porque también enseña los errores de configuración; `--ventana` no se combina con `--tunel` ni `--meet` (`parser.error`).
     - Tests: el `cloudflared` falso de `test_app.py` pasa a ser el de `conftest.py` (el que necesita `Tunnel`), y el `webview` falso de `test_desktop.py` pasa a `conftest.py`, con `on_start` para actuar "con la ventana abierta".
-- [ ] **T13** 👤 · Prueba a mano en el Mac desde el código (`python app.py --ventana`):
+- [x] **T13** 👤 · Prueba a mano en el Mac desde el código (`python app.py --ventana`):
   - abrir la clase online y registrarse desde un móvil con datos (CA-07); cerrar con clase online y cancelar, luego confirmar (CA-10); cerrar sin clase online (CA-11); tras cerrar, ni la app ni `cloudflared` siguen en marcha (CA-12); una asistencia abierta sigue al volver (CA-13); guardar el CSV y abrirlo en Excel o Numbers (CA-17); abrir dos veces (CA-03).
   - *Cubre:* CA-03, CA-07, CA-10 a CA-13, CA-17 (en macOS).
+  - **Hecha (2026-11-05):** Victor la hizo con `python app.py --ventana` (lanzada por el agente; el `cloudflared` de Homebrew) y confirmó que **todo funciona como se espera**: registro desde el móvil con datos por la clase online, diálogo de guardar el CSV, confirmación al cerrar con clase online ("Cancelar" y "Cerrar"), cierre sin preguntar sin ella, la asistencia abierta sigue al volver a abrir y la segunda copia avisa de que ya está abierta.
+    - **CA-12** comprobado por el agente al terminar: ningún proceso de la app ni de `cloudflared`, el puerto del bloqueo (47913) y el del servidor (49868) libres, y la app terminó con código 0 sin errores en su salida.
+    - Pendiente para T16: que el permiso de Google no caduque a los 7 días (CA-15); este mismo recorrido en Windows.
 
 ## Fase F · Empaquetado y publicación (plan §2.11)
 
