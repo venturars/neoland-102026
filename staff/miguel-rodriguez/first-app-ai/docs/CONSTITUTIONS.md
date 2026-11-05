@@ -95,7 +95,8 @@ Development checks use exact versions `prettier@3.9.10`, `eslint@10.13.0`, and
 `@eslint/js@10.0.1`. These development dependencies do not change application
 contracts or provide runtime business functionality.
 
-`pnpm-workspace.yaml` limits release-age exceptions to `electron@45.2.2`.
+`pnpm-workspace.yaml` limits release-age exceptions to `electron@45.2.2` and
+`@nestjs/common`, `@nestjs/core` and `@nestjs/platform-express` at `12.3.3`.
 Other packages retain the release-age control.
 
 - Use pnpm. Do not mix package managers or introduce `package-lock.json` or `yarn.lock`.
@@ -149,3 +150,12 @@ Subsequent SDD developments, starting with the classifier, require separately re
 Keep the documents easy to review without an arbitrary total line limit. Record unresolved conflicts in the plan and stop before tasks or implementation until those conflicts are resolved. General application rules belong here; feature-specific requirements belong in that feature's documents.
 
 The existing operations predate this workflow. This foundation does not create retrospective specifications or claim prior SDD approvals. No feature documents are created as part of this foundation.
+
+
+## Cliente Nest
+
+El cliente Nest comparte las cinco operaciones CRUD y sus errores, con clases,
+decoradores, servicio inyectado y filtro. pnpm nest compila con Babel y escucha
+en loopback3003. Las versiones exactas de Nest, reflect-metadata, rxjs y Babel
+están en package.json y la revisión de tres capas en docs/specs/nest-framework-client/plan.md.
+Las excepciones de antigüedad se limitan a los tres paquetes Nest12.3.3.

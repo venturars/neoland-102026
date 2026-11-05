@@ -70,9 +70,8 @@ call the Fastify adapter in `server.js`. The adapter converts numeric IDs and
 calls the same business operations, including the classifier. `pnpm chrome`
 starts the adapter; Chrome loads the folder as an unpacked extension.
 
-The Nest client is a separate development tracked in
+The Nest adapter is described below; its implementation follows
 [issue #1044](https://github.com/venturars/neoland-102026/issues/1044).
-Its earlier implementation was withdrawn from this delivery on 2026-11-05.
 
 `src/clients/jupyter/` provides nine independent notebooks for those same operations
 and explicit table initialization. Initialization calls a query; it is not a new
@@ -215,3 +214,11 @@ are checked in `tests/browser-classifier.test.js`.
 VS Code registra firstAppUsers como WebviewView de Explorer; el comando
 firstApp.openUsers la enfoca. El host llama a las operaciones compartidas,
 conservando los campos omitidos y mostrando las cinco propiedades del contacto.
+
+
+## Nest
+
+src/clients/nest recibe HTTP en loopback3003. El controlador usa el servicio
+inyectado por Nest, que llama a logic. AppModule registra controlador, proveedor
+y filtro global. Babel compila src a dist; el acceso SQL sigue en el servicio
+de datos3000.

@@ -19,3 +19,5 @@ src/clients/jupyter/.ipynb_checkpoints/
 !.cursor/agents/create-commit.md
 !.cursor/agents/launch-push.md
 !.cursor/agents/create-pr.md
+
+dist/
