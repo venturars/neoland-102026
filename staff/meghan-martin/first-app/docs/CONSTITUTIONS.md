@@ -57,6 +57,13 @@ first-app/
         index.html
         app.js
         styles.css
+      chrome/
+        server.js
+        extension/
+          manifest.json
+          popup.html
+          popup.js
+          popup.css
       jupyter/
         create-users-table.ipynb
         create-user.ipynb
@@ -96,6 +103,7 @@ first-app/
 - `src/clients/browser/` es una página: `index.html`, `app.js` y `styles.css`. `app.js` llama a las mismas acciones de `src/logic/`. Se abre con `npm run browser` desde `first-app`. La base tiene que estar en marcha.
 - `src/clients/rest/server.js` responde JSON en el puerto 3001. Llama a las mismas acciones de `src/logic/`. Se arranca con `npm run api` desde `first-app`. La base tiene que estar en marcha.
 - `src/clients/electron/` es una ventana: `main.js`, `index.html`, `app.js` y `styles.css`. `app.js` llama a las mismas acciones de `src/logic/`. Se abre con `npm run electron` desde `first-app`. La base tiene que estar en marcha.
+- `src/clients/chrome/` es la extensión y su programa: `server.js` y `extension/`. `server.js` llama a las mismas acciones de `src/logic/` y escucha en el puerto 3002. Se arranca con `npm run chrome` desde `first-app`. La extensión se carga sin empaquetar desde `src/clients/chrome/extension`. La base tiene que estar en marcha.
 - Una acción nueva es un fichero nuevo en `src/logic/` y un `.txt` nuevo en `src/clients/terminal/`.
 
 ## Specs

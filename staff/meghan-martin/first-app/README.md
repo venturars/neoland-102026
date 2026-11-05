@@ -47,3 +47,9 @@ Los comandos llevan `--scope user` y valen para todos tus proyectos. Para tenerl
 Crea `~/.cursor/mcp.json` para tenerlos en todos tus proyectos, o `.cursor/mcp.json` para tenerlos solo aquí. Dentro de `mcpServers`, copia la entrada de cada apartado de `MCP.md`. Si el fichero ya existe, añade esas entradas y deja las que ya tuvieras.
 
 Abre Cursor Settings → MCP y comprueba que aparecen conectados. Abre una conversación nueva de Agent.
+
+## Chrome
+
+Desde `first-app`, deja `npm run db` en marcha y ejecuta `npm run chrome`. En Chrome, abre `chrome://extensions`, activa el modo de desarrollador y carga sin empaquetar `src/clients/chrome/extension`.
+
+La extensión solo habla con `http://127.0.0.1:3002`. No sustituye al cliente del puerto 3001.

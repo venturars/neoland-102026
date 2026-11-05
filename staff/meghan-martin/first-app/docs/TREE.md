@@ -30,6 +30,13 @@ first-app/
         index.html
         app.js
         styles.css
+      chrome/
+        server.js
+        extension/
+          manifest.json
+          popup.html
+          popup.js
+          popup.css
     users.js
   logic/
     create-user.js

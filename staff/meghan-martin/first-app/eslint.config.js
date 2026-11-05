@@ -3,7 +3,7 @@ import js from "@eslint/js";
 
 export default defineConfig([
   {
-    ignores: ["node_modules/**", ".venv/**"],
+    ignores: ["node_modules/**", ".venv/**", "dist/**"],
   },
   {
     files: ["**/*.js"],
@@ -48,6 +48,23 @@ export default defineConfig([
     languageOptions: {
       globals: {
         FormData: "readonly",
+        document: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/chrome/server.js"],
+    languageOptions: {
+      globals: {
+        console: "readonly",
+        URL: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/chrome/extension/popup.js"],
+    languageOptions: {
+      globals: {
         document: "readonly",
       },
     },
