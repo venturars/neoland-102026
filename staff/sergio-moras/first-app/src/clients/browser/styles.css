@@ -1,0 +1,391 @@
+/* Aspecto del cliente de navegador: minimalista, con una acción destacada por pantalla. */
+
+:root {
+  --background: #f7f7f8;
+  --surface: #ffffff;
+  --text: #000000;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --hover: #f3f4f6;
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-soft: #eef2ff;
+  --danger: #dc2626;
+  --danger-hover: #b91c1c;
+  --danger-soft: #fef2f2;
+  --radius: 16px;
+  --radius-small: 10px;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+  --speed: 150ms;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Sin esto, un display: flex propio ganaría al atributo hidden. */
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 48px 16px;
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--background);
+}
+
+h1 {
+  margin: 0 0 4px;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid var(--accent-soft);
+  outline-offset: 2px;
+}
+
+.card {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 32px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.subtitle {
+  margin-bottom: 24px;
+  color: var(--muted);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.small {
+  font-size: 14px;
+}
+
+/* Pantalla 1: lista de usuarios */
+
+.users-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.user-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 12px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-small);
+  transition: background var(--speed);
+}
+
+.user-row:hover {
+  background: var(--hover);
+}
+
+.user-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.user-name {
+  font-weight: 600;
+}
+
+.user-email {
+  overflow: hidden;
+  font-size: 14px;
+  color: var(--muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-id {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.avatar {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 50%;
+}
+
+.avatar-large {
+  width: 64px;
+  height: 64px;
+  font-size: 22px;
+}
+
+.empty {
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--muted);
+  background: var(--background);
+  border-radius: var(--radius-small);
+}
+
+/* Pantalla 2: opciones */
+
+.back {
+  margin: 0 0 20px;
+  padding: 0;
+  font-size: 14px;
+  color: var(--muted);
+  background: none;
+  border: none;
+  transition: color var(--speed);
+}
+
+.back:hover {
+  color: var(--text);
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.profile h1 {
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 16px;
+  font-weight: 600;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-small);
+  transition:
+    background var(--speed),
+    border-color var(--speed);
+}
+
+.action:hover:not(:disabled) {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.action:disabled {
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+.arrow {
+  color: var(--accent);
+}
+
+.badge {
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  background: var(--hover);
+  border-radius: 999px;
+}
+
+/* Pantalla 3: modificar o eliminar */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 24px;
+}
+
+label {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+input {
+  padding: 10px 12px;
+  font: inherit;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-small);
+  transition: border-color var(--speed);
+}
+
+input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.form .primary {
+  margin-top: 16px;
+}
+
+.danger-zone {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.danger-link {
+  padding: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--danger);
+  background: none;
+  border: none;
+}
+
+.danger-link:hover {
+  text-decoration: underline;
+}
+
+/* Botones */
+
+.primary,
+.secondary,
+.danger {
+  padding: 10px 18px;
+  font-weight: 600;
+  border-radius: var(--radius-small);
+  transition: background var(--speed);
+}
+
+.primary {
+  color: #ffffff;
+  background: var(--accent);
+  border: none;
+}
+
+.primary:hover {
+  background: var(--accent-hover);
+}
+
+.secondary {
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.secondary:hover {
+  background: var(--hover);
+}
+
+.danger {
+  color: #ffffff;
+  background: var(--danger);
+  border: none;
+}
+
+.danger:hover {
+  background: var(--danger-hover);
+}
+
+/* Errores */
+
+.error {
+  margin-top: 12px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--danger);
+  background: var(--danger-soft);
+  border-radius: var(--radius-small);
+}
+
+/* Ventana de confirmación */
+
+.dialog {
+  width: min(400px, calc(100% - 32px));
+  padding: 0;
+  color: var(--text);
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* El margen interior va en el contenido: así un clic en el fondo oscuro llega al propio <dialog>. */
+.dialog-content {
+  padding: 24px;
+}
+
+.dialog::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+/* Móvil */
+
+@media (max-width: 600px) {
+  body {
+    padding: 0;
+    background: var(--surface);
+  }
+
+  .card {
+    min-height: 100vh;
+    padding: 24px 20px;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
