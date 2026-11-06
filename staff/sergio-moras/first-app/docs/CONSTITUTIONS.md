@@ -34,7 +34,7 @@ Detalle: [DATABASE.md](DATABASE.md).
 *Motivo:* un cambio de esquema afecta a todos los datos y a todas las capas.
 
 ### 4. Datos intactos
-- `db/users.sqlite` es el único archivo de base de datos.
+- `src/db/users.sqlite` es el único archivo de base de datos.
 - Ningún agente lo borra, lo reinicia ni lo sobrescribe.
 - Las pruebas usan usuarios temporales, que se borran al terminar.
 
@@ -74,4 +74,4 @@ Al terminar una tarea se lanzan `pnpm format` y `pnpm lint`. `pnpm lint` no da e
 - Un agente que vea una regla desactualizada o incompleta lo propone, pero no la cambia por su cuenta.
 - Cada modificación actualiza la versión y la fecha del final.
 
-**Versión:** 2.0.0 | **Ratificada:** 2026-10-19 | **Última modificación:** 2026-11-01
+**Versión:** 2.1.0 | **Ratificada:** 2026-10-19 | **Última modificación:** 2026-11-01

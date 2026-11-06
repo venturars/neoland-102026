@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <!-- extension.js cambia {{cspSource}} y {{nonce}} al abrir el panel. -->
+    <!-- Solo carga sus estilos y su script, y no puede llamar a ninguna dirección. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; style-src {{cspSource}}; script-src 'nonce-{{nonce}}'"
+    />
+    <title>first-app usuarios</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <section id="users-screen">
+      <p id="users-error" class="error" hidden></p>
+
+      <form id="add-form" class="block">
+        <h2>Dar de alta</h2>
+        <label>
+          Nombre
+          <input type="text" id="add-name" autocomplete="off" />
+        </label>
+        <label>
+          Email
+          <input type="text" id="add-email" autocomplete="off" />
+        </label>
+        <button type="submit" id="add-button" class="primary">
+          Dar de alta
+        </button>
+      </form>
+
+      <h2>Usuarios</h2>
+      <ul id="users-list" class="list"></ul>
+      <p id="users-empty" class="muted" hidden>
+        Todavía no hay ningún usuario.
+      </p>
+    </section>
+
+    <section id="user-screen" hidden>
+      <button type="button" id="user-back" class="back">← Volver</button>
+      <h1 id="user-title"></h1>
+      <p id="user-error" class="error" hidden></p>
+
+      <dl class="block details">
+        <dt>Id</dt>
+        <dd id="user-id"></dd>
+        <dt>Nombre</dt>
+        <dd id="user-name"></dd>
+        <dt>Email</dt>
+        <dd id="user-email"></dd>
+        <dt>Alta</dt>
+        <dd id="user-created"></dd>
+        <dt>Último cambio</dt>
+        <dd id="user-updated"></dd>
+      </dl>
+
+      <form id="save-form" class="block">
+        <h2>Cambiar datos</h2>
+        <p class="muted">Un campo vacío no cambia ese dato.</p>
+        <label>
+          Nombre
+          <input type="text" id="save-name" autocomplete="off" />
+        </label>
+        <label>
+          Email
+          <input type="text" id="save-email" autocomplete="off" />
+        </label>
+        <div class="actions">
+          <button type="submit" id="save-button" class="primary">
+            Guardar
+          </button>
+          <button type="button" id="delete-button" class="danger">
+            Borrar
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <dialog id="delete-dialog">
+      <h2>Borrar usuario</h2>
+      <p id="delete-text"></p>
+      <div class="actions">
+        <button type="button" id="delete-cancel" class="secondary">
+          Cancelar
+        </button>
+        <button type="button" id="delete-confirm" class="danger">Borrar</button>
+      </div>
+    </dialog>
+
+    <script nonce="{{nonce}}" src="./panel.js"></script>
+  </body>
+</html>

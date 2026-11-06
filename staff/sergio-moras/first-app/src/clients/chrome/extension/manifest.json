@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "first-app usuarios",
+  "version": "1.0.0",
+  "description": "Gestiona los usuarios de first-app a través de su API local.",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmEs3II57aIuNSKAe4UkkYlTBgcGm0CetSlDXKIuyOabpaTyWmgbPFno085ypGnHTVdxtczfkBp+jIUQmALL91s+lwX5hbKWCHD8rmHUhmxJl8qlqujeYP4Btvcjz979cMMbwImnykdzUNHIq5VGDKebDRFkv1trnXmj1VAoIexhTxgjxqg3KT14rxuzF/FqEhdM4U11t1b5ggtfkXvAg9fet8ssGYwKHVI47a2/2PsFo41AHO3rc2vqhCOO+jlbPYaoM4pTUfruXHwTc+PvugQcmU7FUaJRW+0NGfXvpCVQVkpw37bClfDJtonfzbNRtV1gmfujitTpqNrhynvpbXwIDAQAB",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "first-app usuarios"
+  },
+  "host_permissions": ["http://127.0.0.1:3001/*"],
+  "content_security_policy": {
+    "extension_pages": "default-src 'none'; script-src 'self'; style-src 'self'; connect-src http://127.0.0.1:3001"
+  }
+}

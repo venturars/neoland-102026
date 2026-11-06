@@ -1,0 +1,208 @@
+/* Aspecto del cliente de escritorio: tarjetas sobre un fondo claro y una acción destacada en cada una. */
+
+:root {
+  --background: #f4f5f7;
+  --surface: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --hover: #f3f4f6;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --danger: #dc2626;
+  --danger-hover: #b91c1c;
+  --radius: 12px;
+  --speed: 150ms;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Sin esto, un display propio ganaría al atributo hidden. */
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  padding: 32px 24px;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--background);
+}
+
+main {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+h1 {
+  margin: 0 0 16px;
+  font-size: 26px;
+}
+
+h2 {
+  margin: 0 0 12px;
+  font-size: 17px;
+}
+
+p {
+  margin: 0 0 12px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.error {
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  color: var(--danger);
+  background: #fef2f2;
+}
+
+.card {
+  margin: 0 0 16px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.fields {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+label {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+input {
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font: inherit;
+  color: var(--text);
+}
+
+input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+
+button {
+  padding: 9px 16px;
+  border: none;
+  border-radius: 8px;
+  font: inherit;
+  cursor: pointer;
+  transition: background var(--speed);
+}
+
+.primary {
+  color: #ffffff;
+  background: var(--accent);
+}
+
+.primary:hover {
+  background: var(--accent-hover);
+}
+
+.danger {
+  color: #ffffff;
+  background: var(--danger);
+}
+
+.danger:hover {
+  background: var(--danger-hover);
+}
+
+.secondary {
+  color: var(--text);
+  background: var(--hover);
+}
+
+.secondary:hover {
+  background: var(--border);
+}
+
+.back {
+  margin-bottom: 12px;
+  padding: 6px 0;
+  color: var(--accent);
+  background: none;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.list {
+  padding: 6px;
+  list-style: none;
+}
+
+.user-item {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+  width: 100%;
+  padding: 10px 14px;
+  text-align: left;
+  background: none;
+}
+
+.user-item:hover {
+  background: var(--hover);
+}
+
+.user-id {
+  min-width: 40px;
+  color: var(--muted);
+}
+
+.user-name {
+  flex: 1;
+  font-weight: 600;
+}
+
+.user-email {
+  color: var(--muted);
+}
+
+.details {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 8px 16px;
+}
+
+dt {
+  color: var(--muted);
+}
+
+dd {
+  margin: 0;
+}
+
+dialog {
+  width: 380px;
+  padding: 24px;
+  border: none;
+  border-radius: var(--radius);
+}
+
+dialog::backdrop {
+  background: rgba(17, 24, 39, 0.4);
+}
