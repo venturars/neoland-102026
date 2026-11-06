@@ -619,6 +619,69 @@ function navigate(event) {
   }
 }
 
+const GENDER_COUNT_PLACEHOLDER =
+  "Pulsa «Contar género usuarios» para ver el recuento.";
+let LAST_GENDER_COUNT = null;
+
+async function fetchGenderCount() {
+  const url = `${ORIGIN}/users/gender-count`;
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    await throwApiError(response);
+  }
+
+  return response.json();
+}
+
+function showGenderCount(count) {
+  const result = document.getElementById("gender-count-result");
+  const lines = [
+    `Mujer: ${count.woman}`,
+    `Hombre: ${count.man}`,
+    `Sin clasificar: ${count.genderUndefined}`,
+  ];
+
+  result.replaceChildren();
+
+  for (const line of lines) {
+    const paragraph = document.createElement("p");
+    paragraph.textContent = line;
+    result.append(paragraph);
+  }
+}
+
+function restoreGenderCount() {
+  const result = document.getElementById("gender-count-result");
+
+  if (LAST_GENDER_COUNT === null) {
+    result.textContent = GENDER_COUNT_PLACEHOLDER;
+    return;
+  }
+
+  showGenderCount(LAST_GENDER_COUNT);
+}
+
+async function countGenders() {
+  const button = document.getElementById("gender-count-button");
+  const result = document.getElementById("gender-count-result");
+
+  button.disabled = true;
+  showMessage("", false);
+  result.textContent = "Cargando…";
+
+  try {
+    const count = await fetchGenderCount();
+    LAST_GENDER_COUNT = count;
+    showGenderCount(count);
+  } catch {
+    showMessage("Could not classify the users", true);
+    restoreGenderCount();
+  } finally {
+    button.disabled = false;
+  }
+}
+
 function initializeClient() {
   const selectionForm = document.getElementById("selection-form");
   selectionForm.addEventListener("submit", selectUser);
@@ -644,6 +707,8 @@ function initializeClient() {
     }
   });
   document.addEventListener("click", navigate);
+  const genderCountButton = document.getElementById("gender-count-button");
+  genderCountButton.addEventListener("click", countGenders);
 
   loadUserSelection();
 }
