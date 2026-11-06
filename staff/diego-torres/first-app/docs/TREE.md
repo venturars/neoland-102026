@@ -38,6 +38,7 @@ first-app/
       vscode/             (package.json, extension.js, index.html, panel.js y styles.css)
       nest/               (main.js, app.module.js, users.controller.js, users.service.js, users.swagger.js y logic-exception.filter.js)
       http/               (server.js y bruno/, la colección)
+      node-http/          (app.js y jupyter/, un .ipynb por ruta)
       terminal/           (un .txt por operación)
       jupyter/            (un .ipynb por operación)
   docs/

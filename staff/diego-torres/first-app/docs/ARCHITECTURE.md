@@ -3,7 +3,7 @@
 La app tiene cuatro capas. Cada una solo habla con la de debajo.
 
 1. `src/clients/` — muestra datos y pide acciones. Llama a `src/logic/`.
-2. `src/logic/` — las reglas. Se ejecuta en el cliente: navegador, ventana de Electron, API de la extensión de Chrome, extensión de VS Code, API de Nest, API de Express, terminal o Jupyter. Llama a `src/queries/`.
+2. `src/logic/` — las reglas. Se ejecuta en el cliente: navegador, ventana de Electron, API de la extensión de Chrome, extensión de VS Code, API de Nest, API de Express, API de Node, terminal o Jupyter. Llama a `src/queries/`.
 3. `src/queries/` — el texto SQL y su envío al servidor. No tiene reglas.
 4. `src/db/` — el servidor que abre la base y ejecuta el SQL. Solo datos: no sirve la web. No tiene reglas.
 
@@ -17,8 +17,8 @@ Ningún cliente funciona sin el servidor en marcha (`pnpm start`). La web no la 
 | `src/queries/queries/*.js` | Una frase SQL por fichero, exportada como constante |
 | `src/queries/users.js` | Envía cada frase al servidor con `fetch` y devuelve las filas |
 | `src/logic/shared.js` | Qué es un nombre y un email válidos, y la copia de salida de un usuario |
-| `src/logic/<operación>.js` | Una operación por fichero: crear, modificar, borrar, listar y las tres búsquedas. Buscar por nombre y por email también lo usan la API de Chrome, la extensión de VS Code, la API de Nest y la API de Express |
-| `src/logic/users-gender-count.js` | Cuenta usuarios por el género del nombre. No guarda nada. Lo usan la terminal, Jupyter, la API de Chrome, la extensión de VS Code, la API de Nest y la API de Express |
+| `src/logic/<operación>.js` | Una operación por fichero: crear, modificar, borrar, listar y las tres búsquedas. Buscar por nombre y por email también lo usan la API de Chrome, la extensión de VS Code, la API de Nest, la API de Express y la API de Node |
+| `src/logic/users-gender-count.js` | Cuenta usuarios por el género del nombre. No guarda nada. Lo usan la terminal, Jupyter, la API de Chrome, la extensión de VS Code, la API de Nest, la API de Express y la API de Node |
 | `src/logic/index.js` | Reexporta las operaciones |
 | `src/clients/web/*` | Cliente de navegador en HTML, CSS y JS vanilla. Se abre como fichero e importa `src/logic/` con rutas relativas |
 | `scripts/browser.js` | Abre `src/clients/web/index.html` en Chrome, con un perfil aparte y `--allow-file-access-from-files` |
@@ -32,6 +32,8 @@ Ningún cliente funciona sin el servidor en marcha (`pnpm start`). La web no la 
 | `src/clients/http/server.js` | API de usuarios con Express, en `127.0.0.1:3001`. La lanza `pnpm http`. Llama a `src/logic/`, no tiene reglas y comprueba `Host` y `Origin` |
 | `src/clients/http/bruno/*` | Colección de Bruno que prueba esa API. Tiene una carpeta con la base en marcha, otra con la base parada y otra para la IA |
 | `scripts/bruno.js` | Lanza una carpeta de la colección con el CLI de Bruno y termina con su resultado |
+| `src/clients/node-http/app.js` | API de usuarios hecha solo con `node:http`, en `127.0.0.1:3004`. La lanza `pnpm node-http`. Llama a `src/logic/`, no tiene reglas y comprueba `Host` y `Origin` |
+| `src/clients/node-http/jupyter/*.ipynb` | Un cuaderno por ruta, que explica esa API y la llama. Los abre `pnpm jupyter-node-http` |
 | `src/clients/terminal/*.txt` | Un cliente por operación, para pegar en la terminal |
 | `src/clients/jupyter/*.ipynb` | Un cuaderno por operación, que abre `pnpm run jupyter` |
 

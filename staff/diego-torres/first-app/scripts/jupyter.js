@@ -84,9 +84,12 @@ if (hasNotebook.status !== 0) {
   );
 }
 
+// Abre la carpeta recibida. Sin argumento, abre los cuadernos de siempre.
+const carpeta = process.argv[2] ?? "src/clients/jupyter";
+
 // Los kernels heredan UTF-8 para leer la salida de Node también en Windows.
 exitOnFailure(
-  run(envPython, ["-m", "notebook", "src/clients/jupyter"], {
+  run(envPython, ["-m", "notebook", carpeta], {
     env: { ...process.env, PYTHONUTF8: "1" },
   }),
 );
