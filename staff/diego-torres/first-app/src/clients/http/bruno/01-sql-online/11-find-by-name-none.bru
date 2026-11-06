@@ -1,0 +1,25 @@
+meta {
+  name: find-by-name-none
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{baseUrl}}/users/by-name?name=nadie-{{marca}}
+  body: none
+  auth: none
+}
+
+params:query {
+  name: nadie-{{marca}}
+}
+
+tests {
+  test("Estado 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("La lista está vacía", function () {
+    expect(res.getBody()).to.deep.equal([]);
+  });
+}

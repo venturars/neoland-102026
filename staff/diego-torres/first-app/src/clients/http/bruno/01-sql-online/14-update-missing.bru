@@ -1,0 +1,25 @@
+meta {
+  name: update-missing
+  type: http
+  seq: 14
+}
+
+patch {
+  url: {{baseUrl}}/users/{{missingId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  { "name": "Nadie" }
+}
+
+tests {
+  test("Estado 404", function () {
+    expect(res.getStatus()).to.equal(404);
+  });
+
+  test("Mensaje User not found", function () {
+    expect(res.getBody().message).to.equal("User not found");
+  });
+}

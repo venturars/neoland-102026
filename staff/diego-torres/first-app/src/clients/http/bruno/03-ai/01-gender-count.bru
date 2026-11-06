@@ -1,0 +1,23 @@
+meta {
+  name: gender-count
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/users/gender-count
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("Los tres recuentos son números", function () {
+    expect(res.getBody().women).to.be.a("number");
+    expect(res.getBody().men).to.be.a("number");
+    expect(res.getBody().genderUndefined).to.be.a("number");
+  });
+}

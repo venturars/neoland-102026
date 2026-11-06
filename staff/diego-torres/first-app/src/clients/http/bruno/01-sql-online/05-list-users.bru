@@ -1,0 +1,22 @@
+meta {
+  name: list-users
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/users
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("La lista contiene a Ada", function () {
+    const ids = res.getBody().map((user) => user.id);
+    expect(ids).to.include(bru.getVar("userId"));
+  });
+}

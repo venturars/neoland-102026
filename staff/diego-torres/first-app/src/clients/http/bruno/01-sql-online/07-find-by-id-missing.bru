@@ -1,0 +1,21 @@
+meta {
+  name: find-by-id-missing
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/users/{{missingId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 404", function () {
+    expect(res.getStatus()).to.equal(404);
+  });
+
+  test("Mensaje User not found", function () {
+    expect(res.getBody().message).to.equal("User not found");
+  });
+}
