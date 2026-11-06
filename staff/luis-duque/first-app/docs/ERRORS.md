@@ -16,6 +16,8 @@ Si el cliente HTTP no está en marcha, Postman no completa la petición y `pnpm 
 
 Si el cliente NestJS no está en marcha, Postman no completa la petición y `http://127.0.0.1:3003/swagger` no se abre.
 
+Si el cliente HTTP de Node no está en marcha, los documentos de `pnpm jupyter-node-http` no completan la petición. Si el programa de consultas no está en marcha, se ve el fallo de esa llamada.
+
 Si Electron no abre la ventana, no se puede pedir la operación desde ahí. Si el programa local no está en marcha, la ventana muestra el fallo de esa llamada.
 
 Si el popup de Chrome no se abre, no se puede pedir la operación desde ahí. Si su programa no está en marcha, el popup muestra el fallo de esa llamada. Si el programa de consultas no está en marcha, el popup muestra el fallo que devuelve su programa.

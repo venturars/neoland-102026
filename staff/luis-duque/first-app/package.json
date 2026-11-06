@@ -6,15 +6,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "jupyter": "sh scripts/jupyter.sh",
+    "jupyter-node-http": "sh scripts/jupyter-node-http.sh",
     "server": "node src/db/server.js",
     "http": "node src/clients/http/app.js",
+    "node-http": "node src/clients/node-http/app.js",
     "bruno": "cd src/clients/http/bruno && node ../../../../node_modules/@usebruno/cli/bin/bru.js run 01-sql-online -r",
     "browser": "start \"\" \"%LOCALAPPDATA%\\BraveSoftware\\Brave-Browser\\Application\\brave.exe\" --user-data-dir=%TEMP%\\first-app-brave --no-first-run --no-default-browser-check --allow-file-access-from-files \"%CD%\\src\\clients\\browser\\index.html\"",
     "electron": "electron src/clients/electron/main.js",
     "chrome": "node src/clients/chrome/server.js",
     "vscode": "code --extensionDevelopmentPath=\"%CD%\\src\\clients\\vscode\" \"%CD%\"",
     "nest": "pnpm exec babel src -d dist --delete-dir-on-start --config-file ./babel.config.json && node dist/clients/nest/main.js",
-    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/browser/**/*.js\" \"src/clients/http/**/*.js\" \"src/clients/electron/**/*.js\" \"src/clients/chrome/**/*.js\" \"src/clients/vscode/**/*.js\" \"src/clients/nest/**/*.js\"",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/browser/**/*.js\" \"src/clients/http/**/*.js\" \"src/clients/electron/**/*.js\" \"src/clients/chrome/**/*.js\" \"src/clients/vscode/**/*.js\" \"src/clients/nest/**/*.js\" \"src/clients/node-http/**/*.js\"",
     "lint": "eslint ."
   },
   "keywords": [],
