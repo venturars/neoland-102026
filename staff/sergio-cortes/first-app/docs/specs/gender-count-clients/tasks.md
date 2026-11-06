@@ -2,9 +2,10 @@ Issue: #1155.
 
 # Tareas — recuento de género en los clientes
 
-Pasos en el orden en que los haría una persona. Ninguno toca `src/logic/`, `src/queries/` ni `src/db/`. Ningún paso instala paquetes. Ninguno crea un `.txt` en `src/clients/terminal/`.
+Pasos en el orden en que los haría una persona. Ninguno toca `src/logic/`, `src/queries/` ni `src/db/`. Solo el paso 25 toca `package.json`, en el script `format`. Ningún paso instala paquetes. Ninguno crea un `.txt` en `src/clients/terminal/`.
 
 Pregunta P1 del plan: se aplica la recomendación aprobada. Cualquier fallo del recuento muestra `Could not classify the users`.
+Pregunta P2 del plan: se aplica. `package.json` cambia solo en el script `format`.
 
 ## Servidores HTTP
 
@@ -32,26 +33,38 @@ Pregunta P1 del plan: se aplica la recomendación aprobada. Cualquier fallo del 
 
 ## Electron
 
-11. En `src/clients/electron/index.html`, añadir el mismo panel del paso 8. Resultado: la ventana muestra el panel con la frase inicial.
+11. En `src/clients/electron/index.html`, dentro de `#selection-screen` y después del panel «Alta», añadir el mismo panel del paso 8. Resultado: la ventana muestra el panel con la frase inicial.
 
-12. En `src/clients/electron/app.js`, importar `usersGenderCount` de `../../logic/user-gender-count.js`. Añadir `countGenders()`, con `await usersGenderCount()`, y `showGenderCount(count)`. Registrar el botón en `initializeClient`. Resultado: el botón muestra los tres números.
+12. Crear `src/clients/electron/preload.cjs`. Con `const { contextBridge, ipcRenderer } = require("electron");`, exponer `firstApp` con `contextBridge.exposeInMainWorld` y el método `countGenders: () => ipcRenderer.invoke("gender-count")`. Resultado: el fichero solo hace `require("electron")` y no importa ningún fichero local.
+
+13. En `src/clients/electron/main.js`, importar `ipcMain` de `electron` y `usersGenderCount` de `../../logic/user-gender-count.js`. En `startApp()`, antes de `createWindow()`, registrar `ipcMain.handle("gender-count", () => usersGenderCount())`. En `createWindow()`, añadir a `BrowserWindow` la opción `webPreferences: { preload: path.join(folder, "preload.cjs") }`. Resultado: `pnpm electron` arranca sin errores y la ventana carga el preload.
+
+14. En `src/clients/electron/app.js`, quitar el import de `user-gender-count.js` (línea 9). En `countGenders()`, sustituir la llamada directa por `await window.firstApp.countGenders()`. Mantener `showGenderCount(count)` y la lógica del plan. Si el botón no está registrado en `initializeClient`, registrarlo. Resultado: `grep -n "import" src/clients/electron/app.js` no devuelve nada.
+
+15. En `eslint.config.js`, añadir `window: "readonly"` al bloque de `src/clients/electron/app.js`. Resultado: `pnpm run lint` no marca `window` en `app.js`.
+
+16. Ejecutar `pnpm run lint`. Si marca `require` o `module` en `preload.cjs`, añadir un bloque en `eslint.config.js` para ese fichero con `sourceType: "commonjs"`. Si no los marca, no se toca más `eslint.config.js`. Resultado: `pnpm run lint` pasa en `preload.cjs`.
 
 ## VS Code
 
-13. En `src/clients/vscode/index.html`, añadir el mismo panel del paso 8. Resultado: el panel aparece en el webview.
+17. En `src/clients/vscode/index.html`, añadir el mismo panel del paso 8. Resultado: el panel aparece en el webview.
 
-14. En `src/clients/vscode/extension.js`, importar `usersGenderCount`. Añadir `handleGenderCount(webview, message)` con el patrón de `handleList`, que responde `postReply(webview, request, { count })`. En `handleMessage`, añadir `if (action === "genderCount")`. Resultado: `handleMessage` despacha `genderCount`.
+18. En `src/clients/vscode/extension.js`, importar `usersGenderCount`. Añadir `handleGenderCount(webview, message)` con el patrón de `handleList`, que responde `postReply(webview, request, { count })`. En `handleMessage`, añadir `if (action === "genderCount")`. Resultado: `handleMessage` despacha `genderCount`.
 
-15. En `src/clients/vscode/panel.js`, añadir `countGenders()` con `callExtension("genderCount")`, que lee `data.count`, y `showGenderCount(count)`. Usar los mismos pasos del plan. Registrar el botón en `initializeClient`. Resultado: el panel muestra los tres números.
+19. En `src/clients/vscode/panel.js`, añadir `countGenders()` con `callExtension("genderCount")`, que lee `data.count`, y `showGenderCount(count)`. Usar los mismos pasos del plan. Registrar el botón en `initializeClient`. Resultado: el panel muestra los tres números.
+
+## Documentación
+
+20. En `docs/TREE.md`, bajo `electron/`, añadir `preload.cjs` después de `main.js`. En `docs/ARCHITECTURE.md`, el bloque de Electron describe `preload.cjs`, el canal `gender-count` y que el recuento no sigue el camino de `src/logic/` desde `app.js`. La línea de `eslint.config.js` declara `window` para `app.js`. Resultado: `grep preload` encuentra la entrada en los dos ficheros.
 
 ## Verificación
 
-16. Con Ollama en marcha, pulsar el botón en Chrome (`pnpm chrome` y la extensión), en Electron (`pnpm electron`) y en VS Code (`pnpm vscode`). Resultado: en cada uno se ve «Cargando…» y luego los mismos tres números.
+21. Con Ollama en marcha, pulsar el botón en Chrome (`pnpm chrome` y la extensión), en Electron (`pnpm electron`) y en VS Code (`pnpm vscode`). En Electron, abrir DevTools y comprobar que no hay errores de módulo. Resultado: en cada uno se ve «Cargando…» y luego los mismos tres números.
 
-17. Con Ollama parado, pulsar el botón en los tres. Resultado: el aviso dice `Could not classify the users`, y el panel conserva el último resultado o la frase inicial.
+22. Con Ollama parado, pulsar el botón en los tres. Resultado: el aviso dice `Could not classify the users`, y el panel conserva el último resultado o la frase inicial.
 
-18. Mientras cuenta, probar la lista, la búsqueda y el alta en Chrome, Electron y VS Code. Resultado: las tres siguen funcionando.
+23. Mientras cuenta, probar la lista, la búsqueda y el alta en Chrome, Electron y VS Code. Resultado: las tres siguen funcionando.
 
-19. Comprobar con `git status` que no cambian `docs/TREE.md`, `docs/ARCHITECTURE.md` ni `src/clients/terminal/`, y que las specs anteriores no tienen cambios. Resultado: solo aparecen los ficheros de los pasos anteriores y `docs/specs/gender-count-clients/`.
+24. Comprobar con `git status` que solo cambian los ficheros de los pasos anteriores y `docs/specs/gender-count-clients/`. Las specs anteriores no tienen cambios. Resultado: `git status` no lista ningún otro `docs/specs/` ni `src/clients/terminal/`.
 
-20. Ejecutar `pnpm run format` y `pnpm run lint`. Resultado: sin errores.
+25. En `package.json`, añadir `"src/clients/**/*.cjs"` al final de los patrones del script `format`. Resultado: `node -e 'require("./package.json")'` no falla y el script lista el patrón nuevo. Después ejecutar `pnpm run format` y `pnpm run lint`. Resultado: sin errores, y `preload.cjs` queda formateado.

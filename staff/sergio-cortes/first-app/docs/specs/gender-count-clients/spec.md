@@ -40,6 +40,8 @@ En Chrome, VS Code y Electron, la pantalla inicial tiene al final un panel «Rec
 - Mientras cuenta, la lista, la búsqueda y el alta siguen funcionando.
 - Si el recuento falla, el aviso de la pantalla dice «Could not classify the users». El panel conserva el último resultado correcto. Si todavía no hubo ninguno, vuelve a mostrar la frase inicial.
 
+En Electron, el recuento lo calcula el proceso principal de la app y la pantalla lo pide por un canal interno, no por la API. Para quien usa la app, el panel se ve, se comporta y muestra los mismos mensajes que en Chrome y VS Code.
+
 ## Qué fallo se ve
 
 | Caso                                                                 | Qué se ve                                                                   |
@@ -57,4 +59,5 @@ Un nombre que la IA no clasifica cuenta en `genderUndefined`. No es un fallo.
 - Devolver el género de cada persona.
 - Cambiar el modelo o la forma de clasificar.
 - Un cliente de terminal nuevo para este recuento.
+- Otras peticiones de Electron. Solo se añade la del recuento.
 - Cambiar las specs anteriores. Lo que cambia respecto a ellas está en el plan.
