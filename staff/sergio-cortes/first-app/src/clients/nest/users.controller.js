@@ -68,6 +68,17 @@ const UPDATE_USER_BODY_SCHEMA = {
   example: { name: "Ada Lovelace", email: "ada@example.com" },
 };
 
+const GENDER_COUNT_SCHEMA = {
+  type: "object",
+  properties: {
+    woman: { type: "integer", example: 1 },
+    man: { type: "integer", example: 1 },
+    genderUndefined: { type: "integer", example: 2 },
+  },
+  required: ["woman", "man", "genderUndefined"],
+  example: { woman: 1, man: 1, genderUndefined: 2 },
+};
+
 const ID_PARAM = {
   name: "id",
   required: true,
@@ -110,6 +121,22 @@ export class UsersController {
   async list() {
     const users = await this.usersService.list();
     return users;
+  }
+
+  @Get("users/gender-count")
+  @ApiResponse({
+    status: 200,
+    description: "Recuento por género",
+    schema: GENDER_COUNT_SCHEMA,
+  })
+  @ApiResponse({
+    status: 500,
+    description: "Could not classify the users",
+    schema: MESSAGE_SCHEMA,
+  })
+  async genderCount() {
+    const count = await this.usersService.genderCount();
+    return count;
   }
 
   @Get("users/:id")

@@ -5,6 +5,7 @@ import { ValidationError } from "../../logic/errors.js";
 import { findUserById } from "../../logic/find-user-by-id.js";
 import { listUsers } from "../../logic/list-users.js";
 import { updateUser } from "../../logic/update-user.js";
+import { usersGenderCount } from "../../logic/user-gender-count.js";
 
 @Injectable()
 export class UsersService {
@@ -50,5 +51,10 @@ export class UsersService {
     const id = this.parseUserId(rawId);
     const result = deleteUser(id);
     return result;
+  }
+
+  async genderCount() {
+    const count = await usersGenderCount();
+    return count;
   }
 }

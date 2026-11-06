@@ -10,6 +10,7 @@ import {
 import { findUserById } from "../../logic/find-user-by-id.js";
 import { listUsers } from "../../logic/list-users.js";
 import { updateUser } from "../../logic/update-user.js";
+import { usersGenderCount } from "../../logic/user-gender-count.js";
 
 const HOST = "127.0.0.1";
 const ORIGIN = "http://127.0.0.1";
@@ -53,6 +54,12 @@ app.get("/users", async (req, res) => {
   const users = await listUsers();
 
   res.status(200).json(users);
+});
+
+app.get("/users/gender-count", async (req, res) => {
+  const count = await usersGenderCount();
+
+  res.status(200).json(count);
 });
 
 app.get("/users/:id", async (req, res) => {
