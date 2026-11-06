@@ -9,6 +9,7 @@ import { findUserByName } from "../../logic/find-user-by-name.js";
 import { ValidationError } from "../../logic/errors.js";
 import { listUsers } from "../../logic/list-users.js";
 import { updateUser } from "../../logic/update-user.js";
+import { usersGenderCount } from "../../logic/user-gender-count.js";
 
 const OPEN_USERS = "firstApp.openUsers";
 const PANEL_TYPE = "firstAppUsers";
@@ -58,6 +59,17 @@ async function handleList(webview, message) {
   try {
     const users = await listUsers();
     postReply(webview, request, { users });
+  } catch (error) {
+    postError(webview, request, error);
+  }
+}
+
+async function handleGenderCount(webview, message) {
+  const request = message.request;
+
+  try {
+    const count = await usersGenderCount();
+    postReply(webview, request, { count });
   } catch (error) {
     postError(webview, request, error);
   }
@@ -194,6 +206,11 @@ function handleMessage(webview, message) {
 
   if (action === "delete") {
     handleDelete(webview, message);
+    return;
+  }
+
+  if (action === "genderCount") {
+    handleGenderCount(webview, message);
   }
 }
 
