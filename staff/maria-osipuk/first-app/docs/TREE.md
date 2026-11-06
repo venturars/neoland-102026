@@ -6,10 +6,12 @@ first-app/
 ├── .gitignore
 ├── .prettierignore
 ├── README.md
+├── babel.config.json
 ├── eslint.config.js
 ├── package.json
 ├── pnpm-lock.yaml
 ├── scripts/
+│   ├── jupyter-node-http.sh
 │   └── jupyter.sh
 ├── src/
 │   ├── clients/
@@ -27,7 +29,34 @@ first-app/
 │   │   │   ├── styles.css
 │   │   │   └── user-actions.js
 │   │   ├── http/
-│   │   │   └── app.js
+│   │   │   ├── app.js
+│   │   │   └── bruno/
+│   │   │       ├── 01-sql-online/
+│   │   │       │   ├── 01-empty-list.bru
+│   │   │       │   ├── 02-create-ada.bru
+│   │   │       │   ├── 03-list-users.bru
+│   │   │       │   ├── 04-find-ada.bru
+│   │   │       │   ├── 05-patch-name.bru
+│   │   │       │   ├── 06-create-empty-name.bru
+│   │   │       │   ├── 07-create-invalid-email.bru
+│   │   │       │   ├── 08-create-used-email.bru
+│   │   │       │   ├── 09-get-missing.bru
+│   │   │       │   ├── 10-patch-missing.bru
+│   │   │       │   ├── 11-delete-missing.bru
+│   │   │       │   ├── 12-delete-ada.bru
+│   │   │       │   ├── 13-list-after-delete.bru
+│   │   │       │   ├── 14-count-empty.bru
+│   │   │       │   └── folder.bru
+│   │   │       ├── 02-sql-offline/
+│   │   │       │   ├── 15-create-sql-offline.bru
+│   │   │       │   ├── 16-list-sql-offline.bru
+│   │   │       │   ├── 17-find-sql-offline.bru
+│   │   │       │   ├── 18-update-sql-offline.bru
+│   │   │       │   ├── 19-delete-sql-offline.bru
+│   │   │       │   ├── 20-count-sql-offline.bru
+│   │   │       │   └── folder.bru
+│   │   │       ├── bruno.json
+│   │   │       └── collection.bru
 │   │   ├── jupyter/
 │   │   │   ├── actualizar-usuario.ipynb
 │   │   │   ├── bienvenida.ipynb
@@ -39,6 +68,20 @@ first-app/
 │   │   │   ├── listar-usuarios.ipynb
 │   │   │   ├── preparar-tabla-usuarios.ipynb
 │   │   │   └── run_logic.py
+│   │   ├── nest/
+│   │   │   ├── app.module.js
+│   │   │   ├── main.js
+│   │   │   ├── users-exception.filter.js
+│   │   │   ├── users.controller.js
+│   │   │   └── users.service.js
+│   │   ├── node-http/
+│   │   │   ├── app.js
+│   │   │   └── jupyter/
+│   │   │       ├── create-user.ipynb
+│   │   │       ├── delete-user.ipynb
+│   │   │       ├── find-user-by-id.ipynb
+│   │   │       ├── list-users.ipynb
+│   │   │       └── update-user.ipynb
 │   │   ├── terminal/
 │   │   │   ├── count-users-by-gender.txt
 │   │   │   ├── create-user.txt
@@ -48,6 +91,14 @@ first-app/
 │   │   │   ├── find-user-by-id.txt
 │   │   │   ├── list-users.txt
 │   │   │   └── update-user.txt
+│   │   ├── vscode/
+│   │   │   ├── extension.js
+│   │   │   ├── index.html
+│   │   │   ├── package.json
+│   │   │   ├── styles.css
+│   │   │   ├── user-actions.js
+│   │   │   ├── users.svg
+│   │   │   └── view.js
 │   │   └── web/
 │   │       ├── app.js
 │   │       ├── index.html
@@ -151,6 +202,10 @@ first-app/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
+│   │   ├── bruno-http-client/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
 │   │   ├── chrome-extension-client/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
@@ -187,6 +242,18 @@ first-app/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
+│   │   ├── nest-swagger-ui/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── nest-users-client/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   ├── node-http-client/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
 │   │   ├── prettier-and-eslint/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
@@ -211,7 +278,11 @@ first-app/
 │   │   │   ├── plan.md
 │   │   │   ├── spec.md
 │   │   │   └── tasks.md
-│   │   └── vanilla-user-client/
+│   │   ├── vanilla-user-client/
+│   │   │   ├── plan.md
+│   │   │   ├── spec.md
+│   │   │   └── tasks.md
+│   │   └── vscode-extension-client/
 │   │       ├── plan.md
 │   │       ├── spec.md
 │   │       └── tasks.md
@@ -227,5 +298,8 @@ first-app/
     ├── database-server.test.js
     ├── electron-client.test.js
     ├── http-client.test.js
-    └── shared-database.test.js
+    ├── nest-client.test.js
+    ├── node-http-client.test.js
+    ├── shared-database.test.js
+    └── vscode-client.test.js
 ```

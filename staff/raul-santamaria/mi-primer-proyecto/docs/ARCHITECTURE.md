@@ -30,12 +30,15 @@
   `electron` de `package.json`; el instalador Windows con `electron:dist`.
 - `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001 y no
   repite sus reglas.
+- `src/clients/node-http/` llama a `src/logic/`, escucha en el puerto 3004
+  y no repite sus reglas. `jupyter/` documenta esa API por HTTP.
 - `src/clients/chrome/server.js` llama a `src/logic/`, escucha en el puerto
   3002 y no repite sus reglas. La extensión en `src/clients/chrome/` solo
   habla con esa API por `fetch`.
 - `src/clients/nest/` llama a `src/logic/`, escucha en el puerto 3003 y no
-  repite sus reglas. El código interno sigue convenciones Nest; no aplica
-  `docs/STYLE.md` ni `docs/ERRORS.md` en ese árbol.
+  repite sus reglas. Sirve Swagger UI en `/docs` sobre la misma API REST.
+  El código interno sigue convenciones Nest; no aplica `docs/STYLE.md` ni
+  `docs/ERRORS.md` en ese árbol.
 - `src/clients/vscode/extension.cjs` registra la vista lateral webview,
   recibe mensajes del panel y llama a `src/logic/` con `import()`. No
   repite sus reglas. `panel.html`, `panel.js` y `panel.css` son la
@@ -44,6 +47,7 @@
   VS Code y F5; la base tiene que estar en marcha con el script `server`.
 - `src/clients/jupyter/` es el cliente que se abre con el Jupyter de la app.
 - `start-jupyter.js` arranca el Jupyter del entorno de la app.
+- `start-node-http-jupyter.js` arranca el Jupyter de `src/clients/node-http/jupyter`.
 - `eslint.config.js` aplica las reglas recomendadas de ESLint al
   JavaScript, declara los globals de Node e ignora `.venv` y
   `node_modules`.

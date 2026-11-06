@@ -30,7 +30,7 @@ El único que abre la base y ejecuta SQL es `src/db/server.js`. La conexión no 
 
 No escribas SQL en `src/logic` y no abras SQLite desde ahí. Valida y llama a la función de `src/queries/users.js` con el mismo nombre: `createUser`, `updateUser`, `deleteUser`, `listUsers`, `findUserById`, `findUserByEmail` o `findUserByName`. Importa ese archivo como módulo, porque `src/logic` ya exporta una función con ese nombre.
 
-No escribas SQL ni validación en `src/clients`. El cliente de terminal solo llama a `createUser`, `updateUser`, `deleteUser`, `listUsers`, `findUserById`, `findUserByEmail`, `findUserByName` o `usersGender`. El cliente del navegador solo llama a `listUsers`, `updateUser` y `deleteUser`. El cliente HTTP es la excepción a un archivo por acción: solo `src/clients/http/app.js`. Llama a `createUser`, `updateUser`, `deleteUser`, `listUsers`, `findUserById`, `findUserByEmail` y `findUserByName`. No valida, no escribe SQL y no abre la base.
+No escribas SQL ni validación en `src/clients`. El cliente de terminal solo llama a `createUser`, `updateUser`, `deleteUser`, `listUsers`, `findUserById`, `findUserByEmail`, `findUserByName` o `usersGender`. El cliente del navegador solo llama a `listUsers`, `updateUser` y `deleteUser`. El cliente HTTP es la excepción a un archivo por acción: solo `src/clients/http/app.js`. Llama a `createUser`, `updateUser`, `deleteUser`, `listUsers`, `findUserById`, `findUserByEmail` y `findUserByName`. La colección Bruno vive en `src/clients/http/bruno`. Cada petición es un fichero `.bru` propio. El cliente Electron es `src/clients/electron`. `app.js` llama a `listUsers`, `createUser`, `updateUser` y `deleteUser`. No llama a las búsquedas ni a `usersGender`. No valida, no escribe SQL y no abre la base. El popup de Chrome es `src/clients/chrome`. `app.js` pide listar, crear, modificar y eliminar a `http://127.0.0.1:3002`. `server.js` usa Fastify `5.12.8` y llama a `listUsers`, `createUser`, `updateUser` y `deleteUser`. No llama a las búsquedas ni a `usersGender`. No valida, no escribe SQL y no abre la base. El manifiesto es `src/clients/chrome/manifest.json`. Se arranca con `pnpm chrome`. La vista de Visual Studio Code es `src/clients/vscode`. `extension.js` llama a `listUsers`, `createUser`, `updateUser` y `deleteUser`. No llama a las búsquedas ni a `usersGender`. No valida, no escribe SQL y no abre la base. `app.js` pide esas cuatro operaciones al proceso del editor y no importa la lógica. El manifiesto es `src/clients/vscode/package.json`. Se arranca con `pnpm vscode`. `vscode` lo aporta el editor. `engines.vscode` queda en `^1.100.0`. El cliente NestJS es `src/clients/nest`. `main.js` monta la página con `@nestjs/swagger` `12.1.0`. `users.controller.js` describe listar, crear, modificar, eliminar y buscar por id. `users.service.js` llama a `listUsers`, `createUser`, `updateUser`, `deleteUser` y `findUserById`. No llama a `findUserByEmail`, `findUserByName` ni a `usersGender`. No valida, no escribe SQL y no abre la base. Se arranca con `pnpm nest`. NestJS queda en `12.3.3`.
 
 No valides dentro de `src/queries`. Ejecuta la consulta que corresponde.
 
@@ -68,7 +68,7 @@ Usuarios
 Id [        ]  Elegir
 ```
 
-El menú deja el nombre grande y tres acciones en columna: Volver, Modificar usuario, Notas.
+El menú de las pantallas deja el nombre grande y tres acciones en columna: Volver, Modificar usuario, Notas. Las pantallas del navegador conservan Notas.
 
 ```
 Ana García
@@ -84,3 +84,43 @@ Modificar deja el id, el nombre y el email. Guardar, Eliminar y Volver van debaj
 ### Principios
 
 Una persona es una línea del libro. El latón solo marca el id y el foco, con un contorno sólido y separado, sin brillo. El óxido solo significa fallo o eliminar. No hay animación. Si el sistema pide menos movimiento, no hay nada que quitar. El texto que ya se ve no se reescribe.
+
+La ventana Electron usa esta misma dirección. La lista añade Crear. Crear usuario pide el nombre y el email, y debajo van Guardar y Volver. El menú de esta ventana es Volver y Modificar usuario. No tiene Notas.
+
+```
+Usuarios
+12  Ana García
+    ana@example.com
+————————
+4   Luis Martín
+    luis@example.com
+
+Id [        ]  Elegir
+Crear
+```
+
+```
+Crear usuario
+
+Nombre [        ]
+Email  [        ]
+
+Guardar
+Volver
+```
+
+```
+Ana García
+id 12
+
+Volver
+Modificar usuario
+```
+
+## Dirección del popup de Chrome
+
+El popup usa la misma dirección que las pantallas y la ventana: el libro de registro. Chapa `#E4E8EA`, tinta `#1B2830`, latón `#A6843D`, óxido `#8F3D36`, niebla `#F7F8F8` y grafito `#5C6B73`. Literata para el título de la vista y el nombre elegido. Familjen Grotesk para la lista, las etiquetas, los campos, los botones y los fallos. Una persona es una línea, separada por una raya. El nombre elegido es lo único grande. El latón solo marca el id y el foco. El óxido solo marca el fallo y Eliminar. No hay Notas ni animación. El popup mide 360 píxeles de ancho.
+
+## Dirección de la vista de Visual Studio Code
+
+La vista usa la misma dirección que las pantallas, la ventana y el popup: el libro de registro. Chapa `#E4E8EA`, tinta `#1B2830`, latón `#A6843D`, óxido `#8F3D36`, niebla `#F7F8F8` y grafito `#5C6B73`. Literata para el título de la vista y el nombre elegido. Familjen Grotesk para la lista, las etiquetas, los campos, los botones y los fallos. Una persona es una línea, separada por una raya. El nombre elegido es lo único grande. El latón solo marca el id y el foco. El óxido solo marca el fallo y Eliminar. No hay Notas ni animación. La vista ocupa el ancho de la barra lateral.

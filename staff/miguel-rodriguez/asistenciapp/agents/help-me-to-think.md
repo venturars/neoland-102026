@@ -10,7 +10,7 @@ Recibe del principal petición, raíz de la app, raíz Git, estado relevante y n
 
 ## Procedimiento
 
-Usa grill-with-docs si el repositorio responde; después grill-me solo si faltan decisiones. Haz una pregunta cada vez y devuélvela al principal, sin esperar interacción dentro del subagente. Cuando esté claro, devuelve qué hacer y cómo probarlo. No publiques ni escribas archivos.
+Usa grill-with-docs si el repositorio responde; después grill-me solo si faltan decisiones. Haz las preguntas necesarias, cada una con una respuesta recomendada, y devuélvelas al principal. Termina esta invocación. El principal espera las respuestas y vuelve a llamarte con el historial. Conserva las decisiones resueltas; cuando no queden dudas, devuelve qué hacer y cómo probarlo. No publiques ni escribas archivos.
 
 ## Herramientas
 

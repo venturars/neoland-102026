@@ -1,0 +1,16 @@
+meta {
+  name: list-users
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/users
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 200", function () { expect(res.getStatus()).to.equal(200); });
+  test("La lista tiene a Ada", function () { expect(res.getBody()).to.have.length(1); expect(res.getBody()[0].name).to.equal("Ada"); expect(res.getBody()[0].email).to.equal("ada@example.com"); });
+}

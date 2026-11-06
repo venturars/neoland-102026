@@ -36,5 +36,10 @@ def name_key(name: str) -> str:
         name_key("Ana García")
     """
     decomposed = unicodedata.normalize("NFD", name)
-    without_accents = "".join(c for c in decomposed if not unicodedata.combining(c))
-    return " ".join(without_accents.casefold().split())
+    without_accents = "".join(
+        character for character in decomposed
+        if not unicodedata.combining(character)
+    )
+    normalized = without_accents.casefold()
+    words = normalized.split()
+    return " ".join(words)

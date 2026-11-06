@@ -1,0 +1,27 @@
+meta {
+  name: Create with repeated email
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Other",
+    "email": "bruno-ady@example.com"
+  }
+}
+
+assert {
+  res.status: eq 409
+  res.body.error: eq This email is already used.
+}
+
+docs {
+  Ady already has this email. Needs the CRUD folder run first.
+}

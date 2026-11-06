@@ -1,0 +1,30 @@
+meta {
+  name: patch missing id
+  type: http
+  seq: 6
+}
+
+patch {
+  url: {{baseUrl}}/users/999999
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Nobody"
+  }
+}
+
+tests {
+  test("status is 404", function () {
+    expect(res.getStatus()).to.equal(404);
+  });
+  test("message", function () {
+    expect(res.getBody().message).to.equal("No user exists with that id");
+  });
+}

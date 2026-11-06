@@ -1,7 +1,7 @@
-import OpenAI from "openai";
 import { findAll } from "../queries/users.js";
 
 const MODEL = "llama3.2";
+const MODEL_TIMEOUT = 600000;
 
 export async function usersGenderCount() {
   let users;
@@ -17,11 +17,6 @@ export async function usersGenderCount() {
   if (usersAreEmpty) {
     return counts;
   }
-
-  const client = new OpenAI({
-    baseURL: "http://127.0.0.1:11434/v1",
-    apiKey: "ollama",
-  });
 
   for (let offset = 0; offset < userCount; offset += 6) {
     const batchEnd = offset + 6;
@@ -74,9 +69,22 @@ export async function usersGenderCount() {
           },
         },
       };
-      const chat = client.chat;
-      const completions = chat.completions;
-      response = await completions.create(request);
+      const body = JSON.stringify(request);
+      const signal = AbortSignal.timeout(MODEL_TIMEOUT);
+      const result = await fetch("http://127.0.0.1:11434/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer ollama",
+        },
+        body,
+        signal,
+      });
+      const requestFailed = !result.ok;
+      if (requestFailed) {
+        throw new Error("Could not classify the users");
+      }
+      response = await result.json();
     } catch {
       throw new Error("Could not classify the users");
     }

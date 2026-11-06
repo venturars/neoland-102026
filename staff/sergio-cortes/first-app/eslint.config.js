@@ -1,8 +1,14 @@
+import babelParser from "@babel/eslint-parser";
 import js from "@eslint/js";
 
 export default [
   {
-    ignores: [".venv/**", "node_modules/**", "src/clients/jupyter/**"],
+    ignores: [
+      ".venv/**",
+      "node_modules/**",
+      "src/clients/jupyter/**",
+      "dist/**",
+    ],
   },
   js.configs.recommended,
   {
@@ -17,6 +23,14 @@ export default [
   },
   {
     files: ["src/clients/http/**/*.js"],
+    languageOptions: {
+      globals: {
+        console: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/node-http/**/*.js"],
     languageOptions: {
       globals: {
         console: "readonly",
@@ -64,6 +78,21 @@ export default [
         document: "readonly",
         fetch: "readonly",
         URLSearchParams: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/nest/**/*.js"],
+    languageOptions: {
+      parser: babelParser,
+      parserOptions: {
+        requireConfigFile: true,
+        babelOptions: {
+          configFile: "./babel.config.json",
+        },
+      },
+      globals: {
+        console: "readonly",
       },
     },
   },

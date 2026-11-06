@@ -1,0 +1,31 @@
+meta {
+  name: create empty name
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "",
+    "email": "empty-name@example.com"
+  }
+}
+
+tests {
+  test("status is 400", function () {
+    expect(res.getStatus()).to.equal(400);
+  });
+  test("message", function () {
+    expect(res.getBody().message).to.equal("Name is empty");
+  });
+}

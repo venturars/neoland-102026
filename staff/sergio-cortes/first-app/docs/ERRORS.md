@@ -7,10 +7,13 @@ Los errores de entrada y de negocio salen de `src/logic/errors.js`. Ese fichero 
 - `ConflictError`: el email ya existe. Mensaje: `"Email is already used"`.
 - `DatabaseError`: SQLite lanzó y ese error no sale de `src/logic/`. Mensajes: `"Could not create the user"`, `"Could not update the user"`, `"Could not delete the user"`, `"Could not list the users"`, `"Could not find the user"`, `"Could not classify the users"`. Este último lo lanza `usersGenderCount`.
 
-El cliente HTTP (`src/clients/http/server.js`) y la API del cliente de Chrome (`src/clients/chrome/server.js`) usan además dos mensajes que no lanza `src/logic/`:
+El cliente HTTP (`src/clients/http/server.js`), la API del cliente de Chrome (`src/clients/chrome/server.js`) y el cliente Nest responden `{ "message": "<texto>" }`. DELETE correcto es 204 sin cuerpo. Una ruta que no existe es 404 sin cuerpo.
+
+Usan además un mensaje que no lanza `src/logic/`:
 
 - `"Body is invalid"`, `ValidationError`, 400. El JSON está mal formado, falta el cuerpo o el cuerpo no es un objeto.
-- `"Internal error"`, 500. Cualquier error que no es de las cuatro clases anteriores. No se muestra el mensaje original.
+
+Cualquier error que no es de las cuatro clases anteriores responde 500 con el `Could not ...` de esa acción. No se usa `Internal error`. El filtro Nest asigna el estado por la clase del error.
 
 Una entrada o una regla de negocio que no llama a una query se comprueba con `if` y lanza esa clase con el mensaje. No va dentro de `try/catch`.
 

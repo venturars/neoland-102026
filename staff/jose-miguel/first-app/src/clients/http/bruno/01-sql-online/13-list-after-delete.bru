@@ -1,0 +1,16 @@
+meta {
+  name: list-after-delete
+  type: http
+  seq: 13
+}
+
+get {
+  url: {{baseUrl}}/users
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 200", function () { expect(res.getStatus()).to.equal(200); });
+  test("Lista vacía", function () { expect(res.getBody()).to.deep.equal([]); });
+}

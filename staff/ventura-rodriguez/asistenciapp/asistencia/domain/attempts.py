@@ -1,4 +1,4 @@
-"""Decide si una IP se ha pasado de intentos de registrarse.
+"""Decide si una IP se ha pasado de códigos fallados.
 
 No abre la base ni dibuja pantallas.
 
@@ -10,11 +10,15 @@ Usage::
 
 MAX_PER_SECOND = 5
 MAX_PER_MINUTE = 20
-BAN_MESSAGE = "Esta dirección queda bloqueada por haber superado los intentos permitidos."
+BAN_SECONDS = 10 * 60
+BAN_MESSAGE = (
+    f"Esta dirección queda bloqueada {BAN_SECONDS // 60} minutos por fallar el código demasiadas veces. "
+    "Espera y pide el código actual al profesor."
+)
 
 
 class Banned(Exception):
-    """La IP superó los intentos permitidos."""
+    """La IP falló el código demasiadas veces."""
 
     def __init__(self) -> None:
         super().__init__(BAN_MESSAGE)
@@ -23,8 +27,8 @@ class Banned(Exception):
 def over_limit(in_last_second: int, in_last_minute: int) -> bool:
     """Dice si esos recuentos se pasan del máximo.
 
-    :param in_last_second: intentos en el último segundo, incluido el actual.
-    :param in_last_minute: intentos en el último minuto, incluido el actual.
+    :param in_last_second: códigos fallados en el último segundo, incluido el actual.
+    :param in_last_minute: códigos fallados en el último minuto, incluido el actual.
     :return: True si el segundo pasa de 5 o el minuto de 20.
     :rtype: bool
 

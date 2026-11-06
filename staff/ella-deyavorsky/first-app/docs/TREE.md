@@ -33,6 +33,32 @@ first-app/
         update.sql
     clients/
       api/
+        bruno/
+          01 CRUD/
+            create-user.bru
+            find-user.bru
+            list-users.bru
+            update-user.bru
+          02 Errors/
+            create-with-bad-email.bru
+            create-with-empty-name.bru
+            create-with-invalid-json.bru
+            create-with-repeated-email.bru
+            create-without-name.bru
+            delete-missing-user.bru
+            find-id-not-a-number.bru
+            find-missing-user.bru
+            update-missing-user.bru
+            update-with-nothing.bru
+          03 Delete/
+            delete-user.bru
+            find-deleted-user.bru
+          04 SQL down/
+            list-users-database-stopped.bru
+          environments/
+            local.bru
+          README.md
+          bruno.json
         server.js
       chrome/
         manifest.json
@@ -58,6 +84,13 @@ first-app/
         list-users.txt
         nest.txt
         update-user.txt
+      node-http/
+        app.js
+        create-user.ipynb
+        list-users.ipynb
+        find-user-by-id.ipynb
+        update-user.ipynb
+        delete-user.ipynb
       jupyter/
         README.md
         00-welcome-and-index.ipynb
@@ -87,6 +120,7 @@ first-app/
         icon.svg
   scripts/
     jupyter.sh
+    jupyter-node-http.sh
   agents/
     create-branch.md
     create-commit.md

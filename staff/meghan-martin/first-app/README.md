@@ -48,8 +48,8 @@ Crea `~/.cursor/mcp.json` para tenerlos en todos tus proyectos, o `.cursor/mcp.j
 
 Abre Cursor Settings → MCP y comprueba que aparecen conectados. Abre una conversación nueva de Agent.
 
-## Chrome
+## VS Code
 
-Desde `first-app`, deja `npm run db` en marcha y ejecuta `npm run chrome`. En Chrome, abre `chrome://extensions`, activa el modo de desarrollador y carga sin empaquetar `src/clients/chrome/extension`.
+Desde `first-app`, deja `npm run db` en marcha y ejecuta `npm run vscode`. En el explorador de esa ventana está la vista People.
 
-La extensión solo habla con `http://127.0.0.1:3002`. No sustituye al cliente del puerto 3001.
+Al cerrar VS Code se cierra la vista. Para volver a verla, ejecuta otra vez `npm run vscode`. La base tiene que seguir en marcha.

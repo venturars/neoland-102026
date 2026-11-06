@@ -1,7 +1,8 @@
+import babelParser from "@babel/eslint-parser";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
-  globalIgnores([".venv/**", "node_modules/**"]),
+  globalIgnores([".venv/**", "node_modules/**", "dist/**"]),
   {
     files: ["**/*.js"],
     languageOptions: {
@@ -53,6 +54,30 @@ export default defineConfig([
       globals: {
         document: "readonly",
         fetch: "readonly",
+      },
+    },
+  },
+  {
+    // The Nest client uses decorators. ESLint stops at the first "@"
+    // with its own parser, so this folder uses the Babel parser with
+    // the same configuration that compiles it.
+    files: ["src/clients/nest/**/*.js"],
+    languageOptions: {
+      parser: babelParser,
+      parserOptions: {
+        requireConfigFile: true,
+        babelOptions: { configFile: "./babel.config.json" },
+      },
+    },
+  },
+  {
+    // The VS Code view uses the DOM. It reaches the data through messages.
+    files: ["src/clients/vscode/view.js"],
+    languageOptions: {
+      globals: {
+        acquireVsCodeApi: "readonly",
+        document: "readonly",
+        window: "readonly",
       },
     },
   },

@@ -1,0 +1,1 @@
+INSERT INTO races(session_id,prepared_at,expires_at,join_secret) VALUES (?,?,?,?)

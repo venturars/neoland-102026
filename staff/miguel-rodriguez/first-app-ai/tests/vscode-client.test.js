@@ -48,6 +48,9 @@ test("adapter uses shared user operations for CRUD, search, and confirmations", 
     assert.equal((await execute({ action: "email", email: " ANA@EXAMPLE.COM " })).id, ana.id);
     assert.equal((await execute({ action: "id", id: ana.id })).id, ana.id);
     await assert.rejects(execute({ action: "id", id: 999 }), /User not found/);
+    const partial = await execute({ action: "update", id: ana.id, name: "Ana Maria" });
+    assert.equal(partial.email, ana.email);
+    await execute({ action: "update", id: ana.id, name: ana.name });
     for (const id of [Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]) {
       await assert.rejects(execute({ action: "id", id }), /User not found/);
     }
@@ -101,12 +104,12 @@ test("a late initial refresh cannot overwrite a newer search", async () => {
   element("search-value").value = "Ana";
   const search = element("search").handlers.submit({ preventDefault() {} });
   const request = messages[1];
-  receive({ data: { request: request.request, value: [{ id: 1, name: "Ana", email: "ana@example.com" }] } });
+  receive({ data: { request: request.request, value: [{ id: 1, name: "Ana", email: "ana@example.com", createdAt: "2026-11-05 10:00:00", updatedAt: "2026-11-05 10:01:00" }] } });
   await search;
   receive({ data: { request: initial.request, value: [] } });
   await new Promise((resolve) => setImmediate(resolve));
   assert.equal(element("users").children.length, 1);
-  assert.equal(element("users").children[0].children[0].textContent, "1: Ana — ana@example.com");
+  assert.equal(element("users").children[0].children[0].textContent, "1: Ana — ana@example.com — 2026-11-05 10:00:00 — 2026-11-05 10:01:00");
 
   const refresh = element("refresh").handlers.click();
   const staleRefresh = messages.at(-1);
@@ -154,8 +157,8 @@ test("a late initial refresh cannot overwrite a newer search", async () => {
   const retry = element("refresh").handlers.click();
   const retryRequest = messages.at(-1);
   assert.equal(retryRequest.action, "list");
-  receive({ data: { request: retryRequest.request, value: [{ id: 2, name: "New User", email: "new@example.com" }] } });
+  receive({ data: { request: retryRequest.request, value: [{ id: 2, name: "New User", email: "new@example.com", createdAt: "2026-11-05 10:00:00", updatedAt: "2026-11-05 10:01:00" }] } });
   await retry;
-  assert.equal(element("users").children[0].children[0].textContent, "2: New User — new@example.com");
+  assert.equal(element("users").children[0].children[0].textContent, "2: New User — new@example.com — 2026-11-05 10:00:00 — 2026-11-05 10:01:00");
   assert.equal(messages.filter((message) => message.action === "create").length, 1);
 });

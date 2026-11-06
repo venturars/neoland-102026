@@ -14,6 +14,7 @@ const OPERATION_FAILED = "Unable to complete the operation";
 const STATE = {
   selectedId: null,
   isBusy: false,
+  isCounting: false,
 };
 
 // The only wrapper of fetch in this client. It always answers an object:
@@ -294,6 +295,72 @@ async function goBackToList() {
   STATE.isBusy = false;
 }
 
+function showTab(tabName) {
+  // The users tab is only hidden, not rebuilt, so its list, its detail and
+  // what was written in its forms are still there when it comes back.
+  const isUsers = tabName === "users";
+  document.getElementById("users-tab").hidden = !isUsers;
+  document.getElementById("count-tab").hidden = isUsers;
+
+  const usersTab = document.getElementById("tab-users");
+  usersTab.classList.toggle("is-active", isUsers);
+  usersTab.setAttribute("aria-selected", String(isUsers));
+
+  const countTab = document.getElementById("tab-count");
+  countTab.classList.toggle("is-active", !isUsers);
+  countTab.setAttribute("aria-selected", String(!isUsers));
+}
+
+function showUsersTab() {
+  showTab("users");
+}
+
+function showCountTab() {
+  showTab("count");
+}
+
+function showCountError(errorMessage) {
+  // The API answers the sentence of the count in English. Like every other
+  // error in this client, it is shown exactly as it arrives.
+  const text = errorMessage;
+
+  const message = document.getElementById("count-message");
+  message.textContent = text;
+  message.hidden = false;
+}
+
+async function requestCount() {
+  if (STATE.isCounting) {
+    return;
+  }
+
+  STATE.isCounting = true;
+
+  // Hide the previous answer first: a failed count must not leave
+  // numbers on the screen that look like its result.
+  document.getElementById("count-message").hidden = true;
+  document.getElementById("count-result").hidden = true;
+  document.getElementById("count-loading").hidden = false;
+  document.getElementById("count-button").disabled = true;
+
+  const answer = await callApi("GET", "/users/gender-count");
+
+  document.getElementById("count-loading").hidden = true;
+  document.getElementById("count-button").disabled = false;
+  STATE.isCounting = false;
+
+  if (answer.error !== undefined) {
+    showCountError(answer.error);
+    return;
+  }
+
+  const counts = answer.data;
+  document.getElementById("count-female").textContent = counts.female;
+  document.getElementById("count-male").textContent = counts.male;
+  document.getElementById("count-undefined").textContent = counts.undefined;
+  document.getElementById("count-result").hidden = false;
+}
+
 async function initializeClient() {
   // A module script runs after the HTML is available, so these controls exist.
   const userList = document.getElementById("user-list");
@@ -310,6 +377,13 @@ async function initializeClient() {
   confirmButton.addEventListener("click", deleteSelectedUser);
   const cancelButton = document.getElementById("cancel-delete");
   cancelButton.addEventListener("click", cancelDelete);
+
+  const usersTab = document.getElementById("tab-users");
+  usersTab.addEventListener("click", showUsersTab);
+  const countTab = document.getElementById("tab-count");
+  countTab.addEventListener("click", showCountTab);
+  const countButton = document.getElementById("count-button");
+  countButton.addEventListener("click", requestCount);
 
   STATE.isBusy = true;
   await loadUsers();

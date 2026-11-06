@@ -1,0 +1,1 @@
+INSERT INTO registration_attempts VALUES (?, ?)

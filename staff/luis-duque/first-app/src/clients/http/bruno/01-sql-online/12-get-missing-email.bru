@@ -1,0 +1,16 @@
+meta {
+  name: get-missing-email
+  type: http
+  seq: 12
+}
+
+get {
+  url: {{baseUrl}}/users/email/missing%40example.com
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 404", function () { expect(res.getStatus()).to.equal(404); });
+  test("Mensaje was not found", function () { expect(res.getBody().message).to.match(/was not found$/); });
+}

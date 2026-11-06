@@ -14,8 +14,8 @@
 ## 3. Flujo de Trabajo (Paso a Paso)
 
 1. **Recepción:** Distingue el commit vacío del commit de trabajo. El vacío llega con el número de issue. El de trabajo llega con el mensaje y la lista de ficheros.
-2. **Validación:** El mensaje de trabajo es un conventional commit en inglés: `tipo: descripción`. El vacío es exactamente `chore: open #N`.
-3. **Procesamiento:** El vacío usa `skills/create-empty-commit/SKILL.md`. El de trabajo usa `skills/commit-changes/SKILL.md` y nombra cada fichero. Varios commits pequeños pueden convivir en la misma pull request.
+2. **Validación:** El mensaje de trabajo sigue Mensaje técnico, Desglose y Pie de `skills/commit-changes/SKILL.md`. El vacío es exactamente `chore: open #N`.
+3. **Procesamiento:** El vacío usa `skills/create-empty-commit/SKILL.md`. El de trabajo usa `skills/commit-changes/SKILL.md` y nombra cada fichero. El mensaje que le pasa lleva el asunto, el desglose y el pie de esa skill. Varios commits pequeños pueden convivir en la misma pull request.
 4. **Formateo:** Responde con el mensaje y los ficheros incluidos.
 
 ## 4. Herramientas y APIs Asignadas

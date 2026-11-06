@@ -1,0 +1,23 @@
+meta {
+  name: create-empty-name
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": " ",
+    "email": "empty@example.com"
+  }
+}
+
+tests {
+  test("Estado 400", function () { expect(res.getStatus()).to.equal(400); });
+  test("Mensaje exacto", function () { expect(res.getBody()).to.deep.equal({ message: "User name is required" }); });
+}

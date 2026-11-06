@@ -1,0 +1,21 @@
+meta {
+  name: List users
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/users
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body: isArray
+  res.body.length: gte 1
+}
+
+docs {
+  Lists the users. The list has at least Ady.
+}

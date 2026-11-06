@@ -70,18 +70,34 @@ examples from the project directory using a Node version supporting `node:sqlite
 Each example starts a separate Node process. Clients import and call the relevant operation and use `console.log`; initialization awaits `createUsersTable()` and prints the result of `listTables()`, including `users`, deletion prints `undefined`, and other examples print returned data. The classifier client awaits its async result and requires the local AI prerequisites documented in its example for nonempty data. A vanilla web client calls the same asynchronous operations for selection, editing
 and deletion. It confirms deletion by asking for the saved email; that is a client
 precaution, not an additional business-operation parameter or authentication.
-The REST client exposes create, list, ID lookup, update and delete through HTTP
-on loopback port 3001, using the same business operations and data service.
-It starts with `pnpm http` after `pnpm server`; requests are documented in README.
+Express (`pnpm http`, port 3001) and the Chrome Fastify bridge (`pnpm chrome`,
+port 3002) expose create, list, ID lookup, update,
+delete and the existing gender summary over loopback HTTP. Electron uses its own
+page whose module renderer imports shared logic; the Chrome MV3 extension uses its own popup.
+VS Code, the web and both new visual clients call the shared operations. The
+classifier uses native fetch to the same local Ollama API in Node and the browser.
+All clients require the data service and initialized
+table. README documents startup and requests.
 No general-purpose CLI is implemented.
 
 ## Dependencies and package management
 
-The application uses Node built-ins and the exact external dependency `openai@7.39.0`. The REST client uses `express@5.3.0`. The Jupyter client additionally uses the exact development dependency `cli-table3@0.6.5` for colored table headers. Its project-local Python environment uses `notebook==7.6.3` and the directly invoked `ipykernel==7.1.0` from `requirements-jupyter.txt`. These client dependencies do not change the business operations or classifier. pnpm generates `pnpm-lock.yaml`; it is maintained with `package.json`.
+The existing declaration `openai@7.39.0` is retained; the classifier transport now
+uses native fetch for browser compatibility. HTTP adapters use
+`express@5.3.0` and `fastify@5.12.8`. The desktop client uses the development
+dependency `electron@45.2.2`. The Jupyter client uses
+`cli-table3@0.6.5` for colored table headers. Its project-local Python environment
+uses `notebook==7.6.3` and `ipykernel==7.1.0` from `requirements-jupyter.txt`.
+These client dependencies preserve the business contracts and classifier. pnpm
+generates `pnpm-lock.yaml`; it is maintained with `package.json`.
 
 Development checks use exact versions `prettier@3.9.10`, `eslint@10.13.0`, and
 `@eslint/js@10.0.1`. These development dependencies do not change application
 contracts or provide runtime business functionality.
+
+`pnpm-workspace.yaml` limits release-age exceptions to `electron@45.2.2` and
+`@nestjs/common`, `@nestjs/core` and `@nestjs/platform-express` at `12.3.3`.
+Other packages retain the release-age control.
 
 - Use pnpm. Do not mix package managers or introduce `package-lock.json` or `yarn.lock`.
 - Add dependencies only when required by an approved implementation plan.
@@ -134,3 +150,12 @@ Subsequent SDD developments, starting with the classifier, require separately re
 Keep the documents easy to review without an arbitrary total line limit. Record unresolved conflicts in the plan and stop before tasks or implementation until those conflicts are resolved. General application rules belong here; feature-specific requirements belong in that feature's documents.
 
 The existing operations predate this workflow. This foundation does not create retrospective specifications or claim prior SDD approvals. No feature documents are created as part of this foundation.
+
+
+## Cliente Nest
+
+El cliente Nest comparte las cinco operaciones CRUD y sus errores, con clases,
+decoradores, servicio inyectado y filtro. pnpm nest compila con Babel y escucha
+en loopback3003. Las versiones exactas de Nest, reflect-metadata, rxjs y Babel
+están en package.json y la revisión de tres capas en docs/specs/nest-framework-client/plan.md.
+Las excepciones de antigüedad se limitan a los tres paquetes Nest12.3.3.

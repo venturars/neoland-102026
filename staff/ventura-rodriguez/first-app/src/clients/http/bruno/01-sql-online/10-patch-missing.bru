@@ -1,0 +1,22 @@
+meta {
+  name: patch-missing
+  type: http
+  seq: 10
+}
+
+patch {
+  url: {{baseUrl}}/users/{{missingId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Nobody"
+  }
+}
+
+tests {
+  test("Estado 404", function () { expect(res.getStatus()).to.equal(404); });
+  test("Mensaje exacto", function () { expect(res.getBody()).to.deep.equal({ message: "User not found" }); });
+}
