@@ -1,0 +1,34 @@
+meta {
+  name: create-ada
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Ada",
+    "email": "ada@example.com"
+  }
+}
+
+tests {
+  test("Crear Ada", function () {
+    expect(res.getStatus()).to.equal(201);
+    const user = res.getBody();
+    expect(user).to.have.all.keys("id", "name", "email", "createdAt", "updatedAt");
+    expect(user.id).to.be.a("number");
+    expect(user.name).to.equal("Ada");
+    expect(user.email).to.equal("ada@example.com");
+    expect(user.createdAt).to.be.a("string");
+    expect(user.updatedAt).to.be.a("string");
+    const saved = JSON.stringify(user);
+    bru.setVar("ada", saved);
+    bru.setVar("adaId", user.id);
+  });
+}

@@ -1,0 +1,18 @@
+meta {
+  name: delete-ada
+  type: http
+  seq: 27
+}
+
+delete {
+  url: {{baseUrl}}/users/{{adaId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Eliminar sin cuerpo de respuesta", function () {
+    expect(res.getStatus()).to.equal(204);
+    expect(res.getBody()).to.equal("");
+  });
+}

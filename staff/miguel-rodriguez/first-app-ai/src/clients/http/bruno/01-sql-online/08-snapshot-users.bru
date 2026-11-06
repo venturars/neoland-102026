@@ -1,0 +1,23 @@
+meta {
+  name: snapshot-users
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/users
+  body: none
+  auth: none
+}
+
+tests {
+  test("Guardar referencia de los contactos", function () {
+    expect(res.getStatus()).to.equal(200);
+    const ada = JSON.parse(bru.getVar("ada"));
+    const grace = JSON.parse(bru.getVar("grace"));
+    const users = res.getBody();
+    expect(users).to.deep.equal([ada, grace]);
+    const snapshot = JSON.stringify(users);
+    bru.setVar("snapshot", snapshot);
+  });
+}

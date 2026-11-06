@@ -1,0 +1,25 @@
+meta {
+  name: create-invalid-email
+  type: http
+  seq: 11
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Invalid",
+    "email": "invalid"
+  }
+}
+
+tests {
+  test("Rechazo: Email is invalid", function () {
+    expect(res.getStatus()).to.equal(400);
+    expect(res.getBody()).to.deep.equal({ message: "Email is invalid" });
+  });
+}
