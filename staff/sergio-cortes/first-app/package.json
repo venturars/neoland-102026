@@ -18,7 +18,7 @@
     "vscode": "code --extensionDevelopmentPath=\"$(pwd)/src/clients/vscode\" \"$(pwd)/src/clients/vscode\"",
     "jupyter": "sh scripts/jupyter.sh",
     "jupyter-node-http": "sh scripts/jupyter-node-http.sh",
-    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/**/*.js\"",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/**/*.js\" \"src/clients/**/*.cjs\"",
     "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
