@@ -34,6 +34,10 @@ first-app-ai/
 │   ├── STYLE.md
 │   ├── TREE.md
 │   └── specs/
+│       ├── nest-swagger-ui/
+│       │   ├── spec.md
+│       │   ├── plan.md
+│       │   └── tasks.md
 │       ├── workflow-rounds-and-commits/
 │       │   ├── plan.md
 │       │   ├── spec.md
@@ -231,6 +235,7 @@ first-app-ai/
 │       ├── refactor-pull-request.md
 │       └── test-pull-request.md
 ├── tests/
+│   ├── nest-swagger.test.js
 │   ├── browser-classifier.test.js
 │   ├── client-apis.test.js
 │   ├── client-ui-state.test.js

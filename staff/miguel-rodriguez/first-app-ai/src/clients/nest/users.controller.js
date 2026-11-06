@@ -10,7 +10,29 @@ import {
   Delete,
   HttpCode,
 } from "@nestjs/common";
+import { ApiBody, ApiParam } from "@nestjs/swagger";
 import { UsersService } from "./users.service.js";
+
+const CREATE_BODY = {
+  type: "object",
+  required: ["name", "email"],
+  properties: {
+    name: { type: "string", example: "Ada" },
+    email: { type: "string", example: "ada@example.com" },
+  },
+};
+const UPDATE_BODY = {
+  type: "object",
+  properties: {
+    name: { type: "string", example: "Ada Lovelace" },
+    email: { type: "string", example: "ada@example.com" },
+  },
+};
+const ID_PARAMETER = {
+  name: "id",
+  required: true,
+  schema: { type: "string", example: "1" },
+};
 
 @Controller("users")
 @Dependencies(UsersService)
@@ -21,6 +43,7 @@ export class UsersController {
 
   @Post()
   @HttpCode(201)
+  @ApiBody({ schema: CREATE_BODY })
   @Bind(Body())
   async create(body) {
     const input = { name: body.name, email: body.email };
@@ -33,6 +56,7 @@ export class UsersController {
   }
 
   @Get(":id")
+  @ApiParam(ID_PARAMETER)
   @Bind(Param("id"))
   async find(idText) {
     const id = Number(idText);
@@ -40,6 +64,8 @@ export class UsersController {
   }
 
   @Patch(":id")
+  @ApiBody({ schema: UPDATE_BODY })
+  @ApiParam(ID_PARAMETER)
   @Bind(Param("id"), Body())
   async update(idText, body) {
     const id = Number(idText);
@@ -57,6 +83,7 @@ export class UsersController {
 
   @Delete(":id")
   @HttpCode(204)
+  @ApiParam(ID_PARAMETER)
   @Bind(Param("id"))
   async remove(idText) {
     const id = Number(idText);

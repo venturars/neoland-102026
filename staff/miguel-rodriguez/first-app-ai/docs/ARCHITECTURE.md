@@ -218,7 +218,8 @@ conservando los campos omitidos y mostrando las cinco propiedades del contacto.
 
 ## Nest
 
-src/clients/nest recibe HTTP en loopback3003. El controlador usa el servicio
+src/clients/nest recibe HTTP en loopback3003. SwaggerModule publica Swagger UI en `/` del mismo servidor. ApiBody y
+ApiParam documentan los cuerpos y los IDs del controlador. El controlador usa el servicio
 inyectado por Nest, que llama a logic. AppModule registra controlador, proveedor
 y filtro global. Babel compila src a dist; el acceso SQL sigue en el servicio
 de datos3000.

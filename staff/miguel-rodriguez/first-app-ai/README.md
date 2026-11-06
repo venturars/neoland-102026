@@ -37,7 +37,7 @@ usas los clientes. Cada API se inicia en otra terminal:
 `electron@45.2.2`, la versión revisada. pnpm mantiene el
 lockfile; no se desactiva el control de antigüedad para otros paquetes.
 
-El cliente Nest se desarrolla por separado en la [issue #1044](https://github.com/venturars/neoland-102026/issues/1044).
+El cliente Nest ofrece las cinco operaciones CRUD y una página Swagger UI.
 
 ## Abrir el cliente web
 
@@ -206,13 +206,19 @@ En Postman utiliza POST /users con JSON {"name":"Ada","email":"ada@example.com"}
 GET /users; GET /users/ID; PATCH /users/ID con JSON {"name":"Ada Lovelace"};
 DELETE /users/ID. Creación201, consultas y edición200, borrado204 sin cuerpo.
 Sustituye ID por el ID devuelto. Las respuestas de contactos tienen los cinco
-campos y PATCH conserva los omitidos. Es una API; no tiene página propia.
+campos y PATCH conserva los omitidos.
+
+Abre http://127.0.0.1:3003/ para usar Swagger UI. Despliega una operación,
+pulsa «Try it out», introduce el cuerpo o ID y pulsa «Execute». La página
+muestra el estado y la respuesta de la API. En PATCH, elimina del JSON el
+campo que quieras conservar; enviar una cadena vacía no equivale a omitirlo.
+El servicio de datos debe seguir arrancado para ejecutar las operaciones.
 
 Para verificar el adaptador sin dejar el servidor abierto:
 
 ```sh
 pnpm exec babel src --out-dir dist --delete-dir-on-start
-node --test --test-concurrency=1 tests/nest-client.test.js
+node --test --test-concurrency=1 tests/nest-client.test.js tests/nest-swagger.test.js
 ```
 
 Estas pruebas preparan datos desechables y utilizan un puerto separado.
