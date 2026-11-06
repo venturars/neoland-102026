@@ -6,7 +6,7 @@ El trabajo de git sigue `agents/git-workflow-agent.md` de esta carpeta. Las para
 
 first-app es una app de usuarios para alumnos junior. Se construye con IA siguiendo el sistema SDD.
 
-Está en Node, con módulos ES (`"type": "module"`). SQLite entra con `node:sqlite`. Las dependencias de paquete son `openai`, `cli-table3`, `@colors/colors`, `fastify`, `@nestjs/common`, `@nestjs/core`, `@nestjs/platform-express`, `@nestjs/swagger`, `reflect-metadata` y `rxjs`. Las de desarrollo son `prettier`, `eslint`, `@eslint/js`, `electron`, `@babel/cli`, `@babel/core`, `@babel/eslint-parser`, `@babel/plugin-proposal-decorators` y `@babel/preset-env`. Los scripts se lanzan con pnpm.
+Está en Node, con módulos ES (`"type": "module"`). SQLite entra con `node:sqlite`. Las dependencias de paquete son `openai`, `cli-table3`, `@colors/colors`, `fastify`, `@nestjs/common`, `@nestjs/core`, `@nestjs/platform-express`, `@nestjs/swagger`, `reflect-metadata`, `rxjs` y `express`. Las de desarrollo son `prettier`, `eslint`, `@eslint/js`, `electron`, `@babel/cli`, `@babel/core`, `@babel/eslint-parser`, `@babel/plugin-proposal-decorators`, `@babel/preset-env` y `@usebruno/cli`. Los scripts se lanzan con pnpm.
 
 La arquitectura está en `docs/CONSTITUCION.md` y en las guías que enlaza (`docs/ARCHITECTURE.md`, `docs/DATABASE.md`, `docs/ERRORS.md`, `docs/STYLE.md` y `docs/TREE.md`). Esta guía no las repite. Si una tarea y la constitución chocan, gana la constitución. Si la constitución, el código y esta guía se contradicen, se pregunta antes de escribir.
 
@@ -28,7 +28,7 @@ La implementación empieza cuando esa persona lo pide. Ejecuta `tasks.md` y no i
 
 El código vive en `src/`: `src/db/`, `src/queries/`, `src/logic/` y `src/clients/`. Qué sabe cada carpeta está en `docs/ARCHITECTURE.md`. La base y el servidor SQL están en `docs/DATABASE.md`.
 
-Ningún cliente funciona sin el servidor en marcha. Antes de usar la web, Electron, las extensiones de Chrome y de VS Code, la API de Nest, la terminal o Jupyter, se lanza `pnpm start` en otra terminal.
+Ningún cliente funciona sin el servidor en marcha. Antes de usar la web, Electron, las extensiones de Chrome y de VS Code, la API de Nest, la API de Express, la terminal o Jupyter, se lanza `pnpm start` en otra terminal.
 
 ## Paquetes
 
@@ -64,9 +64,13 @@ Desde esta carpeta, Jupyter se abre con `pnpm run jupyter`, en Linux y en Window
 
 `pnpm nest` lanza `scripts/nest.js`, que traduce los decoradores con Babel a `dist/` y arranca la API de Nest en `http://127.0.0.1:3003`, con su documentación en `http://127.0.0.1:3003/docs`. Se lanza en otra terminal, con `pnpm start` ya en marcha.
 
-`pnpm format` pasa Prettier por los `.js` de `src/db/`, `src/queries/` y `src/logic/`, y por los `.js`, `.html` y `.css` de `src/clients/web/`, `src/clients/electron/`, `src/clients/chrome/` y `src/clients/vscode/`, y por los `.js` de `src/clients/nest/`, con el formato estándar y sin configuración propia. `pnpm lint` pasa ESLint con las reglas recomendadas, según `eslint.config.js`. Los ficheros de `src/clients/nest/` se leen con `@babel/eslint-parser`, por sus decoradores.
+`pnpm http` lanza `src/clients/http/server.js`, la API de Express en `http://127.0.0.1:3001`. Se lanza en otra terminal, con `pnpm start` ya en marcha.
 
-La dependencia `openai` es la del clasificador. Lo usan la terminal, Jupyter, la API de Chrome, la extensión de VS Code y la API de Nest, y necesita Ollama con `llama3.2` en marcha. `@colors/colors` y `cli-table3` son las tablas del cliente Jupyter. `fastify` es la API de la extensión de Chrome. Los paquetes `@nestjs/*`, `reflect-metadata`, `rxjs` y `@babel/*` son la API de Nest. Se instalan con `pnpm install`.
+`pnpm bruno` lanza `scripts/bruno.js`, que prueba la API de Express con la colección de `src/clients/http/bruno/` y termina con error si falla alguna comprobación. Sin argumento lanza las peticiones con la base en marcha, que borran lo que crean. `pnpm bruno offline` lanza las de la base parada, con `pnpm http` en marcha. `pnpm bruno ai` lanza la de contar por género, con Ollama en marcha. La colección también se abre en la app de Bruno.
+
+`pnpm format` pasa Prettier por los `.js` de `src/db/`, `src/queries/` y `src/logic/`, y por los `.js`, `.html` y `.css` de `src/clients/web/`, `src/clients/electron/`, `src/clients/chrome/` y `src/clients/vscode/`, y por los `.js` de `src/clients/nest/` y `src/clients/http/`, con el formato estándar y sin configuración propia. `pnpm lint` pasa ESLint con las reglas recomendadas, según `eslint.config.js`. Los ficheros de `src/clients/nest/` se leen con `@babel/eslint-parser`, por sus decoradores.
+
+La dependencia `openai` es la del clasificador. Lo usan la terminal, Jupyter, la API de Chrome, la extensión de VS Code, la API de Nest y la API de Express, y necesita Ollama con `llama3.2` en marcha. `@colors/colors` y `cli-table3` son las tablas del cliente Jupyter. `fastify` es la API de la extensión de Chrome. Los paquetes `@nestjs/*`, `reflect-metadata`, `rxjs` y `@babel/*` son la API de Nest. `express` es la API de Express y `@usebruno/cli` lanza su colección. Se instalan con `pnpm install`.
 
 ## Estilo
 

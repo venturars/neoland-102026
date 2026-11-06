@@ -12,6 +12,7 @@ first-app/
     browser.js
     vscode.js
     nest.js
+    bruno.js
   src/
     db/
       server.js           (todo el servidor de datos)
@@ -36,6 +37,7 @@ first-app/
       chrome/             (server.js, manifest.json, index.html, popup.js y styles.css)
       vscode/             (package.json, extension.js, index.html, panel.js y styles.css)
       nest/               (main.js, app.module.js, users.controller.js, users.service.js, users.swagger.js y logic-exception.filter.js)
+      http/               (server.js y bruno/, la colección)
       terminal/           (un .txt por operación)
       jupyter/            (un .ipynb por operación)
   docs/
