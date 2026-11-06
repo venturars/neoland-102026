@@ -1,15 +1,10 @@
-### Herramienta: ASSIGN_REVIEWERS
+### ASSIGN_REVIEWERS
 
-- **Descripción**: Úsala cuando el alumno nombra a quienes tienen que mirar la pull request. Resuelve el login dentro de este repositorio, asigna esos logins y sácala de draft. No la uses para asignar al autor.
-- **MCP**: El servidor remoto descrito en `MCPS/github-mcp-server/mcp.txt`.
+La ejecuta `create-pr` con la PR y los logins ya resueltos. Usar el MCP GitHub disponible o `gh` con la misma cuenta y repositorio.
 
-#### Especificación de Argumentos
+1. Leer autor, borrador y revisores actuales. Excluir al autor y deduplicar logins.
+2. Verificar en vivo que cada login sigue siendo colaborador mediante `gh api repos/OWNER/REPO/collaborators/LOGIN` o su equivalente MCP; un rechazo no autoriza a escoger otra persona.
+3. Solicitar solo revisores que falten y pasar a lista para revisión cuando se haya pedido. Con `gh`: `gh pr edit NUMERO --repo OWNER/REPO --add-reviewer LOGIN` y `gh pr ready NUMERO --repo OWNER/REPO` si estaba en borrador.
+4. Consultar la PR para confirmar resultado. Si una escritura falla o se interrumpe, leer antes de repetir; no presentar una revisión como pedida sin verificarla.
 
-1. **Pull request** _(Obligatorio)_: El número o la URL.
-2. **Revisores** _(Obligatorio)_: Los nombres que dijo el alumno, separados por comas.
-
-#### Reglas de Invocación Críticas
-
-- **Login**: Cada nombre se resuelve dentro de este repositorio. Primero un colaborador cuyo login o nombre coincida. Si no coincide, el login de quien hace commits aquí con ese nombre o ese correo. No elijas un usuario público que no colabora.
-- **Si no hay login de colaborador**: Dilo y no pidas la revisión de ese nombre.
-- **Procesamiento de respuestas**: Quita al autor de la lista si aparece. Deja la pull request lista para revisión. Si el MCP falla, comunica el error y no marques la revisión como pedida.
+No asignar al autor ni modificar tokens. Un fallo de permisos no borra alias ni acredita una solicitud de revisión.
