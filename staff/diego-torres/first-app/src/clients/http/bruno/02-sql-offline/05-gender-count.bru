@@ -1,0 +1,21 @@
+meta {
+  name: gender-count
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/users/gender-count
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 500", function () {
+    expect(res.getStatus()).to.equal(500);
+  });
+
+  test("Mensaje Could not classify the users", function () {
+    expect(res.getBody().message).to.equal("Could not classify the users");
+  });
+}

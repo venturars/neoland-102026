@@ -1,0 +1,25 @@
+meta {
+  name: create-invalid-email
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+body:json {
+  { "name": "Ada", "email": "no-es-un-email" }
+}
+
+tests {
+  test("Estado 400", function () {
+    expect(res.getStatus()).to.equal(400);
+  });
+
+  test("Mensaje Email is invalid", function () {
+    expect(res.getBody().message).to.equal("Email is invalid");
+  });
+}

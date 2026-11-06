@@ -1,0 +1,25 @@
+meta {
+  name: find-by-email
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/users/by-email?email=ada@example.com
+  body: none
+  auth: none
+}
+
+params:query {
+  email: ada@example.com
+}
+
+tests {
+  test("Estado 500", function () {
+    expect(res.getStatus()).to.equal(500);
+  });
+
+  test("Mensaje Could not find the user", function () {
+    expect(res.getBody().message).to.equal("Could not find the user");
+  });
+}

@@ -1,0 +1,21 @@
+meta {
+  name: find-deleted
+  type: http
+  seq: 20
+}
+
+get {
+  url: {{baseUrl}}/users/{{userId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 404", function () {
+    expect(res.getStatus()).to.equal(404);
+  });
+
+  test("Mensaje User not found", function () {
+    expect(res.getBody().message).to.equal("User not found");
+  });
+}

@@ -1,0 +1,29 @@
+meta {
+  name: update-name
+  type: http
+  seq: 12
+}
+
+patch {
+  url: {{baseUrl}}/users/{{userId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  { "name": "Ada Lovelace" }
+}
+
+tests {
+  test("Estado 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("Cambia el nombre", function () {
+    expect(res.getBody().name).to.equal("Ada Lovelace");
+  });
+
+  test("Conserva el email", function () {
+    expect(res.getBody().email).to.equal(bru.getVar("adaEmail"));
+  });
+}

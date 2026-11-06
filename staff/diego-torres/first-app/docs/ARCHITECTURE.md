@@ -3,7 +3,7 @@
 La app tiene cuatro capas. Cada una solo habla con la de debajo.
 
 1. `src/clients/` — muestra datos y pide acciones. Llama a `src/logic/`.
-2. `src/logic/` — las reglas. Se ejecuta en el cliente: navegador, ventana de Electron, API de la extensión de Chrome, extensión de VS Code, API de Nest, terminal o Jupyter. Llama a `src/queries/`.
+2. `src/logic/` — las reglas. Se ejecuta en el cliente: navegador, ventana de Electron, API de la extensión de Chrome, extensión de VS Code, API de Nest, API de Express, terminal o Jupyter. Llama a `src/queries/`.
 3. `src/queries/` — el texto SQL y su envío al servidor. No tiene reglas.
 4. `src/db/` — el servidor que abre la base y ejecuta el SQL. Solo datos: no sirve la web. No tiene reglas.
 
@@ -17,8 +17,8 @@ Ningún cliente funciona sin el servidor en marcha (`pnpm start`). La web no la 
 | `src/queries/queries/*.js` | Una frase SQL por fichero, exportada como constante |
 | `src/queries/users.js` | Envía cada frase al servidor con `fetch` y devuelve las filas |
 | `src/logic/shared.js` | Qué es un nombre y un email válidos, y la copia de salida de un usuario |
-| `src/logic/<operación>.js` | Una operación por fichero: crear, modificar, borrar, listar y las tres búsquedas. Buscar por nombre y por email también lo usan la API de Chrome, la extensión de VS Code y la API de Nest |
-| `src/logic/users-gender-count.js` | Cuenta usuarios por el género del nombre. No guarda nada. Lo usan la terminal, Jupyter, la API de Chrome, la extensión de VS Code y la API de Nest |
+| `src/logic/<operación>.js` | Una operación por fichero: crear, modificar, borrar, listar y las tres búsquedas. Buscar por nombre y por email también lo usan la API de Chrome, la extensión de VS Code, la API de Nest y la API de Express |
+| `src/logic/users-gender-count.js` | Cuenta usuarios por el género del nombre. No guarda nada. Lo usan la terminal, Jupyter, la API de Chrome, la extensión de VS Code, la API de Nest y la API de Express |
 | `src/logic/index.js` | Reexporta las operaciones |
 | `src/clients/web/*` | Cliente de navegador en HTML, CSS y JS vanilla. Se abre como fichero e importa `src/logic/` con rutas relativas |
 | `scripts/browser.js` | Abre `src/clients/web/index.html` en Chrome, con un perfil aparte y `--allow-file-access-from-files` |
@@ -29,6 +29,9 @@ Ningún cliente funciona sin el servidor en marcha (`pnpm start`). La web no la 
 | `scripts/vscode.js` | Abre el editor en modo desarrollo con la extensión de `src/clients/vscode/` |
 | `src/clients/nest/*` | API de usuarios con Nest, en `127.0.0.1:3003`. La lanza `pnpm nest`. Usa la lógica de `src/logic/`, no tiene reglas y comprueba `Host` y `Origin`. Sirve su documentación en `/docs` y solo acepta el `Origin` de la propia API. En marcha ejecuta la copia de `dist/`, no `src/` tal cual: un cambio en `src/logic/` no llega hasta relanzar `pnpm nest` |
 | `scripts/nest.js` | Traduce `src/logic/`, `src/queries/` y `src/clients/nest/` con Babel a `dist/`, que no está en git, y arranca la API desde `dist/`. La configuración está en `babel.config.json` |
+| `src/clients/http/server.js` | API de usuarios con Express, en `127.0.0.1:3001`. La lanza `pnpm http`. Llama a `src/logic/`, no tiene reglas y comprueba `Host` y `Origin` |
+| `src/clients/http/bruno/*` | Colección de Bruno que prueba esa API. Tiene una carpeta con la base en marcha, otra con la base parada y otra para la IA |
+| `scripts/bruno.js` | Lanza una carpeta de la colección con el CLI de Bruno y termina con su resultado |
 | `src/clients/terminal/*.txt` | Un cliente por operación, para pegar en la terminal |
 | `src/clients/jupyter/*.ipynb` | Un cuaderno por operación, que abre `pnpm run jupyter` |
 

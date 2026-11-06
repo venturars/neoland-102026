@@ -1,0 +1,25 @@
+meta {
+  name: find-by-email
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/users/by-email?email={{adaEmail}}
+  body: none
+  auth: none
+}
+
+params:query {
+  email: {{adaEmail}}
+}
+
+tests {
+  test("Estado 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("Es Ada", function () {
+    expect(res.getBody().id).to.equal(bru.getVar("userId"));
+  });
+}

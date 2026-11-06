@@ -1,0 +1,21 @@
+meta {
+  name: unknown-route
+  type: http
+  seq: 21
+}
+
+get {
+  url: {{baseUrl}}/no-existe
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 404", function () {
+    expect(res.getStatus()).to.equal(404);
+  });
+
+  test("Sin cuerpo", function () {
+    expect(res.getBody() || "").to.equal("");
+  });
+}

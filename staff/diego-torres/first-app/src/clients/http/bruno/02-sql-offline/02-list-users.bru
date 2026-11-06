@@ -1,0 +1,21 @@
+meta {
+  name: list-users
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/users
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 500", function () {
+    expect(res.getStatus()).to.equal(500);
+  });
+
+  test("Mensaje Could not list the users", function () {
+    expect(res.getBody().message).to.equal("Could not list the users");
+  });
+}
