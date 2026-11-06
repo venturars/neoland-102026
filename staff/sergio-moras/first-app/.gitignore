@@ -1,4 +1,4 @@
-/db/users.sqlite
-/db/users.sqlite-journal
-/db/users.sqlite-wal
-/db/users.sqlite-shm
+/src/db/users.sqlite
+/src/db/users.sqlite-journal
+/src/db/users.sqlite-wal
+/src/db/users.sqlite-shm
