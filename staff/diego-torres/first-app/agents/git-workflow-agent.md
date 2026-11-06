@@ -31,7 +31,7 @@
      5. `agents/create-pr.md` con `create-pr-base-staging`. Este agente no enlaza la issue.
      6. `skills/link-pr-to-issue`. El orquestador siempre enlaza la issue.
    - Guardar un trozo: `agents/create-commit.md` con los ficheros de ese trozo y `agents/launch-push.md`.
-   - Que la revisen: el alumno nombra revisores. Se usa la skill `assign-reviewers` y la pull request sale de draft.
+   - Que la revisen: el alumno nombra revisores. Delega PR y nombres en `agents/create-pr.md` para solicitar revisión y salir de draft; espera su resultado.
 4. **Formateo:** Responde con lo que hizo cada paso: número de issue, nombre de rama, mensaje de commit o URL de la pull request.
 
 ## 4. Herramientas y APIs Asignadas

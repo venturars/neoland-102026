@@ -1,9 +1,9 @@
 ### Herramienta: CREATE_PR_BASE_STAGING
 
 - **Descripción**: Úsala desde el agente `create-pr` para abrir la pull request con base `staging`, directamente en draft y asignada al usuario autenticado en una misma invocación.
-- **Comando de Terminal**: `staff/diego-torres/first-app/tools/create-pr-base-staging.sh "[RAMA]" "[TITULO]" "[CUERPO]"`
+- **Comando de Terminal**: `bash staff/diego-torres/first-app/tools/create-pr-base-staging.sh "[RAMA]" "[TITULO]" "[CUERPO]"`
 
-Ejecuta el comando desde la raíz del repositorio git. `[CUERPO]` es la ruta de un fichero temporal con la plantilla rellenada. Requiere GitHub CLI autenticado: esa cuenta será el autor de la PR y `--assignee "@me"` la persona asignada.
+Ejecuta el comando desde la raíz del repositorio git. Si la plantilla se copia a un proyecto, usa la ruta de su carpeta `tools/` desde esa raíz. `[CUERPO]` es la ruta de un fichero temporal con la plantilla rellenada. Requiere GitHub CLI autenticado: esa cuenta será el autor de la PR y `--assignee "@me"` la persona asignada.
 
 Fuente de la forma del cuerpo: [github-pr](https://www.skills.sh/gentleman-programming/gentleman-skills/github-pr), adaptada a esta plantilla.
 
