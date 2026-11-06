@@ -1,8 +1,10 @@
 # Árbol
 
 first-app/
+  .gitignore
   AGENTS.md
   README.md
+  babel.config.json
   eslint.config.js
   package.json
   agents/
@@ -12,6 +14,7 @@ first-app/
   MCPS/
   scripts/
     jupyter.sh
+    jupyter-node-http.sh
   docs/
     ARCHITECTURE.md
     TREE.md
@@ -44,6 +47,21 @@ first-app/
     clients/
       http/
         server.js
+        bruno/
+      node-http/
+        server.js
+        jupyter/
+          create-user.ipynb
+          list-users.ipynb
+          find-user-by-id.ipynb
+          update-user.ipynb
+          delete-user.ipynb
+      nest/
+        main.js
+        app.module.js
+        users.controller.js
+        users.service.js
+        http-exception.filter.js
       web/
         index.html
         styles.css

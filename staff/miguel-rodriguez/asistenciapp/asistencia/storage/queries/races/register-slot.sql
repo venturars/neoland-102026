@@ -1,0 +1,1 @@
+UPDATE race_slots SET state='registrado',checkin_id=? WHERE session_id=? AND roster_key=?

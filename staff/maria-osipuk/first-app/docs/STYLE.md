@@ -78,6 +78,17 @@ Aprobadas en la tarea del cliente de Chrome:
 - `src/clients/chrome/popup.js` reúne las funciones de su cliente en un solo archivo.
 - `callApi(method, route, body)` de `popup.js` es el único envoltorio de `fetch` hacia su API.
 
+Aprobadas en la tarea del cliente de VS Code:
+
+- `src/clients/vscode/extension.js`, `user-actions.js` y `view.js` reúnen las funciones de su parte del cliente en un solo archivo.
+- `user-actions.js` responde `{ data }` o `{ error }` entre las partes de ese cliente. `src/logic/` sigue sin envoltorios.
+- `call(action, values)` de `view.js` es el único envoltorio de `postMessage` hacia el proceso de la extensión.
+
+Aprobadas en la tarea del cliente Nest:
+
+- `src/clients/nest/` se aparta de esta guía: usa clases, `this`, decoradores y nombres de archivo con punto (`users.controller.js`), porque Nest se construye así. El resto de la aplicación no cambia.
+- Los exports de ese cliente siguen siendo con nombre. Cada archivo contiene una sola clase.
+
 ## Comentarios
 
 Los comentarios son material de estudio: la desarrolladora debe poder aprender el código leyéndolos. Se escriben cuando se crea una funcionalidad o se modifica código con autorización, en inglés sencillo y con frases completas, no con etiquetas de una o dos palabras.

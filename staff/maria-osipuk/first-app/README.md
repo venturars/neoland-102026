@@ -1,6 +1,6 @@
 # First App
 
-Aplicación educativa de gestión de usuarios con Node.js y SQLite. Tiene clientes de terminal, Jupyter, navegador, REST, escritorio y extensión de Chrome. El navegador usa HTML, CSS y JavaScript vanilla, sin frameworks.
+Aplicación educativa de gestión de usuarios con Node.js y SQLite. Tiene clientes de terminal, Jupyter, navegador, REST, `node:http`, Nest, escritorio y extensiones de Chrome y VS Code. El navegador usa HTML, CSS y JavaScript vanilla, sin frameworks.
 
 ## Arrancar
 
@@ -14,14 +14,17 @@ Arranca el **servidor de datos** en `http://127.0.0.1:3000`. Es el único proces
 
 Con el servidor de datos arrancado, cada cliente se usa por separado:
 
-| Cliente    | Cómo se abre                                                          |
-| ---------- | --------------------------------------------------------------------- |
-| Navegador  | `pnpm run web` abre Chrome con `src/clients/web/index.html`.          |
-| Terminal   | Copiar una línea de `src/clients/terminal/`.                          |
-| Jupyter    | `./scripts/jupyter.sh` abre los cuadernos de `src/clients/jupyter/`.  |
-| REST       | `pnpm run http` arranca el cliente en `http://127.0.0.1:3001`.        |
-| Escritorio | `pnpm run electron` abre la aplicación en su propia ventana.          |
-| Chrome     | `pnpm run chrome` arranca su API y la extensión se abre desde Chrome. |
+| Cliente    | Cómo se abre                                                             |
+| ---------- | ------------------------------------------------------------------------ |
+| Navegador  | `pnpm run web` abre Chrome con `src/clients/web/index.html`.             |
+| Terminal   | Copiar una línea de `src/clients/terminal/`.                             |
+| Jupyter    | `./scripts/jupyter.sh` abre los cuadernos de `src/clients/jupyter/`.     |
+| REST       | `pnpm run http` arranca el cliente en `http://127.0.0.1:3001`.           |
+| node:http  | `pnpm run node-http` arranca el cliente en `http://127.0.0.1:3004`.      |
+| Nest       | `pnpm run nest` compila y arranca el cliente en `http://127.0.0.1:3003`. |
+| Escritorio | `pnpm run electron` abre la aplicación en su propia ventana.             |
+| Chrome     | `pnpm run chrome` arranca su API y la extensión se abre desde Chrome.    |
+| VS Code    | `pnpm run vscode` abre una ventana de desarrollo con la extensión.       |
 
 `pnpm run web` abre Chrome con un perfil temporal y `--allow-file-access-from-files`, porque la página se abre desde `file://` e importa módulos JavaScript de `src/logic/`. Chrome bloquea esos imports sin esa opción.
 
@@ -39,6 +42,38 @@ Con `pnpm start` y `pnpm run http` en dos terminales, las peticiones van a `http
 
 Un error responde JSON con la clave `message`. Para no tocar la base real, arrancar el servidor de datos con `FIRST_APP_DATABASE_FILE`, como se explica en «Comprobaciones».
 
+## Probar el cliente node:http con Jupyter
+
+Con `pnpm start` y `pnpm run node-http` en dos terminales, `pnpm run jupyter-node-http` abre los cuadernos de `src/clients/node-http/jupyter/`. Hay uno por operación: `create-user`, `list-users`, `find-user-by-id`, `update-user` y `delete-user`. Cada uno explica la petición, la hace a `http://127.0.0.1:3004` y dibuja la respuesta en tabla; si falla, muestra el mensaje en inglés. Son las mismas cinco rutas, los mismos cuerpos y los mismos errores que en el cliente REST. Los de ver, modificar y borrar buscan a Ada por su email (`ada@example.com`), así que se crea antes con `create-user`. El de borrar borra a Ada de verdad.
+
+## Probar el cliente REST con Bruno
+
+La carpeta `src/clients/http/bruno/` es una colección de [Bruno](https://www.usebruno.com/) con las mismas peticiones, ya escritas y con sus comprobaciones. En Bruno, **Open Collection** y esa carpeta. Hace falta una base vacía, así que se arranca el servidor de datos con una temporal:
+
+```sh
+FIRST_APP_DATABASE_FILE=/tmp/bruno.sqlite pnpm start
+pnpm run http
+```
+
+1. `01-sql-online`: con el servidor de datos en marcha, se lanza la carpeta entera (**Run**). Son 14 peticiones que crean a Ada, la ven, la modifican, la borran, prueban los errores y piden el recuento con la base ya vacía. El id de Ada se guarda solo.
+2. `02-sql-offline`: se detiene `pnpm start` con `Ctrl+C`, se deja `pnpm run http` abierto y se lanza la carpeta. Son 6 peticiones que esperan el error `500` de cada operación y del recuento.
+
+Si la primera carpeta se lanza con usuarios ya creados, fallan la lista vacía y el email repetido.
+
+## Probar el cliente Nest con Postman
+
+Con `pnpm start` y `pnpm run nest` en dos terminales, las peticiones van a `http://127.0.0.1:3003`. Son las mismas cinco rutas, los mismos cuerpos y los mismos errores que en el cliente REST. `pnpm run nest` compila `src/` a `dist/` con Babel antes de arrancar, porque Nest usa decoradores y Node no los entiende. `dist/` no se sube a git.
+
+También puedes abrir `http://127.0.0.1:3003` en el navegador: es una página Swagger UI donde se crean, listan, ven, modifican y borran usuarios sin escribir las peticiones a mano.
+
+## Pedir el recuento por género
+
+El recuento cuenta los usuarios guardados según el género que sugiere su nombre y devuelve tres números: mujeres (`female`), hombres (`male`) e indefinidos (`undefined`). Necesita Ollama en local con el modelo `gemma4`, además de `pnpm start`. Sin usuarios responde tres ceros sin contactar con Ollama. No guarda el género ni muestra los nombres.
+
+- **REST, Nest y API de Chrome:** `GET /users/gender-count`, en los puertos 3001, 3003 y 3002. Responde `{ "female": 2, "male": 1, "undefined": 1 }`. Si falla el clasificador responde `500` con `Could not classify the users.`
+- **Escritorio, VS Code y Chrome:** la pestaña **Recuento**, con el botón «Pedir recuento». No se pide solo al abrirla. Se ven tres números: mujeres, hombres e indefinidos. Si falla el clasificador se ve `Could not classify the users.`
+- **Navegador:** no lo tiene, porque su página no puede ejecutar el clasificador. La terminal y Jupyter ya cuentan.
+
 ## Qué muestra cada pantalla del navegador
 
 1. **Selección:** elegir un usuario existente por su id, nombre y email y pulsar «Continuar», o crear uno nuevo con nombre y email. No se pide contraseña.
@@ -51,10 +86,19 @@ Los cambios guardados se conservan al reiniciar. Recargar la página vuelve a la
 
 `pnpm run electron` abre una ventana propia. El primer arranque necesita internet y tarda más, porque descarga el binario de Electron. Si falla con `does not provide an export named 'BrowserWindow'`, la terminal tiene definida `ELECTRON_RUN_AS_NODE`: ejecutar antes `unset ELECTRON_RUN_AS_NODE`.
 
+La ventana tiene dos pestañas, **Usuarios** y **Recuento**.
+
 - **Lista, a la izquierda:** los usuarios, el botón «Actualizar» y el botón «Nuevo usuario».
 - **Panel, a la derecha:** el alta o, al elegir un usuario, su detalle para guardar cambios o eliminarlo.
+- **Recuento:** el botón «Pedir recuento» y los tres números.
 
 Eliminar pide confirmación con un diálogo del sistema. Cerrar la ventana termina la aplicación, también en macOS.
+
+## Abrir la extensión de VS Code
+
+La extensión solo necesita `pnpm start`. `pnpm run vscode` usa el comando `code`, que tiene que estar instalado, y abre una ventana de desarrollo con la extensión cargada. No se instala nada en el editor.
+
+En esa ventana, el icono **Usuarios** de la barra de actividad abre la vista. Los textos y los errores se ven en español. La vista tiene las pestañas **Usuarios** y **Recuento**. Al ocultarla, lo escrito sin guardar se pierde y se vuelve a la lista.
 
 ## Cargar la extensión de Chrome
 
@@ -70,6 +114,7 @@ open -na "Google Chrome" --args --user-data-dir=/tmp/first-app-chrome "chrome://
 2. Pulsar **Cargar descomprimida** y elegir la carpeta `src/clients/chrome/`.
 3. Abrirla con su icono en la barra del navegador. Se puede fijar desde el icono de extensiones.
 
+- **Pestañas:** **Usuarios** y **Recuento**, con el botón «Pedir recuento».
 - **Lista:** los usuarios y el formulario para crear uno nuevo.
 - **Detalle:** al elegir un usuario, sus datos, el formulario para guardar cambios, «Volver» y «Borrar usuario», que pide confirmación dentro de la misma ventana.
 
@@ -82,8 +127,12 @@ Los errores se ven en inglés, sin traducir. Chrome cierra la ventana al pulsar 
 - `src/logic/`: validación y operaciones de usuarios que comparten todos los clientes.
 - `src/clients/web/`: `index.html`, `styles.css` y `app.js`. Importa `src/logic/` directamente.
 - `src/clients/http/app.js`: el cliente REST con Express. Importa `src/logic/` directamente.
+- `src/clients/node-http/`: el cliente REST con `node:http`, sin framework. Su `app.js` importa `src/logic/` y sus cuadernos de `jupyter/` llaman a la API por HTTP.
+- `src/clients/http/bruno/`: la colección de Bruno del cliente REST. Son archivos `.bru`, sin código de la aplicación.
+- `src/clients/nest/`: el cliente Nest, con módulo, controlador, servicio y filtro de errores. Se compila con Babel, y su servicio importa `src/logic/`.
 - `src/clients/electron/`: la aplicación de escritorio. Su proceso principal llama a `src/logic/`, y su página le pide las acciones mediante `preload.cjs`.
 - `src/clients/chrome/`: la extensión y su API con Fastify. La API importa `src/logic/`, y la extensión le habla con `fetch`.
+- `src/clients/vscode/`: la extensión de VS Code. Su proceso llama a `src/logic/`, y su vista le pide las acciones con mensajes.
 
 El recorrido es cliente → lógica → consultas → servidor de datos → SQLite. Ningún cliente abre la base directamente. Las guías completas están en `docs/CONSTITUTION.md` y sus enlaces.
 
@@ -95,7 +144,7 @@ pnpm format
 pnpm lint
 ```
 
-`pnpm test` crea sus propias bases temporales y elimina sus datos al terminar. No usa la base real. Las pruebas arrancan su propio servidor de datos en el puerto `3000`, y lanzan el cliente REST en el `3001` y la API de Chrome en el `3002`, así que hay que detener `pnpm start`, `pnpm run http` y `pnpm run chrome` antes de ejecutarlas; si el puerto está ocupado, fallan antes de enviar ninguna consulta.
+`pnpm test` crea sus propias bases temporales y elimina sus datos al terminar. No usa la base real. Las pruebas arrancan su propio servidor de datos en el puerto `3000`, y lanzan el cliente REST en el `3001`, la API de Chrome en el `3002`, el cliente Nest en el `3003` y el cliente `node:http` en el `3004`, así que hay que detener `pnpm start`, `pnpm run http`, `pnpm run chrome`, `pnpm run nest` y `pnpm run node-http` antes de ejecutarlas; si el puerto está ocupado, fallan antes de enviar ninguna consulta.
 
 Para arrancar el servidor de datos con otro archivo, definir `FIRST_APP_DATABASE_FILE` antes de iniciarlo:
 

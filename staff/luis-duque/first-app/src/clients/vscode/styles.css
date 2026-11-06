@@ -1,0 +1,118 @@
+section[hidden] {
+  display: none;
+}
+
+body {
+  margin: 0;
+  background: #e4e8ea;
+  color: #1b2830;
+  font-family: "Familjen Grotesk", sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+
+main {
+  box-sizing: border-box;
+  padding: 1.25rem 1rem 1.5rem;
+}
+
+h1 {
+  margin: 0 0 1.25rem;
+  font-family: Literata, serif;
+  font-size: 1.35rem;
+  font-weight: 560;
+  line-height: 1.2;
+}
+
+#menu-user .user-name {
+  display: block;
+  font-family: Literata, serif;
+  font-size: 2.75rem;
+  font-weight: 560;
+  line-height: 1.05;
+}
+
+#menu-user .user-id,
+#edit-id {
+  display: block;
+  margin: 0.45rem 0 1.5rem;
+  color: #a6843d;
+}
+
+#user-list {
+  margin: 0 0 1.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+#user-list li {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
+  column-gap: 0.75rem;
+  padding: 0.8rem 0;
+  border-top: 1px solid #1b2830;
+}
+
+#user-list li:last-child {
+  border-bottom: 1px solid #1b2830;
+}
+
+#user-list .user-id {
+  color: #a6843d;
+  font-variant-numeric: tabular-nums;
+}
+
+#user-list .user-name,
+#user-list .user-email {
+  grid-column: 2;
+}
+
+#user-list .user-email {
+  color: #5c6b73;
+}
+
+label {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+input {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid #5c6b73;
+  border-radius: 0;
+  background: #f7f8f8;
+  color: inherit;
+  font: inherit;
+}
+
+button {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0.8rem 0;
+  border: 0;
+  border-bottom: 1px solid #1b2830;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+#delete-button,
+.message {
+  color: #8f3d36;
+}
+
+.message {
+  min-height: 1.5rem;
+}
+
+:focus-visible {
+  outline: 2px solid #a6843d;
+  outline-offset: 2px;
+}

@@ -3,7 +3,13 @@ import js from "@eslint/js";
 
 export default defineConfig([
   {
-    ignores: [".venv/**", "node_modules/**", "src/clients/vscode/extension.js"],
+    ignores: [
+      ".venv/**",
+      "node_modules/**",
+      "dist/**",
+      "src/clients/vscode/extension.js",
+      "src/clients/nest/**",
+    ],
   },
   {
     files: ["**/*.js"],
@@ -24,7 +30,11 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/db/server.js", "src/clients/http/app.js"],
+    files: [
+      "src/db/server.js",
+      "src/clients/http/app.js",
+      "src/clients/node-http/server.js",
+    ],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",

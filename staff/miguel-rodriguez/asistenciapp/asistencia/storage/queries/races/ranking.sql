@@ -1,0 +1,1 @@
+SELECT id,name,checked_at FROM checkins WHERE session_id=? ORDER BY id

@@ -1,12 +1,14 @@
 # First app AI
 
-Aplicación local de contactos. Los nueve documentos de Jupyter permiten ejecutar sus operaciones y leer los resultados desde el navegador.
+Aplicación local de contactos con clientes web, Jupyter, Terminal, VS Code,
+Electron, Chrome y APIs HTTP. Todos utilizan las mismas operaciones y datos.
 
 ## Arrancar los datos
 
-Desde esta carpeta, con las dependencias del proyecto disponibles:
+Desde esta carpeta, con Node compatible con `node:sqlite` y pnpm:
 
 ```sh
+pnpm install --frozen-lockfile
 pnpm server
 ```
 
@@ -15,21 +17,32 @@ Deja esa terminal abierta. El servicio escucha en `http://127.0.0.1:3000` y abre
 o con el ejemplo Terminal de inicialización. Terminal y Jupyter utilizan esos
 mismos datos. El servicio es local y no tiene autenticación.
 
-En otra terminal puedes usar los ejemplos de `src/clients/terminal/` o abrir Jupyter.
-
-## Abrir el cliente web
-
-Con `pnpm server` en ejecución, prepara la tabla una vez desde otra terminal:
+Con el servicio en marcha, prepara la tabla desde otra terminal:
 
 ```sh
 node --input-type=module -e 'import { createUsersTable } from "./src/queries/users.js"; await createUsersTable();'
 ```
 
-Después ejecuta:
+Repetir la preparación conserva los contactos. Deja el servicio abierto mientras
+usas los clientes. Cada API se inicia en otra terminal:
 
-```sh
-pnpm web
-```
+| Cliente | Comando | Dirección |
+| --- | --- | --- |
+| Web | `pnpm web` | Archivo HTML en Chrome/Chromium |
+| Escritorio | `pnpm electron` | Ventana de Electron |
+| Chrome | `pnpm chrome` | API del popup en `http://127.0.0.1:3002` |
+| Express | `pnpm http` | `http://127.0.0.1:3001` |
+
+`pnpm-workspace.yaml` conserva una excepción de antigüedad de publicación solo para
+`electron@45.2.2`, la versión revisada. pnpm mantiene el
+lockfile; no se desactiva el control de antigüedad para otros paquetes.
+
+El cliente Nest se desarrolla por separado en la [issue #1044](https://github.com/venturars/neoland-102026/issues/1044).
+
+## Abrir el cliente web
+
+Ejecuta `pnpm web` con el servicio de datos en marcha. El resumen por nombre
+usa la misma operación compartida y consulta Ollama directamente.
 
 El comando abre `src/clients/web/index.html` como archivo en Chrome/Chromium,
 con permiso para cargar sus módulos locales y un perfil temporal separado.
@@ -55,10 +68,52 @@ Abrir el HTML con doble clic en una sesión normal puede bloquear los módulos.
 Para abrir o volver a abrir el cliente:
 
 1. Desde `first-app-ai`, inicia `pnpm server` si el servicio no está en marcha. Prepara la tabla como se indica arriba si todavía no existe; repetir la preparación conserva los contactos.
-2. En VS Code 1.142.0 o posterior, abre `src/clients/vscode/` como carpeta y pulsa **F5**. Se abrirá una ventana **Extension Development Host**.
-3. En esa ventana, abre la paleta de comandos con **Cmd+Shift+P** (macOS) o **Ctrl+Shift+P** (Windows/Linux), busca **First App: Open Users** y pulsa Enter.
+2. Ejecuta `pnpm vscode` con VS Code 1.142.0 o posterior y el comando `code` disponible.
+3. En la ventana de desarrollo, abre **Usuarios** en **Explorer**. El comando **First App: Open Users** también enfoca esa vista.
 
-Si cierras solo el panel, ejecuta de nuevo el comando en la ventana de desarrollo. Si cierras esa ventana o VS Code, repite los pasos anteriores. Cerrar la ventana de desarrollo no detiene el servicio; para detenerlo, pulsa **Ctrl+C** en su terminal. El panel utiliza la misma base local que los otros clientes. Para experimentar, utiliza una copia del proyecto sin su base y datos ficticios.
+Cerrar VS Code no detiene el servicio de datos. Para detenerlo, pulsa **Ctrl+C**
+en su terminal. Usa una copia y contactos ficticios para experimentar.
+
+## Abrir Electron
+
+La primera vez, prepara el ejecutable de la versión instalada:
+
+```sh
+node node_modules/electron/install.js
+```
+
+Con los datos preparados, ejecuta `pnpm electron`. Abre una ventana propia para
+crear, seleccionar, buscar por ID, editar y eliminar contactos. El borrado pide
+el email guardado. El resumen usa la misma clasificación que Jupyter.
+
+Electron llama a las operaciones desde los módulos de su renderer; no necesita las
+APIs Express o Fastify. Cierra la aplicación con **Salir/Quit**; en macOS
+cerrar solo la ventana conserva la aplicación y puedes reabrirla desde el Dock.
+
+## Cargar la extensión de Chrome
+
+1. Con el servicio de datos abierto, ejecuta `pnpm chrome` para iniciar su API Fastify.
+2. Abre `chrome://extensions`, activa **Modo de desarrollador** y elige **Cargar descomprimida**.
+3. Selecciona `src/clients/chrome/` y abre **First App · Contactos** desde el menú de extensiones.
+
+El popup permite crear, seleccionar, buscar por ID, editar, confirmar el borrado
+por email y consultar el resumen. Solo solicita acceso a su API local en el
+puerto 3002. Al cerrar el popup, los contactos siguen guardados. **Ctrl+C**
+detiene Fastify desde su terminal; el servicio de datos se detiene por separado.
+
+## Consultar el resumen por nombre
+
+Web, VS Code, Electron y Chrome tienen un botón de resumen. Las dos APIs
+ofrecen `GET /users/gender-count`. El resultado contiene `women`, `men` y
+`genderUndefined`: son estimaciones por nombre, no identidades verificadas.
+
+Una tabla vacía devuelve tres ceros sin modelo. Con contactos se necesita Ollama
+local en `http://127.0.0.1:11434/v1` y `llama3.2` disponible. Si falla, se muestra
+`Could not classify the users`; no se devuelve un conteo parcial ni se modifican
+los datos. La web importa la operación compartida; no necesita Express para
+consultar el resumen. Usa el lanzador `pnpm web`, cuyo origen file:// debe estar
+permitido por Ollama. Si otra instalación lo bloquea, revisa OLLAMA_ORIGINS para
+ese origen local concreto antes de reiniciar tu servicio.
 
 ## Abrir Jupyter
 
@@ -115,13 +170,15 @@ Prepara la tabla de esta copia y deja `pnpm server` abierto. En otra terminal:
 pnpm http
 ```
 
-El cliente escucha en http://127.0.0.1:3001. En Postman usa Body → raw → JSON
-para POST y PATCH, con Content-Type: application/json.
+Express escucha en `http://127.0.0.1:3001`. Fastify ofrece las mismas
+rutas en `http://127.0.0.1:3002`. En Postman usa **Body → raw → JSON** para POST y
+PATCH, con `Content-Type: application/json`.
 
 | Petición | Body | Respuesta |
 | --- | --- | --- |
 | POST /users | {"name":"Ada","email":"ada@example.com"} | 201, usuario |
 | GET /users | — | 200, lista |
+| GET /users/gender-count | — | 200, tres conteos |
 | GET /users/ID | — | 200, usuario |
 | PATCH /users/ID | {"name":"Ada Lovelace"} | 200, usuario modificado |
 | DELETE /users/ID | — | 204, cuerpo vacío |
@@ -129,8 +186,33 @@ para POST y PATCH, con Content-Type: application/json.
 Sustituye ID por el recibido al crear. PATCH conserva los campos omitidos.
 Los errores devuelven JSON con message: 400 para nombre/email inválido, 409
 para email ocupado, 404 para usuario inexistente y 500 para fallos de datos.
-Una ruta desconocida devuelve 404 vacío; JSON mal formado, 400 vacío.
+En Express, una ruta desconocida devuelve 404 vacío; JSON mal formado, 400 vacío.
 
-Usa datos desechables para borrar. Terminal, Jupyter, web y REST comparten los
-contactos. Ctrl+C detiene cada servicio desde su propia terminal. El cliente REST
-no sirve la página web.
+Usa datos desechables para borrar. Todos los clientes comparten los contactos.
+**Ctrl+C** detiene cada API desde su propia terminal. Las APIs no sirven la
+página web; esta se abre con `pnpm web`.
+
+
+Los campos vacíos al modificar conservan el valor guardado en Electron, Chrome
+y VS Code. Electron carga lógica desde su renderer. Para VS Code, ejecuta
+`pnpm vscode` con el comando `code` disponible y abre Usuarios en Explorer.
+
+
+## Nest
+
+En otra terminal, mantén `pnpm server` y la tabla inicializada. Ejecuta `pnpm nest`
+para compilar src y abrir la API en http://127.0.0.1:3003. Ctrl+C la detiene.
+En Postman utiliza POST /users con JSON {"name":"Ada","email":"ada@example.com"};
+GET /users; GET /users/ID; PATCH /users/ID con JSON {"name":"Ada Lovelace"};
+DELETE /users/ID. Creación201, consultas y edición200, borrado204 sin cuerpo.
+Sustituye ID por el ID devuelto. Las respuestas de contactos tienen los cinco
+campos y PATCH conserva los omitidos. Es una API; no tiene página propia.
+
+Para verificar el adaptador sin dejar el servidor abierto:
+
+```sh
+pnpm exec babel src --out-dir dist --delete-dir-on-start
+node --test --test-concurrency=1 tests/nest-client.test.js
+```
+
+Estas pruebas preparan datos desechables y utilizan un puerto separado.

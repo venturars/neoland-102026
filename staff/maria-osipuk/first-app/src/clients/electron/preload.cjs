@@ -3,11 +3,14 @@ const { contextBridge, ipcRenderer } = require("electron");
 // The preload is the only bridge between the page and the main process.
 // It has to be .cjs: the window is sandboxed, and a sandboxed preload cannot
 // use import, while package.json makes every .js file an ES module.
-// It publishes five functions and not ipcRenderer itself, so the page can
+// It publishes six functions and not ipcRenderer itself, so the page can
 // only ask for these actions.
 contextBridge.exposeInMainWorld("users", {
   list() {
     return ipcRenderer.invoke("users:list");
+  },
+  count() {
+    return ipcRenderer.invoke("users:count");
   },
   find(id) {
     return ipcRenderer.invoke("users:find", id);

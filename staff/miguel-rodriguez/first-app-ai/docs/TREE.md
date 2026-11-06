@@ -34,6 +34,10 @@ first-app-ai/
 │   ├── STYLE.md
 │   ├── TREE.md
 │   └── specs/
+│       ├── workflow-rounds-and-commits/
+│       │   ├── plan.md
+│       │   ├── spec.md
+│       │   └── tasks.md
 │       ├── vscode-user-client/
 │       │   ├── plan.md
 │       │   ├── spec.md
@@ -43,6 +47,10 @@ first-app-ai/
 │       │   ├── spec.md
 │       │   └── tasks.md
 │       ├── align-code-with-guides/
+│       │   ├── plan.md
+│       │   ├── spec.md
+│       │   └── tasks.md
+│       ├── complete-user-clients/
 │       │   ├── plan.md
 │       │   ├── spec.md
 │       │   └── tasks.md
@@ -101,6 +109,7 @@ first-app-ai/
 ├── eslint.config.js
 ├── package.json
 ├── pnpm-lock.yaml
+├── pnpm-workspace.yaml
 ├── requirements-jupyter.txt
 ├── scripts/
 │   ├── jupyter.js
@@ -136,6 +145,17 @@ first-app-ai/
 │       └── SKILL.md
 ├── src/
 │   ├── clients/
+│   │   ├── chrome/
+│   │   │   ├── index.html
+│   │   │   ├── manifest.json
+│   │   │   ├── popup.js
+│   │   │   ├── server.js
+│   │   │   └── styles.css
+│   │   ├── electron/
+│   │   │   ├── app.js
+│   │   │   ├── index.html
+│   │   │   ├── main.js
+│   │   │   └── styles.css
 │   │   ├── http/
 │   │   │   └── app.js
 │   │   ├── vscode/
@@ -211,7 +231,11 @@ first-app-ai/
 │       ├── refactor-pull-request.md
 │       └── test-pull-request.md
 ├── tests/
+│   ├── browser-classifier.test.js
+│   ├── client-apis.test.js
+│   ├── client-ui-state.test.js
 │   ├── serve-data-through-node.test.js
+│   ├── vscode-client.test.js
 │   └── web-client.test.js
 └── tools/
     ├── check-status.sh
@@ -221,3 +245,8 @@ first-app-ai/
     ├── launch-push.sh
     └── pull-changes.sh
 ```
+
+
+Cliente src/clients/nest: main.js, app.module.js, users.controller.js,
+users.service.js y http-exception.filter.js. babel.config.json configura la
+compilación; dist/ es salida generada ignorada por Git.

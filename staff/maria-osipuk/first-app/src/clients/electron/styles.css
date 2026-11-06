@@ -25,13 +25,56 @@
   box-sizing: border-box;
 }
 
-/* The two zones share the window, and each one scrolls by itself. */
+/* Without this rule, a hidden element that sets its own display, like a
+   grid, would still be shown. */
+[hidden] {
+  display: none;
+}
+
+/* The tab bar is on top and the open tab fills the rest of the window. */
 body {
   display: grid;
-  grid-template-columns: 20rem 1fr;
+  grid-template-rows: auto 1fr;
   height: 100vh;
   margin: 0;
   background: var(--color-background);
+}
+
+/* The two zones of the users tab share the window, and each one scrolls
+   by itself. */
+.users-tab {
+  display: grid;
+  grid-template-columns: 20rem 1fr;
+  min-height: 0;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.5rem 1rem 0;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.tab {
+  border-radius: 0.5rem 0.5rem 0 0;
+  color: var(--color-primary);
+  font-weight: 500;
+  background: transparent;
+}
+
+.tab:hover {
+  background: var(--color-selected);
+}
+
+.tab.is-active {
+  color: #ffffff;
+  background: var(--color-primary);
+}
+
+.count-actions {
+  justify-content: flex-start;
+  margin-bottom: 1rem;
 }
 
 h1,

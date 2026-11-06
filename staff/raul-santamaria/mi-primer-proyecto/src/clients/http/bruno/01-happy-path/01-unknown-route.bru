@@ -1,0 +1,18 @@
+meta {
+  name: unknown route
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/no-existe
+}
+
+tests {
+  test("status is 404", function () {
+    expect(res.getStatus()).to.equal(404);
+  });
+  test("empty body", function () {
+    expect(res.getBody()).to.equal("");
+  });
+}

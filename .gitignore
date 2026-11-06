@@ -1,9 +1,6 @@
 # Electron build output (mi-primer-proyecto)
 **/mi-primer-proyecto/dist-electron/
 
-# Salida de compilación (cualquier carpeta)
-dist/
-
 # Dependencias y locks de npm (cualquier carpeta)
 node_modules/
 package-lock.json
@@ -106,3 +103,8 @@ venv/
 
 # AsistenciApp: data/ guarda nombres de alumnos y el token del profesor.
 **/asistenciapp/data/
+
+# Caché local del workflow compartido.
+/.git-workflow-cache.json
+/.git-workflow-cache.json.*.tmp
+/.git-workflow-cache.lock

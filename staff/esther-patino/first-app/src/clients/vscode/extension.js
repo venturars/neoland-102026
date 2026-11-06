@@ -10,6 +10,7 @@ import { findUserById } from "../../logic/find-user-by-id.js";
 import { findUserByName } from "../../logic/find-user-by-name.js";
 import { listUsers } from "../../logic/list-users.js";
 import { updateUser } from "../../logic/update-user.js";
+import { usersGenderCount } from "../../logic/users-gender-count.js";
 
 const NAME_IS_EMPTY = "Name is empty";
 const EMAIL_IS_INVALID = "Email is invalid";
@@ -21,6 +22,7 @@ const COULD_NOT_LIST_THE_USERS = "Could not list the users";
 const COULD_NOT_FIND_THE_USER = "Could not find the user";
 const COULD_NOT_UPDATE_THE_USER = "Could not update the user";
 const COULD_NOT_DELETE_THE_USER = "Could not delete the user";
+const COULD_NOT_CLASSIFY_THE_USERS = "Could not classify the users";
 const OPEN_USERS = "first-app.openUsers";
 
 const directory = path.dirname(fileURLToPath(import.meta.url));
@@ -58,6 +60,9 @@ function shownMessage(error, fallback) {
       return message;
     }
     if (message === COULD_NOT_DELETE_THE_USER) {
+      return message;
+    }
+    if (message === COULD_NOT_CLASSIFY_THE_USERS) {
       return message;
     }
   }
@@ -178,6 +183,15 @@ async function onUpdateUser(webview, message) {
   }
 }
 
+async function onUsersGenderCount(webview) {
+  try {
+    const count = await usersGenderCount();
+    webview.postMessage({ type: "gender-count", count });
+  } catch (error) {
+    postError(webview, error, COULD_NOT_CLASSIFY_THE_USERS);
+  }
+}
+
 async function onDeleteUser(webview, message) {
   try {
     await deleteUser(message.id);
@@ -219,6 +233,11 @@ function receiveMessage(webview, message) {
 
   if (message.type === "delete-user") {
     onDeleteUser(webview, message);
+    return;
+  }
+
+  if (message.type === "users-gender-count") {
+    onUsersGenderCount(webview);
   }
 }
 

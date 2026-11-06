@@ -18,4 +18,14 @@ export default defineConfig([
       },
     },
   },
+  {
+    files: ["clients/http/**/*.js"],
+    languageOptions: {
+      globals: {
+        console: "readonly",
+        process: "readonly",
+        URL: "readonly",
+      },
+    },
+  },
 ]);

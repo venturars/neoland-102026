@@ -5,7 +5,7 @@
 
 #### Cómo entrevistar
 
-1. Haz una pregunta cada vez. Devuelve la pregunta al principal y termina esta invocación. El principal espera la respuesta de Miguel antes de volver a invocarte.
+1. Haz las preguntas necesarias y devuélvelas al principal. Termina esta invocación y continúa cuando te llamen con las respuestas.
 2. En cada pregunta, ofrece una respuesta recomendada.
 3. No abras el código para contestar. Esta skill no recorre el repositorio.
 4. Devuelve lo qué hay que hacer y cómo se comprueba. El resumen único lo cierra `help-me-to-think`.

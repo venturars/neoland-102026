@@ -37,7 +37,7 @@ function showUsers(users) {
   for (const user of users) {
     const li = document.createElement("li");
     const label = document.createElement("span");
-    label.textContent = `${user.id}: ${user.name} — ${user.email}`;
+    label.textContent = `${user.id}: ${user.name} — ${user.email} — ${user.createdAt} — ${user.updatedAt}`;
     const edit = document.createElement("button");
     edit.type = "button";
     edit.disabled = busy;
@@ -63,8 +63,8 @@ function showUsers(users) {
 function selectUser(user) {
   if (busy) return;
   selected = user;
-  $("name").value = user.name;
-  $("email").value = user.email;
+  $("name").value = "";
+  $("email").value = "";
   $("form-title").textContent = `Edit user ${user.id}`;
   $("save").textContent = "Save";
   $("cancel").hidden = false;
@@ -143,8 +143,8 @@ $("user-form").addEventListener("submit", async (event) => {
   try {
     await call(user ? "update" : "create", {
       id: user?.id,
-      name: $("name").value,
-      email: $("email").value,
+      name: user && $("name").value === "" ? undefined : $("name").value,
+      email: user && $("email").value === "" ? undefined : $("email").value,
     });
     resetForm();
     await reload(user ? "User saved." : "User created.");
@@ -181,3 +181,18 @@ $("delete-form").addEventListener("submit", async (event) => {
   }
 });
 refresh().catch((error) => status(error.message));
+
+$("gender-count").addEventListener("click", async () => {
+  if (busy) return;
+  setBusy(true);
+  $("gender-result").textContent = "Calculating…";
+  try {
+    const counts = await call("genderCount");
+    $("gender-result").textContent =
+      `Name-based estimate: women ${counts.women}, men ${counts.men}, undefined ${counts.genderUndefined}.`;
+  } catch (error) {
+    $("gender-result").textContent = error.message;
+  } finally {
+    setBusy(false);
+  }
+});

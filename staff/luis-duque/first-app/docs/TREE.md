@@ -41,6 +41,31 @@ first-app/
         styles.css
       http/
         app.js
+        bruno/
+      electron/
+        main.js
+        index.html
+        app.js
+        styles.css
+      chrome/
+        manifest.json
+        index.html
+        app.js
+        styles.css
+        server.js
+      vscode/
+        package.json
+        extension.js
+        index.html
+        app.js
+        styles.css
+        icon.svg
+      nest/
+        main.js
+        app.module.js
+        users.controller.js
+        users.service.js
+        http-exception.filter.js
     queries/
       users.js
       queries/
@@ -54,9 +79,11 @@ first-app/
         find-user-by-name.js
   scripts/
     jupyter.sh
+  babel.config.json
   eslint.config.js
   package.json
   pnpm-lock.yaml
+  pnpm-workspace.yaml
   agents/
     git-workflow-agent.md
     help-me-to-think.md

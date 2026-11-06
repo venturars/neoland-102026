@@ -1,0 +1,33 @@
+{
+  "name": "usuarios",
+  "displayName": "Usuarios",
+  "version": "0.0.0",
+  "publisher": "first-app",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "main": "./extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "usuarios",
+          "title": "Usuarios",
+          "icon": "icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "usuarios": [
+        {
+          "type": "webview",
+          "id": "usuarios.view",
+          "name": "Usuarios"
+        }
+      ]
+    }
+  }
+}

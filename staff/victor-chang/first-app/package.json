@@ -5,6 +5,7 @@
   "scripts": {
     "jupyter": "sh scripts/jupyter.sh",
     "web": "sh scripts/web.sh",
+    "http": "node --no-warnings clients/http/server.js",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint ."

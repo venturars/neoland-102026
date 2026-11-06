@@ -1,0 +1,28 @@
+meta {
+  name: create-ada
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Ada",
+    "email": "ada@example.com"
+  }
+}
+
+script:post-response {
+  bru.setVar("userId", res.getBody().id);
+}
+
+tests {
+  test("Estado 201", function () { expect(res.getStatus()).to.equal(201); });
+  test("Campos del usuario", function () { expect(res.getBody()).to.have.all.keys("id", "name", "email"); });
+  test("Valores Ada", function () { expect(res.getBody().name).to.equal("Ada"); expect(res.getBody().email).to.equal("ada@example.com"); });
+}

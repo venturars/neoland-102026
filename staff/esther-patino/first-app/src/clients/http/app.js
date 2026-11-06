@@ -5,6 +5,7 @@ import { deleteUser } from "../../logic/delete-user.js";
 import { findUserById } from "../../logic/find-user-by-id.js";
 import { listUsers } from "../../logic/list-users.js";
 import { updateUser } from "../../logic/update-user.js";
+import { usersGenderCount } from "../../logic/users-gender-count.js";
 
 const ORIGIN = "http://127.0.0.1:3001";
 const NAME_IS_EMPTY = "Name is empty";
@@ -17,6 +18,7 @@ const COULD_NOT_LIST_THE_USERS = "Could not list the users";
 const COULD_NOT_FIND_THE_USER = "Could not find the user";
 const COULD_NOT_UPDATE_THE_USER = "Could not update the user";
 const COULD_NOT_DELETE_THE_USER = "Could not delete the user";
+const COULD_NOT_CLASSIFY_THE_USERS = "Could not classify the users";
 
 const originUrl = new URL(ORIGIN);
 const portText = originUrl.port;
@@ -80,6 +82,25 @@ app.get("/users", async (request, response) => {
     }
     response.status(500);
     response.json({ message: COULD_NOT_LIST_THE_USERS });
+  }
+});
+
+app.get("/users/gender-count", async (request, response) => {
+  try {
+    const count = await usersGenderCount();
+    response.status(200);
+    response.json(count);
+  } catch (error) {
+    if (error instanceof Error) {
+      const message = error.message;
+      if (message === COULD_NOT_CLASSIFY_THE_USERS) {
+        response.status(500);
+        response.json({ message });
+        return;
+      }
+    }
+    response.status(500);
+    response.json({ message: COULD_NOT_CLASSIFY_THE_USERS });
   }
 });
 

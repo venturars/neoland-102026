@@ -1,0 +1,1 @@
+DELETE FROM race_operations WHERE session_id=?

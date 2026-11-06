@@ -15,6 +15,7 @@ Run from `staff/victor-chang/first-app`:
 pnpm install             # install the npm dependencies
 pnpm jupyter             # open the Jupyter client (the first run creates .venv)
 pnpm web                 # serve the web client on http://127.0.0.1:8000/clients/web/
+pnpm http                # start the HTTP API on http://127.0.0.1:3000
 pnpm format              # format every file
 pnpm format:check        # check formatting without changing files
 pnpm lint                # run ESLint

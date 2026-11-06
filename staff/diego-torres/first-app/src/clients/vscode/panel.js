@@ -10,9 +10,15 @@ const viewedUser = byId("viewed-user");
 const userList = byId("user-list");
 const deleteId = byId("delete-id");
 const deleteConfirm = byId("delete-confirm");
+const foundList = byId("found-users");
+const genderButton = byId("gender-count");
+const genderResult = byId("gender-result");
 
 // Id que espera confirmación para borrarse.
 let pendingDeleteId = "";
+
+// Cuenta las acciones. Sirve para reconocer una respuesta que llega tarde.
+let ultimaAccion = 0;
 
 // Sube al principio: los avisos están arriba.
 function scrollToTop() {
@@ -38,6 +44,16 @@ function userText(user) {
 
 // Enseña un usuario, o nada si no hay usuario.
 function showViewedUser(user) {
+  // Cada acción nueva empieza aquí, sin usuario: suma una a la cuenta.
+  if (user === null) {
+    ultimaAccion += 1;
+  }
+
+  // Otra acción puede cambiar los usuarios: quita la búsqueda anterior.
+  foundList.replaceChildren();
+  // Otra acción puede cambiar los usuarios: quita el recuento anterior.
+  genderResult.hidden = true;
+
   viewedUser.textContent = user === null ? "" : userText(user);
   viewedUser.hidden = user === null;
   if (user !== null) {
@@ -49,7 +65,9 @@ function showViewedUser(user) {
 function send(request) {
   showMessage("", false);
   showViewedUser(null);
-  vscode.postMessage(request);
+
+  // La extensión devuelve esta cuenta con la respuesta.
+  vscode.postMessage({ ...request, requestId: ultimaAccion });
 }
 
 // Vacía los campos que se le indican.
@@ -69,9 +87,50 @@ function showUsers(users) {
   }
 }
 
+// Pinta los usuarios encontrados, o avisa si no hay ninguno.
+function showFoundUsers(users) {
+  // Empieza de cero, para no mezclar con otra búsqueda.
+  foundList.replaceChildren();
+
+  // Una lista vacía no es un error: solo se avisa.
+  if (users.length === 0) {
+    showMessage("No hay usuarios con ese nombre", false);
+    return;
+  }
+
+  // Se pinta con textContent, porque viene de la base.
+  for (const user of users) {
+    const item = document.createElement("li");
+    item.textContent = userText(user);
+    foundList.append(item);
+  }
+}
+
+// Escribe los tres números del recuento en una línea.
+function genderText(counts) {
+  const { women, men, genderUndefined } = counts;
+  return `Mujeres: ${women} · Hombres: ${men} · No definidos: ${genderUndefined}`;
+}
+
 // Atiende cada respuesta de la extensión.
 function handleReply(event) {
-  const { action, error, users, user } = event.data;
+  const { action, error, users, user, foundUsers, genderCount, requestId } =
+    event.data;
+
+  // Haya salido bien o mal, el botón del recuento vuelve a funcionar.
+  if (action === "gender-count") {
+    genderButton.disabled = false;
+
+    // Si ya se ha hecho otra cosa, esta respuesta llega tarde: no se enseña.
+    if (requestId !== ultimaAccion) {
+      return;
+    }
+  }
+
+  // Una búsqueda que llega tarde tampoco se enseña.
+  if (action === "find-by-name" && requestId !== ultimaAccion) {
+    return;
+  }
 
   // Si falla, lo escrito se queda para corregirlo.
   if (error !== undefined) {
@@ -83,6 +142,14 @@ function handleReply(event) {
   }
   if (user !== undefined) {
     showViewedUser(user);
+  }
+  if (foundUsers !== undefined) {
+    showFoundUsers(foundUsers);
+  }
+  if (genderCount !== undefined) {
+    showMessage("", false);
+    genderResult.textContent = genderText(genderCount);
+    genderResult.hidden = false;
   }
 
   // Si ha salido bien, vacía el formulario de esa acción.
@@ -150,6 +217,29 @@ function confirmDelete() {
   send({ action: "delete", id });
 }
 
+// Pide el usuario con el email escrito.
+function findByEmailFromForm(event) {
+  event.preventDefault();
+  send({ action: "find-by-email", email: byId("find-email").value });
+}
+
+// Pide los usuarios con el nombre escrito.
+function findByNameFromForm(event) {
+  event.preventDefault();
+  send({ action: "find-by-name", name: byId("find-name").value });
+}
+
+// Pide el recuento por género a la extensión.
+function countByGender() {
+  send({ action: "gender-count" });
+
+  // Desactiva el botón para no pedir dos recuentos a la vez.
+  genderButton.disabled = true;
+
+  // La IA puede tardar: avisa de que está trabajando.
+  showMessage("Contando…", false);
+}
+
 // Conecta formularios, botones y respuestas.
 byId("create-form").addEventListener("submit", createFromForm);
 byId("view-form").addEventListener("submit", viewFromForm);
@@ -157,6 +247,9 @@ byId("update-form").addEventListener("submit", updateFromForm);
 byId("delete-form").addEventListener("submit", askToDelete);
 byId("delete-yes").addEventListener("click", confirmDelete);
 byId("delete-no").addEventListener("click", cancelDelete);
+byId("find-email-form").addEventListener("submit", findByEmailFromForm);
+byId("find-name-form").addEventListener("submit", findByNameFromForm);
+genderButton.addEventListener("click", countByGender);
 window.addEventListener("message", handleReply);
 
 // Al abrir la vista, pide la lista.

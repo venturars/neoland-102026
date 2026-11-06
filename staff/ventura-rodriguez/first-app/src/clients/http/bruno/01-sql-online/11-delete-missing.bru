@@ -1,0 +1,16 @@
+meta {
+  name: delete-missing
+  type: http
+  seq: 11
+}
+
+delete {
+  url: {{baseUrl}}/users/{{missingId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 404", function () { expect(res.getStatus()).to.equal(404); });
+  test("Mensaje exacto", function () { expect(res.getBody()).to.deep.equal({ message: "User not found" }); });
+}

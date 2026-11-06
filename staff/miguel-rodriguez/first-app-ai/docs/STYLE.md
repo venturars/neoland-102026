@@ -60,3 +60,10 @@ refactor. Behavioral or instruction conflicts still require a decision under
 
 Preserve the language of existing client examples. These conventions do not
 require translating clients or changing the query module's SQL-text names.
+
+
+## Cliente Nest
+
+Solo src/clients/nest usa clases, métodos, this y decoradores de Nest. Su filtro
+reconoce HttpException y transforma los errores compartidos al contrato HTTP.
+Las reglas anteriores siguen aplicándose al resto del proyecto.
