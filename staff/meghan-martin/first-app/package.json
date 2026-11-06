@@ -10,6 +10,7 @@
     "db": "node src/db/server.js",
     "browser": "open -na \"Google Chrome\" --args --user-data-dir=/tmp/first-app-chrome --allow-file-access-from-files \"file://$(pwd)/src/clients/browser/index.html\"",
     "api": "node src/clients/rest/server.js",
+    "bruno": "cd src/clients/rest/bruno && bru run 01-sql-online -r",
     "electron": "electron src/clients/electron/main.js"
   },
   "keywords": [],
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
+    "@usebruno/cli": "4.3.0",
     "electron": "45.2.2",
     "eslint": "10.13.0",
     "prettier": "3.9.10"

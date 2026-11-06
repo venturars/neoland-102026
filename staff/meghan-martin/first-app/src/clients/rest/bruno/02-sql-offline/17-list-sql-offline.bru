@@ -1,0 +1,16 @@
+meta {
+  name: list-sql-offline
+  type: http
+  seq: 17
+}
+
+get {
+  url: {{baseUrl}}/users
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 503", function () { expect(res.getStatus()).to.equal(503); });
+  test("Mensaje exacto", function () { expect(res.getBody()).to.deep.equal({ error: "Database is not running. Start it with npm run db." }); });
+}

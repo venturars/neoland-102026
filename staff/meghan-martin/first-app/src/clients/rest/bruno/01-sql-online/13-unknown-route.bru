@@ -1,0 +1,16 @@
+meta {
+  name: unknown-route
+  type: http
+  seq: 13
+}
+
+get {
+  url: {{baseUrl}}/no-such
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 404", function () { expect(res.getStatus()).to.equal(404); });
+  test("Mensaje exacto", function () { expect(res.getBody()).to.deep.equal({ error: "Not found." }); });
+}

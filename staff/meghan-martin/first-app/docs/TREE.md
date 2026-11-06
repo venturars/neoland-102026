@@ -25,6 +25,8 @@ first-app/
         styles.css
       rest/
         server.js
+        bruno.md
+        bruno/
       electron/
         main.js
         index.html

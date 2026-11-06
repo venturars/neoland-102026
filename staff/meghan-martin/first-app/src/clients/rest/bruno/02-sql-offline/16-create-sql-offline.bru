@@ -1,0 +1,23 @@
+meta {
+  name: create-sql-offline
+  type: http
+  seq: 16
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Offline",
+    "email": "offline@example.com"
+  }
+}
+
+tests {
+  test("Estado 503", function () { expect(res.getStatus()).to.equal(503); });
+  test("Mensaje exacto", function () { expect(res.getBody()).to.deep.equal({ error: "Database is not running. Start it with npm run db." }); });
+}

@@ -1,0 +1,21 @@
+meta {
+  name: list-users
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/users
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 200", function () { expect(res.getStatus()).to.equal(200); });
+  test("Tiene a Ada", function () {
+    const ada = res.getBody().find(function (user) { return user.email === "ada@example.com"; });
+    expect(ada).to.not.equal(undefined);
+    expect(ada.name).to.equal("Ada");
+    expect(ada.id).to.equal(Number(bru.getVar("userId")));
+  });
+}
