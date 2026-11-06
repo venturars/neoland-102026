@@ -66,6 +66,9 @@ first-app/
         users.controller.js
         users.service.js
         http-exception.filter.js
+      node-http/
+        app.js
+        jupyter/
     queries/
       users.js
       queries/
@@ -79,6 +82,7 @@ first-app/
         find-user-by-name.js
   scripts/
     jupyter.sh
+    jupyter-node-http.sh
   babel.config.json
   eslint.config.js
   package.json
