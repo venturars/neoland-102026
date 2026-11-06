@@ -28,7 +28,7 @@ La implementación empieza cuando esa persona lo pide. Ejecuta `tasks.md` y no i
 
 El código vive en `src/`: `src/db/`, `src/queries/`, `src/logic/` y `src/clients/`. Qué sabe cada carpeta está en `docs/ARCHITECTURE.md`. La base y el servidor SQL están en `docs/DATABASE.md`.
 
-Ningún cliente funciona sin el servidor en marcha. Antes de usar la web, Electron, las extensiones de Chrome y de VS Code, la API de Nest, la API de Express, la terminal o Jupyter, se lanza `pnpm start` en otra terminal.
+Ningún cliente funciona sin el servidor en marcha. Antes de usar la web, Electron, las extensiones de Chrome y de VS Code, la API de Nest, la API de Express, la API de Node, la terminal o Jupyter, se lanza `pnpm start` en otra terminal.
 
 ## Paquetes
 
@@ -68,9 +68,13 @@ Desde esta carpeta, Jupyter se abre con `pnpm run jupyter`, en Linux y en Window
 
 `pnpm bruno` lanza `scripts/bruno.js`, que prueba la API de Express con la colección de `src/clients/http/bruno/` y termina con error si falla alguna comprobación. Sin argumento lanza las peticiones con la base en marcha, que borran lo que crean. `pnpm bruno offline` lanza las de la base parada, con `pnpm http` en marcha. `pnpm bruno ai` lanza la de contar por género, con Ollama en marcha. La colección también se abre en la app de Bruno.
 
-`pnpm format` pasa Prettier por los `.js` de `src/db/`, `src/queries/` y `src/logic/`, y por los `.js`, `.html` y `.css` de `src/clients/web/`, `src/clients/electron/`, `src/clients/chrome/` y `src/clients/vscode/`, y por los `.js` de `src/clients/nest/` y `src/clients/http/`, con el formato estándar y sin configuración propia. `pnpm lint` pasa ESLint con las reglas recomendadas, según `eslint.config.js`. Los ficheros de `src/clients/nest/` se leen con `@babel/eslint-parser`, por sus decoradores.
+`pnpm node-http` lanza `src/clients/node-http/app.js`, la API hecha solo con `node:http`, en `http://127.0.0.1:3004`. Se lanza en otra terminal, con `pnpm start` ya en marcha.
 
-La dependencia `openai` es la del clasificador. Lo usan la terminal, Jupyter, la API de Chrome, la extensión de VS Code, la API de Nest y la API de Express, y necesita Ollama con `llama3.2` en marcha. `@colors/colors` y `cli-table3` son las tablas del cliente Jupyter. `fastify` es la API de la extensión de Chrome. Los paquetes `@nestjs/*`, `reflect-metadata`, `rxjs` y `@babel/*` son la API de Nest. `express` es la API de Express y `@usebruno/cli` lanza su colección. Se instalan con `pnpm install`.
+`pnpm jupyter-node-http` abre los cuadernos de `src/clients/node-http/jupyter/`, uno por ruta, con el mismo `.venv` que `pnpm run jupyter`. Llaman a la API, así que `pnpm node-http` tiene que estar en marcha.
+
+`pnpm format` pasa Prettier por los `.js` de `src/db/`, `src/queries/` y `src/logic/`, y por los `.js`, `.html` y `.css` de `src/clients/web/`, `src/clients/electron/`, `src/clients/chrome/` y `src/clients/vscode/`, y por los `.js` de `src/clients/nest/`, `src/clients/http/` y `src/clients/node-http/`, con el formato estándar y sin configuración propia. `pnpm lint` pasa ESLint con las reglas recomendadas, según `eslint.config.js`. Los ficheros de `src/clients/nest/` se leen con `@babel/eslint-parser`, por sus decoradores.
+
+La dependencia `openai` es la del clasificador. Lo usan la terminal, Jupyter, la API de Chrome, la extensión de VS Code, la API de Nest, la API de Express y la API de Node, y necesita Ollama con `llama3.2` en marcha. `@colors/colors` y `cli-table3` son las tablas del cliente Jupyter. `fastify` es la API de la extensión de Chrome. Los paquetes `@nestjs/*`, `reflect-metadata`, `rxjs` y `@babel/*` son la API de Nest. `express` es la API de Express y `@usebruno/cli` lanza su colección. Se instalan con `pnpm install`.
 
 ## Estilo
 
