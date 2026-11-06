@@ -23,7 +23,8 @@
     "electron": "electron src/clients/electron/main.js",
     "chrome": "node src/clients/chrome/server.js",
     "vscode": "code --extensionDevelopmentPath=\"${PWD}/src/clients/vscode\" \"${PWD}\"",
-    "nest": "babel src --out-dir dist --delete-dir-on-start && node dist/clients/nest/main.js"
+    "nest": "babel src --out-dir dist --delete-dir-on-start && node dist/clients/nest/main.js",
+    "bruno": "cd src/clients/http/bruno && ../../../../node_modules/.bin/bru run 01-sql-online -r --bail"
   },
   "devDependencies": {
     "@babel/cli": "8.1.0",
@@ -32,6 +33,7 @@
     "@babel/plugin-proposal-decorators": "8.0.2",
     "@babel/preset-env": "8.0.7",
     "@eslint/js": "10.0.1",
+    "@usebruno/cli": "4.3.0",
     "cli-table3": "0.6.5",
     "electron": "45.2.2",
     "eslint": "10.13.0",
