@@ -199,6 +199,13 @@ The client does not serve web assets. The summary route precedes the ID route
 without a special browser-origin exception. Fastify offers the same six
 routes on its own port. README documents the Postman requests.
 
+`src/clients/http/bruno/` tests the five CRUD routes through HTTP with the
+Bruno CLI. Its online collection checks responses, partial updates and preservation
+after rejected operations; its separate offline collection checks database
+failures. `pnpm bruno` runs the online group and stops on failure.
+`src/clients/http/bruno.md` documents disposable data, startup and both commands.
+The collection uses Express; it does not call queries or open SQLite directly.
+
 All adapters await the shared logic and use the data service on port 3000.
 They preserve the existing five-field contacts, validation, ordering and
 timestamps. Summary requests require Ollama only when contacts exist and return
