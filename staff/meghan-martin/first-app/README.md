@@ -47,3 +47,9 @@ Los comandos llevan `--scope user` y valen para todos tus proyectos. Para tenerl
 Crea `~/.cursor/mcp.json` para tenerlos en todos tus proyectos, o `.cursor/mcp.json` para tenerlos solo aquí. Dentro de `mcpServers`, copia la entrada de cada apartado de `MCP.md`. Si el fichero ya existe, añade esas entradas y deja las que ya tuvieras.
 
 Abre Cursor Settings → MCP y comprueba que aparecen conectados. Abre una conversación nueva de Agent.
+
+## VS Code
+
+Desde `first-app`, deja `npm run db` en marcha y ejecuta `npm run vscode`. En el explorador de esa ventana está la vista People.
+
+Al cerrar VS Code se cierra la vista. Para volver a verla, ejecuta otra vez `npm run vscode`. La base tiene que seguir en marcha.
