@@ -18,7 +18,7 @@
 - `src/clients/browser/` es la página de personas. `app.js` llama a `listUsers`, `findUserById`, `updateUser` y `deleteUser`. No decide si un email vale.
 - `src/clients/rest/server.js` responde JSON en el puerto 3001. Llama a las mismas reglas. No decide si un email vale.
 - `src/clients/electron/` es una ventana de escritorio. `app.js` llama a `listUsers`, `findUserById`, `createUser`, `updateUser` y `deleteUser`. No decide si un email vale.
-- `src/clients/nest/` es otra API HTTP, en el puerto 3003. Se compila con Babel y `node` arranca `dist/clients/nest/main.js`. Llama a `listUsers`, `findUserById`, `createUser`, `updateUser` y `deleteUser`. No decide si un email vale. No sustituye a `src/clients/rest/`. Este cliente se aparta de `docs/STYLE.md` y de `docs/ERRORS.md`: usa clases, métodos, `this` y decoradores, y un filtro traduce las frases que ya existen. El resto del proyecto sigue esas dos guías.
+- `src/clients/nest/` es otra API HTTP, en el puerto 3003. Se compila con Babel y `node` arranca `dist/clients/nest/main.js`. Llama a `listUsers`, `findUserById`, `createUser`, `updateUser` y `deleteUser`. No decide si un email vale. También sirve una página Swagger en `http://127.0.0.1:3003`. No sustituye a `src/clients/rest/`. Este cliente se aparta de `docs/STYLE.md` y de `docs/ERRORS.md`: usa clases, métodos, `this` y decoradores, y un filtro traduce las frases que ya existen. El resto del proyecto sigue esas dos guías.
 - `docs/ARCHITECTURE.md` dice qué hace cada capa y cada fichero.
 - `docs/TREE.md` es el dibujo de carpetas y ficheros.
 - `docs/DATABASE.md` es la base y las consultas.

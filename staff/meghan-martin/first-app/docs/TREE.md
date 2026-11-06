@@ -97,3 +97,7 @@ first-app/
         spec.md
         plan.md
         tasks.md
+      swagger-nest/
+        spec.md
+        plan.md
+        tasks.md
