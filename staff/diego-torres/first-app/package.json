@@ -12,9 +12,11 @@
     "nest": "node scripts/nest.js",
     "http": "node src/clients/http/server.js",
     "bruno": "node scripts/bruno.js",
+    "node-http": "node src/clients/node-http/app.js",
     "jupyter": "node scripts/jupyter.js",
+    "jupyter-node-http": "node scripts/jupyter.js src/clients/node-http/jupyter",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/web/**/*.{js,html,css}\" \"src/clients/electron/**/*.{js,html,css}\" \"src/clients/chrome/**/*.{js,html,css}\" \"src/clients/vscode/**/*.{js,html,css}\" \"src/clients/nest/**/*.js\" \"src/clients/http/**/*.js\"",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/web/**/*.{js,html,css}\" \"src/clients/electron/**/*.{js,html,css}\" \"src/clients/chrome/**/*.{js,html,css}\" \"src/clients/vscode/**/*.{js,html,css}\" \"src/clients/nest/**/*.js\" \"src/clients/http/**/*.js\" \"src/clients/node-http/**/*.js\"",
     "lint": "eslint ."
   },
   "keywords": [],
