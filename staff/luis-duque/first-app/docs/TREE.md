@@ -41,6 +41,7 @@ first-app/
         styles.css
       http/
         app.js
+        bruno/
       electron/
         main.js
         index.html

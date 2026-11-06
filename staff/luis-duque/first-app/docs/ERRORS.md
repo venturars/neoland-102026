@@ -12,7 +12,7 @@ Si Ollama no contesta, o la lectura falla, se detiene y lanza un `Error` con el 
 
 Si el programa local no está en marcha, la operación no se completa y se ve el fallo de esa llamada.
 
-Si el cliente HTTP no está en marcha, Postman no completa la petición.
+Si el cliente HTTP no está en marcha, Postman no completa la petición y `pnpm bruno` no completa la petición. Si el programa de consultas no está en marcha, las peticiones de Bruno ven el fallo de esa llamada.
 
 Si el cliente NestJS no está en marcha, Postman no completa la petición y `http://127.0.0.1:3003/swagger` no se abre.
 
