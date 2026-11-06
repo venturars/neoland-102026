@@ -144,5 +144,6 @@ Una funcionalidad está terminada cuando:
 | `002-discord-bot` | Idea futura | Fuera del MVP |
 | `006-git-workflow` | 4. Implementar (T01–T10 hechos) | Issue #777 / PR #784. Pendiente de ok final |
 | `007-workflow-first` | 3. Tareas, pendiente de ejecutar | Issue #1038 |
+| `008-latest-git-workflow-updates` | 4. Implementar | Issue #1163 / PR #1164 |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
