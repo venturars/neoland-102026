@@ -79,10 +79,14 @@ function userIdFrom(pathname) {
   return match[1];
 }
 
+function bodyFrom(raw) {
+  return JSON.parse(raw || "{}") ?? {};
+}
+
 async function handle(response, method, pathname, raw) {
   try {
     if (method === "POST" && pathname === "/users") {
-      const body = JSON.parse(raw);
+      const body = bodyFrom(raw);
       const user = await createUser({ name: body.name, email: body.email });
       send(response, 201, user);
       return;
@@ -103,7 +107,7 @@ async function handle(response, method, pathname, raw) {
     }
 
     if (method === "PATCH" && id !== undefined) {
-      const body = JSON.parse(raw);
+      const body = bodyFrom(raw);
       const changes = {};
 
       if (body.name !== undefined) {
@@ -132,8 +136,17 @@ async function handle(response, method, pathname, raw) {
 }
 
 const server = createServer((request, response) => {
-  const url = new URL(request.url, ORIGIN);
-  const pathname = url.pathname;
+  let pathname;
+
+  try {
+    pathname = new URL(request.url, ORIGIN).pathname;
+  } catch (error) {
+    send(response, 400, {
+      message: error instanceof Error ? error.message : String(error),
+    });
+    return;
+  }
+
   const method = request.method;
   const needsBody = method === "POST" || method === "PATCH";
 
