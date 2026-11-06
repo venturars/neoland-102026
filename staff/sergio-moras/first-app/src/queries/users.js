@@ -26,6 +26,15 @@ export function selectAllUsers() {
   return statement.all();
 }
 
+// Devuelve los usuarios con ese nombre exacto, ordenados por id (lista vacía si no hay ninguno).
+// En SQLite, "=" sobre texto distingue mayúsculas: "Ana" no coincide con "ana".
+export function selectUsersByName(name) {
+  const statement = connection.prepare(
+    "SELECT * FROM users WHERE name = ? ORDER BY id",
+  );
+  return statement.all(name);
+}
+
 // Actualiza un usuario y devuelve el usuario ya actualizado,
 // o undefined si el id no existe.
 // COALESCE(?, name) significa "usa el valor nuevo; si es null, conserva el actual".

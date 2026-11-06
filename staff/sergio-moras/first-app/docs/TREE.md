@@ -1,6 +1,6 @@
 # Árbol
 
-Los ficheros de hoy, sin `node_modules/` ni `db/users.sqlite`, que no están en git.
+Los ficheros de hoy, sin `node_modules/` ni `src/db/users.sqlite`, que no están en git.
 
 ```
 first-app/
@@ -9,20 +9,23 @@ first-app/
   pnpm-lock.yaml
   eslint.config.js
   .gitignore
-  db/
-    connection.js
-  queries/
-    users.js
-  logic/
-    classifyGender.js
-    createUser.js
-    deleteUser.js
-    findUserByEmail.js
-    listUsers.js
-    updateUser.js
-  clients/
-    terminal/          un .txt por operación
-    jupyter/           un .ipynb por operación
+  .gitattributes       finales de línea LF en los .js
+  src/                 el código de la app
+    db/
+      connection.js
+    queries/
+      users.js
+    logic/
+      classify-gender.js
+      create-user.js
+      delete-user.js
+      find-user-by-email.js
+      find-user-by-name.js
+      list-users.js
+      update-user.js
+    clients/
+      terminal/        un .txt por operación
+      jupyter/         un .ipynb por operación
   docs/
     CONSTITUTIONS.md
     ARCHITECTURE.md
