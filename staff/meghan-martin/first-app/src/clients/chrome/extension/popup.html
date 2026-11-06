@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>People</title>
+    <link rel="stylesheet" href="./popup.css" />
+  </head>
+  <body>
+    <main>
+      <h1>People</h1>
+      <form id="create-form">
+        <h2>Create</h2>
+        <label>
+          Name
+          <input id="create-name" name="name" type="text" />
+        </label>
+        <label>
+          Email
+          <input id="create-email" name="email" type="text" />
+        </label>
+        <button type="submit">Create</button>
+      </form>
+      <h2>List</h2>
+      <ul id="user-list"></ul>
+      <form id="open-form">
+        <h2>Open</h2>
+        <label>
+          Id
+          <input id="open-id" name="id" type="text" />
+        </label>
+        <button type="submit">Open</button>
+      </form>
+      <section id="person-card" hidden>
+        <h2>Person</h2>
+        <p id="opened-person"></p>
+        <form id="save-form">
+          <label>
+            Name
+            <input id="save-name" name="name" type="text" />
+          </label>
+          <label>
+            Email
+            <input id="save-email" name="email" type="text" />
+          </label>
+          <button type="submit">Save</button>
+        </form>
+        <button id="delete-person" type="button">Delete</button>
+      </section>
+      <p id="message" class="message" role="alert"></p>
+    </main>
+    <script type="module" src="./popup.js"></script>
+  </body>
+</html>

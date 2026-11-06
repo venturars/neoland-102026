@@ -36,6 +36,7 @@ La plantilla de la pull request es `.github/pull_request_template.md` de esta ap
 - `npm run browser`, desde `first-app`, abre `src/clients/browser/index.html`. No sirve la página. La base tiene que estar en marcha.
 - `npm run api`, desde `first-app`, responde JSON en `http://127.0.0.1:3001`. La base tiene que estar en marcha.
 - `npm run electron`, desde `first-app`, abre una ventana de escritorio. La base tiene que estar en marcha.
+- `npm run chrome`, desde `first-app`, responde JSON en `http://127.0.0.1:3002`. La extensión se carga sin empaquetar desde `src/clients/chrome/extension`. La base tiene que estar en marcha.
 - No hay tests. `package.json` no tiene script `test`.
 - El lock que hay es `package-lock.json`. No hay `pnpm-lock.yaml`.
 - `npm run format` lanza Prettier. El formato es el estándar, sin configuración propia.
