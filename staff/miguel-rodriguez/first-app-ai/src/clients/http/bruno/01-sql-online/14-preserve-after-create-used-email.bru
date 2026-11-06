@@ -1,0 +1,19 @@
+meta {
+  name: preserve-after-create-used-email
+  type: http
+  seq: 14
+}
+
+get {
+  url: {{baseUrl}}/users
+  body: none
+  auth: none
+}
+
+tests {
+  test("Conservar contactos y fechas tras el rechazo", function () {
+    expect(res.getStatus()).to.equal(200);
+    const snapshot = JSON.parse(bru.getVar("snapshot"));
+    expect(res.getBody()).to.deep.equal(snapshot);
+  });
+}

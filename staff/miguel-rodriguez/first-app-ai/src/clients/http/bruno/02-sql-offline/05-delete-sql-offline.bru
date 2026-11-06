@@ -1,0 +1,18 @@
+meta {
+  name: delete-sql-offline
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/users/999999
+  body: none
+  auth: none
+}
+
+tests {
+  test("Fallo de datos: Could not delete the user", function () {
+    expect(res.getStatus()).to.equal(500);
+    expect(res.getBody()).to.deep.equal({ message: "Could not delete the user" });
+  });
+}

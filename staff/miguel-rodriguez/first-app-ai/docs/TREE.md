@@ -34,6 +34,10 @@ first-app-ai/
 │   ├── STYLE.md
 │   ├── TREE.md
 │   └── specs/
+│       ├── bruno-http-client/
+│       │   ├── spec.md
+│       │   ├── plan.md
+│       │   └── tasks.md
 │       ├── nest-swagger-ui/
 │       │   ├── spec.md
 │       │   ├── plan.md
@@ -161,7 +165,50 @@ first-app-ai/
 │   │   │   ├── main.js
 │   │   │   └── styles.css
 │   │   ├── http/
-│   │   │   └── app.js
+│   │   │   ├── app.js
+│   │   │   ├── bruno.md
+│   │   │   └── bruno/
+│   │   │       ├── bruno.json
+│   │   │       ├── collection.bru
+│   │   │       ├── 01-sql-online/
+│   │   │       │   ├── 01-empty-list.bru
+│   │   │       │   ├── 02-create-ada.bru
+│   │   │       │   ├── 03-create-grace.bru
+│   │   │       │   ├── 04-list-users.bru
+│   │   │       │   ├── 05-find-ada.bru
+│   │   │       │   ├── 06-patch-name.bru
+│   │   │       │   ├── 07-patch-email.bru
+│   │   │       │   ├── 08-snapshot-users.bru
+│   │   │       │   ├── 09-create-empty-name.bru
+│   │   │       │   ├── 10-preserve-after-create-empty-name.bru
+│   │   │       │   ├── 11-create-invalid-email.bru
+│   │   │       │   ├── 12-preserve-after-create-invalid-email.bru
+│   │   │       │   ├── 13-create-used-email.bru
+│   │   │       │   ├── 14-preserve-after-create-used-email.bru
+│   │   │       │   ├── 15-patch-empty-name.bru
+│   │   │       │   ├── 16-preserve-after-patch-empty-name.bru
+│   │   │       │   ├── 17-patch-invalid-email.bru
+│   │   │       │   ├── 18-preserve-after-patch-invalid-email.bru
+│   │   │       │   ├── 19-patch-used-email.bru
+│   │   │       │   ├── 20-preserve-after-patch-used-email.bru
+│   │   │       │   ├── 21-find-missing.bru
+│   │   │       │   ├── 22-preserve-after-find-missing.bru
+│   │   │       │   ├── 23-patch-missing.bru
+│   │   │       │   ├── 24-preserve-after-patch-missing.bru
+│   │   │       │   ├── 25-delete-missing.bru
+│   │   │       │   ├── 26-preserve-after-delete-missing.bru
+│   │   │       │   ├── 27-delete-ada.bru
+│   │   │       │   ├── 28-list-grace.bru
+│   │   │       │   ├── 29-delete-grace.bru
+│   │   │       │   ├── 30-empty-list-after-delete.bru
+│   │   │       │   └── folder.bru
+│   │   │       └── 02-sql-offline/
+│   │   │           ├── 01-create-sql-offline.bru
+│   │   │           ├── 02-list-sql-offline.bru
+│   │   │           ├── 03-find-sql-offline.bru
+│   │   │           ├── 04-update-sql-offline.bru
+│   │   │           ├── 05-delete-sql-offline.bru
+│   │   │           └── folder.bru
 │   │   ├── vscode/
 │   │   │   ├── .vscode/
 │   │   │   │   └── launch.json

@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "first-app-ai Express users",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

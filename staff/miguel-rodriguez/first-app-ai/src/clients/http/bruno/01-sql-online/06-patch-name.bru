@@ -1,0 +1,33 @@
+meta {
+  name: patch-name
+  type: http
+  seq: 6
+}
+
+patch {
+  url: {{baseUrl}}/users/{{adaId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Ada Lovelace"
+  }
+}
+
+tests {
+  test("Modificar solo name", function () {
+    expect(res.getStatus()).to.equal(200);
+    const before = JSON.parse(bru.getVar("ada"));
+    const user = res.getBody();
+    expect(user).to.have.all.keys("id", "name", "email", "createdAt", "updatedAt");
+    expect(user.id).to.equal(before.id);
+    expect(user.createdAt).to.equal(before.createdAt);
+    expect(user.updatedAt).to.be.a("string");
+    expect(user.name).to.equal("Ada Lovelace");
+    expect(user.email).to.equal(before.email);
+    const saved = JSON.stringify(user);
+    bru.setVar("ada", saved);
+  });
+}

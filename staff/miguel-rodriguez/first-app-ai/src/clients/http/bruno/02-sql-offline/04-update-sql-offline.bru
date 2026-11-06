@@ -1,0 +1,25 @@
+meta {
+  name: update-sql-offline
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/users/999999
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Offline",
+    "email": "offline@example.com"
+  }
+}
+
+tests {
+  test("Fallo de datos: Could not update the user", function () {
+    expect(res.getStatus()).to.equal(500);
+    expect(res.getBody()).to.deep.equal({ message: "Could not update the user" });
+  });
+}

@@ -198,6 +198,13 @@ y VS Code. Electron carga lógica desde su renderer. Para VS Code, ejecuta
 `pnpm vscode` con el comando `code` disponible y abre Usuarios en Explorer.
 
 
+## Bruno
+
+La [guía de Bruno](src/clients/http/bruno.md) prepara una copia con datos
+de prueba y explica los dos grupos. Con datos y Express arrancados,
+`pnpm bruno` ejecuta el CRUD y sus errores. Detén solo el servicio de datos
+antes de ejecutar el grupo offline. Ambos comandos paran al primer fallo.
+
 ## Nest
 
 En otra terminal, mantén `pnpm server` y la tabla inicializada. Ejecuta `pnpm nest`

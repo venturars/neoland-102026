@@ -1,0 +1,18 @@
+meta {
+  name: empty-list-after-delete
+  type: http
+  seq: 30
+}
+
+get {
+  url: {{baseUrl}}/users
+  body: none
+  auth: none
+}
+
+tests {
+  test("Lista final vacía", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody()).to.deep.equal([]);
+  });
+}

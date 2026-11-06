@@ -1,0 +1,25 @@
+meta {
+  name: create-empty-name
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": " ",
+    "email": "empty@example.com"
+  }
+}
+
+tests {
+  test("Rechazo: Name is empty", function () {
+    expect(res.getStatus()).to.equal(400);
+    expect(res.getBody()).to.deep.equal({ message: "Name is empty" });
+  });
+}
