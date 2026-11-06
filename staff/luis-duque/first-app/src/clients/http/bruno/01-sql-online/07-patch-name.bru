@@ -1,0 +1,22 @@
+meta {
+  name: patch-name
+  type: http
+  seq: 7
+}
+
+patch {
+  url: {{baseUrl}}/users/{{userId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Ada Lovelace"
+  }
+}
+
+tests {
+  test("Estado 200", function () { expect(res.getStatus()).to.equal(200); });
+  test("Id y nombre enviados", function () { expect(res.getBody()).to.have.all.keys("id", "name"); expect(res.getBody().id).to.equal(Number(bru.getVar("userId"))); expect(res.getBody().name).to.equal("Ada Lovelace"); });
+}

@@ -2,6 +2,7 @@ import { error as logError, log } from "node:console";
 
 import express from "express";
 
+import { countUsersByGender } from "../../logic/count-users-by-gender.js";
 import { createUser } from "../../logic/create-user.js";
 import { deleteUser } from "../../logic/delete-user.js";
 import { findUserById } from "../../logic/find-user-by-id.js";
@@ -25,6 +26,11 @@ const UNABLE_TO_LIST = "Unable to list users";
 const UNABLE_TO_FIND = "Unable to find user";
 const UNABLE_TO_UPDATE = "Unable to update user";
 const UNABLE_TO_DELETE = "Unable to delete user";
+
+// This message is born here, not in logic/: the terminal and Jupyter keep
+// the logic messages. Any failure of the count that is not a failed read
+// of the users answers this sentence.
+const COULD_NOT_CLASSIFY = "Could not classify the users.";
 
 // This message is born here: a broken body fails before reaching logic/.
 const REQUEST_JSON_IS_INVALID = "Request JSON is invalid";
@@ -86,6 +92,28 @@ app.get("/users", async (request, response) => {
   } catch {
     response.status(500);
     response.json({ message: UNABLE_TO_LIST });
+  }
+});
+
+// This route is before /users/:id so "gender-count" is not read as an id.
+app.get("/users/gender-count", async (request, response) => {
+  try {
+    const counts = await countUsersByGender();
+    response.status(200);
+    response.json(counts);
+  } catch (error) {
+    if (error instanceof Error) {
+      const message = error.message;
+
+      if (message === UNABLE_TO_LIST) {
+        response.status(500);
+        response.json({ message });
+        return;
+      }
+    }
+
+    response.status(500);
+    response.json({ message: COULD_NOT_CLASSIFY });
   }
 });
 

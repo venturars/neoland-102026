@@ -14,9 +14,17 @@ const updateEmail = document.getElementById("update-email");
 const deleteId = document.getElementById("delete-id");
 const deleteConfirm = document.getElementById("delete-confirm");
 const deleteQuestion = document.getElementById("delete-question");
+const findEmail = document.getElementById("find-email");
+const findName = document.getElementById("find-name");
+const foundUsers = document.getElementById("found-users");
+const genderButton = document.getElementById("gender-count");
+const genderResult = document.getElementById("gender-result");
 
 // Id que espera confirmación para borrarse.
 let pendingDeleteId = "";
+
+// Cuenta las acciones. Sirve para reconocer una respuesta que llega tarde.
+let ultimaAccion = 0;
 
 // Sube al principio de la ventana: con una lista larga, los formularios quedan muy abajo.
 function scrollToTopIf(hasSomethingToShow) {
@@ -40,6 +48,16 @@ function userText(user) {
 
 // Enseña un usuario debajo de los mensajes, o nada si no hay usuario.
 function showViewedUser(user) {
+  // Cada acción nueva empieza aquí, sin usuario: suma una a la cuenta.
+  if (user === null) {
+    ultimaAccion += 1;
+  }
+
+  // Otra acción puede cambiar los usuarios: quita la búsqueda anterior.
+  foundUsers.replaceChildren();
+  // Otra acción puede cambiar los usuarios: quita el recuento anterior.
+  genderResult.hidden = true;
+
   viewedUser.textContent = user === null ? "" : userText(user);
   viewedUser.hidden = user === null;
   scrollToTopIf(user !== null);
@@ -205,6 +223,10 @@ async function confirmDelete() {
   const id = pendingDeleteId;
   cancelDelete();
 
+  // Borrar también es una acción nueva: limpia lo que hubiera en pantalla.
+  showMessage("", false);
+  showViewedUser(null);
+
   try {
     await callApi(
       "DELETE",
@@ -222,6 +244,124 @@ async function confirmDelete() {
   await showUsers();
 }
 
+// Busca el usuario con el email escrito y lo enseña.
+async function findByEmailFromForm(event) {
+  event.preventDefault();
+  showMessage("", false);
+  showViewedUser(null);
+
+  try {
+    // Un email puede llevar un +: se prepara para la dirección.
+    const email = encodeURIComponent(findEmail.value);
+    const user = await callApi(
+      "GET",
+      `/users/by-email?email=${email}`,
+      undefined,
+      "Could not find the user",
+    );
+    showViewedUser(user);
+  } catch (error) {
+    // Si falla, lo escrito se queda para poder corregirlo.
+    showMessage(error.message, true);
+  }
+}
+
+// Busca los usuarios con el nombre escrito y los enseña.
+async function findByNameFromForm(event) {
+  event.preventDefault();
+  showMessage("", false);
+  showViewedUser(null);
+
+  // Guarda la cuenta para saber si, al responder, sigue siendo lo último.
+  const accion = ultimaAccion;
+
+  let users;
+  try {
+    // El nombre puede llevar espacios o acentos: se prepara para la dirección.
+    const name = encodeURIComponent(findName.value);
+    users = await callApi(
+      "GET",
+      `/users/by-name?name=${name}`,
+      undefined,
+      "Could not find the user",
+    );
+  } catch (error) {
+    // Si falla, lo escrito se queda para poder corregirlo.
+    // Un error que llega tarde no se enseña.
+    if (accion === ultimaAccion) {
+      showMessage(error.message, true);
+    }
+    return;
+  }
+
+  // Si ya se ha pedido otra cosa, esta respuesta llega tarde: no se enseña.
+  if (accion !== ultimaAccion) {
+    return;
+  }
+
+  // Empieza de cero, para no mezclar con otra búsqueda.
+  foundUsers.replaceChildren();
+
+  // Una lista vacía no es un error: solo se avisa.
+  if (users.length === 0) {
+    showMessage("No hay usuarios con ese nombre", false);
+    return;
+  }
+
+  // Pinta cada usuario con textContent, porque viene de la base.
+  for (const user of users) {
+    const item = document.createElement("li");
+    item.textContent = userText(user);
+    foundUsers.append(item);
+  }
+}
+
+// Escribe los tres números del recuento en una línea.
+function genderText(counts) {
+  const { women, men, genderUndefined } = counts;
+  return `Mujeres: ${women} · Hombres: ${men} · No definidos: ${genderUndefined}`;
+}
+
+// Pide el recuento por género y lo enseña.
+async function countByGender() {
+  showViewedUser(null);
+
+  // Guarda la cuenta para saber si, al responder, sigue siendo lo último.
+  const accion = ultimaAccion;
+
+  // Desactiva el botón para no pedir dos recuentos a la vez.
+  genderButton.disabled = true;
+
+  // La IA puede tardar: avisa de que está trabajando.
+  showMessage("Contando…", false);
+
+  try {
+    const counts = await callApi(
+      "GET",
+      "/users/gender-count",
+      undefined,
+      "Could not classify the users",
+    );
+
+    // Si ya se ha hecho otra cosa, esta respuesta llega tarde: no se enseña.
+    if (accion !== ultimaAccion) {
+      return;
+    }
+
+    showMessage("", false);
+    genderResult.textContent = genderText(counts);
+    genderResult.hidden = false;
+  } catch (error) {
+    // Un error que llega tarde tampoco se enseña.
+    if (accion === ultimaAccion) {
+      showMessage(error.message, true);
+    }
+  } finally {
+    // Haya salido bien o mal, el botón vuelve a funcionar.
+    genderButton.disabled = false;
+  }
+}
+
 // Conecta cada formulario y botón con la función que lo atiende.
 document
   .getElementById("create-form")
@@ -233,6 +373,13 @@ document
 document.getElementById("delete-form").addEventListener("submit", askToDelete);
 document.getElementById("delete-yes").addEventListener("click", confirmDelete);
 document.getElementById("delete-no").addEventListener("click", cancelDelete);
+document
+  .getElementById("find-email-form")
+  .addEventListener("submit", findByEmailFromForm);
+document
+  .getElementById("find-name-form")
+  .addEventListener("submit", findByNameFromForm);
+genderButton.addEventListener("click", countByGender);
 
 // Al abrir la ventana, carga la lista.
 showUsers();

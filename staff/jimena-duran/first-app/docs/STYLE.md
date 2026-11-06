@@ -12,6 +12,10 @@ Las comprobaciones con `if` y su `throw new Error` van en líneas separadas.
 No se definen clases ni métodos propios y no se usa `this`. Se conservan las
 instancias y llamadas a métodos de bibliotecas que ya utiliza la aplicación.
 
+En `src/clients/nest/` se permiten clases, métodos, `this` y decoradores
+para utilizar la estructura de NestJS. Los nombres de archivo siguen en
+kebab-case. Esta excepción se limita a ese cliente.
+
 Aplica el formato estándar de Prettier: comillas dobles, punto y coma, coma final, dos espacios de indentación y líneas de hasta 80 columnas.
 
 Los valores fijos se declaran como constantes en MAYÚSCULAS; las variables normales usan camelCase.

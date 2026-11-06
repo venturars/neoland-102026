@@ -1,5 +1,45 @@
 # My First App en Jupyter
 
+## Notebook del cliente Node HTTP
+
+Desde first-app, abrir tres terminales PowerShell para el servidor SQL,
+el cliente HTTP y los cinco notebooks, respectivamente:
+
+```powershell
+pnpm server
+pnpm node-http
+pnpm jupyter-node-http
+```
+
+`node-http` escucha en `http://127.0.0.1:3004`; SQL conserva 3000.
+`jupyter-node-http` requiere el `sh` de Git Bash disponible en PATH.
+Si esta terminal no lo encuentra, usar la carpeta real de la instalación
+de Git Bash solo en el PATH de esta sesión, por ejemplo:
+
+```powershell
+$env:Path = 'E:/Desarrollos/Git/Git/bin;' + $env:Path
+pnpm jupyter-node-http
+```
+
+El script resuelve first-app desde su propia ubicación, reutiliza o crea
+`.venv`, comprueba Notebook exactamente 7.6.3 y lo instala ahí únicamente
+si falta o difiere. No instala paquetes Node ni modifica Python global.
+Abre `src/clients/node-http/jupyter/` en Notebook con el kernel
+**Python 3 (ipykernel)**; los procesos heredan UTF-8.
+
+Con una copia de ensayo y lista vacía, ejecutar en orden `create-user`,
+`list-users`, `find-user-by-id`, `update-user` y `delete-user`.
+Se crea Ada, se reutiliza su ID real y se cambia solo su nombre a Ada
+Lovelace conservando email. El borrado responde 204 sin contenido.
+Los notebooks muestran el estado y resultado HTTP mediante Node `fetch`,
+sin importar logic. Sus anotaciones incluyen errores actuales y SQL
+detenido; mantener el cliente HTTP abierto al detener solo el SQL propio
+para comprobar los cinco mensajes 500. No usar datos personales para
+ese ensayo. Al terminar, cerrar únicamente los procesos propios.
+
+El arranque JupyterLab y los nueve notebooks actuales se conservan como
+se documenta a continuación; no utilizan este nuevo comando.
+
 Abre un documento, selecciona su celda y pulsa **▶** o **Shift+Enter**.
 La acción se ejecuta y muestra una tabla con encabezados cian. No hay que
 escribir código ni rellenar formularios.

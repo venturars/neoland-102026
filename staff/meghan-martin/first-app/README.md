@@ -48,8 +48,8 @@ Crea `~/.cursor/mcp.json` para tenerlos en todos tus proyectos, o `.cursor/mcp.j
 
 Abre Cursor Settings → MCP y comprueba que aparecen conectados. Abre una conversación nueva de Agent.
 
-## Nest
+## VS Code
 
-Desde `first-app`, deja `npm run db` en marcha y ejecuta `npm run nest`. Responde en `http://127.0.0.1:3003`.
+Desde `first-app`, deja `npm run db` en marcha y ejecuta `npm run vscode`. En el explorador de esa ventana está la vista People.
 
-Este cliente se aparta de `docs/STYLE.md` y de `docs/ERRORS.md`: usa clases, métodos, `this` y decoradores, y traduce las frases de error que ya existen. Esas dos guías siguen igual para el resto de la app. No sustituye al cliente HTTP del puerto 3001.
+Al cerrar VS Code se cierra la vista. Para volver a verla, ejecuta otra vez `npm run vscode`. La base tiene que seguir en marcha.

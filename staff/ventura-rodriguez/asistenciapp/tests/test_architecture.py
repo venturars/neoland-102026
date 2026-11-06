@@ -1,4 +1,4 @@
-"""Límites de documentos y de arquitectura. CA-01 a CA-06 y CA-09.
+"""Límites de documentos y de arquitectura.
 
 El almacén puede nombrar la tabla `sessions`: eso es el dato guardado.
 Lo que no puede hacer es importar las reglas de `domain.session`.
@@ -18,12 +18,12 @@ def _python_files(relative: str):
     return sorted(root.rglob("*.py"))
 
 
-def test_constitution_lives_in_docs():  # CA-01
+def test_constitution_lives_in_docs():
     assert (APP_ROOT / "docs" / "CONSTITUTION.md").is_file()
     assert not (APP_ROOT / "CONSTITUTION.md").exists()
 
 
-def test_architecture_document_keeps_only_what_this_app_needs():  # CA-02
+def test_architecture_document_keeps_only_what_this_app_needs():
     text = _text("docs/ARCHITECTURE.md")
     assert "reglas" in text.lower()
     assert "almacén" in text.lower()
@@ -32,7 +32,7 @@ def test_architecture_document_keeps_only_what_this_app_needs():  # CA-02
         assert tool in text
 
 
-def test_agent_manual_was_renamed_and_explains_how_to_write():  # CA-03
+def test_agent_manual_was_renamed_and_explains_how_to_write():
     assert not (APP_ROOT / "AGENT.md").exists()
     text = _text("AGENTS.md")
     assert ":param" in text
@@ -40,7 +40,7 @@ def test_agent_manual_was_renamed_and_explains_how_to_write():  # CA-03
     assert "Usage" in text
 
 
-def test_domain_does_not_open_the_database_or_draw_screens():  # CA-04
+def test_domain_does_not_open_the_database_or_draw_screens():
     files = _python_files("asistencia/domain")
     assert files
     for path in files:
@@ -49,7 +49,7 @@ def test_domain_does_not_open_the_database_or_draw_screens():  # CA-04
         assert "flask" not in text
 
 
-def test_storage_does_not_decide_rules_or_draw_screens():  # CA-05
+def test_storage_does_not_decide_rules_or_draw_screens():
     text = _text("asistencia/storage/sqlite.py")
     assert "flask" not in text
     assert "clean_name" not in text
@@ -58,17 +58,17 @@ def test_storage_does_not_decide_rules_or_draw_screens():  # CA-05
     assert "import session" not in text
 
 
-def test_app_does_not_open_the_database():  # CA-06
+def test_app_does_not_open_the_database():
     text = _text("app.py")
     assert "sqlite3" not in text
     assert "asistencia.storage" not in text
 
 
-def test_constitution_names_the_new_folders():  # CA-09
+def test_constitution_names_the_new_folders():
     text = _text("docs/CONSTITUTION.md")
-    assert "Versión 3.0" in text
-    assert "IP pública estática" in text
-    assert "intentos de registrarse" in text
+    assert "Versión 4.1" in text
+    assert "IP de quien intenta registrarse" in text
+    assert "códigos fallados" in text
     assert "lista de bloqueo" in text
     for folder in (
         "docs/",

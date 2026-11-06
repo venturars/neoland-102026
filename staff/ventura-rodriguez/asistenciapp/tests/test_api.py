@@ -1,4 +1,4 @@
-"""Tests de la API (app.py) · T06–T11."""
+"""Tests de la API (app.py)."""
 
 import re
 
@@ -22,7 +22,7 @@ def check_in(client, sid, name, code):
     return client.post(f"/api/s/{sid}/checkin", json={"name": name, "code": code})
 
 
-# ---------- T06 · base y acceso del profesor (CA-15, CA-17) ----------
+# ---------- base y acceso del profesor ----------
 
 @pytest.mark.parametrize(
     "method, path",
@@ -54,9 +54,9 @@ def test_public_session_info_does_not_leak_the_list(client, teacher):
     assert data == {"title": "Clase de prueba", "open": True}
 
 
-# ---------- T07 · crear y listar sesiones (CA-01, CA-02, CA-16) ----------
+# ---------- crear y listar sesiones ----------
 
-def test_create_session_with_title(client, teacher):  # CA-01
+def test_create_session_with_title(client, teacher):
     res = client.post("/api/sessions", json={"title": "  Clase 20/10 – SDD "}, headers=teacher)
     assert res.status_code == 201
     assert res.get_json()["title"] == "Clase 20/10 – SDD"
@@ -64,13 +64,13 @@ def test_create_session_with_title(client, teacher):  # CA-01
 
 
 @pytest.mark.parametrize("body", [{}, {"title": ""}, {"title": "   "}])
-def test_create_session_without_title_uses_date(client, teacher, body):  # CA-02
+def test_create_session_without_title_uses_date(client, teacher, body):
     res = client.post("/api/sessions", json=body, headers=teacher)
     assert res.status_code == 201
     assert re.fullmatch(r"\d{2}/\d{2}/\d{4} \d{2}:\d{2}", res.get_json()["title"])
 
 
-def test_list_sessions_newest_first_with_totals(client, teacher, clock):  # CA-16
+def test_list_sessions_newest_first_with_totals(client, teacher, clock):
     first = open_session(client, teacher, "Primera")
     check_in(client, first, "Ana", current_code(client, teacher, first))
     check_in(client, first, "Luis", current_code(client, teacher, first))
@@ -85,9 +85,9 @@ def test_list_sessions_newest_first_with_totals(client, teacher, clock):  # CA-1
     assert {"openedAt", "closedAt"} <= sessions[0].keys()
 
 
-# ---------- T08 · registro del alumno (CA-04 … CA-08, CA-12) ----------
+# ---------- registro del alumno ----------
 
-def test_check_in_with_current_code(client, teacher):  # CA-04
+def test_check_in_with_current_code(client, teacher):
     sid = open_session(client, teacher)
     res = check_in(client, sid, "Ana García", current_code(client, teacher, sid))
     assert res.status_code == 201
@@ -96,14 +96,14 @@ def test_check_in_with_current_code(client, teacher):  # CA-04
     assert "checkedAt" in data
 
 
-def test_check_in_with_previous_code(client, teacher, clock):  # CA-05
+def test_check_in_with_previous_code(client, teacher, clock):
     sid = open_session(client, teacher)
     previous = current_code(client, teacher, sid)
     clock.advance(30)
     assert check_in(client, sid, "Ana", previous).status_code == 201
 
 
-def test_check_in_with_code_from_two_windows_ago(client, teacher, clock):  # CA-06
+def test_check_in_with_code_from_two_windows_ago(client, teacher, clock):
     sid = open_session(client, teacher)
     old = current_code(client, teacher, sid)
     clock.advance(30)
@@ -117,14 +117,14 @@ def test_check_in_with_code_from_two_windows_ago(client, teacher, clock):  # CA-
 
 
 @pytest.mark.parametrize("code", ["abcd", "", "12345"])
-def test_check_in_with_wrong_code(client, teacher, code):  # CA-06
+def test_check_in_with_wrong_code(client, teacher, code):
     sid = open_session(client, teacher)
     res = check_in(client, sid, "Ana", code)
     assert res.status_code == 422
     assert res.get_json()["error"] == INVALID_CODE
 
 
-def test_duplicate_name_is_not_added_twice(client, teacher, clock):  # CA-07
+def test_duplicate_name_is_not_added_twice(client, teacher, clock):
     sid = open_session(client, teacher)
     first = check_in(client, sid, "Ana García", current_code(client, teacher, sid)).get_json()
     clock.advance(10)
@@ -135,14 +135,14 @@ def test_duplicate_name_is_not_added_twice(client, teacher, clock):  # CA-07
 
 
 @pytest.mark.parametrize("name", ["", "   ", "a" * 61])
-def test_invalid_name_is_rejected(client, teacher, name):  # CA-08
+def test_invalid_name_is_rejected(client, teacher, name):
     sid = open_session(client, teacher)
     res = check_in(client, sid, name, current_code(client, teacher, sid))
     assert res.status_code == 400
     assert res.get_json()["error"]
 
 
-def test_html_name_is_returned_literally(client, teacher):  # CA-12
+def test_html_name_is_returned_literally(client, teacher):
     sid = open_session(client, teacher)
     check_in(client, sid, "<b>Ana</b>", current_code(client, teacher, sid))
     checkins = client.get(f"/api/sessions/{sid}", headers=teacher).get_json()["checkins"]
@@ -154,9 +154,9 @@ def test_unknown_session(client):
     assert check_in(client, "no-existe", "Ana", "1234").status_code == 404
 
 
-# ---------- T09 · vista del profesor (CA-10, CA-11) ----------
+# ---------- vista del profesor ----------
 
-def test_teacher_view(client, teacher, clock):  # CA-10, CA-11
+def test_teacher_view(client, teacher, clock):
     sid = open_session(client, teacher)
     data = client.get(f"/api/sessions/{sid}", headers=teacher).get_json()
     assert data["open"] is True
@@ -173,9 +173,9 @@ def test_teacher_view(client, teacher, clock):  # CA-10, CA-11
     assert [c["name"] for c in data["checkins"]] == ["Luis", "Ana"]
 
 
-# ---------- T10 · cerrar sesión (CA-09, CA-13) ----------
+# ---------- cerrar sesión ----------
 
-def test_closed_session(client, teacher):  # CA-09, CA-13
+def test_closed_session(client, teacher):
     sid = open_session(client, teacher)
     code = current_code(client, teacher, sid)
     assert client.post(f"/api/sessions/{sid}/close", headers=teacher).status_code == 200
@@ -195,9 +195,9 @@ def test_close_unknown_session(client, teacher):
     assert client.post("/api/sessions/no-existe/close", headers=teacher).status_code == 404
 
 
-# ---------- T11 · exportar (CA-14) ----------
+# ---------- exportar ----------
 
-def test_export_csv(client, teacher, clock):  # CA-14
+def test_export_csv(client, teacher, clock):
     sid = open_session(client, teacher)
     check_in(client, sid, "Luis", current_code(client, teacher, sid))
     clock.advance(5)
@@ -214,9 +214,9 @@ def test_export_csv(client, teacher, clock):  # CA-14
     assert [r.split(";")[0] for r in rows[1:]] == ["Luis", "Ana García"]
 
 
-# ---------- T13 · acceso a través del túnel (CA-19) ----------
+# ---------- acceso a través del túnel ----------
 
-def test_student_url_uses_public_tunnel_address(client, teacher):  # CA-19
+def test_student_url_uses_public_tunnel_address(client, teacher):
     sid = open_session(client, teacher)
     res = client.get(
         f"/api/sessions/{sid}",
@@ -225,7 +225,7 @@ def test_student_url_uses_public_tunnel_address(client, teacher):  # CA-19
     assert res.get_json()["studentUrl"] == f"https://abc.trycloudflare.com/alumno.html?s={sid}"
 
 
-# ---------- T22 · quitar registros (CA-24, CA-25, CA-26) ----------
+# ---------- quitar registros ----------
 
 def checkins_of(client, teacher, sid):
     return client.get(f"/api/sessions/{sid}", headers=teacher).get_json()["checkins"]
@@ -237,7 +237,7 @@ def test_checkins_include_id(client, teacher):
     assert isinstance(checkins_of(client, teacher, sid)[0]["id"], int)
 
 
-def test_remove_checkin(client, teacher):  # CA-24
+def test_remove_checkin(client, teacher):
     sid = open_session(client, teacher)
     code = current_code(client, teacher, sid)
     check_in(client, sid, "Ana", code)
@@ -254,7 +254,7 @@ def test_remove_checkin(client, teacher):  # CA-24
     assert "Falso" not in csv and "Ana" in csv
 
 
-def test_remove_checkin_from_closed_session(client, teacher):  # CA-24
+def test_remove_checkin_from_closed_session(client, teacher):
     sid = open_session(client, teacher)
     check_in(client, sid, "Ana", current_code(client, teacher, sid))
     client.post(f"/api/sessions/{sid}/close", headers=teacher)
@@ -263,7 +263,7 @@ def test_remove_checkin_from_closed_session(client, teacher):  # CA-24
     assert checkins_of(client, teacher, sid) == []
 
 
-def test_remove_unknown_or_other_session_checkin(client, teacher):  # CA-24
+def test_remove_unknown_or_other_session_checkin(client, teacher):
     sid = open_session(client, teacher)
     other = open_session(client, teacher, "Otra")
     check_in(client, other, "Ana", current_code(client, teacher, other))
@@ -276,7 +276,7 @@ def test_remove_unknown_or_other_session_checkin(client, teacher):  # CA-24
 
 
 @pytest.mark.parametrize("headers", [{}, {"X-Teacher-Token": "token-falso"}])
-def test_remove_requires_token(client, teacher, headers):  # CA-25
+def test_remove_requires_token(client, teacher, headers):
     sid = open_session(client, teacher)
     check_in(client, sid, "Ana", current_code(client, teacher, sid))
     checkin_id = checkins_of(client, teacher, sid)[0]["id"]
@@ -284,7 +284,7 @@ def test_remove_requires_token(client, teacher, headers):  # CA-25
     assert len(checkins_of(client, teacher, sid)) == 1
 
 
-def test_removed_person_can_check_in_again(client, teacher):  # CA-26
+def test_removed_person_can_check_in_again(client, teacher):
     sid = open_session(client, teacher)
     code = current_code(client, teacher, sid)
     check_in(client, sid, "Ana García", code)

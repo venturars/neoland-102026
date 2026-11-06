@@ -16,6 +16,19 @@ El cliente `src/clients/browser/` contiene `index.html`, `app.js` y `styles.css`
 
 `src/logic/` es el núcleo estable de la aplicación. No se reemplaza por adaptadores, plugins o implementaciones intercambiables, y sus reglas no se trasladan a `src/queries/` ni a `src/clients/`. Cada operación tiene su propio archivo; una operación nueva no modifica otro archivo para reutilizarlo.
 
+`src/clients/nest/` expone las mismas cinco operaciones en
+`http://127.0.0.1:3003`. Un módulo registra controlador, servicio y filtro
+de transporte. El servicio importa las funciones existentes de `logic/`;
+no repite validaciones ni accede directamente a SQLite.
+La raíz `/` sirve Swagger UI en el mismo origen. Los metadatos de cuerpos
+e ids documentan las cinco rutas actuales sin añadir validaciones.
+`corepack pnpm nest` limpia el `dist/` local, compila `src/` con Babel
+manteniendo ESM y arranca `dist/clients/nest/main.js`. Los imports relativos
+usan la copia compilada de logic y queries, que sigue llamando al servidor
+SQL original en 3000. No se ejecuta la copia del servidor SQL en dist.
+Express permanece en 3001 y ambos clientes comparten el mismo servidor
+y datos. `dist/` no se versiona ni se revisa con ESLint.
+
 El cliente `src/clients/electron/` abre una ventana de escritorio propia e importa las operaciones de `src/logic/`. No reutiliza `src/clients/browser/` ni sustituye al servidor SQL de `src/db/server.js`.
 
 El cliente `src/clients/chrome/` reúne una extensión Manifest V3 y su API
@@ -36,6 +49,16 @@ Los contratos de funciones siguen [STYLE.md](STYLE.md); las salidas y los errore
 
 `eslint.config.js` configura la revisión del JavaScript con las reglas
 recomendadas de ESLint y excluye `.venv` y `node_modules`.
+
+`src/clients/node-http/app.js` usa `createServer` de `node:http` en
+`http://127.0.0.1:3004` y delega las cinco operaciones de usuarios en
+`src/logic/`. Se inicia con `pnpm node-http`; conserva el servidor SQL en
+3000 y los contratos existentes. Sus cinco notebooks Python ejecutan Node
+con `fetch`: notebook → HTTP 3004 → logic → queries → SQL actual.
+`pnpm jupyter-node-http` ejecuta `scripts/jupyter-node-http.sh`, reutiliza
+o crea `.venv` local y abre esa carpeta con Notebook 7.6.3. No incorpora
+dependencias Node ni sustituye el arranque documentado de JupyterLab o
+los nueve notebooks de `src/clients/jupyter/`. Uso en [JUPYTER.md](JUPYTER.md).
 
 ## Automatización del trabajo
 

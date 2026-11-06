@@ -1,0 +1,27 @@
+meta {
+  name: Create with bad email
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Bad",
+    "email": "not-an-email"
+  }
+}
+
+assert {
+  res.status: eq 400
+  res.body.error: eq The email is not valid.
+}
+
+docs {
+  The email has no @.
+}

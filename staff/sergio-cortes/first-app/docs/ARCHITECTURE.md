@@ -1,6 +1,7 @@
 # Arquitectura
 
-- `eslint.config.js` aplica las reglas recomendadas de ESLint al JavaScript e ignora `.venv`, `node_modules` y los cuadernos Jupyter. Declara `console` como global solo para `src/clients/http/`. Declara `process` como global para `src/clients/electron/main.js` y `document` y `fetch` para `src/clients/electron/app.js`.
+- `eslint.config.js` aplica las reglas recomendadas de ESLint al JavaScript e ignora `.venv`, `node_modules`, `dist/` y los cuadernos Jupyter. Declara `console` como global solo para `src/clients/http/`, `src/clients/node-http/` y `src/clients/nest/`. En Nest usa `@babel/eslint-parser` con `babel.config.json`. Declara `process` como global para `src/clients/electron/main.js` y `document` y `fetch` para `src/clients/electron/app.js`.
+- `babel.config.json` compila los decoradores de Nest (`preset-env` con `node` `current` y `modules` `false`; plugin de decoradores `legacy`). La salida va a `dist/`; `first-app/.gitignore` la excluye.
 - `agents/git-workflow-agent.md` reconoce el momento, llama al subagente o a la skill que toca y confirma cada paso antes del siguiente. Si la issue ya está escrita y el trabajo siguiente hace cambios, el momento es Empezar.
 - `agents/help-me-to-think.md` hace las preguntas que hagan falta hasta que la tarea se pueda dejar escrita; el orquestador espera al alumno entre rondas.
 - `agents/create-issue.md` crea la issue asignada a quien está autenticado; el cuerpo sale de la plantilla del tipo en `templates/issues/`.
@@ -17,7 +18,7 @@
 - `skills/create-branch-from-staging/SKILL.md` abre la rama desde `staging`.
 - `skills/create-branch/SKILL.md` abre la rama desde una base que no es `staging`.
 - `skills/create-empty-commit/SKILL.md` hace el commit vacío `chore: open #N`.
-- `skills/commit-changes/SKILL.md` guarda un trozo con ficheros nombrados; el mensaje nombra el fichero o la función y el cambio.
+- `skills/commit-changes/SKILL.md` guarda un trozo con ficheros nombrados; la primera línea del mensaje dice qué cambió, sin rutas de fichero, y el cuerpo nombra las funciones o ficheros implicados.
 - `skills/launch-push/SKILL.md` sube la rama actual y fija el upstream.
 - `skills/create-pr-base-staging/SKILL.md` abre la pull request con base `staging`, en draft y asignada, con el script de `tools/`.
 - `skills/create-draft/SKILL.md` pasa a draft una pull request que ya existe.
@@ -31,8 +32,8 @@
 - `tools/commit-changes.sh` guarda los ficheros nombrados.
 - `tools/launch-push.sh` sube la rama y fija el upstream.
 - `tools/create-pr-base-staging.sh` crea la pull request con base `staging`, en draft y asignada al usuario autenticado.
-- `templates/issues/` lleva seis plantillas (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`). En el comentario HTML van la regla del título, el tipo y el nombre de rama.
-- `templates/pull-request/` lleva seis plantillas del mismo tipo. El cuerpo comparte secciones; la lista de comprobación cambia por tipo. La sección Issue es `Closes #`.
+- `templates/issues/` lleva siete plantillas (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `knowledge`). En el comentario HTML van la regla del título, el tipo y el nombre de rama.
+- `templates/pull-request/` lleva siete plantillas del mismo tipo. El cuerpo comparte secciones; la lista de comprobación cambia por tipo. La sección Issue es `Closes #`.
 - `MCPS/github-mcp-server/mcp.txt` es la dirección del MCP de GitHub y el header para que la escritura no abra un formulario.
 - `MCPS/socket-mcp/mcp.txt` es la dirección del MCP de Socket.
 - `docs/specs/<nombre>/` es donde empieza un desarrollo. `<nombre>` es la funcionalidad, en kebab-case.
@@ -44,7 +45,7 @@
 - `src/logic/` es el núcleo de la app. Aquí viven las reglas de negocio.
 - `src/logic/errors.js` exporta las clases de error compartidas. No es una funcionalidad de negocio.
 - `src/logic/create-user.js` crea un usuario.
-- `src/logic/update-user.js` actualiza un usuario.
+- `src/logic/update-user.js` actualiza un usuario. Un dato que no entra se conserva. Antes de guardar se comprueba que el email resultante no lo tenga otro usuario.
 - `src/logic/delete-user.js` borra un usuario.
 - `src/logic/find-user-by-id.js` busca un usuario por id.
 - `src/logic/find-user-by-email.js` busca un usuario por email.
@@ -61,13 +62,22 @@
   - `src/clients/electron/index.html` define selección (lista, búsqueda y alta), menú, edición y el popover de borrado (mismo texto de búsqueda que web).
   - `src/clients/electron/styles.css` es la hoja copiada (paleta crema/teal).
   - `src/clients/electron/app.js` concentra la lógica de pantalla, igual que el de navegador: lista, búsqueda, alta, selección, guardado, borrado y arranque.
-- `src/clients/http/server.js` es el cliente HTTP con Express en `127.0.0.1:3001`. Solo acepta conexiones de este equipo y escribe esa dirección en la consola al arrancar. Un solo fichero con las rutas `GET /users`, `GET /users/:id`, `POST /users`, `PATCH /users/:id` y `DELETE /users/:id`. Llama a `src/logic/` directamente y un middleware de errores traduce la clase del error a su estado. Se arranca con `pnpm http`. El script `http` de `package.json` arranca antes `src/db/server.js` si nada escucha en `127.0.0.1:3000`, y lo para al salir. Si ya está en marcha (`pnpm server`), lo reutiliza.
+- `src/clients/http/server.js` es el cliente HTTP con Express en `127.0.0.1:3001`. Solo acepta conexiones de este equipo y escribe esa dirección en la consola al arrancar. Un solo fichero con las rutas `GET /users`, `GET /users/:id`, `POST /users`, `PATCH /users/:id` y `DELETE /users/:id`. Llama a `src/logic/` directamente y un middleware de errores traduce la clase del error a su estado. DELETE correcto es 204 sin cuerpo. Un fallo responde `{ "message" }`. Una ruta que no existe es 404 sin cuerpo. La carpeta `src/clients/http/bruno/` tiene la colección Bruno. Se arranca con `pnpm http`. El script `http` de `package.json` arranca antes `src/db/server.js` si nada escucha en `127.0.0.1:3000`, y lo para al salir. Si ya está en marcha (`pnpm server`), lo reutiliza. El script `bruno` lanza `bru run 01-sql-online -r` en esa colección.
 - `src/clients/chrome/` es la extensión de Chrome para usuarios. Copia de partida de las pantallas de `src/clients/web/` (`index.html`, `styles.css`) más `popup.js` y `manifest.json`. El popup pide JSON a Fastify en `127.0.0.1:3002`; no importa `src/logic/`. No modifica `src/clients/web/` ni Express.
-  - `src/clients/chrome/server.js` es la API con Fastify en `127.0.0.1:3002`. Rutas de usuarios (listar, buscar por nombre y email, ver por id, crear, actualizar y borrar) y el JSON de errores alineados con Express. Llama a `src/logic/` directamente.
+  - `src/clients/chrome/server.js` es la API con Fastify en `127.0.0.1:3002`. Rutas de usuarios (listar, buscar por nombre y email, ver por id, crear, actualizar y borrar), DELETE 204, `{ "message" }` y 404 vacío alineados con Express. Llama a `src/logic/` directamente.
   - `src/clients/chrome/manifest.json` es Manifest V3. La acción abre `index.html` en el popup. El permiso de host es `http://127.0.0.1:3002/*`.
   - `src/clients/chrome/index.html` define selección (lista, búsqueda y alta), menú, edición y el popover de borrado (mismo texto de búsqueda que web).
   - `src/clients/chrome/styles.css` es la hoja copiada (paleta crema/teal).
-  - `src/clients/chrome/popup.js` concentra la lógica de pantalla y habla con la API por `fetch` (lista, búsqueda, alta con `POST /users`, selección, guardado, borrado). Un resultado de búsqueda abre el menú; varios por nombre exigen elegir y continuar.
+  - `src/clients/chrome/popup.js` concentra la lógica de pantalla y habla con la API por `fetch` (lista, búsqueda, alta con `POST /users`, selección, guardado, borrado). Un resultado de búsqueda abre el menú; varios por nombre exigen elegir y continuar. El fallo lee `body.message`. Un DELETE 204 no llama a `response.json()`.
+- `src/clients/node-http/` es el cliente HTTP con `node:http` en `127.0.0.1:3004`, sin Express, Fastify ni Nest. Un solo fichero, `server.js`, con las rutas `GET /users`, `GET /users/:id`, `POST /users`, `PATCH /users/:id` y `DELETE /users/:id`. Llama a `src/logic/` directamente. Tiene el mismo contrato que el cliente HTTP: DELETE correcto es 204 sin cuerpo, un fallo responde `{ "message" }` y una ruta que no existe es 404 sin cuerpo. Se arranca con `pnpm node-http`. El script `node-http` de `package.json` arranca antes `src/db/server.js` si nada escucha en `127.0.0.1:3000`, y lo para al salir.
+  - `src/clients/node-http/server.js` crea el servidor, lee el cuerpo, despacha las rutas y traduce los errores a estado.
+  - `src/clients/node-http/jupyter/` tiene un cuaderno por operación: `create-user.ipynb`, `list-users.ipynb`, `find-user-by-id.ipynb`, `update-user.ipynb` y `delete-user.ipynb`. Cada uno tiene una celda de Python que lanza `node --input-type=module -e`, con `fetch` a la API y tabla de `cli-table3`. Se abre con `pnpm jupyter-node-http` desde `first-app`.
+- `src/clients/nest/` es el cliente HTTP con Nest.js en `127.0.0.1:3003`. Módulo, controlador, servicio y filtro. `UsersService` es el único que importa `src/logic/`. El controlador no llama a logic. El filtro traduce la clase del error a estado y `{ "message" }`. DELETE correcto es 204 sin cuerpo. Una ruta que no existe es 404 sin cuerpo. La página Swagger UI sale en `/docs` y el documento OpenAPI en `/docs-json`. Se compila a `dist/` y se arranca con `pnpm nest`. El script `nest` arranca antes `src/db/server.js` si nada escucha en `127.0.0.1:3000`, y lo para al salir. Si ya está en marcha (`pnpm server`), lo reutiliza. No habla con Express ni con Fastify. El contrato HTTP es el de Express y Chrome.
+  - `src/clients/nest/main.js` crea la app, publica la página Swagger UI en `/docs` y escucha en `127.0.0.1:3003`.
+  - `src/clients/nest/app.module.js` registra controlador, servicio y filtro.
+  - `src/clients/nest/users.controller.js` declara las cinco rutas y delega en el servicio. El cuerpo de `PATCH` no exige nombre y email a la vez.
+  - `src/clients/nest/users.service.js` llama a `src/logic/`.
+  - `src/clients/nest/http-exception.filter.js` asigna el estado por la clase del error.
 - `src/clients/vscode/` es la extensión de VS Code para usuarios. Copia de partida de las pantallas de `src/clients/web/` (`index.html`, `styles.css`) más `panel.js`, `extension.js` y `package.json`. El panel no importa `src/logic/`; el proceso de la extensión sí. No modifica los otros clientes ni abre un puerto nuevo.
   - `src/clients/vscode/extension.js` importa `src/logic/`, abre un webview como pestaña de editor con el comando `First App: Abrir usuarios` y atiende los mensajes del panel.
   - `src/clients/vscode/index.html` define selección (lista, búsqueda y alta), menú, edición y el popover de borrado.
@@ -75,8 +85,9 @@
   - `src/clients/vscode/panel.js` concentra la lógica de pantalla y habla con `extension.js` por mensajes (lista, alta, búsqueda por nombre, email o id, selección, guardado, borrado).
   - `src/clients/vscode/package.json` es el manifiesto de la extensión. Se abre con F5 desde la carpeta `src/clients/vscode/`; la base se arranca aparte con `pnpm server`. `README.md` en first-app explica VS Code y Chrome.
 - `README.md` en first-app resume cómo arrancar el cliente de VS Code y el de Chrome.
-- `package.json` script `server` arranca el servidor de la base desde `first-app`. El script `web` abre la página en Brave; si el puerto 3000 está libre, arranca la base antes, como `http`. El script `http` arranca el cliente HTTP. El script `electron` arranca el cliente de escritorio. El script `chrome` arranca la API de Fastify; si el puerto 3000 está libre, arranca la base antes, como `http`. El script `vscode` abre VS Code en `src/clients/vscode/` con `--extensionDevelopmentPath`; la base sigue aparte (`pnpm server`). Tras F5, el comando del panel es `First App: Abrir usuarios`.
+- `package.json` script `server` arranca el servidor de la base desde `first-app`. El script `web` abre la página en Brave; si el puerto 3000 está libre, arranca la base antes, como `http`. El script `http` arranca el cliente HTTP. El script `bruno` ejecuta la colección online del cliente HTTP. El script `electron` arranca el cliente de escritorio. El script `chrome` arranca la API de Fastify; si el puerto 3000 está libre, arranca la base antes, como `http`. El script `nest` compila `src` a `dist/` y arranca Nest; si el puerto 3000 está libre, arranca la base antes, como `http`. El script `vscode` abre VS Code en `src/clients/vscode/` con `--extensionDevelopmentPath`; la base sigue aparte (`pnpm server`). Tras F5, el comando del panel es `First App: Abrir usuarios`.
 - `scripts/jupyter.sh` prepara `.venv` si hace falta, instala `notebook==7.6.3` y arranca Jupyter en `src/clients/jupyter/`. Funciona en Mac, Linux y Windows (con `sh`). `package.json` lo invoca con `pnpm jupyter`.
+- `scripts/jupyter-node-http.sh` es una copia de `scripts/jupyter.sh` que abre `src/clients/node-http/jupyter/`. `package.json` lo invoca con `pnpm jupyter-node-http`. `scripts/jupyter.sh` no cambia.
 - `src/clients/jupyter/` es el cuaderno, uno por cada `.txt` de `src/clients/terminal/`. El bloque muestra ese texto: arranca `node --input-type=module` y, dentro, los `import` y la llamada quedan igual. El `console.log` se sustituye por la tabla. `cli-table3` y `@colors/colors` pintan esa tabla con colores y encabezados. Si la función falla, se ve ese mensaje. En esa carpeta no hay ficheros `.py` ni `requirements.txt`. Se abre con `pnpm jupyter` desde `first-app`.
 - `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada fichero.
 - `docs/TREE.md` es el árbol de carpetas y ficheros.

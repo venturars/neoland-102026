@@ -4,8 +4,9 @@
 - `package.json` declara el proyecto. Los scripts `format` y `lint` lanzan Prettier y ESLint.
 - `pnpm-lock.yaml` fija las versiones de las dependencias.
 
-- `scripts/` arranca Jupyter sobre `src/clients/jupyter/`.
+- `scripts/` arranca Jupyter sobre `src/clients/jupyter/` o sobre `src/clients/node-http/jupyter/`.
   - `scripts/jupyter.js` arranca Jupyter sobre `src/clients/jupyter/`.
+  - `scripts/jupyter-node-http.js` arranca Jupyter sobre `src/clients/node-http/jupyter/`.
 
 - `src/db/` abre la base de datos y no contiene reglas de negocio.
   - `src/db/server.js` es el único fichero de esa capa junto a la base. Abre la única conexión, guarda la dirección `http://127.0.0.1:3000` y ejecuta el SQL que recibe. No exporta la conexión.
@@ -108,25 +109,40 @@
   - `src/clients/jupyter/users-gender-count.ipynb` valida el recuento por sexo del nombre.
 
 - `src/clients/http/` llama a `src/logic/`, escucha en el puerto 3001 y no repite sus reglas. No sustituye a `src/db/server.js`.
-  - `src/clients/http/app.js` crea, lista, ve, modifica y borra usuarios. Se arranca con `pnpm http`.
+  - `src/clients/http/app.js` crea, lista, ve, modifica, borra y cuenta usuarios. Se arranca con `pnpm http`. La página no existe: la ruta llama a `src/logic/`.
 
-- `src/clients/nest/` llama a `src/logic/`, escucha en el puerto 3003 y no repite sus reglas. Las clases quedan en el módulo y en el controlador. `pnpm nest` lo compila con Babel a `src/clients/nest-run` y arranca ese `main.js`. No sustituye a `src/db/server.js` ni al cliente HTTP.
+- `src/clients/node-http/` llama a `src/logic/`, escucha en el puerto 3004 y no repite sus reglas. No sustituye a `src/clients/http/` ni a `src/db/server.js`.
+  - `src/clients/node-http/app.js` crea, lista, ve, modifica y borra usuarios con `node:http`. Se arranca con `pnpm node-http`.
+  - `src/clients/node-http/jupyter/post-user.ipynb` valida crear por HTTP.
+  - `src/clients/node-http/jupyter/list-users.ipynb` valida listar por HTTP.
+  - `src/clients/node-http/jupyter/get-user-by-id.ipynb` valida ver uno por HTTP.
+  - `src/clients/node-http/jupyter/patch-user.ipynb` valida modificar por HTTP.
+  - `src/clients/node-http/jupyter/delete-user.ipynb` valida borrar por HTTP.
+
+- `src/clients/nest/` llama a `src/logic/`, escucha en el puerto 3003 y no repite sus reglas. Las clases quedan en el módulo y en el controlador. `pnpm nest` lo compila con Babel a `src/clients/nest-run` y arranca ese `main.js`. No sustituye a `src/db/server.js` ni al cliente HTTP. También cuenta usuarios. La página no existe: la ruta llama a `src/logic/`.
 
 - `src/clients/chrome/` llama a `src/logic/`, escucha en el puerto 3002 y no repite sus reglas. El popup es `index.html` y pide esa API. No sustituye a `src/db/server.js` ni al cliente HTTP.
-  - `src/clients/chrome/server.js` crea, lista, ve, modifica y borra usuarios. Se arranca con `pnpm chrome`.
+  - `src/clients/chrome/server.js` crea, lista, ve, modifica, borra y cuenta usuarios. Se arranca con `pnpm chrome`.
   - `src/clients/chrome/manifest.json` es el manifiesto de la extensión.
-  - `src/clients/chrome/index.html` es el popup.
+  - `src/clients/chrome/index.html` es el popup. Tiene la pestaña Recuento.
   - `src/clients/chrome/styles.css` es la hoja del popup.
   - `src/clients/chrome/popup.js` pide las rutas de la API con `fetch` y no importa `src/logic/`.
 
 - `src/clients/vscode/` abre su panel en una pestaña. `extension.js` llama a `src/logic/` y no repite sus reglas. La página no importa `src/logic/`. No sustituye a `src/db/server.js` ni a los clientes HTTP, Chrome, Electron o web. No escucha en un puerto.
-  - `src/clients/vscode/extension.js` crea, lista, busca, ve, modifica y borra usuarios. Se abre con el comando «Abrir usuarios».
+  - `src/clients/vscode/extension.js` crea, lista, busca, ve, modifica, borra y cuenta usuarios. Se abre con el comando «Abrir usuarios».
   - `src/clients/vscode/package.json` es el manifiesto de la extensión.
-  - `src/clients/vscode/index.html` es el panel.
+  - `src/clients/vscode/index.html` es el panel. Tiene la pestaña Recuento.
   - `src/clients/vscode/styles.css` es la hoja del panel.
   - `src/clients/vscode/app.js` pide las acciones y no importa `src/logic/` ni `vscode`.
 
-- `src/clients/web/` son las tres pantallas del navegador. Se abren desde el disco con `pnpm open`. Llaman a `src/logic/` y no piden `/api/users`.
+- `src/clients/electron/` abre su ventana. `main.js` llama a `src/logic/` y no repite sus reglas. La página no importa `src/logic/`. No sustituye a `src/db/server.js` ni a los clientes HTTP, Chrome o web. No escucha en un puerto.
+  - `src/clients/electron/main.js` crea, lista, ve, modifica, borra y cuenta usuarios. Se abre con `pnpm electron`.
+  - `src/clients/electron/preload.js` publica las llamadas. No importa `src/logic/`.
+  - `src/clients/electron/index.html` es la ventana. Tiene la pestaña Recuento.
+  - `src/clients/electron/styles.css` es la hoja de la ventana.
+  - `src/clients/electron/app.js` pide las llamadas y no importa `src/logic/` ni `electron`.
+
+- `src/clients/web/` son las tres pantallas del navegador. Se abren desde el disco con `pnpm open`. Llaman a `src/logic/` y no piden `/api/users`. No cuentan usuarios.
   - `src/clients/web/index.html` define la lista, el menú y la modificación.
   - `src/clients/web/styles.css` es la hoja compartida.
   - `src/clients/web/app.js` es la lógica de las tres pantallas. Carga la lista con `listUsers()`, elige por id con `findUserById(id)`, guarda con `updateUser(id, { name, email })` y borra con `deleteUser(id)`.

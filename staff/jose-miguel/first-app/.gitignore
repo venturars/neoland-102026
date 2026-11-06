@@ -5,3 +5,4 @@ src/db/users.sqlite
 *.sqlite-journal
 .DS_Store
 Thumbs.db
+dist/

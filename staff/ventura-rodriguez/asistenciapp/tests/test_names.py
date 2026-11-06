@@ -1,4 +1,4 @@
-"""Tests de asistencia/domain/names.py · CA-07, CA-08, CA-12."""
+"""Tests de asistencia/domain/names.py."""
 
 import pytest
 
@@ -10,21 +10,21 @@ def test_strips_surrounding_spaces():
 
 
 @pytest.mark.parametrize("raw", ["", "   ", None])
-def test_empty_name_is_rejected(raw):  # CA-08
+def test_empty_name_is_rejected(raw):
     with pytest.raises(ValueError, match="Escribe tu nombre"):
         clean_name(raw)
 
 
-def test_name_at_max_length_is_accepted():  # CA-08
+def test_name_at_max_length_is_accepted():
     assert clean_name("a" * MAX_LENGTH) == "a" * MAX_LENGTH
 
 
-def test_name_over_max_length_is_rejected():  # CA-08
+def test_name_over_max_length_is_rejected():
     with pytest.raises(ValueError, match="60 caracteres"):
         clean_name("a" * (MAX_LENGTH + 1))
 
 
-def test_html_is_kept_literally():  # CA-12
+def test_html_is_kept_literally():
     assert clean_name("<b>Ana</b>") == "<b>Ana</b>"
 
 
@@ -32,7 +32,7 @@ def test_html_is_kept_literally():  # CA-12
     "variant",
     ["Ana García", "ana garcia", "  ANA   GARCÍA ", "Ána Garcìa"],
 )
-def test_variants_share_the_same_key(variant):  # CA-07
+def test_variants_share_the_same_key(variant):
     assert name_key(variant) == name_key("Ana García")
 
 

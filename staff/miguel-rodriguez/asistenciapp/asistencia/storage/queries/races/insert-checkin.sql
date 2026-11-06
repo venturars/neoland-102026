@@ -1,0 +1,1 @@
+INSERT INTO checkins(session_id,name,name_key,checked_at) VALUES (?,?,?,?)

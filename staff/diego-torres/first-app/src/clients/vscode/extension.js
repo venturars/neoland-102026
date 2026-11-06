@@ -7,12 +7,18 @@ import * as vscode from "vscode";
 import { createUser } from "../../logic/create-user.js";
 // Borra un usuario (viene de la capa de lógica).
 import { deleteUser } from "../../logic/delete-user.js";
+// Busca un usuario por su email (viene de la capa de lógica).
+import { findUserByEmail } from "../../logic/find-user-by-email.js";
 // Busca un usuario por su id (viene de la capa de lógica).
 import { findUserById } from "../../logic/find-user-by-id.js";
+// Busca usuarios por su nombre (viene de la capa de lógica).
+import { findUserByName } from "../../logic/find-user-by-name.js";
 // Devuelve la lista de usuarios (viene de la capa de lógica).
 import { listUsers } from "../../logic/list-users.js";
 // Modifica un usuario (viene de la capa de lógica).
 import { updateUser } from "../../logic/update-user.js";
+// Cuenta los usuarios por género (viene de la capa de lógica).
+import { usersGenderCount } from "../../logic/users-gender-count.js";
 
 // Las acciones que cambian datos vuelven a enviar la lista.
 const CAMBIAN_DATOS = ["create", "update", "delete"];
@@ -31,6 +37,15 @@ async function runAction(message) {
   if (action === "view") {
     return { user: await findUserById(id) };
   }
+  if (action === "find-by-email") {
+    return { user: await findUserByEmail(email) };
+  }
+  if (action === "find-by-name") {
+    return { foundUsers: await findUserByName(name) };
+  }
+  if (action === "gender-count") {
+    return { genderCount: await usersGenderCount() };
+  }
   if (action === "update") {
     return { user: await updateUser(id, changes) };
   }
@@ -41,11 +56,12 @@ async function runAction(message) {
 
 // Atiende un mensaje de la vista y le envía la respuesta.
 async function answer(webview, message) {
-  const { action } = message;
+  // requestId vuelve a la vista para que reconozca las respuestas que llegan tarde.
+  const { action, requestId } = message;
 
   try {
     const reply = await runAction(message);
-    webview.postMessage({ action, ...reply });
+    webview.postMessage({ action, requestId, ...reply });
 
     // Si han cambiado los datos, envía la lista nueva.
     if (CAMBIAN_DATOS.includes(action)) {
@@ -54,7 +70,7 @@ async function answer(webview, message) {
     }
   } catch (error) {
     // El mensaje llega a la vista tal como sale de la lógica.
-    webview.postMessage({ action, error: error.message });
+    webview.postMessage({ action, requestId, error: error.message });
   }
 }
 

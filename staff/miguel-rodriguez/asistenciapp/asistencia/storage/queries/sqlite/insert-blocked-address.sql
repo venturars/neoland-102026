@@ -1,0 +1,1 @@
+INSERT OR IGNORE INTO blocked_addresses VALUES (?)

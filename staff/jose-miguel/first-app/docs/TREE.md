@@ -7,7 +7,9 @@ first-app/
   eslint.config.js
   scripts/
     start-jupyter.js
+    start-jupyter-node-http.js
     start-browser.js
+    run-bruno.js
   src/
     db/
       server.js
@@ -44,6 +46,11 @@ first-app/
       http/
         app.js
         README.md
+        bruno/
+          bruno.json
+          collection.bru
+          01-sql-online/
+          02-sql-offline/
       electron/
         main.js
         index.html
@@ -64,6 +71,17 @@ first-app/
         panel.js
         styles.css
         README.md
+      nest/
+        main.js
+        app.module.js
+        users.controller.js
+        users.service.js
+        http-exception.filter.js
+        README.md
+      node-http/
+        server.js
+        README.md
+        jupyter/
   agents/
   skills/
   tools/
@@ -113,6 +131,22 @@ first-app/
         plan.md
         tasks.md
       vscode-sidebar-users/
+        spec.md
+        plan.md
+        tasks.md
+      nest-http-client/
+        spec.md
+        plan.md
+        tasks.md
+      nest-openapi-ui/
+        spec.md
+        plan.md
+        tasks.md
+      bruno-http-collection/
+        spec.md
+        plan.md
+        tasks.md
+      node-http-users-client/
         spec.md
         plan.md
         tasks.md

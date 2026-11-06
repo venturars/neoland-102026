@@ -1,0 +1,16 @@
+meta {
+  name: count-sql-offline
+  type: http
+  seq: 20
+}
+
+get {
+  url: {{baseUrl}}/users/gender-count
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 500", function () { expect(res.getStatus()).to.equal(500); });
+  test("Mensaje exacto", function () { expect(res.getBody()).to.deep.equal({ message: "Unable to list users" }); });
+}

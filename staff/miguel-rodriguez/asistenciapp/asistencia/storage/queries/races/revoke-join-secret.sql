@@ -1,0 +1,1 @@
+UPDATE races SET join_secret=NULL WHERE session_id=?

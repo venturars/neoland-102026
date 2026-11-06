@@ -1,0 +1,1 @@
+SELECT COUNT(*),SUM(checkin_id IS NOT NULL) FROM race_slots WHERE session_id=? AND included_at_start=1

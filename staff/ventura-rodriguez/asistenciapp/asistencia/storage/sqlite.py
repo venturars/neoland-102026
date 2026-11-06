@@ -270,10 +270,10 @@ def list_checkins(path: PathArg, session_id: str) -> list[dict]:
 
 
 def add_registration_attempt(path: PathArg, ip: str, attempted_at: float) -> None:
-    """Anota un intento de registrarse desde esa IP.
+    """Anota un código fallado desde esa IP.
 
     :param path: ruta del archivo.
-    :param ip: IP pública estática del intento.
+    :param ip: IP de quien intenta registrarse.
     :param attempted_at: instante Unix, en segundos.
     :return: None.
     :rtype: None
@@ -294,10 +294,10 @@ def add_registration_attempt(path: PathArg, ip: str, attempted_at: float) -> Non
 
 
 def count_registration_attempts(path: PathArg, ip: str, since: float) -> int:
-    """Cuenta los intentos de esa IP desde un instante, incluido ese instante.
+    """Cuenta los códigos fallados de esa IP desde un instante, incluido ese instante.
 
     :param path: ruta del archivo.
-    :param ip: IP pública estática.
+    :param ip: IP de quien intenta registrarse.
     :param since: instante Unix a partir del cual se cuenta.
     :return: cuántos intentos hay.
     :rtype: int
@@ -348,7 +348,7 @@ def is_ip_blocked(path: PathArg, ip: str) -> bool:
     """Dice si esa IP está en la lista de bloqueo.
 
     :param path: ruta del archivo.
-    :param ip: IP pública estática.
+    :param ip: IP de quien intenta registrarse.
     :return: True si está bloqueada.
     :rtype: bool
 
@@ -366,10 +366,10 @@ def is_ip_blocked(path: PathArg, ip: str) -> bool:
 
 
 def block_ip(path: PathArg, ip: str, blocked_at: str) -> None:
-    """Deja esa IP en la lista de bloqueo. Si ya estaba, no cambia la hora.
+    """Deja esa IP en la lista de bloqueo. Si ya estaba, renueva la hora.
 
     :param path: ruta del archivo.
-    :param ip: IP pública estática.
+    :param ip: IP de quien intenta registrarse.
     :param blocked_at: hora del bloqueo, en ISO UTC.
     :return: None.
     :rtype: None
@@ -382,9 +382,34 @@ def block_ip(path: PathArg, ip: str, blocked_at: str) -> None:
     try:
         with conn:
             conn.execute(
-                "INSERT OR IGNORE INTO blocked_ips (ip, blocked_at) VALUES (?, ?)",
+                """
+                INSERT INTO blocked_ips (ip, blocked_at) VALUES (?, ?)
+                ON CONFLICT (ip) DO UPDATE SET blocked_at = excluded.blocked_at
+                """,
                 (ip, blocked_at),
             )
+    finally:
+        conn.close()
+
+
+def prune_blocked_ips(path: PathArg, older_than: str) -> None:
+    """Borra los bloqueos que empezaron antes de esa hora: ya caducaron.
+
+    Las horas son ISO UTC con el mismo formato, así que se comparan como texto.
+
+    :param path: ruta del archivo.
+    :param older_than: hora en ISO UTC; se borran los bloqueos estrictamente anteriores.
+    :return: None.
+    :rtype: None
+
+    Usage::
+
+      prune_blocked_ips(path, ten_minutes_ago)
+    """
+    conn = _connect(path)
+    try:
+        with conn:
+            conn.execute("DELETE FROM blocked_ips WHERE blocked_at < ?", (older_than,))
     finally:
         conn.close()
 
