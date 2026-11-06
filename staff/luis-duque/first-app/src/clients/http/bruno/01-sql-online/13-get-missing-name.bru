@@ -1,0 +1,16 @@
+meta {
+  name: get-missing-name
+  type: http
+  seq: 13
+}
+
+get {
+  url: {{baseUrl}}/users/name/Nobody
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 404", function () { expect(res.getStatus()).to.equal(404); });
+  test("Mensaje exacto", function () { expect(res.getBody()).to.deep.equal({ message: "User Nobody was not found" }); });
+}

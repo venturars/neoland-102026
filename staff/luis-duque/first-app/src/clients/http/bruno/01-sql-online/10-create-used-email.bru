@@ -1,0 +1,23 @@
+meta {
+  name: create-used-email
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Other",
+    "email": "ada@example.com"
+  }
+}
+
+tests {
+  test("Estado 409", function () { expect(res.getStatus()).to.equal(409); });
+  test("Mensaje UNIQUE constraint", function () { expect(res.getBody().message).to.include("UNIQUE constraint"); });
+}

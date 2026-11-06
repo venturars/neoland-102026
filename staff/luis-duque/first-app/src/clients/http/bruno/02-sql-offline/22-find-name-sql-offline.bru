@@ -1,0 +1,16 @@
+meta {
+  name: find-name-sql-offline
+  type: http
+  seq: 22
+}
+
+get {
+  url: {{baseUrl}}/users/name/Offline
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 500", function () { expect(res.getStatus()).to.equal(500); });
+  test("Mensaje de ese Error", function () { expect(res.getBody()).to.have.property("message").that.is.a("string").and.not.equal(""); });
+}

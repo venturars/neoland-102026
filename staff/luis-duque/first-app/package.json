@@ -8,6 +8,7 @@
     "jupyter": "sh scripts/jupyter.sh",
     "server": "node src/db/server.js",
     "http": "node src/clients/http/app.js",
+    "bruno": "cd src/clients/http/bruno && node ../../../../node_modules/@usebruno/cli/bin/bru.js run 01-sql-online -r",
     "browser": "start \"\" \"%LOCALAPPDATA%\\BraveSoftware\\Brave-Browser\\Application\\brave.exe\" --user-data-dir=%TEMP%\\first-app-brave --no-first-run --no-default-browser-check --allow-file-access-from-files \"%CD%\\src\\clients\\browser\\index.html\"",
     "electron": "electron src/clients/electron/main.js",
     "chrome": "node src/clients/chrome/server.js",
@@ -41,6 +42,7 @@
     "@babel/plugin-proposal-decorators": "8.0.2",
     "@babel/preset-env": "8.0.7",
     "@eslint/js": "10.0.1",
+    "@usebruno/cli": "4.3.0",
     "eslint": "10.13.0",
     "prettier": "3.9.10"
   }
