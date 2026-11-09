@@ -15,7 +15,7 @@
   },
   "scripts": {
     "jupyter": "node scripts/jupyter.js",
-    "format": "prettier --no-config --no-editorconfig --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/jupyter/**/*.js\" \"src/clients/web/**/*.js\" \"src/clients/http/**/*.js\" \"src/clients/vscode/**/*.js\" \"src/clients/vscode/**/*.cjs\" \"src/clients/electron/**/*.js\" \"src/clients/chrome/**/*.js\" \"scripts/**/*.js\" \"eslint.config.js\" \"src/clients/nest/**/*.js\"",
+    "format": "prettier --no-config --no-editorconfig --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/jupyter/**/*.js\" \"src/clients/node-http/**/*.js\" \"src/clients/web/**/*.js\" \"src/clients/http/**/*.js\" \"src/clients/vscode/**/*.js\" \"src/clients/vscode/**/*.cjs\" \"src/clients/electron/**/*.js\" \"src/clients/chrome/**/*.js\" \"scripts/**/*.js\" \"eslint.config.js\" \"src/clients/nest/**/*.js\"",
     "lint": "eslint .",
     "server": "node src/db/server.js",
     "web": "node scripts/web.js",
@@ -24,7 +24,9 @@
     "chrome": "node src/clients/chrome/server.js",
     "vscode": "code --extensionDevelopmentPath=\"${PWD}/src/clients/vscode\" \"${PWD}\"",
     "nest": "babel src --out-dir dist --delete-dir-on-start && node dist/clients/nest/main.js",
-    "bruno": "cd src/clients/http/bruno && ../../../../node_modules/.bin/bru run 01-sql-online -r --bail"
+    "bruno": "cd src/clients/http/bruno && ../../../../node_modules/.bin/bru run 01-sql-online -r --bail",
+    "node-http": "node src/clients/node-http/app.js",
+    "jupyter-node-http": "node scripts/jupyter.js --node-http"
   },
   "devDependencies": {
     "@babel/cli": "8.1.0",
