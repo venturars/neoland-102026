@@ -38,6 +38,10 @@ first-app-ai/
 │       │   ├── spec.md
 │       │   ├── plan.md
 │       │   └── tasks.md
+│       ├── node-http-client/
+│       │   ├── plan.md
+│       │   ├── spec.md
+│       │   └── tasks.md
 │       ├── nest-swagger-ui/
 │       │   ├── spec.md
 │       │   ├── plan.md
@@ -209,6 +213,15 @@ first-app-ai/
 │   │   │           ├── 04-update-sql-offline.bru
 │   │   │           ├── 05-delete-sql-offline.bru
 │   │   │           └── folder.bru
+│   │   ├── node-http/
+│   │   │   ├── app.js
+│   │   │   ├── run-request.js
+│   │   │   └── jupyter/
+│   │   │       ├── create-user.ipynb
+│   │   │       ├── delete-user.ipynb
+│   │   │       ├── find-user-by-id.ipynb
+│   │   │       ├── list-users.ipynb
+│   │   │       └── update-user.ipynb
 │   │   ├── vscode/
 │   │   │   ├── .vscode/
 │   │   │   │   └── launch.json
