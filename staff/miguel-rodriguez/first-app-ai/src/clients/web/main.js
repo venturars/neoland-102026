@@ -1,3 +1,4 @@
+import { pickRandomUser } from "../../logic/pick-random-user.js";
 import { listUsers } from "../../logic/list-users.js";
 import { findUserById } from "../../logic/find-user-by-id.js";
 import { updateUser } from "../../logic/update-user.js";
@@ -240,6 +241,26 @@ document.querySelector("#gender-count").addEventListener("click", async () => {
     result.textContent = `Estimación por nombre: mujeres ${counts.women}, hombres ${counts.men}, sin determinar ${counts.genderUndefined}.`;
   } catch {
     result.textContent = "Could not classify the users";
+  } finally {
+    setBusy(false);
+  }
+});
+
+document.querySelector("#random-pick").addEventListener("click", async () => {
+  if (busy) return;
+  const result = document.querySelector("#random-result");
+  result.textContent = "";
+  setBusy(true);
+  try {
+    const user = await pickRandomUser();
+    const empty = user === null;
+    if (empty) {
+      result.textContent = "No hay contactos guardados.";
+    } else {
+      result.textContent = `${user.name} · ID ${user.id} · ${user.email}`;
+    }
+  } catch {
+    result.textContent = "No se pudo elegir un contacto. Vuelve a intentarlo.";
   } finally {
     setBusy(false);
   }
