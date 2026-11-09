@@ -18,4 +18,6 @@ SwaggerModule.setup(SWAGGER_PATH, app, document);
 await app.listen(PORT, HOST);
 console.log(`HTTP server listening on ${ORIGIN}:${PORT}`);
 console.log("--------------------------------");
-console.log(`Swagger documentation available at ${ORIGIN}:${PORT}/${SWAGGER_PATH}`);
+console.log(
+  `Swagger documentation available at ${ORIGIN}:${PORT}/${SWAGGER_PATH}`,
+);

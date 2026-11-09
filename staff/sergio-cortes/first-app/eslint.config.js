@@ -60,6 +60,7 @@ export default [
       globals: {
         document: "readonly",
         fetch: "readonly",
+        window: "readonly",
       },
     },
   },
