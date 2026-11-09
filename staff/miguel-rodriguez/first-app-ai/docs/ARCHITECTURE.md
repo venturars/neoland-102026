@@ -27,6 +27,11 @@
 | `src/logic/find-user-by-id.js` | Finds a contact by ID. |
 | `src/logic/users-gender-count.js` | Counts name-based classification guesses through the existing AI client. |
 
+The web random-pick control imports pickRandomUser directly and presents its
+result independently of the editing identity. The terminal example
+`src/clients/terminal/pick-random-user.txt` calls the same operation.
+`tests/random-user-picker.test.js` verifies the shared contract and web states.
+
 ## Clients and startup
 
 `src/clients/terminal/` contains copyable `node --input-type=module` heredocs. They await
@@ -231,9 +236,3 @@ ApiParam documentan los cuerpos y los IDs del controlador. El controlador usa el
 inyectado por Nest, que llama a logic. AppModule registra controlador, proveedor
 y filtro global. Babel compila src a dist; el acceso SQL sigue en el servicio
 de datos3000.
-
-
-The web random-pick control imports pickRandomUser directly and presents its
-result independently of the editing identity. The terminal example
-`src/clients/terminal/pick-random-user.txt` calls the same operation.
-`tests/random-user-picker.test.js` verifies the shared contract and web states.
