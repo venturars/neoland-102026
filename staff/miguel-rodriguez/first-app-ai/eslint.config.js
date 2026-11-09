@@ -20,7 +20,7 @@ export default [
     ],
   },
   {
-    files: ["**/*.js"],
+    files: ["**/*.js", "tools/**/*.mjs", "tests/git-workflow.test.mjs"],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",

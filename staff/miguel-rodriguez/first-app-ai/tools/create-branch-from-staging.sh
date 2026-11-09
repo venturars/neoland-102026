@@ -13,7 +13,7 @@ number=$1
 type=$2
 description=$3
 [[ "$number" =~ ^[0-9]+$ ]] || { echo "Número de issue inválido." >&2; exit 1; }
-case "$type" in feat|fix|docs|refactor|test|chore) ;; *) echo "Tipo inválido." >&2; exit 1;; esac
+case "$type" in feat|fix|docs|refactor|test|chore|knowledge) ;; *) echo "Tipo inválido." >&2; exit 1;; esac
 [[ "$description" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]] || { echo "Descripción inválida." >&2; exit 1; }
 branch="${number}-${type}-${description}"
 if [[ -n $(git ls-files --unmerged) ]]; then

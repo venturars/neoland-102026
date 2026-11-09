@@ -1,21 +1,15 @@
-### Herramienta: ASSIGN_REVIEWERS
+### ASSIGN_REVIEWERS
 
-* **Descripción**: Úsala cuando el alumno nombra a quienes tienen que mirar la pull request. Resuelve el login dentro de este repositorio, asigna esos logins y sácala de draft. No la uses para asignar al autor.
-* **MCP**: El servidor remoto descrito en `MCPS/github-mcp-server/mcp.txt`. No uses `gh` ni un script de `tools/`.
+La ejecuta `create-pr` con la PR y los logins ya resueltos. Usar el MCP GitHub disponible o `gh` con la misma cuenta y repositorio.
 
-#### Especificación de Argumentos
+1. Leer autor, borrador y revisores actuales. Excluir al autor y deduplicar logins.
+2. Verificar en vivo que cada login sigue siendo colaborador mediante `gh api repos/OWNER/REPO/collaborators/LOGIN` o su equivalente MCP; un rechazo no autoriza a escoger otra persona.
+3. Solicitar solo revisores que falten y pasar a lista para revisión cuando se haya pedido. Con `gh`: `gh pr edit NUMERO --repo OWNER/REPO --add-reviewer LOGIN` y `gh pr ready NUMERO --repo OWNER/REPO` si estaba en borrador.
+4. Consultar la PR para confirmar resultado. Si una escritura falla o se interrumpe, leer antes de repetir; no presentar una revisión como pedida sin verificarla.
 
-1. **Pull request** *(Obligatorio)*: El número o la URL.
-2. **Revisores** *(Obligatorio)*: Los nombres que dijo el alumno, separados por comas.
+No asignar al autor ni modificar tokens. Un fallo de permisos no borra alias ni acredita una solicitud de revisión.
 
-#### Reglas de Invocación Críticas
-
-- **Comprobaciones**: Lee la lista de la plantilla de la PR y la evidencia disponible. Mientras esté en draft, las casillas permanecen sin marcar. Al pedir revisión, marca mediante MCP únicamente los puntos realmente verificados y conserva el resto del cuerpo, incluido Closes y el enlace existente. Si falta una comprobación necesaria, informa y detén la salida de draft y las solicitudes hasta resolverla; no inventes resultados ni marques casillas solo por recibir la petición. Verifica después el cuerpo y el estado reales.
-
-* **Login**: Cada nombre se resuelve dentro de este repositorio. Primero un colaborador cuyo login o nombre coincida. Si no coincide, el login de quien hace commits aquí con ese nombre o ese correo. No elijas un usuario público que no colabora.
-* **Si no hay login de colaborador**: Dilo y no pidas la revisión de ese nombre.
-* **Procesamiento de respuestas**: Quita al autor de la lista si aparece. Deja la pull request lista para revisión. Si el MCP falla, comunica el error y no marques la revisión como pedida.
-
-Solo actúa con una petición expresa de revisión y nombres concretos. Si no puedes resolver todas las cuentas, devuelve la duda antes de enviar solicitudes. Tras un fallo parcial, informa de las solicitudes efectivamente hechas y del estado real de draft; no repitas las ya enviadas. No cambies head, base ni commits.
-
-Si la herramienta exige confirmación, espera a que se complete por su interfaz. Una tarjeta inaccesible o un permiso ausente es un bloqueo; no sustituyas MCP por gh ni desactives confirmaciones. La única excepción de herramienta prevista es el enlace Development por gh descrito en su skill.
+Antes de salir de draft coteja las casillas con la evidencia. Marca solo las
+comprobadas y conserva el cuerpo y Closes #N. Si falta una comprobación necesaria,
+detente. No cambia base, head o commits. Resuelve todas las identidades antes de
+pedir revisión; no repitas solicitudes existentes.

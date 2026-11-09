@@ -13,7 +13,7 @@ branch=$(git symbolic-ref --quiet --short HEAD) || {
   echo "HEAD separado: selecciona la rama de trabajo." >&2
   exit 1
 }
-if [[ ! "$branch" =~ ^[0-9]+-(feat|fix|docs|refactor|test|chore)-[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
+if [[ ! "$branch" =~ ^[0-9]+-(feat|fix|docs|refactor|test|chore|knowledge)-[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
   echo "Se requiere una rama de trabajo número-tipo-descripcion." >&2
   exit 1
 fi
