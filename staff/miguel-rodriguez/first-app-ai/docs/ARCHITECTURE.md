@@ -18,6 +18,7 @@
 | Business file | Responsibility |
 | --- | --- |
 | `src/logic/create-user.js` | Creates a contact. |
+| `src/logic/pick-random-user.js` | Picks a contact from a fresh listUsers result; empty data returns null. |
 | `src/logic/list-users.js` | Lists saved contacts. |
 | `src/logic/update-user.js` | Updates an existing contact. |
 | `src/logic/delete-user.js` | Deletes an existing contact. |
@@ -230,3 +231,9 @@ ApiParam documentan los cuerpos y los IDs del controlador. El controlador usa el
 inyectado por Nest, que llama a logic. AppModule registra controlador, proveedor
 y filtro global. Babel compila src a dist; el acceso SQL sigue en el servicio
 de datos3000.
+
+
+The web random-pick control imports pickRandomUser directly and presents its
+result independently of the editing identity. The terminal example
+`src/clients/terminal/pick-random-user.txt` calls the same operation.
+`tests/random-user-picker.test.js` verifies the shared contract and web states.

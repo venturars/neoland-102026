@@ -39,6 +39,7 @@ For contact-returning operations, a returned user is a new ordinary object conta
 | Signature | Behavior and return |
 | --- | --- |
 | `createUser(input)` | Creates a contact from `input.name` and `input.email`; returns the created user. |
+| `pickRandomUser()` | Without parameters; chooses uniformly from the contacts retrieved for that call and returns one five-field contact, or `null` when empty. Independent draws allow repetitions and preserve records and timestamps. |
 | `listUsers()` | Returns an array of users in ascending numeric ID order, or `[]` for an empty table. |
 | `updateUser(id, changes)` | Updates an existing contact; returns the updated user. |
 | `deleteUser(id)` | Permanently deletes an existing contact; returns `undefined`. |
@@ -159,3 +160,11 @@ decoradores, servicio inyectado y filtro. pnpm nest compila con Babel y escucha
 en loopback3003. Las versiones exactas de Nest, reflect-metadata, rxjs y Babel
 están en package.json y la revisión de tres capas en docs/specs/nest-framework-client/plan.md.
 Las excepciones de antigüedad se limitan a los tres paquetes Nest12.3.3.
+
+
+## Random picker
+
+The web action displays name, email and ID separately from the selected editing
+identity. A new draw clears the previous result. Empty data and retrieval failure
+produce distinct client messages. The terminal example prints the returned contact
+or `No users available` for null; failures print the operation error with exit 1.

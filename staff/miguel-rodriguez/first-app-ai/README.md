@@ -229,3 +229,16 @@ node --test --test-concurrency=1 tests/nest-client.test.js tests/nest-swagger.te
 ```
 
 Estas pruebas preparan datos desechables y utilizan un puerto separado.
+
+
+## Elegir al azar
+
+Con el servicio de datos iniciado (`pnpm server`) y la tabla inicializada, abre
+el cliente con `pnpm web` y pulsa «Elegir al azar». El resultado muestra nombre,
+ID y email sin cambiar quién eres. Cada sorteo consulta los contactos guardados
+y permite que vuelva a salir la misma persona.
+
+Para usarlo desde terminal, copia y ejecuta
+[src/clients/terminal/pick-random-user.txt](src/clients/terminal/pick-random-user.txt).
+Sin contactos muestra un mensaje de lista vacía; si falla la recuperación,
+comunica el error.
