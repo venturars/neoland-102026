@@ -196,3 +196,16 @@ El grupo inicial procede de `asistencia/storage/data/initial-students.csv`; desp
 implementación y acción sobre la PR. [El flujo Git](agents/git-workflow-agent.md)
 coordina agentes y skills propios de esta carpeta en Codex. Las ramas nuevas
 parten de staging actualizado y las PRs apuntan a staging desde su creación.
+
+## Workflow actualizado
+
+El flujo incluye knowledge, commits con detalle y referencia a la issue y PR
+nueva en draft hacia staging asignada al autor. create-pr resuelve los revisores
+indicados mediante github-cache y comprueba su acceso actual. La caché caduca a
+las 48 horas y está ignorada en la raíz Git. Estas herramientas de desarrollo
+requieren Node 20+ y gh autenticado.
+
+Prueba local desde la raíz Git:
+node --test staff/miguel-rodriguez/asistenciapp/tests/git-workflow.test.mjs
+
+Documentos: [specs/016-actualizar-flujo-git](specs/016-actualizar-flujo-git/spec.md).

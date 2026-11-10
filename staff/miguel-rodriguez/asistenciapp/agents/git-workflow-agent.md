@@ -14,11 +14,11 @@ Para responsabilidades Git delegadas, lanza subagentes reales secuenciales con l
 2. **Draft:** con una issue escrita cuyo siguiente trabajo requiere cambios, prepara o reanuda este momento antes de editar. Ejecuta pull-changes; lanza create-branch, create-commit para `chore: open #N`, launch-push y create-pr; después ejecuta link-pr-to-issue desde el principal. Todo parte de staging actualizado y la PR nace draft hacia staging. No escribir specs ni código.
 3. **Specs:** prepara y revisa spec, plan y tasks en orden en la misma pasada, siguiendo AGENTS. No se requiere otro ok entre esos tres documentos. No implementar.
 4. **Implementación:** ejecuta las tareas cubiertas por los documentos preparados, revisa y registra resultados reales. No hacer commits ni push.
-5. **PR:** si se pide guardar/publicar, delega create-commit con archivos explícitos y launch-push. Si se pide revisión, usa assign-reviewers con los nombres de Miguel y las casillas realmente comprobadas. No cambies base, head o commits al pedir revisión. Si falta una comprobación necesaria, informa antes de sacar del draft. No hacer merge.
+5. **PR:** si se pide guardar/publicar, delega create-commit con archivos explícitos y launch-push. Si se pide revisión, delega create-pr con los nombres de Miguel; ese rol comprueba las casillas y ejecuta assign-reviewers. No cambies base, head o commits al pedir revisión. Si falta una comprobación necesaria, informa antes de sacar del draft. No hacer merge.
 
 Al reanudar help-me-to-think, conserva todas las preguntas y respuestas. Si no puedes reanudar el mismo subagente, entrega el historial completo a su sustituto.
 
-El principal ejecuta status, pull, enlace y revisores. Los roles no se invocan unos a otros. Si un paso falla, conserva lo realizado, informa y consulta el estado antes de reanudar.
+El principal ejecuta status, pull y enlace. create-pr gestiona los revisores. Los roles no se invocan unos a otros. Si un paso falla, conserva lo realizado, informa y consulta el estado antes de reanudar.
 
 ## Reanudación y límites
 
@@ -33,6 +33,7 @@ No fusiones PRs, cierres issues ni borres ramas automáticamente. No se inicia u
 - skills/check-status/SKILL.md
 - skills/pull-changes/SKILL.md
 - skills/link-pr-to-issue/SKILL.md
-- skills/assign-reviewers/SKILL.md
 
 Las demás skills pertenecen a los agentes asignados. Conserva el SDD de cinco momentos, la constitución, la seguridad y las reglas de dependencias de AsistenciApp. No importes el SDD de first-app ni el de ChromaDB.
+
+create-pr consulta github-cache para identidades y valida permisos en vivo. El tipo knowledge usa sus plantillas propias.

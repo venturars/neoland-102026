@@ -10,7 +10,7 @@ asistenciapp/
 ├── README.md              # uso de la app
 ├── agents/                # principal y seis roles del flujo Git
 ├── skills/                # acciones con entradas, resultados y controles
-├── tools/                 # siete scripts Git locales
+├── tools/                 # herramientas Git locales
 ├── templates/             # issues y PRs por tipo
 ├── MCPS/                  # referencias públicas, sin credenciales
 ├── docs/
@@ -200,19 +200,18 @@ El adaptador traduce los dos motivos a 409/503. El panel muestra el mensaje como
 `agents/git-workflow-agent.md` es el documento que carga el principal. Los otros
 seis roles ejecutan aclaración, issue, rama, commit, push y PR mediante delegación
 nativa de Codex; no requieren un registro de Cursor. El principal conserva status,
-pull, enlace Development y asignación de revisores.
+pull y enlace Development; create-pr gestiona los revisores.
 
 La aclaración devuelve las preguntas necesarias con una recomendación por pregunta
 y termina. El principal espera las respuestas y conserva el historial completo al
 reanudar o sustituir el subagente. Una tarea definida aprovecha los documentos;
 una issue existente que requiere ediciones prepara o reanuda el draft primero.
-Los mensajes de commit nombran el archivo o función y el cambio concreto.
+El asunto del commit resume el cambio; el cuerpo identifica archivos o funciones y el pie referencia la issue.
 
 La actualización se documenta en `specs/014-rondas-y-commits/spec.md`, `plan.md`
 y `tasks.md`; esos tres archivos registran criterios, enfoque y comprobaciones.
 
-Las quince skills documentan sus entradas y comprobaciones. Los siete scripts
-Bash conservan la implementación original del template y trabajan desde la raíz
+Las skills documentan sus entradas y comprobaciones. Los scripts Bash siguen la implementación del template y trabajan desde la raíz
 Git. El orquestador limita los encargos a esta app y nombra los archivos de cada
 commit; no se atribuyen a los scripts validaciones añadidas de rutas o tipos.
 create-branch.sh y su skill se conservan para completar la copia de la fuente;
@@ -226,3 +225,13 @@ El SDD de cinco momentos pertenece a AGENTS y a §4 de la constitución. Este fl
 no cambia la aplicación ni autoriza código por la mera existencia de una issue.
 Closes y Development enlazan la tarea; el cierre automático sigue la rama
 predeterminada real, sin cambiar el destino staging ni cerrar por API.
+
+## Herramientas actuales de Git
+
+tools/github-cache.mjs y su skill mantienen identidades públicas durante 48 horas
+en un archivo ignorado de la raíz Git, por cuenta/host/repositorio. create-pr
+consulta la caché y assign-reviewers comprueba acceso en vivo.
+tools/create-pr-base-staging.sh crea la PR draft hacia staging y la asigna al autor
+en una llamada a gh. Las plantillas knowledge y el formato de commit con cuerpo
+y pie pertenecen a este flujo. tests/git-workflow.test.mjs usa Git desechable y
+respuestas simuladas, sin escrituras en GitHub.

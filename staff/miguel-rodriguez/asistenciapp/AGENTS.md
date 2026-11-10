@@ -208,3 +208,5 @@ Miguel confirmó después el recorrido en ordenador y con cámara de móvil por 
 
 
 Publicación 2026-10-26: PR [356](https://github.com/venturars/neoland-102026/pull/356) de la tarea 009, base staging, creada por instrucción expresa de Miguel aunque haya dependencias pendientes. Los estados anteriores describen la ejecución local y sus fechas; la PR actual es la referencia de publicación.
+
+Actualización del workflow: create-pr gestiona las revisiones con caché de identidades y comprobación de acceso en vivo. El principal mantiene estado, pull y enlace; se conserva el SDD propio.
