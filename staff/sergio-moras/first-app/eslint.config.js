@@ -11,6 +11,19 @@ export default defineConfig([
         URL: "readonly",
         fetch: "readonly",
         AbortSignal: "readonly",
+        console: "readonly",
+      },
+    },
+  },
+  {
+    files: [
+      "src/clients/browser/**/*.js",
+      "src/clients/electron/**/*.js",
+      "src/clients/chrome/extension/**/*.js",
+    ],
+    languageOptions: {
+      globals: {
+        document: "readonly",
       },
     },
   },
