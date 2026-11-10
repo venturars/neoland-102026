@@ -236,3 +236,7 @@ ApiParam documentan los cuerpos y los IDs del controlador. El controlador usa el
 inyectado por Nest, que llama a logic. AppModule registra controlador, proveedor
 y filtro global. Babel compila src a dist; el acceso SQL sigue en el servicio
 de datos3000.
+
+## Cliente Node HTTP
+
+`src/clients/node-http/` adapta las cinco operaciones CRUD compartidas con `node:http` en el puerto 3004. Sus notebooks envían peticiones HTTP y se abren con `pnpm jupyter-node-http`; el servicio de datos se inicia con `pnpm server`.

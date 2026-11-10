@@ -95,9 +95,14 @@ const kernelArguments = [
 ];
 run(python, kernelArguments);
 
-console.log("Abriendo los nueve documentos. Ctrl+C para detener Jupyter.");
-const notebookDirectory = join(app, "src/clients/jupyter");
 const suppliedArguments = process.argv.slice(2);
+const nodeHttp = suppliedArguments[0] === "--node-http";
+if (nodeHttp) suppliedArguments.shift();
+const folder = nodeHttp
+  ? "src/clients/node-http/jupyter"
+  : "src/clients/jupyter";
+console.log("Abriendo los documentos. Ctrl+C para detener Jupyter.");
+const notebookDirectory = join(app, folder);
 const notebookArguments = [
   "-m",
   "notebook",

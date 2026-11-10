@@ -241,3 +241,7 @@ node --test --test-concurrency=1 tests/nest-client.test.js tests/nest-swagger.te
 ```
 
 Estas pruebas preparan datos desechables y utilizan un puerto separado.
+
+## Cliente Node HTTP y Jupyter
+
+Inicializa la tabla y ejecuta `pnpm server`, `pnpm node-http` y `pnpm jupyter-node-http` en terminales separadas. La API escucha en `http://127.0.0.1:3004`. Los cinco notebooks llaman a sus rutas HTTP. `pnpm jupyter` sigue abriendo los notebooks originales.
