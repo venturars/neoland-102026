@@ -302,3 +302,13 @@ first-app-ai/
 Cliente src/clients/nest: main.js, app.module.js, users.controller.js,
 users.service.js y http-exception.filter.js. babel.config.json configura la
 compilación; dist/ es salida generada ignorada por Git.
+
+
+Random-picker additions:
+
+- `src/logic/pick-random-user.js`
+- `src/clients/terminal/pick-random-user.txt`
+- `tests/random-user-picker.test.js`
+- `docs/specs/random-user-picker/spec.md`
+- `docs/specs/random-user-picker/plan.md`
+- `docs/specs/random-user-picker/tasks.md`

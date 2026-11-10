@@ -9,6 +9,7 @@ All explicit business errors are ordinary `Error` objects with these exact messa
 | `Email is already used` | Creation finds an existing email, or update finds another owner. |
 | `User not found` | ID lookup, update, or delete cannot find the ID, or email lookup cannot find the valid email. |
 | `Could not create the user` | A query called inside creation fails. |
+| `Could not pick a user` | Random picker cannot retrieve saved contacts. |
 | `Could not list the users` | The listing query fails. |
 | `Could not update the user` | A query called inside updating fails. |
 | `Could not delete the user` | A query called inside deletion fails. |

@@ -39,6 +39,18 @@ lockfile; no se desactiva el control de antigüedad para otros paquetes.
 
 El cliente Nest ofrece las cinco operaciones CRUD y una página Swagger UI.
 
+## Elegir al azar
+
+Con el servicio de datos iniciado (`pnpm server`) y la tabla inicializada, abre
+el cliente con `pnpm web` y pulsa «Elegir al azar». El resultado muestra nombre,
+ID y email sin cambiar quién eres. Cada sorteo consulta los contactos guardados
+y permite que vuelva a salir la misma persona.
+
+Para usarlo desde terminal, copia y ejecuta
+[src/clients/terminal/pick-random-user.txt](src/clients/terminal/pick-random-user.txt).
+Sin contactos muestra un mensaje de lista vacía; si falla la recuperación,
+comunica el error.
+
 ## Abrir el cliente web
 
 Ejecuta `pnpm web` con el servicio de datos en marcha. El resumen por nombre
