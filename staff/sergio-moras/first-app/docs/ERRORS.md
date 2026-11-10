@@ -6,7 +6,7 @@ Los clientes lo muestran como `Error: <mensaje>`.
 
 | Mensaje | Lo lanza |
 |---|---|
-| `Name is required.` | `createUser` |
+| `Name is required.` | `createUser`, `findUserByName` |
 | `Email is required.` | `createUser`, `findUserByEmail` |
 | `Invalid email: <email>` | `createUser`, `updateUser` |
 | `Email already exists: <email>` | `createUser`, `updateUser` |

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "format": "prettier --write \"logic/**/*.js\" \"queries/**/*.js\" \"db/**/*.js\" eslint.config.js",
+    "format": "prettier --write \"src/logic/**/*.js\" \"src/queries/**/*.js\" \"src/db/**/*.js\" eslint.config.js",
     "lint": "eslint ."
   },
   "dependencies": {
