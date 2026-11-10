@@ -9,17 +9,18 @@ first-app/
   pnpm-lock.yaml
   eslint.config.js
   .gitignore
+  .gitattributes       finales de línea LF en los .js
   db/
     connection.js
   queries/
     users.js
   logic/
-    classifyGender.js
-    createUser.js
-    deleteUser.js
-    findUserByEmail.js
-    listUsers.js
-    updateUser.js
+    classify-gender.js
+    create-user.js
+    delete-user.js
+    find-user-by-email.js
+    list-users.js
+    update-user.js
   clients/
     terminal/          un .txt por operación
     jupyter/           un .ipynb por operación

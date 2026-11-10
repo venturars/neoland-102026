@@ -14,12 +14,12 @@ Antes de tocar código se leen la constitución y la guía del tema:
 ## Comandos
 Los comandos de la app están en `clients/terminal/`, un `.txt` por operación. Se copian y se pegan en la terminal (PowerShell o Git Bash) desde la raíz del proyecto (`first-app/`). Los valores de ejemplo se cambian editando el comando. El flag `--no-warnings` oculta el aviso experimental de `node:sqlite`.
 ```
-clients/terminal/createUser.txt
-clients/terminal/findUserByEmail.txt
-clients/terminal/listUsers.txt
-clients/terminal/updateUser.txt       # '' = no cambiar ese campo
-clients/terminal/deleteUser.txt
-clients/terminal/classifyGender.txt   # necesita Ollama en marcha
+clients/terminal/create-user.txt
+clients/terminal/find-user-by-email.txt
+clients/terminal/list-users.txt
+clients/terminal/update-user.txt       # '' = no cambiar ese campo
+clients/terminal/delete-user.txt
+clients/terminal/classify-gender.txt   # necesita Ollama en marcha
 ```
 
 Formato y revisión del JavaScript de la app, desde `first-app/`:
@@ -31,7 +31,7 @@ pnpm lint     # ESLint con las reglas recomendadas
 ## Cómo verificar un cambio
 1. Ejecutar los comandos reales de la sección anterior.
 2. Probar también los casos de error: datos que faltan, email inválido o repetido, id inexistente o no numérico.
-3. Probar con usuarios temporales y borrarlos al terminar. Comprobar con `clients/terminal/listUsers.txt` que los datos existentes siguen intactos.
+3. Probar con usuarios temporales y borrarlos al terminar. Comprobar con `clients/terminal/list-users.txt` que los datos existentes siguen intactos.
 4. Lanzar `pnpm format` y `pnpm lint`. `pnpm lint` no da errores.
 
 ## Límites
