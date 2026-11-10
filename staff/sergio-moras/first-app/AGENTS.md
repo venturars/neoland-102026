@@ -12,26 +12,47 @@ Antes de tocar código se leen la constitución y la guía del tema:
 - [docs/STYLE.md](docs/STYLE.md): nombres, líneas y formato.
 
 ## Comandos
-Los comandos de la app están en `clients/terminal/`, un `.txt` por operación. Se copian y se pegan en la terminal (PowerShell o Git Bash) desde la raíz del proyecto (`first-app/`). Los valores de ejemplo se cambian editando el comando. El flag `--no-warnings` oculta el aviso experimental de `node:sqlite`.
+Antes de nada se arranca la base desde `first-app/`, en una terminal aparte. Se queda en marcha en `http://127.0.0.1:4000` y se para con Ctrl+C. Sin ella, todo da `Error: Database is not running. Start it with pnpm db.`
 ```
-clients/terminal/createUser.txt
-clients/terminal/findUserByEmail.txt
-clients/terminal/listUsers.txt
-clients/terminal/updateUser.txt       # '' = no cambiar ese campo
-clients/terminal/deleteUser.txt
-clients/terminal/classifyGender.txt   # necesita Ollama en marcha
+pnpm db
+```
+
+Los comandos de la app están en `src/clients/terminal/`, un `.txt` por operación. Se copian y se pegan en la terminal (PowerShell o Git Bash) desde la raíz del proyecto (`first-app/`). Los valores de ejemplo se cambian editando el comando. El flag `--no-warnings` oculta el aviso experimental de `node:sqlite`.
+```
+src/clients/terminal/create-user.txt
+src/clients/terminal/find-user-by-email.txt
+src/clients/terminal/find-user-by-name.txt
+src/clients/terminal/list-users.txt
+src/clients/terminal/update-user.txt       # '' = no cambiar ese campo
+src/clients/terminal/delete-user.txt
+src/clients/terminal/classify-gender.txt   # necesita Ollama en marcha
+```
+
+El cliente de navegador se abre desde `first-app/`, con `pnpm db` ya en marcha en otra terminal. Abre la app en Chrome, en una ventana con un perfil aparte. Se cierra cerrando esa ventana:
+```
+pnpm browser
+```
+
+La API REST se arranca desde `first-app/`, con `pnpm db` ya en marcha en otra terminal. Escucha en `http://127.0.0.1:3000` y se para con Ctrl+C:
+```
+pnpm api
+```
+
+El cliente de escritorio se abre desde `first-app/`, con `pnpm db` ya en marcha en otra terminal. Abre una ventana propia y se cierra cerrándola:
+```
+pnpm electron
 ```
 
 Formato y revisión del JavaScript de la app, desde `first-app/`:
 ```
-pnpm format   # Prettier sobre los .js de logic/, queries/ y db/, y eslint.config.js
+pnpm format   # Prettier sobre los .js de src/logic/, src/queries/ y src/db/, el cliente de navegador, la API REST, el cliente de escritorio y eslint.config.js
 pnpm lint     # ESLint con las reglas recomendadas
 ```
 
 ## Cómo verificar un cambio
-1. Ejecutar los comandos reales de la sección anterior.
+1. Arrancar `pnpm db` y ejecutar los comandos reales de la sección anterior.
 2. Probar también los casos de error: datos que faltan, email inválido o repetido, id inexistente o no numérico.
-3. Probar con usuarios temporales y borrarlos al terminar. Comprobar con `clients/terminal/listUsers.txt` que los datos existentes siguen intactos.
+3. Probar con usuarios temporales y borrarlos al terminar. Comprobar con `src/clients/terminal/list-users.txt` que los datos existentes siguen intactos.
 4. Lanzar `pnpm format` y `pnpm lint`. `pnpm lint` no da errores.
 
 ## Límites

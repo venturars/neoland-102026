@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>first-app</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="card">
+      <section id="select-screen">
+        <h1>¿Quién eres?</h1>
+        <p class="subtitle">Elige tu usuario para continuar.</p>
+        <div id="users-list" class="users-list"></div>
+        <p id="empty-list" class="empty" hidden>
+          Todavía no hay usuarios guardados.
+        </p>
+        <p id="select-error" class="error" hidden></p>
+      </section>
+
+      <section id="options-screen" hidden>
+        <button type="button" id="options-back" class="back">← Volver</button>
+        <div class="profile">
+          <span id="options-avatar" class="avatar avatar-large"></span>
+          <div>
+            <h1 id="options-name"></h1>
+            <p id="options-email" class="muted"></p>
+            <p id="options-id" class="muted small"></p>
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" id="options-edit" class="action">
+            <span>Modificar</span>
+            <span class="arrow">→</span>
+          </button>
+          <button type="button" id="options-notes" class="action" disabled>
+            <span>Notas</span>
+            <span class="badge">Próximamente</span>
+          </button>
+        </div>
+      </section>
+
+      <section id="edit-screen" hidden>
+        <button type="button" id="edit-back" class="back">← Volver</button>
+        <h1>Modificar usuario</h1>
+        <form id="edit-form" class="form">
+          <label for="edit-name">Nombre</label>
+          <input type="text" id="edit-name" autocomplete="off" />
+          <label for="edit-email">Email</label>
+          <input type="text" id="edit-email" autocomplete="off" />
+          <p class="muted small">Un campo vacío no cambia ese dato.</p>
+          <p id="edit-error" class="error" hidden></p>
+          <button type="submit" id="edit-save" class="primary">Guardar</button>
+        </form>
+        <div class="danger-zone">
+          <button type="button" id="edit-delete" class="danger-link">
+            Eliminar usuario
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="delete-dialog" class="dialog">
+      <div class="dialog-content">
+        <h2>Eliminar usuario</h2>
+        <p id="delete-question"></p>
+        <p class="muted small">Esta acción no se puede deshacer.</p>
+        <div class="dialog-buttons">
+          <button type="button" id="delete-cancel" class="secondary">
+            Cancelar
+          </button>
+          <button type="button" id="delete-confirm" class="danger">
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </dialog>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
