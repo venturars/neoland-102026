@@ -80,6 +80,17 @@ Documentación del proyecto:
 - [Tester](exercises/ChromaDB/agents/tester.md): qué comprueba y qué no puede editar.
 - [Skill python-docs](exercises/ChromaDB/skills/python-docs/SKILL.md): cuándo buscar en la documentación y con qué comando.
 
+## delivery-workflow
+
+Un paquete APM que lleva una tarea desde la idea hasta la revisión, en cualquier proyecto en GitHub y con Claude Code, Cursor o Codex. Une la plantilla de `exercises/git-workflow-agent-template/` y el ciclo de rondas de `exercises/ChromaDB/`. Vive en su propio repositorio, [venturars/delivery-workflow](https://github.com/venturars/delivery-workflow), y se instala en la raíz de tu proyecto.
+
+**Automatización.** Al dejar una tarea escrita, el orquestador crea la issue con la etiqueta de su tipo, la rama y la pull request en draft. Después escribe la spec, el plan y las tasks en la propia issue y abre hasta nueve rondas de código y tests sin esperar un ok. Cada ronda deja un comentario en la issue. Para si la spec tiene un hueco, si aparece un secreto o si la novena ronda falla.
+
+Documentación del paquete:
+
+- [README](https://github.com/venturars/delivery-workflow#readme): requisitos, instalación, uso y cómo instalarlo una sola vez en un proyecto compartido.
+- [CAMBIOS.md](https://github.com/venturars/delivery-workflow/blob/main/CAMBIOS.md): qué cambia respecto a la plantilla de git y a ChromaDB.
+
 ## El resto del repositorio
 
 `exercises/halloween/`, `exercises/pomodoro/` y `exercises/poema.md` son ejercicios sueltos. No definen cómo trabaja el agente. Las presentaciones de cada persona están en `staff/<tu-carpeta>/README.md`.
