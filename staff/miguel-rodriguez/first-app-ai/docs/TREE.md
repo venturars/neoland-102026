@@ -34,6 +34,10 @@ first-app-ai/
 │   ├── STYLE.md
 │   ├── TREE.md
 │   └── specs/
+│       ├── sync-latest-git-workflow/
+│       │   ├── spec.md
+│       │   ├── plan.md
+│       │   └── tasks.md
 │       ├── bruno-http-client/
 │       │   ├── spec.md
 │       │   ├── plan.md
@@ -144,6 +148,8 @@ first-app-ai/
 │   ├── create-issue/
 │   │   └── SKILL.md
 │   ├── create-pr-base-staging/
+│   │   └── SKILL.md
+│   ├── github-cache/
 │   │   └── SKILL.md
 │   ├── grill-me/
 │   │   └── SKILL.md
@@ -285,6 +291,7 @@ first-app-ai/
 │   │   ├── docs_issue.md
 │   │   ├── feat_issue.md
 │   │   ├── fix_issue.md
+│   │   ├── knowledge_issue.md
 │   │   ├── refactor_issue.md
 │   │   └── test_issue.md
 │   └── pull-request/
@@ -292,9 +299,11 @@ first-app-ai/
 │       ├── docs-pull-request.md
 │       ├── feat-pull-request.md
 │       ├── fix-pull-request.md
+│       ├── knowledge-pull-request.md
 │       ├── refactor-pull-request.md
 │       └── test-pull-request.md
 ├── tests/
+│   ├── git-workflow.test.mjs
 │   ├── nest-swagger.test.js
 │   ├── browser-classifier.test.js
 │   ├── client-apis.test.js
@@ -307,6 +316,8 @@ first-app-ai/
     ├── commit-changes.sh
     ├── create-branch-from-staging.sh
     ├── create-empty-commit.sh
+    ├── create-pr-base-staging.sh
+    ├── github-cache.mjs
     ├── launch-push.sh
     └── pull-changes.sh
 ```

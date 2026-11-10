@@ -168,11 +168,25 @@ Puedes pedir pensar una tarea, dejarla escrita como issue, empezarla, guardar un
 
 Comprueba una invocación real de help-me-to-think: debe existir un encargo separado y un resultado, no solo lectura del documento en la conversación principal. Verifica por lectura la cuenta autenticada y el acceso al repositorio con el MCP GitHub del entorno activo. `MCPS/github-mcp-server/mcp.txt` es una referencia pública; no instala el servidor ni contiene credenciales.
 
-Reutiliza la conexión existente. Configura la escritura directa según [la referencia MCP](MCPS/github-mcp-server/mcp.txt): header X-MCP-Features en remoto o --features en el servidor local de Codex. Recarga la conexión después del cambio; no des por probada la escritura hasta verificar su resultado. Si falla, identifica el error y acuerda el cambio concreto antes de modificar autenticación. Los tokens permanecen en configuración local, fuera de Git, comandos y capturas. Una confirmación inaccesible detiene la operación; el agente no desactiva controles ni sustituye el MCP silenciosamente por otro cliente.
+Reutiliza la conexión existente. Configura la escritura directa según [la referencia MCP](MCPS/github-mcp-server/mcp.txt): header X-MCP-Features en remoto o --features en el servidor local de Codex. Recarga la conexión después del cambio; no des por probada la escritura hasta verificar su resultado. Si falla, identifica el error y acuerda el cambio concreto antes de modificar autenticación. Los tokens permanecen en configuración local, fuera de Git, comandos y capturas. Una confirmación inaccesible detiene la operación. Las acciones que admiten MCP o gh usan la misma cuenta y repositorio; no se cambia de herramienta para eludir confirmaciones o rechazos de permisos.
 
 Las entradas `.cursor/agents/` se conservan como compatibilidad opcional. Requieren abrir esta app como proyecto en Cursor y verificar su propio entorno; el resultado de Codex no acredita ejecución allí. No son necesarias para usar el flujo en Codex.
 
 Las verificaciones y pendientes están en [las tareas de Git](docs/specs/git-workflow-automation/tasks.md). Las solicitudes de revisión van después de publicar los cambios finales; después no se cambian commits ni base sin petición expresa.
+
+
+## Workflow actualizado
+
+El flujo incluye knowledge, commits con detalle y referencia a la issue y PR
+nueva en draft hacia staging asignada al autor. create-pr resuelve los revisores
+indicados mediante github-cache y comprueba su acceso actual. La caché caduca a
+las 48 horas y está ignorada en la raíz Git. Estas herramientas de desarrollo
+requieren Node 20+ y gh autenticado.
+
+Prueba local desde la raíz Git:
+node --test staff/miguel-rodriguez/first-app-ai/tests/git-workflow.test.mjs
+
+Documentos: [docs/specs/sync-latest-git-workflow](docs/specs/sync-latest-git-workflow/spec.md).
 
 ## Cliente REST y Postman
 

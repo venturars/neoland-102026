@@ -24,7 +24,7 @@ En Codex, usa su herramienta nativa para lanzar subagentes reales secuenciales y
   5. Lanza create-pr para abrir en draft hacia staging.
   6. Ejecuta link-pr-to-issue: cuerpo y Development, sin cerrar la issue.
 - Guardar: lanza create-commit para los archivos elegidos; después launch-push. No incluyas archivos ajenos. Confirma antes que los cambios están verificados según AGENTS.md.
-- Pedir revisión: Miguel debe nombrar revisores. Ejecuta assign-reviewers, excluyendo al autor. Comprueba las casillas según assign-reviewers y marca solo las verificadas al pedir revisión; si falta una comprobación necesaria, informa antes de pasar a revisión. Verifica solicitudes y salida de draft; no inventes usuarios ni resultados.
+- Pedir revisión: Miguel nombra revisores. Lanza create-pr sobre la PR existente para resolver nombres, ejecutar assign-reviewers y comprobar evidencia y resultado.
 
 ## Reanudación y límites
 
@@ -39,6 +39,7 @@ No fusiones PRs, cierres issues ni borres ramas automáticamente. No se inicia u
 - skills/check-status/SKILL.md
 - skills/pull-changes/SKILL.md
 - skills/link-pr-to-issue/SKILL.md
-- skills/assign-reviewers/SKILL.md
 
 Las demás skills pertenecen a los agentes asignados. Conserva las reglas SDD y Socket de esta app; este flujo no las sustituye.
+
+create-pr consulta github-cache para identidades y valida permisos en vivo. El tipo knowledge usa sus plantillas propias.

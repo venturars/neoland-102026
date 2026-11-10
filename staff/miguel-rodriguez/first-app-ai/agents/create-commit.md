@@ -20,3 +20,5 @@ Para apertura recibe número de issue y comprueba que no existe ya el commit exa
 ## Resultado y errores
 
 Devuelve las acciones realizadas y sus resultados observados: número/URL, rama o commit según corresponda. Si faltan datos, devuelve la pregunta y termina sin escribir. Si una herramienta falla, devuelve el error y los pasos ya completados; no inventes resultados ni cambies de herramienta para saltar una confirmación. No repitas una publicación sin consultar si llegó a completarse. Nunca muestres credenciales. No implementes código de la app ni modifiques la spec, el plan o las tareas.
+
+El mensaje de trabajo sigue asunto, desglose y pie de commit-changes; la apertura mantiene exactamente chore: open #N.

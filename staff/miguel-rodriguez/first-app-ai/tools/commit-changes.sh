@@ -13,14 +13,14 @@ app_relative=${app#"$root/"}
 [[ $# -ge 2 ]] || { echo "Uso: MENSAJE FICHERO [FICHERO...]" >&2; exit 1; }
 message=$1
 shift
-[[ "$message" =~ ^(feat|fix|docs|refactor|test|chore)(\([a-z0-9-]+\))?:[[:space:]][^[:space:]].*$ ]] || {
+[[ "$message" =~ ^(feat|fix|docs|refactor|test|chore|knowledge)(\([a-z0-9-]+\))?!?:[[:space:]][^[:space:]].*$ ]] || {
   echo "Se requiere un conventional commit en inglés." >&2; exit 1;
 }
 branch=$(git symbolic-ref --quiet --short HEAD) || {
   echo "HEAD separado: selecciona la rama de trabajo." >&2
   exit 1
 }
-if [[ ! "$branch" =~ ^[0-9]+-(feat|fix|docs|refactor|test|chore)-[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
+if [[ ! "$branch" =~ ^[0-9]+-(feat|fix|docs|refactor|test|chore|knowledge)-[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
   echo "Se requiere una rama de trabajo número-tipo-descripcion." >&2
   exit 1
 fi

@@ -167,19 +167,19 @@ It checks task readiness against project context, asks for missing decisions and
 retains resolved answers. Starting a task completes branch and draft PR setup,
 including issue links, before project edits; resuming reuses completed steps.
 Interview rounds return the necessary questions with recommendations; the principal
-waits for answers and passes their history when resuming. Commit subjects identify
-the file or function and its concrete change.
+waits for answers and passes their history when resuming. Commit subjects summarize the change; the body identifies affected
+functions or files and the footer references the issue.
 The six other agent documents define task clarification, issue creation, branch
 creation, commits, pushes and pull requests. The principal runs status, staging
-updates, issue linking and reviewer assignment through their respective skills.
+updates and issue linking through their respective skills; create-pr handles reviewers.
 Delegated responsibilities run as real subagents, sequentially, through Codex’s native delegation tools. Each receives the corresponding agent document and explicit task context.
 
 `.cursor/agents/` contains small Cursor registration entries referencing those six
 agent documents. It does not duplicate their procedures. These are optional compatibility entries, not required for Codex. Opening this app as a Cursor project loads them, but requires separate runtime verification. The enclosing NEOLAND repository remains the Git root.
 
-`skills/` describes each action and its inputs/results. The six Bash scripts in
+`skills/` describes each action and its inputs/results. The Bash scripts in
 `tools/` implement local Git operations. `templates/` supplies the issue and PR
-bodies: six issue templates and six PR templates for feat, fix, docs, refactor,
+bodies: seven issue templates and seven PR templates for feat, fix, docs, refactor,
 test and chore. The chosen supported type is shared by the issue, branch and PR;
 new tasks without a specific template use the closest supported type. Draft
 checklists remain unchecked until review is requested and their items verified.
@@ -193,6 +193,17 @@ README.md; workflow permissions and SDD gates remain in AGENTS.md.
 documentation reference, alongside the GitHub reference. It is not an installed
 connection or credential store. The constitution explains access and source
 coverage; AGENTS.md retains the detailed dependency-validation procedure.
+
+
+## Herramientas actuales de Git
+
+tools/github-cache.mjs y su skill mantienen identidades públicas durante 48 horas
+en un archivo ignorado de la raíz Git, por cuenta/host/repositorio. create-pr
+consulta la caché y assign-reviewers comprueba acceso en vivo.
+tools/create-pr-base-staging.sh crea la PR draft hacia staging y la asigna al autor
+en una llamada a gh. Las plantillas knowledge y el formato de commit con cuerpo
+y pie pertenecen a este flujo. tests/git-workflow.test.mjs usa Git desechable y
+respuestas simuladas, sin escrituras en GitHub.
 
 ## REST client
 
