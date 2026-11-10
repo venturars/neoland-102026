@@ -1,0 +1,191 @@
+/* Aspecto del panel: usa los colores y la letra del tema de VS Code, así se ve como el resto del editor. */
+
+* {
+  box-sizing: border-box;
+}
+
+/* Sin esto, un display propio ganaría al atributo hidden. */
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  padding: 8px 12px 16px;
+  font-family: var(--vscode-font-family);
+  font-size: var(--vscode-font-size);
+  color: var(--vscode-foreground);
+  background: var(--vscode-sideBar-background);
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 1.4em;
+  font-weight: 600;
+}
+
+h2 {
+  margin: 0 0 8px;
+  font-size: 0.85em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--vscode-descriptionForeground);
+}
+
+p {
+  margin: 0 0 8px;
+}
+
+.muted {
+  color: var(--vscode-descriptionForeground);
+}
+
+.error {
+  padding: 6px 8px;
+  border: 1px solid var(--vscode-inputValidation-errorBorder);
+  color: var(--vscode-errorForeground);
+  background: var(--vscode-inputValidation-errorBackground);
+}
+
+.block {
+  margin: 0 0 16px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 8px;
+  color: var(--vscode-descriptionForeground);
+}
+
+input {
+  padding: 4px 6px;
+  border: 1px solid var(--vscode-input-border, transparent);
+  font: inherit;
+  color: var(--vscode-input-foreground);
+  background: var(--vscode-input-background);
+}
+
+input:focus {
+  outline: 1px solid var(--vscode-focusBorder);
+  outline-offset: -1px;
+}
+
+button {
+  padding: 4px 12px;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.primary {
+  color: var(--vscode-button-foreground);
+  background: var(--vscode-button-background);
+}
+
+.primary:hover {
+  background: var(--vscode-button-hoverBackground);
+}
+
+.secondary {
+  color: var(--vscode-button-secondaryForeground);
+  background: var(--vscode-button-secondaryBackground);
+}
+
+.secondary:hover {
+  background: var(--vscode-button-secondaryHoverBackground);
+}
+
+.danger {
+  color: #ffffff;
+  background: var(--vscode-errorForeground);
+}
+
+.danger:hover {
+  opacity: 0.85;
+}
+
+.back {
+  margin-bottom: 8px;
+  padding: 2px 0;
+  color: var(--vscode-textLink-foreground);
+  background: none;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.user-item {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  padding: 4px 6px;
+  text-align: left;
+  color: inherit;
+  background: none;
+}
+
+.user-item:hover {
+  background: var(--vscode-list-hoverBackground);
+}
+
+.user-item:focus {
+  outline: 1px solid var(--vscode-focusBorder);
+  outline-offset: -1px;
+}
+
+.user-id {
+  min-width: 28px;
+  color: var(--vscode-descriptionForeground);
+}
+
+.user-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.user-email {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--vscode-descriptionForeground);
+}
+
+.details {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 4px 8px;
+}
+
+dt {
+  color: var(--vscode-descriptionForeground);
+}
+
+dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+dialog {
+  width: 260px;
+  padding: 14px;
+  border: 1px solid var(--vscode-widget-border, var(--vscode-focusBorder));
+  color: var(--vscode-foreground);
+  background: var(--vscode-editorWidget-background);
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+}
