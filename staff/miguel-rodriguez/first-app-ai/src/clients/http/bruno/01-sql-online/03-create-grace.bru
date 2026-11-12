@@ -1,0 +1,34 @@
+meta {
+  name: create-grace
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Grace",
+    "email": "grace@example.com"
+  }
+}
+
+tests {
+  test("Crear Grace", function () {
+    expect(res.getStatus()).to.equal(201);
+    const user = res.getBody();
+    expect(user).to.have.all.keys("id", "name", "email", "createdAt", "updatedAt");
+    expect(user.id).to.be.a("number");
+    expect(user.name).to.equal("Grace");
+    expect(user.email).to.equal("grace@example.com");
+    expect(user.createdAt).to.be.a("string");
+    expect(user.updatedAt).to.be.a("string");
+    const saved = JSON.stringify(user);
+    bru.setVar("grace", saved);
+    bru.setVar("graceId", user.id);
+  });
+}

@@ -13,7 +13,7 @@ El profesor abre una sesión y comparte en la llamada un **código de 4 cifras**
 Necesitas **Python 3.13+** y, para clases online, **Homebrew** (macOS).
 
 ```bash
-cd staff/victor-chang/asistenciapp
+cd staff/<usuario>/asistenciapp
 python3 -m venv .venv                # crea el entorno virtual del proyecto
 source .venv/bin/activate            # lo activa (verás "(.venv)" en el prompt)
 pip install -r requirements.txt      # instala Flask y pytest
@@ -22,14 +22,18 @@ brew install cloudflared             # el túnel para que los alumnos entren des
 
 ---
 
-## 2. Arrancar la app
+## 2. Activar el entorno
 
 En cada terminal nueva, primero activa el entorno:
 
 ```bash
-cd staff/victor-chang/asistenciapp
+cd staff/<usuario>/asistenciapp
 source .venv/bin/activate
 ```
+
+---
+
+## 3. Arrancar la app
 
 | Para… | Comando |
 | --- | --- |
@@ -51,7 +55,7 @@ Ese enlace es **tu panel privado**: no lo compartas, porque quien lo tenga puede
 
 ---
 
-## 3. Pasar lista, paso a paso
+## 4. Pasar lista, paso a paso
 
 1. Abre el **enlace del panel** que aparece en la terminal.
 2. Escribe un título (opcional; si no, se usa la fecha y hora) y pulsa **Abrir asistencia**.
@@ -71,9 +75,13 @@ Es un límite **disuasorio**, no una prueba de identidad: se salta con otro nave
 
 Las **sesiones anteriores** aparecen en el panel con su número de asistentes, y puedes volver a verlas o descargarlas cuando quieras.
 
+### Límite por IP
+
+Una misma dirección IP puede intentar registrarse como máximo **5 veces por segundo** y **20 veces por minuto**. Si se pasa de ahí, queda **bloqueada para siempre** y ve un aviso de que ha superado los intentos permitidos. En esta versión no hay forma de quitar una IP de la lista de bloqueo. El código de 4 cifras no cambia: sigue igual de fácil de copiar.
+
 ---
 
-## 4. Cerrar la app
+## 5. Cerrar la app
 
 Pulsa **Ctrl+C** en la terminal donde está arrancada. Se paran la app y el túnel. Los datos quedan guardados en `data/asistencia.db`.
 
@@ -89,11 +97,11 @@ pkill cloudflared                    # para el túnel, si lo usabas
 
 ---
 
-## 5. Problemas frecuentes
+## 6. Problemas frecuentes
 
 | Mensaje o síntoma | Qué hacer |
 | --- | --- |
-| `El puerto 8000 ya está en uso` | Ya tienes la app abierta en otra terminal: ciérrala (sección 4). O usa otro puerto: `PORT=8001 python app.py --tunel`. |
+| `El puerto 8000 ya está en uso` | Ya tienes la app abierta en otra terminal: ciérrala (sección 5). O usa otro puerto: `PORT=8001 python app.py --tunel`. |
 | `No se encontró cloudflared` | Instálalo: `brew install cloudflared`. |
 | El enlace del túnel no carga | Espera unos 20 segundos y recarga: los túneles nuevos tardan en estar accesibles. |
 | Aviso amarillo en el panel: *"tus alumnos no podrán abrir el enlace"* | Abriste el panel en `localhost`. Para la app y arráncala con `python app.py --tunel`. |
@@ -102,7 +110,7 @@ pkill cloudflared                    # para el túnel, si lo usabas
 
 ---
 
-## 6. Tests
+## 7. Tests
 
 ```bash
 source .venv/bin/activate
@@ -113,9 +121,10 @@ Cada criterio de aceptación de la spec (`CA-01` a `CA-26`) tiene un test o una 
 
 ---
 
-## 7. Privacidad
+## 8. Privacidad
 
-- Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails ni IPs.
+- Del alumno solo se guarda **el nombre que escribe** y **la hora**. Nada de emails ni identificadores de dispositivo.
+- La **IP pública** se recuerda solo para contar los intentos de registro y para la lista de bloqueo, en el mismo archivo local, y **no** se guarda junto al nombre ni a la hora.
 - El límite "un registro por navegador" se guarda **solo en el navegador del alumno**, no en el servidor.
 - Quitar un registro lo **borra de verdad** (no queda en ninguna papelera).
 - Los datos se guardan **solo en tu ordenador** (`data/`, que no se sube a git).

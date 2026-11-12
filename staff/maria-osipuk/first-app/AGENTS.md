@@ -1,388 +1,133 @@
-# Instrucciones para el agente
+# Instrucciones de trabajo — First App
 
-## Fuente de verdad
+Este manual define el proceso de trabajo. La constitución recoge los principios del proyecto; las guías técnicas describen cómo se aplican.
 
-Lee completamente `docs/CONSTITUTION.md` antes de modificar código.
+## 1. Alcance y redacción
 
-Respeta el árbol, el flujo y las responsabilidades definidos allí. No los repitas ni los redefinas en otros documentos.
+Trabaja dentro de esta aplicación y solo sobre el pedido autorizado. Usa roles generales y rutas relativas a su raíz en la documentación. Los comandos conservan las rutas necesarias para ejecutarse desde el directorio indicado.
 
-Si el código contradice la Constitución, explica la contradicción y espera una decisión antes de programar.
+Evita nombres personales, comparaciones con copias de otras personas y apartados de punto de partida ligados a ramas o commits. Las referencias de trabajo son las guías de esta app y los templates compartidos.
 
-## Antes de editar
+Una petición de explicación, revisión o comparación es de lectura. Una petición explícita de editar o implementar autoriza esos cambios dentro del alcance y de la fase aprobada. Nombrar un archivo no es, por sí solo, una orden de editarlo.
 
-Cuando el pedido sea una funcionalidad o una forma de trabajar, crea primero `docs/specs/<nombre-en-kebab-case>/` con `spec.md`, `plan.md` y `tasks.md`. No toques código, consultas, clientes ni la constitución hasta que esa carpeta exista y María diga de forma explícita que la revisión está hecha.
+## 2. Qué documento consultar
 
-Una petición de explicación, revisión, comparación o planificación no autoriza cambios. Crear o reescribir esos tres ficheros tampoco autoriza cambios de código.
+Antes de editar, lee la [constitución](docs/CONSTITUTION.md), este manual y la spec local que cubre la tarea. Después consulta las guías relacionadas:
 
-Cuando la revisión esté hecha, implementa solo ese pedido:
+| Documento                            | Fuente para                                                     |
+| ------------------------------------ | --------------------------------------------------------------- |
+| [Arquitectura](docs/ARCHITECTURE.md) | Responsabilidades, dependencias y recorrido de los datos.       |
+| [Estilo](docs/STYLE.md)              | Código sencillo, funciones de negocio y comentarios educativos. |
+| [Base de datos](docs/DATABASE.md)    | Esquema, tipos, validación de campos y consultas.               |
+| [Errores](docs/ERRORS.md)            | Errores de negocio y su presentación al cliente.                |
+| [Árbol](docs/TREE.md)                | Ubicación de archivos y carpetas.                               |
+| [README](README.md)                  | Preparación, arranque y comandos de uso.                        |
 
-1. Inspecciona los archivos relacionados.
-2. Sigue `tasks.md` de esa carpeta, en orden.
-3. Trabaja un solo pedido a la vez.
+No copies reglas de una guía a otra. Si una contradicción afecta al pedido, explícalo antes de implementar y solicita la decisión necesaria. No cambies una regla de producto o un contrato para acomodar el código sin autorización.
 
-## Forma de trabajar
+## 3. Flujo Git y autorizaciones
 
-- Trabaja en pasos pequeños.
-- Implementa una sola funcionalidad cada vez.
-- No añadas funcionalidades no solicitadas.
-- No refactorices archivos no relacionados.
-- No cambies contratos existentes silenciosamente.
-- No añadas dependencias sin explicar su necesidad.
-- No hagas `commit`, `push`, merge ni pull request sin autorización.
-- Si hay varias soluciones razonables, presenta primero las opciones.
+Las operaciones de Git siguen el [orquestador local](agents/git-workflow-agent.md). Antes de elegir una operación, consulta [check-status](skills/check-status/SKILL.md).
 
-Las reglas de este documento se aplican al código nuevo y a las partes que se modifiquen dentro de una tarea autorizada. No refactorices una funcionalidad antigua únicamente para adaptarla a una convención añadida después de su creación.
+Una tarea nueva se registra con una issue, una rama desde `staging` y una PR en borrador hacia `staging`. Las [plantillas de issues](templates/issues/) y de [PR](templates/pull-request/) definen el título, el cuerpo y el tipo de rama; no dupliques esas reglas aquí.
 
+La issue se crea sin pedir confirmación del título, asignada a la cuenta autenticada en GitHub. Después, la rama, el commit vacío, el push, la PR en borrador y el enlace con la issue van encadenados, sin esperar un sí. Las únicas paradas de la preparación son las del apartado 4.
 
-## Nivel del código
+El orden de preparación es issue → rama → PR en borrador → documentos SDD. Una issue o una PR no sustituye la revisión del SDD ni autoriza código pendiente de aprobación.
 
-La desarrolladora es junior. El código debe ser:
+Fuera del commit vacío de apertura, el commit y el push de un trozo se hacen solo cuando la persona lo pide. La revisión se pide cuando la persona nombra a los revisores; entonces la PR sale de borrador. No se hace merge a `staging`.
 
-- sencillo;
-- explícito;
-- lineal;
-- fácil de leer de arriba abajo;
-- escrito con nombres descriptivos;
-- dividido en pasos visibles.
+## 4. SDD de esta aplicación
 
-Evita:
+Todo cambio de un archivo de la app necesita su spec: una funcionalidad, una forma de trabajo, una corrección o un cambio solo de documentación. Después de la PR en borrador, prepara `docs/specs/<nombre-en-kebab-case>/` con estos tres documentos:
 
-- clases innecesarias;
-- abstracciones prematuras;
-- patrones de diseño no solicitados;
-- helpers genéricos que oculten pasos;
-- expresiones demasiado compactas;
-- dependencias externas innecesarias.
+| Documento  | Contenido                                                                                                                                                                      |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `spec.md`  | Qué se necesita y por qué, alcance, caso correcto, caso que debe fallar y resultado observable. Describe el comportamiento en el cliente afectado, sin archivos, SQL ni capas. |
+| `plan.md`  | Cómo se construirá: capas y archivos afectados, entradas y salidas de la lógica, dependencias y verificación. No repite reglas de las guías.                                   |
+| `tasks.md` | Pasos pequeños y ordenados, cada uno con una acción y un resultado comprobable. Cada paso ocupa como máximo cuatro líneas.                                                     |
 
-Una solución más larga es preferible si resulta más fácil de comprender.
+Si el pedido es una regla de trabajo, la spec explica la regla, a qué operaciones obliga y cómo se comprueba.
 
-## Idioma y formato
+Esta app tiene dos paradas en el SDD:
 
-- Código y nombres técnicos: inglés.
-- Explicaciones para la desarrolladora: español.
-- Archivos: kebab-case.
-- Funciones y variables: camelCase.
-- Módulos: ESM.
-- Imports JavaScript con extensión `.js`.
-- Comillas dobles.
-- Punto y coma.
-- Indentación de 2 espacios.
-- Formato estándar de Prettier.
+1. Se escriben `spec.md` y `plan.md`. La spec abre con `Issue: #N`. No se toca ningún otro archivo. Ahí se para: la persona responsable revisa la spec y el plan.
+2. Con esa revisión hecha, se escribe `tasks.md`. Ahí se para. La implementación empieza cuando la persona lo pide.
 
-Los comentarios son material de estudio. Deben ser lo más explicativos posible para que la desarrolladora pueda aprender el código leyéndolos.
+Si la constitución, el código actual y la spec no dicen lo mismo, la pregunta queda al final del plan y no se escribe `tasks.md` hasta tener la respuesta. No modifiques ningún archivo de la app (código, consultas, clientes, guías ni la constitución) antes de que la persona pida implementar. Crear los documentos no equivale a aprobarlos.
 
-## Comentarios educativos en el código
+Antes de implementar, lee completos los tres archivos y sigue `tasks.md` en orden. Una spec describe un pedido y su aceptación; las guías describen el proyecto vigente. Si el plan necesita un cambio de alcance o contrato, presenta ese cambio para revisión antes de continuar con él.
 
-Cuando crees una funcionalidad nueva o modifiques código con autorización, deja comentarios lo más explicativos posible. Sirven para aprender el código, no solo para marcar un paso.
+## 5. Paquetes
 
-Cada comentario debe poder leerse solo y responder, cuando aplique:
+El gestor Node del proyecto es pnpm 10. La versión exacta está en `packageManager` de `package.json`. Se conserva `pnpm-lock.yaml`; no se genera `package-lock.json`.
 
-- qué se está haciendo en este punto;
-- por qué se hace así y no de otra forma;
-- qué regla de negocio o de datos se está aplicando;
-- qué entra, qué sale y qué puede fallar;
-- cómo encaja este paso con el anterior y el siguiente.
+No se utilizan npm, npx, yarn ni bun para las dependencias Node de esta app.
 
-Escríbelos en inglés sencillo, como el resto del código. Prefiere una frase completa a una etiqueta de una o dos palabras. Si un bloque tiene una decisión, un límite o un caso que no se ve en el nombre de la función, explícalo en el comentario.
+| Operación                                  | Comando desde la raíz de la app |
+| ------------------------------------------ | ------------------------------- |
+| Instalar lo declarado                      | `pnpm install`                  |
+| Añadir una dependencia aprobada            | `pnpm add <paquete>`            |
+| Ejecutar un script del proyecto            | `pnpm run <script>`             |
+| Ejecutar una herramienta instalada         | `pnpm exec <herramienta>`       |
+| Ejecutar una herramienta temporal revisada | `pnpm dlx <herramienta>`        |
 
-Ejemplo:
+Revisa las dependencias y sus scripts de instalación antes de autorizar su ejecución. No autorices scripts bloqueados de forma global por comodidad. El control `preinstall` de este proyecto rechaza gestores distintos de pnpm; no sustituye la revisión de seguridad.
 
-```js
-// Check that id is a whole number greater than zero.
-// The client sends it as a JavaScript value, so a string like "1"
-// or a decimal like 1.5 must be rejected here, before any query runs.
+El cliente Jupyter utiliza `notebook` e `ipykernel`, instalados con pip dentro del entorno virtual de la app. Esa instalación Python no modifica las dependencias Node.
 
-// Trim spaces and lowercase the email so "Ada@Example.com"
-// and "ada@example.com" are treated as the same address.
+### Revisión con Socket
 
-// Ask the database for that email. If SQLite fails, do not return
-// its message: replace it with a clear error about this operation.
+Antes de aceptar un plan que añada un paquete Node o cambie su versión, revisa el paquete y la versión propuestos con el MCP `socket-mcp`. Comprueba:
 
-// Return only the fields the client needs, with camelCase names.
-// created_at stays inside the database column name until this mapping.
-```
+- si están afectados por una campaña;
+- si tienen alertas;
+- si alguna puntuación (`stat`) está por debajo de 50.
 
-Un comentario puede repetir la idea de un nombre si eso aclara el motivo, el límite o el orden. No hace falta comentar una línea cuyo significado ya quedó explicado en el bloque anterior.
+La referencia del servidor está en `MCPS/socket-mcp/mcp.txt`. Cada dato se escribe con la herramienta que le corresponde:
 
-No modifiques las funcionalidades antiguas únicamente para añadir comentarios. Esta regla se aplica al código nuevo y a las partes que se modifiquen como parte de una tarea autorizada.
+- Las puntuaciones salen de `depscore`, con la versión exacta. Una puntuación por debajo de 50 se escribe; 50 no baja.
+- Las alertas salen de `alerts`, con el `org_slug` que devuelve `organizations`. Una lista vacía es la lista de la organización: no dice que esa versión no tenga alertas.
+- La campaña sale de `threat_feed`, con ese mismo `org_slug`.
 
-## Tipos y formatos
+Repite la revisión sobre sus dependencias hasta tres niveles de profundidad. Registra en el plan el paquete, la versión, el alcance revisado, los hallazgos de cada nivel y las alertas pendientes. La persona que aprueba el plan decide sobre esas alertas.
 
-### `id`
+Si una herramienta no puede contestar, el resumen dice el motivo que devolvió. No se escribe «no consta» sin haberla llamado. Indica qué no se pudo revisar. No presentes la validación como superada ni aceptes el plan sin ese resumen y las decisiones requeridas.
 
-- Tipo en JavaScript: `number`.
-- Tipo en SQLite: `INTEGER`.
-- Debe ser un número entero mayor que cero.
-- No se aceptan texto, decimales, cero, números negativos ni `NaN`.
-- SQLite genera el ID al crear un usuario.
+## 6. Implementación
 
-Validación:
+- Trabaja un pedido cada vez y en pasos pequeños.
+- Usa las responsabilidades y funciones existentes antes de crear otras.
+- Aplica [STYLE.md](docs/STYLE.md) al código nuevo y a las partes modificadas.
+- Conserva las funcionalidades, contratos y archivos ajenos al pedido.
+- Justifica cualquier dependencia nueva y completa la revisión con Socket antes de aceptar el plan, según el apartado 5.
+- Usa el criterio técnico para decisiones rutinarias dentro de lo aprobado. Presenta opciones cuando cambien el alcance, el contrato, los datos o una decisión fundamental.
+- Usa datos ficticios y copias temporales para las comprobaciones que escriban o borren datos.
 
-```js
-Number.isInteger(id) && id > 0
-```
+No refactorices código antiguo solo para adaptarlo a una convención posterior. Una diferencia de estilo ajena al pedido no bloquea por sí sola una tarea nueva.
 
-### `name`
+## 7. Comprobaciones y cierre
 
-- Tipo en JavaScript: `string`.
-- Tipo en SQLite: `TEXT NOT NULL`.
-- Se aplica `trim()`.
-- Después de aplicar `trim()`, no puede quedar vacío.
-- Un valor de otro tipo no se convierte silenciosamente en texto.
+Desde la carpeta de la app, aplica el formato de Prettier con `pnpm format` y comprueba JavaScript con `pnpm lint`. Limita cualquier formateo a los archivos del pedido para no introducir cambios ajenos. Si falla una comprobación requerida, el trabajo sigue pendiente.
 
-Ejemplo válido:
+Si cambia una funcionalidad, comprueba el caso correcto, al menos un caso incorrecto y el cliente afectado; actualiza el ejemplo de terminal cuando cambie su contrato. Ejecuta las pruebas relacionadas. Para una edición solo documental, comprueba enlaces, coherencia y conservación de las reglas.
 
-```text
-Ada Lovelace
-```
+Actualiza en la misma tarea únicamente los documentos afectados por el cambio:
 
-Ejemplos inválidos:
+| Si cambia…                                                | Actualiza…                                                              |
+| --------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Propósito, alcance, principios o una decisión fundamental | `docs/CONSTITUTION.md`, con autorización de la enmienda.                |
+| Ubicación, alta o eliminación de archivos                 | `docs/TREE.md` y las descripciones afectadas de `docs/ARCHITECTURE.md`. |
+| Responsabilidad, dependencia o recorrido del código       | `docs/ARCHITECTURE.md`.                                                 |
+| Firma, entrada o salida de una operación                  | La spec de la tarea, `docs/STYLE.md` si cambia la regla y los clientes. |
+| Esquema, tipos o validación de campos                     | `docs/DATABASE.md`.                                                     |
+| Errores o su presentación                                 | `docs/ERRORS.md`.                                                       |
+| Convenciones de código o comentarios                      | `docs/STYLE.md`.                                                        |
+| Comandos de arranque o uso visible                        | `README.md` y la guía de uso afectada.                                  |
+| Proceso de trabajo, paquetes o aprobaciones               | `AGENTS.md` y el agente o la skill afectados.                           |
 
-```text
-""
-"   "
-null
-123
-```
+La constitución cambia únicamente si cambian el propósito, el alcance, los principios o una decisión fundamental; mover un archivo o ajustar un detalle interno no obliga a modificarla. Las specs conservan el pedido y las decisiones de su tarea: no se reescriben specs históricas para describir el código actual. Las guías describen lo implementado; no incorporan funcionalidades futuras.
 
-### `email`
+Al cerrar, indica qué guías se revisaron y por qué la constitución cambió o no necesitó cambios.
 
-JavaScript no tiene un tipo nativo `email`. En Node se representa como `string`, pero su contenido debe ser una dirección de email válida.
-
-- Tipo en JavaScript: `string`.
-- Tipo en SQLite: `TEXT NOT NULL UNIQUE`.
-- Tipo de dominio: email.
-- Se aplica `trim().toLowerCase()`.
-- Debe contener un único `@`.
-- Debe tener contenido antes y después de `@`.
-- Debe tener como máximo 64 caracteres.
-- No puede repetirse.
-- La comprobación se escribe en pasos visibles: `split("@")`, un solo `@`, texto a ambos lados y longitud. No se sustituye por una expresión regular.
-
-Ejemplo válido:
-
-```text
-ada@example.com
-```
-
-Ejemplos inválidos:
-
-```text
-ada
-@example.com
-ada@
-ada@@example.com
-""
-null
-```
-
-Si posteriormente existe un formulario HTML, utilizará:
-
-```html
-<input type="email">
-```
-
-El formulario no sustituye la validación de `logic/`.
-
-### `created_at`
-
-- Tipo en JavaScript: `string`.
-- Tipo en SQLite: `TEXT NOT NULL`.
-- En código nuevo, lo genera SQLite al insertar la fila con `DEFAULT (datetime('now', 'localtime'))`.
-- `logic/` no crea esta fecha con `new Date()` ni la envía a la consulta.
-- No se acepta desde el cliente.
-
-### `updated_at`
-
-- Tipo en JavaScript: `string`.
-- Tipo en SQLite: `TEXT NOT NULL`.
-- En código nuevo, lo genera SQLite al insertar la fila y lo actualiza la consulta SQL con `datetime('now', 'localtime')`.
-- `logic/` no crea esta fecha con `new Date()` ni la envía a la consulta.
-- No se acepta desde el cliente.
-
-Las fechas de persistencia son responsabilidad de SQLite. La capa `logic/` decide cuándo se crea o modifica una entidad, pero no calcula sus timestamps.
-
-## Firma de las funciones
-
-La firma debe mostrar claramente qué datos necesita la función.
-
-- Una función sin entrada no recibe argumentos: `listUsers()`.
-- Si necesita un solo dato, lo recibe directamente y con un nombre descriptivo: `findUserById(id)` o `findUserByEmail(email)`.
-- Si necesita varios valores fijos y conocidos, los parámetros aparecen de forma visible en la firma.
-- No agrupes un `id`, un `email` u otro dato único dentro de un objeto sin necesidad.
-- Utiliza un objeto solo cuando el grupo tenga un significado propio, como `changes` en una actualización parcial, o cuando la spec defina expresamente ese contrato.
-- El nombre de la función debe describir la acción completa y coincidir con la finalidad de su archivo.
-
-No desestructures un objeto directamente en la firma. Cuando una función reciba un objeto con significado propio, comprueba primero que sea un objeto válido y después lee sus propiedades dentro del cuerpo.
-
-## Actualizaciones parciales
-
-Una nueva función de actualización recibe el identificador y los cambios por separado:
-
-```js
-updateUser(id, changes);
-```
-
-- Valida primero `id`.
-- Comprueba que `changes` sea un objeto válido.
-- Solo modifica las propiedades que estén presentes en `changes` y que la spec permita actualizar.
-- Conserva el valor actual de una propiedad cuando no aparezca en `changes`.
-- Valida y normaliza cada valor proporcionado con las mismas reglas que se aplican al crearlo.
-- Si se modifica un valor único, permite que la entidad conserve su propio valor, pero no que utilice el de otra fila.
-- Devuelve la entidad completa y saneada después de actualizarla, salvo que la spec defina otro resultado.
-
-## Orden de una función de negocio
-
-1. Recibir los parámetros.
-2. Validar sus tipos.
-3. Normalizar los datos.
-4. Validar las reglas de negocio.
-5. Solicitar la operación correspondiente.
-6. Estructurar la respuesta.
-
-Los pasos deben ser visibles y no combinarse en una única expresión compleja.
-
-## Gestión de errores
-
-Los errores se gestionan en `logic/`, cerca de la regla de negocio que puede fallar.
-
-Cuando una entrada o una regla de negocio no es válida, la función lanza un `Error` con un mensaje claro en inglés:
-
-```js
-throw new Error("User email is invalid");
-```
-
-El mensaje explica el problema de forma comprensible. No se utilizan códigos opacos, clases de error propias ni objetos genéricos como `{ ok: false, error }`.
-
-Mensajes de referencia para esta aplicación:
-
-- `User id must be a positive integer`;
-- `User name is required`;
-- `User email is invalid`;
-- `User email is already registered`;
-- `User does not exist`.
-
-Los errores internos de SQLite nunca llegan directamente al cliente. `logic/` los captura y lanza un nuevo error que identifica la operación que no pudo completarse.
-
-Mensajes de referencia para errores de operación:
-
-- `Unable to create user`;
-- `Unable to update user`;
-- `Unable to delete user`;
-- `Unable to list users`;
-- `Unable to find user`.
-
-Ejemplo:
-
-```js
-let user;
-
-try {
-  user = findUserByEmail(email);
-} catch {
-  throw new Error("Unable to find user");
-}
-```
-
-Cuando una operación funciona, devuelve directamente el dato saneado. No lo envuelve en `{ ok: true }`.
-
-```js
-return {
-  id: user.id,
-  name: user.name,
-  email: user.email,
-  createdAt: user.created_at,
-  updatedAt: user.updated_at,
-};
-```
-
-Si una operación correcta no produce datos, no devuelve un valor artificial.
-
-Al crear o modificar una funcionalidad, aplica estas reglas de forma consistente a todas las funciones afectadas y actualiza sus clientes de terminal.
-
-Cada archivo de `clients/terminal/` contiene una sola línea: un ejemplo del caso correcto. Los casos incorrectos se prueban al implementar, pero no se guardan en el `.txt`.
-
-## Reglas de implementación
-
-- Utiliza las capas existentes según `docs/CONSTITUTION.md`.
-- Antes de crear un archivo, comprueba si ya existe uno con esa responsabilidad.
-- Antes de crear una consulta, comprueba si puede reutilizarse una existente.
-- Lee los archivos SQL una vez al cargar el módulo.
-- Utiliza parámetros SQL con nombre.
-- Nunca concatenes datos del usuario dentro del SQL.
-- No devuelvas campos que el cliente no necesita.
-- No conviertas silenciosamente datos inválidos.
-- No cambies el esquema como efecto secundario de otra tarea.
-- `logic/` no llama a `createUsersTable()` ni crea tablas. La tabla `users` queda preparada al cargar `queries/users.js`. Asegurarla con `CREATE TABLE IF NOT EXISTS` no es un cambio de esquema.
-
-## Seguridad
-
-- Valida la entrada antes de utilizarla.
-- No guardes secretos, tokens ni contraseñas en el repositorio.
-- No subas `db/users.sqlite`.
-- No registres emails reales en los ejemplos.
-- No borres ni reemplaces la base real durante las comprobaciones.
-- No añadas autenticación ni contraseñas sin una tarea específica.
-
-## Cambios en la base de datos
-
-Antes de cambiar columnas, tipos o restricciones:
-
-1. Explica el esquema actual.
-2. Explica el cambio propuesto.
-3. Indica si los datos existentes pueden verse afectados.
-4. Presenta el plan de migración.
-5. Espera autorización.
-
-## Sincronización de la documentación
-
-`docs/CONSTITUTION.md` debe representar siempre el estado real del proyecto.
-
-Después de implementar un cambio, comprueba si también hay que actualizar la Constitución.
-
-Actualízala en la misma tarea cuando:
-
-- se crea, elimina, mueve o renombra un archivo o carpeta;
-- se añade o elimina una funcionalidad;
-- cambia el árbol del proyecto;
-- cambia el recorrido de los datos;
-- cambia la responsabilidad de una capa;
-- cambia el contrato de entrada o salida de `logic/`;
-- cambia la estructura de la base de datos;
-- cambia una decisión fundamental de la arquitectura.
-
-Al actualizar la Constitución:
-
-- describe únicamente lo que ya existe;
-- no añadas archivos ni funcionalidades planificadas;
-- actualiza el árbol para que coincida con el proyecto;
-- elimina información que haya dejado de ser cierta.
-
-Si cambian los tipos o las reglas de validación de `id`, `name`, `email`, `created_at` o `updated_at`, actualiza también la sección correspondiente de este `AGENTS.md`.
-
-Si una modificación interna no afecta al árbol, al alcance, al flujo, al contrato ni a la arquitectura, no cambies la Constitución innecesariamente. Indica al terminar que se revisó y que no necesitaba actualización.
-
-Una tarea que requiera actualizar la documentación no se considera terminada hasta que el código y la Constitución vuelvan a coincidir.
-
-## Verificación
-
-Para comprobar una funcionalidad:
-
-1. Revisa la sintaxis.
-2. Ejecuta su cliente de terminal.
-3. Prueba un caso correcto.
-4. Prueba al menos un caso incorrecto.
-5. Utiliza una copia temporal cuando sea posible.
-6. Comprueba que no se modificaron archivos no relacionados.
-7. Comprueba si `docs/CONSTITUTION.md` necesita actualizarse.
-
-Al finalizar, informa:
-
-- qué archivos cambiaron;
-- qué hace cada cambio;
-- qué se comprobó;
-- cuál fue el resultado;
-- si se actualizó la Constitución;
-- qué quedó pendiente.
-
-No afirmes que algo funciona si no se ha comprobado.
+Al terminar, informa de los archivos cambiados, el resultado, las comprobaciones realizadas, las limitaciones y lo pendiente. Distingue cambios locales de cambios publicados. No afirmes que algo funciona o está aprobado sin la evidencia correspondiente.

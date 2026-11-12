@@ -1,0 +1,117 @@
+# AGENTS.md — Manual de trabajo para agentes de IA
+
+---
+
+## 1. Antes de hacer nada: lectura obligatoria
+
+Lee en este orden al empezar cualquier tarea:
+
+1. `docs/CONSTITUTION.md`: las reglas no negociables.
+2. Este archivo (`AGENTS.md`).
+3. `docs/ARCHITECTURE.md`: las partes del código y qué puede importar cada una.
+4. La spec activa: `specs/NNN-nombre/spec.md` (ver §5 "Estado actual").
+5. Su `plan.md` y su `tasks.md`, si ya existen.
+
+Si lo que te piden va en contra de la constitución, **no cambies ningún fichero**. Di a la persona que trabaja en esta carpeta qué regla choca con la petición y espera su respuesta.
+
+---
+
+## 2. Flujo SDD paso a paso
+
+Cada cambio en esta app recorre estas fases **en orden**. Al terminar cada una, el agente **se detiene** y pide la aprobación de la persona que trabaja en esta carpeta. No se avanza sin un "ok" explícito.
+
+Al empezar el cambio, el único fichero nuevo permitido es el `spec.md`. El agente lo enseña y espera el ok. El plan, las tasks y el cambio vienen después.
+
+| Fase | Archivo | Pregunta que responde | Puerta de salida |
+| --- | --- | --- | --- |
+| 1. Especificar | `spec.md` | ¿**Qué** hay que construir y **por qué**? | Sin `[NECESITA ACLARACIÓN]` pendientes + aprobación de la persona que trabaja en esta carpeta |
+| 2. Planificar | `plan.md` | ¿**Cómo** lo construimos? | Pasa la comprobación de la constitución + aprobación de la persona que trabaja en esta carpeta |
+| 3. Desglosar | `tasks.md` | ¿En qué **pasos pequeños** lo hacemos? | Cada tarea apunta a un criterio de aceptación + aprobación de la persona que trabaja en esta carpeta |
+| 4. Implementar | el cambio que digan las tasks | Hacerlo, tarea a tarea. Incluye el README cuando una task lo diga | `pytest` en verde + criterios verificados |
+
+### 2.1 Especificar (`spec.md`)
+- Habla del usuario y del problema. **Nunca** nombra tecnologías (nada de "SQLite", "endpoint", "fetch").
+- Estructura: Problema · Usuarios · Historias de usuario · Criterios de aceptación (Dado / Cuando / Entonces) · Fuera de alcance · Preguntas abiertas.
+- Cada criterio de aceptación lleva un identificador (`CA-01`, `CA-02`…) para poder enlazarlo desde tareas y tests.
+- Si falta información, escribe `[NECESITA ACLARACIÓN: pregunta concreta]`. **No inventes la respuesta.**
+
+### 2.2 Planificar (`plan.md`)
+- Arquitectura, modelo de datos, rutas/API, archivos que se crearán.
+- Sección obligatoria **"Comprobación de la constitución"**: repasa P1–P6 y §5–§6 y di cómo los cumple el plan.
+- Si propones una dependencia externa, justifícala aquí (constitución P3).
+
+### 2.3 Desglosar (`tasks.md`)
+- Lista de casillas `- [ ] T01 …` en orden de ejecución.
+- Cada tarea es pequeña (un archivo o una función), tiene un resultado comprobable e indica qué `CA-xx` cubre.
+- Primero el test, luego el código, siempre que sea posible.
+
+### 2.4 Implementar
+- Haz **una tarea cada vez**. Al acabarla, márcala `[x]` en `tasks.md`.
+- Ningún fichero de la app se adelanta al spec. Si la spec activa no cubre el pedido, **para**, escribe el spec y espera aprobación.
+- Si durante la implementación descubres que la spec o el plan están mal o incompletos, **para**, propón el cambio en el documento y espera aprobación.
+
+---
+
+## 3. Normas de escritura del código
+
+Al estilo de la API pública de `requests`. Las partes y lo que puede importar cada una están en [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md); `tests/test_architecture.py` lo vigila.
+
+- **Módulo:** empieza con una docstring de una frase que dice para qué sirve.
+- **Función pública:** docstring con `:param nombre:` por cada parámetro, `:return:` y `:rtype:`; si lanza errores, `:raises Error:`.
+- **Ejemplo:** un bloque `Usage::` con un uso corto.
+- **Tipos** en los parámetros y en el resultado de toda función pública.
+- Funciones pequeñas con una sola tarea; sin lógica de negocio en las rutas.
+- Los errores de negocio son excepciones del dominio con un mensaje claro en español (constitución §5).
+- Nombres en inglés; mensajes y docstrings en español.
+- Comentarios solo para el porqué; referencia al `CA-xx` cuando una función implementa un criterio.
+- Sin código muerto ni abstracciones «por si acaso» (constitución P2).
+
+Ejemplo:
+
+```python
+def ensure_open(session: dict) -> None:
+    """Comprueba que la sesión admite registros (CA-09).
+
+    :param session: la sesión, con su campo ``closed_at``.
+    :return: nada si está abierta.
+    :rtype: None
+    :raises SessionClosed: si la sesión ya está cerrada.
+
+    Usage::
+
+        >>> ensure_open({"closed_at": None})
+    """
+    if session["closed_at"] is not None:
+        raise SessionClosed(CLOSED)
+```
+
+---
+
+## 4. Definición de "terminado"
+
+Una funcionalidad está terminada cuando:
+
+- [ ] Todas las tareas de `tasks.md` están en `[x]`.
+- [ ] `pytest` pasa.
+- [ ] Cada `CA-xx` de la spec tiene su test o su verificación manual hecha.
+- [ ] El `README.md` explica cómo usar lo nuevo.
+- [ ] La persona que trabaja en esta carpeta la ha probado y la ha dado por buena.
+
+---
+
+## 5. Estado actual
+
+| Spec | Fase | Notas |
+| --- | --- | --- |
+| `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
+| `002-spec-antes-del-cambio` | ✅ Implementada (2026-10-23) | Ningún fichero de la app se toca sin un spec aprobado |
+| `003-activar-el-entorno` | ✅ Implementada (2026-10-24): T01–T04, 77 tests | El README separa activar el entorno y arrancar la app |
+| `004-quitar-referencias-personales` | ✅ Implementada (2026-10-26) | Ninguna referencia personal a otro usuario en la documentación; la ruta del README es la de esta carpeta |
+| `005-arquitectura-por-capas` | ✅ Implementada v1.3 (2026-10-26) | Documentación en `docs/`, `AGENTS.md` con normas de escritura y código en `domain`, `usecases` y `storage` |
+| `006-limite-por-ip` | 🚧 En implementación (2026-10-26) | Límite de 5 intentos por segundo y 20 por minuto por IP; bloqueo permanente en la base; constitución 3.0 |
+| `007-lista-de-alumnos` | 🚧 Código hecho v1.3 (2026-10-28): T01–T25, T29, T30, T33–T39; 263 tests. Falta la verificación manual (T26–T28, T31) y T32 | Listas de grupo: el alumno elige su nombre, ausentes y nuevos en la descarga; propone la enmienda 4.0 de P4 (issue #539). v1.3: una casilla por alumno, «Subir lista» y mayúscula inicial en las listas del profesor |
+| `008-estilo-neoland` | 🚧 Código hecho (2026-10-28): T01–T09; 295 tests (32 de contraste nuevos). Falta que lo pruebes tú | Aspecto de neoland.es: colores, Montserrat y Roboto dentro de la app, botones píldora, banda oscura del código y modo oscuro; sin cambios de funcionalidad (issue #544) |
+| `009-agents-mas-simple` | ✅ Implementada (2026-10-29): T01–T09, 295 tests | `AGENTS.md` solo dice cómo se trabaja: la estructura de carpetas va en `docs/ARCHITECTURE.md` y los comandos en el README (issue #565) |
+| Bot de Discord | Idea futura, sin número | Fuera del MVP |
+
+> El agente actualiza esta tabla cada vez que una spec cambia de fase.

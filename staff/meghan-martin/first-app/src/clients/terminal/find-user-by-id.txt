@@ -1,0 +1,7 @@
+# Pega esto en la terminal, con el directorio actual en first-app.
+# La base tiene que estar en marcha: npm run db
+node --input-type=module <<'EOF'
+import { findUserById } from "./src/logic/find-user-by-id.js";
+const result = await findUserById(1);
+console.log(result);
+EOF

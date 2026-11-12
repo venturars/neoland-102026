@@ -1,0 +1,14 @@
+# Requires pnpm server running in another terminal.
+# Run from the project directory after separate initialization and creation.
+# Replace the sample ID (1) with an existing contact's ID.
+node --input-type=module <<'NODE'
+import { findUserById } from './src/logic/find-user-by-id.js';
+
+try {
+  const user = await findUserById(1);
+  console.log(user);
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+}
+NODE

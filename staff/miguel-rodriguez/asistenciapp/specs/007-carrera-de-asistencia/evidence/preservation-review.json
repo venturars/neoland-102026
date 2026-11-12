@@ -1,0 +1,28 @@
+{
+  "base_files": 78,
+  "missing": [],
+  "changed_baseline_files": [
+    "AGENTS.md",
+    "README.md",
+    "asistencia/race_http.py",
+    "docs/ARCHITECTURE.md",
+    "docs/CONSTITUTION.md",
+    "requirements.txt",
+    "specs/007-carrera-de-asistencia/plan.md",
+    "specs/007-carrera-de-asistencia/spec.md",
+    "specs/007-carrera-de-asistencia/tasks.md",
+    "static/profesor.html",
+    "static/profesor.js",
+    "tests/test_architecture.py",
+    "tests/test_registration_security.py"
+  ],
+  "halloween_files_unchanged": 43,
+  "safe_original_svgs": 15,
+  "text_contrast": {
+    "texto": 11.83,
+    "secundario": 5.02,
+    "botón": 13.44,
+    "personaje": 6.71,
+    "estado": 6.57
+  }
+}

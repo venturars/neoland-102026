@@ -1,0 +1,16 @@
+meta {
+  name: delete-ada
+  type: http
+  seq: 14
+}
+
+delete {
+  url: {{baseUrl}}/users/{{userId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 200", function () { expect(res.getStatus()).to.equal(200); });
+  test("Número borrado", function () { expect(res.getBody()).to.deep.equal({ id: Number(bru.getVar("userId")) }); });
+}

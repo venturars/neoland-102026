@@ -1,0 +1,9 @@
+# Paste this in the terminal, with first-app as the current folder
+# The database program must be running (pnpm start)
+node --input-type=module <<'EOF'
+import { listGmailUsers } from "./src/logic/list-gmail-users.js";
+
+const result = await listGmailUsers();
+
+console.log(result);
+EOF

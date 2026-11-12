@@ -1,7 +1,0 @@
-node --input-type=module <<'NODE'
-import { db } from './db/connection.js';
-import { createUsersTable } from './queries/users.js';
-
-createUsersTable();
-console.log(db.prepare("SELECT name FROM sqlite_master WHERE type = 'table'").all());
-NODE

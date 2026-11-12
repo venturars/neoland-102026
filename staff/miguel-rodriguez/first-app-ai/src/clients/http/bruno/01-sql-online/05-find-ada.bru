@@ -1,0 +1,19 @@
+meta {
+  name: find-ada
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/users/{{adaId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Consultar Ada conserva sus datos", function () {
+    expect(res.getStatus()).to.equal(200);
+    const ada = JSON.parse(bru.getVar("ada"));
+    expect(res.getBody()).to.deep.equal(ada);
+  });
+}

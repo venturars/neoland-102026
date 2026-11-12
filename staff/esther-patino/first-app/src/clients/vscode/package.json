@@ -1,0 +1,25 @@
+{
+  "name": "first-app-vscode",
+  "displayName": "First App",
+  "description": "Panel de usuarios de first-app",
+  "version": "0.0.0",
+  "publisher": "first-app",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "vscode": "^1.94.0"
+  },
+  "main": "./extension.js",
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:first-app.openUsers"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "first-app.openUsers",
+        "title": "Abrir usuarios"
+      }
+    ]
+  }
+}

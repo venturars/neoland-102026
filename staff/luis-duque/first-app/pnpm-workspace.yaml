@@ -1,0 +1,4 @@
+allowBuilds:
+  "@scarf/scarf": false
+minimumReleaseAgeExclude:
+  - electron@45.2.3

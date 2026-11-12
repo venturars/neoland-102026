@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>People</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main>
+      <h1>People</h1>
+      <form id="create-form">
+        <h2>Create</h2>
+        <label>
+          Name
+          <input id="create-name" name="name" type="text" />
+        </label>
+        <label>
+          Email
+          <input id="create-email" name="email" type="text" />
+        </label>
+        <button type="submit">Create</button>
+      </form>
+      <h2>List</h2>
+      <ul id="user-list"></ul>
+      <form id="view-form">
+        <h2>View</h2>
+        <label>
+          Id
+          <input id="view-id" name="id" type="text" />
+        </label>
+        <button type="submit">View</button>
+      </form>
+      <p id="viewed-user"></p>
+      <form id="update-form">
+        <h2>Update</h2>
+        <label>
+          Id
+          <input id="update-id" name="id" type="text" />
+        </label>
+        <label>
+          Name
+          <input id="update-name" name="name" type="text" />
+        </label>
+        <label>
+          Email
+          <input id="update-email" name="email" type="text" />
+        </label>
+        <button type="submit">Update</button>
+      </form>
+      <form id="delete-form">
+        <h2>Delete</h2>
+        <label>
+          Id
+          <input id="delete-id" name="id" type="text" />
+        </label>
+        <button type="submit">Delete</button>
+      </form>
+      <p id="message" class="message" role="alert"></p>
+    </main>
+    <script src="./panel.js"></script>
+  </body>
+</html>

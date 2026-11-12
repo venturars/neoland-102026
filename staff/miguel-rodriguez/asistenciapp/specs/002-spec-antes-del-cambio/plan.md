@@ -28,7 +28,7 @@ Proponer la versión 2.2, con fecha de implementación y aprobación de Miguel r
 
 Actualizar la cabecera de versión y fecha. No alterar propósito, principios P1–P6, stack, privacidad ni seguridad. La aclaración aprobada por Miguel el 2026-10-22 añade una enmienda 2.3 de §5: para cambios exclusivamente documentales o de instrucciones, cada criterio puede verificarse documentalmente con procedimiento y evidencia registrados; para comportamiento se mantienen las pruebas automatizadas y la excepción visual existente. Conservar la entrada 2.2 y añadir la 2.3, sin reescribir resultados anteriores.
 
-La aprobación de este plan autorizará esa enmienda concreta para la fase de implementación; antes solo se documenta la propuesta. Las restricciones heredadas que nombran a Victor y su carpeta se adaptan por la decisión explícita de Miguel para su copia; no se reatribuyen aprobaciones históricas.
+La aprobación de este plan autorizará esa enmienda concreta para la fase de implementación; antes solo se documenta la propuesta. Las restricciones heredadas que nombran al responsable anterior y su carpeta se adaptan por la decisión explícita de Miguel para su copia; no se reatribuyen aprobaciones históricas.
 
 ## Verificación
 

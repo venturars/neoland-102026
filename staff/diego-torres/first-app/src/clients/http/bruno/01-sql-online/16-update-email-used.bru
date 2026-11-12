@@ -1,0 +1,25 @@
+meta {
+  name: update-email-used
+  type: http
+  seq: 16
+}
+
+patch {
+  url: {{baseUrl}}/users/{{userId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  { "email": "{{graceEmail}}" }
+}
+
+tests {
+  test("Estado 409", function () {
+    expect(res.getStatus()).to.equal(409);
+  });
+
+  test("Mensaje Email is already used", function () {
+    expect(res.getBody().message).to.equal("Email is already used");
+  });
+}

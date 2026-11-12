@@ -1,0 +1,12 @@
+# Paste this in the terminal, with first-app as the current folder
+# The database program must be running (pnpm start)
+node --input-type=module <<'EOF'
+import { createUsersTable, findAll } from "./src/queries/users.js";
+
+await createUsersTable();
+
+// If the table exists, the list answers (empty or with users)
+const result = await findAll();
+
+console.log(result);
+EOF

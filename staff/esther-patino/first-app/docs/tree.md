@@ -1,0 +1,86 @@
+# Árbol
+
+first-app/
+    AGENTS.md
+    package.json
+    pnpm-lock.yaml
+    scripts/
+        jupyter.js
+    db/
+        server.js
+        users.sqlite
+    agents/
+    skills/
+    tools/
+    templates/
+    MCPS/
+    docs/
+            CONSTITUTIONS.md
+        specs/<nombre>/
+            spec.md
+            plan.md
+            tasks.md
+    logic/
+        shared.js
+        create-user.js
+        list-users.js
+        find-user-by-email.js
+        find-user-by-id.js
+        find-user-by-name.js
+        update-user.js
+        delete-user.js
+        users-gender-count.js
+    queries/
+        users.js
+        queries/
+            create-users-table.js
+            find-by-id.js
+            find-by-email.js
+            find-by-name.js
+            find-all.js
+            insert.js
+            update.js
+            remove.js
+            list-tables.js
+        clients/
+            terminal/
+            jupyter/
+            web/
+                index.html
+                styles.css
+                app.js
+            http/
+                app.js
+            bruno/
+        node-http/
+                app.js
+            jupyter/
+            
+            nest/
+                .babelrc.json
+                main.js
+                app.module.js
+                users.controller.js
+            chrome/
+                server.js
+                manifest.json
+                index.html
+                popup.js
+                styles.css
+            vscode/
+                package.json
+                extension.js
+                index.html
+                app.js
+                styles.css
+            electron/
+                main.js
+                preload.js
+                index.html
+                app.js
+                styles.css
+
+
+```
+
+```

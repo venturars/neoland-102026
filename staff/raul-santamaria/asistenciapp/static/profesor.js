@@ -173,6 +173,9 @@ function renderSession(data) {
   $("code-card").hidden = !data.open;
   $("s-closed").hidden = data.open;
   $("close").hidden = !data.open;
+  $("discord-card").hidden = !data.open;
+  $("enable-discord").hidden = !data.open || Boolean(data.discordEnabled);
+  $("discord-status").hidden = !data.open || !data.discordEnabled;
   if (data.open) {
     $("s-code").textContent = data.code;
     startCountdown(data.secondsLeft);
@@ -334,6 +337,55 @@ $("download").addEventListener("click", () => {
 });
 
 // Cerrar con confirmación dentro de la página (CA-13)
+$("enable-discord").addEventListener("click", async () => {
+  if (!currentSession) return;
+  const button = $("enable-discord");
+  button.disabled = true;
+  try {
+    const res = await api(`/api/sessions/${encodeURIComponent(currentSession.id)}/discord`, {
+      method: "POST",
+    });
+    if (!res.ok) throw new Error("discord");
+    currentSession.discordEnabled = true;
+    $("enable-discord").hidden = true;
+    $("discord-status").hidden = false;
+  } catch (error) {
+    handleError(error);
+  } finally {
+    button.disabled = false;
+  }
+});
+
+$("add-manual").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  if (!currentSession) return;
+  const button = event.submitter;
+  const input = $("manual-name");
+  button.disabled = true;
+  try {
+    const res = await api(
+      `/api/sessions/${encodeURIComponent(currentSession.id)}/checkins`,
+      { method: "POST", body: JSON.stringify({ name: input.value }) },
+    );
+    const body = await res.json().catch(() => ({}));
+    if (res.status === 400) {
+      showMessage("error", body.error || "Nombre no válido.");
+      return;
+    }
+    if (!res.ok && res.status !== 200) throw new Error("add");
+    const feedback = body.already
+      ? ["warn", `${body.name} ya estaba registrado.`]
+      : ["ok", `Añadido: ${body.name}.`];
+    if (!body.already) input.value = "";
+    await poll();
+    showMessage(feedback[0], feedback[1]);
+  } catch (error) {
+    handleError(error);
+  } finally {
+    button.disabled = false;
+  }
+});
+
 $("close").addEventListener("click", () => {
   $("confirm-close").hidden = false;
   $("confirm-no").focus();

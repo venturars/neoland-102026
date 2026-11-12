@@ -1,0 +1,24 @@
+meta {
+  name: patch-missing
+  type: http
+  seq: 23
+}
+
+patch {
+  url: {{baseUrl}}/users/{{missingId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Missing"
+  }
+}
+
+tests {
+  test("Rechazo: User not found", function () {
+    expect(res.getStatus()).to.equal(404);
+    expect(res.getBody()).to.deep.equal({ message: "User not found" });
+  });
+}

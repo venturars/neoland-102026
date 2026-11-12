@@ -1,0 +1,14 @@
+# Run from the project directory with pnpm server running in another terminal.
+# Initializes the table explicitly; repeating it preserves saved contacts.
+node --input-type=module <<'NODE'
+import { createUsersTable, listTables } from './src/queries/users.js';
+
+try {
+  await createUsersTable();
+  const tables = await listTables();
+  console.log(tables);
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+}
+NODE

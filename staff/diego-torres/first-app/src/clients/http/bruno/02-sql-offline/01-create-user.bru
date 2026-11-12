@@ -1,0 +1,25 @@
+meta {
+  name: create-user
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+body:json {
+  { "name": "Ada", "email": "ada@example.com" }
+}
+
+tests {
+  test("Estado 500", function () {
+    expect(res.getStatus()).to.equal(500);
+  });
+
+  test("Mensaje Could not create the user", function () {
+    expect(res.getBody().message).to.equal("Could not create the user");
+  });
+}

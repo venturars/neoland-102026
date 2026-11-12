@@ -1,14 +1,14 @@
 # first-app
 
-Aplicación de gestión de usuarios. Permite crear, actualizar, eliminar, listar y buscar usuarios con `id`, `name` y `email`. También cuenta el género de los nombres ya guardados, sin pedir nombres nuevos y sin modificar los datos. No tiene pantalla ni servidor. La entrada es una llamada a una función de `logic`, o un archivo de `clients/terminal` ejecutado desde la terminal. La salida de crear, actualizar y eliminar se guarda en SQLite. El recuento de género solo se muestra.
-
-El `id` lo asigna la base de datos. El email se guarda en minúsculas y no se puede repetir. `package.json` incluye la dependencia `openai` `7.39.0` y declara pnpm `12.15.0` como gestor de paquetes. pnpm escribe `pnpm-lock.yaml`.
+Las guías están en [ARCHITECTURE.md](ARCHITECTURE.md), [TREE.md](TREE.md), [DATABASE.md](DATABASE.md), [ERRORS.md](ERRORS.md) y [STYLE.md](STYLE.md).
 
 ## Desarrollos
 
-Un desarrollo nuevo no empieza en el código. Se escribe en `docs/specs/<nombre>/`. `<nombre>` va en kebab-case. El desarrollo abierto es `docs/specs/find-user-by-name/`.
+Un desarrollo nuevo no empieza en el código. El pedido entra primero por `agents/git-workflow-agent.md`. Si la tarea ya está en curso, el pedido sigue en su momento o en su fase. Se piensa la tarea solo si es nueva. Una pregunta sobre el proyecto, o un mensaje que no cambie el proyecto, no abre ese flujo.
 
-Pedir el cambio no abre el código. Primero se escribe `spec.md` y una persona lo lee. Después `plan.md` y lo lee. Después `tasks.md` y lo lee. El código, `package.json` y el resto de ficheros de la app se tocan cuando esa persona pide ejecutar las tareas.
+Se escribe en `docs/specs/<nombre>/`. `<nombre>` va en kebab-case. El desarrollo abierto es `docs/specs/latest-git-workflow-updates/`.
+
+Pedir el cambio no abre el código y no escribe `spec.md` como primera respuesta. Con la rama ya abierta, `spec.md` se escribe y una persona lo lee, antes de pedir revisión. Después `plan.md` y lo lee. Después `tasks.md` y lo lee. El código, `package.json` y el resto de ficheros de la app se tocan cuando esa persona pide ejecutar las tareas.
 
 `spec.md` es el negocio: qué se pide, qué entra, qué sale y qué fallo se ve. No nombra ficheros, funciones ni SQL.
 
@@ -20,77 +20,15 @@ Es un SDD de iniciación. Una persona lee cada fichero antes del siguiente. No h
 
 Si la constitución, el código y la spec no dicen lo mismo, la pregunta queda al final del plan y no hay tareas.
 
-## Estructura
+## Paquetes
 
-```text
-first-app/
-  db/
-    connection.js
-    users.sqlite
-  logic/
-    shared.js
-    create-user.js
-    update-user.js
-    delete-user.js
-    list-users.js
-    find-user-by-id.js
-    find-user-by-email.js
-    find-user-by-name.js
-    users-gender.js
-  clients/
-    terminal/
-      create-user.txt
-      update-user.txt
-      delete-user.txt
-      list-users.txt
-      find-user-by-id.txt
-      find-user-by-email.txt
-      find-user-by-name.txt
-      users-gender.txt
-  queries/
-    users.js
-    queries/
-      create-table-users.sql
-      create-user.sql
-      update-user.sql
-      delete-user.sql
-      list-users.sql
-      find-user-by-id.sql
-      find-user-by-email.sql
-      find-user-by-name.sql
-  package.json
-  pnpm-lock.yaml
-  docs/
-    CONSTITUTIONS.MD
-    specs/
-      <nombre>/
-        spec.md
-        plan.md
-        tasks.md
-  AGENTS.MD
-```
-
-## Componentes
-
-**Base de datos.** Guarda a los usuarios en `users.sqlite`: un `id` que pone SQLite, un nombre y un email que no se puede repetir. Abre el archivo y no ejecuta SQL.
-
-**Lógica.** Recibe lo que se quiere hacer, comprueba que el `id`, el nombre y el email sean válidos, y elige crear, actualizar, eliminar, listar o buscar. Buscar por nombre usa el nombre ya guardado: si hay uno, devuelve ese usuario; si hay varios, devuelve la lista; si no hay ninguno, lanza `User ${name} was not found`. Si los datos no valen, se detiene y no toca la base. Listar no recibe datos. También puede contar el género de los nombres ya guardados: lee esos usuarios, pregunta a Ollama de seis en seis con `nimble-v3` y devuelve cuántos son `women`, cuántos son `man` y cuántos son `undefined`. No modifica los usuarios. No escribe una línea por nombre: la terminal muestra solo el recuento completo. Si Ollama no contesta, o la lectura falla, se detiene y lanza un `Error` con el texto `no se han podido clasificar usuarios`.
-
-**Cliente de terminal.** Es otra forma de pedir la misma operación, sin pantalla. Cada archivo guarda una línea: el comando de cmd que llama a la lógica. Esa línea se tira desde cmd, en la raíz del repositorio. Crear lleva el nombre y el email. Actualizar lleva el id y los cambios `name=` y `email=`, uno o los dos. Eliminar lleva el id. Listar no lleva argumentos. Buscar lleva el id, el email o el nombre. Buscar por nombre llama a `findUserByName` desde `find-user-by-name.txt` y muestra el resultado. Contar el género no lleva argumentos: la línea llama a `usersGender` y muestra el recuento. No comprueba los datos y no toca la base.
-
-**Consultas.** Ejecuta todo el SQL, también el que crea la tabla si no existe, y el de la operación que pidió la lógica. No revisa los datos: inserta, modifica, borra o lee.
-
-**Documentación.** Explica el proyecto para una persona. No crea, no actualiza, no elimina, no lista y no busca usuarios. `docs/specs/<nombre>/` guarda el negocio, la técnica y los pasos de un desarrollo. Esos tres ficheros se leen antes de escribir el código. `AGENTS.MD`, en la raíz, son las instrucciones del agente y se actualizan cuando hay una instrucción nueva.
+Un paquete de Node nuevo, o un cambio de su versión, se comprueba con Socket antes de aceptar el plan. El cómo está en `AGENTS.MD`.
 
 ## Pasos de funcionamiento
 
 Crear, actualizar, eliminar, listar y buscar siguen el mismo camino.
 
-1. Se pide una operación con los datos del usuario, llamando a la lógica o desde el cliente de terminal.
+1. Se pide una operación con los datos del usuario, llamando a la lógica, desde el cliente de terminal, desde Jupyter, desde las pantallas del navegador, desde la ventana Electron, desde el popup de Chrome, desde la vista de Visual Studio Code, desde Bruno o desde Postman. Las pantallas piden listar, modificar y eliminar. La ventana Electron, el popup de Chrome y la vista de Visual Studio Code piden listar, crear, modificar y eliminar. El cliente NestJS pide listar, crear, modificar, eliminar y buscar por id. Bruno y Postman piden crear, actualizar, eliminar, listar y buscar en el cliente HTTP. El cliente HTTP de Node pide listar, crear, modificar, eliminar y buscar por id, documentado con Jupyter. El cliente HTTP es `src/clients/http/app.js`, usa Express `5.3.0`, se arranca con `pnpm http` y responde en `127.0.0.1:3001`. La colección Bruno vive en `src/clients/http/bruno` y se lanza con `pnpm bruno`. La ventana es `src/clients/electron`, usa Electron `45.2.3` y se arranca con `pnpm electron`. El popup es `src/clients/chrome`, el manifiesto es `src/clients/chrome/manifest.json`, su programa usa Fastify `5.12.8`, escucha en `127.0.0.1:3002` y se arranca con `pnpm chrome`. La vista es `src/clients/vscode`, el manifiesto es `src/clients/vscode/package.json`, el proceso del editor llama a la lógica y se arranca con `pnpm vscode`. `vscode` lo aporta el editor. `engines.vscode` queda en `^1.100.0`. El cliente NestJS es `src/clients/nest`, usa NestJS `12.3.3` y `@nestjs/swagger` `12.1.0`, se arranca con `pnpm nest` (Babel compila `src` a `dist` y Node ejecuta `dist/clients/nest/main.js`) y responde en `127.0.0.1:3003`. La página `http://127.0.0.1:3003/swagger` deja ver y lanzar listar, crear, modificar, eliminar y buscar por id. El cliente HTTP de Node es `src/clients/node-http/app.js`, se arranca con `pnpm node-http` y responde en `127.0.0.1:3004`. Los documentos viven en `src/clients/node-http/jupyter` y se abren con `pnpm jupyter-node-http`. `pnpm jupyter` sigue abriendo `src/clients/jupyter`.
 2. La lógica valida esos datos cuando la operación los lleva. Listar no lleva datos. Si no valen, lanza un `Error` y termina.
-3. Las consultas crean la tabla si no existe y ejecutan el SQL de esa operación.
+3. Las consultas crean la tabla si no existe y piden la ejecución a un programa local en `127.0.0.1:3000`. Ese programa solo ejecuta consultas. Se arranca con `pnpm server`. Las pantallas se abren con `pnpm browser`. La ventana se abre con `pnpm electron`. El programa del popup se arranca con `pnpm chrome`. La extensión se arranca con `pnpm vscode`. El cliente NestJS se arranca con `pnpm nest`. El cliente HTTP de Node se arranca con `pnpm node-http`. Sus documentos se abren con `pnpm jupyter-node-http`.
 4. La base de datos guarda el cambio, lo rechaza si el email ya existe o el usuario no está, o devuelve las filas.
-
-Al crear, la base asigna el `id` y se devuelve el usuario. Al actualizar, se puede cambiar el nombre, el email o los dos, y lo que no se envía se queda igual. Al eliminar, desaparece la fila de ese `id`. Si ese usuario no existe, la operación no cambia nada y se avisa con un `Error`. Al listar, una sola consulta devuelve todos los usuarios. Si no hay ninguno, la lista va vacía. Al buscar, se devuelve el usuario de ese `id` o de ese email. Si no existe, se avisa con un `Error`. Al buscar por nombre, `findUserByName` devuelve ese usuario si hay uno, o la lista si hay varios. Si no hay ninguno, lanza `User ${name} was not found` y no cambia los usuarios guardados. Un nombre vacío se rechaza. Un nombre de más de 100 caracteres se rechaza. `Ana` y `ana` no son el mismo nombre.
-
-Contar el género no valida datos de entrada y no escribe en la base. Se pide con `usersGender`, desde la lógica o desde `users-gender.txt`. La lógica lee los usuarios que ya están. Si no hay ninguno, devuelve `{ women: 0, man: 0, undefined: 0 }` y no llama a Ollama. Si hay nombres, los envía de seis en seis y suma cada respuesta. Otra respuesta cuenta como `undefined`. Si no hay mensaje, no se puede leer el JSON o el grupo no trae una línea por nombre, esos nombres también cuentan como `undefined`. Devuelve solo el recuento. Si Ollama o la lectura fallan, lanza `no se han podido clasificar usuarios` y se detiene.

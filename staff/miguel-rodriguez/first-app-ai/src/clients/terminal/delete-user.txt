@@ -1,0 +1,15 @@
+# Requires pnpm server running in another terminal.
+# Run from the project directory after separate initialization and creation.
+# Replace the sample ID (1) with an existing disposable user's ID.
+# Deletion is permanent. Successful deletion prints undefined.
+node --input-type=module <<'NODE'
+import { deleteUser } from './src/logic/delete-user.js';
+
+try {
+  const result = await deleteUser(1);
+  console.log(result);
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+}
+NODE

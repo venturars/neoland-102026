@@ -4,6 +4,8 @@ import re
 
 import pytest
 
+from app import create_app
+
 INVALID_CODE = "El código no es válido o ha caducado. Pide el código actual al profesor."
 CLOSED = "La asistencia de esta clase ya está cerrada."
 
@@ -291,3 +293,116 @@ def test_removed_person_can_check_in_again(client, teacher):  # CA-26
     checkin_id = checkins_of(client, teacher, sid)[0]["id"]
     client.delete(f"/api/sessions/{sid}/checkins/{checkin_id}", headers=teacher)
     assert check_in(client, sid, "ana garcia", code).status_code == 201
+
+
+# ---------- spec 006 · límite de intentos por IP (CA-02 a CA-12, CA-14, CA-16) ----------
+
+BAN_FRAGMENT = "bloqueada"
+
+
+def attempts(client, sid, code, n, clock=None, step=0.0, headers=None, ip=None):
+    """Hace ``n`` registros con nombres distintos y devuelve sus respuestas."""
+    environ = {"REMOTE_ADDR": ip} if ip else {}
+    responses = []
+    for i in range(n):
+        responses.append(
+            client.post(
+                f"/api/s/{sid}/checkin",
+                json={"name": f"Alumno {i}", "code": code},
+                headers=headers,
+                environ_base=environ,
+            )
+        )
+        if clock and step:
+            clock.advance(step)
+    return responses
+
+
+def test_normal_checkin_is_not_affected(client, teacher):  # CA-14
+    sid = open_session(client, teacher)
+    assert check_in(client, sid, "Ana", current_code(client, teacher, sid)).status_code == 201
+
+
+def test_sixth_attempt_in_a_second_is_banned(client, teacher):  # CA-01, CA-02, CA-05
+    sid = open_session(client, teacher)
+    responses = attempts(client, sid, current_code(client, teacher, sid), 6)
+    assert [r.status_code for r in responses[:5]] == [201] * 5
+    assert responses[5].status_code == 429
+    assert BAN_FRAGMENT in responses[5].get_json()["error"]
+    assert "profesor" in responses[5].get_json()["error"]
+
+
+def test_twenty_one_attempts_in_a_minute_are_banned(client, teacher, clock):  # CA-03, CA-04
+    sid = open_session(client, teacher)
+    code = current_code(client, teacher, sid)
+    responses = attempts(client, sid, code, 21, clock=clock, step=0.5)
+    assert [r.status_code for r in responses[:20]] == [201] * 20
+    assert responses[20].status_code == 429
+
+
+def test_blocked_ip_is_rejected_even_with_a_valid_code(client, teacher, clock):  # CA-06
+    sid = open_session(client, teacher)
+    attempts(client, sid, current_code(client, teacher, sid), 6)
+    clock.advance(3600)
+    res = check_in(client, sid, "Otra Persona", current_code(client, teacher, sid))
+    assert res.status_code == 429
+    assert BAN_FRAGMENT in res.get_json()["error"]
+
+
+def test_other_ip_is_not_blocked(client, teacher):  # CA-07
+    sid = open_session(client, teacher)
+    code = current_code(client, teacher, sid)
+    attempts(client, sid, code, 6)
+    res = client.post(
+        f"/api/s/{sid}/checkin",
+        json={"name": "Ana", "code": code},
+        environ_base={"REMOTE_ADDR": "203.0.113.9"},
+    )
+    assert res.status_code == 201
+
+
+def test_ban_survives_a_restart(app, tmp_path, teacher, clock):  # CA-08
+    client = app.test_client()
+    sid = open_session(client, teacher)
+    attempts(client, sid, current_code(client, teacher, sid), 6)
+    restarted = create_app(tmp_path / "test.db", token=teacher["X-Teacher-Token"], now=clock)
+    res = check_in(restarted.test_client(), sid, "Ana", current_code(client, teacher, sid))
+    assert res.status_code == 429
+
+
+def test_changing_name_and_code_does_not_change_the_counted_ip(client, teacher):  # CA-10
+    sid = open_session(client, teacher)
+    for i in range(5):
+        res = client.post(f"/api/s/{sid}/checkin", json={"name": f"Falso {i}", "code": f"000{i}"})
+        assert res.status_code in (201, 422)
+    res = client.post(f"/api/s/{sid}/checkin", json={"name": "Otro Nombre", "code": "9999"})
+    assert res.status_code == 429
+
+
+def test_ip_headers_sent_by_the_user_are_ignored(client, teacher):  # CA-11, CA-12
+    sid = open_session(client, teacher)
+    code = current_code(client, teacher, sid)
+    responses = [
+        client.post(
+            f"/api/s/{sid}/checkin",
+            json={"name": f"Alumno {i}", "code": code},
+            headers={"X-Forwarded-For": f"198.51.100.{i}", "CF-Connecting-IP": f"198.51.100.{i}"},
+        )
+        for i in range(6)
+    ]
+    assert [r.status_code for r in responses[:5]] == [201] * 5
+    assert responses[5].status_code == 429
+
+
+def test_teacher_routes_are_not_limited(client, teacher):
+    sid = open_session(client, teacher)
+    attempts(client, sid, current_code(client, teacher, sid), 6)
+    assert client.get(f"/api/sessions/{sid}", headers=teacher).status_code == 200
+    assert client.get(f"/api/s/{sid}").status_code == 200
+
+
+def test_export_does_not_contain_the_ip(client, teacher):  # CA-16
+    sid = open_session(client, teacher)
+    attempts(client, sid, current_code(client, teacher, sid), 6)
+    csv = client.get(f"/api/sessions/{sid}/export", headers=teacher).get_data(as_text=True)
+    assert "127.0.0.1" not in csv

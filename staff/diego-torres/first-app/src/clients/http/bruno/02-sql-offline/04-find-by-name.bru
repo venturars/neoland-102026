@@ -1,0 +1,25 @@
+meta {
+  name: find-by-name
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/users/by-name?name=Ada
+  body: none
+  auth: none
+}
+
+params:query {
+  name: Ada
+}
+
+tests {
+  test("Estado 500", function () {
+    expect(res.getStatus()).to.equal(500);
+  });
+
+  test("Mensaje Could not find the user", function () {
+    expect(res.getBody().message).to.equal("Could not find the user");
+  });
+}

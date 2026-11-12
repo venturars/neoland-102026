@@ -6,6 +6,11 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE_SHA256 = "38e7d41655369de32d93de72beac7cc5a8dd4999c553f41a5c57343622657590"
+CSV_DOWNLOAD = """7. Pulsa **Descargar lista** para obtener el CSV (columnas *Nombre* y *Hora*),
+   ordenado por nombre sin distinguir mayúsculas de minúsculas. La última fila
+   muestra `Total de registros;N`, incluido `Total de registros;0` si no hay asistentes.
+""".encode("utf-8")
+PREVIOUS_DOWNLOAD = "7. Pulsa **Descargar lista** para obtener el CSV (columnas *Nombre* y *Hora*).\n".encode("utf-8")
 SECURITY_SECTION = """### Límite de intentos de registro
 
 Una misma dirección puede realizar **5 intentos por segundo** y **20 por minuto**, contando también los fallidos y compartiendo los máximos entre clases. Abrir páginas y consultar el panel no cuenta.
@@ -53,6 +58,9 @@ def test_only_planned_changes():
     data = (ROOT / "README.md").read_bytes()
     # Conservar todo el contenido salvo la representación CRLF del checkout.
     data = data.replace(b"\r\n", b"\n")
+    # Revertir solo el texto exacto de descarga aprobado por la spec 007.
+    assert data.count(CSV_DOWNLOAD) == 1
+    data = data.replace(CSV_DOWNLOAD, PREVIOUS_DOWNLOAD, 1)
     # Revertir exclusivamente los dos textos aprobados por la 006, exigiendo
     # su presencia exacta. El hash histórico se conserva, no se recalcula.
     assert data.count(SECURITY_SECTION) == 1
@@ -71,7 +79,10 @@ def test_only_planned_changes():
 
 
 @pytest.mark.parametrize("newline", [b"\n", b"\r\n"])
-@pytest.mark.parametrize("change", ["none", "text", "space", "final_newline", "limit", "tunnel", "privacy"])
+@pytest.mark.parametrize("change", [
+    "none", "text", "space", "final_newline", "limit", "tunnel", "privacy",
+    "csv_total", "csv_missing", "csv_duplicate",
+])
 def test_readme_integrity_line_endings_and_changes(tmp_path, monkeypatch, newline, change):
     content = (ROOT / "README.md").read_bytes().replace(b"\r\n", b"\n")
     if change == "text":
@@ -87,6 +98,12 @@ def test_readme_integrity_line_endings_and_changes(tmp_path, monkeypatch, newlin
         content = content.replace(b"127.0.0.1", b"127.0.0.2")
     elif change == "privacy":
         content = content.replace(b"la blacklist no caduca", b"la blacklist caduca")
+    elif change == "csv_total":
+        content = content.replace(b"Total de registros;0", b"Total de registros;1")
+    elif change == "csv_missing":
+        content = content.replace(CSV_DOWNLOAD, b"")
+    elif change == "csv_duplicate":
+        content += CSV_DOWNLOAD
     (tmp_path / "README.md").write_bytes(content.replace(b"\n", newline))
     monkeypatch.setitem(globals(), "ROOT", tmp_path)
     if change == "none":

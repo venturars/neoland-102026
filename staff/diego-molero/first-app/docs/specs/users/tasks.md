@@ -54,3 +54,11 @@ La copia temporal se eliminó; el hash de la base personal no cambió.
 
 - [x] Observar los límites exactos de 64 y 65 caracteres en el correo.
 - [x] Observar el listado vacío y el borrado repetido en una base aislada.
+
+## Iteración del 27 de octubre de 2026
+
+Se conserva el contrato anterior después de comparar 69 escenarios en copias temporales. Los nueve comandos de terminal y notebooks funcionan; la búsqueda por nombre tiene su propia spec y comprobaciones. Se verificaron altas, búsquedas, cambios parciales, duplicados, errores y borrados sin tocar la base personal.
+
+## Comprobación de compatibilidad de notas · 2026-11-03 · Issue #782
+
+En una copia temporal con el esquema anterior, el principal preparó la ampliación dos veces y cotejó las dos filas de usuarios, IDs y fechas sin diferencias. Comprobó las operaciones existentes sin IA mediante comandos reales y el borrado de usuario con notas creadas en otro proceso. Un trigger que bloqueaba el borrado de una nota provocó el fallo de la operación completa y conservó usuario y notas; tras retirarlo, el borrado conjunto terminó y conservó al otro usuario. No se ejecutó nada sobre la base personal ni se repitió el clasificador. La evidencia detallada está en [tareas de notas](../notes/tasks.md).

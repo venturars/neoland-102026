@@ -1,0 +1,3 @@
+# Paste this in the terminal, with the current directory set to first-app
+# First start the server in another terminal: pnpm start
+node --input-type=module -e "import { findUserByName } from './src/logic/find-user-by-name.js'; console.log(await findUserByName('Ana'));"

@@ -1,0 +1,17 @@
+meta {
+  name: delete-ada
+  type: http
+  seq: 18
+}
+
+delete {
+  url: {{baseUrl}}/users/{{userId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 204", function () {
+    expect(res.getStatus()).to.equal(204);
+  });
+}

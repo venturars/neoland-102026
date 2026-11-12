@@ -129,7 +129,11 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
             )
         except ActionError as exc:
             return fail(exc)
-        payload = {"name": result["name"], "checkedAt": result["checked_at"]}
+        payload = {
+            "name": result["name"],
+            "checkedAt": result["checked_at"],
+            "arrival": result["arrival"],
+        }
         if not result["created"]:
             payload["already"] = True
             return jsonify(payload)
@@ -169,7 +173,12 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
             "studentUrl": f"{request.host_url}alumno.html?s={session_id}",
             "total": data["total"],
             "checkins": [
-                {"id": item["id"], "name": item["name"], "checkedAt": item["checked_at"]}
+                {
+                    "id": item["id"],
+                    "name": item["name"],
+                    "checkedAt": item["checked_at"],
+                    "arrival": item["arrival"],
+                }
                 for item in data["checkins"]
             ],
         }

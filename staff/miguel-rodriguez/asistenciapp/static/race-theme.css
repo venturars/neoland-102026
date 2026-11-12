@@ -1,0 +1,21 @@
+/* Tema compartido, limitado a las pantallas que lo solicitan. */
+body.race-ui { --bg:#fff;--surface:#fff;--text:#171717;--muted:#595959;--border:#d8d8d8;--accent:#ff6b00;--accent-text:#171717;color-scheme:light;background:#fff;color:#171717;font:16px/1.45 Arial,Helvetica,sans-serif;margin:0; }
+.race-ui * { box-sizing:border-box; }
+.race-ui [hidden] { display:none!important; }
+.race-ui a { color:#171717;text-decoration:underline;text-underline-offset:3px; }
+.race-ui button,.race-ui .button { font:700 15px/1.2 Arial,Helvetica,sans-serif;min-height:44px;padding:11px 18px;background:#ff6b00;color:#171717;border:1px solid #171717;border-radius:3px;box-shadow:none;cursor:pointer; }
+.race-ui button.secondary,.race-ui .button.secondary { background:white;color:#171717;border-color:#aaa; }
+.race-ui button.danger { color:#9e2118;border-color:#9e2118;background:#fff; }
+.race-ui button.danger-solid { background:#9e2118;color:#fff;border-color:#9e2118; }
+.race-ui button:disabled { opacity:.55;cursor:wait; }
+.race-ui input,.race-ui select { font:inherit;min-height:44px;color:#171717;background:#fff;border:1px solid #888;border-radius:3px;padding:10px 12px; }
+.race-ui input[type=checkbox] { min-height:20px;accent-color:#ff6b00; }
+.race-ui :focus-visible { outline:3px solid #2457ad;outline-offset:3px; }
+.race-ui h1 { font-size:28px;line-height:1.12;letter-spacing:-.04em; }
+.race-ui h2 { font-size:19px;line-height:1.2;letter-spacing:-.02em; }
+.race-ui .muted { color:#595959; }
+.race-ui .card { border-radius:3px;box-shadow:none; }
+.race-ui .status { font-size:14px; }
+.race-ui .status:not(:empty) { padding:12px 0;border-bottom:1px solid #ddd;margin:0 0 16px; }
+.race-ui .status.error { color:#9e2118; }
+.race-ui .small { font-size:13px; }

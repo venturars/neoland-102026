@@ -1,0 +1,1 @@
+INSERT INTO race_slots(session_id,roster_key,display_name,character_slug) VALUES (?,?,?,?)

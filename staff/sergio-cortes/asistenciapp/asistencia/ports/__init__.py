@@ -1,1 +1,0 @@
-"""Contratos que infraestructura implementa."""

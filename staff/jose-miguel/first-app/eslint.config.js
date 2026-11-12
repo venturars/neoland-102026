@@ -1,0 +1,104 @@
+import { defineConfig } from "eslint/config";
+import js from "@eslint/js";
+
+export default defineConfig([
+  {
+    ignores: [
+      ".venv/**",
+      "node_modules/**",
+      "dist/**",
+      "src/clients/vscode/extension.js",
+      "src/clients/nest/**",
+    ],
+  },
+  {
+    files: ["**/*.js"],
+    plugins: {
+      js,
+    },
+    extends: ["js/recommended"],
+  },
+  {
+    files: ["scripts/**/*.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        console: "readonly",
+        process: "readonly",
+      },
+    },
+  },
+  {
+    files: [
+      "src/db/server.js",
+      "src/clients/http/app.js",
+      "src/clients/node-http/server.js",
+    ],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        console: "readonly",
+        process: "readonly",
+        URL: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/electron/main.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        process: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/electron/app.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        document: "readonly",
+        fetch: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/chrome/server.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        console: "readonly",
+        process: "readonly",
+        URL: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/chrome/popup.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        document: "readonly",
+        fetch: "readonly",
+      },
+    },
+  },
+  {
+    files: ["src/clients/vscode/panel.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        document: "readonly",
+        acquireVsCodeApi: "readonly",
+        window: "readonly",
+      },
+    },
+  },
+]);

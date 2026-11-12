@@ -1,0 +1,25 @@
+meta {
+  name: create-used-email
+  type: http
+  seq: 13
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Other",
+    "email": "grace@example.com"
+  }
+}
+
+tests {
+  test("Rechazo: Email is already used", function () {
+    expect(res.getStatus()).to.equal(409);
+    expect(res.getBody()).to.deep.equal({ message: "Email is already used" });
+  });
+}

@@ -21,11 +21,12 @@ CREATE TABLE IF NOT EXISTS config (
 );
 
 CREATE TABLE IF NOT EXISTS sessions (
-  id         TEXT PRIMARY KEY,
-  title      TEXT NOT NULL,
-  secret     TEXT NOT NULL,
-  opened_at  TEXT NOT NULL,
-  closed_at  TEXT
+  id               TEXT PRIMARY KEY,
+  title            TEXT NOT NULL,
+  secret           TEXT NOT NULL,
+  opened_at        TEXT NOT NULL,
+  closed_at        TEXT,
+  discord_enabled  INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS checkins (
@@ -62,7 +63,16 @@ def _row_to_session(row) -> dict | None:
         return None
     loaded = dict(row)
     loaded["secret"] = bytes.fromhex(loaded["secret"])
+    loaded["discord_enabled"] = int(loaded.get("discord_enabled") or 0)
     return loaded
+
+
+def _ensure_discord_enabled_column(conn: sqlite3.Connection) -> None:
+    cols = {row[1] for row in conn.execute("PRAGMA table_info(sessions)")}
+    if "discord_enabled" not in cols:
+        conn.execute(
+            "ALTER TABLE sessions ADD COLUMN discord_enabled INTEGER NOT NULL DEFAULT 0"
+        )
 
 
 def init_schema(path: PathArg) -> None:
@@ -79,6 +89,7 @@ def init_schema(path: PathArg) -> None:
     conn = _connect(path)
     try:
         conn.executescript(SCHEMA)
+        _ensure_discord_enabled_column(conn)
         conn.commit()
     finally:
         conn.close()
@@ -130,10 +141,62 @@ def create_session(path: PathArg, title: str, opened_at: str) -> dict:
     try:
         with conn:
             conn.execute(
-                "INSERT INTO sessions (id, title, secret, opened_at) VALUES (?, ?, ?, ?)",
+                """
+                INSERT INTO sessions (id, title, secret, opened_at, discord_enabled)
+                VALUES (?, ?, ?, ?, 0)
+                """,
                 (session_id, title, secret.hex(), opened_at),
             )
         row = conn.execute("SELECT * FROM sessions WHERE id = ?", (session_id,)).fetchone()
+        return _row_to_session(row)
+    finally:
+        conn.close()
+
+
+def enable_discord(path: PathArg, session_id: str) -> None:
+    """Marca una clase para aceptar registro por Discord.
+
+    :param path: ruta del archivo.
+    :param session_id: id de la clase.
+    :return: None.
+    :rtype: None
+
+    Usage::
+
+      enable_discord(path, session_id)
+    """
+    conn = _connect(path)
+    try:
+        with conn:
+            conn.execute(
+                "UPDATE sessions SET discord_enabled = 1 WHERE id = ?",
+                (session_id,),
+            )
+    finally:
+        conn.close()
+
+
+def get_open_discord_session(path: PathArg) -> dict | None:
+    """Devuelve la clase abierta más reciente con Discord activado.
+
+    :param path: ruta del archivo.
+    :return: la clase, o None si no hay ninguna.
+    :rtype: dict | None
+
+    Usage::
+
+      loaded = get_open_discord_session(path)
+    """
+    conn = _connect(path)
+    try:
+        row = conn.execute(
+            """
+            SELECT * FROM sessions
+            WHERE closed_at IS NULL AND discord_enabled = 1
+            ORDER BY opened_at DESC
+            LIMIT 1
+            """
+        ).fetchone()
         return _row_to_session(row)
     finally:
         conn.close()

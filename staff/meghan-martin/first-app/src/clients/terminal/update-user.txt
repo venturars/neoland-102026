@@ -1,0 +1,7 @@
+# Pega esto en la terminal, con el directorio actual en first-app.
+# La base tiene que estar en marcha: npm run db
+node --input-type=module <<'EOF'
+import { updateUser } from "./src/logic/update-user.js";
+const result = await updateUser(1, { name: "Ada Lovelace" });
+console.log(result);
+EOF

@@ -1,0 +1,18 @@
+meta {
+  name: delete-grace
+  type: http
+  seq: 29
+}
+
+delete {
+  url: {{baseUrl}}/users/{{graceId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Eliminar sin cuerpo de respuesta", function () {
+    expect(res.getStatus()).to.equal(204);
+    expect(res.getBody()).to.equal("");
+  });
+}

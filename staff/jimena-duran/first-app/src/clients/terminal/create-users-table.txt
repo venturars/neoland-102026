@@ -1,0 +1,9 @@
+# Pega esto en PowerShell desde la carpeta first-app.
+$script = @'
+import { createUsersTable, listTables } from "./src/queries/users.js";
+
+await createUsersTable();
+const tables = await listTables();
+console.log(tables);
+'@
+$script | node --input-type=module

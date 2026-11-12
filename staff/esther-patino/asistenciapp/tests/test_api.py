@@ -135,7 +135,12 @@ def test_duplicate_name_is_not_added_twice(client, teacher, clock):  # CA-07
     clock.advance(10)
     res = check_in(client, sid, "  ana   GARCIA ", current_code(client, teacher, sid))
     assert res.status_code == 200
-    assert res.get_json() == {"already": True, "name": "Ana García", "checkedAt": first["checkedAt"]}
+    assert res.get_json() == {
+        "already": True,
+        "name": "Ana García",
+        "checkedAt": first["checkedAt"],
+        "arrival": first["arrival"],
+    }
     assert client.get(f"/api/sessions/{sid}", headers=teacher).get_json()["total"] == 1
 
 
@@ -215,7 +220,8 @@ def test_export_csv(client, teacher, clock):  # CA-14
     assert ".csv" in res.headers["Content-Disposition"]
 
     rows = res.get_data(as_text=True).lstrip("﻿").splitlines()
-    assert rows[0] == "Nombre;Hora"
+    assert rows[0] == "Nombre;Hora;Estado"
+    assert all(row.endswith(";A tiempo") for row in rows[1:])
     assert [r.split(";")[0] for r in rows[1:]] == ["Luis", "Ana García"]
 
 
@@ -452,3 +458,81 @@ def test_nobody_can_remove_or_change_a_banned_ip(client, teacher):  # CA-10
     assert attempt.status_code == missing.status_code
     assert attempt.status_code != 200
     assert post_from(client, sid, "Luis", code, ip).status_code == 403
+
+
+# ---------- 007 · llegadas tardías (CA-01 a CA-13) ----------
+
+ON_TIME = "A tiempo"
+LATE = "Llegada tardía"
+
+
+def test_checkins_do_not_store_arrival(tmp_path):
+    conn = db.connect(tmp_path / "lista.db")
+    db.init_schema(conn)
+    columns = [row["name"] for row in conn.execute("PRAGMA table_info(checkins)")]
+    assert "arrival" not in columns
+    conn.close()
+
+
+def test_registration_at_five_minutes_is_on_time(client, teacher, clock):
+    sid = open_session(client, teacher)
+    clock.advance(5 * 60)
+    res = check_in(client, sid, "Ana", current_code(client, teacher, sid))
+    assert res.status_code == 201
+    assert res.get_json()["arrival"] == ON_TIME
+    assert "checkins" not in res.get_json()
+    row = checkins_of(client, teacher, sid)[0]
+    assert row["arrival"] == ON_TIME
+    assert "ip" not in row
+    csv = client.get(f"/api/sessions/{sid}/export", headers=teacher).get_data(as_text=True)
+    assert "Estado" in csv.splitlines()[0]
+    assert ON_TIME in csv
+    assert "ip" not in csv.casefold()
+
+
+def test_registration_after_five_minutes_is_late(client, teacher, clock):
+    sid = open_session(client, teacher)
+    clock.advance(5 * 60 + 1)
+    res = check_in(client, sid, "Luis", current_code(client, teacher, sid))
+    assert res.status_code == 201
+    assert res.get_json()["arrival"] == LATE
+    assert checkins_of(client, teacher, sid)[0]["arrival"] == LATE
+
+
+def test_closed_session_keeps_the_arrival_text(client, teacher, clock):
+    sid = open_session(client, teacher)
+    clock.advance(5 * 60 + 1)
+    check_in(client, sid, "Luis", current_code(client, teacher, sid))
+    assert client.post(f"/api/sessions/{sid}/close", headers=teacher).status_code == 200
+    assert checkins_of(client, teacher, sid)[0]["arrival"] == LATE
+    csv = client.get(f"/api/sessions/{sid}/export", headers=teacher).get_data(as_text=True)
+    assert LATE in csv
+    assert "#" not in csv
+
+
+def test_failed_check_in_has_no_arrival(client, teacher):
+    sid = open_session(client, teacher)
+    rejected = check_in(client, sid, "Ana", "0000")
+    assert rejected.status_code == 422
+    assert "arrival" not in rejected.get_json()
+    code = current_code(client, teacher, sid)
+    invalid = check_in(client, sid, "", code)
+    assert invalid.status_code == 400
+    assert "arrival" not in invalid.get_json()
+    client.post(f"/api/sessions/{sid}/close", headers=teacher)
+    closed = check_in(client, sid, "Ana", code)
+    assert closed.status_code == 409
+    assert "arrival" not in closed.get_json()
+
+
+def test_removed_registration_uses_the_new_time(client, teacher, clock):
+    sid = open_session(client, teacher)
+    first = check_in(client, sid, "Ana", current_code(client, teacher, sid))
+    assert first.get_json()["arrival"] == ON_TIME
+    checkin_id = checkins_of(client, teacher, sid)[0]["id"]
+    client.delete(f"/api/sessions/{sid}/checkins/{checkin_id}", headers=teacher)
+    clock.advance(5 * 60 + 1)
+    again = check_in(client, sid, "Ana", current_code(client, teacher, sid))
+    assert again.status_code == 201
+    assert again.get_json()["arrival"] == LATE
+    assert checkins_of(client, teacher, sid)[0]["arrival"] == LATE

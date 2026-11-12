@@ -61,7 +61,9 @@ Ese enlace es **tu panel privado**: no lo compartas, porque quien lo tenga puede
 4. Pulsa **Copiar enlace de alumnos** y pégalo en el chat de Discord o Meet.
 5. Cada alumno abre el enlace, escribe su **nombre** y el **código** de tu pantalla, y pulsa **Estoy en clase**. Su nombre aparece en tu lista en un par de segundos.
 6. Cuando ya estén todos, pulsa **Cerrar asistencia** y confírmalo. Desde ese momento nadie más puede registrarse.
-7. Pulsa **Descargar lista** para obtener el CSV (columnas *Nombre* y *Hora*).
+7. Pulsa **Descargar lista** para obtener el CSV (columnas *Nombre* y *Hora*),
+   ordenado por nombre sin distinguir mayúsculas de minúsculas. La última fila
+   muestra `Total de registros;N`, incluido `Total de registros;0` si no hay asistentes.
 
 **¿Ves un nombre falso o equivocado?** Pulsa **Quitar** en su fila y confirma con **Sí, quitar**. Desaparece de la lista, del total y de la descarga. Funciona también con la asistencia ya cerrada.
 

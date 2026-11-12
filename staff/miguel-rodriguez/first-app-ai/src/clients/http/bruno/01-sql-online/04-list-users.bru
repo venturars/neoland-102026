@@ -1,0 +1,23 @@
+meta {
+  name: list-users
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/users
+  body: none
+  auth: none
+}
+
+tests {
+  test("Listar los contactos por ID", function () {
+    expect(res.getStatus()).to.equal(200);
+    const ada = JSON.parse(bru.getVar("ada"));
+    const grace = JSON.parse(bru.getVar("grace"));
+    expect(ada.id).to.be.lessThan(grace.id);
+    expect(res.getBody()).to.deep.equal([ada, grace]);
+    const missingId = grace.id + 1;
+    bru.setVar("missingId", missingId);
+  });
+}

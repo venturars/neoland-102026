@@ -8,6 +8,7 @@ from collections.abc import Callable
 from datetime import datetime, timezone
 from pathlib import Path
 
+from asistencia.domain.attempts import RegistrationBlocked, exceeds
 from asistencia.domain.codes import code_for, seconds_left
 from asistencia.domain.names import clean_name, name_key
 from asistencia.domain.session import require_code, require_open, require_session
@@ -56,16 +57,22 @@ def check_in(
     raw_name: object,
     raw_code: object,
     now: Callable[[], float],
+    address: str,
 ) -> tuple[dict[str, str], bool]:
-    """Registra a un alumno si la clase existe, está abierta y el código vale.
+    """Registra a un alumno si la dirección puede y la clase acepta el código.
+
+    El intento se anota antes de validar. Si la dirección está bloqueada o
+    este intento supera el tope, no se guarda la asistencia.
 
     :param db_path: Ruta del archivo.
     :param session_id: Identificador de la clase.
     :param raw_name: Nombre recibido.
     :param raw_code: Código recibido.
     :param now: Reloj invocable. Devuelve segundos Unix.
+    :param address: Dirección de la conexión, ya elegida por la entrada.
     :return: El registro (name, checked_at) y si se acaba de crear.
     :rtype: tuple[dict[str, str], bool]
+    :raises RegistrationBlocked: Si la dirección está bloqueada o este intento supera el tope.
     :raises SessionNotFound: Si la clase no existe.
     :raises SessionClosed: Si la clase ya está cerrada.
     :raises ValueError: Si el nombre no sirve.
@@ -73,8 +80,13 @@ def check_in(
 
     Usage::
 
-        registro, creado = check_in(ruta, clase, "Ana", "1234", reloj)
+        registro, creado = check_in(ruta, clase, "Ana", "1234", reloj, "203.0.113.5")
     """
+    blocked, in_second, in_minute = storage.note_attempt(db_path, address, now())
+    if blocked or exceeds(in_second, in_minute):
+        if not blocked:
+            storage.block_address(db_path, address, now())
+        raise RegistrationBlocked()
     session = require_session(storage.get_session(db_path, session_id))
     require_open(session)
     name = clean_name(raw_name)

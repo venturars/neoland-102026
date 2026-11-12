@@ -1,48 +1,41 @@
 # CONSTITUTIONS.md — mi-primer-proyecto
 
-Base de la app. login con IA para alumnos junior de AI Engineering, en español, con el código en inglés. Node y una sola base SQLite. Sigue SDD.
+Principios **no negociables** de mi-primer-proyecto. login con IA para alumnos junior de AI Engineering, en español, con el código en inglés. Node y una sola base SQLite en `src/db/users.sqlite`. Sigue SDD. Un desarrollo nuevo no empieza en el código: pasa por `spec.md`, `plan.md` y `tasks.md`, y un humano lee cada uno antes de seguir. Antes está la issue, escrita por su subagente. La spec abre con `Issue: #N`. **Cómo** trabaja el agente (orquestador, paradas, comandos) está en `AGENTS.md`.
 
-## Árbol
+## Guías
 
-```text
-mi-primer-proyecto/
-  package.json                 El único paquete es openai. El gestor es pnpm.
-  pnpm-lock.yaml               Lockfile de pnpm.
-  .gitignore                   Ignora node_modules/.
-  AGENTS.md                    Reglas para quien modifica el proyecto.
-  clients/terminal/            Primer cliente de cada funcionalidad. Ficheros .txt para pegar en la terminal.
-    create-user.txt
-    list-users.txt
-    update-user.txt
-    delete-user.txt
-    users-gender-count.txt
-  db/connection.js             Abre una vez el único fichero SQLite y deja la conexión abierta. No contiene SQL.
-  db/users.sqlite              La base. Se crea al abrir la conexión. No hay otra.
-  docs/CONSTITUTIONS.md        Este documento.
-  docs/specs/<nombre>/         Una funcionalidad nueva. spec.md, plan.md y tasks.md, en ese orden.
-  logic/                       Reglas de negocio. Una funcionalidad, un fichero. Esta capa no se reemplaza.
-    create-user.js
-    list-users.js
-    update-user.js
-    delete-user.js
-    users-gender-count.js
-  queries/users.js             Almacén de usuarios. Importa las queries. No escribe el SQL.
-  queries/queries/             Una query por fichero. SQL reutilizable.
-```
-
-`logic/` no importa la base de datos. Recibe el almacén. Cuando una funcionalidad de `logic/` existe, no se mueve a otra carpeta ni se sustituye por otra implementación. Pueden cambiar el cliente y el SQL. Las reglas no.
+- `docs/ARCHITECTURE.md` dice la responsabilidad de cada capa y de cada fichero.
+- `docs/TREE.md` es el árbol.
+- `docs/DATABASE.md` es la base de datos y las queries.
+- `docs/ERRORS.md` es la lista de errores.
+- `docs/STYLE.md` es la forma de cada línea y las convenciones.
 
 ## Paquetes
 
-El único paquete es `openai`. Se instala con pnpm. No se usa npm.
+Los paquetes son `openai`, `cli-table3` `0.6.5` y `@colors/colors` `1.6.1`. Se instalan con pnpm. No se usa npm.
 
-### Constantes
+Un paquete de Node nuevo, o un cambio de su versión, se valida con Socket. El procedimiento (capas, resumen en el plan, skill) no está en esta sección; está en `AGENTS.md`.
 
-Un dato que no cambia va en mayúsculas, como `MODEL`. Una variable sigue en camelCase.
+La referencia del MCP está en `MCPS/socket-mcp/mcp.txt`. La organización
+es `ai-engineering`.
+
+Las stats salen de `depscore`, con la versión exacta. Una stat por debajo
+de 50 puntos se escribe. 50 no baja.
+
+La alerta sale de `alerts`, con `org_slug` `ai-engineering`. Una lista
+vacía es la lista de la organización. No dice que esa versión no tenga
+alerta.
+
+La campaña sale de `threat_feed`. Si responde 403
+`threat_feed_not_entitled`, el resumen dice que la cuenta no tiene threat
+feed. No escribe «no consta».
+
+Si una herramienta no contesta, el resumen dice el motivo. No deja el
+dato en blanco.
 
 ## SDD
 
-Una funcionalidad nueva empieza en `docs/specs/<nombre>/`. `<nombre>` va en inglés y con guiones, igual que el fichero de `logic/`.
+Una funcionalidad nueva empieza en `docs/specs/<nombre>/`. `<nombre>` va en inglés y con guiones, igual que el fichero de `src/logic/`.
 
 Tres ficheros, en este orden. Cada uno se revisa antes de escribir el siguiente.
 
@@ -59,31 +52,14 @@ Para poder revisarlo: `spec.md` cabe en una pantalla, `plan.md` no pasa de sesen
 Un paso nombra un solo fichero o una sola comprobación, empieza por un verbo (Crear, Abrir, Escribir, Comprobar) y dice qué se ve al terminar. Van en orden, con `- [ ]`. Sin códigos `T001` y sin marcas de trabajo en paralelo.
 
 ```text
-- [ ] 3. Abrir logic/create-user.js y escribir la validación del email. Un email vacío lanza "Email is invalid".
+- [ ] 3. Abrir src/logic/create-user.js y escribir la validación del email. Un email vacío lanza "Email is invalid".
 ```
 
-## Base de datos
+## Un fichero de src/logic
 
-Hay una sola base: `db/users.sqlite`.
+`src/logic/` no importa la base de datos. Recibe el almacén. Cuando una funcionalidad de `src/logic/` existe, no se mueve a otra carpeta ni se sustituye por otra implementación. Pueden cambiar el cliente y el SQL. Las reglas no.
 
-- `id`: `INTEGER PRIMARY KEY AUTOINCREMENT`.
-- `email`: `VARCHAR(64) NOT NULL UNIQUE`.
-- `name`: `VARCHAR(64) NOT NULL`.
-- `created_at`: fecha de alta. `TEXT` en ISO-8601 (`YYYY-MM-DD`).
-- `updated_at`: fecha de última actualización. `TEXT` en ISO-8601 (`YYYY-MM-DD`).
-- Una fecha se guarda como `TEXT` en ISO-8601 (`YYYY-MM-DD`). SQLite no valida un tipo `DATE`.
-
-La conexión se abre al cargar `db/connection.js` y se queda abierta. Las queries no la abren ni la cierran.
-
-El SQLite de Node ejecuta cada sentencia en el momento. Las funciones de `queries/users.js` son síncronas.
-
-El `CREATE TABLE` vive en una query de `queries/queries/`. `queries/users.js` la lee y la ejecuta al cargar el módulo.
-
-## Código para un junior
-
-El código lo tiene que poder leer y escribir un junior sin experiencia y sin ayuda de IA. Prettier con su configuración por defecto: comillas dobles, punto y coma, dos espacios.
-
-Una funcionalidad de `logic/` es un fichero. El fichero define el nombre, los parámetros de entrada, el cuerpo y la salida.
+Una funcionalidad de `src/logic/` es un fichero. El fichero define el nombre, los parámetros de entrada, el cuerpo y la salida. La forma de cada línea está en `docs/STYLE.md`.
 
 Orden del cuerpo:
 
@@ -92,9 +68,9 @@ Orden del cuerpo:
 3. Aplicar la logica de negocio.
 4. Montar la salida y dejar solo los datos que salen de la función.
 
-El error no se devuelve como objeto. Se lanza con `throw new Error("mensaje en inglés")` dentro de `try/catch`.
+El error no se devuelve como objeto. Se lanza con `throw new Error("mensaje en inglés")` dentro de `try/catch`. Los mensajes están en `docs/ERRORS.md`.
 
-## Funciones de logic
+## Funciones de src/logic
 
 `createUser({ name, email })`  
 Entrada: nombre y email.  
@@ -103,6 +79,10 @@ Salida: el usuario creado, con `id`, `name`, `email`, `createdAt` y `updatedAt`.
 `listUsers()`  
 Entrada: ninguna.  
 Salida: la lista de usuarios, cada uno con `id`, `name`, `email`, `createdAt` y `updatedAt`.
+
+`findUserById(id)`  
+Entrada: id.  
+Salida: el usuario, con `id`, `name`, `email`, `createdAt` y `updatedAt`.
 
 `updateUser({ id, name, email })`  
 Entrada: id y los campos enviados (`name`, `email`).  
@@ -116,10 +96,6 @@ Salida: ninguna. No devuelve un objeto.
 Entrada: ninguna.  
 Salida: `women`, `men` y `genderUndefined`.
 
-## Queries
-
-Cada sentencia SQL es un fichero `.sql` en `queries/queries/`. Solo contiene SQL. `queries/users.js` lee esos ficheros y los ejecuta.
-
 ## Cliente
 
-Al terminar una funcionalidad, su primer cliente es un `.txt` en `clients/terminal/`. El fichero es el bloque que se pega en Git Bash, con el directorio actual en `mi-primer-proyecto`. Ese bloque practica la query.
+Al terminar una funcionalidad, su primer cliente es un `.txt` en `src/clients/terminal/`. El fichero es el bloque que se pega en Git Bash, con el directorio actual en `mi-primer-proyecto`. Ese bloque practica la query.

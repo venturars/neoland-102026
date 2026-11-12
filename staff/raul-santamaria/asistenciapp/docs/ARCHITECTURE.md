@@ -12,9 +12,9 @@ Las flechas solo van hacia dentro. Una parte de fuera puede llamar a una de dent
 
 1. **Reglas** (`asistencia/domain/`): deciden si un registro vale. No dibujan pantallas ni abren la base.
 2. **Acciones** (`asistencia/usecases/`): el profesor abre, cierra, lista, exporta o quita; el alumno se registra. Piden la decisión a las reglas y el guardado al almacén.
-3. **Borde**: `app.py` y `static/` son la pantalla. Hablan HTTP y llaman a las acciones. `asistencia/storage/` es el almacén: abre el archivo y guarda lo que la acción ya decidió.
+3. **Borde**: `app.py` y `static/` son la pantalla HTTP. `bot_discord.py` es el bot de Discord (proceso aparte): llama a las acciones y no abre la base. `asistencia/storage/` es el almacén: abre el archivo y guarda lo que la acción ya decidió.
 
-`app.py` no abre la base. El almacén no decide reglas ni dibuja pantallas.
+`app.py` y `bot_discord.py` no abren la base. El almacén no decide reglas ni dibuja pantallas.
 
 ---
 
@@ -22,6 +22,11 @@ Las flechas solo van hacia dentro. Una parte de fuera puede llamar a una de dent
 
 ```
 asistenciapp/
+├── agents/                # orquestador y subagentes del flujo de git
+├── skills/                # skills del flujo de git
+├── tools/                 # scripts del flujo de git (desde la raíz del monorepo)
+├── templates/             # plantillas de issue y pull request
+├── MCPS/                  # referencia al MCP de GitHub
 ├── docs/
 │   ├── CONSTITUTION.md    # reglas no negociables
 │   └── ARCHITECTURE.md    # este archivo
@@ -32,9 +37,10 @@ asistenciapp/
 │       ├── spec.md        # qué y por qué
 │       ├── plan.md        # cómo
 │       └── tasks.md       # pasos
-├── requirements.txt       # dependencias de Python (Flask, pytest)
+├── requirements.txt       # Flask, pytest; discord.py justificado en spec 007
 ├── pytest.ini             # configuración de pytest
 ├── app.py                 # HTTP: llama a las acciones, no abre la base
+├── bot_discord.py         # bot Discord: proceso aparte, llama a las acciones
 ├── asistencia/
 │   ├── domain/            # reglas: no abren la base ni dibujan pantallas
 │   ├── usecases/          # acciones del profesor y del alumno
@@ -46,6 +52,8 @@ asistenciapp/
 ├── .venv/                 # entorno virtual de Python (no se sube a git)
 └── data/                  # base de datos SQLite (no se sube a git)
 ```
+
+El orquestador (`agents/git-workflow-agent.md`) reconoce el momento (issue, draft, specs, implementar, pull request) y llama al subagente o a la skill que toca. El padre no hace ese trabajo.
 
 ---
 
@@ -62,6 +70,7 @@ asistenciapp/
 | `asistencia/export.py` | Acción de exportar | Da formato CSV a filas que ya están cargadas. No abre la base |
 | `asistencia/tunnel.py` | Borde | Publica el enlace para que los alumnos entren desde casa. No sabe de asistencia |
 | `app.py` | Pantalla | Recibe HTTP, llama a una acción y devuelve la respuesta |
+| `bot_discord.py` | Borde | Bot de Discord (`discord.py`): registro con nombre visible y código. No abre la base |
 | `static/` | Pantalla | HTML, CSS y JavaScript. No se enteran de la base |
 
 ---
@@ -72,5 +81,5 @@ De ejemplos de arquitectura por capas **no** se copian, porque aquí no hacen fa
 
 - PostgreSQL, SQLAlchemy ni Alembic. El guardado es `sqlite3` y el archivo `data/asistencia.db`.
 - Una segunda forma de guardar (memoria) ni una interfaz para elegirla. Solo hay un almacén.
-- Una aplicación de línea de comandos. La única entrada es `app.py`.
-- Variables `.env`, pre-commit ni documentación generada automáticamente.
+- Una aplicación de línea de comandos genérica. Las entradas son `app.py` (HTTP) y, si se usa Discord, `bot_discord.py`.
+- Variables `.env`, pre-commit ni documentación generada automáticamente. El token del bot vive en `data/discord_token.txt` (no se sube a git).

@@ -6,9 +6,9 @@
 
 ## Fase A · Dominio y constitución
 
-- [x] **T01** · `domain/rate_limit.py` + `tests/test_rate_limit.py` (`should_block_after_attempt`, constantes).
+- [x] **T01** · `domain/attempts.py` + `tests/test_rate_limit.py` (`over_limit`, constantes, `Banned`).
   - *Cubre:* CA-06.
-- [x] **T02** · `IpBlocked` en `domain/errors.py`.
+- [x] **T02** · Bloqueo vía `check_in` + `run(action)` (`Banned` → 429).
   - *Cubre:* CA-05.
 - [x] **T03** · Enmienda constitución v2.4 (P4 excepción anti-abuso, §6).
   - *Cubre:* CA-13.
@@ -17,14 +17,14 @@
 
 - [x] **T04** · Ampliar `infra/sqlite/schema.py` (tablas `blocked_ips`, `invalid_code_attempts`).
   - *Cubre:* CA-07, CA-08.
-- [x] **T05** · `ports/rate_limit_repository.py` + `infra/sqlite/rate_limit_repository.py`.
+- [x] **T05** · Funciones anti-abuso en `storage/sqlite.py` (con `path`; DDL en `schema.py`).
   - *Cubre:* CA-08, CA-09.
-- [x] **T06** · `use_cases/rate_limit.py` (`assert_not_blocked`, `after_invalid_code`).
+- [x] **T06** · Lógica en `usecases/attendance.py` (`_after_invalid_code`, `list_blocked`, desbloqueos).
   - *Cubre:* CA-01, CA-03, CA-04.
 
 ## Fase C · Web y API
 
-- [x] **T07** · `client_ip`, `ProxyFix(x_for=1)`, integración en ruta check-in (429/422).
+- [x] **T07** · `ProxyFix(x_for=1)` y `request.remote_addr` en ruta check-in (429/422).
   - *Cubre:* CA-01–CA-05.
 - [x] **T08** · Rutas profesor `GET/DELETE /api/blocked-ips` + token.
   - *Cubre:* CA-10–CA-12.
@@ -39,3 +39,8 @@
   - *Cubre:* CA-13, CA-14.
 - [x] **T12** · `pytest` completo verde; marcar tareas `[x]`.
   - *Cubre:* CA-14.
+
+## Nota · Documentación 2026-10-26
+
+- [x] **T13** · Actualizar `plan.md` §13 y specs 005 §11 para reflejar módulos finales (`attempts`, `storage`, `usecases`).
+  - *Hecha cuando:* plan 006 y tasks describen la misma estructura que el código y ARCHITECTURE v1.2.

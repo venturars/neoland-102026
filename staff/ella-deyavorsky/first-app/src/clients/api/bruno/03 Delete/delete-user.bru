@@ -1,0 +1,19 @@
+meta {
+  name: Delete user
+  type: http
+  seq: 1
+}
+
+delete {
+  url: {{baseUrl}}/users/{{userId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 204
+}
+
+docs {
+  Deletes Ady. The answer has no body.
+}

@@ -1,10 +1,12 @@
 # AGENTS.md — first-app
 
+El trabajo de git sigue [agents/git-workflow-agent.md](agents/git-workflow-agent.md). Las paradas de la app siguen: spec antes del código, y `npm run format` con `npm run lint` antes de terminar.
+
 ## Proyecto
 
 first-app es la app de Meghan en este curso. Se construye con IA siguiendo SDD. No es una web: se usa desde la terminal y guarda personas en SQLite.
 
-Está en `staff/meghan-martin/first-app`, en Node, con módulos ES (`"type": "module"`) y `node:sqlite`. La conexión es `db/connection.js`. El fichero por defecto es `db/users.sqlite`; si existe `USERS_DB_PATH`, se usa ese. La arquitectura, la base de datos y qué llevan spec, plan y tasks están en `docs/CONSTITUTIONS.md`. Léelo antes de cambiar código.
+Las reglas de la app, y el camino a cada tema, están en [docs/CONSTITUTIONS.md](docs/CONSTITUTIONS.md). Para escribir código se sigue [docs/STYLE.md](docs/STYLE.md).
 
 ## Flujo
 
@@ -14,7 +16,7 @@ Ningún código de una funcionalidad nueva se escribe antes de spec, plan y task
 2. `spec.md`, y revisión humana.
 3. `plan.md` y `tasks.md`.
 4. Implementación.
-5. El ejemplo de `clients/terminal/` de esa acción.
+5. El ejemplo de `src/clients/terminal/` de esa acción.
 
 El ejemplo de terminal es obligatorio. Un logic ya creado no se reemplaza.
 
@@ -22,24 +24,34 @@ El ejemplo de terminal es obligatorio. Un logic ya creado no se reemplaza.
 
 Cada tarea nueva sigue `docs/GIT-WORKFLOW.md` aunque el prompt no nombre ese fichero. Es una issue, una rama desde `staging` y una pull request en draft hacia `staging`.
 
+Las formas de la issue y de la pull request están en `templates/`, una por tipo. El enlace es `Closes #N`. Al pedir revisión se marcan solo las casillas que se han comprobado.
+
 La plantilla de la pull request es `.github/pull_request_template.md` de esta app. Si el workspace es el repositorio de la clase, la ruta es `staff/meghan-martin/first-app/.github/pull_request_template.md`.
 
 ## Comandos
 
-- No hay comando de arranque. Cada acción se prueba pegando su `clients/terminal/*.txt` desde dentro de `first-app`.
+- No hay comando de arranque de la app. Cada acción se prueba pegando su `src/clients/terminal/*.txt` desde dentro de `first-app`.
+- `npm run db`, desde `first-app`, abre la base en `http://127.0.0.1:3000` y se queda en marcha hasta Ctrl+C.
+- `npm run jupyter`, desde `first-app`, abre la lista de notebooks. La primera vez prepara el Jupyter de esta app. La base tiene que estar en marcha.
+- `npm run browser`, desde `first-app`, abre `src/clients/browser/index.html`. No sirve la página. La base tiene que estar en marcha.
+- `npm run api`, desde `first-app`, responde JSON en `http://127.0.0.1:3001`. La base tiene que estar en marcha.
+- `npm run bruno`, desde `first-app`, lanza la colección Bruno del programa JSON. El programa JSON y la base del ensayo tienen que estar en marcha.
+- `npm run electron`, desde `first-app`, abre una ventana de escritorio. La base tiene que estar en marcha.
 - No hay tests. `package.json` no tiene script `test`.
 - El lock que hay es `package-lock.json`. No hay `pnpm-lock.yaml`.
-- Prettier, formato estándar. No hay script de lint ni de formato.
+- `npm run format` lanza Prettier. El formato es el estándar, sin configuración propia.
+- `npm run lint` lanza ESLint.
 
 ## Estilo
 
-El código va en inglés. Los comentarios de `clients/terminal/*.txt` van en español. Esos `.txt` son un bloque `node --input-type=module`. Las acciones de `logic/` importan su función y hacen `console.log`. Crear la tabla importa `createUsersTable` y `db`, y muestra el nombre de la tabla.
+El código va en inglés. Los comentarios de `src/clients/terminal/*.txt` van en español. Esos `.txt` son un bloque `node --input-type=module`. Las acciones de `src/logic/` importan su función y hacen `console.log`. Crear la tabla importa `createUsersTable` y `db`, y muestra el nombre de la tabla.
 
 Ficheros en kebab-case, funciones y variables en camelCase, exportaciones con nombre e imports ESM con `.js`. El SQL usa parámetros con nombre (`:id`, `:name`, `:email`). El contrato de `logic/` está en la constitución. La frase de error de cada acción está en su plan.
 
 Se lee de arriba abajo, con `if` y con nombres que digan qué hacen. No añadas envoltorios de resultado, clases de error, helpers genéricos ni capas que oculten los pasos.
 
 Prettier sin configuración propia: comillas dobles, punto y coma, coma final, 2 espacios, ancho 80.
+- No hay script de lint ni de formato. Cómo queda el código está en [docs/STYLE.md](docs/STYLE.md).
 
 ## Reglas
 
@@ -50,8 +62,23 @@ Prettier sin configuración propia: comillas dobles, punto y coma, coma final, 2
 - No digas que algo funciona si no has ejecutado el ejemplo de terminal.
 - `.gitignore` ignora `node_modules/` y los ficheros `*.sqlite`. No subas tampoco `.DS_Store` ni restos de Jupyter (`Untitled.ipynb`).
 
+## Al terminar una tarea
+## Paquetes
+
+La regla está en la sección «Paquetes» de [docs/CONSTITUTIONS.md](docs/CONSTITUTIONS.md). Aquí solo el cómo, al escribir el plan.
+
+El servidor es el de `MCPS/socket-mcp/mcp.txt`. La entrada se llama `socket-mcp`.
+
+- Las puntuaciones salen de `depscore`, con la versión exacta. Una puntuación por debajo de 50 se escribe. 50 no baja.
+- La alerta sale de `alerts`, con la organización `vibecodingneoland` y el nombre del paquete. Solo cuenta una alerta de esa misma versión. Una lista vacía es la de un paquete vigilado. No dice que no haya alerta.
+- La campaña sale de `threat_feed`. Si responde 403 `threat_feed_not_entitled`, el resumen dice que la cuenta no tiene ese feed.
+
+Si una herramienta no contesta, el resumen dice el motivo. No escribe «no consta» sin haberla llamado. Quien aprueba el plan decide. Esto no es un momento del flujo de git.
+
 ## Al terminar
 
-Al crear una funcionalidad se crea su ejemplo en `clients/terminal/`: un `.txt` que se pega con el directorio actual en `first-app`. Importa la función de `logic/` y hace `console.log` del resultado. Si la función es async, el ejemplo la espera con `await`. Esa es la comprobación.
+Al crear una funcionalidad se crea su ejemplo en `src/clients/terminal/`: un `.txt` que se pega con el directorio actual en `first-app`. Importa la función de `src/logic/` y hace `console.log` del resultado. Si la función es async, el ejemplo la espera con `await`. Esa es la comprobación.
+
+Antes de dar la tarea por terminada, lanza `npm run format` y `npm run lint`.
 
 La tarea está terminada solo si hubo spec aprobada, plan, código, y ese ejemplo ejecutado.

@@ -36,13 +36,15 @@ def test_architecture_document_names_the_layers():  # CA-02
     assert "domain" in text
     assert "actions" in text
     assert "infra" in text
+    assert "TREE.md" in text
+    assert "STYLE.md" in text
     assert "no se trae" in text
 
 
-def test_agent_manual_was_renamed_and_shows_how_to_write():  # CA-03
+def test_agent_manual_was_renamed_and_shows_how_to_write():  # CA-03, spec 008 CA-09
     assert (APP_ROOT / "AGENTS.md").is_file()
     assert not (APP_ROOT / "AGENT.md").exists()
-    text = _text("AGENTS.md")
+    text = _text("docs/STYLE.md")
     assert ":param" in text
     assert ":return" in text
 

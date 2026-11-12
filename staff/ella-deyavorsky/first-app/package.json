@@ -3,7 +3,19 @@
   "version": "0.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/db/server.js",
+    "api": "node src/clients/api/server.js",
+    "chrome": "node src/clients/chrome/server.js",
+    "nest": "babel src --out-dir dist --delete-dir-on-start && node dist/clients/nest/main.js",
+    "browser": "open http://127.0.0.1:3000",
+    "node-http": "node src/clients/node-http/app.js",
+    "jupyter": "sh scripts/jupyter.sh",
+    "jupyter-node-http": "sh scripts/jupyter-node-http.sh",
+    "electron": "electron src/clients/electron/main.js",
+    "vscode": "code --extensionDevelopmentPath=\"$PWD/src/clients/vscode\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write \"src/db/**/*.js\" \"src/queries/**/*.js\" \"src/logic/**/*.js\" \"src/clients/web/**/*.js\" \"src/clients/api/**/*.js\" \"src/clients/chrome/**/*.js\" \"src/clients/nest/**/*.js\" \"src/clients/node-http/**/*.js\" \"src/clients/electron/**/*.js\" \"src/clients/vscode/**/*.js\"",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "Ella Deyavorsky",
@@ -12,6 +24,25 @@
   "type": "module",
   "packageManager": "pnpm@12.14.0",
   "dependencies": {
-    "openai": "^7.43.0"
+    "@nestjs/common": "12.3.3",
+    "@nestjs/core": "12.3.3",
+    "@nestjs/platform-express": "12.3.3",
+    "@nestjs/swagger": "12.1.0",
+    "cli-table3": "0.6.5",
+    "express": "5.2.1",
+    "fastify": "5.12.8",
+    "openai": "^7.43.0",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "8.1.0",
+    "@babel/core": "8.1.0",
+    "@babel/eslint-parser": "8.0.7",
+    "@babel/plugin-proposal-decorators": "8.0.2",
+    "@eslint/js": "10.0.1",
+    "electron": "45.2.2",
+    "eslint": "10.13.0",
+    "prettier": "3.9.10"
   }
 }

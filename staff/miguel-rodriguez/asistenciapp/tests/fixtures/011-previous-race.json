@@ -1,0 +1,101 @@
+{
+  "source_commit": "93c320005f18fb4a9f7ba7c940a0d4c43a435f40",
+  "test_credentials": "Synthetic deterministic placeholders; no real access.",
+  "session_id": "fixture1",
+  "now": 1800000003.0,
+  "cases": [
+    {
+      "key": "jimena-duran",
+      "token": "test_fixture_jimena_00000000000000000000000",
+      "fields": {
+        "operation_id": "00000000-0000-4000-8000-000000000001",
+        "code": "6892"
+      },
+      "body": {
+        "phase": "open",
+        "serverNow": 1800000003.0,
+        "startsAt": 1800000003.0,
+        "expiresAt": 1800007200.0,
+        "roster_key": "jimena-duran",
+        "name": "Jimena Duran",
+        "character": "ajolote",
+        "state": "registrado",
+        "remaining": 2,
+        "operations": [
+          {
+            "operation_id": "00000000-0000-4000-8000-000000000001",
+            "state": "completed"
+          }
+        ],
+        "result": {
+          "id": 1,
+          "name": "Jimena Duran",
+          "checkedAt": "2027-01-15T08:00:03.000+00:00",
+          "position": 1
+        },
+        "csrfToken": "839dba98f2c5cc60193cb4cdc1fa1bb5a2c240ef3a0ae71c8cf04f4752fd8983",
+        "already": true
+      },
+      "status": 200
+    },
+    {
+      "key": "meghan-martin",
+      "token": "test_fixture_meghan_00000000000000000000000",
+      "fields": {
+        "operation_id": "00000000-0000-4000-8000-000000000002",
+        "code": "0000"
+      },
+      "body": {
+        "phase": "open",
+        "serverNow": 1800000003.0,
+        "startsAt": 1800000003.0,
+        "expiresAt": 1800007200.0,
+        "roster_key": "meghan-martin",
+        "name": "Meghan Martin",
+        "character": "fantasma",
+        "state": "listo",
+        "remaining": 2,
+        "operations": [
+          {
+            "operation_id": "00000000-0000-4000-8000-000000000002",
+            "state": "completed"
+          }
+        ],
+        "result": null,
+        "csrfToken": "3986ed3cdca39065879be097fd516ee5f5c9f3fe115cbb6ee3c422e54d449d09",
+        "error": "El código no es válido o ha caducado. Pide el código actual al profesor."
+      },
+      "status": 422
+    },
+    {
+      "key": "miguel-rodriguez",
+      "token": "test_fixture_miguel_00000000000000000000000",
+      "fields": {
+        "operation_id": "00000000-0000-4000-8000-000000000003",
+        "code": "6892"
+      },
+      "body": {
+        "phase": "open",
+        "serverNow": 1800000003.0,
+        "startsAt": 1800000003.0,
+        "expiresAt": 1800007200.0,
+        "roster_key": "miguel-rodriguez",
+        "name": "Miguel Rodriguez",
+        "character": "yomi",
+        "state": "listo",
+        "remaining": 2,
+        "operations": [
+          {
+            "operation_id": "00000000-0000-4000-8000-000000000003",
+            "state": "reserved"
+          }
+        ],
+        "result": null,
+        "csrfToken": "bc51f65d8516cc9bafb56fef1c70ae2919dc8a40a57cb4138557f85d6052cd63",
+        "operationState": "unconfirmed",
+        "message": "Este envío aún no tiene resultado confirmado. El intento sigue gastado. Consulta tu estado."
+      },
+      "status": 202
+    }
+  ]
+}

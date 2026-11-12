@@ -16,19 +16,32 @@ Las flechas solo van hacia dentro. Una parte de fuera puede llamar a una de dent
 
 `app.py` no abre la base. El almacén no decide reglas ni dibuja pantallas.
 
+No entran PostgreSQL, SQLAlchemy ni Alembic, ni una segunda base, ni una interfaz de almacén, ni una entrada de línea de comandos, ni `.env`, ni pre-commit, ni documentación generada.
+
 ---
 
 ## 2. Estructura de carpetas
 
+El flujo de git vive junto al código. `agents/git-workflow-agent.md` reconoce el momento y llama al subagente o a la skill que toca. El detalle de cada momento está en `AGENTS.md`.
+
 ```
 asistenciapp/
+├── agents/                # orquestador y subagentes del flujo de git
+├── skills/                # skills de ese flujo
+├── tools/                 # scripts de git
+├── templates/             # cuerpo de la issue y de la pull request
+├── MCPS/                  # dirección del MCP de GitHub
 ├── docs/
 │   ├── CONSTITUTION.md    # reglas no negociables
 │   └── ARCHITECTURE.md    # este archivo
 ├── AGENTS.md              # cómo se trabaja y cómo se escribe el código
 ├── README.md              # cómo arrancar la app (para humanos)
 ├── specs/
-│   └── NNN-nombre/
+│   ├── 000-historial/
+│   │   ├── specs.md       # todas las specs, en orden, con su estado
+│   │   ├── enmienda.md    # historial de enmiendas de la constitución
+│   │   └── resumen.md     # versión corta de las specs antiguas
+│   └── <issue>-nombre/    # una spec por issue
 │       ├── spec.md        # qué y por qué
 │       ├── plan.md        # cómo
 │       └── tasks.md       # pasos
@@ -56,12 +69,18 @@ asistenciapp/
 | `asistencia/domain/codes.py`        | Reglas             | Calcula el código y dice si el que escribió el alumno vale                          |
 | `asistencia/domain/names.py`        | Reglas             | Acepta o rechaza el nombre                                                          |
 | `asistencia/domain/session.py`      | Reglas             | Dice si la clase existe, si sigue abierta y si el código vale ahora                 |
-| `asistencia/domain/attempts.py`     | Reglas             | Decide si los intentos de una IP se han pasado. No abre la base ni dibuja pantallas |
+| `asistencia/domain/attempts.py`     | Reglas             | Decide si los códigos fallados de una IP se han pasado y cuánto dura el bloqueo. No abre la base ni dibuja pantallas |
 | `asistencia/usecases/attendance.py` | Acciones           | Abre, cierra, lista, exporta, quita y registra                                      |
 | `asistencia/storage/sqlite.py`      | Almacén            | Abre `data/asistencia.db`, guarda y lee                                             |
 | `asistencia/export.py`              | Acción de exportar | Da formato CSV a filas que ya están cargadas. No abre la base                       |
 | `asistencia/tunnel.py`              | Borde              | Publica el enlace para que los alumnos entren desde casa. No sabe de asistencia     |
-| `app.py`                            | Pantalla           | Recibe HTTP, llama a una acción y devuelve la respuesta                             |
+| `app.py`                            | Pantalla           | Recibe HTTP, saca la IP de quien se registra (con túnel, `CF-Connecting-IP`), llama a una acción y devuelve la respuesta |
 | `static/`                           | Pantalla           | HTML, CSS y JavaScript. No se enteran de la base                                    |
 
 ---
+
+## Nota (legado)
+
+Las specs `005` a `008` son anteriores al formato `<issue>-nombre` y conservan su número de tres dígitos.
+
+**TODO:** borrar esta nota en la pull request que borre la última spec con número de tres dígitos (`AGENTS.md` §3).

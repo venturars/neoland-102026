@@ -1,231 +1,49 @@
-# Constitución — first-app
-
-## Objetivo
-
-`first-app` es una aplicación educativa de gestión de usuarios construida con Node.js y SQLite.
-
-El objetivo es aprender a desarrollar una aplicación sencilla por capas, entendiendo el recorrido de los datos y la responsabilidad de cada archivo.
-
-## Alcance actual
-
-Actualmente la aplicación permite:
-
-- crear un usuario;
-- buscar un usuario por email;
-- buscar un usuario por id;
-- actualizar un usuario;
-- borrar un usuario;
-- listar los usuarios;
-- contar los usuarios según el género de su nombre;
-- crear la tabla `users`;
-- comprobar las operaciones desde la terminal.
-
-La aplicación no tiene frontend, API HTTP, Jupyter Notebook ni autenticación.
-
-Contar por género llama a Ollama en local desde `logic/count-users-by-gender.js`, modelo `gemma4`, usando el paquete `openai` como cliente. No añade una capa. Primero lee los usuarios ya guardados y, solo si hay filas, los envía en partes de hasta 6.
-
-## Árbol actual
-
-```text
-first-app/
-├── AGENTS.md
-├── .gitignore
-├── package.json
-├── pnpm-lock.yaml
-│
-├── db/
-│   ├── connection.js
-│   └── users.sqlite
-│
-├── queries/
-│   ├── queries/
-│   │   ├── create-users-table.sql
-│   │   ├── delete.sql
-│   │   ├── find-by-email.sql
-│   │   ├── find-by-id.sql
-│   │   ├── insert.sql
-│   │   ├── list.sql
-│   │   └── update.sql
-│   └── users.js
-│
-├── logic/
-│   ├── count-users-by-gender.js
-│   ├── create-user.js
-│   ├── delete-user.js
-│   ├── find-user-by-email.js
-│   ├── find-user-by-id.js
-│   ├── list-users.js
-│   └── update-user.js
-│
-├── clients/
-│   └── terminal/
-│       ├── count-users-by-gender.txt
-│       ├── create-users-table.txt
-│       ├── create-user.txt
-│       ├── delete-user.txt
-│       ├── find-user-by-email.txt
-│       ├── find-user-by-id.txt
-│       ├── list-users.txt
-│       └── update-user.txt
-│
-└── docs/
-    ├── CONSTITUTION.md
-    └── specs/
-        ├── classifier/
-        │   ├── spec.md
-        │   ├── plan.md
-        │   └── tasks.md
-        └── gestor-pnpm/
-            ├── spec.md
-            ├── plan.md
-            └── tasks.md
-```
-
-El árbol representa solamente los archivos y funcionalidades existentes.
+# Constitución — First App
 
-## Flujo de una operación
+Esta constitución recoge el propósito, el alcance y los principios del proyecto. Los procedimientos, contratos concretos, comandos y rutas de implementación se mantienen en sus guías.
 
-```text
-clients/terminal/
-        ↓
-logic/
-        ↓
-queries/users.js
-        ↓
-queries/queries/*.sql
-        ↓
-db/connection.js
-        ↓
-db/users.sqlite
-```
+## 1. Propósito y alcance
 
-Ninguna capa accede directamente a otra capa que no sea la siguiente del recorrido.
+First App es una aplicación educativa de gestión de usuarios. Su objetivo es aprender a separar responsabilidades y seguir el recorrido de los datos mediante código sencillo y comprensible.
 
-## Responsabilidades
+Permite crear, buscar, listar, modificar y borrar usuarios, y realizar un recuento mediante clasificación local de nombres. Las operaciones se pueden utilizar desde terminal y Jupyter. El cliente web permite crear un usuario, seleccionar uno existente y modificar o borrar sus datos. El cliente REST permite crear, listar, ver, modificar y borrar usuarios por HTTP. El cliente Nest permite las mismas cinco operaciones por HTTP, con otra forma de construirlas. El cliente `node:http` permite esas cinco operaciones por HTTP sin framework y se documenta con cuadernos Jupyter propios. El cliente de escritorio permite crear, listar, ver, modificar y borrar usuarios desde una ventana propia. El cliente de Chrome permite crear, listar, ver, modificar y borrar usuarios desde una extensión, y muestra los errores en inglés. El cliente de VS Code permite crear, listar, ver, modificar y borrar usuarios desde una vista del editor. El recuento por género también se pide desde los clientes REST, Nest, de escritorio, de Chrome y de VS Code; los tres clientes con pantalla lo muestran en una pestaña, y el cliente web queda fuera porque su página no puede ejecutar el clasificador. Cada cliente es independiente de los demás.
 
-### `clients/terminal/`
+La selección de usuario no acredita su identidad. La autenticación y la gestión de notas están fuera del alcance actual. Ampliar ese alcance requiere una tarea específica.
 
-Es el cliente actual de la aplicación.
+## 2. Principios de diseño
 
-Sus archivos ejecutan funciones de `logic/`, proporcionan datos de ejemplo y muestran el resultado.
+- Separar presentación, entrada de peticiones, reglas de negocio y acceso a datos.
+- Mantener las reglas de negocio compartidas por los clientes; una interfaz nueva reutiliza las operaciones existentes.
+- Favorecer código explícito, sencillo y apropiado para aprender. Evitar abstracciones y dependencias sin una necesidad concreta.
+- Conservar los contratos existentes salvo cambio autorizado. Validar las entradas y devolver únicamente los datos necesarios.
+- Mantener alineados el comportamiento y las guías vigentes, sin presentar trabajo planificado como si ya estuviera implementado.
 
-Cada archivo contiene una sola línea de ejemplo: el caso correcto.
+## 3. Decisiones tecnológicas
 
-### `logic/`
+El proyecto utiliza Node.js y SQLite, con datos almacenados localmente. SQLite queda detrás de un servidor de datos local, el único proceso que abre la base; las reglas de negocio y las consultas no dependen de Node, para que cualquier cliente, también el navegador, las use directamente. El cliente web usa HTML, CSS y JavaScript vanilla. El cliente REST usa Express. El cliente `node:http` usa solo el módulo `node:http` de Node, y sus cuadernos dibujan las tablas con `cli-table3` y `@colors/colors`. El cliente Nest usa Nest en JavaScript, sin TypeScript, y se compila con Babel porque Node no entiende sus decoradores. El cliente de escritorio usa Electron, con HTML, CSS y JavaScript vanilla; la lógica se ejecuta en su proceso principal. El cliente de Chrome es una extensión con HTML, CSS y JavaScript vanilla y una API propia con Fastify, porque una extensión no puede importar archivos de fuera de su carpeta. El cliente de VS Code es una extensión con HTML, CSS y JavaScript vanilla; la lógica se ejecuta en el proceso de la extensión. La clasificación de nombres utiliza un servicio local de modelos.
 
-Es el núcleo de la aplicación.
+pnpm es el gestor de paquetes Node del proyecto. Las dependencias nuevas y los cambios de versión requieren una revisión de necesidad y seguridad antes de aprobar el plan. Las versiones, la configuración y el procedimiento de revisión se consultan en las guías técnicas.
 
-Contiene las funcionalidades para crear, buscar, actualizar, borrar y listar usuarios, y para contarlos según el género del nombre. Aplica las reglas de negocio y decide qué resultado recibe el cliente.
+## 4. Seguridad y datos
 
-Cada función recibe solo los datos que necesita:
+- Validar los datos antes de utilizarlos y no convertir entradas inválidas de forma silenciosa.
+- No publicar secretos, credenciales ni bases de datos locales.
+- Usar datos ficticios en ejemplos y pruebas; no borrar ni reemplazar la base real para comprobar un cambio.
+- Presentar errores comprensibles sin exponer detalles internos del almacenamiento.
+- No incorporar autenticación ni tratamiento de datos adicional sin una tarea que defina su alcance.
 
-- `createUser(name, email)` crea un usuario y devuelve `id`, `name`, `email`, `createdAt` y `updatedAt`;
-- `findUserById(id)` busca por id y devuelve ese mismo usuario, o lanza un error si no existe;
-- `findUserByEmail(email)` busca por email y devuelve ese mismo usuario, o lanza un error si no existe;
-- `updateUser(id, changes)` cambia `name` y `email` solo cuando esas propiedades vienen en `changes`. Si falta una, conserva la que ya está guardada. Devuelve el usuario completo;
-- `deleteUser(id)` borra el usuario y no devuelve un valor;
-- `listUsers()` no recibe datos y devuelve la lista de usuarios;
-- `countUsersByGender()` no recibe datos y devuelve `{ female, male, undefined }`.
+## 5. Gobierno del proyecto
 
-`logic/` no calcula `createdAt` ni `updatedAt` y no los envía a las consultas. Esas fechas las escribe SQLite.
+Los cambios se definen y revisan mediante el SDD propio de esta aplicación. La issue y la PR permiten seguir el trabajo, pero no sustituyen esa revisión. El proceso y sus aprobaciones están en [AGENTS.md](../AGENTS.md).
 
-`count-users-by-gender.js` llama a Ollama en local, modelo `gemma4`, con el paquete `openai` apuntando a `http://127.0.0.1:11434/v1`. Los nombres salen en partes de hasta 6. No añade una capa. El diagrama de SQLite de arriba no cambia: la lectura sigue siendo `listUserRows()`.
+Una modificación de estos principios o del alcance requiere aprobación explícita de la persona responsable. Las decisiones internas se documentan en la guía correspondiente, sin convertir cada cambio técnico en una enmienda constitucional.
 
-### `queries/users.js`
+## 6. Guías del proyecto
 
-Es la capa de ejecución de consultas.
-
-Lee los archivos SQL, prepara las consultas, proporciona sus parámetros y las ejecuta mediante la conexión compartida.
-
-Al cargar este módulo, crea la tabla `users` si todavía no existe.
-
-### `queries/queries/`
-
-Contiene un archivo `.sql` por consulta.
-
-Los archivos contienen exclusivamente SQL y no contienen JavaScript ni reglas de negocio.
-
-### `db/`
-
-`db/connection.js` abre la única conexión SQLite.
-
-`db/users.sqlite` es el único archivo de base de datos.
-
-## Usuario
-
-La tabla `users` contiene:
-
-- `id`;
-- `name`;
-- `email`;
-- `created_at`;
-- `updated_at`.
-
-Las reglas de tipo, formato y validación están definidas en `AGENTS.md`.
-
-En una base creada con el script actual, `created_at` y `updated_at` usan `DEFAULT (datetime('now', 'localtime'))`. Las consultas de alta y de modificación también escriben esa fecha en SQL. `CREATE TABLE IF NOT EXISTS` no cambia una tabla que ya existía.
-
-## Decisiones fundamentales
-
-- Existe una sola conexión SQLite.
-- Existe un solo archivo de base de datos.
-- Cada funcionalidad de negocio tiene su propio archivo.
-- Cada consulta SQL tiene su propio archivo.
-- Los archivos `.sql` están separados del código JavaScript.
-- Las reglas de negocio viven en `logic/`.
-- Las consultas se ejecutan desde `queries/users.js`.
-- El cliente actual es la terminal.
-- Ninguna funcionalidad se añade sin una tarea concreta.
-- Cada pedido tiene su carpeta `docs/specs/<nombre>/` con `spec.md`, `plan.md` y `tasks.md`.
-
-## Specs
-
-El nombre de la carpeta va en kebab-case. La carpeta de contar usuarios por género es `docs/specs/classifier/`.
-
-Esos tres ficheros describen ese pedido. No describen el estado del código. El estado real del proyecto es esta constitución.
-
-Antes de modificar el código de un pedido, hay que leer por completo `spec.md`, `plan.md` y `tasks.md` de su carpeta.
-
-Si contradicen esta constitución, no se programa. Se señala la contradicción y se espera una decisión.
-
-### `docs/specs/<nombre>/spec.md`
-
-Es la parte de negocio.
-
-Recoge el pedido del product owner: qué se podrá hacer, un ejemplo correcto, un ejemplo que debe fallar y cómo se nota en la terminal que está terminado.
-
-No contiene archivos, SQL ni capas.
-
-Si el pedido es una forma de trabajar, describe la regla, a quién obliga y cómo se comprueba que se está siguiendo.
-
-### `docs/specs/<nombre>/plan.md`
-
-Es la parte técnica.
-
-Explica qué capas y archivos del recorrido actual se usan, qué entra y qué sale de `logic/`, y cómo se comprobará.
-
-No copia reglas que ya están en `AGENTS.md`.
-
-### `docs/specs/<nombre>/tasks.md`
-
-Son los pasos para implementar el pedido, en el orden en que los haría una persona.
-
-Cada paso abre un sitio, hace una cosa y deja un resultado que se puede mirar. Un paso ocupa como mucho cuatro líneas.
-
-No son tickets de agente.
-
-## Gestión de dependencias
-
-Por política de seguridad, el gestor del proyecto es pnpm 10. También en las próximas funcionalidades.
-
-pnpm 10 no ejecuta los scripts de instalación de las dependencias hasta que se autorizan. Esos scripts son código de terceros y se lanzan al instalar. Además, cada paquete solo puede usar lo que declaró.
-
-- No se usan `npm` ni `npx`. Tampoco yarn ni bun.
-- Instalar lo declarado: `pnpm install`.
-- Añadir una dependencia: `pnpm add`.
-- Ejecutar un script: `pnpm run`.
-- Ejecutar una herramienta ya instalada: `pnpm exec`.
-- Descargar una herramienta de forma temporal: `pnpm dlx`.
-- El archivo de bloqueo que se conserva es `pnpm-lock.yaml`. No se genera `package-lock.json`.
-- `package.json` declara `packageManager` con `pnpm@10.34.7`. El script `preinstall` termina con error si el instalador no es pnpm, así que `npm install` no llega a instalar.
-- Revisar las dependencias y los scripts de instalación antes de autorizar su ejecución. Usar pnpm no sustituye esta revisión.
+- [AGENTS.md](../AGENTS.md): proceso de trabajo, autorizaciones, paquetes y cierre.
+- [ARCHITECTURE.md](ARCHITECTURE.md): responsabilidades y dependencias del código.
+- [STYLE.md](STYLE.md): convenciones, funciones de negocio y comentarios educativos.
+- [DATABASE.md](DATABASE.md): esquema, consultas y reglas de los campos.
+- [ERRORS.md](ERRORS.md): tratamiento de errores.
+- [TREE.md](TREE.md): organización de archivos.
+- [README.md](../README.md): instalación, arranque y uso.

@@ -1,0 +1,1 @@
+SELECT * FROM race_operations WHERE session_id=? AND roster_key=? ORDER BY attempt_no

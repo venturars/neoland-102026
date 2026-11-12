@@ -1,0 +1,13 @@
+# Requires pnpm server running in another terminal.
+# Run from the project directory after the separate initialization snippet.
+node --input-type=module <<'NODE'
+import { createUser } from './src/logic/create-user.js';
+
+try {
+  const user = await createUser({ name: "Ada", email: "ada@example.com" });
+  console.log(user);
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+}
+NODE

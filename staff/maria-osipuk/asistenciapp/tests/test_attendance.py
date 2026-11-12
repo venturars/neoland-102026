@@ -72,25 +72,25 @@ def test_check_in_duplicate_close_remove_and_export(tmp_path):
     assert public_info(db_path, opened["id"]) == {"title": "Clase de prueba", "open": True}
 
     code = teacher_detail(db_path, opened["id"], clock)["code"]
-    first, created = check_in(db_path, opened["id"], "Ana García", code, clock)
+    first, created = check_in(db_path, opened["id"], "Ana García", code, clock, "198.51.100.8")
     assert created is True
     assert first["name"] == "Ana García"
 
-    again, created_again = check_in(db_path, opened["id"], "  ana   GARCIA ", code, clock)
+    again, created_again = check_in(db_path, opened["id"], "  ana   GARCIA ", code, clock, "198.51.100.8")
     assert created_again is False
     assert again == first
     assert teacher_detail(db_path, opened["id"], clock)["total"] == 1
 
     with pytest.raises(InvalidCode):
-        check_in(db_path, opened["id"], "Luis", NOT_A_CODE, clock)
+        check_in(db_path, opened["id"], "Luis", NOT_A_CODE, clock, "198.51.100.8")
     with pytest.raises(SessionNotFound):
-        check_in(db_path, "no-existe", "Luis", code, clock)
+        check_in(db_path, "no-existe", "Luis", code, clock, "198.51.100.8")
 
     close_class(db_path, opened["id"], clock)
     assert public_info(db_path, opened["id"])["open"] is False
     assert "code" not in teacher_detail(db_path, opened["id"], clock)
     with pytest.raises(SessionClosed):
-        check_in(db_path, opened["id"], "Luis", code, clock)
+        check_in(db_path, opened["id"], "Luis", code, clock, "198.51.100.8")
 
     checkin_id = teacher_detail(db_path, opened["id"], clock)["checkins"][0]["id"]
     remove_checkin(db_path, opened["id"], checkin_id)
@@ -110,7 +110,7 @@ def test_prepare_does_not_wipe_an_existing_database(tmp_path):
     prepare(db_path)
     opened = open_class(db_path, "Conservada", clock)
     code = teacher_detail(db_path, opened["id"], clock)["code"]
-    check_in(db_path, opened["id"], "Ana", code, clock)
+    check_in(db_path, opened["id"], "Ana", code, clock, "198.51.100.9")
 
     prepare(db_path)
 
@@ -129,4 +129,4 @@ def test_expired_code_is_rejected_without_waiting(tmp_path):
     assert teacher_detail(db_path, opened["id"], clock)["code"] == code
     clock.advance(60)
     with pytest.raises(InvalidCode):
-        check_in(db_path, opened["id"], "Ana", code, clock)
+        check_in(db_path, opened["id"], "Ana", code, clock, "198.51.100.10")

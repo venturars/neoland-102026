@@ -1,0 +1,18 @@
+# Start pnpm server separately and initialize the users table first.
+# Run from the project directory.
+node --input-type=module <<'NODE'
+import { pickRandomUser } from './src/logic/pick-random-user.js';
+
+try {
+  const user = await pickRandomUser();
+  const empty = user === null;
+  if (empty) {
+    console.log('No users available');
+  } else {
+    console.log(user);
+  }
+} catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+}
+NODE

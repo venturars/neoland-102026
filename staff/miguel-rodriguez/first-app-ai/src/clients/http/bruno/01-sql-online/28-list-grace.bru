@@ -1,0 +1,19 @@
+meta {
+  name: list-grace
+  type: http
+  seq: 28
+}
+
+get {
+  url: {{baseUrl}}/users
+  body: none
+  auth: none
+}
+
+tests {
+  test("Solo queda Grace intacta", function () {
+    expect(res.getStatus()).to.equal(200);
+    const grace = JSON.parse(bru.getVar("grace"));
+    expect(res.getBody()).to.deep.equal([grace]);
+  });
+}

@@ -1,0 +1,25 @@
+meta {
+  name: find-by-id
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/users/{{userId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("Campos del usuario", function () {
+    expect(res.getBody()).to.have.all.keys("id", "name", "email", "createdAt", "updatedAt");
+  });
+
+  test("Es Ada", function () {
+    expect(res.getBody().id).to.equal(bru.getVar("userId"));
+  });
+}

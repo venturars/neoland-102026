@@ -1,8 +1,0 @@
-# Pega esto en la terminal, con el directorio actual en mi-primer-proyecto
-node --input-type=module <<'EOF'
-import { updateUser } from "./logic/update-user.js";
-
-const result = updateUser({ id: 1, name: "Ada Lovelace" });
-
-console.log(result);
-EOF

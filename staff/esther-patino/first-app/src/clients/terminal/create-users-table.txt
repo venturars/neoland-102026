@@ -1,0 +1,3 @@
+# .\staff\esther-patino-141020261\first-app
+Set-Location .\staff\esther-patino-141020261\first-app
+node --input-type=module -e "import { createUsersTable, listTables } from './src/queries/users.js'; await createUsersTable(); console.log(await listTables());"

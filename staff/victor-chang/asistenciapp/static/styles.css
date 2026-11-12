@@ -1,0 +1,340 @@
+/* AsistenciApp · estilos comunes (móvil primero, constitución P5) */
+/* Colores al estilo de neoland.es, con contraste comprobado por tests/test_static.py (spec 006 · plan §2.1). */
+
+:root {
+  --bg: #f5f5f5;
+  --surface: #ffffff;
+  --text: #333333;
+  --muted: #5f5f5f;
+  --border: #e0e0e0;
+  --control-border: #8a8a8a;
+  --accent: #d01f45;
+  --accent-text: #ffffff;
+  --accent-soft: #fde8ec;
+  --header-bg: #333333;
+  --header-text: #ffffff;
+  --brand-mark: #e6284e;
+  --ok-bg: #e5f5ea;
+  --ok-text: #14592d;
+  --error-bg: #fde8e8;
+  --error-text: #8a1c1c;
+  --warn-bg: #fff4d6;
+  --warn-text: #6b4a00;
+  --danger: #333333;
+  --danger-text: #ffffff;
+  --card-shadow: 0 1px 2px rgb(0 0 0 / 6%), 0 4px 14px rgb(0 0 0 / 5%);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161616;
+    --surface: #222222;
+    --text: #f2f2f2;
+    --muted: #a8a8a8;
+    --border: #3a3a3a;
+    --control-border: #8a8a8a;
+    --accent: #ff5c7a;
+    --accent-text: #1a0a0e;
+    --accent-soft: #3a1720;
+    --header-bg: #0b0b0b;
+    --header-text: #f2f2f2;
+    --ok-bg: #133321;
+    --ok-text: #a6e3bb;
+    --error-bg: #3d1717;
+    --error-text: #ffb4b4;
+    --warn-bg: #3a2e0c;
+    --warn-text: #ffd97a;
+    --danger: #e0e0e0;
+    --danger-text: #161616;
+    --card-shadow: none;
+    color-scheme: dark;
+  }
+}
+
+/* ---------- letras (spec 006 · CA-02, CA-08): servidas por la app, sin pedir nada fuera ---------- */
+
+@font-face {
+  font-family: "Montserrat";
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/montserrat-latin-700-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Montserrat";
+  font-weight: 800;
+  font-display: swap;
+  src: url("fonts/montserrat-latin-800-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/roboto-latin-400-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/roboto-latin-700-normal.woff2") format("woff2");
+}
+
+* { box-sizing: border-box; }
+
+/* Sin esto, `display: inline-flex` de los botones ganaría al atributo hidden. */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 1rem/1.5 "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* ---------- cabecera (spec 006 · CA-01): franja oscura con el nombre ---------- */
+
+header.brand {
+  background: var(--header-bg);
+  color: var(--header-text);
+}
+
+.wordmark {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 0.9rem 1rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+
+/* El guion bajo recuerda el cursor que escribe en la portada de Neoland: solo decoración. */
+.wordmark span { color: var(--brand-mark); }
+
+main {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+/* Títulos, código y total con la letra de títulos; si aún no ha llegado, la del sistema. */
+h1, h2, .code, .total, .wordmark { font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif; }
+
+h1 { font-size: 1.6rem; font-weight: 800; line-height: 1.2; margin: 0 0 1rem; }
+h2 { font-size: 1.2rem; font-weight: 700; margin: 2rem 0 0.75rem; }
+p { margin: 0 0 1rem; }
+a { color: var(--accent); }
+
+.muted { color: var(--muted); }
+.small { font-size: 0.875rem; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+/* ---------- formularios ---------- */
+
+label { display: block; font-weight: 700; margin-bottom: 0.25rem; }
+
+input {
+  width: 100%;
+  font: inherit;
+  font-size: 1.1rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--control-border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+.field-code input {
+  font-size: 2rem;
+  letter-spacing: 0.4em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+button, .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.6rem 1.1rem;
+  font: inherit;
+  font-weight: 700;
+  border-radius: 4px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-text);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* Botones al estilo de Neoland (spec 006 · plan §2.4): principal rojo y cuadrado; secundario con borde y redondo. */
+button.secondary, .button.secondary {
+  background: transparent;
+  color: var(--accent);
+  border-radius: 999px;
+}
+
+button:hover:not(:disabled) { filter: brightness(0.92); }
+button.secondary:hover:not(:disabled), .button.secondary:hover { background: var(--accent-soft); filter: none; }
+button.danger:hover:not(:disabled) { background: var(--border); filter: none; }
+
+button.danger {
+  background: transparent;
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+button.danger-solid {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: var(--danger-text);
+}
+
+button:disabled { opacity: 0.6; cursor: wait; }
+
+.full { width: 100%; }
+
+/* ---------- modo de la clase (spec 004 · CA-01) ---------- */
+
+fieldset.modes { border: 0; margin: 0 0 1rem; padding: 0; }
+fieldset.modes legend { font-weight: 700; margin-bottom: 0.25rem; padding: 0; }
+
+label.choice {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  font-weight: 400;
+  margin: 0;
+  cursor: pointer;
+}
+
+label.choice input {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: var(--accent);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- mensajes ---------- */
+
+.message {
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  margin: 0 0 1rem;
+}
+
+.message.ok { background: var(--ok-bg); color: var(--ok-text); }
+.message.error { background: var(--error-bg); color: var(--error-text); }
+.message.warn { background: var(--warn-bg); color: var(--warn-text); }
+
+/* ---------- vista de sesión (profesor) ---------- */
+
+.code {
+  font-size: clamp(4.5rem, 24vw, 9rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  margin: 0.5rem 0;
+}
+
+.countdown { text-align: center; }
+
+.meeting-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+  margin: 0.25rem 0 0;
+}
+
+#sync-status .message { margin: 0; }
+
+.link-box {
+  display: block;
+  width: 100%;
+  overflow-wrap: anywhere;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.total { font-size: 1.25rem; font-weight: 700; }
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.list li:last-child { border-bottom: 0; }
+
+/* Una lista que además es tarjeta recupera el margen interior de .card. */
+.list.card { padding: 0.25rem 1.25rem; }
+
+.list .name { overflow-wrap: anywhere; }
+.list .meta { color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.list li { align-items: center; }
+.row-actions { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+.confirm-row { flex-wrap: wrap; background: var(--warn-bg); color: var(--warn-text); margin: 0 -0.5rem; padding: 0.6rem 0.5rem !important; border-radius: 8px; }
+
+button.small, .button.small { min-height: 36px; padding: 0.3rem 0.7rem; font-size: 0.875rem; }
+
+.sessions li { flex-wrap: wrap; align-items: center; }
+.sessions .info { flex: 1 1 14rem; }
+.sessions .buttons { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+.badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+  margin-left: 0.4rem;
+  background: var(--ok-bg);
+  color: var(--ok-text);
+  vertical-align: middle;
+}
+
+.badge.closed { background: var(--border); color: var(--muted); }
+.badge.mode { background: transparent; border: 1px solid var(--border); color: var(--muted); }

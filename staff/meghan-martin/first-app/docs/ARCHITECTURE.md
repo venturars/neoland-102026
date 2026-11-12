@@ -1,0 +1,32 @@
+# Arquitectura
+
+- `src/db/` abre la base y no decide reglas de negocio.
+- `src/db/connection.js` es la única conexión. Solo la abre `src/db/server.js`.
+- `src/db/users.sqlite` es el único fichero de la base.
+- `src/db/server.js` escucha en este equipo, en el puerto 3000, y ejecuta una sentencia por su nombre.
+- `src/queries/users-sql.js` guarda el SQL. Los parámetros siguen siendo `:id`, `:name` y `:email`.
+- `src/queries/users.js` pide esas sentencias al programa de la base. No decide si un email vale.
+- `src/logic/` es la app. Aquí viven las reglas. Una acción por fichero.
+- `src/logic/create-user.js` guarda una persona.
+- `src/logic/update-user.js` cambia una persona.
+- `src/logic/delete-user.js` borra una persona.
+- `src/logic/list-users.js` lista las personas.
+- `src/logic/find-user-by-email.js` busca una persona por email.
+- `src/logic/find-user-by-id.js` busca una persona por su número.
+- `src/logic/users-gender-count.js` cuenta las personas por género.
+- `src/clients/terminal/` llama a `src/logic/` y muestra el resultado. Es la prueba a mano de cada acción.
+- `src/clients/browser/` es la página de personas. `app.js` llama a `listUsers`, `findUserById`, `updateUser` y `deleteUser`. No decide si un email vale.
+- `src/clients/rest/server.js` responde JSON en el puerto 3001. Llama a las mismas reglas. No decide si un email vale. Tiene la guía y la colección Bruno. Se lanza con `npm run bruno`. El paquete es `@usebruno/cli`. No sustituye a la base del puerto 3000.
+- `src/clients/electron/` es una ventana de escritorio. `app.js` llama a `listUsers`, `findUserById`, `createUser`, `updateUser` y `deleteUser`. No decide si un email vale.
+- `docs/ARCHITECTURE.md` dice qué hace cada capa y cada fichero.
+- `docs/TREE.md` es el dibujo de carpetas y ficheros.
+- `docs/DATABASE.md` es la base y las consultas.
+- `docs/ERRORS.md` es las frases de error.
+- `docs/STYLE.md` es la forma del código.
+- `docs/CONSTITUTIONS.md` guarda cómo se escriben spec, plan y tasks, y los cuatro pasos. Enlaza las otras guías.
+- `docs/specs/<nombre>/` es un cambio. `<nombre>` va en kebab-case. Ahí están su spec, su plan y sus tareas.
+- `docs/GIT-AUTOMATION.md` es el flujo de git en la terminal del Mac.
+- `agents/` dice cada momento de git. `agents/git-workflow-agent.md` elige el momento.
+- `skills/` es un paso de git. `tools/` son los scripts de shell. `MCPS/` apunta al servidor de GitHub.
+- `templates/` tiene seis formas de issue y seis de pull request, para `feat`, `fix`, `docs`, `refactor`, `test` y `chore`. El mismo tipo vale para la issue, la rama y la pull request. En el draft las casillas siguen vacías hasta pedir revisión. El orquestador escribe `Closes #N`. La base sigue siendo `staging`, y el cierre automático depende de la rama por defecto real.
+- `MCPS/socket-mcp/mcp.txt` es la dirección del MCP de Socket.

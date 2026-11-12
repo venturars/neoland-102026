@@ -18,10 +18,13 @@ REMOVED = (
 REQUIRED = (
     "docs/CONSTITUTION.md",
     "docs/ARCHITECTURE.md",
+    "docs/STYLE.md",
+    "docs/CONSTITUTION-HISTORY.md",
     "asistencia/domain/__init__.py",
     "asistencia/domain/codes.py",
     "asistencia/domain/names.py",
     "asistencia/domain/session.py",
+    "asistencia/domain/attempts.py",
     "asistencia/usecases/__init__.py",
     "asistencia/usecases/attendance.py",
     "asistencia/storage/__init__.py",
@@ -140,11 +143,13 @@ def test_docs_match_the_structure_and_name_the_deferred_errors():
     agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
     architecture = (ROOT / "docs" / "ARCHITECTURE.md").read_text(encoding="utf-8")
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    style = (ROOT / "docs" / "STYLE.md").read_text(encoding="utf-8")
     for piece in ("domain/", "usecases/", "attendance.py", "storage/", "sqlite.py"):
-        assert piece in agents
+        assert piece in architecture or piece in agents
     for piece in (":param", ":raises", "Usage::"):
-        assert piece in agents
-    assert "staff/maria-osipuk/asistenciapp/specs/" in agents
+        assert piece in style
+    assert "[STYLE.md](docs/STYLE.md)" in agents
+    assert "`specs/` de esta app" in agents
     for piece in ("Dominio", "acciones", "Almacenamiento", "navegador"):
         assert piece in architecture
     assert "１２３４" in architecture
@@ -152,14 +157,16 @@ def test_docs_match_the_structure_and_name_the_deferred_errors():
     assert "número" in architecture
     assert "docs/CONSTITUTION.md" in readme
     assert "docs/ARCHITECTURE.md" in readme
-    for spec in (
+    for spec_name in (
         "001-checkin-codigo",
         "002-spec-antes-del-cambio",
         "003-aclarar-instrucciones-arranque",
         "004-quitar-referencias-personales",
         "005-reorganizar-documentos-y-arquitectura",
+        "006-limitar-intentos-por-ip",
+        "007-identidad-visual-y-aula-en-directo",
     ):
-        assert spec in agents
+        assert (ROOT / "specs" / spec_name / "spec.md").is_file()
 
 
 def test_detector_sees_import_forms():

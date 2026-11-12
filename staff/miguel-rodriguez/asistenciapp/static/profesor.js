@@ -22,7 +22,7 @@ function hashParams() {
 }
 
 function token() {
-  return hashParams().get("t") || "";
+  try { return hashParams().get("t") || sessionStorage.getItem("race-teacher") || ""; } catch { return hashParams().get("t") || ""; }
 }
 
 function hrefFor(sessionId) {
@@ -129,11 +129,20 @@ $("new-session").addEventListener("submit", async (event) => {
   const button = event.submitter;
   button.disabled = true;
   try {
-    const res = await api("/api/sessions", {
+    const racing = $("race-mode").checked;
+    const res = await api(racing ? "/api/sessions/races" : "/api/sessions", {
       method: "POST",
       body: JSON.stringify({ title: $("session-title").value }),
     }); // CA-01, CA-02
     const session = await res.json();
+    if (!res.ok && racing) {
+      const message = typeof session?.error === "string" && session.error.trim()
+        ? session.error : "No se pudo preparar la carrera.";
+      showMessage("error", message);
+      return;
+    }
+    if (!res.ok) throw new Error(session.error || "No se pudo abrir la clase.");
+    if (racing) { location.assign(`race-display.html?r=${encodeURIComponent(session.id)}#t=${encodeURIComponent(token())}`); return; }
     $("session-title").value = "";
     location.hash = hrefFor(session.id);
   } catch (error) {
@@ -304,6 +313,7 @@ async function poll() {
       return;
     }
     const data = await res.json();
+    if (data.mode === "race") { location.replace(`race-display.html?r=${encodeURIComponent(sessionId)}#t=${encodeURIComponent(token())}`); return; }
     if (hashParams().get("s") !== sessionId) return; // el usuario ya cambió de vista
     showMessage("", "");
     renderSession(data);

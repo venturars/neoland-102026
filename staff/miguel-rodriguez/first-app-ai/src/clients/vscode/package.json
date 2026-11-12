@@ -1,0 +1,27 @@
+{
+  "name": "first-app-users",
+  "displayName": "First App Users",
+  "version": "0.0.1",
+  "publisher": "first-app-local",
+  "engines": {
+    "vscode": "^1.142.0"
+  },
+  "main": "./extension.cjs",
+  "contributes": {
+    "commands": [
+      {
+        "command": "firstApp.openUsers",
+        "title": "First App: Open Users"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "firstAppUsers",
+          "name": "Usuarios",
+          "type": "webview"
+        }
+      ]
+    }
+  }
+}

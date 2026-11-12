@@ -1,0 +1,16 @@
+meta {
+  name: count-empty
+  type: http
+  seq: 14
+}
+
+get {
+  url: {{baseUrl}}/users/gender-count
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 200", function () { expect(res.getStatus()).to.equal(200); });
+  test("Tres ceros", function () { expect(res.getBody()).to.deep.equal({ female: 0, male: 0, undefined: 0 }); });
+}

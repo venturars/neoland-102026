@@ -1,0 +1,20 @@
+meta {
+  name: Find deleted user
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/users/{{userId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 404
+  res.body.error: eq No user was found.
+}
+
+docs {
+  Ady is gone.
+}

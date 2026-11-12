@@ -1,0 +1,6 @@
+allowBuilds:
+  zeromq: set this to true or false
+minimumReleaseAgeExclude:
+  - "@nestjs/common@12.3.3"
+  - "@nestjs/core@12.3.3"
+  - "@nestjs/platform-express@12.3.3"

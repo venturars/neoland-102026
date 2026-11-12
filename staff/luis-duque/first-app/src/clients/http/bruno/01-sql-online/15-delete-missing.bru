@@ -1,0 +1,16 @@
+meta {
+  name: delete-missing
+  type: http
+  seq: 15
+}
+
+delete {
+  url: {{baseUrl}}/users/{{missingId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Estado 404", function () { expect(res.getStatus()).to.equal(404); });
+  test("Mensaje was not found", function () { expect(res.getBody().message).to.match(/was not found$/); });
+}

@@ -1,0 +1,2 @@
+# Se pega con el directorio actual en first-app.
+node --input-type=module -e "import { usersGenderCount } from './src/logic/users-gender-count.js'; console.log(await usersGenderCount());"

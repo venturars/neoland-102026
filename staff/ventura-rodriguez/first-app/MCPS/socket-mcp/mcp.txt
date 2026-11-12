@@ -1,0 +1,5 @@
+https://docs.socket.dev/docs/remote-socket-mcp
+
+Servidor remoto: https://mcp.socket.dev/
+
+Procedimiento al validar paquetes: docs/SOCKET.md

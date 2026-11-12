@@ -1,0 +1,7 @@
+# Pega esto en la terminal, con el directorio actual en first-app.
+# La base tiene que estar en marcha: npm run db
+node --input-type=module <<'EOF'
+import { deleteUser } from "./src/logic/delete-user.js";
+const result = await deleteUser(1);
+console.log(result);
+EOF

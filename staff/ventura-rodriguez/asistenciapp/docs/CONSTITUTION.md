@@ -1,6 +1,6 @@
 # Constitución de AsistenciApp
 
-> Versión 3.0 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-23
+> Versión 4.1 · Ratificada: 2026-10-19 · Última enmienda: 2026-10-30
 
 Este documento recoge los principios **no negociables** del proyecto. Toda especificación, plan técnico, tarea y línea de código debe cumplirlos. Si algo entra en conflicto con esta constitución, gana la constitución (o se enmienda primero, ver §8).
 
@@ -31,11 +31,12 @@ El registro de asistencia no depende de una plataforma concreta. Las integracion
 - Se usa la biblioteca estándar de Python (`sqlite3`, `hmac`, `secrets`, `csv`, `unicodedata`…) y el navegador (HTML, CSS y JavaScript sin frameworks).
 - Las únicas dependencias externas permitidas de serie son **Flask** (servidor web) y **pytest** (tests), listadas en `requirements.txt`.
 - Añadir cualquier otra requiere **justificarla por escrito** en el `plan.md` de la feature (qué problema resuelve y por qué no basta lo que ya hay).
+- Herramientas externas que no son de Python, ya justificadas: `cloudflared` para el túnel (spec 001), y `git`, `gh` y el MCP de GitHub para el flujo de git (spec 007). Cualquier otra sigue la regla anterior.
 
 ### P4 · Privacidad mínima
 
 - Del alumno solo se guarda el **nombre que él mismo escribe** y la **hora del registro**.
-- **Prohibido** guardar emails, identificadores de dispositivo o cualquier dato no imprescindible. La IP pública estática es la excepción: se recuerda solo para contar los intentos de registrarse y para la lista de bloqueo. No forma parte del registro del alumno.
+- **Prohibido** guardar emails, identificadores de dispositivo o cualquier dato no imprescindible. La IP de quien intenta registrarse es la excepción (con el túnel, la que da el proveedor del túnel; sin él, la de la conexión). Se recuerda solo para contar los códigos fallados durante un minuto y para la lista de bloqueo, que caduca y se borra. No forma parte del registro del alumno.
 - Los datos se **almacenan** solo en local (SQLite). Ningún servicio de terceros los guarda.
 - Para que los alumnos lleguen a la app desde sus casas, el tráfico puede **pasar cifrado (HTTPS)** por un proveedor de túnel (p. ej. Cloudflare). Ese proveedor no los almacena, pero técnicamente podría verlos en tránsito; por eso solo se envía lo imprescindible (nombre y código).
 
@@ -62,35 +63,42 @@ Interfaz, mensajes de error, documentación y especificaciones se escriben en es
 | Documentos    | `docs/` (esta constitución y `docs/ARCHITECTURE.md`)                              |
 | Frontend      | HTML + CSS + JavaScript sin frameworks, servidos desde `static/`                  |
 | Tests         | `pytest`                                                                          |
+| Túnel         | `cloudflared` (solo con `--tunel`), lanzado desde `asistencia/tunnel.py`          |
+| Flujo de git  | `agents/`, `skills/`, `tools/`, `templates/` y `MCPS/`; usa `git`, `gh` y el MCP de GitHub |
+| Sistemas      | macOS, Linux y Windows. Los scripts de `tools/` piden bash (en Windows, Git Bash) |
 
 El detalle de cómo se relacionan esas carpetas está en `docs/ARCHITECTURE.md`. Cambiar el stack requiere enmendar esta constitución.
 
 ---
 
-## 4. Desarrollo guiado por especificaciones (SDD)
+## 4. Forma de trabajo: desarrollo guiado por especificaciones (SDD)
 
-1. **Ningún fichero de la app se modifica sin un spec aprobado que cubra ese cambio.** Entran el código, los tests, el README y el resto de la documentación de uso. Cada cambio nace como `specs/NNN-nombre/spec.md`. Si no cabe en la spec activa, se abre otra. La persona que trabaja en esta carpeta la aprueba antes de pasar al plan.
-2. El orden siempre es: **spec → plan → tasks → implementación**. No se salta ningún paso. Al terminar el spec, el agente lo enseña y espera el ok. No escribe el plan, las tasks ni el cambio hasta entonces.
-3. La `spec.md` describe el **qué y el porqué**, nunca el cómo (no menciona tecnologías).
-4. El `plan.md` describe el **cómo** e incluye una sección que comprueba que cumple esta constitución.
-5. Las dudas se marcan como `[NECESITA ACLARACIÓN]` y se resuelven **antes** de implementar. No se inventan requisitos.
+El proyecto se trabaja con **SDD**: primero se escribe **qué** se quiere y **por qué**, después **cómo**, después los **pasos**, y solo entonces se cambia nada.
+
+- **Ningún fichero de esta carpeta cambia sin una spec que lo cubra.**
+- Toda spec sirve al propósito (§1). Si no, no sigue adelante.
+- La spec dice el qué y el porqué; el plan, el cómo, y comprueba esta constitución; las tareas, los pasos.
+- Las dudas se resuelven antes de implementar. No se inventan requisitos.
+
+Cómo se aplica día a día está en `AGENTS.md`.
 
 ---
 
 ## 5. Calidad
 
-- Cada **criterio de aceptación** de una spec tiene al menos **un test** automatizado (o, si es puramente visual, un paso de verificación manual escrito en el plan).
-- `pytest` debe pasar antes de dar una tarea por terminada.
-- Los errores que ve el usuario son claros, en español y dicen qué hacer ("El código ha caducado, pide el nuevo al profesor").
+- Todo lo que pide una spec se comprueba: con un test o, si no se puede automatizar, a mano.
+- Los tests pasan antes de dar algo por terminado.
+- Los errores que ve el usuario son claros y dicen qué hacer.
 
 ---
 
 ## 6. Seguridad
 
-- Los códigos de asistencia **caducan** y no se pueden adivinar **a mano** antes de caducar. La protección contra ataques automatizados (scripts) no es un requisito.
+- Los códigos de asistencia **caducan** y no se pueden adivinar **a mano** antes de caducar.
+- Hay un **freno** contra quien prueba códigos sin parar: cuenta los fallos y bloquea **un tiempo**. **Nunca** puede impedir que la clase pase lista.
 - Un mismo alumno no puede registrarse dos veces en la misma sesión.
 - Una sesión cerrada no acepta más registros.
-- Toda entrada del usuario se valida en el servidor y se escapa al mostrarla (sin HTML inyectado).
+- Toda entrada del usuario se valida en el servidor y se escapa al mostrarla.
 
 ---
 
@@ -103,16 +111,4 @@ El detalle de cómo se relacionan esas carpetas está en `docs/ARCHITECTURE.md`.
 ## 8. Enmiendas
 
 - Cualquiera (persona o agente) puede **proponer** un cambio, pero solo lo **aprueba** la persona que trabaja en esta carpeta.
-- Cada enmienda sube la versión (1.0 → 1.1 para añadidos, 2.0 si se elimina o contradice un principio) y se anota abajo con fecha y motivo.
-
-### Historial de enmiendas
-
-| Versión | Fecha      | Cambio                                                                                                                                                                                                                                  | Motivo                                                                                                                                                                        |
-| ------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1.0     | 2026-10-19 | Versión inicial                                                                                                                                                                                                                         | Arranque del proyecto                                                                                                                                                         |
-| 1.1     | 2026-10-19 | §6: los códigos no deben poder adivinarse _a mano_; la protección contra scripts deja de ser obligatoria                                                                                                                                | En una clase el riesgo real es un alumno ausente, no un ataque automatizado. Evita añadir límites de intentos que no aportan al MVP (P2)                                      |
-| 2.0     | 2026-10-20 | §3: stack Node.js → Python (Flask + pytest). P3 pasa de "cero dependencias" a "dependencias mínimas" y permite Flask y pytest                                                                                                           | Requisito nuevo: el proyecto debe hacerse en Python. Se elige Flask por ser simple y muy extendido, y pytest por su sintaxis sencilla                                         |
-| 2.1     | 2026-10-20 | P4: distingue _almacenar_ (solo en local) de _transitar_ (puede pasar cifrado por un proveedor de túnel)                                                                                                                                | Los alumnos asisten desde casa y necesitan llegar a la app del profesor; un túnel es la forma más simple (spec 001, HU-08)                                                    |
-| 2.2     | 2026-10-22 | §4: ningún fichero de la app se modifica sin spec aprobado; una issue, una rama o una pull request no sustituyen al spec. §7: la carpeta es `staff/ventura-rodriguez/asistenciapp/`. §8: aprueba la persona que trabaja en esta carpeta | El texto solo frenaba el código de una funcionalidad, así que un cambio de README se escribía sin spec. Las reglas seguían nombrando otra carpeta y a otra persona (spec 002) |
-| 2.3     | 2026-10-22 | §3: el código se reparte en `docs/`, `asistencia/domain/`, `asistencia/usecases/`, `asistencia/storage/` y `app.py`. El archivo sigue en `data/` y las pantallas en `static/` | La organización de archivos y carpetas cambió. El propósito, la privacidad y las reglas de pasar lista siguen (spec 005) |
-| 3.0     | 2026-10-23 | P4: la IP pública estática se puede recordar solo para contar los intentos de registrarse y para la lista de bloqueo. No se guarda con el nombre ni con la hora | El límite por IP necesita recordar esa IP. Contradice la prohibición de guardar IPs. Los máximos y la duración de la lista se quedan en la spec 006 |
+- Cada enmienda sube la versión (1.0 → 1.1 para añadidos, 2.0 si se elimina o contradice un principio) y se anota con fecha y motivo en [`specs/000-historial/enmienda.md`](../specs/000-historial/enmienda.md).

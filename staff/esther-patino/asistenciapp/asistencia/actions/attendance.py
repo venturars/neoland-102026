@@ -7,6 +7,7 @@ No conoce el navegador.
 from datetime import datetime
 
 from asistencia.domain.access import MINUTE, is_attack
+from asistencia.domain.arrival import label
 from asistencia.domain.codes import code_for, is_valid_code, seconds_left
 from asistencia.domain.names import clean_name, name_key
 from asistencia.infra import db
@@ -81,7 +82,7 @@ def register(conn, session_id: str, raw_name, code, now: float, checked_at: str)
     :param code: código que escribió el alumno.
     :param now: instante actual, en segundos Unix.
     :param checked_at: hora del registro, en ISO UTC.
-    :return: name, checked_at y created. created es False si ya estaba.
+    :return: name, checked_at, arrival y created. created es False si ya estaba.
     :raises ActionError: si la clase no existe, está cerrada, el nombre no vale o el código no vale.
     """
     session = _require_session(conn, session_id)
@@ -94,7 +95,12 @@ def register(conn, session_id: str, raw_name, code, now: float, checked_at: str)
     if not is_valid_code(session["secret"], code, now):
         raise ActionError(INVALID_CODE)
     row, created = db.add_checkin(conn, session_id, name, name_key(name), checked_at)
-    return {"name": row["name"], "checked_at": row["checked_at"], "created": created}
+    return {
+        "name": row["name"],
+        "checked_at": row["checked_at"],
+        "created": created,
+        "arrival": label(session["opened_at"], row["checked_at"]),
+    }
 
 
 def list_sessions(conn) -> list[dict]:
@@ -132,7 +138,10 @@ def teacher_view(conn, session_id: str, now: float) -> dict:
     :raises ActionError: si la clase no existe.
     """
     session = _require_session(conn, session_id)
-    checkins = db.list_checkins(conn, session_id)
+    checkins = [
+        {**item, "arrival": label(session["opened_at"], item["checked_at"])}
+        for item in db.list_checkins(conn, session_id)
+    ]
     data = {
         "id": session["id"],
         "title": session["title"],
@@ -186,8 +195,12 @@ def export_csv(conn, session_id: str) -> dict:
     :raises ActionError: si la clase no existe.
     """
     session = _require_session(conn, session_id)
+    rows = [
+        {**item, "arrival": label(session["opened_at"], item["checked_at"])}
+        for item in db.list_checkins(conn, session_id)
+    ]
     return {
         "opened_at": session["opened_at"],
         "session_id": session["id"],
-        "csv": to_csv(db.list_checkins(conn, session_id)),
+        "csv": to_csv(rows),
     }

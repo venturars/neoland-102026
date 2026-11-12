@@ -1,0 +1,92 @@
+[
+  {
+    "key": "diego-molero",
+    "name": "Diego Molero",
+    "character": "node-jack",
+    "display_order": 0
+  },
+  {
+    "key": "diego-torres",
+    "name": "Diego Torres",
+    "character": "espantatorres",
+    "display_order": 1
+  },
+  {
+    "key": "ella-deyavorsky",
+    "name": "Ella Deyavorsky",
+    "character": "mr-wobble",
+    "display_order": 2
+  },
+  {
+    "key": "esther-patino",
+    "name": "Esther Patino",
+    "character": "hombre-lobo-esther",
+    "display_order": 3
+  },
+  {
+    "key": "jimena-duran",
+    "name": "Jimena Duran",
+    "character": "ajolote",
+    "display_order": 4
+  },
+  {
+    "key": "jose-miguel",
+    "name": "Jose Miguel",
+    "character": "jack",
+    "display_order": 5
+  },
+  {
+    "key": "luis-duque",
+    "name": "Luis Duque",
+    "character": "vampire-king-leo",
+    "display_order": 6
+  },
+  {
+    "key": "manuel-diaz",
+    "name": "Manuel Diaz",
+    "character": "fantasmiko",
+    "display_order": 7
+  },
+  {
+    "key": "maria-osipuk",
+    "name": "Maria Osipuk",
+    "character": "mimo",
+    "display_order": 8
+  },
+  {
+    "key": "meghan-martin",
+    "name": "Meghan Martin",
+    "character": "fantasma",
+    "display_order": 9
+  },
+  {
+    "key": "miguel-rodriguez",
+    "name": "Miguel Rodriguez",
+    "character": "yomi",
+    "display_order": 10
+  },
+  {
+    "key": "raul-santamaria",
+    "name": "Raul Santamaria",
+    "character": "calabaza-aterradora",
+    "display_order": 11
+  },
+  {
+    "key": "sergio-cortes",
+    "name": "Sergio Cortes",
+    "character": "harry-universe",
+    "display_order": 12
+  },
+  {
+    "key": "sergio-moras",
+    "name": "Sergio Moras",
+    "character": "edgar-allan-poe",
+    "display_order": 13
+  },
+  {
+    "key": "victor-chang",
+    "name": "Victor Chang",
+    "character": "vicwolf",
+    "display_order": 14
+  }
+]

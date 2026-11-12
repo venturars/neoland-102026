@@ -20,6 +20,21 @@ function showMessage(kind, text) {
   statusEl.append(p);
 }
 
+function showArrival(beforeName, name, afterName, arrival) {
+  form.hidden = true;
+  statusEl.replaceChildren();
+  const p = document.createElement("p");
+  p.className = "message ok";
+  const nameEl = document.createElement("span");
+  nameEl.className = `name ${arrival === "A tiempo" ? "on-time" : "late"}`;
+  nameEl.textContent = name;
+  const arrivalEl = document.createElement("span");
+  arrivalEl.className = "arrival";
+  arrivalEl.textContent = arrival;
+  p.append(beforeName, nameEl, afterName, arrivalEl, ".");
+  statusEl.append(p);
+}
+
 function hhmm(iso) {
   return new Date(iso).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
 }
@@ -34,12 +49,24 @@ function savedRegistration() {
 }
 function saveRegistration(data) {
   try {
-    localStorage.setItem(registrationKey(), JSON.stringify({ name: data.name, checkedAt: data.checkedAt }));
+    localStorage.setItem(
+      registrationKey(),
+      JSON.stringify({ name: data.name, checkedAt: data.checkedAt, arrival: data.arrival }),
+    );
   } catch { /* sin almacenamiento: el límite no se aplica */ }
 }
 function showAlreadyRegistered(reg) {
   form.hidden = true;
-  showMessage("ok", `Ya te registraste en esta clase como ${reg.name} a las ${hhmm(reg.checkedAt)}.`);
+  if (!reg.arrival) {
+    showMessage("ok", `Ya te registraste en esta clase como ${reg.name} a las ${hhmm(reg.checkedAt)}.`);
+    return;
+  }
+  showArrival(
+    "Ya te registraste en esta clase como ",
+    reg.name,
+    ` a las ${hhmm(reg.checkedAt)}. `,
+    reg.arrival,
+  );
 }
 
 // El nombre se recuerda solo en este dispositivo, para la próxima clase.
@@ -98,11 +125,14 @@ form.addEventListener("submit", async (event) => {
     if (res.status === 201) { // CA-04
       rememberName(data.name);
       saveRegistration(data);
-      form.hidden = true;
-      showMessage("ok", `¡Listo, ${data.name}! Registrado a las ${hhmm(data.checkedAt)}.`);
+      showArrival("¡Listo, ", data.name, `! Registrado a las ${hhmm(data.checkedAt)}. `, data.arrival);
     } else if (res.ok && data.already) { // CA-07 (no marca el navegador: no se registró desde aquí)
-      form.hidden = true;
-      showMessage("ok", `Ya estabas registrado a las ${hhmm(data.checkedAt)}.`);
+      showArrival(
+        "Ya estabas registrado como ",
+        data.name,
+        ` a las ${hhmm(data.checkedAt)}. `,
+        data.arrival,
+      );
     } else if (res.status === 409) { // CA-09
       form.hidden = true;
       showMessage("error", data.error);

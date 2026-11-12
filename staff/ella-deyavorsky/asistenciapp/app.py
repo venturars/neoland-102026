@@ -1,6 +1,9 @@
-"""AsistenciApp: servidor Flask (plan §1, §4).
+"""AsistenciApp: borde HTTP de la aplicación (rutas, token del profesor y arranque).
 
-Uso: `python app.py` y abrir la URL del panel que se imprime en consola.
+Usage::
+
+    python app.py            # solo en local
+    python app.py --tunel    # con enlace público para clases online
 """
 
 import argparse
@@ -9,78 +12,120 @@ import os
 import socket
 import sys
 import time
-from datetime import datetime, timezone
 from pathlib import Path
 
-from flask import Flask, Response, abort, g, jsonify, request
+from flask import Flask, Response, jsonify, request
 from werkzeug.exceptions import HTTPException
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from asistencia import db
-from asistencia.codes import code_for, is_valid_code, seconds_left
-from asistencia.export import to_csv
-from asistencia.names import clean_name, name_key
+from asistencia.domain.passes import PassExpired, PassUsed
+from asistencia.domain.rate_limit import IpBanned
+from asistencia.domain.roster import (
+    DuplicateName,
+    EmptyGroup,
+    GroupArchived,
+    GroupFull,
+    GroupGone,
+    GroupHasOpenSession,
+    GroupNotFound,
+    NameTaken,
+    NoGroup,
+    NotInRoster,
+    SimilarName,
+    StudentNotFound,
+)
+from asistencia.domain.session import (
+    CheckinNotFound,
+    InvalidCode,
+    SessionClosed,
+    SessionNotFound,
+)
+from asistencia.export import to_csv, to_group_csv
 from asistencia.tunnel import TunnelError, start_tunnel
+from asistencia.usecases import attendance, groups
 
 BASE_DIR = Path(__file__).parent
 DEFAULT_DB = BASE_DIR / "data" / "asistencia.db"
 
-INVALID_CODE = "El código no es válido o ha caducado. Pide el código actual al profesor."
-CLOSED = "La asistencia de esta clase ya está cerrada."
-NOT_FOUND = "Esta clase no existe. Revisa el enlace."
 UNAUTHORIZED = "Acceso no autorizado. Abre el panel con tu enlace secreto de profesor."
 GENERIC_ERRORS = {404: "No encontrado.", 405: "Método no permitido."}
 
+# Cada error del dominio se traduce a su estado HTTP.
+DOMAIN_ERRORS = {
+    SessionNotFound: 404,
+    CheckinNotFound: 404,
+    SessionClosed: 409,
+    InvalidCode: 422,
+    IpBanned: 429,
+    GroupNotFound: 404,
+    StudentNotFound: 404,
+    DuplicateName: 409,
+    GroupFull: 409,
+    GroupHasOpenSession: 409,
+    GroupArchived: 409,
+    EmptyGroup: 409,
+    NameTaken: 409,
+    NoGroup: 409,
+    NotInRoster: 422,
+    PassExpired: 401,
+    GroupGone: 410,
+}
+
+# Rutas solo para el profesor: necesitan su token (CA-15, CA-17; spec 007).
+TEACHER_PREFIXES = ("/api/sessions", "/api/groups")
+
 
 def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
+    """Crea la aplicación Flask: rutas, token del profesor y errores HTTP.
+
+    :param db_path: ruta de la base de datos.
+    :param token: token del profesor; si falta, se usa el guardado o se crea.
+    :param now: reloj que devuelve segundos Unix (los tests lo sustituyen).
+    :return: la aplicación lista para ejecutar.
+    :rtype: Flask
+
+    Usage::
+
+        >>> app = create_app(token="secreto")  # doctest: +SKIP
+        >>> app.run(host="127.0.0.1", port=8000)  # doctest: +SKIP
+    """
     app = Flask(__name__, static_folder="static", static_url_path="")
     app.json.ensure_ascii = False
     # Detrás del túnel, usar la dirección pública que nos indica (plan §2.10, CA-19).
-    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+    # x_for=0: la IP que se cuenta es la de la conexión, no una cabecera que escribe el usuario (spec 006, CA-11).
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=0, x_proto=1, x_host=1)
 
-    conn = db.connect(db_path)
-    db.init_schema(conn)
-    app.config["TEACHER_TOKEN"] = token or db.get_or_create_teacher_token(conn)
-    conn.close()
+    teacher_token = attendance.prepare(db_path)
+    app.config["TEACHER_TOKEN"] = token or teacher_token
 
     # ---------- utilidades ----------
-
-    def get_db():
-        # Una conexión por petición (plan §2.9).
-        if "db" not in g:
-            g.db = db.connect(db_path)
-        return g.db
-
-    @app.teardown_appcontext
-    def close_db(_exc):
-        conn = g.pop("db", None)
-        if conn is not None:
-            conn.close()
-
-    def now_iso() -> str:
-        return datetime.fromtimestamp(now(), timezone.utc).isoformat(timespec="milliseconds")
 
     def error(status: int, message: str):
         return jsonify(error=message), status
 
-    def session_or_404(session_id: str) -> dict:
-        session = db.get_session(get_db(), session_id)
-        if session is None:
-            abort(404, NOT_FOUND)
-        return session
+    for error_class, status in DOMAIN_ERRORS.items():
+        app.register_error_handler(error_class, lambda exc, status=status: error(status, str(exc)))
+
+    @app.errorhandler(PassUsed)
+    def pass_used(exc):
+        # Un pase, un registro: la página del alumno vuelve a pedir el código (spec 007, CA-21).
+        return jsonify(error=str(exc), needCode=True), 409
+
+    @app.errorhandler(SimilarName)
+    def similar_name(exc):
+        # «¿Quisiste decir…?»: el alumno elige el nombre sugerido o sigue como nuevo (spec 007, CA-05).
+        return jsonify(error=str(exc), suggestion=exc.suggestion), 409
 
     @app.errorhandler(HTTPException)
     def http_error(exc):
         if request.path.startswith("/api/"):
-            if exc.description == NOT_FOUND:
-                return error(404, NOT_FOUND)
             return error(exc.code, GENERIC_ERRORS.get(exc.code, "Error inesperado."))
         return exc
 
     @app.before_request
     def require_teacher():
-        # Todo lo que cuelga de /api/sessions es solo para el profesor (CA-15, CA-17).
-        if request.path == "/api/sessions" or request.path.startswith("/api/sessions/"):
+        # Todo lo que cuelga de /api/sessions y /api/groups es solo para el profesor (CA-15, CA-17).
+        if any(request.path == p or request.path.startswith(p + "/") for p in TEACHER_PREFIXES):
             given = request.headers.get("X-Teacher-Token", "").encode()
             if not hmac.compare_digest(given, app.config["TEACHER_TOKEN"].encode()):
                 return error(401, UNAUTHORIZED)
@@ -95,98 +140,166 @@ def create_app(db_path=DEFAULT_DB, token=None, now=time.time):
 
     @app.get("/api/s/<session_id>")
     def public_session(session_id):
-        session = session_or_404(session_id)
-        return jsonify(title=session["title"], open=session["closed_at"] is None)
+        return jsonify(attendance.public_session(db_path, session_id))
+
+    @app.post("/api/s/<session_id>/unlock")
+    def unlock(session_id):
+        body = request.get_json(silent=True) or {}
+        return jsonify(
+            attendance.unlock(db_path, session_id, body.get("code", ""), request.remote_addr, now)
+        )  # spec 007, RF-11
+
+    @app.post("/api/s/<session_id>/roster")
+    def roster(session_id):
+        body = request.get_json(silent=True) or {}
+        return jsonify(
+            attendance.roster_for_pass(db_path, session_id, body.get("pass"), request.remote_addr, now)
+        )
+
+    @app.get("/api/s/<session_id>/checkins/<int:checkin_id>")
+    def registration(session_id, checkin_id):
+        return jsonify(
+            attendance.registration_exists(db_path, session_id, checkin_id, request.args.get("r"))
+        )  # spec 007, CA-14
 
     @app.post("/api/s/<session_id>/checkin")
     def check_in(session_id):
-        session = session_or_404(session_id)
-        if session["closed_at"] is not None:
-            return error(409, CLOSED)  # CA-09
-
         body = request.get_json(silent=True) or {}
+        if "pass" in body:  # sesión con grupo (spec 007)
+            try:
+                result = attendance.check_in_group(
+                    db_path, session_id, body.get("pass"), body.get("name"),
+                    bool(body.get("isNew")), bool(body.get("confirmSimilar")), request.remote_addr, now,
+                )
+            except ValueError as exc:
+                return error(400, str(exc))
+            return jsonify(result), 201
         try:
-            name = clean_name(body.get("name"))
+            result, created = attendance.check_in(
+                db_path, session_id, body.get("name"), body.get("code", ""), request.remote_addr, now
+            )
         except ValueError as exc:
             return error(400, str(exc))  # CA-08
-
-        if not is_valid_code(session["secret"], body.get("code", ""), now()):
-            return error(422, INVALID_CODE)  # CA-06
-
-        row, created = db.add_checkin(get_db(), session_id, name, name_key(name), now_iso())
         if not created:
-            return jsonify(already=True, name=row["name"], checkedAt=row["checked_at"])  # CA-07
-        return jsonify(name=row["name"], checkedAt=row["checked_at"]), 201  # CA-04
+            return jsonify(already=True, **result)  # CA-07
+        return jsonify(result), 201  # CA-04
 
     # ---------- API del profesor ----------
 
     @app.get("/api/sessions")
     def list_sessions():
-        return jsonify([
-            {
-                "id": s["id"],
-                "title": s["title"],
-                "openedAt": s["opened_at"],
-                "closedAt": s["closed_at"],
-                "total": s["total"],
-            }
-            for s in db.list_sessions(get_db())
-        ])  # CA-16
+        return jsonify(attendance.list_sessions(db_path))  # CA-16
 
     @app.post("/api/sessions")
     def create_session():
         body = request.get_json(silent=True) or {}
-        title = str(body.get("title") or "").strip()
-        if not title:
-            title = datetime.fromtimestamp(now()).strftime("%d/%m/%Y %H:%M")  # CA-02
-        session = db.create_session(get_db(), title, now_iso())
-        return jsonify(id=session["id"], title=session["title"]), 201  # CA-01
+        session = attendance.create_session(db_path, body.get("title"), now, body.get("groupId"))
+        return jsonify(session), 201  # CA-01; spec 007, RF-8
 
     @app.get("/api/sessions/<session_id>")
     def teacher_view(session_id):
-        session = session_or_404(session_id)
-        checkins = db.list_checkins(get_db(), session_id)
-        data = {
-            "id": session["id"],
-            "title": session["title"],
-            "open": session["closed_at"] is None,
-            "openedAt": session["opened_at"],
-            "closedAt": session["closed_at"],
-            "studentUrl": f"{request.host_url}alumno.html?s={session_id}",
-            "total": len(checkins),  # CA-11
-            "checkins": [
-                {"id": c["id"], "name": c["name"], "checkedAt": c["checked_at"]} for c in checkins
-            ],
-        }
-        if data["open"]:  # sin código si está cerrada (CA-13)
-            data["code"] = code_for(session["secret"], now())
-            data["secondsLeft"] = seconds_left(now())
+        data = attendance.teacher_view(db_path, session_id, now)
+        data["studentUrl"] = f"{request.host_url}alumno.html?s={session_id}"
         return jsonify(data)
 
     @app.post("/api/sessions/<session_id>/close")
     def close_session(session_id):
-        session_or_404(session_id)
-        db.close_session(get_db(), session_id, now_iso())  # CA-13
+        attendance.close_session(db_path, session_id, now)  # CA-13
         return jsonify(ok=True)
 
     @app.delete("/api/sessions/<session_id>/checkins/<int:checkin_id>")
     def remove_checkin(session_id, checkin_id):
-        session_or_404(session_id)
-        if not db.remove_checkin(get_db(), session_id, checkin_id):  # CA-24
-            return error(404, "Ese registro no existe en esta clase.")
+        attendance.remove_checkin(db_path, session_id, checkin_id)  # CA-24
         return jsonify(ok=True)
 
     @app.get("/api/sessions/<session_id>/export")
     def export(session_id):
-        session = session_or_404(session_id)
+        session, checkins = attendance.checkins_for_export(db_path, session_id)
         day = session["opened_at"][:10]
+        if session["group_name"] is None:
+            content = to_csv(checkins)  # CA-14
+        else:
+            roster = attendance.roster_for_export(db_path, session_id)
+            content = to_group_csv(session["group_name"], session["opened_at"], roster, checkins)  # spec 007, RF-21
         return Response(
-            to_csv(db.list_checkins(get_db(), session_id)),  # CA-14
+            content,
             mimetype="text/csv",
             headers={
                 "Content-Disposition": f'attachment; filename="asistencia-{day}-{session_id}.csv"'
             },
         )
+
+    @app.post("/api/sessions/<session_id>/checkins/<int:checkin_id>/decision")
+    def decide_new(session_id, checkin_id):
+        body = request.get_json(silent=True) or {}
+        try:
+            return jsonify(attendance.decide_new(db_path, session_id, checkin_id, body.get("action")))
+        except ValueError as exc:
+            return error(400, str(exc))  # spec 007, RF-20
+
+    # ---------- API del profesor: grupos (spec 007) ----------
+
+    @app.get("/api/groups")
+    def list_groups():
+        return jsonify(groups.list_groups(db_path, request.args.get("archived") == "1"))  # RF-4, RF-5
+
+    @app.post("/api/groups")
+    def create_group():
+        body = request.get_json(silent=True) or {}
+        try:
+            group = groups.create_group(db_path, body.get("name"), body.get("students") or [], now)
+        except ValueError as exc:
+            return error(400, str(exc))
+        return jsonify(group), 201  # CA-01
+
+    @app.post("/api/groups/preview")
+    def preview_group():
+        body = request.get_json(silent=True) or {}
+        return jsonify(
+            groups.preview_roster(db_path, body.get("text") or "", body.get("source"), body.get("groupId"))
+        )  # CA-01, CA-02
+
+    @app.get("/api/groups/<group_id>")
+    def group_detail(group_id):
+        return jsonify(groups.group_detail(db_path, group_id))
+
+    @app.patch("/api/groups/<group_id>")
+    def update_group(group_id):
+        body = request.get_json(silent=True) or {}
+        try:
+            if "name" in body:
+                groups.rename_group(db_path, group_id, body["name"])  # RF-3
+            if "archived" in body:
+                groups.set_archived(db_path, group_id, bool(body["archived"]), now)  # RF-5
+        except ValueError as exc:
+            return error(400, str(exc))
+        return jsonify(groups.group_detail(db_path, group_id))
+
+    @app.delete("/api/groups/<group_id>")
+    def delete_group(group_id):
+        groups.delete_group(db_path, group_id)  # RF-6
+        return jsonify(ok=True)
+
+    @app.post("/api/groups/<group_id>/students")
+    def add_students(group_id):
+        body = request.get_json(silent=True) or {}
+        try:
+            return jsonify(groups.add_students(db_path, group_id, body.get("names") or [])), 201
+        except ValueError as exc:
+            return error(400, str(exc))
+
+    @app.patch("/api/groups/<group_id>/students/<int:student_id>")
+    def rename_student(group_id, student_id):
+        body = request.get_json(silent=True) or {}
+        try:
+            return jsonify(groups.rename_student(db_path, group_id, student_id, body.get("name")))
+        except ValueError as exc:
+            return error(400, str(exc))
+
+    @app.delete("/api/groups/<group_id>/students/<int:student_id>")
+    def remove_student(group_id, student_id):
+        groups.remove_student(db_path, group_id, student_id)
+        return jsonify(ok=True)
 
     return app
 

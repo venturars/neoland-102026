@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>First App</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <nav class="tabs" role="tablist">
+      <button
+        id="tab-users"
+        type="button"
+        role="tab"
+        class="tab is-active"
+        aria-selected="true"
+      >
+        Usuarios
+      </button>
+      <button
+        id="tab-count"
+        type="button"
+        role="tab"
+        class="tab"
+        aria-selected="false"
+      >
+        Recuento
+      </button>
+    </nav>
+
+    <div id="users-tab">
+      <p id="message" class="message" role="status" hidden></p>
+
+      <section id="list-view">
+        <h1>Usuarios</h1>
+        <p id="loading" class="muted">Cargando usuarios...</p>
+        <p id="empty-list" class="muted" hidden>Todavía no hay usuarios.</p>
+        <ul id="user-list" class="user-list"></ul>
+
+        <h2>Nuevo usuario</h2>
+        <form id="create-form" novalidate>
+          <label>
+            Nombre
+            <input id="create-name" type="text" autocomplete="off" />
+          </label>
+          <label>
+            Email
+            <input id="create-email" type="text" autocomplete="off" />
+          </label>
+          <div class="actions">
+            <button type="submit">Crear usuario</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="detail-view" hidden>
+        <h1 id="detail-title"></h1>
+        <dl class="facts">
+          <dt>Id</dt>
+          <dd id="detail-id"></dd>
+          <dt>Email</dt>
+          <dd id="detail-email"></dd>
+          <dt>Creado</dt>
+          <dd id="detail-created"></dd>
+          <dt>Modificado</dt>
+          <dd id="detail-updated"></dd>
+        </dl>
+
+        <form id="edit-form" novalidate>
+          <label>
+            Nombre
+            <input id="edit-name" type="text" autocomplete="off" />
+          </label>
+          <label>
+            Email
+            <input id="edit-email" type="text" autocomplete="off" />
+          </label>
+          <div class="actions">
+            <button type="submit">Guardar cambios</button>
+            <button id="back" type="button" class="button-quiet">Volver</button>
+          </div>
+        </form>
+
+        <div id="delete-actions" class="actions">
+          <button id="delete-user" type="button" class="button-danger">
+            Borrar usuario
+          </button>
+        </div>
+
+        <div id="delete-confirmation" class="confirmation" hidden>
+          <p>¿Seguro que quieres borrar este usuario?</p>
+          <div class="actions">
+            <button id="confirm-delete" type="button" class="button-danger">
+              Sí, borrar
+            </button>
+            <button id="cancel-delete" type="button" class="button-quiet">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section id="count-tab" hidden>
+      <h2>Recuento por género</h2>
+      <p class="muted">
+        Cuenta los usuarios guardados según el género que sugiere su nombre.
+      </p>
+      <p
+        id="count-message"
+        class="message message-error"
+        role="status"
+        hidden
+      ></p>
+      <div class="actions">
+        <button id="count-button" type="button">Pedir recuento</button>
+      </div>
+      <p id="count-loading" class="muted" hidden>Contando usuarios...</p>
+      <dl id="count-result" class="facts" hidden>
+        <dt>Mujeres</dt>
+        <dd id="count-female"></dd>
+        <dt>Hombres</dt>
+        <dd id="count-male"></dd>
+        <dt>Indefinidos</dt>
+        <dd id="count-undefined"></dd>
+      </dl>
+    </section>
+
+    <script type="module" src="./popup.js"></script>
+  </body>
+</html>

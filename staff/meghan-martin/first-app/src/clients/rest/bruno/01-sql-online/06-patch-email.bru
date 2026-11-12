@@ -1,0 +1,27 @@
+meta {
+  name: patch-email
+  type: http
+  seq: 6
+}
+
+patch {
+  url: {{baseUrl}}/users/{{userId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "ada.lovelace@example.com"
+  }
+}
+
+tests {
+  test("Estado 200", function () { expect(res.getStatus()).to.equal(200); });
+  test("Conserva número y nombre", function () {
+    const user = res.getBody();
+    expect(user.id).to.equal(Number(bru.getVar("userId")));
+    expect(user.name).to.equal("Ada Lovelace");
+    expect(user.email).to.equal("ada.lovelace@example.com");
+  });
+}

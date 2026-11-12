@@ -1,0 +1,26 @@
+meta {
+  name: find-by-name
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{baseUrl}}/users/by-name?name=Ada
+  body: none
+  auth: none
+}
+
+params:query {
+  name: Ada
+}
+
+tests {
+  test("Estado 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("La lista contiene a Ada", function () {
+    const ids = res.getBody().map((user) => user.id);
+    expect(ids).to.include(bru.getVar("userId"));
+  });
+}

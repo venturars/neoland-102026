@@ -1,0 +1,25 @@
+meta {
+  name: find-by-email-missing
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{baseUrl}}/users/by-email?email=nadie-{{marca}}@example.com
+  body: none
+  auth: none
+}
+
+params:query {
+  email: nadie-{{marca}}@example.com
+}
+
+tests {
+  test("Estado 404", function () {
+    expect(res.getStatus()).to.equal(404);
+  });
+
+  test("Mensaje User not found", function () {
+    expect(res.getBody().message).to.equal("User not found");
+  });
+}

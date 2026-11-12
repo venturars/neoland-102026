@@ -1,1 +1,0 @@
-node --input-type=module -e "import { createUser } from './logic/create-user.js'; console.log(createUser('Ada', 'ada@example.com'))"

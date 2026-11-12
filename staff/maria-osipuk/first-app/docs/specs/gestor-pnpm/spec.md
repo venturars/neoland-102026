@@ -1,5 +1,7 @@
 # Gestor pnpm
 
+Issue: #690. Regularización documental; no se ha identificado una issue original.
+
 ## Qué se pide
 
 Por política de seguridad, el proyecto usa solo pnpm para instalar dependencias, ejecutar scripts y lanzar herramientas. La misma regla vale para las próximas funcionalidades.

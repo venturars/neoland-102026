@@ -1,0 +1,28 @@
+# Tareas — clasificador de género
+
+1. Abre `docs/CONSTITUCION.md`, en la tabla de quién sabe qué.
+   Añade `logic/users-gender-count.js` y la operación `usersGenderCount(store)`.
+   En «Errores», escribe `No se han podido clasificar los usuarios` y que lo lanza ese fichero.
+   Esas frases se leen en el documento.
+
+2. Abre `AGENTS.md`.
+   Deja los scripts con pnpm y admite la dependencia `openai`.
+   Esa frase se lee en la guía.
+
+3. En `first-app`, ejecuta `pnpm add openai`.
+   `package.json` lista `openai`.
+   No se añade otra dependencia.
+
+4. Abre `logic/users-gender-count.js`.
+   La constante `MODEL` vale `llama3.2` una sola vez.
+   Los ejemplos, en este orden, son Carmen `women`, Lucia `women`, Javier `men`, Pablo `men` y Kim `undefined`.
+   El lote es un mensaje `user` con un nombre por línea. `response_format` es `json_schema` y el esquema es `{ genders }`.
+
+5. En ese fichero, `usersGenderCount(store)` llama a `findAll`.
+   No importa `db` ni `queries`. El email no sale del fichero.
+   `women` y `men` suman en su campo. Cualquier otro valor suma en `genderUndefined`.
+   Si no hay mensaje, el JSON no se lee, o `genders` no coincide, ese lote suma en `genderUndefined` y sigue. Si la llamada falla, lanza `No se han podido clasificar los usuarios`.
+
+6. Abre `clients/terminal/users-gender-count.txt`.
+   Llama a `usersGenderCount` con el almacén SQLite.
+   Imprime solo `{ women, men, genderUndefined }`.
