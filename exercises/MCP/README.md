@@ -65,7 +65,7 @@ Rutas habituales:
 | Proyecto (monorepo) | `.cursor/mcp.json` en la raíz del workspace |
 | Global | `~/.cursor/mcp.json` |
 
-Ejemplo comiteable en el monorepo: **`exercises/MCP/.mcp.json`** (solo el remoto de Railway). Para stdio local, suele ir en `.cursor/mcp.json` del workspace.
+La config **activa** va en **`.mcp.json` en la raíz del monorepo** (no se sube a Git). Plantilla comiteada: **`.mcp.example.json`** en la misma raíz — copia a `.mcp.json`
 
 Tras editar la config, recarga los MCP en Cursor (o reinicia) si no aparecen.
 

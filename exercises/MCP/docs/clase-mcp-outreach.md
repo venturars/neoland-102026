@@ -454,7 +454,6 @@ Cursor lee la configuración MCP de archivos concretos. **No escanea el repo bus
 |--------|-------------|---------|
 | Proyecto | `.cursor/mcp.json` | Solo este workspace (se puede commitear para el equipo) |
 | Global | `~/.cursor/mcp.json` | Todos tus proyectos en esa máquina |
-| (Este ejercicio) | `exercises/MCP/.mcp.json` | Ejemplo comiteado del remoto de Railway |
 
 Si el mismo nombre de servidor aparece en proyecto y en global, **gana el del proyecto**.
 
