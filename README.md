@@ -80,6 +80,14 @@ Documentación del proyecto:
 - [Tester](exercises/ChromaDB/agents/tester.md): qué comprueba y qué no puede editar.
 - [Skill python-docs](exercises/ChromaDB/skills/python-docs/SKILL.md): cuándo buscar en la documentación y con qué comando.
 
+## MCP Outreach
+
+Servidor MCP de práctica (contactos, tools, resources y prompts) para la clase de MCP. El proyecto compartido es `exercises/MCP/`.
+
+- [README](exercises/MCP/README.md): entorno con `uv`, comandos `make`, Inspector, stdio/HTTP y cómo registrar el servidor en Cursor cuando el workspace es el monorepo completo.
+- [Clase](exercises/MCP/docs/clase-mcp-outreach.md): teoría SDK + demo Flask.
+- [Ejercicio juniors](exercises/MCP/docs/ejercicio-practico-juniors.md): práctica corta.
+
 ## El resto del repositorio
 
 `exercises/halloween/`, `exercises/pomodoro/` y `exercises/poema.md` son ejercicios sueltos. No definen cómo trabaja el agente. Las presentaciones de cada persona están en `staff/<tu-carpeta>/README.md`.
