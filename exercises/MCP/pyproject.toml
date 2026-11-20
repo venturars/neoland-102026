@@ -1,0 +1,13 @@
+[project]
+name = "mcp-test"
+version = "0.1.0"
+description = "Servidor MCP de ejemplo (outreach) para probar en local y desplegar en Railway"
+requires-python = ">=3.14"
+dependencies = [
+    "flask>=3.0.0",
+    "mcp[cli]>=2.3.0",
+]
+
+# Es una aplicación, no una librería: no hace falta empaquetarla.
+[tool.uv]
+package = false
