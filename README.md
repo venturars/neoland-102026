@@ -97,6 +97,12 @@ Pipeline que indexa nueve PDF de la documentación de Python 3.13 y responde con
 
 - [README](exercises/rag-pdf/README.md): corpus, entorno y los tres notebooks.
 
+## Self-RAG
+
+Self-RAG simplificado sobre 26 apuntes de Fórmula 1. `llama3.2`, en local, clasifica, filtra, genera y juzga si la respuesta está soportada. El material está en `exercises/self-rag/`. No define cómo trabaja el agente.
+
+- [README](exercises/self-rag/README.md): corpus, entorno y el notebook.
+
 ## El resto del repositorio
 
 `exercises/halloween/`, `exercises/pomodoro/` y `exercises/poema.md` son ejercicios sueltos. No definen cómo trabaja el agente. Las presentaciones de cada persona están en `staff/<tu-carpeta>/README.md`.
