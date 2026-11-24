@@ -1,0 +1,11 @@
+.venv/
+.env
+chroma_db/
+llama_storage/
+qdrant_db/
+data/archivo/
+data/*.tar.bz2
+.fastembed_cache/
+.ipynb_checkpoints/
+__pycache__/
+*.pyc

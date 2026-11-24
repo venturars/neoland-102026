@@ -91,6 +91,12 @@ Resumen de la clase sobre cómo separar un proyecto para que cada parte tenga un
 - [Instrucciones](exercises/arquitectura-en-capas/arquitectura-en-capas.instructions.md): reglas para agentes, con ID.
 - [Recorte](exercises/arquitectura-en-capas/arquitectura-en-capas-recorte.md): qué regla va a cada fichero de la skill.
 
+## RAG sobre PDF
+
+Pipeline que indexa nueve PDF de la documentación de Python 3.13 y responde con búsqueda densa, híbrida y reranking. Ollama calcula los embeddings y las respuestas en local. El material está en `exercises/rag-pdf/`. No define cómo trabaja el agente.
+
+- [README](exercises/rag-pdf/README.md): corpus, entorno y los tres notebooks.
+
 ## El resto del repositorio
 
 `exercises/halloween/`, `exercises/pomodoro/` y `exercises/poema.md` son ejercicios sueltos. No definen cómo trabaja el agente. Las presentaciones de cada persona están en `staff/<tu-carpeta>/README.md`.
