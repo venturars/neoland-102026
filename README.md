@@ -85,7 +85,11 @@ Documentación del proyecto:
 Resumen de la clase sobre cómo separar un proyecto para que cada parte tenga un sitio, se pueda cambiar y se pueda probar por separado. El material está en `exercises/arquitectura-en-capas/`. No define cómo trabaja el agente.
 
 - [README](exercises/arquitectura-en-capas/README.md): el contenido de la clase, para leer y repasar.
-- [Presentación](exercises/arquitectura-en-capas/arquitectura-en-capas-clase.pptx): las diapositivas originales.
+- [Presentación](exercises/arquitectura-en-capas/arquitectura-en-capas-clase.pptx): las diapositivas.
+- [Documento](exercises/arquitectura-en-capas/arquitectura-en-capas.pdf): fundamentos, cuándo usarla y el modelo de capas.
+- [Guía de implementación](exercises/arquitectura-en-capas/arquitectura_capas_guia_implementacion.pdf): cómo llevarlo al código.
+- [Instrucciones](exercises/arquitectura-en-capas/arquitectura-en-capas.instructions.md): reglas para agentes, con ID.
+- [Recorte](exercises/arquitectura-en-capas/arquitectura-en-capas-recorte.md): qué regla va a cada fichero de la skill.
 
 ## El resto del repositorio
 
