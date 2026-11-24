@@ -1,0 +1,7 @@
+.venv/
+.env
+chroma_db/
+.fastembed_cache/
+.ipynb_checkpoints/
+__pycache__/
+*.pyc

@@ -1,0 +1,13 @@
+langchain==1.5.2
+langchain-ollama==1.2.0
+langchain-chroma==1.2.0
+langchain-community==0.4.2
+langchain-text-splitters==1.2.0
+langchain-classic==1.1.0
+langgraph==1.2.24
+rank-bm25==0.2.2
+fastembed==0.9.1
+chromadb==1.5.9
+jupyter==1.1.1
+ipykernel==7.4.0
+ddgs==9.16.1
