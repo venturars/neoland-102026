@@ -80,6 +80,13 @@ Documentación del proyecto:
 - [Tester](exercises/ChromaDB/agents/tester.md): qué comprueba y qué no puede editar.
 - [Skill python-docs](exercises/ChromaDB/skills/python-docs/SKILL.md): cuándo buscar en la documentación y con qué comando.
 
+## Arquitectura en capas
+
+Resumen de la clase sobre cómo separar un proyecto para que cada parte tenga un sitio, se pueda cambiar y se pueda probar por separado. El material está en `exercises/arquitectura-en-capas/`. No define cómo trabaja el agente.
+
+- [README](exercises/arquitectura-en-capas/README.md): el contenido de la clase, para leer y repasar.
+- [Presentación](exercises/arquitectura-en-capas/arquitectura-en-capas-clase.pptx): las diapositivas originales.
+
 ## El resto del repositorio
 
 `exercises/halloween/`, `exercises/pomodoro/` y `exercises/poema.md` son ejercicios sueltos. No definen cómo trabaja el agente. Las presentaciones de cada persona están en `staff/<tu-carpeta>/README.md`.
