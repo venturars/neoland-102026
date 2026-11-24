@@ -2,7 +2,17 @@
 
 Separar el código en capas, cada una con un solo trabajo, permite que un proyecto crezca sin romperse: se puede cambiar y probar cada parte sin tocar el resto.
 
-Resumen de la clase de AI engineers junior. Las diapositivas originales están en [arquitectura-en-capas-clase.pptx](arquitectura-en-capas-clase.pptx).
+Resumen de la clase de AI engineers junior. El material original está en esta carpeta:
+
+| Documento | Para qué sirve |
+| --- | --- |
+| [arquitectura-en-capas-clase.pptx](arquitectura-en-capas-clase.pptx) | Diapositivas de la clase. |
+| [arquitectura-en-capas.pdf](arquitectura-en-capas.pdf) | El documento completo: fundamentos, cuándo usarla, el modelo de capas y el flujo entre ellas. |
+| [arquitectura_capas_guia_implementacion.pdf](arquitectura_capas_guia_implementacion.pdf) | Guía de implementación (v2). |
+| [arquitectura-en-capas.instructions.md](arquitectura-en-capas.instructions.md) | Instrucciones para agentes (v1.2). Cada regla tiene un ID `R-ÁREA-NN`. |
+| [arquitectura-en-capas-recorte.md](arquitectura-en-capas-recorte.md) | Recorte de esas reglas hacia una skill: qué va a cada fichero y con qué etiqueta. |
+
+Lo que sigue es el resumen de la clase, para leerlo sin abrir las diapositivas.
 
 ## El problema
 
