@@ -1,0 +1,26 @@
+.env
+.venv/
+chroma_db/
+
+# Material del curso (pesado y ajeno)
+*.pdf
+!docs/informe/*.pdf
+
+# Editor y memoria local
+.vscode/
+.memsearch/
+
+# Python
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+
+
+# APM dependencies
+apm_modules/
+
+# Datos de Qdrant (Docker)
+qdrant_storage/
+
+# Chunks generados (notebook 05)
+data/chunks/

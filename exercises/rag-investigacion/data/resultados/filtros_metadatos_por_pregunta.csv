@@ -1,0 +1,289 @@
+configuracion,campo,filtro,repetida_sin_filtro,id,categoria,rango fuente,rango evidencia,hit@4,ev_hit@4,latencia total (ms)
+1 sin filtro,,,False,A01,A,,,False,False,879.9944999991567
+1 sin filtro,,,False,A02,A,3.0,3.0,True,True,868.8392999974894
+1 sin filtro,,,False,A03,A,3.0,3.0,True,True,947.6402000000235
+1 sin filtro,,,False,A04,A,1.0,2.0,True,True,1055.550699995365
+1 sin filtro,,,False,A05,A,1.0,1.0,True,True,1073.3079999990878
+1 sin filtro,,,False,A06,A,1.0,1.0,True,True,1086.326899996493
+1 sin filtro,,,False,A07,A,1.0,1.0,True,True,1099.6641000019736
+1 sin filtro,,,False,A08,A,1.0,3.0,True,True,1092.0093000022462
+1 sin filtro,,,False,A09,A,1.0,1.0,True,True,1124.370599995018
+1 sin filtro,,,False,A10,A,1.0,1.0,True,True,1060.0162999980967
+1 sin filtro,,,False,B01,B,1.0,,True,False,1086.2290000004577
+1 sin filtro,,,False,B02,B,1.0,1.0,True,True,1101.5963000027114
+1 sin filtro,,,False,B03,B,1.0,1.0,True,True,1067.6011000032304
+1 sin filtro,,,False,B04,B,2.0,2.0,True,True,1076.766399994085
+1 sin filtro,,,False,B05,B,2.0,2.0,True,True,813.2446999952663
+1 sin filtro,,,False,B06,B,1.0,2.0,True,True,1072.4965000044904
+1 sin filtro,,,False,B07,B,1.0,1.0,True,True,1075.165400005062
+1 sin filtro,,,False,B08,B,3.0,,True,False,1041.6178000014042
+1 sin filtro,,,False,B09,B,1.0,1.0,True,True,1054.5399999973597
+1 sin filtro,,,False,B10,B,1.0,1.0,True,True,1082.3295000009239
+1 sin filtro,,,False,C01,C,1.0,,True,False,1078.9820000063628
+1 sin filtro,,,False,C02,C,2.0,2.0,True,True,731.229799996072
+1 sin filtro,,,False,C03,C,1.0,1.0,True,True,1086.6138999990653
+1 sin filtro,,,False,C04,C,1.0,1.0,True,True,1044.5996999987983
+1 sin filtro,,,False,C05,C,2.0,2.0,True,True,783.7569999974221
+1 sin filtro,,,False,C06,C,1.0,1.0,True,True,1076.6225999977905
+1 sin filtro,,,False,C07,C,1.0,3.0,True,True,967.7137000035145
+1 sin filtro,,,False,C08,C,2.0,2.0,True,True,795.9477999975206
+1 sin filtro,,,False,C09,C,1.0,2.0,True,True,1044.6458000005805
+1 sin filtro,,,False,D01,D,1.0,1.0,True,True,1081.7817999995896
+1 sin filtro,,,False,D02,D,,,False,False,1055.8651000028476
+1 sin filtro,,,False,D03,D,1.0,,True,False,1094.6889000042574
+2 perfecto modulo sin repeticion,modulo,http.client,False,A01,A,1.0,1.0,True,True,951.6199999998207
+2 perfecto modulo sin repeticion,modulo,urllib.request,False,A02,A,1.0,1.0,True,True,1105.3140999938478
+2 perfecto modulo sin repeticion,modulo,pathlib,False,A03,A,1.0,1.0,True,True,1016.7079000020749
+2 perfecto modulo sin repeticion,modulo,re,False,A04,A,1.0,2.0,True,True,1063.1764999998268
+2 perfecto modulo sin repeticion,modulo,,False,A05,A,1.0,1.0,True,True,1073.7405999971088
+2 perfecto modulo sin repeticion,modulo,json,False,A06,A,1.0,1.0,True,True,1037.254100003338
+2 perfecto modulo sin repeticion,modulo,subprocess,False,A07,A,1.0,1.0,True,True,1054.5112999971025
+2 perfecto modulo sin repeticion,modulo,sqlite3,False,A08,A,1.0,3.0,True,True,1059.9575000014738
+2 perfecto modulo sin repeticion,modulo,,False,A09,A,1.0,1.0,True,True,1060.440399996878
+2 perfecto modulo sin repeticion,modulo,argparse,False,A10,A,1.0,1.0,True,True,1067.4068000007537
+2 perfecto modulo sin repeticion,modulo,http,False,B01,B,1.0,4.0,True,True,364.4410999986576
+2 perfecto modulo sin repeticion,modulo,secrets,False,B02,B,1.0,1.0,True,True,306.5982999978587
+2 perfecto modulo sin repeticion,modulo,hashlib,False,B03,B,1.0,1.0,True,True,944.2421999992803
+2 perfecto modulo sin repeticion,modulo,,False,B04,B,2.0,2.0,True,True,934.783000004245
+2 perfecto modulo sin repeticion,modulo,,False,B05,B,2.0,2.0,True,True,743.6822000017855
+2 perfecto modulo sin repeticion,modulo,,False,B06,B,1.0,2.0,True,True,956.9114999976591
+2 perfecto modulo sin repeticion,modulo,functools,False,B07,B,1.0,1.0,True,True,744.5604000022286
+2 perfecto modulo sin repeticion,modulo,logging,False,B08,B,1.0,,True,False,973.407400000724
+2 perfecto modulo sin repeticion,modulo,itertools,False,B09,B,1.0,1.0,True,True,952.2240000005695
+2 perfecto modulo sin repeticion,modulo,tomllib,False,B10,B,1.0,1.0,True,True,292.5351000012597
+2 perfecto modulo sin repeticion,modulo,asyncio,False,C01,C,1.0,,True,False,981.7709000053583
+2 perfecto modulo sin repeticion,modulo,threading,False,C02,C,1.0,1.0,True,True,961.2959000005503
+2 perfecto modulo sin repeticion,modulo,dataclasses,False,C03,C,1.0,1.0,True,True,931.3471999994363
+2 perfecto modulo sin repeticion,modulo,,False,C04,C,1.0,1.0,True,True,953.8167999999132
+2 perfecto modulo sin repeticion,modulo,,False,C05,C,2.0,2.0,True,True,655.6213000003481
+2 perfecto modulo sin repeticion,modulo,shutil,False,C06,C,1.0,1.0,True,True,944.0929999982473
+2 perfecto modulo sin repeticion,modulo,,False,C07,C,1.0,3.0,True,True,862.1898999990663
+2 perfecto modulo sin repeticion,modulo,,False,C08,C,2.0,2.0,True,True,756.2448999960907
+2 perfecto modulo sin repeticion,modulo,,False,C09,C,1.0,2.0,True,True,954.8925999988569
+2 perfecto modulo sin repeticion,modulo,subprocess|json,False,D01,D,1.0,1.0,True,True,956.8912999966415
+2 perfecto modulo sin repeticion,modulo,http.client|pathlib,False,D02,D,1.0,3.0,True,True,943.8283999988926
+2 perfecto modulo sin repeticion,modulo,threading|concurrent.futures,False,D03,D,1.0,,True,False,963.2682000010391
+3 perfecto modulo con repeticion,modulo,http.client,False,A01,A,1.0,1.0,True,True,803.871900003287
+3 perfecto modulo con repeticion,modulo,urllib.request,False,A02,A,1.0,1.0,True,True,955.1283999971929
+3 perfecto modulo con repeticion,modulo,pathlib,False,A03,A,1.0,1.0,True,True,940.7197000036831
+3 perfecto modulo con repeticion,modulo,re,False,A04,A,1.0,2.0,True,True,972.1205000023474
+3 perfecto modulo con repeticion,modulo,,False,A05,A,1.0,1.0,True,True,951.8928999968921
+3 perfecto modulo con repeticion,modulo,json,False,A06,A,1.0,1.0,True,True,943.3113000050071
+3 perfecto modulo con repeticion,modulo,subprocess,False,A07,A,1.0,1.0,True,True,978.3161999948788
+3 perfecto modulo con repeticion,modulo,sqlite3,False,A08,A,1.0,3.0,True,True,982.7864999970188
+3 perfecto modulo con repeticion,modulo,,False,A09,A,1.0,1.0,True,True,964.7213999996893
+3 perfecto modulo con repeticion,modulo,argparse,False,A10,A,1.0,1.0,True,True,965.5542000036803
+3 perfecto modulo con repeticion,modulo,http,False,B01,B,1.0,4.0,True,True,357.01170000538696
+3 perfecto modulo con repeticion,modulo,secrets,False,B02,B,1.0,1.0,True,True,306.4840999941225
+3 perfecto modulo con repeticion,modulo,hashlib,False,B03,B,1.0,1.0,True,True,926.4735999968252
+3 perfecto modulo con repeticion,modulo,,False,B04,B,2.0,2.0,True,True,978.3313000007183
+3 perfecto modulo con repeticion,modulo,,False,B05,B,2.0,2.0,True,True,760.5310000071768
+3 perfecto modulo con repeticion,modulo,,False,B06,B,1.0,2.0,True,True,956.4832000032766
+3 perfecto modulo con repeticion,modulo,functools,False,B07,B,1.0,1.0,True,True,762.8362000032212
+3 perfecto modulo con repeticion,modulo,logging,False,B08,B,1.0,,True,False,964.169300001231
+3 perfecto modulo con repeticion,modulo,itertools,False,B09,B,1.0,1.0,True,True,1022.0514999964507
+3 perfecto modulo con repeticion,modulo,tomllib,False,B10,B,1.0,1.0,True,True,297.8953999991063
+3 perfecto modulo con repeticion,modulo,asyncio,False,C01,C,1.0,,True,False,960.0078000003123
+3 perfecto modulo con repeticion,modulo,threading,False,C02,C,1.0,1.0,True,True,973.7030999967828
+3 perfecto modulo con repeticion,modulo,dataclasses,False,C03,C,1.0,1.0,True,True,1007.0926999978838
+3 perfecto modulo con repeticion,modulo,,False,C04,C,1.0,1.0,True,True,978.3022999981767
+3 perfecto modulo con repeticion,modulo,,False,C05,C,2.0,2.0,True,True,689.0446999968844
+3 perfecto modulo con repeticion,modulo,shutil,False,C06,C,1.0,1.0,True,True,968.3251000024029
+3 perfecto modulo con repeticion,modulo,,False,C07,C,1.0,3.0,True,True,890.9614000003785
+3 perfecto modulo con repeticion,modulo,,False,C08,C,2.0,2.0,True,True,802.5893000012729
+3 perfecto modulo con repeticion,modulo,,False,C09,C,1.0,2.0,True,True,958.0243000018527
+3 perfecto modulo con repeticion,modulo,subprocess|json,False,D01,D,1.0,1.0,True,True,930.564800000866
+3 perfecto modulo con repeticion,modulo,http.client|pathlib,True,D02,D,,,False,False,1900.02330000425
+3 perfecto modulo con repeticion,modulo,threading|concurrent.futures,False,D03,D,1.0,,True,False,966.7520999937551
+4 equivocado modulo sin repeticion,modulo,urllib.request,False,A01,A,,,False,False,985.2819000007003
+4 equivocado modulo sin repeticion,modulo,pathlib,False,A02,A,,,False,False,1010.3765999956522
+4 equivocado modulo sin repeticion,modulo,re,False,A03,A,,,False,False,991.5764999968815
+4 equivocado modulo sin repeticion,modulo,json,False,A04,A,,,False,False,991.9544000003953
+4 equivocado modulo sin repeticion,modulo,,False,A05,A,1.0,1.0,True,True,953.8845999995829
+4 equivocado modulo sin repeticion,modulo,subprocess,False,A06,A,,,False,False,977.2818999990704
+4 equivocado modulo sin repeticion,modulo,sqlite3,False,A07,A,,,False,False,999.4033999973908
+4 equivocado modulo sin repeticion,modulo,argparse,False,A08,A,,,False,False,953.272200000356
+4 equivocado modulo sin repeticion,modulo,,False,A09,A,1.0,1.0,True,True,980.9854999984964
+4 equivocado modulo sin repeticion,modulo,http,False,A10,A,,,False,False,346.66440000000875
+4 equivocado modulo sin repeticion,modulo,secrets,False,B01,B,,,False,False,274.9681999994209
+4 equivocado modulo sin repeticion,modulo,hashlib,False,B02,B,,,False,False,966.5158999996493
+4 equivocado modulo sin repeticion,modulo,functools,False,B03,B,,,False,False,800.8593999984441
+4 equivocado modulo sin repeticion,modulo,,False,B04,B,2.0,2.0,True,True,943.2587000046624
+4 equivocado modulo sin repeticion,modulo,,False,B05,B,2.0,2.0,True,True,755.1877000005334
+4 equivocado modulo sin repeticion,modulo,,False,B06,B,1.0,2.0,True,True,990.2386000030674
+4 equivocado modulo sin repeticion,modulo,logging,False,B07,B,,,False,False,956.5337000021827
+4 equivocado modulo sin repeticion,modulo,itertools,False,B08,B,,,False,False,986.2919000006514
+4 equivocado modulo sin repeticion,modulo,tomllib,False,B09,B,,,False,False,318.1137999999919
+4 equivocado modulo sin repeticion,modulo,asyncio,False,B10,B,,,False,False,874.3701999992481
+4 equivocado modulo sin repeticion,modulo,threading,False,C01,C,,,False,False,970.8920999983093
+4 equivocado modulo sin repeticion,modulo,dataclasses,False,C02,C,,,False,False,973.9552000028198
+4 equivocado modulo sin repeticion,modulo,shutil,False,C03,C,,,False,False,971.2346999949659
+4 equivocado modulo sin repeticion,modulo,,False,C04,C,1.0,1.0,True,True,967.4286999943433
+4 equivocado modulo sin repeticion,modulo,,False,C05,C,2.0,2.0,True,True,672.8862000018125
+4 equivocado modulo sin repeticion,modulo,subprocess|json,False,C06,C,,,False,False,943.3720000015455
+4 equivocado modulo sin repeticion,modulo,,False,C07,C,1.0,3.0,True,True,874.5179000034113
+4 equivocado modulo sin repeticion,modulo,,False,C08,C,2.0,2.0,True,True,761.2977999961004
+4 equivocado modulo sin repeticion,modulo,,False,C09,C,1.0,2.0,True,True,1016.6294000009657
+4 equivocado modulo sin repeticion,modulo,http.client|pathlib,False,D01,D,,,False,False,942.4343000064255
+4 equivocado modulo sin repeticion,modulo,threading|concurrent.futures,False,D02,D,,,False,False,972.9972999994061
+4 equivocado modulo sin repeticion,modulo,http.client,False,D03,D,,,False,False,842.2644000020227
+5 equivocado modulo con repeticion,modulo,urllib.request,False,A01,A,,,False,False,944.165900000371
+5 equivocado modulo con repeticion,modulo,pathlib,True,A02,A,3.0,3.0,True,True,1929.6490999986418
+5 equivocado modulo con repeticion,modulo,re,True,A03,A,3.0,3.0,True,True,1879.4264000025578
+5 equivocado modulo con repeticion,modulo,json,True,A04,A,1.0,2.0,True,True,1939.7752000004402
+5 equivocado modulo con repeticion,modulo,,False,A05,A,1.0,1.0,True,True,990.6674000012572
+5 equivocado modulo con repeticion,modulo,subprocess,True,A06,A,1.0,1.0,True,True,1907.9875000024913
+5 equivocado modulo con repeticion,modulo,sqlite3,True,A07,A,1.0,1.0,True,True,1929.1541000056895
+5 equivocado modulo con repeticion,modulo,argparse,True,A08,A,1.0,3.0,True,True,1964.4302999950014
+5 equivocado modulo con repeticion,modulo,,False,A09,A,1.0,1.0,True,True,964.4383999984711
+5 equivocado modulo con repeticion,modulo,http,True,A10,A,1.0,1.0,True,True,1271.3527000014437
+5 equivocado modulo con repeticion,modulo,secrets,True,B01,B,1.0,,True,False,1212.3280000014347
+5 equivocado modulo con repeticion,modulo,hashlib,True,B02,B,1.0,1.0,True,True,1914.8168999963673
+5 equivocado modulo con repeticion,modulo,functools,True,B03,B,1.0,1.0,True,True,1647.2786000013002
+5 equivocado modulo con repeticion,modulo,,False,B04,B,2.0,2.0,True,True,978.943000001891
+5 equivocado modulo con repeticion,modulo,,False,B05,B,2.0,2.0,True,True,722.7102000033483
+5 equivocado modulo con repeticion,modulo,,False,B06,B,1.0,2.0,True,True,999.2818999962765
+5 equivocado modulo con repeticion,modulo,logging,True,B07,B,1.0,1.0,True,True,1943.3974999992643
+5 equivocado modulo con repeticion,modulo,itertools,True,B08,B,3.0,,True,False,1919.004600000335
+5 equivocado modulo con repeticion,modulo,tomllib,True,B09,B,1.0,1.0,True,True,1237.5290999989375
+5 equivocado modulo con repeticion,modulo,asyncio,True,B10,B,1.0,1.0,True,True,1795.0491000010516
+5 equivocado modulo con repeticion,modulo,threading,False,C01,C,,,False,False,975.3583999990951
+5 equivocado modulo con repeticion,modulo,dataclasses,True,C02,C,2.0,2.0,True,True,1604.3850999994902
+5 equivocado modulo con repeticion,modulo,shutil,True,C03,C,1.0,1.0,True,True,1947.3262000028626
+5 equivocado modulo con repeticion,modulo,,False,C04,C,1.0,1.0,True,True,1037.042299998575
+5 equivocado modulo con repeticion,modulo,,False,C05,C,2.0,2.0,True,True,686.5728999982821
+5 equivocado modulo con repeticion,modulo,subprocess|json,True,C06,C,1.0,1.0,True,True,1926.1834999997518
+5 equivocado modulo con repeticion,modulo,,False,C07,C,1.0,3.0,True,True,901.5849999996135
+5 equivocado modulo con repeticion,modulo,,False,C08,C,2.0,2.0,True,True,780.6320000017877
+5 equivocado modulo con repeticion,modulo,,False,C09,C,1.0,2.0,True,True,1014.0376999988803
+5 equivocado modulo con repeticion,modulo,http.client|pathlib,True,D01,D,1.0,1.0,True,True,1930.2682999987155
+5 equivocado modulo con repeticion,modulo,threading|concurrent.futures,True,D02,D,,,False,False,1968.026300004567
+5 equivocado modulo con repeticion,modulo,http.client,True,D03,D,1.0,,True,False,1835.4568999930052
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,library,False,A01,A,,,False,False,1021.5689999968163
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,library,False,A02,A,1.0,1.0,True,True,1017.2051999979885
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,library,False,A03,A,3.0,3.0,True,True,945.9275000044727
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,library,False,A04,A,1.0,2.0,True,True,1036.0918000005768
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,builtins,False,A05,A,1.0,1.0,True,True,996.329000001424
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,library,False,A06,A,1.0,1.0,True,True,1018.5110999955214
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,library,False,A07,A,1.0,1.0,True,True,990.3002999999444
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,library,False,A08,A,1.0,3.0,True,True,1040.1494999969145
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,tutorial,False,A09,A,1.0,1.0,True,True,994.2647999996552
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,library,False,A10,A,1.0,1.0,True,True,1004.2186999999103
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,library,False,B01,B,1.0,,True,False,1019.0618999986327
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,library,False,B02,B,1.0,1.0,True,True,1005.2432000011322
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,library,False,B03,B,1.0,1.0,True,True,1018.854599999031
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,whatsnew,False,B04,B,1.0,1.0,True,True,1010.9121999994386
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,whatsnew,False,B05,B,1.0,1.0,True,True,984.6361000018078
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,whatsnew,False,B06,B,1.0,3.0,True,True,1004.9052000031224
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,library,False,B07,B,1.0,1.0,True,True,1014.4087000007858
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,library,False,B08,B,3.0,,True,False,1000.8551999999327
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,library,False,B09,B,1.0,1.0,True,True,1016.7472000030102
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,library,False,B10,B,2.0,2.0,True,True,997.2847999961232
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,library,False,C01,C,1.0,,True,False,1028.5738999955356
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,library,False,C02,C,1.0,1.0,True,True,1066.5134000009857
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,library,False,C03,C,1.0,1.0,True,True,1012.260100003914
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,tutorial,False,C04,C,1.0,1.0,True,True,944.7602000000188
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,tutorial,False,C05,C,1.0,1.0,True,True,871.9121999965864
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,library,False,C06,C,1.0,1.0,True,True,1011.8819999988773
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,whatsnew,False,C07,C,1.0,2.0,True,True,1018.9581000013277
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,whatsnew,False,C08,C,1.0,1.0,True,True,1011.8537000016659
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,whatsnew,False,C09,C,1.0,2.0,True,True,1023.1602999992901
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,library,False,D01,D,1.0,1.0,True,True,1003.3831999971881
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,library,False,D02,D,,,False,False,1006.7161000042688
+6 perfecto tipo_pagina sin repeticion,tipo_pagina,library,False,D03,D,1.0,,True,False,995.3752000001259
+7 perfecto tipo_pagina con repeticion,tipo_pagina,library,False,A01,A,,,False,False,1008.5093000016059
+7 perfecto tipo_pagina con repeticion,tipo_pagina,library,False,A02,A,1.0,1.0,True,True,1037.8431999997701
+7 perfecto tipo_pagina con repeticion,tipo_pagina,library,False,A03,A,3.0,3.0,True,True,951.3430000006338
+7 perfecto tipo_pagina con repeticion,tipo_pagina,library,False,A04,A,1.0,2.0,True,True,987.0180999932927
+7 perfecto tipo_pagina con repeticion,tipo_pagina,builtins,False,A05,A,1.0,1.0,True,True,986.6343999965466
+7 perfecto tipo_pagina con repeticion,tipo_pagina,library,False,A06,A,1.0,1.0,True,True,985.688199994911
+7 perfecto tipo_pagina con repeticion,tipo_pagina,library,False,A07,A,1.0,1.0,True,True,982.8921999942395
+7 perfecto tipo_pagina con repeticion,tipo_pagina,library,False,A08,A,1.0,3.0,True,True,989.7259999997914
+7 perfecto tipo_pagina con repeticion,tipo_pagina,tutorial,False,A09,A,1.0,1.0,True,True,1032.4639000027673
+7 perfecto tipo_pagina con repeticion,tipo_pagina,library,False,A10,A,1.0,1.0,True,True,1035.5311000021175
+7 perfecto tipo_pagina con repeticion,tipo_pagina,library,False,B01,B,1.0,,True,False,1019.3416999973124
+7 perfecto tipo_pagina con repeticion,tipo_pagina,library,False,B02,B,1.0,1.0,True,True,1022.445599999628
+7 perfecto tipo_pagina con repeticion,tipo_pagina,library,False,B03,B,1.0,1.0,True,True,1000.1275000031455
+7 perfecto tipo_pagina con repeticion,tipo_pagina,whatsnew,False,B04,B,1.0,1.0,True,True,1006.4012000002549
+7 perfecto tipo_pagina con repeticion,tipo_pagina,whatsnew,False,B05,B,1.0,1.0,True,True,995.3918000028352
+7 perfecto tipo_pagina con repeticion,tipo_pagina,whatsnew,False,B06,B,1.0,3.0,True,True,974.7837000031723
+7 perfecto tipo_pagina con repeticion,tipo_pagina,library,False,B07,B,1.0,1.0,True,True,1006.3122999999905
+7 perfecto tipo_pagina con repeticion,tipo_pagina,library,False,B08,B,3.0,,True,False,1005.6106999982148
+7 perfecto tipo_pagina con repeticion,tipo_pagina,library,False,B09,B,1.0,1.0,True,True,1004.3206999980612
+7 perfecto tipo_pagina con repeticion,tipo_pagina,library,False,B10,B,2.0,2.0,True,True,1031.1404000021867
+7 perfecto tipo_pagina con repeticion,tipo_pagina,library,False,C01,C,1.0,,True,False,1013.2053999986965
+7 perfecto tipo_pagina con repeticion,tipo_pagina,library,False,C02,C,1.0,1.0,True,True,1024.9580000017886
+7 perfecto tipo_pagina con repeticion,tipo_pagina,library,False,C03,C,1.0,1.0,True,True,1010.8840000029886
+7 perfecto tipo_pagina con repeticion,tipo_pagina,tutorial,False,C04,C,1.0,1.0,True,True,974.0351000000373
+7 perfecto tipo_pagina con repeticion,tipo_pagina,tutorial,False,C05,C,1.0,1.0,True,True,910.9997999985353
+7 perfecto tipo_pagina con repeticion,tipo_pagina,library,False,C06,C,1.0,1.0,True,True,1005.1652000038303
+7 perfecto tipo_pagina con repeticion,tipo_pagina,whatsnew,False,C07,C,1.0,2.0,True,True,1013.3086000059848
+7 perfecto tipo_pagina con repeticion,tipo_pagina,whatsnew,False,C08,C,1.0,1.0,True,True,1013.1209000028321
+7 perfecto tipo_pagina con repeticion,tipo_pagina,whatsnew,False,C09,C,1.0,2.0,True,True,1041.5064999979222
+7 perfecto tipo_pagina con repeticion,tipo_pagina,library,False,D01,D,1.0,1.0,True,True,1011.8619999993825
+7 perfecto tipo_pagina con repeticion,tipo_pagina,library,True,D02,D,,,False,False,1976.1808999974164
+7 perfecto tipo_pagina con repeticion,tipo_pagina,library,False,D03,D,1.0,,True,False,996.9196999954875
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,c-api,False,A01,A,,,False,False,965.3603999977349
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,c-api,False,A02,A,,,False,False,1013.673600005859
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,c-api,False,A03,A,,,False,False,1036.3073000044096
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,c-api,False,A04,A,,,False,False,1002.0288000014261
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,library,False,A05,A,,,False,False,992.3871999999392
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,c-api,False,A06,A,,,False,False,995.695199999318
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,c-api,False,A07,A,,,False,False,986.2409999986994
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,c-api,False,A08,A,,,False,False,994.0950000018347
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,library,False,A09,A,,,False,False,974.7481999947922
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,c-api,False,A10,A,,,False,False,1003.6347000059322
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,c-api,False,B01,B,,,False,False,806.3653999997769
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,c-api,False,B02,B,,,False,False,1014.9534000011045
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,c-api,False,B03,B,,,False,False,989.1745999993873
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,library,False,B04,B,,,False,False,967.823099999805
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,library,False,B05,B,,,False,False,865.2118999962113
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,library,False,B06,B,,,False,False,692.2881999998935
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,c-api,False,B07,B,,,False,False,988.9431000046898
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,c-api,False,B08,B,,,False,False,997.3835999990115
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,c-api,False,B09,B,,,False,False,804.0430999972159
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,c-api,False,B10,B,,,False,False,969.658599999093
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,c-api,False,C01,C,,,False,False,1014.6985000028508
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,c-api,False,C02,C,,,False,False,982.7242000028491
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,c-api,False,C03,C,,,False,False,990.7795999970403
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,library,False,C04,C,,,False,False,994.2194999966887
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,library,False,C05,C,,,False,False,971.2282000036794
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,c-api,False,C06,C,,,False,False,989.005499999621
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,library,False,C07,C,,,False,False,996.4022999993176
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,library,False,C08,C,,,False,False,1010.7298000002629
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,library,False,C09,C,,,False,False,980.1206999982242
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,c-api,False,D01,D,,,False,False,906.1071000032825
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,c-api,False,D02,D,,,False,False,843.0826000039815
+8 equivocado tipo_pagina sin repeticion,tipo_pagina,c-api,False,D03,D,,,False,False,886.1323999954038
+9 equivocado tipo_pagina con repeticion,tipo_pagina,c-api,True,A01,A,,,False,False,1897.3145999989356
+9 equivocado tipo_pagina con repeticion,tipo_pagina,c-api,True,A02,A,3.0,3.0,True,True,1969.076599998516
+9 equivocado tipo_pagina con repeticion,tipo_pagina,c-api,True,A03,A,3.0,3.0,True,True,1913.4282999948482
+9 equivocado tipo_pagina con repeticion,tipo_pagina,c-api,True,A04,A,1.0,2.0,True,True,1949.1111999959685
+9 equivocado tipo_pagina con repeticion,tipo_pagina,library,True,A05,A,1.0,1.0,True,True,1945.5056000006152
+9 equivocado tipo_pagina con repeticion,tipo_pagina,c-api,True,A06,A,1.0,1.0,True,True,1916.958199995861
+9 equivocado tipo_pagina con repeticion,tipo_pagina,c-api,True,A07,A,1.0,1.0,True,True,1925.6445999999414
+9 equivocado tipo_pagina con repeticion,tipo_pagina,c-api,True,A08,A,1.0,3.0,True,True,1966.4641999988817
+9 equivocado tipo_pagina con repeticion,tipo_pagina,library,False,A09,A,,,False,False,980.078799999319
+9 equivocado tipo_pagina con repeticion,tipo_pagina,c-api,True,A10,A,1.0,1.0,True,True,1946.0041999991518
+9 equivocado tipo_pagina con repeticion,tipo_pagina,c-api,True,B01,B,1.0,,True,False,1733.109599997988
+9 equivocado tipo_pagina con repeticion,tipo_pagina,c-api,True,B02,B,1.0,1.0,True,True,1867.2028000000864
+9 equivocado tipo_pagina con repeticion,tipo_pagina,c-api,True,B03,B,1.0,1.0,True,True,1934.1649999987567
+9 equivocado tipo_pagina con repeticion,tipo_pagina,library,False,B04,B,,,False,False,991.4990999968722
+9 equivocado tipo_pagina con repeticion,tipo_pagina,library,False,B05,B,,,False,False,907.018900004914
+9 equivocado tipo_pagina con repeticion,tipo_pagina,library,True,B06,B,1.0,2.0,True,True,1631.5528999984963
+9 equivocado tipo_pagina con repeticion,tipo_pagina,c-api,True,B07,B,1.0,1.0,True,True,1924.9387000018032
+9 equivocado tipo_pagina con repeticion,tipo_pagina,c-api,True,B08,B,3.0,,True,False,1932.8669000024092
+9 equivocado tipo_pagina con repeticion,tipo_pagina,c-api,True,B09,B,1.0,1.0,True,True,1725.5992000063998
+9 equivocado tipo_pagina con repeticion,tipo_pagina,c-api,True,B10,B,1.0,1.0,True,True,1962.5570999996853
+9 equivocado tipo_pagina con repeticion,tipo_pagina,c-api,True,C01,C,1.0,,True,False,1931.6086000035284
+9 equivocado tipo_pagina con repeticion,tipo_pagina,c-api,False,C02,C,,,False,False,983.0920000022161
+9 equivocado tipo_pagina con repeticion,tipo_pagina,c-api,False,C03,C,,,False,False,1000.5587999985437
+9 equivocado tipo_pagina con repeticion,tipo_pagina,library,False,C04,C,,,False,False,994.8846999977832
+9 equivocado tipo_pagina con repeticion,tipo_pagina,library,False,C05,C,,,False,False,1020.1403999963077
+9 equivocado tipo_pagina con repeticion,tipo_pagina,c-api,True,C06,C,1.0,1.0,True,True,1992.4351000008755
+9 equivocado tipo_pagina con repeticion,tipo_pagina,library,False,C07,C,,,False,False,1017.830299999332
+9 equivocado tipo_pagina con repeticion,tipo_pagina,library,False,C08,C,,,False,False,980.0122000015108
+9 equivocado tipo_pagina con repeticion,tipo_pagina,library,False,C09,C,,,False,False,987.5406999999541
+9 equivocado tipo_pagina con repeticion,tipo_pagina,c-api,False,D01,D,,,False,False,920.7502000062959
+9 equivocado tipo_pagina con repeticion,tipo_pagina,c-api,True,D02,D,,,False,False,1764.5254999952158
+9 equivocado tipo_pagina con repeticion,tipo_pagina,c-api,True,D03,D,1.0,,True,False,1843.465700003435

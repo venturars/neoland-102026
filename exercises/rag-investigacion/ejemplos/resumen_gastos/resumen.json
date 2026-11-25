@@ -1,0 +1,17 @@
+{
+  "numero_gastos": 10,
+  "total": 1057.81,
+  "por_categoria": {
+    "Supermercado": 105.6,
+    "Transporte": 114.6,
+    "Ocio": 57.9,
+    "Hogar": 767.31,
+    "Salud": 12.4
+  },
+  "gasto_mayor": {
+    "fecha": "2026-11-17",
+    "concepto": "Alquiler",
+    "categoria": "Hogar",
+    "importe": 650.0
+  }
+}

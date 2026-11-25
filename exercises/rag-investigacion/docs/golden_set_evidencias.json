@@ -1,0 +1,44 @@
+{
+  "_descripcion": "Evidencias literales de cada pregunta A-D de GOLDEN_SET_PYTHON_DOCS.md: {ID: {fuente .md: [subcadena, ...]}}. Un chunk recuperado acierta si es de esa fuente y contiene tal cual cualquiera de las subcadenas de su lista (con el formato Markdown del corpus limpio: \\_, *arg*, comillas tipográficas). Cada subcadena cabe entera en un chunk de 500 caracteres. IDs y fuentes deben coincidir con el golden set; lo comprueba tests/test_comparar_embeddings.py.",
+  "A01": {"library/http.client.md": ["conn.request(\"GET\", \"/3/\", headers={\"Host\": host})"]},
+  "A02": {"library/urllib.request.md": ["urllib.request.urlopen(*url*, *data=None*"]},
+  "A03": {"library/pathlib.md": ["Path.read\\_text(*encoding=None*"]},
+  "A04": {"library/re.md": ["re.fullmatch(*pattern*, *string*, *flags=0*)", "`re.fullmatch()` checks for entire string to be a match"]},
+  "A05": {"builtins/functions.md": ["it’s recommended to use the `strict=True`"]},
+  "A06": {"library/json.md": ["json.dumps({'6': 7, '4': 5}, sort_keys=True, indent=4)", "*indent=None*, *separators=None*, *default=None*, *sort\\_keys=False*"]},
+  "A07": {"library/subprocess.md": ["If *capture\\_output* is true, stdout and stderr will be captured."]},
+  "A08": {"library/sqlite3.md": ["cur.executemany(\"INSERT INTO movie VALUES(?, ?, ?)\", data)"]},
+  "A09": {"tutorial/venv.md": ["source tutorial-env/bin/activate"]},
+  "A10": {"library/argparse.md": ["ArgumentParser.add\\_subparsers(", "subparsers = parser.add_subparsers()"]},
+  "B01": {"library/http.md": ["| `418` | `IM_A_TEAPOT` |"]},
+  "B02": {"library/secrets.md": ["constant-time compare"]},
+  "B03": {"library/hashlib.md": ["functions, they are available in\nthe `zlib` module."]},
+  "B04": {"whatsnew/3.15.md": ["**PEP 814**: Add frozendict built-in type"]},
+  "B05": {"whatsnew/3.15.md": ["**PEP 686**: Python now uses UTF-8 as the default encoding"]},
+  "B06": {"whatsnew/3.15.md": ["Tachyon: High-frequency statistical sampling profiler"]},
+  "B07": {"library/functools.md": ["Returns the same as `lru_cache(maxsize=None)`"]},
+  "B08": {"library/logging.md": ["is created with level `WARNING`."]},
+  "B09": {"library/itertools.md": ["itertools.batched(*iterable*, *n*, *\\**, *strict=False*)"]},
+  "B10": {"library/tomllib.md": ["readable and binary file object"]},
+  "C01": {"library/asyncio-task.md": ["The await is implicit when the context manager exits."]},
+  "C02": {"library/threading.md": ["due to the Global Interpreter Lock, only one thread"]},
+  "C03": {"library/dataclasses.md": ["assigning to fields will", "passing `frozen=True` to the `@dataclass` decorator"]},
+  "C04": {"tutorial/datastructures.md": ["To implement a queue, use `collections.deque`"]},
+  "C05": {"tutorial/errors.md": ["If a `finally` clause is present, the `finally`"]},
+  "C06": {"library/shutil.md": ["such as `'link/'`, the operating system resolves the link"]},
+  "C07": {"whatsnew/3.15.md": ["### **PEP 810**: Explicit lazy imports"]},
+  "C08": {"whatsnew/3.15.md": ["Python provides the `-X lazy_imports` command-line"]},
+  "C09": {"whatsnew/3.15.md": ["## Summary – Release highlights"]},
+  "D01": {
+    "library/subprocess.md": ["If *capture\\_output* is true, stdout and stderr will be captured."],
+    "library/json.md": ["json.loads(*s*"]
+  },
+  "D02": {
+    "library/http.client.md": ["conn.request(\"GET\", \"/3/\", headers={\"Host\": host})"],
+    "library/pathlib.md": ["Path.write\\_text(*data*"]
+  },
+  "D03": {
+    "library/threading.md": ["`multiprocessing` or `concurrent.futures.ProcessPoolExecutor`"],
+    "library/concurrent.futures.md": ["class concurrent.futures.ProcessPoolExecutor("]
+  }
+}
