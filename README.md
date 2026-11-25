@@ -80,6 +80,15 @@ Documentación del proyecto:
 - [Tester](exercises/ChromaDB/agents/tester.md): qué comprueba y qué no puede editar.
 - [Skill python-docs](exercises/ChromaDB/skills/python-docs/SKILL.md): cuándo buscar en la documentación y con qué comando.
 
+## MCP Outreach
+
+Servidor MCP de práctica (contactos, tools, resources y prompts) para la clase de MCP. El proyecto compartido es `exercises/MCP/`.
+
+- [README](exercises/MCP/README.md): entorno con `uv`, comandos `make`, Inspector, stdio/HTTP y cómo registrar el servidor en Cursor cuando el workspace es el monorepo completo.
+- [Clase](exercises/MCP/docs/clase-mcp-outreach.md): teoría SDK + demo Flask.
+- [Ejercicio juniors](exercises/MCP/docs/ejercicio-practico-juniors.md): práctica corta.
+
+
 ## Arquitectura en capas
 
 Resumen de la clase sobre cómo separar un proyecto para que cada parte tenga un sitio, se pueda cambiar y se pueda probar por separado. El material está en `exercises/arquitectura-en-capas/`. No define cómo trabaja el agente.
