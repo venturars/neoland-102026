@@ -1,5 +1,5 @@
 node --no-warnings --input-type=module -e "
-import { listUsers } from './logic/listUsers.js';
+import { listUsers } from './logic/list-users.js';
 
 try {
   const users = listUsers();

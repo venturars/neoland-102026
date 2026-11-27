@@ -15,12 +15,12 @@ La base de datos está en [DATABASE.md](DATABASE.md). El árbol completo, en [TR
 ## Ficheros
 - `db/connection.js`: la única conexión a `db/users.sqlite`. Crea la tabla `users` si no existe.
 - `queries/users.js`: todo el SQL de la tabla `users`. Exporta `insertUser`, `selectUserByEmail`, `selectAllUsers`, `updateUserById` y `deleteUserById`.
-- `logic/createUser.js`: crea un usuario.
-- `logic/findUserByEmail.js`: busca un usuario por su email.
-- `logic/listUsers.js`: lista los usuarios por id.
-- `logic/updateUser.js`: cambia el nombre, el email o los dos de un usuario.
-- `logic/deleteUser.js`: borra un usuario.
-- `logic/classifyGender.js`: cuenta hombres, mujeres y no definidos con un modelo de Ollama. Exporta también `countGenders`, que hace el conteo sobre una lista.
+- `logic/create-user.js`: crea un usuario.
+- `logic/find-user-by-email.js`: busca un usuario por su email.
+- `logic/list-users.js`: lista los usuarios por id.
+- `logic/update-user.js`: cambia el nombre, el email o los dos de un usuario.
+- `logic/delete-user.js`: borra un usuario.
+- `logic/classify-gender.js`: cuenta hombres, mujeres y no definidos con un modelo de Ollama. Exporta también `countGenders`, que hace el conteo sobre una lista.
 - `clients/terminal/<operación>.txt`: el comando que se pega en la terminal.
 - `clients/jupyter/<operación>.ipynb`: el documento que se ejecuta en Jupyter.
 

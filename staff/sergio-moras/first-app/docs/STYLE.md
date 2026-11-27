@@ -16,14 +16,19 @@
 
 ## Líneas
 - Cada línea hace una sola acción: una llamada o una comprobación.
-- `email?.trim().toLowerCase()` se escribe en líneas separadas, cada paso con su nombre:
+- Recortar y pasar a minúsculas un email que puede faltar se escribe en líneas separadas, cada paso con su nombre:
 
 ```js
-const trimmedEmail = email.trim();
+let trimmedEmail = "";
+if (typeof email === "string") {
+  trimmedEmail = email.trim();
+}
 const normalizedEmail = trimmedEmail.toLowerCase();
 ```
 
 - Un fallo se comprueba con `if` y `throw new Error`, en su propia línea. Los mensajes están en [ERRORS.md](ERRORS.md).
+- No se usa `?.`. Si un dato puede faltar, se comprueba antes con un `if`.
+- Una condición que junta valores ya calculados, sin llamar a nada (`newName === null && newEmail === null`), cuenta como una comprobación.
 - Sin expresiones condensadas ni trucos de sintaxis: el código se escribe como lo escribiría un junior a mano.
 
 ## Formato
@@ -31,13 +36,5 @@ const normalizedEmail = trimmedEmail.toLowerCase();
 - Se lanza con `pnpm format`. `pnpm lint` revisa el código con ESLint.
 
 ## Plantillas
-- Para un fichero de `logic/`: `logic/createUser.js`.
-- Para un cliente de terminal: `clients/terminal/createUser.txt`.
-
-## Pendiente
-El código de hoy no cumple todavía:
-- Los nombres de ficheros: están en camelCase (`createUser.js`).
-- Una acción por línea: hay líneas como `email?.trim().toLowerCase()`.
-- Los campos que devuelve `logic/`, descritos en [DATABASE.md](DATABASE.md).
-
-Lo alinea la tarea que aplica las guías al código. Hasta entonces, el código nuevo sigue estas reglas.
+- Para un fichero de `logic/`: `logic/create-user.js`.
+- Para un cliente de terminal: `clients/terminal/create-user.txt`.
