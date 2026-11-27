@@ -127,6 +127,7 @@ Una funcionalidad está terminada cuando:
 | --- | --- | --- |
 | `001-checkin-codigo` | ✅ Terminada v1.2 (2026-10-20): 25 tareas, 77 tests, CA-01 a CA-26 verificados | Check-in con código rotatorio, válido para cualquier plataforma |
 | `002-spec-antes-del-cambio` | ✅ Implementada (2026-11-01) | Cualquier cambio de la app necesita spec aprobada |
+| `003-activar-el-entorno` | ✅ Implementada (2026-11-01) | El README separa activar el entorno de arrancar la app |
 | Integración con Discord | Idea, sin número asignado | Fuera del MVP |
 
 > El agente actualiza esta tabla cada vez que una spec cambia de fase.
