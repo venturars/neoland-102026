@@ -1,0 +1,144 @@
+# Python/C API reference manual
+
+This manual documents the API used by C and C++ programmers who want to write
+extension modules or embed Python. It is a companion to Extending and Embedding the Python Interpreter,
+which describes the general principles of extension writing but does not
+document the API functions in detail.
+
+- Introduction
+  - Language version compatibility
+  - Coding standards
+  - Include Files
+  - Useful macros
+  - Objects, Types and Reference Counts
+  - Exceptions
+  - Embedding Python
+  - Debugging Builds
+  - Recommended third party tools
+- C API and ABI Stability
+  - Unstable C API
+  - Stable Application Binary Interfaces
+  - Platform Considerations
+  - ABI Checking
+  - Contents of Limited API
+- The Very High Level Layer
+  - Available start symbols
+  - Stack Effects
+- Reference Counting
+- Exception Handling
+  - Printing and clearing
+  - Raising exceptions
+  - Issuing warnings
+  - Querying the error indicator
+  - Signal Handling
+  - Exception Classes
+  - Exception Objects
+  - Unicode Exception Objects
+  - Recursion Control
+  - Exception and warning types
+  - Tracebacks
+- Defining extension modules
+  - Extension export hook
+  - Multi-phase initialization
+  - Multiple module instances
+  - `PyInit` function
+- Definition slots
+  - Convenience macros
+  - Common slot IDs
+- Utilities
+  - Operating System Utilities
+  - System Functions
+  - Process Control
+  - Importing Modules
+  - Data marshalling support
+  - Parsing arguments and building values
+  - String conversion and formatting
+  - Character classification and conversion
+  - PyHash API
+  - Reflection
+  - Codec registry and support functions
+  - PyTime C API
+  - Support for Perf Maps
+  - Expat C API
+- Abstract Objects Layer
+  - Object Protocol
+  - Call Protocol
+  - Number Protocol
+  - Sequence Protocol
+  - Mapping Protocol
+  - Iterator Protocol
+  - Buffer Protocol
+- Concrete Objects Layer
+  - Fundamental Objects
+  - Numeric Objects
+  - Sequence Objects
+  - Container Objects
+  - Function Objects
+  - Other Objects
+  - C API for extension modules
+- Interpreter initialization and finalization
+  - Before Python initialization
+  - Global configuration variables
+  - Initializing and finalizing the interpreter
+  - Cautions regarding interpreter finalization
+  - Interpreter views
+  - Process-wide parameters
+- Thread states and the global interpreter lock
+  - Detaching the thread state from extension code
+  - Using the C API from foreign threads
+  - GIL-state APIs
+  - Cautions about fork()
+  - High-level APIs
+  - Low-level APIs
+- Asynchronous notifications
+- Operating system thread APIs
+- Synchronization primitives
+  - Python critical section API
+  - Legacy locking APIs
+- Thread-local storage support
+  - Thread-specific storage API
+  - Dynamic allocation
+  - Methods
+  - Legacy APIs
+- Multiple interpreters in a Python process
+  - A per-interpreter GIL
+  - Bugs and caveats
+  - High-level APIs
+  - Low-level APIs
+  - Advanced debugger support
+- Profiling and tracing
+- Reference tracing
+- Performance statistics
+- Python Initialization Configuration
+  - PyInitConfig C API
+  - Configuration Options
+  - Runtime Python configuration API
+  - PyConfig C API
+  - Py\_GetArgcArgv()
+  - Multi-Phase Initialization Private Provisional API
+- Memory Management
+  - Overview
+  - Allocator Domains
+  - Raw Memory Interface
+  - Memory Interface
+  - Object allocators
+  - Default Memory Allocators
+  - Customize Memory Allocators
+  - Debug hooks on the Python memory allocators
+  - The pymalloc allocator
+  - The mimalloc allocator
+  - tracemalloc C API
+  - Examples
+- Object Implementation Support
+  - Allocating objects on the heap
+  - Object Life Cycle
+  - Common Object Structures
+  - Type Object Structures
+  - Supporting Cyclic Garbage Collection
+- API and ABI Versioning
+  - Build-time version constants
+  - Run-time version
+  - Bit-packing macros
+- Monitoring C API
+- Generating Execution Events
+  - Managing the Monitoring State

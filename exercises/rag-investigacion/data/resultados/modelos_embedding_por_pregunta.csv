@@ -1,0 +1,769 @@
+modelo,configuracion,id,categoria,filtro,repetida_sin_filtro,rango fuente,rango evidencia,hit@4,ev_hit@4,latencia total (ms)
+nomic,"sin reranker, sin filtro",A01,A,,False,4.0,4.0,True,True,43.89720000108355
+nomic,"sin reranker, sin filtro",A02,A,,False,1.0,1.0,True,True,139.06409999981406
+nomic,"sin reranker, sin filtro",A03,A,,False,4.0,,True,False,133.6300000002666
+nomic,"sin reranker, sin filtro",A04,A,,False,1.0,,True,False,75.07850000001781
+nomic,"sin reranker, sin filtro",A05,A,,False,,,False,False,172.88949999965553
+nomic,"sin reranker, sin filtro",A06,A,,False,1.0,1.0,True,True,82.99429999897256
+nomic,"sin reranker, sin filtro",A07,A,,False,1.0,1.0,True,True,113.22800000016287
+nomic,"sin reranker, sin filtro",A08,A,,False,1.0,,True,False,64.43940000099246
+nomic,"sin reranker, sin filtro",A09,A,,False,1.0,1.0,True,True,76.50410000132979
+nomic,"sin reranker, sin filtro",A10,A,,False,1.0,2.0,True,True,137.5979999993433
+nomic,"sin reranker, sin filtro",B01,B,,False,1.0,,True,False,82.66569999977946
+nomic,"sin reranker, sin filtro",B02,B,,False,1.0,1.0,True,True,191.2560000000667
+nomic,"sin reranker, sin filtro",B03,B,,False,,,False,False,55.8389999987412
+nomic,"sin reranker, sin filtro",B04,B,,False,1.0,1.0,True,True,59.65869999999995
+nomic,"sin reranker, sin filtro",B05,B,,False,1.0,1.0,True,True,106.55270000097516
+nomic,"sin reranker, sin filtro",B06,B,,False,1.0,1.0,True,True,114.48209999980463
+nomic,"sin reranker, sin filtro",B07,B,,False,1.0,1.0,True,True,68.48489999902085
+nomic,"sin reranker, sin filtro",B08,B,,False,3.0,,True,False,121.717300000455
+nomic,"sin reranker, sin filtro",B09,B,,False,1.0,1.0,True,True,46.462599999358645
+nomic,"sin reranker, sin filtro",B10,B,,False,1.0,1.0,True,True,153.47819999988133
+nomic,"sin reranker, sin filtro",C01,C,,False,1.0,,True,False,45.77000000062981
+nomic,"sin reranker, sin filtro",C02,C,,False,3.0,3.0,True,True,173.30709999987448
+nomic,"sin reranker, sin filtro",C03,C,,False,1.0,2.0,True,True,117.8754000011395
+nomic,"sin reranker, sin filtro",C04,C,,False,1.0,1.0,True,True,72.40709999859973
+nomic,"sin reranker, sin filtro",C05,C,,False,2.0,2.0,True,True,125.0780999998824
+nomic,"sin reranker, sin filtro",C06,C,,False,1.0,1.0,True,True,91.5709999990213
+nomic,"sin reranker, sin filtro",C07,C,,False,1.0,1.0,True,True,71.34120000046096
+nomic,"sin reranker, sin filtro",C08,C,,False,2.0,3.0,True,True,54.82280000069295
+nomic,"sin reranker, sin filtro",C09,C,,False,1.0,2.0,True,True,64.53890000011597
+nomic,"sin reranker, sin filtro",D01,D,,False,1.0,,True,False,76.67319999927713
+nomic,"sin reranker, sin filtro",D02,D,,False,,,False,False,60.38840000110213
+nomic,"sin reranker, sin filtro",D03,D,,False,1.0,,True,False,89.31879999909142
+nomic,"sin reranker, filtro modulo con repeticion",A01,A,http.client,False,1.0,1.0,True,True,76.3621999994939
+nomic,"sin reranker, filtro modulo con repeticion",A02,A,urllib.request,False,1.0,1.0,True,True,67.12979999974777
+nomic,"sin reranker, filtro modulo con repeticion",A03,A,pathlib,False,1.0,3.0,True,True,61.339600000792416
+nomic,"sin reranker, filtro modulo con repeticion",A04,A,re,False,1.0,,True,False,71.73130000046513
+nomic,"sin reranker, filtro modulo con repeticion",A05,A,,False,,,False,False,66.11460000021907
+nomic,"sin reranker, filtro modulo con repeticion",A06,A,json,False,1.0,1.0,True,True,64.1672000001563
+nomic,"sin reranker, filtro modulo con repeticion",A07,A,subprocess,False,1.0,1.0,True,True,73.68049999968207
+nomic,"sin reranker, filtro modulo con repeticion",A08,A,sqlite3,False,1.0,,True,False,65.30199999906472
+nomic,"sin reranker, filtro modulo con repeticion",A09,A,,False,1.0,1.0,True,True,59.56960000003164
+nomic,"sin reranker, filtro modulo con repeticion",A10,A,argparse,False,1.0,2.0,True,True,44.604400000025635
+nomic,"sin reranker, filtro modulo con repeticion",B01,B,http,False,1.0,,True,False,63.36670000018785
+nomic,"sin reranker, filtro modulo con repeticion",B02,B,secrets,False,1.0,1.0,True,True,64.02379999963159
+nomic,"sin reranker, filtro modulo con repeticion",B03,B,hashlib,False,1.0,1.0,True,True,46.53159999907075
+nomic,"sin reranker, filtro modulo con repeticion",B04,B,,False,1.0,1.0,True,True,41.81890000108979
+nomic,"sin reranker, filtro modulo con repeticion",B05,B,,False,1.0,1.0,True,True,62.455000001136796
+nomic,"sin reranker, filtro modulo con repeticion",B06,B,,False,1.0,1.0,True,True,62.02789999952074
+nomic,"sin reranker, filtro modulo con repeticion",B07,B,functools,False,1.0,1.0,True,True,74.61419999890495
+nomic,"sin reranker, filtro modulo con repeticion",B08,B,logging,False,1.0,,True,False,80.08779999909166
+nomic,"sin reranker, filtro modulo con repeticion",B09,B,itertools,False,1.0,1.0,True,True,61.26770000082615
+nomic,"sin reranker, filtro modulo con repeticion",B10,B,tomllib,False,1.0,1.0,True,True,61.90480000077514
+nomic,"sin reranker, filtro modulo con repeticion",C01,C,asyncio,False,1.0,,True,False,62.43519999952696
+nomic,"sin reranker, filtro modulo con repeticion",C02,C,threading,False,1.0,1.0,True,True,70.86099999833095
+nomic,"sin reranker, filtro modulo con repeticion",C03,C,dataclasses,False,1.0,2.0,True,True,65.02929999987828
+nomic,"sin reranker, filtro modulo con repeticion",C04,C,,False,1.0,1.0,True,True,63.331299999845214
+nomic,"sin reranker, filtro modulo con repeticion",C05,C,,False,2.0,2.0,True,True,61.973400001079426
+nomic,"sin reranker, filtro modulo con repeticion",C06,C,shutil,False,1.0,1.0,True,True,42.497200000070734
+nomic,"sin reranker, filtro modulo con repeticion",C07,C,,False,1.0,1.0,True,True,65.00830000004498
+nomic,"sin reranker, filtro modulo con repeticion",C08,C,,False,2.0,3.0,True,True,63.202999999703025
+nomic,"sin reranker, filtro modulo con repeticion",C09,C,,False,1.0,2.0,True,True,61.23880000086501
+nomic,"sin reranker, filtro modulo con repeticion",D01,D,subprocess|json,False,1.0,,True,False,40.61150000052294
+nomic,"sin reranker, filtro modulo con repeticion",D02,D,http.client|pathlib,False,1.0,,True,False,55.329900000288035
+nomic,"sin reranker, filtro modulo con repeticion",D03,D,threading|concurrent.futures,False,1.0,,True,False,61.322900000959635
+nomic,"con reranker, sin filtro",A01,A,,False,,,False,False,118.9303999999538
+nomic,"con reranker, sin filtro",A02,A,,False,3.0,3.0,True,True,119.11069999950996
+nomic,"con reranker, sin filtro",A03,A,,False,3.0,3.0,True,True,129.26729999890085
+nomic,"con reranker, sin filtro",A04,A,,False,1.0,2.0,True,True,123.08730000040669
+nomic,"con reranker, sin filtro",A05,A,,False,1.0,1.0,True,True,118.9092000004166
+nomic,"con reranker, sin filtro",A06,A,,False,1.0,1.0,True,True,118.81450000146287
+nomic,"con reranker, sin filtro",A07,A,,False,1.0,1.0,True,True,94.52869999950053
+nomic,"con reranker, sin filtro",A08,A,,False,1.0,3.0,True,True,109.09849999916332
+nomic,"con reranker, sin filtro",A09,A,,False,1.0,1.0,True,True,123.61339999915799
+nomic,"con reranker, sin filtro",A10,A,,False,1.0,1.0,True,True,107.71849999946426
+nomic,"con reranker, sin filtro",B01,B,,False,1.0,,True,False,107.83049999918148
+nomic,"con reranker, sin filtro",B02,B,,False,1.0,1.0,True,True,107.48599999897124
+nomic,"con reranker, sin filtro",B03,B,,False,1.0,1.0,True,True,108.80849999921338
+nomic,"con reranker, sin filtro",B04,B,,False,2.0,2.0,True,True,110.93120000077761
+nomic,"con reranker, sin filtro",B05,B,,False,2.0,2.0,True,True,95.46039999986533
+nomic,"con reranker, sin filtro",B06,B,,False,1.0,2.0,True,True,102.2410999994463
+nomic,"con reranker, sin filtro",B07,B,,False,1.0,1.0,True,True,112.11169999842241
+nomic,"con reranker, sin filtro",B08,B,,False,3.0,,True,False,106.58479999983683
+nomic,"con reranker, sin filtro",B09,B,,False,1.0,1.0,True,True,108.33610000008775
+nomic,"con reranker, sin filtro",B10,B,,False,1.0,1.0,True,True,105.07900000084192
+nomic,"con reranker, sin filtro",C01,C,,False,1.0,,True,False,111.49250000016764
+nomic,"con reranker, sin filtro",C02,C,,False,2.0,2.0,True,True,77.73290000113775
+nomic,"con reranker, sin filtro",C03,C,,False,1.0,1.0,True,True,111.2148000011075
+nomic,"con reranker, sin filtro",C04,C,,False,1.0,1.0,True,True,96.13879999960773
+nomic,"con reranker, sin filtro",C05,C,,False,2.0,2.0,True,True,85.42469999883906
+nomic,"con reranker, sin filtro",C06,C,,False,1.0,1.0,True,True,113.82439999943017
+nomic,"con reranker, sin filtro",C07,C,,False,1.0,3.0,True,True,120.05439999848022
+nomic,"con reranker, sin filtro",C08,C,,False,2.0,2.0,True,True,99.74070000134816
+nomic,"con reranker, sin filtro",C09,C,,False,1.0,2.0,True,True,123.57719999999972
+nomic,"con reranker, sin filtro",D01,D,,False,1.0,1.0,True,True,104.5804000004864
+nomic,"con reranker, sin filtro",D02,D,,False,,,False,False,107.54760000054375
+nomic,"con reranker, sin filtro",D03,D,,False,1.0,,True,False,139.45139999850653
+nomic,"con reranker, filtro modulo con repeticion",A01,A,http.client,False,1.0,1.0,True,True,116.27390000103333
+nomic,"con reranker, filtro modulo con repeticion",A02,A,urllib.request,False,1.0,1.0,True,True,114.27939999884984
+nomic,"con reranker, filtro modulo con repeticion",A03,A,pathlib,False,1.0,1.0,True,True,109.37969999940833
+nomic,"con reranker, filtro modulo con repeticion",A04,A,re,False,1.0,2.0,True,True,94.48789999987639
+nomic,"con reranker, filtro modulo con repeticion",A05,A,,False,1.0,1.0,True,True,110.72190000049886
+nomic,"con reranker, filtro modulo con repeticion",A06,A,json,False,1.0,1.0,True,True,100.37569999985863
+nomic,"con reranker, filtro modulo con repeticion",A07,A,subprocess,False,1.0,1.0,True,True,100.20590000021912
+nomic,"con reranker, filtro modulo con repeticion",A08,A,sqlite3,False,1.0,3.0,True,True,126.01720000020578
+nomic,"con reranker, filtro modulo con repeticion",A09,A,,False,1.0,1.0,True,True,118.55629999990924
+nomic,"con reranker, filtro modulo con repeticion",A10,A,argparse,False,1.0,1.0,True,True,108.6950999997498
+nomic,"con reranker, filtro modulo con repeticion",B01,B,http,False,1.0,4.0,True,True,89.63230000153999
+nomic,"con reranker, filtro modulo con repeticion",B02,B,secrets,False,1.0,1.0,True,True,87.67120000084105
+nomic,"con reranker, filtro modulo con repeticion",B03,B,hashlib,False,1.0,1.0,True,True,114.39840000093682
+nomic,"con reranker, filtro modulo con repeticion",B04,B,,False,2.0,2.0,True,True,109.55409999951371
+nomic,"con reranker, filtro modulo con repeticion",B05,B,,False,2.0,2.0,True,True,88.20360000026994
+nomic,"con reranker, filtro modulo con repeticion",B06,B,,False,1.0,2.0,True,True,93.33560000050056
+nomic,"con reranker, filtro modulo con repeticion",B07,B,functools,False,1.0,1.0,True,True,98.9183999990928
+nomic,"con reranker, filtro modulo con repeticion",B08,B,logging,False,1.0,,True,False,93.12789999967208
+nomic,"con reranker, filtro modulo con repeticion",B09,B,itertools,False,1.0,1.0,True,True,102.89649999867834
+nomic,"con reranker, filtro modulo con repeticion",B10,B,tomllib,False,1.0,1.0,True,True,76.29389999965497
+nomic,"con reranker, filtro modulo con repeticion",C01,C,asyncio,False,1.0,,True,False,100.76099999969301
+nomic,"con reranker, filtro modulo con repeticion",C02,C,threading,False,1.0,1.0,True,True,107.9755999999179
+nomic,"con reranker, filtro modulo con repeticion",C03,C,dataclasses,False,1.0,1.0,True,True,107.38160000073549
+nomic,"con reranker, filtro modulo con repeticion",C04,C,,False,1.0,1.0,True,True,108.42029999912484
+nomic,"con reranker, filtro modulo con repeticion",C05,C,,False,2.0,2.0,True,True,90.78150000095775
+nomic,"con reranker, filtro modulo con repeticion",C06,C,shutil,False,1.0,1.0,True,True,106.9180000013148
+nomic,"con reranker, filtro modulo con repeticion",C07,C,,False,1.0,3.0,True,True,108.34470000008878
+nomic,"con reranker, filtro modulo con repeticion",C08,C,,False,2.0,2.0,True,True,100.12219999953231
+nomic,"con reranker, filtro modulo con repeticion",C09,C,,False,1.0,2.0,True,True,104.97190000023693
+nomic,"con reranker, filtro modulo con repeticion",D01,D,subprocess|json,False,1.0,1.0,True,True,95.65389999988838
+nomic,"con reranker, filtro modulo con repeticion",D02,D,http.client|pathlib,True,,,False,False,192.8090000001248
+nomic,"con reranker, filtro modulo con repeticion",D03,D,threading|concurrent.futures,False,1.0,,True,False,105.01699999986158
+qwen3_06b,"sin reranker, sin filtro",A01,A,,False,2.0,,True,False,46.203599998989375
+qwen3_06b,"sin reranker, sin filtro",A02,A,,False,4.0,,True,False,74.18420000067272
+qwen3_06b,"sin reranker, sin filtro",A03,A,,False,1.0,1.0,True,True,62.34299999960058
+qwen3_06b,"sin reranker, sin filtro",A04,A,,False,1.0,1.0,True,True,61.702499999228166
+qwen3_06b,"sin reranker, sin filtro",A05,A,,False,2.0,2.0,True,True,61.06270000054792
+qwen3_06b,"sin reranker, sin filtro",A06,A,,False,2.0,2.0,True,True,61.325500000748434
+qwen3_06b,"sin reranker, sin filtro",A07,A,,False,1.0,1.0,True,True,60.9783999989304
+qwen3_06b,"sin reranker, sin filtro",A08,A,,False,1.0,2.0,True,True,61.87879999924917
+qwen3_06b,"sin reranker, sin filtro",A09,A,,False,1.0,1.0,True,True,77.53559999946447
+qwen3_06b,"sin reranker, sin filtro",A10,A,,False,1.0,1.0,True,True,62.922400000388734
+qwen3_06b,"sin reranker, sin filtro",B01,B,,False,1.0,1.0,True,True,62.409599999227794
+qwen3_06b,"sin reranker, sin filtro",B02,B,,False,1.0,1.0,True,True,77.59440000154427
+qwen3_06b,"sin reranker, sin filtro",B03,B,,False,3.0,3.0,True,True,60.384299998986535
+qwen3_06b,"sin reranker, sin filtro",B04,B,,False,1.0,1.0,True,True,61.245799999596784
+qwen3_06b,"sin reranker, sin filtro",B05,B,,False,1.0,,True,False,62.10610000016459
+qwen3_06b,"sin reranker, sin filtro",B06,B,,False,,,False,False,61.83249999958207
+qwen3_06b,"sin reranker, sin filtro",B07,B,,False,1.0,2.0,True,True,63.23040000097535
+qwen3_06b,"sin reranker, sin filtro",B08,B,,False,2.0,,True,False,60.9242999998969
+qwen3_06b,"sin reranker, sin filtro",B09,B,,False,1.0,1.0,True,True,62.25090000043565
+qwen3_06b,"sin reranker, sin filtro",B10,B,,False,1.0,1.0,True,True,54.403000000093016
+qwen3_06b,"sin reranker, sin filtro",C01,C,,False,1.0,3.0,True,True,68.23550000081013
+qwen3_06b,"sin reranker, sin filtro",C02,C,,False,2.0,,True,False,61.122200000681914
+qwen3_06b,"sin reranker, sin filtro",C03,C,,False,1.0,1.0,True,True,61.01659999876574
+qwen3_06b,"sin reranker, sin filtro",C04,C,,False,1.0,1.0,True,True,61.24189999900409
+qwen3_06b,"sin reranker, sin filtro",C05,C,,False,2.0,2.0,True,True,61.21789999997418
+qwen3_06b,"sin reranker, sin filtro",C06,C,,False,1.0,1.0,True,True,63.430000000153086
+qwen3_06b,"sin reranker, sin filtro",C07,C,,False,1.0,3.0,True,True,61.10209999860672
+qwen3_06b,"sin reranker, sin filtro",C08,C,,False,2.0,,True,False,64.67759999941336
+qwen3_06b,"sin reranker, sin filtro",C09,C,,False,1.0,3.0,True,True,62.153099999704864
+qwen3_06b,"sin reranker, sin filtro",D01,D,,False,1.0,,True,False,48.63310000109777
+qwen3_06b,"sin reranker, sin filtro",D02,D,,False,4.0,,True,False,45.7951000007597
+qwen3_06b,"sin reranker, sin filtro",D03,D,,False,1.0,1.0,True,True,58.317800001532305
+qwen3_06b,"sin reranker, filtro modulo con repeticion",A01,A,http.client,False,1.0,4.0,True,True,61.25210000027437
+qwen3_06b,"sin reranker, filtro modulo con repeticion",A02,A,urllib.request,False,1.0,3.0,True,True,61.39489999986836
+qwen3_06b,"sin reranker, filtro modulo con repeticion",A03,A,pathlib,False,1.0,1.0,True,True,61.954199998581316
+qwen3_06b,"sin reranker, filtro modulo con repeticion",A04,A,re,False,1.0,1.0,True,True,63.37809999968158
+qwen3_06b,"sin reranker, filtro modulo con repeticion",A05,A,,False,2.0,2.0,True,True,61.79380000139645
+qwen3_06b,"sin reranker, filtro modulo con repeticion",A06,A,json,False,1.0,1.0,True,True,61.03430000075605
+qwen3_06b,"sin reranker, filtro modulo con repeticion",A07,A,subprocess,False,1.0,1.0,True,True,61.814400000002934
+qwen3_06b,"sin reranker, filtro modulo con repeticion",A08,A,sqlite3,False,1.0,2.0,True,True,61.50639999941632
+qwen3_06b,"sin reranker, filtro modulo con repeticion",A09,A,,False,1.0,1.0,True,True,46.67850000078033
+qwen3_06b,"sin reranker, filtro modulo con repeticion",A10,A,argparse,False,1.0,1.0,True,True,50.0002000007953
+qwen3_06b,"sin reranker, filtro modulo con repeticion",B01,B,http,False,1.0,1.0,True,True,54.468500000439235
+qwen3_06b,"sin reranker, filtro modulo con repeticion",B02,B,secrets,False,1.0,1.0,True,True,49.19060000065656
+qwen3_06b,"sin reranker, filtro modulo con repeticion",B03,B,hashlib,False,1.0,1.0,True,True,59.489000001121894
+qwen3_06b,"sin reranker, filtro modulo con repeticion",B04,B,,False,1.0,1.0,True,True,62.60680000013963
+qwen3_06b,"sin reranker, filtro modulo con repeticion",B05,B,,False,1.0,,True,False,61.969100001078914
+qwen3_06b,"sin reranker, filtro modulo con repeticion",B06,B,,False,,,False,False,62.60609999844746
+qwen3_06b,"sin reranker, filtro modulo con repeticion",B07,B,functools,False,1.0,2.0,True,True,62.435699999696226
+qwen3_06b,"sin reranker, filtro modulo con repeticion",B08,B,logging,False,1.0,4.0,True,True,63.33520000043791
+qwen3_06b,"sin reranker, filtro modulo con repeticion",B09,B,itertools,False,1.0,1.0,True,True,59.897699999055476
+qwen3_06b,"sin reranker, filtro modulo con repeticion",B10,B,tomllib,False,1.0,1.0,True,True,44.73679999864544
+qwen3_06b,"sin reranker, filtro modulo con repeticion",C01,C,asyncio,False,1.0,2.0,True,True,41.37050000099407
+qwen3_06b,"sin reranker, filtro modulo con repeticion",C02,C,threading,False,1.0,2.0,True,True,69.07520000095246
+qwen3_06b,"sin reranker, filtro modulo con repeticion",C03,C,dataclasses,False,1.0,1.0,True,True,60.4336999986117
+qwen3_06b,"sin reranker, filtro modulo con repeticion",C04,C,,False,1.0,1.0,True,True,62.950900000942056
+qwen3_06b,"sin reranker, filtro modulo con repeticion",C05,C,,False,2.0,2.0,True,True,63.19660000008298
+qwen3_06b,"sin reranker, filtro modulo con repeticion",C06,C,shutil,False,1.0,1.0,True,True,60.92899999930523
+qwen3_06b,"sin reranker, filtro modulo con repeticion",C07,C,,False,1.0,3.0,True,True,63.04170000112208
+qwen3_06b,"sin reranker, filtro modulo con repeticion",C08,C,,False,2.0,,True,False,48.41390000001411
+qwen3_06b,"sin reranker, filtro modulo con repeticion",C09,C,,False,1.0,3.0,True,True,58.692800001153955
+qwen3_06b,"sin reranker, filtro modulo con repeticion",D01,D,subprocess|json,False,1.0,,True,False,51.74950000036915
+qwen3_06b,"sin reranker, filtro modulo con repeticion",D02,D,http.client|pathlib,False,1.0,2.0,True,True,54.38779999894905
+qwen3_06b,"sin reranker, filtro modulo con repeticion",D03,D,threading|concurrent.futures,False,1.0,1.0,True,True,61.81060000017169
+qwen3_06b,"con reranker, sin filtro",A01,A,,False,,,False,False,129.52469999981986
+qwen3_06b,"con reranker, sin filtro",A02,A,,False,2.0,2.0,True,True,116.79619999995339
+qwen3_06b,"con reranker, sin filtro",A03,A,,False,4.0,4.0,True,True,106.94759999933012
+qwen3_06b,"con reranker, sin filtro",A04,A,,False,1.0,2.0,True,True,106.12469999978202
+qwen3_06b,"con reranker, sin filtro",A05,A,,False,1.0,1.0,True,True,113.89890000100422
+qwen3_06b,"con reranker, sin filtro",A06,A,,False,1.0,1.0,True,True,121.98350000107894
+qwen3_06b,"con reranker, sin filtro",A07,A,,False,1.0,1.0,True,True,117.2975999998016
+qwen3_06b,"con reranker, sin filtro",A08,A,,False,1.0,3.0,True,True,122.25229999967269
+qwen3_06b,"con reranker, sin filtro",A09,A,,False,1.0,1.0,True,True,105.84820000076434
+qwen3_06b,"con reranker, sin filtro",A10,A,,False,1.0,1.0,True,True,129.56889999986743
+qwen3_06b,"con reranker, sin filtro",B01,B,,False,1.0,,True,False,145.36210000005667
+qwen3_06b,"con reranker, sin filtro",B02,B,,False,1.0,1.0,True,True,141.91699999901175
+qwen3_06b,"con reranker, sin filtro",B03,B,,False,1.0,1.0,True,True,138.8702000003832
+qwen3_06b,"con reranker, sin filtro",B04,B,,False,2.0,2.0,True,True,111.89519999970798
+qwen3_06b,"con reranker, sin filtro",B05,B,,False,3.0,,True,False,116.43449999974109
+qwen3_06b,"con reranker, sin filtro",B06,B,,False,1.0,1.0,True,True,105.69590000159224
+qwen3_06b,"con reranker, sin filtro",B07,B,,False,1.0,1.0,True,True,101.74779999942984
+qwen3_06b,"con reranker, sin filtro",B08,B,,False,3.0,,True,False,110.90090000107011
+qwen3_06b,"con reranker, sin filtro",B09,B,,False,1.0,1.0,True,True,130.05150000026333
+qwen3_06b,"con reranker, sin filtro",B10,B,,False,1.0,1.0,True,True,116.9763999987481
+qwen3_06b,"con reranker, sin filtro",C01,C,,False,1.0,,True,False,107.07580000052985
+qwen3_06b,"con reranker, sin filtro",C02,C,,False,2.0,2.0,True,True,103.81190000043716
+qwen3_06b,"con reranker, sin filtro",C03,C,,False,1.0,1.0,True,True,124.1119999995135
+qwen3_06b,"con reranker, sin filtro",C04,C,,False,1.0,1.0,True,True,109.48660000030941
+qwen3_06b,"con reranker, sin filtro",C05,C,,False,2.0,2.0,True,True,79.16750000003958
+qwen3_06b,"con reranker, sin filtro",C06,C,,False,1.0,1.0,True,True,101.41320000002452
+qwen3_06b,"con reranker, sin filtro",C07,C,,False,1.0,3.0,True,True,124.94909999986703
+qwen3_06b,"con reranker, sin filtro",C08,C,,False,2.0,2.0,True,True,95.36110000044573
+qwen3_06b,"con reranker, sin filtro",C09,C,,False,1.0,2.0,True,True,111.07449999872188
+qwen3_06b,"con reranker, sin filtro",D01,D,,False,1.0,1.0,True,True,113.22850000033213
+qwen3_06b,"con reranker, sin filtro",D02,D,,False,,,False,False,120.06780000047002
+qwen3_06b,"con reranker, sin filtro",D03,D,,False,2.0,,True,False,117.44129999897268
+qwen3_06b,"con reranker, filtro modulo con repeticion",A01,A,http.client,False,1.0,1.0,True,True,89.31329999904847
+qwen3_06b,"con reranker, filtro modulo con repeticion",A02,A,urllib.request,False,1.0,1.0,True,True,112.36110000027111
+qwen3_06b,"con reranker, filtro modulo con repeticion",A03,A,pathlib,False,1.0,1.0,True,True,95.13550000156101
+qwen3_06b,"con reranker, filtro modulo con repeticion",A04,A,re,False,1.0,2.0,True,True,97.29040000092937
+qwen3_06b,"con reranker, filtro modulo con repeticion",A05,A,,False,1.0,1.0,True,True,120.70560000029218
+qwen3_06b,"con reranker, filtro modulo con repeticion",A06,A,json,False,1.0,1.0,True,True,123.14380000134406
+qwen3_06b,"con reranker, filtro modulo con repeticion",A07,A,subprocess,False,1.0,1.0,True,True,103.77949999929115
+qwen3_06b,"con reranker, filtro modulo con repeticion",A08,A,sqlite3,False,1.0,3.0,True,True,124.84140000015032
+qwen3_06b,"con reranker, filtro modulo con repeticion",A09,A,,False,1.0,1.0,True,True,109.05739999907382
+qwen3_06b,"con reranker, filtro modulo con repeticion",A10,A,argparse,False,1.0,1.0,True,True,122.62720000035188
+qwen3_06b,"con reranker, filtro modulo con repeticion",B01,B,http,False,1.0,4.0,True,True,68.56449999941105
+qwen3_06b,"con reranker, filtro modulo con repeticion",B02,B,secrets,False,1.0,1.0,True,True,75.04340000014054
+qwen3_06b,"con reranker, filtro modulo con repeticion",B03,B,hashlib,False,1.0,1.0,True,True,104.23560000162979
+qwen3_06b,"con reranker, filtro modulo con repeticion",B04,B,,False,2.0,2.0,True,True,130.57110000045213
+qwen3_06b,"con reranker, filtro modulo con repeticion",B05,B,,False,3.0,,True,False,117.14290000054461
+qwen3_06b,"con reranker, filtro modulo con repeticion",B06,B,,False,1.0,1.0,True,True,101.32599999997183
+qwen3_06b,"con reranker, filtro modulo con repeticion",B07,B,functools,False,1.0,1.0,True,True,96.1702000004152
+qwen3_06b,"con reranker, filtro modulo con repeticion",B08,B,logging,False,1.0,,True,False,116.61890000141284
+qwen3_06b,"con reranker, filtro modulo con repeticion",B09,B,itertools,False,1.0,1.0,True,True,109.08039999958419
+qwen3_06b,"con reranker, filtro modulo con repeticion",B10,B,tomllib,False,1.0,1.0,True,True,75.6786000001739
+qwen3_06b,"con reranker, filtro modulo con repeticion",C01,C,asyncio,False,1.0,,True,False,101.94969999975001
+qwen3_06b,"con reranker, filtro modulo con repeticion",C02,C,threading,False,1.0,1.0,True,True,121.91039999925124
+qwen3_06b,"con reranker, filtro modulo con repeticion",C03,C,dataclasses,False,1.0,1.0,True,True,108.29379999995581
+qwen3_06b,"con reranker, filtro modulo con repeticion",C04,C,,False,1.0,1.0,True,True,92.1596000007412
+qwen3_06b,"con reranker, filtro modulo con repeticion",C05,C,,False,2.0,2.0,True,True,107.00469999937923
+qwen3_06b,"con reranker, filtro modulo con repeticion",C06,C,shutil,False,1.0,1.0,True,True,96.52429999914602
+qwen3_06b,"con reranker, filtro modulo con repeticion",C07,C,,False,1.0,3.0,True,True,129.31580000076792
+qwen3_06b,"con reranker, filtro modulo con repeticion",C08,C,,False,2.0,2.0,True,True,128.1357999996544
+qwen3_06b,"con reranker, filtro modulo con repeticion",C09,C,,False,1.0,2.0,True,True,115.24149999968358
+qwen3_06b,"con reranker, filtro modulo con repeticion",D01,D,subprocess|json,False,1.0,1.0,True,True,111.27879999912693
+qwen3_06b,"con reranker, filtro modulo con repeticion",D02,D,http.client|pathlib,True,,,False,False,183.0706000000646
+qwen3_06b,"con reranker, filtro modulo con repeticion",D03,D,threading|concurrent.futures,False,1.0,,True,False,126.85849999979837
+qwen3_8b,"sin reranker, sin filtro",A01,A,,False,1.0,,True,False,207.47810000102618
+qwen3_8b,"sin reranker, sin filtro",A02,A,,False,1.0,1.0,True,True,179.49399999997695
+qwen3_8b,"sin reranker, sin filtro",A03,A,,False,1.0,1.0,True,True,345.5636999988201
+qwen3_8b,"sin reranker, sin filtro",A04,A,,False,1.0,1.0,True,True,179.83709999862185
+qwen3_8b,"sin reranker, sin filtro",A05,A,,False,2.0,2.0,True,True,180.00019999999495
+qwen3_8b,"sin reranker, sin filtro",A06,A,,False,1.0,1.0,True,True,168.2600000003731
+qwen3_8b,"sin reranker, sin filtro",A07,A,,False,1.0,1.0,True,True,180.66610000096262
+qwen3_8b,"sin reranker, sin filtro",A08,A,,False,1.0,1.0,True,True,295.31719999977213
+qwen3_8b,"sin reranker, sin filtro",A09,A,,False,1.0,1.0,True,True,181.52420000114944
+qwen3_8b,"sin reranker, sin filtro",A10,A,,False,1.0,1.0,True,True,312.4884999997448
+qwen3_8b,"sin reranker, sin filtro",B01,B,,False,1.0,1.0,True,True,186.0603999994055
+qwen3_8b,"sin reranker, sin filtro",B02,B,,False,1.0,1.0,True,True,327.4602000001323
+qwen3_8b,"sin reranker, sin filtro",B03,B,,False,,,False,False,165.67319999921892
+qwen3_8b,"sin reranker, sin filtro",B04,B,,False,1.0,1.0,True,True,192.67130000116595
+qwen3_8b,"sin reranker, sin filtro",B05,B,,False,1.0,,True,False,310.26660000134143
+qwen3_8b,"sin reranker, sin filtro",B06,B,,False,3.0,3.0,True,True,161.64019999996526
+qwen3_8b,"sin reranker, sin filtro",B07,B,,False,1.0,2.0,True,True,179.49309999858087
+qwen3_8b,"sin reranker, sin filtro",B08,B,,False,2.0,,True,False,172.91540000042005
+qwen3_8b,"sin reranker, sin filtro",B09,B,,False,1.0,1.0,True,True,186.99740000010934
+qwen3_8b,"sin reranker, sin filtro",B10,B,,False,1.0,2.0,True,True,162.9904000001261
+qwen3_8b,"sin reranker, sin filtro",C01,C,,False,1.0,3.0,True,True,178.2167000001209
+qwen3_8b,"sin reranker, sin filtro",C02,C,,False,1.0,4.0,True,True,188.7483999998949
+qwen3_8b,"sin reranker, sin filtro",C03,C,,False,1.0,1.0,True,True,188.4501000004093
+qwen3_8b,"sin reranker, sin filtro",C04,C,,False,1.0,1.0,True,True,188.71109999963664
+qwen3_8b,"sin reranker, sin filtro",C05,C,,False,1.0,1.0,True,True,289.31980000015756
+qwen3_8b,"sin reranker, sin filtro",C06,C,,False,1.0,1.0,True,True,165.534599998864
+qwen3_8b,"sin reranker, sin filtro",C07,C,,False,1.0,,True,False,167.27089999949385
+qwen3_8b,"sin reranker, sin filtro",C08,C,,False,4.0,,True,False,165.78640000079758
+qwen3_8b,"sin reranker, sin filtro",C09,C,,False,1.0,2.0,True,True,191.43020000046818
+qwen3_8b,"sin reranker, sin filtro",D01,D,,False,1.0,,True,False,188.89279999893915
+qwen3_8b,"sin reranker, sin filtro",D02,D,,False,3.0,,True,False,185.95819999973173
+qwen3_8b,"sin reranker, sin filtro",D03,D,,False,1.0,1.0,True,True,186.5932000000612
+qwen3_8b,"sin reranker, filtro modulo con repeticion",A01,A,http.client,False,1.0,3.0,True,True,169.38929999923857
+qwen3_8b,"sin reranker, filtro modulo con repeticion",A02,A,urllib.request,False,1.0,1.0,True,True,171.8908000002557
+qwen3_8b,"sin reranker, filtro modulo con repeticion",A03,A,pathlib,False,1.0,1.0,True,True,294.0524000005098
+qwen3_8b,"sin reranker, filtro modulo con repeticion",A04,A,re,False,1.0,1.0,True,True,184.42440000035276
+qwen3_8b,"sin reranker, filtro modulo con repeticion",A05,A,,False,2.0,2.0,True,True,171.97370000030787
+qwen3_8b,"sin reranker, filtro modulo con repeticion",A06,A,json,False,1.0,1.0,True,True,156.29470000021684
+qwen3_8b,"sin reranker, filtro modulo con repeticion",A07,A,subprocess,False,1.0,1.0,True,True,200.2148000010493
+qwen3_8b,"sin reranker, filtro modulo con repeticion",A08,A,sqlite3,False,1.0,1.0,True,True,296.501900000294
+qwen3_8b,"sin reranker, filtro modulo con repeticion",A09,A,,False,1.0,1.0,True,True,177.3979000008694
+qwen3_8b,"sin reranker, filtro modulo con repeticion",A10,A,argparse,False,1.0,1.0,True,True,306.6739999994752
+qwen3_8b,"sin reranker, filtro modulo con repeticion",B01,B,http,False,1.0,1.0,True,True,160.4445000011765
+qwen3_8b,"sin reranker, filtro modulo con repeticion",B02,B,secrets,False,1.0,1.0,True,True,292.3057999996672
+qwen3_8b,"sin reranker, filtro modulo con repeticion",B03,B,hashlib,False,1.0,1.0,True,True,163.4665000001405
+qwen3_8b,"sin reranker, filtro modulo con repeticion",B04,B,,False,1.0,1.0,True,True,169.48129999946104
+qwen3_8b,"sin reranker, filtro modulo con repeticion",B05,B,,False,1.0,,True,False,298.4911999992619
+qwen3_8b,"sin reranker, filtro modulo con repeticion",B06,B,,False,3.0,3.0,True,True,185.33779999961553
+qwen3_8b,"sin reranker, filtro modulo con repeticion",B07,B,functools,False,1.0,2.0,True,True,159.84600000047067
+qwen3_8b,"sin reranker, filtro modulo con repeticion",B08,B,logging,False,1.0,,True,False,165.58679999980086
+qwen3_8b,"sin reranker, filtro modulo con repeticion",B09,B,itertools,False,1.0,1.0,True,True,158.88839999934135
+qwen3_8b,"sin reranker, filtro modulo con repeticion",B10,B,tomllib,False,1.0,2.0,True,True,181.5747000000556
+qwen3_8b,"sin reranker, filtro modulo con repeticion",C01,C,asyncio,False,1.0,3.0,True,True,173.20360000121582
+qwen3_8b,"sin reranker, filtro modulo con repeticion",C02,C,threading,False,1.0,2.0,True,True,183.34860000140907
+qwen3_8b,"sin reranker, filtro modulo con repeticion",C03,C,dataclasses,False,1.0,1.0,True,True,172.19379999914963
+qwen3_8b,"sin reranker, filtro modulo con repeticion",C04,C,,False,1.0,1.0,True,True,186.2481000007392
+qwen3_8b,"sin reranker, filtro modulo con repeticion",C05,C,,False,1.0,1.0,True,True,295.50799999924493
+qwen3_8b,"sin reranker, filtro modulo con repeticion",C06,C,shutil,False,1.0,1.0,True,True,186.81889999970736
+qwen3_8b,"sin reranker, filtro modulo con repeticion",C07,C,,False,1.0,,True,False,164.9892000004911
+qwen3_8b,"sin reranker, filtro modulo con repeticion",C08,C,,False,4.0,,True,False,178.93759999969916
+qwen3_8b,"sin reranker, filtro modulo con repeticion",C09,C,,False,1.0,2.0,True,True,182.65050000081828
+qwen3_8b,"sin reranker, filtro modulo con repeticion",D01,D,subprocess|json,False,1.0,4.0,True,True,167.8805999999895
+qwen3_8b,"sin reranker, filtro modulo con repeticion",D02,D,http.client|pathlib,False,1.0,3.0,True,True,184.9277000001166
+qwen3_8b,"sin reranker, filtro modulo con repeticion",D03,D,threading|concurrent.futures,False,1.0,1.0,True,True,187.94619999971474
+qwen3_8b,"con reranker, sin filtro",A01,A,,False,,,False,False,225.41780000028666
+qwen3_8b,"con reranker, sin filtro",A02,A,,False,3.0,3.0,True,True,265.1889000007941
+qwen3_8b,"con reranker, sin filtro",A03,A,,False,4.0,4.0,True,True,352.77900000073714
+qwen3_8b,"con reranker, sin filtro",A04,A,,False,1.0,2.0,True,True,220.0786999983393
+qwen3_8b,"con reranker, sin filtro",A05,A,,False,1.0,1.0,True,True,234.61810000117111
+qwen3_8b,"con reranker, sin filtro",A06,A,,False,1.0,1.0,True,True,252.34930000078748
+qwen3_8b,"con reranker, sin filtro",A07,A,,False,1.0,1.0,True,True,233.97649999969872
+qwen3_8b,"con reranker, sin filtro",A08,A,,False,1.0,3.0,True,True,397.0806999986962
+qwen3_8b,"con reranker, sin filtro",A09,A,,False,1.0,1.0,True,True,258.34170000052836
+qwen3_8b,"con reranker, sin filtro",A10,A,,False,1.0,1.0,True,True,359.48719999942114
+qwen3_8b,"con reranker, sin filtro",B01,B,,False,1.0,,True,False,221.18979999868316
+qwen3_8b,"con reranker, sin filtro",B02,B,,False,1.0,1.0,True,True,359.9916999992274
+qwen3_8b,"con reranker, sin filtro",B03,B,,False,1.0,1.0,True,True,234.52670000006037
+qwen3_8b,"con reranker, sin filtro",B04,B,,False,2.0,2.0,True,True,236.54999999962456
+qwen3_8b,"con reranker, sin filtro",B05,B,,False,3.0,,True,False,340.63419999984035
+qwen3_8b,"con reranker, sin filtro",B06,B,,False,1.0,2.0,True,True,221.93200000037905
+qwen3_8b,"con reranker, sin filtro",B07,B,,False,1.0,1.0,True,True,250.39920000017446
+qwen3_8b,"con reranker, sin filtro",B08,B,,False,2.0,,True,False,234.32909999974072
+qwen3_8b,"con reranker, sin filtro",B09,B,,False,1.0,1.0,True,True,240.5830000006972
+qwen3_8b,"con reranker, sin filtro",B10,B,,False,1.0,1.0,True,True,237.7613000007841
+qwen3_8b,"con reranker, sin filtro",C01,C,,False,1.0,,True,False,236.92839999966964
+qwen3_8b,"con reranker, sin filtro",C02,C,,False,2.0,2.0,True,True,220.03340000082972
+qwen3_8b,"con reranker, sin filtro",C03,C,,False,1.0,1.0,True,True,242.67880000115838
+qwen3_8b,"con reranker, sin filtro",C04,C,,False,1.0,1.0,True,True,246.21209999895655
+qwen3_8b,"con reranker, sin filtro",C05,C,,False,2.0,2.0,True,True,361.0182000011264
+qwen3_8b,"con reranker, sin filtro",C06,C,,False,1.0,1.0,True,True,236.9401999985712
+qwen3_8b,"con reranker, sin filtro",C07,C,,False,2.0,4.0,True,True,224.7908000008465
+qwen3_8b,"con reranker, sin filtro",C08,C,,False,2.0,2.0,True,True,233.71140000017476
+qwen3_8b,"con reranker, sin filtro",C09,C,,False,1.0,2.0,True,True,230.4082999999082
+qwen3_8b,"con reranker, sin filtro",D01,D,,False,1.0,1.0,True,True,239.2469999995228
+qwen3_8b,"con reranker, sin filtro",D02,D,,False,3.0,3.0,True,True,234.2279000004055
+qwen3_8b,"con reranker, sin filtro",D03,D,,False,1.0,,True,False,228.562400001465
+qwen3_8b,"con reranker, filtro modulo con repeticion",A01,A,http.client,False,1.0,1.0,True,True,231.9751000013639
+qwen3_8b,"con reranker, filtro modulo con repeticion",A02,A,urllib.request,False,1.0,1.0,True,True,236.11170000003767
+qwen3_8b,"con reranker, filtro modulo con repeticion",A03,A,pathlib,False,1.0,1.0,True,True,377.23800000094343
+qwen3_8b,"con reranker, filtro modulo con repeticion",A04,A,re,False,1.0,2.0,True,True,223.66080000028887
+qwen3_8b,"con reranker, filtro modulo con repeticion",A05,A,,False,1.0,1.0,True,True,225.7006999989244
+qwen3_8b,"con reranker, filtro modulo con repeticion",A06,A,json,False,1.0,1.0,True,True,228.3856999983982
+qwen3_8b,"con reranker, filtro modulo con repeticion",A07,A,subprocess,False,1.0,1.0,True,True,241.99579999913112
+qwen3_8b,"con reranker, filtro modulo con repeticion",A08,A,sqlite3,False,1.0,3.0,True,True,392.41149999907066
+qwen3_8b,"con reranker, filtro modulo con repeticion",A09,A,,False,1.0,1.0,True,True,228.05570000127773
+qwen3_8b,"con reranker, filtro modulo con repeticion",A10,A,argparse,False,1.0,1.0,True,True,375.8672999992996
+qwen3_8b,"con reranker, filtro modulo con repeticion",B01,B,http,False,1.0,4.0,True,True,190.12219999967783
+qwen3_8b,"con reranker, filtro modulo con repeticion",B02,B,secrets,False,1.0,1.0,True,True,358.46979999951145
+qwen3_8b,"con reranker, filtro modulo con repeticion",B03,B,hashlib,False,1.0,1.0,True,True,211.46030000090832
+qwen3_8b,"con reranker, filtro modulo con repeticion",B04,B,,False,2.0,2.0,True,True,234.53840000001946
+qwen3_8b,"con reranker, filtro modulo con repeticion",B05,B,,False,3.0,,True,False,372.06569999943895
+qwen3_8b,"con reranker, filtro modulo con repeticion",B06,B,,False,1.0,2.0,True,True,217.83639999921434
+qwen3_8b,"con reranker, filtro modulo con repeticion",B07,B,functools,False,1.0,1.0,True,True,209.30109999972046
+qwen3_8b,"con reranker, filtro modulo con repeticion",B08,B,logging,False,1.0,,True,False,229.90549999849463
+qwen3_8b,"con reranker, filtro modulo con repeticion",B09,B,itertools,False,1.0,1.0,True,True,225.7528000009188
+qwen3_8b,"con reranker, filtro modulo con repeticion",B10,B,tomllib,False,1.0,1.0,True,True,194.62560000101803
+qwen3_8b,"con reranker, filtro modulo con repeticion",C01,C,asyncio,False,1.0,,True,False,242.55989999983285
+qwen3_8b,"con reranker, filtro modulo con repeticion",C02,C,threading,False,1.0,1.0,True,True,247.84379999982775
+qwen3_8b,"con reranker, filtro modulo con repeticion",C03,C,dataclasses,False,1.0,1.0,True,True,223.34269999919343
+qwen3_8b,"con reranker, filtro modulo con repeticion",C04,C,,False,1.0,1.0,True,True,221.77220000048692
+qwen3_8b,"con reranker, filtro modulo con repeticion",C05,C,,False,2.0,2.0,True,True,382.04419999965467
+qwen3_8b,"con reranker, filtro modulo con repeticion",C06,C,shutil,False,1.0,1.0,True,True,228.48549999980605
+qwen3_8b,"con reranker, filtro modulo con repeticion",C07,C,,False,2.0,4.0,True,True,216.29050000046846
+qwen3_8b,"con reranker, filtro modulo con repeticion",C08,C,,False,2.0,2.0,True,True,235.0691999999981
+qwen3_8b,"con reranker, filtro modulo con repeticion",C09,C,,False,1.0,2.0,True,True,223.63120000045456
+qwen3_8b,"con reranker, filtro modulo con repeticion",D01,D,subprocess|json,False,1.0,1.0,True,True,227.74459999891405
+qwen3_8b,"con reranker, filtro modulo con repeticion",D02,D,http.client|pathlib,True,3.0,3.0,True,True,302.29160000089905
+qwen3_8b,"con reranker, filtro modulo con repeticion",D03,D,threading|concurrent.futures,False,1.0,,True,False,237.302900000941
+bge_m3,"sin reranker, sin filtro",A01,A,,False,,,False,False,46.10119999961171
+bge_m3,"sin reranker, sin filtro",A02,A,,False,3.0,,True,False,40.21239999929094
+bge_m3,"sin reranker, sin filtro",A03,A,,False,2.0,2.0,True,True,63.02440000035858
+bge_m3,"sin reranker, sin filtro",A04,A,,False,1.0,3.0,True,True,61.17810000068857
+bge_m3,"sin reranker, sin filtro",A05,A,,False,2.0,2.0,True,True,55.318000000625034
+bge_m3,"sin reranker, sin filtro",A06,A,,False,1.0,1.0,True,True,41.59060000165482
+bge_m3,"sin reranker, sin filtro",A07,A,,False,1.0,2.0,True,True,48.50280000027851
+bge_m3,"sin reranker, sin filtro",A08,A,,False,1.0,,True,False,45.40380000071309
+bge_m3,"sin reranker, sin filtro",A09,A,,False,1.0,1.0,True,True,45.112400001016795
+bge_m3,"sin reranker, sin filtro",A10,A,,False,1.0,1.0,True,True,54.23230000087642
+bge_m3,"sin reranker, sin filtro",B01,B,,False,1.0,1.0,True,True,42.477599999983795
+bge_m3,"sin reranker, sin filtro",B02,B,,False,1.0,1.0,True,True,54.22480000015639
+bge_m3,"sin reranker, sin filtro",B03,B,,False,2.0,2.0,True,True,71.00410000020929
+bge_m3,"sin reranker, sin filtro",B04,B,,False,2.0,2.0,True,True,41.81160000007367
+bge_m3,"sin reranker, sin filtro",B05,B,,False,1.0,4.0,True,True,38.865200000145705
+bge_m3,"sin reranker, sin filtro",B06,B,,False,1.0,1.0,True,True,41.90700000071956
+bge_m3,"sin reranker, sin filtro",B07,B,,False,1.0,4.0,True,True,59.51720000120986
+bge_m3,"sin reranker, sin filtro",B08,B,,False,2.0,,True,False,62.19830000009097
+bge_m3,"sin reranker, sin filtro",B09,B,,False,1.0,1.0,True,True,53.26459999923827
+bge_m3,"sin reranker, sin filtro",B10,B,,False,1.0,1.0,True,True,42.65229999873554
+bge_m3,"sin reranker, sin filtro",C01,C,,False,1.0,,True,False,49.67450000003737
+bge_m3,"sin reranker, sin filtro",C02,C,,False,,,False,False,84.41060000041034
+bge_m3,"sin reranker, sin filtro",C03,C,,False,1.0,1.0,True,True,50.902299999506795
+bge_m3,"sin reranker, sin filtro",C04,C,,False,1.0,1.0,True,True,74.32710000102816
+bge_m3,"sin reranker, sin filtro",C05,C,,False,2.0,2.0,True,True,55.59910000010859
+bge_m3,"sin reranker, sin filtro",C06,C,,False,1.0,1.0,True,True,68.89360000059241
+bge_m3,"sin reranker, sin filtro",C07,C,,False,2.0,,True,False,61.240900000484544
+bge_m3,"sin reranker, sin filtro",C08,C,,False,2.0,3.0,True,True,61.17219999941881
+bge_m3,"sin reranker, sin filtro",C09,C,,False,1.0,2.0,True,True,62.34709999989718
+bge_m3,"sin reranker, sin filtro",D01,D,,False,1.0,,True,False,62.266200000522076
+bge_m3,"sin reranker, sin filtro",D02,D,,False,,,False,False,62.46339999961492
+bge_m3,"sin reranker, sin filtro",D03,D,,False,3.0,4.0,True,True,48.449299998537754
+bge_m3,"sin reranker, filtro modulo con repeticion",A01,A,http.client,False,1.0,,True,False,58.63909999970929
+bge_m3,"sin reranker, filtro modulo con repeticion",A02,A,urllib.request,False,1.0,3.0,True,True,61.925500000143074
+bge_m3,"sin reranker, filtro modulo con repeticion",A03,A,pathlib,False,1.0,1.0,True,True,63.11720000121568
+bge_m3,"sin reranker, filtro modulo con repeticion",A04,A,re,False,1.0,3.0,True,True,62.99589999980526
+bge_m3,"sin reranker, filtro modulo con repeticion",A05,A,,False,2.0,2.0,True,True,48.85120000108145
+bge_m3,"sin reranker, filtro modulo con repeticion",A06,A,json,False,1.0,1.0,True,True,59.87509999977192
+bge_m3,"sin reranker, filtro modulo con repeticion",A07,A,subprocess,False,1.0,2.0,True,True,61.73099999978149
+bge_m3,"sin reranker, filtro modulo con repeticion",A08,A,sqlite3,False,1.0,,True,False,76.78549999945972
+bge_m3,"sin reranker, filtro modulo con repeticion",A09,A,,False,1.0,1.0,True,True,62.825400000292575
+bge_m3,"sin reranker, filtro modulo con repeticion",A10,A,argparse,False,1.0,1.0,True,True,59.841999998752726
+bge_m3,"sin reranker, filtro modulo con repeticion",B01,B,http,False,1.0,1.0,True,True,61.44679999852087
+bge_m3,"sin reranker, filtro modulo con repeticion",B02,B,secrets,False,1.0,1.0,True,True,62.044000000241795
+bge_m3,"sin reranker, filtro modulo con repeticion",B03,B,hashlib,False,1.0,1.0,True,True,61.39269999948738
+bge_m3,"sin reranker, filtro modulo con repeticion",B04,B,,False,2.0,2.0,True,True,62.33080000129121
+bge_m3,"sin reranker, filtro modulo con repeticion",B05,B,,False,1.0,4.0,True,True,62.15119999978924
+bge_m3,"sin reranker, filtro modulo con repeticion",B06,B,,False,1.0,1.0,True,True,44.967399999222835
+bge_m3,"sin reranker, filtro modulo con repeticion",B07,B,functools,False,1.0,2.0,True,True,62.30440000035742
+bge_m3,"sin reranker, filtro modulo con repeticion",B08,B,logging,False,1.0,,True,False,61.39889999940351
+bge_m3,"sin reranker, filtro modulo con repeticion",B09,B,itertools,False,1.0,1.0,True,True,62.44379999952798
+bge_m3,"sin reranker, filtro modulo con repeticion",B10,B,tomllib,False,1.0,1.0,True,True,61.373900000035064
+bge_m3,"sin reranker, filtro modulo con repeticion",C01,C,asyncio,False,1.0,,True,False,63.02230000073905
+bge_m3,"sin reranker, filtro modulo con repeticion",C02,C,threading,False,1.0,2.0,True,True,54.04660000021977
+bge_m3,"sin reranker, filtro modulo con repeticion",C03,C,dataclasses,False,1.0,1.0,True,True,45.08469999927911
+bge_m3,"sin reranker, filtro modulo con repeticion",C04,C,,False,1.0,1.0,True,True,70.0594000009005
+bge_m3,"sin reranker, filtro modulo con repeticion",C05,C,,False,2.0,2.0,True,True,62.71120000019437
+bge_m3,"sin reranker, filtro modulo con repeticion",C06,C,shutil,False,1.0,1.0,True,True,60.34469999940484
+bge_m3,"sin reranker, filtro modulo con repeticion",C07,C,,False,2.0,,True,False,42.61969999970461
+bge_m3,"sin reranker, filtro modulo con repeticion",C08,C,,False,2.0,3.0,True,True,67.31480000053125
+bge_m3,"sin reranker, filtro modulo con repeticion",C09,C,,False,1.0,2.0,True,True,60.92179999905056
+bge_m3,"sin reranker, filtro modulo con repeticion",D01,D,subprocess|json,False,1.0,,True,False,60.90960000074119
+bge_m3,"sin reranker, filtro modulo con repeticion",D02,D,http.client|pathlib,False,1.0,,True,False,61.48930000017572
+bge_m3,"sin reranker, filtro modulo con repeticion",D03,D,threading|concurrent.futures,False,1.0,2.0,True,True,62.37379999947734
+bge_m3,"con reranker, sin filtro",A01,A,,False,,,False,False,126.38239999978396
+bge_m3,"con reranker, sin filtro",A02,A,,False,3.0,3.0,True,True,121.59830000018701
+bge_m3,"con reranker, sin filtro",A03,A,,False,4.0,4.0,True,True,125.33679999978631
+bge_m3,"con reranker, sin filtro",A04,A,,False,1.0,2.0,True,True,119.51590000171564
+bge_m3,"con reranker, sin filtro",A05,A,,False,1.0,1.0,True,True,107.9805999997916
+bge_m3,"con reranker, sin filtro",A06,A,,False,1.0,1.0,True,True,126.67030000011437
+bge_m3,"con reranker, sin filtro",A07,A,,False,1.0,1.0,True,True,125.04120000085095
+bge_m3,"con reranker, sin filtro",A08,A,,False,1.0,3.0,True,True,132.91130000106932
+bge_m3,"con reranker, sin filtro",A09,A,,False,1.0,1.0,True,True,130.0389999996696
+bge_m3,"con reranker, sin filtro",A10,A,,False,1.0,1.0,True,True,122.51459999970393
+bge_m3,"con reranker, sin filtro",B01,B,,False,1.0,,True,False,120.13999999908265
+bge_m3,"con reranker, sin filtro",B02,B,,False,1.0,1.0,True,True,133.36549999985436
+bge_m3,"con reranker, sin filtro",B03,B,,False,1.0,1.0,True,True,113.47890000070038
+bge_m3,"con reranker, sin filtro",B04,B,,False,2.0,2.0,True,True,128.90510000033828
+bge_m3,"con reranker, sin filtro",B05,B,,False,2.0,2.0,True,True,127.77710000045772
+bge_m3,"con reranker, sin filtro",B06,B,,False,1.0,3.0,True,True,133.06939999893075
+bge_m3,"con reranker, sin filtro",B07,B,,False,1.0,1.0,True,True,129.6742999984417
+bge_m3,"con reranker, sin filtro",B08,B,,False,3.0,,True,False,127.28629999946861
+bge_m3,"con reranker, sin filtro",B09,B,,False,1.0,1.0,True,True,122.36880000091332
+bge_m3,"con reranker, sin filtro",B10,B,,False,1.0,1.0,True,True,113.93780000071274
+bge_m3,"con reranker, sin filtro",C01,C,,False,1.0,,True,False,122.92600000000675
+bge_m3,"con reranker, sin filtro",C02,C,,False,2.0,2.0,True,True,116.15189999974973
+bge_m3,"con reranker, sin filtro",C03,C,,False,1.0,1.0,True,True,119.37130000114848
+bge_m3,"con reranker, sin filtro",C04,C,,False,1.0,1.0,True,True,141.96590000028664
+bge_m3,"con reranker, sin filtro",C05,C,,False,2.0,2.0,True,True,124.07619999976305
+bge_m3,"con reranker, sin filtro",C06,C,,False,1.0,1.0,True,True,137.90510000035283
+bge_m3,"con reranker, sin filtro",C07,C,,False,2.0,4.0,True,True,129.68039999941539
+bge_m3,"con reranker, sin filtro",C08,C,,False,2.0,2.0,True,True,122.81670000083977
+bge_m3,"con reranker, sin filtro",C09,C,,False,1.0,2.0,True,True,116.1619000013161
+bge_m3,"con reranker, sin filtro",D01,D,,False,1.0,1.0,True,True,113.14429999947606
+bge_m3,"con reranker, sin filtro",D02,D,,False,2.0,,True,False,113.55550000007497
+bge_m3,"con reranker, sin filtro",D03,D,,False,1.0,,True,False,125.21420000120997
+bge_m3,"con reranker, filtro modulo con repeticion",A01,A,http.client,False,1.0,1.0,True,True,112.66620000060357
+bge_m3,"con reranker, filtro modulo con repeticion",A02,A,urllib.request,False,1.0,1.0,True,True,113.31989999962389
+bge_m3,"con reranker, filtro modulo con repeticion",A03,A,pathlib,False,1.0,1.0,True,True,118.23530000037863
+bge_m3,"con reranker, filtro modulo con repeticion",A04,A,re,False,1.0,2.0,True,True,127.20850000005157
+bge_m3,"con reranker, filtro modulo con repeticion",A05,A,,False,1.0,1.0,True,True,120.64720000125817
+bge_m3,"con reranker, filtro modulo con repeticion",A06,A,json,False,1.0,1.0,True,True,118.51989999922807
+bge_m3,"con reranker, filtro modulo con repeticion",A07,A,subprocess,False,1.0,1.0,True,True,115.31680000007327
+bge_m3,"con reranker, filtro modulo con repeticion",A08,A,sqlite3,False,1.0,3.0,True,True,140.6178999986878
+bge_m3,"con reranker, filtro modulo con repeticion",A09,A,,False,1.0,1.0,True,True,135.4230999986612
+bge_m3,"con reranker, filtro modulo con repeticion",A10,A,argparse,False,1.0,1.0,True,True,125.63610000142944
+bge_m3,"con reranker, filtro modulo con repeticion",B01,B,http,False,1.0,4.0,True,True,81.26740000079735
+bge_m3,"con reranker, filtro modulo con repeticion",B02,B,secrets,False,1.0,1.0,True,True,74.60149999860732
+bge_m3,"con reranker, filtro modulo con repeticion",B03,B,hashlib,False,1.0,1.0,True,True,118.09720000019297
+bge_m3,"con reranker, filtro modulo con repeticion",B04,B,,False,2.0,2.0,True,True,114.05740000009246
+bge_m3,"con reranker, filtro modulo con repeticion",B05,B,,False,2.0,2.0,True,True,126.37009999889415
+bge_m3,"con reranker, filtro modulo con repeticion",B06,B,,False,1.0,3.0,True,True,124.34570000004896
+bge_m3,"con reranker, filtro modulo con repeticion",B07,B,functools,False,1.0,1.0,True,True,97.36539999903471
+bge_m3,"con reranker, filtro modulo con repeticion",B08,B,logging,False,1.0,,True,False,110.68580000028305
+bge_m3,"con reranker, filtro modulo con repeticion",B09,B,itertools,False,1.0,1.0,True,True,111.60639999980049
+bge_m3,"con reranker, filtro modulo con repeticion",B10,B,tomllib,False,1.0,1.0,True,True,83.03599999999278
+bge_m3,"con reranker, filtro modulo con repeticion",C01,C,asyncio,False,1.0,,True,False,126.20240000069316
+bge_m3,"con reranker, filtro modulo con repeticion",C02,C,threading,False,1.0,1.0,True,True,113.574900000458
+bge_m3,"con reranker, filtro modulo con repeticion",C03,C,dataclasses,False,1.0,1.0,True,True,117.98320000161766
+bge_m3,"con reranker, filtro modulo con repeticion",C04,C,,False,1.0,1.0,True,True,119.24089999956777
+bge_m3,"con reranker, filtro modulo con repeticion",C05,C,,False,2.0,2.0,True,True,135.02710000102525
+bge_m3,"con reranker, filtro modulo con repeticion",C06,C,shutil,False,1.0,1.0,True,True,107.11940000146569
+bge_m3,"con reranker, filtro modulo con repeticion",C07,C,,False,2.0,4.0,True,True,121.66660000002594
+bge_m3,"con reranker, filtro modulo con repeticion",C08,C,,False,2.0,2.0,True,True,120.62319999859028
+bge_m3,"con reranker, filtro modulo con repeticion",C09,C,,False,1.0,2.0,True,True,112.69780000111496
+bge_m3,"con reranker, filtro modulo con repeticion",D01,D,subprocess|json,False,1.0,1.0,True,True,109.34889999953157
+bge_m3,"con reranker, filtro modulo con repeticion",D02,D,http.client|pathlib,True,2.0,,True,False,185.77109999932873
+bge_m3,"con reranker, filtro modulo con repeticion",D03,D,threading|concurrent.futures,False,1.0,,True,False,115.94809999951394
+embeddinggemma,"sin reranker, sin filtro",A01,A,,False,1.0,3.0,True,True,67.93979999929434
+embeddinggemma,"sin reranker, sin filtro",A02,A,,False,1.0,4.0,True,True,40.662200000952
+embeddinggemma,"sin reranker, sin filtro",A03,A,,False,1.0,1.0,True,True,98.27039999981935
+embeddinggemma,"sin reranker, sin filtro",A04,A,,False,2.0,3.0,True,True,61.705199999778415
+embeddinggemma,"sin reranker, sin filtro",A05,A,,False,3.0,3.0,True,True,62.10730000020703
+embeddinggemma,"sin reranker, sin filtro",A06,A,,False,2.0,2.0,True,True,61.03129999974044
+embeddinggemma,"sin reranker, sin filtro",A07,A,,False,1.0,1.0,True,True,60.99300000096264
+embeddinggemma,"sin reranker, sin filtro",A08,A,,False,1.0,1.0,True,True,47.30340000060096
+embeddinggemma,"sin reranker, sin filtro",A09,A,,False,1.0,2.0,True,True,60.981800001172815
+embeddinggemma,"sin reranker, sin filtro",A10,A,,False,1.0,1.0,True,True,76.64479999948526
+embeddinggemma,"sin reranker, sin filtro",B01,B,,False,1.0,1.0,True,True,61.98770000082732
+embeddinggemma,"sin reranker, sin filtro",B02,B,,False,1.0,1.0,True,True,62.14010000076087
+embeddinggemma,"sin reranker, sin filtro",B03,B,,False,4.0,4.0,True,True,61.07669999983045
+embeddinggemma,"sin reranker, sin filtro",B04,B,,False,1.0,1.0,True,True,62.65259999963746
+embeddinggemma,"sin reranker, sin filtro",B05,B,,False,4.0,,True,False,62.061000000539934
+embeddinggemma,"sin reranker, sin filtro",B06,B,,False,1.0,1.0,True,True,62.56239999856916
+embeddinggemma,"sin reranker, sin filtro",B07,B,,False,1.0,2.0,True,True,61.54939999942144
+embeddinggemma,"sin reranker, sin filtro",B08,B,,False,,,False,False,63.16329999935988
+embeddinggemma,"sin reranker, sin filtro",B09,B,,False,1.0,1.0,True,True,60.763800000131596
+embeddinggemma,"sin reranker, sin filtro",B10,B,,False,1.0,1.0,True,True,48.359599999457714
+embeddinggemma,"sin reranker, sin filtro",C01,C,,False,1.0,4.0,True,True,62.04339999931108
+embeddinggemma,"sin reranker, sin filtro",C02,C,,False,1.0,1.0,True,True,62.281000000439235
+embeddinggemma,"sin reranker, sin filtro",C03,C,,False,1.0,1.0,True,True,61.90530000094441
+embeddinggemma,"sin reranker, sin filtro",C04,C,,False,1.0,1.0,True,True,62.22119999983988
+embeddinggemma,"sin reranker, sin filtro",C05,C,,False,1.0,1.0,True,True,42.908100000204286
+embeddinggemma,"sin reranker, sin filtro",C06,C,,False,1.0,1.0,True,True,63.04019999879529
+embeddinggemma,"sin reranker, sin filtro",C07,C,,False,1.0,,True,False,62.866700000085984
+embeddinggemma,"sin reranker, sin filtro",C08,C,,False,1.0,2.0,True,True,60.11129999933473
+embeddinggemma,"sin reranker, sin filtro",C09,C,,False,1.0,1.0,True,True,61.75880000046163
+embeddinggemma,"sin reranker, sin filtro",D01,D,,False,1.0,,True,False,63.1628000010096
+embeddinggemma,"sin reranker, sin filtro",D02,D,,False,1.0,1.0,True,True,60.98600000041188
+embeddinggemma,"sin reranker, sin filtro",D03,D,,False,1.0,1.0,True,True,63.38759999925969
+embeddinggemma,"sin reranker, filtro modulo con repeticion",A01,A,http.client,False,1.0,2.0,True,True,76.77569999941625
+embeddinggemma,"sin reranker, filtro modulo con repeticion",A02,A,urllib.request,False,1.0,3.0,True,True,62.40090000028431
+embeddinggemma,"sin reranker, filtro modulo con repeticion",A03,A,pathlib,False,1.0,1.0,True,True,60.50639999921259
+embeddinggemma,"sin reranker, filtro modulo con repeticion",A04,A,re,False,1.0,2.0,True,True,61.54000000060478
+embeddinggemma,"sin reranker, filtro modulo con repeticion",A05,A,,False,3.0,3.0,True,True,61.804599999959464
+embeddinggemma,"sin reranker, filtro modulo con repeticion",A06,A,json,False,1.0,1.0,True,True,60.964899999817135
+embeddinggemma,"sin reranker, filtro modulo con repeticion",A07,A,subprocess,False,1.0,1.0,True,True,60.7053999992786
+embeddinggemma,"sin reranker, filtro modulo con repeticion",A08,A,sqlite3,False,1.0,1.0,True,True,78.26299999942421
+embeddinggemma,"sin reranker, filtro modulo con repeticion",A09,A,,False,1.0,2.0,True,True,65.69519999902695
+embeddinggemma,"sin reranker, filtro modulo con repeticion",A10,A,argparse,False,1.0,1.0,True,True,56.84600000131468
+embeddinggemma,"sin reranker, filtro modulo con repeticion",B01,B,http,False,1.0,1.0,True,True,60.42159999924479
+embeddinggemma,"sin reranker, filtro modulo con repeticion",B02,B,secrets,False,1.0,1.0,True,True,61.68260000049486
+embeddinggemma,"sin reranker, filtro modulo con repeticion",B03,B,hashlib,False,1.0,1.0,True,True,43.94049999973504
+embeddinggemma,"sin reranker, filtro modulo con repeticion",B04,B,,False,1.0,1.0,True,True,62.66029999824241
+embeddinggemma,"sin reranker, filtro modulo con repeticion",B05,B,,False,4.0,,True,False,61.76179999965825
+embeddinggemma,"sin reranker, filtro modulo con repeticion",B06,B,,False,1.0,1.0,True,True,60.991199999989476
+embeddinggemma,"sin reranker, filtro modulo con repeticion",B07,B,functools,False,1.0,2.0,True,True,61.19140000009793
+embeddinggemma,"sin reranker, filtro modulo con repeticion",B08,B,logging,False,1.0,,True,False,63.00159999955213
+embeddinggemma,"sin reranker, filtro modulo con repeticion",B09,B,itertools,False,1.0,1.0,True,True,62.48849999974482
+embeddinggemma,"sin reranker, filtro modulo con repeticion",B10,B,tomllib,False,1.0,1.0,True,True,61.22479999976349
+embeddinggemma,"sin reranker, filtro modulo con repeticion",C01,C,asyncio,False,1.0,4.0,True,True,62.69760000031965
+embeddinggemma,"sin reranker, filtro modulo con repeticion",C02,C,threading,False,1.0,1.0,True,True,61.697999999523745
+embeddinggemma,"sin reranker, filtro modulo con repeticion",C03,C,dataclasses,False,1.0,1.0,True,True,62.34720000065863
+embeddinggemma,"sin reranker, filtro modulo con repeticion",C04,C,,False,1.0,1.0,True,True,78.9398999986588
+embeddinggemma,"sin reranker, filtro modulo con repeticion",C05,C,,False,1.0,1.0,True,True,62.155100000381935
+embeddinggemma,"sin reranker, filtro modulo con repeticion",C06,C,shutil,False,1.0,1.0,True,True,60.42960000013409
+embeddinggemma,"sin reranker, filtro modulo con repeticion",C07,C,,False,1.0,,True,False,77.7008000004571
+embeddinggemma,"sin reranker, filtro modulo con repeticion",C08,C,,False,1.0,2.0,True,True,77.34540000092238
+embeddinggemma,"sin reranker, filtro modulo con repeticion",C09,C,,False,1.0,1.0,True,True,51.901799999541254
+embeddinggemma,"sin reranker, filtro modulo con repeticion",D01,D,subprocess|json,False,1.0,,True,False,72.33319999977539
+embeddinggemma,"sin reranker, filtro modulo con repeticion",D02,D,http.client|pathlib,False,1.0,1.0,True,True,60.100999999121996
+embeddinggemma,"sin reranker, filtro modulo con repeticion",D03,D,threading|concurrent.futures,False,1.0,1.0,True,True,44.01519999919401
+embeddinggemma,"con reranker, sin filtro",A01,A,,False,,,False,False,109.7023000002082
+embeddinggemma,"con reranker, sin filtro",A02,A,,False,3.0,3.0,True,True,131.9444000000658
+embeddinggemma,"con reranker, sin filtro",A03,A,,False,3.0,3.0,True,True,92.47689999938302
+embeddinggemma,"con reranker, sin filtro",A04,A,,False,1.0,2.0,True,True,107.62529999919934
+embeddinggemma,"con reranker, sin filtro",A05,A,,False,1.0,1.0,True,True,110.57900000014342
+embeddinggemma,"con reranker, sin filtro",A06,A,,False,1.0,1.0,True,True,105.42930000156048
+embeddinggemma,"con reranker, sin filtro",A07,A,,False,1.0,1.0,True,True,120.60600000040722
+embeddinggemma,"con reranker, sin filtro",A08,A,,False,1.0,3.0,True,True,102.07960000116145
+embeddinggemma,"con reranker, sin filtro",A09,A,,False,1.0,1.0,True,True,119.28179999995336
+embeddinggemma,"con reranker, sin filtro",A10,A,,False,1.0,1.0,True,True,120.59009999939008
+embeddinggemma,"con reranker, sin filtro",B01,B,,False,1.0,,True,False,98.7795000000915
+embeddinggemma,"con reranker, sin filtro",B02,B,,False,1.0,1.0,True,True,121.4851999993698
+embeddinggemma,"con reranker, sin filtro",B03,B,,False,1.0,1.0,True,True,115.54200000136916
+embeddinggemma,"con reranker, sin filtro",B04,B,,False,2.0,2.0,True,True,115.76530000093044
+embeddinggemma,"con reranker, sin filtro",B05,B,,False,3.0,,True,False,112.96089999996184
+embeddinggemma,"con reranker, sin filtro",B06,B,,False,1.0,3.0,True,True,122.91730000106327
+embeddinggemma,"con reranker, sin filtro",B07,B,,False,1.0,1.0,True,True,117.11529999956838
+embeddinggemma,"con reranker, sin filtro",B08,B,,False,2.0,,True,False,118.5139999997773
+embeddinggemma,"con reranker, sin filtro",B09,B,,False,1.0,1.0,True,True,125.3285999991931
+embeddinggemma,"con reranker, sin filtro",B10,B,,False,2.0,2.0,True,True,116.01039999914065
+embeddinggemma,"con reranker, sin filtro",C01,C,,False,1.0,,True,False,142.51250000052096
+embeddinggemma,"con reranker, sin filtro",C02,C,,False,2.0,2.0,True,True,89.99329999824113
+embeddinggemma,"con reranker, sin filtro",C03,C,,False,1.0,1.0,True,True,109.3949000005523
+embeddinggemma,"con reranker, sin filtro",C04,C,,False,1.0,1.0,True,True,114.52289999942877
+embeddinggemma,"con reranker, sin filtro",C05,C,,False,2.0,2.0,True,True,99.06360000059067
+embeddinggemma,"con reranker, sin filtro",C06,C,,False,1.0,1.0,True,True,105.1471999999194
+embeddinggemma,"con reranker, sin filtro",C07,C,,False,2.0,4.0,True,True,121.13209999915853
+embeddinggemma,"con reranker, sin filtro",C08,C,,False,2.0,2.0,True,True,113.62969999936468
+embeddinggemma,"con reranker, sin filtro",C09,C,,False,1.0,2.0,True,True,115.98120000053314
+embeddinggemma,"con reranker, sin filtro",D01,D,,False,1.0,1.0,True,True,96.65299999869603
+embeddinggemma,"con reranker, sin filtro",D02,D,,False,1.0,,True,False,120.89469999955327
+embeddinggemma,"con reranker, sin filtro",D03,D,,False,1.0,,True,False,278.70160000020405
+embeddinggemma,"con reranker, filtro modulo con repeticion",A01,A,http.client,False,1.0,1.0,True,True,360.0084000008792
+embeddinggemma,"con reranker, filtro modulo con repeticion",A02,A,urllib.request,False,1.0,1.0,True,True,380.5277000010392
+embeddinggemma,"con reranker, filtro modulo con repeticion",A03,A,pathlib,False,1.0,1.0,True,True,362.03029999887804
+embeddinggemma,"con reranker, filtro modulo con repeticion",A04,A,re,False,1.0,2.0,True,True,197.69580000138376
+embeddinggemma,"con reranker, filtro modulo con repeticion",A05,A,,False,1.0,1.0,True,True,188.00759999976435
+embeddinggemma,"con reranker, filtro modulo con repeticion",A06,A,json,False,1.0,1.0,True,True,123.63139999979467
+embeddinggemma,"con reranker, filtro modulo con repeticion",A07,A,subprocess,False,1.0,1.0,True,True,140.28919999873324
+embeddinggemma,"con reranker, filtro modulo con repeticion",A08,A,sqlite3,False,1.0,3.0,True,True,143.40509999965434
+embeddinggemma,"con reranker, filtro modulo con repeticion",A09,A,,False,1.0,1.0,True,True,139.33170000018436
+embeddinggemma,"con reranker, filtro modulo con repeticion",A10,A,argparse,False,1.0,1.0,True,True,124.63820000084525
+embeddinggemma,"con reranker, filtro modulo con repeticion",B01,B,http,False,1.0,4.0,True,True,84.87940000122762
+embeddinggemma,"con reranker, filtro modulo con repeticion",B02,B,secrets,False,1.0,1.0,True,True,75.0926000000618
+embeddinggemma,"con reranker, filtro modulo con repeticion",B03,B,hashlib,False,1.0,1.0,True,True,106.98720000073081
+embeddinggemma,"con reranker, filtro modulo con repeticion",B04,B,,False,2.0,2.0,True,True,119.25130000054196
+embeddinggemma,"con reranker, filtro modulo con repeticion",B05,B,,False,3.0,,True,False,119.0591000013228
+embeddinggemma,"con reranker, filtro modulo con repeticion",B06,B,,False,1.0,3.0,True,True,108.71480000059819
+embeddinggemma,"con reranker, filtro modulo con repeticion",B07,B,functools,False,1.0,1.0,True,True,95.20770000017365
+embeddinggemma,"con reranker, filtro modulo con repeticion",B08,B,logging,False,1.0,,True,False,145.5949999999575
+embeddinggemma,"con reranker, filtro modulo con repeticion",B09,B,itertools,False,1.0,1.0,True,True,116.21489999924961
+embeddinggemma,"con reranker, filtro modulo con repeticion",B10,B,tomllib,False,1.0,1.0,True,True,69.1610000012588
+embeddinggemma,"con reranker, filtro modulo con repeticion",C01,C,asyncio,False,1.0,,True,False,124.28499999987253
+embeddinggemma,"con reranker, filtro modulo con repeticion",C02,C,threading,False,1.0,1.0,True,True,121.01989999973739
+embeddinggemma,"con reranker, filtro modulo con repeticion",C03,C,dataclasses,False,1.0,1.0,True,True,122.25939999916591
+embeddinggemma,"con reranker, filtro modulo con repeticion",C04,C,,False,1.0,1.0,True,True,118.51220000062312
+embeddinggemma,"con reranker, filtro modulo con repeticion",C05,C,,False,2.0,2.0,True,True,97.74680000009539
+embeddinggemma,"con reranker, filtro modulo con repeticion",C06,C,shutil,False,1.0,1.0,True,True,119.47370000052615
+embeddinggemma,"con reranker, filtro modulo con repeticion",C07,C,,False,2.0,4.0,True,True,123.09649999951944
+embeddinggemma,"con reranker, filtro modulo con repeticion",C08,C,,False,2.0,2.0,True,True,105.92499999984284
+embeddinggemma,"con reranker, filtro modulo con repeticion",C09,C,,False,1.0,2.0,True,True,115.19469999984722
+embeddinggemma,"con reranker, filtro modulo con repeticion",D01,D,subprocess|json,False,1.0,1.0,True,True,130.3542000005109
+embeddinggemma,"con reranker, filtro modulo con repeticion",D02,D,http.client|pathlib,True,1.0,,True,False,335.571899999195
+embeddinggemma,"con reranker, filtro modulo con repeticion",D03,D,threading|concurrent.futures,False,1.0,,True,False,126.2962000000698
+jina_code,"sin reranker, sin filtro",A01,A,,False,,,False,False,37.694299999202485
+jina_code,"sin reranker, sin filtro",A02,A,,False,,,False,False,60.993600000074366
+jina_code,"sin reranker, sin filtro",A03,A,,False,1.0,1.0,True,True,46.03789999964647
+jina_code,"sin reranker, sin filtro",A04,A,,False,3.0,,True,False,46.63090000030934
+jina_code,"sin reranker, sin filtro",A05,A,,False,2.0,2.0,True,True,46.7279000004055
+jina_code,"sin reranker, sin filtro",A06,A,,False,1.0,1.0,True,True,36.201699998855474
+jina_code,"sin reranker, sin filtro",A07,A,,False,1.0,,True,False,57.650100001410465
+jina_code,"sin reranker, sin filtro",A08,A,,False,1.0,,True,False,44.884999999339925
+jina_code,"sin reranker, sin filtro",A09,A,,False,2.0,3.0,True,True,46.13909999898169
+jina_code,"sin reranker, sin filtro",A10,A,,False,1.0,2.0,True,True,47.93040000004112
+jina_code,"sin reranker, sin filtro",B01,B,,False,1.0,4.0,True,True,47.92959999940649
+jina_code,"sin reranker, sin filtro",B02,B,,False,1.0,1.0,True,True,38.192400001207716
+jina_code,"sin reranker, sin filtro",B03,B,,False,4.0,4.0,True,True,45.45750000033877
+jina_code,"sin reranker, sin filtro",B04,B,,False,1.0,1.0,True,True,72.85530000081053
+jina_code,"sin reranker, sin filtro",B05,B,,False,2.0,,True,False,78.7359000005381
+jina_code,"sin reranker, sin filtro",B06,B,,False,2.0,2.0,True,True,61.73110000054294
+jina_code,"sin reranker, sin filtro",B07,B,,False,1.0,2.0,True,True,62.33560000146099
+jina_code,"sin reranker, sin filtro",B08,B,,False,3.0,,True,False,45.72510000070906
+jina_code,"sin reranker, sin filtro",B09,B,,False,1.0,1.0,True,True,47.43670000061684
+jina_code,"sin reranker, sin filtro",B10,B,,False,1.0,2.0,True,True,44.103199999881326
+jina_code,"sin reranker, sin filtro",C01,C,,False,1.0,,True,False,40.478799999618786
+jina_code,"sin reranker, sin filtro",C02,C,,False,,,False,False,56.389600000329665
+jina_code,"sin reranker, sin filtro",C03,C,,False,1.0,1.0,True,True,46.65150000073481
+jina_code,"sin reranker, sin filtro",C04,C,,False,,,False,False,45.86100000051374
+jina_code,"sin reranker, sin filtro",C05,C,,False,1.0,3.0,True,True,45.01500000151282
+jina_code,"sin reranker, sin filtro",C06,C,,False,1.0,2.0,True,True,62.61559999984456
+jina_code,"sin reranker, sin filtro",C07,C,,False,2.0,2.0,True,True,42.95330000059039
+jina_code,"sin reranker, sin filtro",C08,C,,False,2.0,2.0,True,True,66.0717000009754
+jina_code,"sin reranker, sin filtro",C09,C,,False,2.0,3.0,True,True,62.48469999991357
+jina_code,"sin reranker, sin filtro",D01,D,,False,1.0,,True,False,48.07799999980489
+jina_code,"sin reranker, sin filtro",D02,D,,False,,,False,False,62.312600000950624
+jina_code,"sin reranker, sin filtro",D03,D,,False,,,False,False,37.556199999016826
+jina_code,"sin reranker, filtro modulo con repeticion",A01,A,http.client,False,1.0,,True,False,41.53790000054869
+jina_code,"sin reranker, filtro modulo con repeticion",A02,A,urllib.request,False,1.0,1.0,True,True,39.65989999960584
+jina_code,"sin reranker, filtro modulo con repeticion",A03,A,pathlib,False,1.0,1.0,True,True,52.728700000443496
+jina_code,"sin reranker, filtro modulo con repeticion",A04,A,re,False,1.0,3.0,True,True,79.42520000142395
+jina_code,"sin reranker, filtro modulo con repeticion",A05,A,,False,2.0,2.0,True,True,48.53000000002794
+jina_code,"sin reranker, filtro modulo con repeticion",A06,A,json,False,1.0,1.0,True,True,60.89609999980894
+jina_code,"sin reranker, filtro modulo con repeticion",A07,A,subprocess,False,1.0,,True,False,46.73270000057528
+jina_code,"sin reranker, filtro modulo con repeticion",A08,A,sqlite3,False,1.0,,True,False,38.26830000070913
+jina_code,"sin reranker, filtro modulo con repeticion",A09,A,,False,2.0,3.0,True,True,37.98409999944852
+jina_code,"sin reranker, filtro modulo con repeticion",A10,A,argparse,False,1.0,2.0,True,True,47.081500000786036
+jina_code,"sin reranker, filtro modulo con repeticion",B01,B,http,False,1.0,3.0,True,True,53.578199998810305
+jina_code,"sin reranker, filtro modulo con repeticion",B02,B,secrets,False,1.0,1.0,True,True,53.80659999900672
+jina_code,"sin reranker, filtro modulo con repeticion",B03,B,hashlib,False,1.0,1.0,True,True,42.94819999995525
+jina_code,"sin reranker, filtro modulo con repeticion",B04,B,,False,1.0,1.0,True,True,68.52189999881375
+jina_code,"sin reranker, filtro modulo con repeticion",B05,B,,False,2.0,,True,False,63.05590000010852
+jina_code,"sin reranker, filtro modulo con repeticion",B06,B,,False,2.0,2.0,True,True,61.64429999989807
+jina_code,"sin reranker, filtro modulo con repeticion",B07,B,functools,False,1.0,2.0,True,True,62.00369999896793
+jina_code,"sin reranker, filtro modulo con repeticion",B08,B,logging,False,1.0,,True,False,34.84319999915897
+jina_code,"sin reranker, filtro modulo con repeticion",B09,B,itertools,False,1.0,1.0,True,True,41.58040000038454
+jina_code,"sin reranker, filtro modulo con repeticion",B10,B,tomllib,False,1.0,2.0,True,True,63.096599998971215
+jina_code,"sin reranker, filtro modulo con repeticion",C01,C,asyncio,False,1.0,,True,False,46.946599999500904
+jina_code,"sin reranker, filtro modulo con repeticion",C02,C,threading,False,1.0,4.0,True,True,47.444499999983236
+jina_code,"sin reranker, filtro modulo con repeticion",C03,C,dataclasses,False,1.0,1.0,True,True,77.21969999875
+jina_code,"sin reranker, filtro modulo con repeticion",C04,C,,False,,,False,False,63.16809999952966
+jina_code,"sin reranker, filtro modulo con repeticion",C05,C,,False,1.0,3.0,True,True,46.111399999062996
+jina_code,"sin reranker, filtro modulo con repeticion",C06,C,shutil,False,1.0,2.0,True,True,49.30579999927431
+jina_code,"sin reranker, filtro modulo con repeticion",C07,C,,False,2.0,2.0,True,True,45.28019999997923
+jina_code,"sin reranker, filtro modulo con repeticion",C08,C,,False,2.0,2.0,True,True,61.01719999969646
+jina_code,"sin reranker, filtro modulo con repeticion",C09,C,,False,2.0,3.0,True,True,46.74700000032317
+jina_code,"sin reranker, filtro modulo con repeticion",D01,D,subprocess|json,False,1.0,,True,False,58.10849999943457
+jina_code,"sin reranker, filtro modulo con repeticion",D02,D,http.client|pathlib,False,1.0,4.0,True,True,64.62149999970279
+jina_code,"sin reranker, filtro modulo con repeticion",D03,D,threading|concurrent.futures,False,1.0,1.0,True,True,46.779299998888746
+jina_code,"con reranker, sin filtro",A01,A,,False,,,False,False,110.48099999970873
+jina_code,"con reranker, sin filtro",A02,A,,False,3.0,3.0,True,True,125.02940000013041
+jina_code,"con reranker, sin filtro",A03,A,,False,3.0,3.0,True,True,99.00590000142984
+jina_code,"con reranker, sin filtro",A04,A,,False,1.0,2.0,True,True,110.70250000011583
+jina_code,"con reranker, sin filtro",A05,A,,False,1.0,1.0,True,True,107.97239999919839
+jina_code,"con reranker, sin filtro",A06,A,,False,1.0,1.0,True,True,113.64179999873159
+jina_code,"con reranker, sin filtro",A07,A,,False,1.0,1.0,True,True,105.51269999996293
+jina_code,"con reranker, sin filtro",A08,A,,False,1.0,,True,False,127.9078000006848
+jina_code,"con reranker, sin filtro",A09,A,,False,1.0,1.0,True,True,130.3542000005109
+jina_code,"con reranker, sin filtro",A10,A,,False,1.0,1.0,True,True,115.83359999895038
+jina_code,"con reranker, sin filtro",B01,B,,False,1.0,,True,False,109.5164999987901
+jina_code,"con reranker, sin filtro",B02,B,,False,1.0,1.0,True,True,112.06789999960165
+jina_code,"con reranker, sin filtro",B03,B,,False,1.0,1.0,True,True,97.51169999981357
+jina_code,"con reranker, sin filtro",B04,B,,False,2.0,2.0,True,True,89.17430000110471
+jina_code,"con reranker, sin filtro",B05,B,,False,2.0,,True,False,108.62210000050254
+jina_code,"con reranker, sin filtro",B06,B,,False,1.0,1.0,True,True,107.74570000103267
+jina_code,"con reranker, sin filtro",B07,B,,False,1.0,1.0,True,True,110.99280000053113
+jina_code,"con reranker, sin filtro",B08,B,,False,2.0,,True,False,96.30799999831652
+jina_code,"con reranker, sin filtro",B09,B,,False,1.0,1.0,True,True,98.59159999905387
+jina_code,"con reranker, sin filtro",B10,B,,False,1.0,1.0,True,True,90.70140000039828
+jina_code,"con reranker, sin filtro",C01,C,,False,1.0,,True,False,103.80280000026687
+jina_code,"con reranker, sin filtro",C02,C,,False,,,False,False,91.13079999951879
+jina_code,"con reranker, sin filtro",C03,C,,False,1.0,1.0,True,True,114.30389999986801
+jina_code,"con reranker, sin filtro",C04,C,,False,1.0,1.0,True,True,124.19210000007297
+jina_code,"con reranker, sin filtro",C05,C,,False,2.0,2.0,True,True,104.4266000008065
+jina_code,"con reranker, sin filtro",C06,C,,False,1.0,1.0,True,True,93.19920000052662
+jina_code,"con reranker, sin filtro",C07,C,,False,1.0,3.0,True,True,115.55789999874833
+jina_code,"con reranker, sin filtro",C08,C,,False,2.0,2.0,True,True,88.51580000009562
+jina_code,"con reranker, sin filtro",C09,C,,False,1.0,2.0,True,True,113.66049999924144
+jina_code,"con reranker, sin filtro",D01,D,,False,1.0,,True,False,109.65790000045672
+jina_code,"con reranker, sin filtro",D02,D,,False,,,False,False,107.31069999928877
+jina_code,"con reranker, sin filtro",D03,D,,False,2.0,,True,False,91.4465999994718
+jina_code,"con reranker, filtro modulo con repeticion",A01,A,http.client,False,1.0,1.0,True,True,102.06269999980577
+jina_code,"con reranker, filtro modulo con repeticion",A02,A,urllib.request,False,1.0,1.0,True,True,99.3676999987656
+jina_code,"con reranker, filtro modulo con repeticion",A03,A,pathlib,False,1.0,1.0,True,True,92.80070000022533
+jina_code,"con reranker, filtro modulo con repeticion",A04,A,re,False,1.0,2.0,True,True,113.43380000107572
+jina_code,"con reranker, filtro modulo con repeticion",A05,A,,False,1.0,1.0,True,True,99.49330000017653
+jina_code,"con reranker, filtro modulo con repeticion",A06,A,json,False,1.0,1.0,True,True,105.7042000011279
+jina_code,"con reranker, filtro modulo con repeticion",A07,A,subprocess,False,1.0,1.0,True,True,96.07909999976982
+jina_code,"con reranker, filtro modulo con repeticion",A08,A,sqlite3,False,1.0,,True,False,109.63509999965027
+jina_code,"con reranker, filtro modulo con repeticion",A09,A,,False,1.0,1.0,True,True,104.46760000013455
+jina_code,"con reranker, filtro modulo con repeticion",A10,A,argparse,False,1.0,1.0,True,True,117.10309999944002
+jina_code,"con reranker, filtro modulo con repeticion",B01,B,http,False,1.0,4.0,True,True,77.97170000048936
+jina_code,"con reranker, filtro modulo con repeticion",B02,B,secrets,False,1.0,1.0,True,True,73.44460000058461
+jina_code,"con reranker, filtro modulo con repeticion",B03,B,hashlib,False,1.0,1.0,True,True,114.79959999996936
+jina_code,"con reranker, filtro modulo con repeticion",B04,B,,False,2.0,2.0,True,True,114.30990000008023
+jina_code,"con reranker, filtro modulo con repeticion",B05,B,,False,2.0,,True,False,116.60250000022643
+jina_code,"con reranker, filtro modulo con repeticion",B06,B,,False,1.0,1.0,True,True,89.09800000037649
+jina_code,"con reranker, filtro modulo con repeticion",B07,B,functools,False,1.0,1.0,True,True,86.30929999890213
+jina_code,"con reranker, filtro modulo con repeticion",B08,B,logging,False,1.0,,True,False,99.59370000069612
+jina_code,"con reranker, filtro modulo con repeticion",B09,B,itertools,False,1.0,1.0,True,True,122.16799999987416
+jina_code,"con reranker, filtro modulo con repeticion",B10,B,tomllib,False,1.0,1.0,True,True,68.36789999942994
+jina_code,"con reranker, filtro modulo con repeticion",C01,C,asyncio,False,1.0,,True,False,102.90549999990617
+jina_code,"con reranker, filtro modulo con repeticion",C02,C,threading,False,1.0,1.0,True,True,112.84930000147142
+jina_code,"con reranker, filtro modulo con repeticion",C03,C,dataclasses,False,1.0,1.0,True,True,105.59330000069167
+jina_code,"con reranker, filtro modulo con repeticion",C04,C,,False,1.0,1.0,True,True,115.66579999998794
+jina_code,"con reranker, filtro modulo con repeticion",C05,C,,False,2.0,2.0,True,True,121.45930000042426
+jina_code,"con reranker, filtro modulo con repeticion",C06,C,shutil,False,1.0,1.0,True,True,106.03329999867128
+jina_code,"con reranker, filtro modulo con repeticion",C07,C,,False,1.0,3.0,True,True,127.47959999978775
+jina_code,"con reranker, filtro modulo con repeticion",C08,C,,False,2.0,2.0,True,True,99.04339999957301
+jina_code,"con reranker, filtro modulo con repeticion",C09,C,,False,1.0,2.0,True,True,104.67830000015965
+jina_code,"con reranker, filtro modulo con repeticion",D01,D,subprocess|json,False,1.0,,True,False,124.44419999883394
+jina_code,"con reranker, filtro modulo con repeticion",D02,D,http.client|pathlib,True,,,False,False,176.36789999960456
+jina_code,"con reranker, filtro modulo con repeticion",D03,D,threading|concurrent.futures,False,1.0,,True,False,92.64479999910691

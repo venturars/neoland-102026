@@ -1,0 +1,68 @@
+{
+  "nomic": {
+    "nombre": "nomic-embed-text",
+    "proveedor": "ollama",
+    "coleccion": "pydocs_nomic_est1500_m200_sinruta",
+    "dimension": 768,
+    "num_ctx": 2048,
+    "truncados": 42,
+    "tiempo_indexacion_s": 228.2493026250013,
+    "dispositivo": "cuda",
+    "fecha": "2026-11-18T10:37:54+01:00"
+  },
+  "qwen3_06b": {
+    "nombre": "qwen3-embedding:0.6b",
+    "proveedor": "ollama",
+    "coleccion": "pydocs_qwen3_06b_est1500_m200_sinruta",
+    "dimension": 1024,
+    "num_ctx": 8192,
+    "truncados": 2,
+    "tiempo_indexacion_s": 261.37300810000033,
+    "dispositivo": "cuda",
+    "fecha": "2026-11-18T10:42:33+01:00"
+  },
+  "embeddinggemma": {
+    "nombre": "embeddinggemma",
+    "proveedor": "ollama",
+    "coleccion": "pydocs_embeddinggemma_est1500_m200_sinruta",
+    "dimension": 768,
+    "num_ctx": 2048,
+    "truncados": 47,
+    "tiempo_indexacion_s": 247.36541830000078,
+    "dispositivo": "cuda",
+    "fecha": "2026-11-18T10:52:22+01:00"
+  },
+  "qwen3_8b": {
+    "nombre": "qwen3-embedding:8b",
+    "proveedor": "ollama",
+    "coleccion": "pydocs_qwen3_8b_est1500_m200_sinruta",
+    "dimension": 4096,
+    "num_ctx": 8192,
+    "truncados": 2,
+    "tiempo_indexacion_s": 1573.4310286,
+    "dispositivo": "cuda+cpu",
+    "fecha": "2026-11-18T11:18:45+01:00"
+  },
+  "jina_code": {
+    "nombre": "jinaai/jina-code-embeddings-1.5b",
+    "proveedor": "sentence-transformers",
+    "coleccion": "pydocs_jina_code_est1500_m200_sinruta",
+    "dimension": 1536,
+    "num_ctx": 8192,
+    "truncados": 2,
+    "tiempo_indexacion_s": 1814.8710730000003,
+    "dispositivo": "cuda",
+    "fecha": "2026-11-18T12:00:52+01:00"
+  },
+  "bge_m3": {
+    "nombre": "bge-m3",
+    "proveedor": "ollama",
+    "coleccion": "pydocs_bge_m3_est1500_m200_sinruta",
+    "dimension": 1024,
+    "num_ctx": 8192,
+    "truncados": 3,
+    "tiempo_indexacion_s": 276.2593385,
+    "dispositivo": "cuda",
+    "fecha": "2026-11-18T12:07:39+01:00"
+  }
+}

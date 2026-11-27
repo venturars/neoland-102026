@@ -1,0 +1,12 @@
+timeout_s = 0.5
+top_rutas = 3
+
+[[logs]]
+ruta = "web1.log"
+
+[[logs]]
+ruta = "web2.log"
+
+[[logs]]
+ruta = "lento.log"
+retardo_s = 2.0
